@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-06 preview deployment diagnosis
+
+- Pushed commit `9978f67` to `codex/production-readiness-baseline`. Vercel cloned it, installed the locked dependencies, ran `next build`, and marked preview deployment `dpl_mwbNt8UbRcQF7x6RLZUwadpiNjue` Ready.
+- The generated preview URL and its branch alias both return Vercel `404 NOT_FOUND` before any application runtime logs are created, including with a temporary protected-deployment share URL. This is a hosted Vercel routing/deployment configuration issue, not a failed application build; it remains a release blocker.
+- Pilot advisors now report only expected unused-index information plus intentional private-schema/RPC warnings, and one unresolved Supabase Auth warning: leaked-password protection is disabled. The UI is OTP-only, but service-side password behavior has not been verified; production must enable leaked-password protection or enforce passwordless Auth.
+
 ## 2026-09-06 pilot advisor remediation
 
 - Applied `0005_pilot_index_and_advisor_baseline` to the isolated synthetic-data pilot only after focused review. It adds non-unique covering indexes for the advisory foreign keys and does not broaden table, policy, or RPC privileges.
