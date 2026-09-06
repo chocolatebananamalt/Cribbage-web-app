@@ -1,0 +1,36 @@
+{
+  "name": "acc-tournament-workspace",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src tests next.config.ts eslint.config.mjs",
+    "test": "node --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs tests/game-api-semantics.test.mjs",
+    "verify": "node --test tests/workspace.test.mjs",
+    "verify:handoff": "node --test tests/handoff.test.mjs",
+    "test:score": "node --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs",
+    "verify:local": "pnpm lint && pnpm test && pnpm build && pnpm verify && pnpm verify:handoff",
+    "verify:all": "pnpm lint && pnpm test && pnpm build && pnpm verify"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.6",
+    "@supabase/supabase-js": "2.115.0",
+    "next": "16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.4",
+    "typescript": "^6.0.3"
+  }
+}

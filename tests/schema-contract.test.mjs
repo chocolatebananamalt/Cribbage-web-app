@@ -1,0 +1,101 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import test from 'node:test';
+
+const migrationPath = path.join(process.cwd(), 'database', 'migrations', '0001_vertical_slice_core.sql');
+const sql = fs.readFileSync(migrationPath, 'utf8').toLowerCase();
+const tables = ['profiles', 'tournaments', 'tournament_roles', 'ruleset_versions', 'events', 'rounds', 'event_participants', 'canonical_games', 'card_scorelines', 'score_submissions', 'score_confirmations', 'operation_receipts', 'audit_events'];
+
+test('local schema is private, UUID-backed, RLS-forced, and non-destructive', () => {
+  assert.match(sql, /create schema if not exists app/);
+  assert.match(sql, /references auth\.users\(id\) on delete restrict/);
+  for (const table of tables) {
+    assert.match(sql, new RegExp(`create table app\\.${table}\\s*\\(`), `${table} exists in private app schema`);
+  }
+  assert.match(sql, /enable row level security/);
+  assert.match(sql, /force row level security/);
+  assert.match(sql, /revoke all on table app\.%i from anon, authenticated/);
+  assert.doesNotMatch(sql, /on delete cascade/, 'history and core records have no destructive cascades');
+  assert.doesNotMatch(sql, /create policy[\s\S]*using \(true\)/, 'no broad allow-all policy');
+});
+
+test('game scope, assignments, immutable submissions, and exact verification boundaries are explicit', () => {
+  assert.match(sql, /foreign key \(round_id, tournament_id, event_id\) references app\.rounds/);
+  assert.match(sql, /foreign key \(side_a_participant_id, event_id, tournament_id\) references app\.event_participants/);
+  assert.match(sql, /foreign key \(side_b_participant_id, event_id, tournament_id\) references app\.event_participants/);
+  assert.match(sql, /check \(side_a_participant_id <> side_b_participant_id\)/);
+  assert.match(sql, /unique \(event_id, round_id, match_instance, side_low_participant_id, side_high_participant_id\)/);
+  assert.match(sql, /submission_slot smallint not null check \(submission_slot in \(1, 2\)\)/);
+  assert.match(sql, /unique \(canonical_game_id, submission_slot\)/);
+  assert.match(sql, /unique \(canonical_game_id, submitter_profile_id\)/);
+  assert.match(sql, /winner_side text not null/);
+  assert.match(sql, /margin integer not null check \(margin between 1 and 121\)/);
+  assert.match(sql, /score_submissions_immutable/);
+  assert.match(sql, /unique \(canonical_game_id, confirmation_actor_id\)/);
+  assert.match(sql, /foreign key \(submission_id, canonical_game_id, submission_actor_id\) references app\.score_submissions/);
+  assert.doesNotMatch(sql, /confirmation_actor_id <> submission_actor_id/, 'self-confirmation remains allowed');
+  assert.match(sql, /state text not null default 'pending' check \(state in \('pending', 'submitted', 'mismatch', 'confirmation_pending', 'verified', 'corrected'\)\)/);
+  assert.match(sql, /pending game cannot have canonical scorelines/);
+  assert.match(sql, /game requires exactly two submissions/);
+  assert.match(sql, /game requires two confirmations/);
+  assert.match(sql, /verified game requires exactly two scorelines/);
+  assert.match(sql, /canonical winner and margin must equal matching submissions/);
+  assert.match(sql, /table_seat_snapshot text not null/);
+  assert.match(sql, /only verified or corrected games can have canonical scorelines/);
+  assert.match(sql, /confirmations must bind two distinct submissions/);
+  assert.match(sql, /submission slots must map to assigned game sides/);
+  assert.match(sql, /reciprocal plus-minus and game points are invalid/);
+  assert.match(sql, /score_confirmations_immutable/);
+  assert.match(sql, /audit_events_immutable/);
+  assert.match(sql, /ruleset_versions_immutable/);
+});
+
+test('scoring, idempotency, and format boundaries are explicit', () => {
+  assert.match(sql, /game_points smallint not null check \(game_points in \(0, 2, 3\)\)/);
+  assert.doesNotMatch(sql, /total_points|net_points|derived_total/);
+  assert.doesNotMatch(sql, /unique \(actor_profile_id, operation_type, target_id, request_hash\)/, 'request hash is compared by future RPC, not a uniqueness key');
+  assert.match(sql, /unique \(actor_profile_id, client_operation_id\)/);
+  assert.match(sql, /response_payload jsonb/);
+  assert.match(sql, /foreign key \(operation_receipt_id, tournament_id\) references app\.operation_receipts/);
+  assert.match(sql, /foreign key \(canonical_game_id, tournament_id\) references app\.canonical_games/);
+  assert.match(sql, /confirmations require two submissions and an eligible game state/);
+  assert.match(sql, /confirmations require matching submission winner and margin/);
+  assert.match(sql, /opponent_participant_id = g\.side_b_participant_id/);
+  assert.match(sql, /is_winner and side <> g\.winner_side/);
+  assert.match(sql, /scoring_method = 'digital' and format = 'standard_singles'/);
+  assert.match(sql, /scoring_method in \('manual', 'imported'\)/);
+  assert.match(sql, /digital_event_requires_approved_ruleset/);
+});
+
+test('deferred constraint functions are security-definer safe for RPC mutations', () => {
+  for (const name of ['revalidate_game', 'revalidate_game_from_scoreline', 'revalidate_game_from_submission', 'revalidate_game_from_confirmation', 'assert_two_submissions_before_verified', 'assert_digital_event_ruleset']) {
+    const functionStart = sql.indexOf(`function app.${name}`);
+    assert.notEqual(functionStart, -1, `${name} exists`);
+    const functionBody = sql.slice(functionStart, functionStart + 500);
+    assert.match(functionBody, /security definer/);
+    assert.match(functionBody, /set search_path = ''/);
+  }
+  assert.match(sql, /revoke all on function app\.revalidate_game\(uuid\) from public, anon, authenticated/);
+});
+
+test('advisor baseline covers listed private-schema foreign keys without opening access', () => {
+  const baseline = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0005_pilot_index_and_advisor_baseline.sql'), 'utf8').toLowerCase();
+  for (const indexName of [
+    'audit_events_actor_profile_id_idx',
+    'audit_events_canonical_game_scope_idx',
+    'audit_events_operation_receipt_scope_idx',
+    'event_participants_event_scope_idx',
+    'operation_conflicts_prior_receipt_id_idx',
+    'score_confirmations_confirmation_actor_id_idx',
+    'score_submissions_submitter_scope_idx',
+    'score_submissions_submitter_profile_id_idx',
+    'tournaments_director_profile_id_idx',
+  ]) assert.match(baseline, new RegExp(`create index if not exists ${indexName}`));
+  assert.match(baseline, /policy-free/);
+  assert.match(baseline, /security-definer rpc/);
+  assert.match(baseline, /magic-link\/otp only/);
+  assert.match(baseline, /before treating[\s\S]*leaked-password[\s\S]*non-applicable/);
+  assert.match(baseline, /enforce passwordless auth/);
+  assert.doesNotMatch(baseline, /grant select on table|create policy/);
+});

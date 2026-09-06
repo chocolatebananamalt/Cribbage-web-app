@@ -1,5 +1,174 @@
 # Project Status
 
+## 2026-09-06 pilot advisor remediation
+
+- Applied `0005_pilot_index_and_advisor_baseline` to the isolated synthetic-data pilot only after focused review. It adds non-unique covering indexes for the advisory foreign keys and does not broaden table, policy, or RPC privileges.
+- Corrected the fresh-schema index names in `0001` to match `0005`, preventing duplicate equivalent indexes on a clean migration replay.
+- The Supabase password-protection advisory remains a release blocker: the current UI is magic-link only, but the hosted Auth password setting has not been independently verified or configured. Production must enforce passwordless Auth or enable leaked-password protection before launch.
+
+## 2026-09-06 Supabase auth scaffolding
+
+- Added pinned `@supabase/supabase-js@2.115.0` and `@supabase/ssr@0.12.6`, fail-closed public environment validation, browser/server cookie-aware client utilities, a minimal email-link sign-in page, and a same-origin-safe `/auth/callback` route.
+- Added `.env.example` with blank public variables only. No secrets, service keys, policies, RPCs, direct public database access, or environment values were added. The existing prototype dashboard route remains available.
+
+## 2026-09-06 Supabase auth review hardening
+
+- Browser/server utilities now pass direct `process.env.NEXT_PUBLIC_*` references for Next bundling while retaining the testable validator. Added Next 16 `src/proxy.ts` claim refresh with cookie propagation and no swallowed errors.
+- Sign-in is invite-only (`shouldCreateUser: false`). Added a server-side tournament DAL membership/role gate and protected dynamic tournament route; unknown or unassigned users receive no tournament data. `.env.example` is explicitly unignored and contains only blank public variables.
+
+## 2026-09-06 Supabase auth blocker remediation
+
+- Added response-aware route-handler cookie propagation for the callback and retained claim-refresh cookie propagation in the Next 16 proxy. Protected membership now uses a narrowly scoped, unapplied `app.get_tournament_role` security-definer function with empty search path, `auth.uid()` membership check, revoked defaults, and an explicit authenticated execute grant only.
+- Safe `next` paths are preserved through sign-in and callback. `.env.example` remains tracked, blank, and credential-free (`a35a1da` latest template correction).
+
+## 2026-09-06 final auth boundary correction
+
+- SSR proxy and callback now preserve refreshed request headers and response cookies. The unapplied membership migration exposes only a public `get_tournament_role` security-definer wrapper with empty search path, fully qualified private-table access, revoked public/anonymous execution, and authenticated execute only; the DAL uses that RPC and never reads `app` tables directly.
+
+## 2026-09-06 Standard Singles game API vertical slice
+
+- Added an unapplied `0003` migration with authenticated SECURITY DEFINER `submit_game_score` and `confirm_game_score` RPCs. They enforce actor assignment/role scope, idempotency replay/conflict detection, matching submissions, two confirmations, and atomic canonical scoreline/game-point derivation without client table grants.
+- Added validated POST handlers at `/api/v1/games/[id]/submissions` and `/api/v1/games/[id]/confirmations`, using `getClaims` and RPCs only. No environment, Supabase project, migration, or deployment was changed.
+
+## 2026-09-06 game API review remediation
+
+- Restricted confirmations to the assigned player confirming their own submission; staff confirmation is not enabled. The second submission now atomically persists `confirmation_pending` for an exact pair or `mismatch` otherwise, with digital/approved/open/checked-in gates.
+- RPCs compute request digests internally, lock the game before idempotency lookup, record accepted receipts and linked audit events, and return structured rejection responses. Routes no longer accept caller-supplied hashes or source methods.
+
+## 2026-09-06 final game API review correction
+
+- Both RPCs now require an open tournament; submission requires an approved digital Standard Singles event and checked-in assigned player, while confirmation rechecks current checked-in assignment and own-submission ownership.
+- Rejection logging is now internal to the authoritative RPC subtransaction: partial mutations roll back, then controlled rejected receipts/audit events are appended without any client-callable logging RPC or false acceptance. `pgcrypto` qualification is recorded from the pilot read-only verification below.
+- Pilot read-only verification confirmed the extension schema is `extensions`; 0001 defaults and 0003 digest/generator calls now use `extensions.gen_random_uuid()` and `extensions.digest()`.
+
+## 2026-09-06 rejection-integrity hardening
+
+- Added an immutable, private `app.operation_conflicts` record for same- or cross-tournament idempotency conflicts and unscoped/unknown-game rejection attempts. It retains the attempted key/hash and any prior receipt ID without an invalid composite reference.
+- Domain validation is now ordered after game lookup where possible; expected domain rejects return stable codes, while unexpected database/audit failures rethrow and are surfaced by routes as generic 503 responses without raw database messages.
+- Added static coverage for conflict retention, immutable audit behavior, structured non-2xx route mapping, and the audit-write failure boundary. Migration 0003 remains unapplied.
+
+## 2026-09-06 idempotency/null-boundary hardening
+
+- Both RPCs now reject required null arguments explicitly, serialize the actor/idempotency-key pair with a transaction advisory lock, and resolve exact replays before mutable tournament/event/assignment eligibility checks after safe game lookup.
+- Stable idempotency conflicts remain separate immutable conflict records; accepted replay responses never receive rejection audit events or mutate state.
+
+## 2026-09-06 PL/pgSQL exception-structure correction
+
+- Corrected the unapplied 0003 RPC draft after the pilot rejected it atomically on PostgreSQL syntax near `exception`: each function now uses one valid `EXCEPTION` clause with `P0001` and `OTHERS` branches. No pilot mutation occurred.
+- Static tests now assert two exception blocks total and both fallback rethrows. No local `psql` parser/client is available, so database parse/apply validation remains pending a controlled integration environment.
+
+## 2026-09-06 pilot trigger security correction
+
+- The pilot's first real 0003 mutation test exposed authenticated execution failure in the deferred submission revalidation trigger (`permission denied for schema app`). Updated the 0001 base trigger/revalidation functions to use `SECURITY DEFINER`, empty `search_path`, fully qualified private-table references, and revoked client execution.
+- Added unapplied `database/migrations/0004_trigger_security_hardening.sql` to correct the already-created pilot schema. No pilot changes were made during this pass.
+
+## 2026-09-06 pilot advisor index baseline
+
+- Added unapplied `database/migrations/0005_pilot_index_and_advisor_baseline.sql` with covering indexes for the advisor-listed private-schema foreign keys, including audit scope, participant/event scope, conflict receipt, confirmation actor, submission ownership, and tournament director references.
+- Mirrored the index coverage in 0001 for fresh database creation. The pilot remains intentionally policy-free/private with revoked direct table DML; only authenticated, auth-checked security-definer RPCs are intended to execute. Authentication is magic-link/OTP only, so leaked-password lint is not applicable.
+
+## 2026-09-06 local schema contract scaffolding
+
+- Added an unapplied local first-draft migration for private Standard Singles core tables, UUID/FK/scope checks, 1–121 margins, 0/2/3 game points, normalized two-side game pairs, forced RLS, and revoked direct `anon`/`authenticated` DML.
+- Added static schema rejection-boundary tests and wired them into `pnpm test`. No Supabase service, auth, routes, policies, RPCs, or production database was changed. Applying the migration remains gated on server authorization policies, integration fixtures, and recovery review.
+
+## 2026-09-06 local schema security redesign
+
+- Reworked the unapplied migration into private `app` schema with `profiles.id` linked to `auth.users`, restrictive non-cascading history/core FKs, composite tournament/event/ruleset/round/game scope, assigned two-sided games, exact two submission slots, immutable winner/margin submissions, submission-bound distinct confirmations, pending-state score guards, game versioning, and actor/operation/target/request-hash idempotency.
+- Updated static schema tests to cover these security and rejection invariants. No Supabase migration, policies, RPCs, auth routes, or services were touched.
+
+## 2026-09-06 second schema review correction
+
+- Expanded the local state model to pending/submitted/mismatch/confirmation_pending/verified/corrected; confirmations now support exactly two distinct actors and allow a player to confirm their own submission. Verified/corrected games require two matching submissions, exactly two reciprocal scorelines, one winner, and two confirmations.
+- Added immutable confirmation/audit protection, audit foreign-key linkage, assigned-side submission linkage, game/scoreline Table/Seat snapshots, approved matching ruleset enforcement for digital events, and corrected idempotency semantics so request-hash comparison remains future RPC logic.
+
+## 2026-09-06 third schema remediation
+
+- Added deferred revalidation after scoreline, submission, and confirmation mutations. Verified/corrected games now require matching submissions, exactly two reciprocal side-mapped scorelines with matching seats/margins and reciprocal Plus/Minus/game points, exactly two distinct submission-bound confirmations, and valid assigned slot/player linkage.
+- Added immutable receipt/ruleset protections, stored replay response payloads, tournament-scoped audit receipt linkage, and retained the migration as local-only/static-test scaffolding.
+
+## 2026-09-06 final score-entry readiness pass
+
+- Added and tested `isScoreEntryReady`: no winner or invalid margin cannot start entry; a valid margin plus selected winner can. Dashboard initial controls remain unpressed and review-disabled.
+- Improved decorative VS contrast/accessibility and corrected direct handoff evidence to 6/6 (outer workspace verification remains 6/6).
+
+## 2026-09-06 final prototype accessibility/CI correction
+
+- Added defensive runtime winner validation; the dashboard starts with no winner selected, keeps both controls unpressed, and disables score review until a winner and valid margin are entered.
+- CI now uses `pnpm verify` only for clean-clone checks; `verify:handoff` remains a mandatory local-only command via `verify:local`. `verify:all` uses pnpm and excludes private handoff verification.
+- Raised essential UI information to 16px minimum, retained 56px keypad targets, strengthened muted/status colors for normal-text contrast, and recorded browser checks at 320/375/1280px plus the unrun 200% zoom limitation.
+
+## 2026-09-06 prototype accessibility and source-boundary pass
+
+- Corrected the demo scorecard so live entry remains visibly `Pending preview · not certified` and is excluded from settled rows, totals, and net calculations. Removed static “saved” behavior.
+- Added signed-net formatting tests, 16px essential labels/table/status targets, 56px keypad targets, `aria-pressed` winner controls, offline-safe system font stack, and the user-authorized `public/branding/acc-logo.jpg` via `next/image`.
+- Added ESLint flat config and lint CI gate. Existing CI score/build/recovery gates remain intact; this pass added lint and did not replace them.
+
+## 2026-09-06 prototype corrective pass
+
+- Corrected score derivation so either selected winner receives 2 game points for a normal win or 3 for an informal skunk-band win; reciprocal Plus/Minus fields remain correct.
+- Added opponent-winner normal/skunk regression coverage, pinned `pnpm@11.19.0`, meaningful `test`/`verify:all` scripts, and CI installation/build/score/recovery gates on Node 24.
+- Recorded dependency/lockfile validation: the lead-added dependency set and `pnpm-lock.yaml` pass frozen install; initial ignored `unrs-resolver` build was narrowly approved via `pnpm-workspace.yaml`; `pnpm audit --audit-level=high` reports no known vulnerabilities.
+
+## 2026-09-06 fresh prototype shell
+
+- Added a bounded Next.js App Router TypeScript prototype under `src/app`: ACC-branded responsive tournament dashboard, large 1–121 score keypad, derived scoring/skunk aid, paper-style scorecard, and static operations/verification/correction/results cards.
+- Added pure score derivation utility and rejection/boundary tests. This shell uses synthetic data only and intentionally has no Supabase, auth, persistence, or production claims.
+- Verified production build, score tests, workspace/handoff checks, and browser behavior at desktop plus a 375px phone viewport. Fixed the phone page-level horizontal overflow found during browser review.
+
+## 2026-09-06 final source-accuracy corrections
+
+- Corrected cross-check staffing to apply per individual table, including the ACC related-couple/significant-other/relative third-checker safeguard only where a qualifying table is affected.
+- Expanded `TR-06` with ACC 2025 Judge Protocols, Rule 10.1(b), Appendix A items 1–3, and existing rules 12.1–12.2, 13.2, and Cross-Checking Guidelines item 20.
+- Removed Muggins disclosure from unresolved gates; retained only event configuration as data to record. Architecture now requires all affected scorelines to update atomically and defines normalized side-pair uniqueness plus explicit rematch/version and replay handling.
+
+## 2026-09-06 second normative requirements hardening
+
+- Tightened hybrid/paper verification to require each assigned player to independently enter and confirm their own paper result using context-only PIN; unavailable players leave the card `PendingCrossCheck`, with no staff substitution absent a future approved exception.
+- Encoded the cited ACC 2025 judge/cross-check baseline, immediate correction semantics, paid-placement amounts, Muggins disclosure, high-non-qualifier fixture, finance gates, non-singles manual/imported boundary, and event-finalization gates.
+- Replaced the architecture summary with a canonical `tournament → event → round → canonical_game → card_scoreline → ...` model, explicit offline security boundary, result versions, finance/attachments, and internal export artifact.
+- Added direct requirement mappings for roles, offline queue security, finalization, flyers, attachments, and financial classification. No production code, imports, credentials, or external services were changed.
+
+## 2026-09-06 normative requirements hardening
+
+- Hardened `docs/product/production-requirements.md` after independent review: added stable requirement IDs and positive/rejection traceability, self-contained registration/check-in/shared-device/seating/dispute/Consolation/template/attachment workflows, exact digital and hybrid actor rules, canonical per-card/match linkage and Rule 12.2 fixture coverage, explicit Pending/Applied correction semantics, judge capacity/self-dispute safeguards, Standard Singles boundary, restricted-hold retention, deletion/backup/restore controls, internal director-assisted export wording, finance/reporting gates, signed-in results default, informal skunk bands, measurable accessibility targets, and rulebook-cache permission gate.
+- Updated `docs/product/requirements.md` so the summary IDs, audience, correction state, canonical score linkage, and export boundary agree with the normative baseline.
+- No production code, imports, credentials, or external services were changed. Remaining requirements are intentionally implementation gates where ACC policy, payout fixtures, retention, copyright, or export schema approval is still absent.
+
+## 2026-09-06 normative production requirements baseline
+
+- Added `docs/product/production-requirements.md` as the self-contained normative baseline for scoring, digital/digital and hybrid/paper state machines, post-verification corrections, authentication, staged full-product delivery, public results, private finance, ACC-ready export, retention uncertainty, and traceability/acceptance gates.
+- Updated `docs/product/requirements.md` to point to the normative baseline while retaining the recovered summary and source map.
+- No production code, imports, credentials, or external services were changed.
+
+## 2026-09-06 requirements reconciliation and production-readiness audit
+
+- Reconciled user-approved scorecard, correction, flyer, results, Q-pool, branding, and ACC-export decisions into `docs/product/requirements.md`; recorded current ACC 2025 scoring, tie-break, and qualification sources.
+- Updated launch planning to reflect the connected GitHub/Vercel project and healthy Supabase project. The only Vercel deployment is a placeholder that returns 404; Supabase has no migrations or public tables.
+- Production implementation has not begun. The next milestone is a fresh accessible branded prototype, followed by an authenticated two-player, dual-confirmed, server-audited vertical slice.
+
+## 2026-09-06 handoff restoration
+
+- Restored the 33-entry ACC handoff ZIP into `imports/acc-handoff-2026-09-05` without overwriting any source material.
+- Ran `scripts/organize-handoff.ps1`; all 32 manifest artifacts and their organized copies match size and SHA-256, with three exact duplicate pairs mapped to shared copies.
+- Verified with the bundled Node 24.19.0 runtime: `tests/workspace.test.mjs` (6/6 passing) and `tests/handoff.test.mjs` (3/3 passing).
+
+## 2026-09-05 model routing
+
+- Added project-specific builder/reviewer routing in `docs/operations/MODEL_ROUTING.md`; Astra is explicitly prohibited.
+- Terra is the default lead, Sol performs focused plan/high-risk review, and bounded mechanical and routine work may use Luna or Mini.
+- Routing never replaces the mandatory verification gates.
+
+## Recovery update: 2026-09-05
+
+ACC_Digital_Tournament_System_CODEX_MAXIMAL_HANDOFF_2026-09-05.zip found in C:/Users/choco/New folder/. All 32 listed artifacts match SHA-256 and size. There are 33 archive entries including the manifest and 29 unique listed artifact contents. Original files are preserved; inventory.json maps organized copies.
+
+Specification v1.1 is the baseline; v1.3 is the latest review prototype. No production backend, database or multi-user engine was recovered. The missing original August transcript is helpful but no longer blocks implementation planning.
+
+Read docs/recovery/REVIEW.md, docs/quality/VERIFICATION.md and docs/operations/LAUNCH_PLAN.md. Next milestone: validate rules and build one tested, authenticated two-player game with atomic verification and audit.
+
+The earlier scaffold notes below are historical and superseded by this recovery update.
+
 ## Current state
 
 - Repository scaffold created.
