@@ -3,7 +3,7 @@
 ## 2026-09-07 score-entry language cleanup
 
 - Removed prototype workflow jargon from the score-entry panel: `FAST ENTRY`, `1 of 3`, and `Derived result`. The panel is now headed simply `Record game result`; after a valid entry it states the plain-language win result with the existing game-points, Plus/Minus, and skunk aid.
-- Added a regression test that rejects those labels and requires the player-facing result wording. Hosted browser verification remains required after the next preview deployment.
+- Added a regression test that rejects those labels and requires the player-facing result wording. `pnpm verify:local` passed (23 application/security tests plus build and local handoff checks), and a signed-in hosted browser rendered the updated score-entry panel from preview deployment `dpl_HYexTAhfWuGrjGtAurEZkutRgJAP`.
 
 ## 2026-09-07 Vercel framework configuration fallback
 
