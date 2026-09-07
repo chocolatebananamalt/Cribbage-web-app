@@ -4,7 +4,7 @@
 
 - Added a repository-owned `vercel.json` declaring the `nextjs` framework. This is the durable equivalent of selecting the Next.js framework preset in the Vercel dashboard and will accompany every Git deployment.
 - `pnpm verify:local` passed: lint, 22 application/security tests, production build, workspace verification, and 6/6 private-handoff checks.
-- Vercel still requires its public environment variables before the authenticated app can connect to the pilot service. The deployment/domain 404 remains independently unverified after this commit is deployed.
+- Vercel deployed commit `f1c57c1` as `dpl_GHHrC2nF2zMuwiKLsDewQhoETKLg` and now routes requests to the app instead of returning its edge-level 404. A direct request reaches the deployment and returns 500 until the required public Supabase environment variables are configured; the domain/routing blocker is therefore resolved, while hosted environment configuration remains a release blocker.
 
 ## 2026-09-06 preview deployment diagnosis
 
