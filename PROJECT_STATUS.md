@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-07 skunk-language requirements reconciliation
+
+- Reconciled the normative requirements with the approved prototype review: player-facing Skunk/Double Skunk/Triple Skunk labels and icons require no disclaimer, while remaining presentation-only and excluded from official calculations, standings, and exports.
+
 ## 2026-09-07 spread-points score-entry label
 
 - Renamed the player-facing `Winning margin` field to `Spread Points`, removed the visible `1–121` range cue, and retained the existing internal 1–121 score validation. The keypad and invalid-entry feedback use the same plain-language wording.

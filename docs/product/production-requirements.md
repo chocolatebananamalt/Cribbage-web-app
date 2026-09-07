@@ -194,7 +194,7 @@ Production release requires a real Supabase test backend, staging/production sep
 
 Measurable accessibility targets: WCAG 2.2 AA color contrast; all primary actions keyboard and screen-reader reachable; focus indicator visible; minimum 44x44 CSS-pixel touch targets (56x56 for keypad controls); body text at least 16px with no loss of function at 200% zoom; score/keypad critical text remains readable at 320px viewport width; and browser tests cover phone (320/375px) and desktop (1280px) layouts. Any target failure is a release defect, not a preference.
 
-Friendly skunk visuals use informal bands only: 31–60 one icon, 61–90 two icons, and 91–121 three icons. The UI MUST display a clear “informal player aid—not ACC scoring terminology” disclaimer and MUST keep these bands out of official calculations/exports.
+Friendly skunk visuals use informal bands only: 31–60 one icon, 61–90 two icons, and 91–121 three icons. The player-facing screen MAY name them `Skunk`, `Double Skunk`, and `Triple Skunk` without an explanatory disclaimer. They MUST remain separate from official calculations, standings, and ACC exports, where only the official 3-game-point skunk outcome is recorded.
 
 ## 11. Acceptance and rejection matrix
 
