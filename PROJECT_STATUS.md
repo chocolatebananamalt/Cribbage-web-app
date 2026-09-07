@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-07 release-readiness audit
+
+- Recorded a current-state, evidence-based release audit in `docs/quality/2026-09-07-release-readiness-audit.md`. The Preview and bounded pilot score API have evidence, but production deployment, real score-entry integration, role views, corrections/disputes, offline/hybrid operation, event/finance/results/export, rule fixtures, and operational exercises remain critical release blockers.
+
 ## 2026-09-07 skunk-language requirements reconciliation
 
 - Reconciled the normative requirements with the approved prototype review: player-facing Skunk/Double Skunk/Triple Skunk labels and icons require no disclaimer, while remaining presentation-only and excluded from official calculations, standings, and exports.
