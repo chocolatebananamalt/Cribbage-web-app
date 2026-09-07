@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-07 score-entry language cleanup
+
+- Removed prototype workflow jargon from the score-entry panel: `FAST ENTRY`, `1 of 3`, and `Derived result`. The panel is now headed simply `Record game result`; after a valid entry it states the plain-language win result with the existing game-points, Plus/Minus, and skunk aid.
+- Added a regression test that rejects those labels and requires the player-facing result wording. Hosted browser verification remains required after the next preview deployment.
+
 ## 2026-09-07 Vercel framework configuration fallback
 
 - Added a repository-owned `vercel.json` declaring the `nextjs` framework. This is the durable equivalent of selecting the Next.js framework preset in the Vercel dashboard and will accompany every Git deployment.

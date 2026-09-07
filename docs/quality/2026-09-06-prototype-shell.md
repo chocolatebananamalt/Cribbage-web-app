@@ -11,6 +11,7 @@
 ## Changes
 
 - Added `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/tournament-dashboard.tsx`, and `src/app/globals.css`.
+- Removed the ambiguous score-entry labels `FAST ENTRY`, `1 of 3`, and `Derived result`. Valid input now presents the outcome directly in player-facing language; a dashboard semantics regression test prevents those labels from returning.
 - Added `src/lib/score.ts`, `tests/score.test.mjs`, `public/branding/acc-logo.jpg`, and `eslint.config.mjs`.
 - Added linting and corrected the static prototype so pending live input is visibly uncertified and excluded from settled scorecard rows/totals/net. Lead setup added the Next.js/React/TypeScript dependencies and `pnpm-lock.yaml`; this pass did not alter dependency versions or the lockfile.
 
