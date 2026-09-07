@@ -4,7 +4,7 @@
 
 - Added a repository-owned `vercel.json` declaring the `nextjs` framework. This is the durable equivalent of selecting the Next.js framework preset in the Vercel dashboard and will accompany every Git deployment.
 - `pnpm verify:local` passed: lint, 22 application/security tests, production build, workspace verification, and 6/6 private-handoff checks.
-- Vercel deployed commit `f1c57c1` as `dpl_GHHrC2nF2zMuwiKLsDewQhoETKLg` and now routes requests to the app instead of returning its edge-level 404. A direct request reaches the deployment and returns 500 until the required public Supabase environment variables are configured; the domain/routing blocker is therefore resolved, while hosted environment configuration remains a release blocker.
+- Vercel deployed commit `f1c57c1` as `dpl_GHHrC2nF2zMuwiKLsDewQhoETKLg` and now routes requests to the app instead of returning its edge-level 404. Preview environment values were then configured and commit `dedcc78` deployed as `dpl_E8EYFwyjaSBrujHKQfFznA3R7TFq`; a signed-in browser independently rendered the full ACC Tournament Desk prototype from that URL. Production remains intentionally separate: it still points at `main`, has no production environment values, and must not be promoted until release gates are complete.
 
 ## 2026-09-06 preview deployment diagnosis
 
