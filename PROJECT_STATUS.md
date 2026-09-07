@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-07 spread-points score-entry label
+
+- Renamed the player-facing `Winning margin` field to `Spread Points`, removed the visible `1–121` range cue, and retained the existing internal 1–121 score validation. The keypad and invalid-entry feedback use the same plain-language wording.
+
 ## 2026-09-07 score-entry language cleanup
 
 - Removed prototype workflow jargon from the score-entry panel: `FAST ENTRY`, `1 of 3`, and `Derived result`. The panel is now headed simply `Record game result`; after a valid entry it states the plain-language win result with the existing game-points, Plus/Minus, and skunk aid.

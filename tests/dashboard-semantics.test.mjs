@@ -17,3 +17,10 @@ test("score entry uses player-facing language without prototype workflow jargon"
   assert.doesNotMatch(source, /Derived result/);
   assert.match(source, /wins by \{score\.margin\}/);
 });
+
+test("score entry calls the entered value Spread Points without exposing its validation range", () => {
+  assert.match(source, />Spread Points<\/label>/);
+  assert.match(source, /aria-label="Spread points keypad"/);
+  assert.doesNotMatch(source, /Winning margin/);
+  assert.doesNotMatch(source, /1–121/);
+});
