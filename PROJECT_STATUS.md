@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-07 Vercel framework configuration fallback
+
+- Added a repository-owned `vercel.json` declaring the `nextjs` framework. This is the durable equivalent of selecting the Next.js framework preset in the Vercel dashboard and will accompany every Git deployment.
+- `pnpm verify:local` passed: lint, 22 application/security tests, production build, workspace verification, and 6/6 private-handoff checks.
+- Vercel still requires its public environment variables before the authenticated app can connect to the pilot service. The deployment/domain 404 remains independently unverified after this commit is deployed.
+
 ## 2026-09-06 preview deployment diagnosis
 
 - Pushed commit `9978f67` to `codex/production-readiness-baseline`. Vercel cloned it, installed the locked dependencies, ran `next build`, and marked preview deployment `dpl_mwbNt8UbRcQF7x6RLZUwadpiNjue` Ready.
