@@ -12,6 +12,10 @@
 - Tightened the Scorecard columns, made the header and two total/summary rows fixed outside the touch-scrolling game rows, retained the requested grouped Game/Spread divider lines only, added signed spread totals, and surfaced red `Verification Pending Entry` beside the card heading.
 - Renamed the Operations option to Seating and added prototype controls for table/seats-per-table capacity, name search, sorting by first/last/card type/current table-seat, and printing the seating list. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted preview `dpl_57LReyrNzTQS13uEWPx5ijZ7Jx75` rendered the revised Score Entry screen without an error overlay; local browser remains intentionally blocked without public Supabase variables.
 
+## 2026-09-07 score-entry keypad refinement
+
+- Reordered the keypad status band to put the entered number on the left, `Spread Points` centered over the keypad, and any Skunk aid on the right. The keypad now ignores a fourth digit while existing 1–121 validation still rejects impossible three-digit entries. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed.
+
 ## 2026-09-07 navigable format-review prototype
 
 - Replaced the static anchor review shell with a navigable local review flow: Score Entry, Review Current Game Result, Scorecard, Operations, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results.
