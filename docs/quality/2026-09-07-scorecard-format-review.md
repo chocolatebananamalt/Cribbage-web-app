@@ -31,6 +31,7 @@ This review-shell change implements the user-approved visual language only. It m
 | Focused high-risk review | Pass with gates recorded: Sol reviewed seating, qualifications, MRP/Q-pool, staff roles, and rulebook boundaries. Prototype text was corrected to avoid official schedule, approval, portal-parity, or payout claims. |
 | Qualifier PDF render | Pass: `scripts/create-qualifiers-pdf.py` produced `output/pdf/qualifiers-summary.pdf`; Poppler render inspection confirmed one readable Letter page with prominent `SAMPLE — NOT OFFICIAL` marking and synthetic-data disclaimer. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after pending-total, left-first print, rulebook, Operations, results, and PDF-sample changes. `pnpm test`: 25 tests. |
+| Hosted Preview desktop | Pass: deployment `dpl_4kb59L4Pn27hbo1RnejZDPqnZuy1` rendered the revised Score Entry view and its five top-level navigation tabs, including Rulebook, with no error overlay. |
 
 ## Limitation
 
