@@ -9,6 +9,10 @@
 - Corrected the deferred game-state invariant to allow exactly one accepted entry in `submitted`, while retaining the two-submission requirement for mismatch, confirmation-pending, verified, and corrected states. Pilot transactions forced deferred constraints and confirmed both the one-entry state and the two-player/two-confirmation verified state with reciprocal +31/−31 scorelines.
 - `pnpm lint`, `pnpm test` (26 tests), `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` passed. Pilot SQL verified an assigned caller receives its constrained context, an unassigned caller receives none, and a verified game refreshes to its authoritative state. Preview deployment `dpl_DVrpjbWYsXYHuwNk1Uokdq3EpUi3` is Ready from commit `414ccd5` with no current runtime error clusters. Independent browser sessions, a seeded real role, and phone/desktop live-route verification remain required before this vertical slice can be called complete.
 
+## 2026-09-08 correction foundation decision
+
+- Recorded the server-side correction boundary before implementation: corrections are immutable separate history, require non-self cross-check authorization, preserve original verification history, default to immediate authority with optional reason, and atomically recompute only the effective canonical/scoreline projections. Pending approval must remain non-authoritative, and published-result corrections fail closed until result versioning exists.
+
 ## 2026-09-07 canonical setup and Events/Flyer foundation
 
 - Confirmed **Events and Flyer** is an event-management/reference area with flyer creation inside it, not a flyer-only operation. It now lists Main Event, Consolation Event, and configured Satellite Events without incorrectly treating Topaz (a location) as an event.
