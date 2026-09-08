@@ -13,6 +13,13 @@
 - Renamed seating columns to `Assigned Table - Seat`; both printed columns now repeat Player, Scorecard, and Assigned Table - Seat headers, use compact `A-5` values, preserve left-column-first pagination, and use one-half-inch print margins.
 - The user recorded permission to cache the full ACC Rulebook. Verified and cached the dated official 64-page 2025 PDF from the ACC rules URL; the Rulebook tab now opens that local copy. This is a prototype asset integration, not an assertion that every rule implementation is complete or current.
 
+## 2026-09-07 continued prototype-format review
+
+- The review flow now shows the pending-opponent notices only after a submitted entry; the fixed total-row notice uses the same 16px red status treatment as the scorecard header and is announced accessibly.
+- Reduced printable seating capacity to 28 entries per column (56 per Letter page) to fit 12-point print with half-inch margins. The prototype keeps the requested left-column-first order and repeats the three compact headers in both columns.
+- Made configured events data-driven in the review layout, including Main, Consy, Canadian Doubles, and a custom satellite sample. Canadian Doubles is now represented as a future team-scorecard workflow, not a manual-only result; actual standings use remains gated on team verification and dated ACC fixtures.
+- Check-in now explicitly holds Table/Seat and permanent ID generation until registration closes. Added a viewable flyer sample and an interactive two-format Rulebook view: Quick Reference, cached 2025 full PDF, and the external official ACC source.
+
 ## 2026-09-07 scorecard ID and Seating review
 
 - Distinguished a permanent player `ID #` (used for scorecard verification throughout the tournament) from each game’s changing Table/Seat assignment. The Score Entry and Review Result screens now display both concepts separately.

@@ -36,6 +36,13 @@ This review-shell change implements the user-approved visual language only. It m
 | ACC Rulebook cache verification | Pass: downloaded the official ACC 2025 Rulebook from the dated ACC source URL. `pdfinfo` reports a 64-page, unencrypted PDF created July 9, 2025; Poppler-rendered first-page inspection matched the ACC green 2025 cover. User-recorded permission for full-rulebook copy/cache is documented in the product decision and requirements. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after total-row placement, header sizing, Game 3 label, assigned-seat print layout, and ACC Rulebook cache changes. `pnpm test`: 25 tests. |
 
+## Continued-review acceptance criteria
+
+1. Pending-opponent messages appear only after the player submits an entry, use a consistent 16px status treatment, and are accessible to assistive technology.
+2. Seating assignment/verification IDs remain unavailable during check-in and are shown as assigned only after registration closes.
+3. The review layout renders all configured event types, including Canadian Doubles as a team-scorecard configuration, without claiming that unimplemented team verification is authoritative.
+4. The Flyer editor opens a viewable sample; the Rulebook area opens an app quick reference, the permitted cached 2025 PDF, and the official external source.
+
 ## Limitation
 
 The Review Result control remains a non-persistent prototype control. This visual review does not claim that the display is wired to the authoritative two-submission/two-confirmation API workflow. A true phone-device/browser pass remains required before this format is accepted as a responsive production design.
