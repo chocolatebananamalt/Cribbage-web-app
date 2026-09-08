@@ -17,6 +17,7 @@ test("score entry uses the approved result wording and rejects an impossible spr
   assert.doesNotMatch(source, /Derived result/);
   assert.match(source, /title="Current Game Results"/);
   assert.match(source, /Game Winner:/);
+  assert.match(source, /marginText \? "Enter a possible spread point number\." : "Enter spread points\."/);
   assert.match(source, /Enter a possible spread point number\./);
   assert.match(source, /won by \{score\.margin\}/);
   assert.match(source, /Main \(\{eventGames\} games\)/);
