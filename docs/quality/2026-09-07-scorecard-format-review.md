@@ -35,6 +35,7 @@ This review-shell change implements the user-approved visual language only. It m
 | Hosted Preview desktop | Pass: deployment `dpl_4kb59L4Pn27hbo1RnejZDPqnZuy1` rendered the revised Score Entry view and its five top-level navigation tabs, including Rulebook, with no error overlay. |
 | ACC Rulebook cache verification | Pass: downloaded the official ACC 2025 Rulebook from the dated ACC source URL. `pdfinfo` reports a 64-page, unencrypted PDF created July 9, 2025; Poppler-rendered first-page inspection matched the ACC green 2025 cover. User-recorded permission for full-rulebook copy/cache is documented in the product decision and requirements. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after total-row placement, header sizing, Game 3 label, assigned-seat print layout, and ACC Rulebook cache changes. `pnpm test`: 25 tests. |
+| Hosted Preview desktop | Pass: deployment `dpl_CazZCcDRaWkRbBycZFPRbpQ5o29p` rendered `GAME 3`, the current score-entry view, and all five top-level navigation tabs without an error overlay. |
 
 ## Continued-review acceptance criteria
 
