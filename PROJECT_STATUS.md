@@ -20,7 +20,7 @@
 
 - Restored left-aligned `Spread Points:` to match `Game Winner:`, centered only the entered value above the keypad, and updated Review Result seating punctuation.
 - Expanded the review prototype with Tournament Setup, Players & Check-In, Table Plan, Judge Desk, Flyer Editor, a print-specific two-column Seating Assignments layout, and a clickable Qualification Preview. The Table Plan visibly identifies an under-filled final table for director review; authoritative rotation/play-through instructions remain gated on an approved ACC fixture.
-- Flyer & Events now presents event editing and flyer generation rather than treating `ACC Sanctioning Fee` or `Ready to Publish` as event states. The qualification preview presents configuration, qualifying-place, MRP, and Q Pool areas before results are final. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed.
+- Flyer & Events now presents event editing and flyer generation rather than treating `ACC Sanctioning Fee` or `Ready to Publish` as event states. The qualification preview presents configuration, qualifying-place, MRP, and Q Pool areas before results are final. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed; hosted preview `dpl_2c7f3rE7zRtVzZkGh4ubkzrE1rLz` rendered the revised Score Entry without an error overlay.
 
 ## 2026-09-07 navigable format-review prototype
 

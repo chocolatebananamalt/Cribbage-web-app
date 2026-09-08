@@ -23,6 +23,7 @@ This review-shell change implements the user-approved visual language only. It m
 | Hosted Preview desktop | Pass: deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the score-entry controls, 12-game grouped scorecard, four navigation sections, and no development error overlay. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after the permanent-ID, fixed-scorecard, and Seating controls update. `pnpm test`: 25 tests. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after keypad, print-layout, and additional operations/results review screens. `pnpm test`: 25 tests. |
+| Hosted Preview desktop | Pass: deployment `dpl_2c7f3rE7zRtVzZkGh4ubkzrE1rLz` rendered the revised Score Entry heading, permanent IDs, current Table/Seat context, and left-aligned `Spread Points:` without a development error overlay. |
 | Hosted Preview desktop | Pass: deployment `dpl_57LReyrNzTQS13uEWPx5ijZ7Jx75` rendered the revised Score Entry screen with permanent IDs and separate current Table/Seat assignments, with no development error overlay. |
 
 ## Limitation
