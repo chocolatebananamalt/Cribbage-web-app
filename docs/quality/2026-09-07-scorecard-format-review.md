@@ -4,11 +4,11 @@
 
 This review-shell change implements the user-approved visual language only. It must:
 
-1. Show `Score Entry` / `Game Result`, `Game Winner:`, and player-facing winner buttons.
+1. Show `Score Entry` / `Current Game Results`, `Game Winner:`, permanent player verification IDs, and changing per-game Table/Seat context.
 2. Show both players’ plain-language result, Game Points, and signed Spread Points after a valid entry, with the skunk indicator in the spread-entry band.
-3. Show a 12-game scorecard with the requested grouped paper-card-inspired headers, player ACC number, Table/Seat, current game, opponent, and no player-facing prototype explanations.
+3. Show a 12-game scorecard with compact grouped paper-card-inspired headers, permanent `ID #`, a vertically scrolling body, and fixed header/total/summary rows without player-facing prototype explanations.
 4. Keep invalid score entry disabled and retain the existing 1–121 validation in program logic.
-5. Provide a reviewable navigation prototype for Score Entry, Review Result, Scorecard, Operations, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results.
+5. Provide a reviewable navigation prototype for Score Entry, Review Result, Scorecard, Operations, Seating, Cross Check, Flyer & Events, Financials, and Results; Seating must support capacity setup, name search, sorting, and printing.
 
 ## Executed checks
 
@@ -20,6 +20,7 @@ This review-shell change implements the user-approved visual language only. It m
 | Hosted Preview desktop | Pass: deployment `dpl_6pYkkG1QrRAjcTH2AMSFWJCzsBR3` rendered the Current Game Results screen, tournament context, keypad, review gate, and top-level screen navigation without a development error overlay. |
 | Browser local preview | Blocked intentionally by missing local public Supabase values: Next proxy refuses to run without the two public environment variables. |
 | Hosted Preview desktop | Pass: deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the score-entry controls, 12-game grouped scorecard, four navigation sections, and no development error overlay. |
+| `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after the permanent-ID, fixed-scorecard, and Seating controls update. `pnpm test`: 25 tests. |
 
 ## Limitation
 

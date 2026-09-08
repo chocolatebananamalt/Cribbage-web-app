@@ -27,19 +27,24 @@ test("scorecard has grouped paper-card headers and touch scrolling", () => {
   assert.match(source, /title="Barb Stevens, HI-296"/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Game<\/th>/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Spread Points<\/th>/);
-  assert.match(source, /<th scope="col">Opponent<\/th>/);
-  assert.match(source, /<th scope="col">Verification<\/th>/);
-  assert.match(source, /<th scope="col">ID Number<\/th>/);
-  assert.match(source, /Net Points/);
-  assert.match(source, /Games Won/);
+  assert.match(source, /rowSpan=\{2\} scope="col">Opponent<span>Name<\/span>/);
+  assert.match(source, /rowSpan=\{2\} scope="col">Verification<span>ID #<\/span>/);
+  assert.match(source, /Net Spread Points/);
+  assert.match(source, /2<\/strong> Games Won/);
+  assert.match(source, /ID #<strong>A-7<\/strong>/);
+  assert.match(source, /Verification Pending Entry/);
   assert.match(styles, /-webkit-overflow-scrolling:touch/);
   assert.match(styles, /touch-action:pan-y/);
+  assert.match(styles, /overflow-x:hidden/);
 });
 
 test("prototype navigation includes review and all requested operational screens", () => {
   assert.match(source, /setScreen\("review"\)/);
   assert.match(source, /title="Review Current Game Result"/);
-  assert.match(source, /title="Seating & Paper Cards"/);
+  assert.match(source, /title="Seating"/);
+  assert.match(source, /Set tables and publish assignments/);
+  assert.match(source, /Search player name/);
+  assert.match(source, /Scorecard type/);
   assert.match(source, /title="Scorecard Review"/);
   assert.match(source, /title="Tournament Events"/);
   assert.match(source, /title="Tournament Financials"/);

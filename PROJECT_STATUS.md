@@ -6,6 +6,12 @@
 - Reworked the scorecard into the requested 12-game, paper-card-inspired grouped header format, with the player ACC number, Table/Seat, current game, opponent, Verification ID #, and Games Won. Removed prototype explanations, initials, loss count, and Checked by from the visible card.
 - Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted Preview deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the revised desktop review shell; a real phone browser pass remains required.
 
+## 2026-09-07 scorecard ID and Seating review
+
+- Distinguished a permanent player `ID #` (used for scorecard verification throughout the tournament) from each game’s changing Table/Seat assignment. The Score Entry and Review Result screens now display both concepts separately.
+- Tightened the Scorecard columns, made the header and two total/summary rows fixed outside the touch-scrolling game rows, retained the requested grouped Game/Spread divider lines only, added signed spread totals, and surfaced red `Verification Pending Entry` beside the card heading.
+- Renamed the Operations option to Seating and added prototype controls for table/seats-per-table capacity, name search, sorting by first/last/card type/current table-seat, and printing the seating list. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Local browser remains intentionally blocked without public Supabase variables; hosted review is recorded separately.
+
 ## 2026-09-07 navigable format-review prototype
 
 - Replaced the static anchor review shell with a navigable local review flow: Score Entry, Review Current Game Result, Scorecard, Operations, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results.
