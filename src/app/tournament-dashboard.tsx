@@ -1,80 +1,50 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Image from "next/image";
+import { useMemo, useState } from "react";
 import { deriveScore, formatSignedNet, isScoreEntryReady } from "../lib/score";
 
 const keypad = [1, 2, 3, 4, 5, 6, 7, 8, 9, "clear", 0, "backspace"] as const;
+const eventGames = 12;
+type Screen = "score" | "review" | "card" | "operations" | "seating" | "corrections" | "flyer" | "finance" | "results";
 
-function SkunkNote({ level }: { level: 0 | 1 | 2 | 3 }) {
-  if (!level) return null;
-  return (
-    <span className="skunk-note" role="status">
-      {"🦨".repeat(level)} {level === 1 ? "Skunk" : level === 2 ? "Double skunk" : "Triple skunk"}
-    </span>
-  );
-}
+function Context() { return <p className="context">Grass Roots · Honolulu, HI<br />Apr. 25, 2025 · Main ({eventGames} games)</p>; }
+function Skunk({ level }: { level: 0 | 1 | 2 | 3 }) { if (!level) return null; return <span className="skunk" role="status">{"🦨".repeat(level)} {level === 1 ? "Skunk" : level === 2 ? "Double skunk" : "Triple skunk"}</span>; }
+function Heading({ label, title, children }: { label: string; title: string; children?: React.ReactNode }) { return <header className="heading"><div><p className="eyebrow">{label}</p><h1>{title}</h1></div>{children ?? <Context />}</header>; }
 
 export function TournamentDashboard() {
-  const [marginText, setMarginText] = useState("");
+  const [screen, setScreen] = useState<Screen>("score");
   const [winner, setWinner] = useState<"player" | "opponent" | null>(null);
-  const parsedMargin = Number(marginText);
-  const score = useMemo(() => {
-    if (!isScoreEntryReady(parsedMargin, winner)) return null;
-    try {
-      return deriveScore(parsedMargin, winner);
-    } catch {
-      return null;
-    }
-  }, [parsedMargin, winner]);
+  const [marginText, setMarginText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const margin = Number(marginText);
+  const score = useMemo(() => { if (!isScoreEntryReady(margin, winner)) return null; try { return deriveScore(margin, winner); } catch { return null; } }, [margin, winner]);
+  const winnerName = winner === "player" ? "Barb Stevens" : "Steve Hall";
+  const loserName = winner === "player" ? "Steve Hall" : "Barb Stevens";
+  const winnerPoints = winner === "player" ? score?.playerGamePoints : score?.opponentGamePoints;
+  const loserPoints = winner === "player" ? score?.opponentGamePoints : score?.playerGamePoints;
+  const choose = (value: "player" | "opponent") => { setWinner(value); setSubmitted(false); };
+  const key = (value: (typeof keypad)[number]) => { setSubmitted(false); if (value === "clear") return setMarginText(""); if (value === "backspace") return setMarginText((old) => old.slice(0, -1)); setMarginText((old) => old === "0" ? String(value) : `${old}${value}`); };
+  const nav = (["score", "card", "operations", "results"] as const);
 
-  function enterKey(key: (typeof keypad)[number]) {
-    if (key === "clear") return setMarginText("");
-    if (key === "backspace") return setMarginText((value) => value.slice(0, -1));
-    setMarginText((value) => (value === "0" ? String(key) : `${value}${key}`));
-  }
+  const resultRows = score && <div className="result-rows"><div><strong>{winnerName} won by {score.margin}</strong><dl><div><dt>Game Points</dt><dd>{winnerPoints}</dd></div><div><dt>Spread Points</dt><dd>+{score.margin}</dd></div></dl></div><div><strong>{loserName} lost by {score.margin}</strong><dl><div><dt>Game Points</dt><dd>{loserPoints}</dd></div><div><dt>Spread Points</dt><dd>-{score.margin}</dd></div></dl></div></div>;
 
-  return (
-    <main className="shell">
-      <header className="topbar">
-        <div className="brand" aria-label="American Cribbage Congress tournament desk">
-          <Image className="brand-logo" src="/branding/acc-logo.jpg" alt="American Cribbage Congress logo" width={1080} height={510} priority />
-          <div><strong>AMERICAN<br />CRIBBAGE CONGRESS</strong><small>TOURNAMENT DESK</small></div>
-        </div>
-        <div className="topbar-meta"><span className="prototype-badge">ROUND 3</span><span>Grass Roots · April 25, 2025</span></div>
-      </header>
-
-      <section className="hero">
-        <div><p className="eyebrow">DIRECTOR VIEW / ROUND 3</p><h1>Keep every table moving.</h1><p className="lede">A senior-friendly tournament desk for registration, scoring, cross-checking, and results.</p></div>
-        <div className="hero-stat"><strong>24</strong><span>players checked in</span><em>2 cards need review</em></div>
-      </section>
-
-      <nav className="section-nav" aria-label="Tournament sections">
-        <a className="active" href="#score">Score Entry</a><a href="#card">Scorecard</a><a href="#operations">Operations</a><a href="#results">Results</a>
-      </nav>
-
-      <div className="dashboard-grid">
-        <section className="panel score-panel" id="score" aria-labelledby="score-title">
-          <div className="panel-heading"><div><p className="eyebrow">SCORE ENTRY</p><h2 id="score-title">Game Result</h2></div><p className="tournament-context">Grass Roots · Honolulu, HI<br />Apr. 25, 2025 · Main</p></div>
-          <div className="matchup"><div><span>Player</span><strong>Barb Stevens</strong><small>Table A · Seat 7</small></div><div className="versus" aria-hidden="true">VS</div><div className="opponent"><span>Opponent</span><strong>Steve Hall</strong><small>Table A · Seat 8</small></div></div>
-          <fieldset className="winner-choice"><legend>Game Winner:</legend><button type="button" aria-pressed={winner === "player"} className={winner === "player" ? "choice selected" : "choice"} onClick={() => setWinner("player")}>Barb won</button><button type="button" aria-pressed={winner === "opponent"} className={winner === "opponent" ? "choice selected" : "choice"} onClick={() => setWinner("opponent")}>Steve won</button></fieldset>
-          <div className="margin-entry"><label htmlFor="margin">Spread Points</label><SkunkNote level={score?.skunkLevel ?? 0} /><output id="margin" aria-live="polite" className={score ? "margin-value" : "margin-value invalid"}>{marginText || "—"}</output></div>
-          <div className="keypad" aria-label="Spread points keypad">{keypad.map((key) => <button type="button" key={key} onClick={() => enterKey(key)} aria-label={key === "backspace" ? "Delete last digit" : key === "clear" ? "Clear spread points" : `Enter ${key}`}>{key === "backspace" ? "⌫" : key === "clear" ? "Clear" : key}</button>)}</div>
-          <div className="derived-result" aria-live="polite">{score ? <div className="result-preview"><div className="result-line"><strong>{winner === "player" ? "Barb Stevens" : "Steve Hall"} won by {score.margin}</strong><dl><div><dt>Game Points</dt><dd>{winner === "player" ? score.playerGamePoints : score.opponentGamePoints}</dd></div><div><dt>Spread Points</dt><dd>{winner === "player" ? `+${score.margin}` : `+${score.margin}`}</dd></div></dl></div><div className="result-line opponent-result"><strong>{winner === "player" ? "Steve Hall" : "Barb Stevens"} lost by {score.margin}</strong><dl><div><dt>Game Points</dt><dd>{winner === "player" ? score.opponentGamePoints : score.playerGamePoints}</dd></div><div><dt>Spread Points</dt><dd>-{score.margin}</dd></div></dl></div></div> : <p className="error-text">{winner ? "Enter a valid whole number." : "Choose the winner to begin score entry."}</p>}</div>
-          <button type="button" className="primary-action" disabled={!score}>Review Result</button>
-        </section>
-
-        <section className="panel card-panel" id="card" aria-labelledby="card-title">
-          <div className="panel-heading"><div><p className="eyebrow">SCORECARD</p><h2 id="card-title">Barb Stevens, HI-296</h2></div><span className="seat-label">TABLE/SEAT <strong>A-7</strong></span></div>
-          <div className="card-meta"><span>Game 3 of 12</span><span>Opponent: Steve Hall</span><span>Grass Roots · Honolulu, HI · Apr. 25, 2025 · Main</span></div>
-          <div className="score-table-wrap"><table><caption className="sr-only">Barb Stevens digital scorecard</caption><thead><tr><th colSpan={2} scope="colgroup">Game</th><th colSpan={2} scope="colgroup">Spread Points</th><th rowSpan={2} scope="col">Opponent</th><th rowSpan={2} scope="col">Verification</th></tr><tr><th scope="col">#</th><th scope="col">Points</th><th scope="col">+</th><th scope="col">−</th><th scope="col">ID #</th></tr></thead><tbody><tr><th scope="row">1</th><td>2</td><td>10</td><td>—</td><td>Steve Hall</td><td>A-8</td></tr><tr><th scope="row">2</th><td>2</td><td>11</td><td>—</td><td>Robin Lee</td><td>B-3</td></tr><tr className="pending-row"><th scope="row">3</th><td>{score ? score.playerGamePoints : "—"}</td><td>{score ? score.playerPlus || "—" : "—"}</td><td>{score ? score.playerMinus || "—" : "—"}</td><td>Steve Hall</td><td>A-8</td></tr>{Array.from({ length: 9 }, (_, index) => <tr key={index + 4}><th scope="row">{index + 4}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>)}</tbody><tfoot><tr><th>Total</th><td>4</td><td>21</td><td>—</td><td colSpan={2}>Net {formatSignedNet(21)}</td></tr></tfoot></table></div>
-          <div className="card-summary"><div><span>Games Won</span><strong>2</strong></div><div><span>Verification</span><strong className="status-text">Pending entry</strong></div></div>
-        </section>
-      </div>
-
-      <section className="summary-section" id="operations" aria-labelledby="operations-title"><div className="section-heading"><div><p className="eyebrow">AT A GLANCE</p><h2 id="operations-title">Tournament operations</h2></div></div><div className="summary-grid"><article className="summary-card"><span className="icon-chip blue">◎</span><div><span>Verification queue</span><strong>18 verified · 2 pending</strong><small>Two independent entries + two confirmations</small></div></article><article className="summary-card"><span className="icon-chip gold">♢</span><div><span>Cross-check desk</span><strong>2 cards need review</strong><small>Self-card corrections are blocked</small></div></article><article className="summary-card"><span className="icon-chip green">✓</span><div><span>Correction policy</span><strong>Immediate by default</strong><small>Director can require reason or approval</small></div></article><article className="summary-card" id="results"><span className="icon-chip coral">↗</span><div><span>Published results</span><strong>Results not published yet</strong><small>24 registered participants</small></div></article></div></section>
-
-      <footer><span>ACC Tournament Desk</span><span>Grass Roots · Honolulu, HI · April 25, 2025</span></footer>
-    </main>
-  );
+  return <main className="shell">
+    <header className="topbar"><div className="brand"><Image className="brand-logo" src="/branding/acc-logo.jpg" alt="American Cribbage Congress logo" width={1080} height={510} priority /><div><strong>AMERICAN<br />CRIBBAGE CONGRESS</strong><small>TOURNAMENT DESK</small></div></div><div className="top-meta"><b>ROUND 3</b><span>Grass Roots · April 25, 2025</span></div></header>
+    <nav className="nav" aria-label="Tournament sections">{nav.map((item) => <button type="button" key={item} className={screen === item || (screen === "review" && item === "score") ? "active" : ""} aria-current={screen === item ? "page" : undefined} onClick={() => setScreen(item)}>{item === "score" ? "Score Entry" : item === "card" ? "Scorecard" : item[0].toUpperCase() + item.slice(1)}</button>)}</nav>
+    <div className="content">
+      {screen === "score" && <section className="panel score" aria-labelledby="score-title"><Heading label="SCORE ENTRY" title="Current Game Results"><Context /></Heading><div className="matchup"><div><span>Player</span><strong>Barb Stevens</strong><small>Table A · Seat 7</small></div><b>VS</b><div><span>Opponent</span><strong>Steve Hall</strong><small>Table A · Seat 8</small></div></div><fieldset><legend>Game Winner:</legend><button type="button" className={winner === "player" ? "pick selected" : "pick"} aria-pressed={winner === "player"} onClick={() => choose("player")}>Barb won</button><button type="button" className={winner === "opponent" ? "pick selected" : "pick"} aria-pressed={winner === "opponent"} onClick={() => choose("opponent")}>Steve won</button></fieldset><div className="entry"><label htmlFor="margin">Spread Points</label><Skunk level={score?.skunkLevel ?? 0} /><output id="margin" className={score ? "number" : "number invalid"}>{marginText || "—"}</output></div><div className="keypad" aria-label="Spread points keypad">{keypad.map((value) => <button type="button" key={value} onClick={() => key(value)} aria-label={value === "clear" ? "Clear spread points" : value === "backspace" ? "Delete last digit" : `Enter ${value}`}>{value === "clear" ? "Clear" : value === "backspace" ? "⌫" : value}</button>)}</div><div className="result">{resultRows ?? <p>{winner ? "Enter a possible spread point number." : "Choose the winner to begin score entry."}</p>}</div><button type="button" className="primary full" disabled={!score} onClick={() => setScreen("review")}>Review Result</button></section>}
+      {screen === "review" && <section className="panel review"><Heading label="SCORE ENTRY" title="Review Current Game Result"><Context /></Heading>{score ? <><p className="game-line">Game 3 · Table/Seat A-7 · Barb Stevens and Steve Hall</p><div className="review-cards">{resultRows}</div><Skunk level={score.skunkLevel} /><div className="actions"><button type="button" className="secondary" onClick={() => setScreen("score")}>Edit Result</button><button type="button" className="primary" onClick={() => setSubmitted(true)}>{submitted ? "Entry Submitted" : "Submit My Entry"}</button></div>{submitted && <p className="status" role="status">Your entry is waiting for Steve’s independent entry.</p>}</> : <p>Return to Score Entry to enter this result.</p>}</section>}
+      {screen === "card" && <section className="panel card"><Heading label="SCORECARD" title="Barb Stevens, HI-296"><p className="seat">TABLE/SEAT<strong>A-7</strong></p></Heading><p className="card-context">Grass Roots · Honolulu, HI · Apr. 25, 2025 · Main ({eventGames} games)</p><div className="table-scroll"><table><caption className="sr-only">Barb Stevens digital scorecard</caption><thead><tr><th colSpan={2} scope="colgroup">Game</th><th colSpan={2} scope="colgroup">Spread Points</th><th scope="col">Opponent</th><th scope="col">Verification</th></tr><tr><th scope="col">#</th><th scope="col">Points</th><th scope="col">+</th><th scope="col">−</th><th scope="col">Name</th><th scope="col">ID Number</th></tr></thead><tbody>{Array.from({ length: eventGames }, (_, index) => { const n = index + 1; const saved = n === 1 ? [2, 10, "—", "Steve Hall", "A-8"] : n === 2 ? [2, 11, "—", "Robin Lee", "B-3"] : null; const current = n === 3; return <tr key={n} className={current ? "current" : undefined}><th scope="row">{n}</th><td>{current && score ? score.playerGamePoints : saved?.[0] ?? "—"}</td><td>{current && score ? score.playerPlus || "—" : saved?.[1] ?? "—"}</td><td>{current && score ? score.playerMinus || "—" : saved?.[2] ?? "—"}</td><td>{current ? "Steve Hall" : saved?.[3] ?? "—"}</td><td>{current ? "A-8" : saved?.[4] ?? "—"}</td></tr>; })}</tbody><tfoot><tr><th>Total</th><td>4</td><td>21</td><td>—</td><td colSpan={2}></td></tr></tfoot></table></div><div className="totals"><div><span>Net Points</span><strong>{formatSignedNet(21)}</strong></div><div><span>Games Won</span><strong>2</strong></div><div><span>Verification</span><strong className="pending">Pending Entry</strong></div></div></section>}
+      {screen === "operations" && <section className="panel operations"><Heading label="TOURNAMENT OPERATIONS" title="Grass Roots"><Context /></Heading><div className="option-grid"><button type="button" onClick={() => setScreen("seating")}><b>⌘</b><strong>Seating & Paper Cards</strong><span>Publish Table/Seat assignments</span></button><button type="button" onClick={() => setScreen("corrections")}><b>♢</b><strong>Cross Check</strong><span>Review scorecards and corrections</span></button><button type="button" onClick={() => setScreen("flyer")}><b>✦</b><strong>Flyer & Events</strong><span>Main, Consy, and satellites</span></button><button type="button" onClick={() => setScreen("finance")}><b>$</b><strong>Financials</strong><span>Fees, pools, expenses, and results</span></button></div></section>}
+      {screen === "seating" && <Feature label="OPERATIONS" title="Seating & Paper Cards" back={() => setScreen("operations")} action="Print Paper Seating List"><List rows={[["Barb Stevens", "Digital scorecard", "A-7"], ["Steve Hall", "Digital scorecard", "A-8"], ["Robin Lee", "Paper scorecard", "B-3"], ["Alex Morgan", "Paper scorecard", "B-4"]]} /></Feature>}
+      {screen === "corrections" && <Feature label="CROSS CHECK" title="Scorecard Review" back={() => setScreen("operations")} action="Open Selected Card"><List rows={[["Table A · Game 3", "Barb Stevens / Steve Hall", "Waiting for entry"], ["Table C · Game 2", "Jordan Patel / Casey Kim", "Correction ready"]]} /></Feature>}
+      {screen === "flyer" && <Feature label="FLYER & EVENTS" title="Tournament Events" back={() => setScreen("operations")} action="Add Satellite Event"><List rows={[["Main", "12 games · April 25", "ACC Sanctioning Fee"], ["Consy", "9 games · April 25", "Ready to publish"], ["Canadian Doubles", "Satellite · April 26", "Ready to publish"]]} /></Feature>}
+      {screen === "finance" && <Feature label="FINANCIALS" title="Tournament Financials" back={() => setScreen("operations")} action="Add Expense"><div className="money"><div><span>Registration received</span><b>$1,200.00</b></div><div><span>ACC Sanctioning Fee</span><b>$120.00</b></div><div><span>Prize pool</span><b>$960.00</b></div><div><span>Unreconciled</span><b>$0.00</b></div></div></Feature>}
+      {screen === "results" && <section className="panel results"><Heading label="RESULTS" title="Grass Roots Results" /><div className="results-head"><div><span>Main</span><strong>Results not published</strong></div><button type="button" className="secondary">View Qualifiers</button></div><List rows={[["Winner", "—", "—"], ["Runner-up", "—", "—"], ["High Non-Qualifier", "—", "—"]]} /></section>}
+    </div><footer><span>ACC Tournament Desk</span><span>Grass Roots · Honolulu, HI · April 25, 2025</span></footer>
+  </main>;
 }
+
+function Feature({ label, title, action, back, children }: { label: string; title: string; action: string; back: () => void; children: React.ReactNode }) { return <section className="panel feature"><Heading label={label} title={title} /><div className="actions"><button type="button" className="secondary" onClick={back}>Back to Operations</button><button type="button" className="primary">{action}</button></div>{children}</section>; }
+function List({ rows }: { rows: string[][] }) { return <div className="list">{rows.map((row) => <div key={row.join("|")}><strong>{row[0]}</strong><span>{row[1]}</span><b>{row[2]}</b></div>)}</div>; }

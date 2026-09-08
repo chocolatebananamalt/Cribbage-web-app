@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const source = readFileSync("src/app/tournament-dashboard.tsx", "utf8");
+const styles = readFileSync("src/app/globals.css", "utf8");
 
 test("dashboard keeps initial winner controls unpressed and review gated", () => {
   assert.match(source, /useState<"player" \| "opponent" \| null>\(null\)/);
@@ -11,29 +12,35 @@ test("dashboard keeps initial winner controls unpressed and review gated", () =>
   assert.match(source, /disabled=\{!score\}/);
 });
 
-test("score entry uses player-facing language without prototype workflow jargon", () => {
+test("score entry uses the approved result wording and rejects an impossible spread", () => {
   assert.doesNotMatch(source, /FAST ENTRY/);
-  assert.doesNotMatch(source, /1 of 3/);
   assert.doesNotMatch(source, /Derived result/);
-  assert.match(source, /won by \{score\.margin\}/);
+  assert.match(source, /title="Current Game Results"/);
   assert.match(source, /Game Winner:/);
-  assert.match(source, /<p className="eyebrow">SCORE ENTRY<\/p><h2 id="score-title">Game Result<\/h2>/);
+  assert.match(source, /Enter a possible spread point number\./);
+  assert.match(source, /won by \{score\.margin\}/);
+  assert.match(source, /Main \(\{eventGames\} games\)/);
 });
 
-test("score entry calls the entered value Spread Points without exposing its validation range", () => {
-  assert.match(source, />Spread Points<\/label>/);
-  assert.match(source, /aria-label="Spread points keypad"/);
-  assert.doesNotMatch(source, /Winning margin/);
-  assert.doesNotMatch(source, /1–121/);
-});
-
-test("scorecard preserves the requested paper-card structure and player-facing labels", () => {
-  assert.match(source, /<p className="eyebrow">SCORECARD<\/p><h2 id="card-title">Barb Stevens, HI-296<\/h2>/);
-  assert.match(source, /Game 3 of 12/);
+test("scorecard has grouped paper-card headers and touch scrolling", () => {
+  assert.match(source, /title="Barb Stevens, HI-296"/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Game<\/th>/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Spread Points<\/th>/);
-  assert.match(source, /<th rowSpan=\{2\} scope="col">Verification<\/th>/);
+  assert.match(source, /<th scope="col">Opponent<\/th>/);
+  assert.match(source, /<th scope="col">Verification<\/th>/);
+  assert.match(source, /<th scope="col">ID Number<\/th>/);
+  assert.match(source, /Net Points/);
   assert.match(source, /Games Won/);
-  assert.doesNotMatch(source, /PAPER-STYLE VIEW/);
-  assert.doesNotMatch(source, /Checked by/);
+  assert.match(styles, /-webkit-overflow-scrolling:touch/);
+  assert.match(styles, /touch-action:pan-y/);
+});
+
+test("prototype navigation includes review and all requested operational screens", () => {
+  assert.match(source, /setScreen\("review"\)/);
+  assert.match(source, /title="Review Current Game Result"/);
+  assert.match(source, /title="Seating & Paper Cards"/);
+  assert.match(source, /title="Scorecard Review"/);
+  assert.match(source, /title="Tournament Events"/);
+  assert.match(source, /title="Tournament Financials"/);
+  assert.match(source, /title="Grass Roots Results"/);
 });

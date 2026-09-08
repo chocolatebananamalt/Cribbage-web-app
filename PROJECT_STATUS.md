@@ -6,6 +6,12 @@
 - Reworked the scorecard into the requested 12-game, paper-card-inspired grouped header format, with the player ACC number, Table/Seat, current game, opponent, Verification ID #, and Games Won. Removed prototype explanations, initials, loss count, and Checked by from the visible card.
 - Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted Preview deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the revised desktop review shell; a real phone browser pass remains required.
 
+## 2026-09-07 navigable format-review prototype
+
+- Replaced the static anchor review shell with a navigable local review flow: Score Entry, Review Current Game Result, Scorecard, Operations, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results.
+- Updated Current Game Results language, the invalid spread-point message, event game-count context, paper-card headers, vertically stacked Net Points/Games Won values, and touch-scrolling scorecard container. The Review Result step is visual/prototype state only and does not bypass server-side independent verification.
+- `pnpm test` (25 tests), `pnpm lint`, and `pnpm build` passed. Hosted preview verification is pending the Git deployment for this revision.
+
 ## 2026-09-07 release-readiness audit
 
 - Recorded a current-state, evidence-based release audit in `docs/quality/2026-09-07-release-readiness-audit.md`. The Preview and bounded pilot score API have evidence, but production deployment, real score-entry integration, role views, corrections/disputes, offline/hybrid operation, event/finance/results/export, rule fixtures, and operational exercises remain critical release blockers.
