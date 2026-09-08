@@ -10,7 +10,7 @@
 
 - Replaced the static anchor review shell with a navigable local review flow: Score Entry, Review Current Game Result, Scorecard, Operations, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results.
 - Updated Current Game Results language, the invalid spread-point message, event game-count context, paper-card headers, vertically stacked Net Points/Games Won values, and touch-scrolling scorecard container. The Review Result step is visual/prototype state only and does not bypass server-side independent verification.
-- `pnpm test` (25 tests), `pnpm lint`, and `pnpm build` passed. Hosted preview verification is pending the Git deployment for this revision.
+- `pnpm test` (25 tests), `pnpm lint`, and `pnpm build` passed. Hosted Preview deployment `dpl_6pYkkG1QrRAjcTH2AMSFWJCzsBR3` rendered the Current Game Results screen and top-level navigation without a development error; a real phone browser pass remains required.
 
 ## 2026-09-07 release-readiness audit
 

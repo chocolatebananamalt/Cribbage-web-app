@@ -17,6 +17,7 @@ This review-shell change implements the user-approved visual language only. It m
 | `pnpm test` | Pass: 25 tests, including the new scorecard header/label regression assertions. |
 | `pnpm build` | Pass: optimized Next.js production build completed. |
 | Expanded screen navigation tests | Pass: Score Entry Review Result, Seating & Paper Cards, Cross Check, Flyer & Events, Financials, and Results are all represented by regression assertions. |
+| Hosted Preview desktop | Pass: deployment `dpl_6pYkkG1QrRAjcTH2AMSFWJCzsBR3` rendered the Current Game Results screen, tournament context, keypad, review gate, and top-level screen navigation without a development error overlay. |
 | Browser local preview | Blocked intentionally by missing local public Supabase values: Next proxy refuses to run without the two public environment variables. |
 | Hosted Preview desktop | Pass: deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the score-entry controls, 12-game grouped scorecard, four navigation sections, and no development error overlay. |
 
