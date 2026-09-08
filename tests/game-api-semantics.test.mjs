@@ -57,6 +57,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
   const confirmationHardening = read('database/migrations/0008_confirmation_eligibility_hardening.sql');
   const contextDal = read('src/lib/games/assigned-game-context.ts');
   const liveScore = read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx');
+  const howTo = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(contextSql, /create or replace function public\.get_assigned_game_context/);
   assert.match(contextSql, /security definer/);
   assert.match(contextSql, /player_participant\.profile_id = auth\.uid\(\)/);
@@ -86,6 +87,10 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(confirmationSource, /event is not approved for digital scoring/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
+  assert.match(liveScore, /Open Start Here \/ How To/);
+  assert.match(howTo, /requireTournamentAccess/);
+  assert.match(howTo, /One paper card and one digital card/);
+  assert.match(howTo, /do not mark them verified by hand/);
   assert.match(liveScore, /\/api\/v1\/games\/\$\{context\.gameId\}\/submissions/);
   assert.match(liveScore, /\/api\/v1\/games\/\$\{context\.gameId\}\/confirmations/);
   assert.doesNotMatch(liveScore, /service_role/);
