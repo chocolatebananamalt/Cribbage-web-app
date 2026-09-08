@@ -153,6 +153,13 @@ begin
     return coalesce(v_existing.response_payload, jsonb_build_object('status', v_existing.outcome));
   end if;
   if not exists (select 1 from app.tournaments where id = v_game.tournament_id and status = 'open') then raise exception using errcode = 'P0001', message = 'tournament is not open'; end if;
+  if not exists (
+    select 1 from app.events e
+    join app.ruleset_versions rv on rv.id = e.ruleset_version_id and rv.tournament_id = e.tournament_id
+    where e.id = v_game.event_id and e.tournament_id = v_game.tournament_id
+      and e.format = 'standard_singles' and e.scoring_method = 'digital'
+      and rv.format = 'standard_singles' and rv.approved_at is not null
+  ) then raise exception using errcode = 'P0001', message = 'event is not approved for digital scoring'; end if;
   select * into v_submission from app.score_submissions where id = p_submission_id and canonical_game_id = p_game_id;
   if not found then raise exception using errcode = 'P0001', message = 'submission not found for game'; end if;
   if v_submission.submitter_profile_id <> v_actor then raise exception using errcode = 'P0001', message = 'only the assigned player may confirm own submission'; end if;

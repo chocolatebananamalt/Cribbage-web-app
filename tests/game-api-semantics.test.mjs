@@ -82,7 +82,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
-  assert.match(read('database/migrations/0003_game_submission_confirmation_rpc.sql'), /event is not approved for digital scoring/);
+  const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];
+  assert.match(confirmationSource, /event is not approved for digital scoring/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
   assert.match(liveScore, /\/api\/v1\/games\/\$\{context\.gameId\}\/submissions/);
