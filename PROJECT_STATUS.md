@@ -167,6 +167,14 @@
 - Added opponent-winner normal/skunk regression coverage, pinned `pnpm@11.19.0`, meaningful `test`/`verify:all` scripts, and CI installation/build/score/recovery gates on Node 24.
 - Recorded dependency/lockfile validation: the lead-added dependency set and `pnpm-lock.yaml` pass frozen install; initial ignored `unrs-resolver` build was narrowly approved via `pnpm-workspace.yaml`; `pnpm audit --audit-level=high` reports no known vulnerabilities.
 
+## 2026-09-07 prototype operations and results review
+
+- Refined the review prototype with a prominent `Verification Pending Opponent Entry` state and a matching total-row notice that verified totals exclude the pending game.
+- Corrected seating print pagination to fill the left column before beginning the right column; the synthetic roster has four entries and is not an actual tournament count.
+- Added a public Rulebook tab with an app-owned quick-reference placeholder and an official dated-link placeholder; it intentionally does not reproduce or cache the ACC rulebook without permission.
+- Added event and repeatable co-director setup cues, a Table C exception-review screen, more precise cross-check language, event-selectable tournament results, and an explicitly synthetic, non-official Main qualifier-report PDF sample.
+- A focused Sol review confirmed that rotation/play-through instructions, MRP/payout calculations, and portal-role parity remain production gates pending dated ACC fixtures and verified portal requirements.
+
 ## 2026-09-06 fresh prototype shell
 
 - Added a bounded Next.js App Router TypeScript prototype under `src/app`: ACC-branded responsive tournament dashboard, large 1–121 score keypad, derived scoring/skunk aid, paper-style scorecard, and static operations/verification/correction/results cards.

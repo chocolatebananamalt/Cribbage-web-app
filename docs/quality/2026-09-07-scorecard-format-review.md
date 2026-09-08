@@ -10,6 +10,9 @@ This review-shell change implements the user-approved visual language only. It m
 4. Keep invalid score entry disabled and retain the existing 1–121 validation in program logic.
 5. Provide a reviewable navigation prototype for Score Entry, Review Result, Scorecard, Operations, Seating, Cross Check, Flyer & Events, Financials, and Results; Seating must support capacity setup, name search, sorting, and printing.
 6. Provide review layouts for tournament setup, player check-in, table-plan exceptions, judge desk, flyer editing, and qualification preview without claiming their prototype controls persist authoritative data.
+7. Keep an entered but unverified game visibly excluded from the scorecard totals; show the reason near both the card status and the totals.
+8. Print active seating data in sort/filter order, filling the left column before the right column, with a simple print-only heading.
+9. Expose a public rulebook route without copying ACC content, and label the qualifier report as a synthetic, non-official sample.
 
 ## Executed checks
 
@@ -25,7 +28,12 @@ This review-shell change implements the user-approved visual language only. It m
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after keypad, print-layout, and additional operations/results review screens. `pnpm test`: 25 tests. |
 | Hosted Preview desktop | Pass: deployment `dpl_2c7f3rE7zRtVzZkGh4ubkzrE1rLz` rendered the revised Score Entry heading, permanent IDs, current Table/Seat context, and left-aligned `Spread Points:` without a development error overlay. |
 | Hosted Preview desktop | Pass: deployment `dpl_57LReyrNzTQS13uEWPx5ijZ7Jx75` rendered the revised Score Entry screen with permanent IDs and separate current Table/Seat assignments, with no development error overlay. |
+| Focused high-risk review | Pass with gates recorded: Sol reviewed seating, qualifications, MRP/Q-pool, staff roles, and rulebook boundaries. Prototype text was corrected to avoid official schedule, approval, portal-parity, or payout claims. |
+| Qualifier PDF render | Pass: `scripts/create-qualifiers-pdf.py` produced `output/pdf/qualifiers-summary.pdf`; Poppler render inspection confirmed one readable Letter page with prominent `SAMPLE — NOT OFFICIAL` marking and synthetic-data disclaimer. |
+| `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after pending-total, left-first print, rulebook, Operations, results, and PDF-sample changes. `pnpm test`: 25 tests. |
 
 ## Limitation
 
 The Review Result control remains a non-persistent prototype control. This visual review does not claim that the display is wired to the authoritative two-submission/two-confirmation API workflow. A true phone-device/browser pass remains required before this format is accepted as a responsive production design.
+
+Table C exception wording is intentionally an information-gathering review layout, not an ACC-authorized play-through instruction. The PDF is a visual sample only; production event reports must be generated only from reconciled, director-approved published results and approved award fixtures.
