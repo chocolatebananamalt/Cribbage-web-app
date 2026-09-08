@@ -84,7 +84,9 @@ begin
     values (p_submission_id, v_game.tournament_id, v_game.event_id, p_game_id, v_actor, v_participant, p_submission_slot, p_winner_side, p_margin, 'digital', v_request_hash);
   select count(*) into v_submission_count from app.score_submissions where canonical_game_id = p_game_id;
   select count(distinct (winner_side, margin)) into v_matching_count from app.score_submissions where canonical_game_id = p_game_id;
-  if v_submission_count = 2 then
+  if v_submission_count = 1 then
+    update app.canonical_games set state = 'submitted', version = version + 1 where id = p_game_id and state = 'pending';
+  elsif v_submission_count = 2 then
     update app.canonical_games set state = case when v_matching_count = 1 then 'confirmation_pending' else 'mismatch' end, version = version + 1 where id = p_game_id;
   end if;
   v_response := jsonb_build_object('status', case when v_submission_count = 2 and v_matching_count = 1 then 'confirmation_pending' when v_submission_count = 2 then 'mismatch' else 'submitted' end, 'game_id', p_game_id, 'submission_id', p_submission_id);

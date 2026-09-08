@@ -55,6 +55,8 @@ test('rejection audit boundary preserves stable codes and does not swallow audit
 test('assigned game context and live score entry stay server-authoritative', () => {
   const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql');
   const confirmationHardening = read('database/migrations/0008_confirmation_eligibility_hardening.sql');
+  const submissionStateHardening = read('database/migrations/0009_submission_state_hardening.sql');
+  const submittedInvariant = read('database/migrations/0010_submitted_state_invariant.sql');
   const contextDal = read('src/lib/games/assigned-game-context.ts');
   const liveScore = read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx');
   const howTo = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
@@ -85,6 +87,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];
   assert.match(confirmationSource, /event is not approved for digital scoring/);
+  assert.match(read('database/migrations/0003_game_submission_confirmation_rpc.sql'), /v_submission_count = 1[\s\S]*?state = 'submitted'/);
+  assert.match(submissionStateHardening, /after insert on app\.score_submissions/);
+  assert.match(submissionStateHardening, /state = 'submitted'/);
+  assert.match(submittedInvariant, /g\.state = 'submitted' and submission_count <> 1/);
+  assert.match(submittedInvariant, /g\.state in \('mismatch', 'confirmation_pending', 'verified', 'corrected'\) and submission_count <> 2/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
   assert.match(liveScore, /Open Start Here \/ How To/);

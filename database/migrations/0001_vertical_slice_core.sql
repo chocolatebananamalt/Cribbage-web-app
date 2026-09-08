@@ -241,7 +241,10 @@ begin
   if confirmation_count > 0 and (select count(distinct (winner_side, margin)) from app.score_submissions where canonical_game_id = game_id) <> 1 then
     raise exception 'confirmations require matching submission winner and margin';
   end if;
-  if g.state in ('submitted', 'mismatch', 'confirmation_pending', 'verified', 'corrected') and submission_count <> 2 then
+  if g.state = 'submitted' and submission_count <> 1 then
+    raise exception 'submitted game requires exactly one submission';
+  end if;
+  if g.state in ('mismatch', 'confirmation_pending', 'verified', 'corrected') and submission_count <> 2 then
     raise exception 'game requires exactly two submissions';
   end if;
   if g.state = 'confirmation_pending' and confirmation_count not in (0, 1) then

@@ -19,6 +19,8 @@ The scope does not certify the full tournament suite, offline queue, director gu
 - The client persists a UUID for both submission ID and idempotency key in session storage for an ambiguous retry. It removes them only after a recognized accepted response or a definitive client rejection, and retains them for network, 5xx, or malformed-success responses.
 - A confirmation eligibility guard rechecks open tournament, digital Standard Singles event, and approved matching ruleset at the database boundary, so a stale direct confirmation cannot finalize after event eligibility changes.
 - Added the `R-GUIDE-01` requirement and the visible score-entry “Playing with one paper card and one digital card” guidance.
+- Added a protected tournament-scoped `Start Here / How To` page for players and directors. It covers hybrid paper/digital entry, check-in, seating and permanent verification-ID publication, and the instruction to leave exceptions pending for authorized review.
+- Corrected the deferred game-state invariant so exactly one accepted submission is valid while a game is `submitted`; two submissions remain mandatory for mismatch, confirmation-pending, verified, and corrected states.
 
 ## Executed evidence
 
@@ -34,7 +36,9 @@ The scope does not certify the full tournament suite, offline queue, director gu
 | Pilot RPC positive read | Pass — a synthetic checked-in assigned actor received only its mismatch-game context, including own submission ID and `canConfirm: false` |
 | Pilot RPC rejection read | Pass — an unassigned synthetic actor received `null` |
 | Pilot function configuration | Pass — SECURITY DEFINER, empty search path, authenticated execute only; no profile/participant identifiers in function source |
-| Higher-risk Sol review | Pass after remediation — four findings on stale confirmation, refresh-time confirmation context, malformed 2xx retry, and verified recovery were fixed; follow-up found and corrected one fresh-schema confirmation eligibility placement issue |
+| Pilot forced-deferred first submission | Pass — an authenticated assigned player’s first accepted submission ended as `submitted`, version 2, with exactly one submission after deferred integrity checks were forced; transaction rolled back |
+| Pilot forced-deferred two-player happy path | Pass — two independently submitted matching 31-point results and two own-entry confirmations ended as `verified`, with two scorelines, 3 total game points, +31 and −31; transaction rolled back |
+| Higher-risk Sol review | Pass after remediation — four findings on stale confirmation, refresh-time confirmation context, malformed 2xx retry, and verified recovery were fixed; follow-up found and corrected one fresh-schema confirmation eligibility placement issue. Final focused review of the one-submission `submitted` state and deferred invariant found no P0/P1 issue. |
 | Hosted Preview | Pass — deployment `dpl_DVrpjbWYsXYHuwNk1Uokdq3EpUi3` is Ready for commit `414ccd5`; its root prototype renders without a runtime error and Vercel reports no runtime error clusters in the one-hour scan |
 
 ## Security/advisor interpretation
