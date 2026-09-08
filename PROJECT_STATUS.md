@@ -10,7 +10,7 @@
 
 - Distinguished a permanent player `ID #` (used for scorecard verification throughout the tournament) from each game’s changing Table/Seat assignment. The Score Entry and Review Result screens now display both concepts separately.
 - Tightened the Scorecard columns, made the header and two total/summary rows fixed outside the touch-scrolling game rows, retained the requested grouped Game/Spread divider lines only, added signed spread totals, and surfaced red `Verification Pending Entry` beside the card heading.
-- Renamed the Operations option to Seating and added prototype controls for table/seats-per-table capacity, name search, sorting by first/last/card type/current table-seat, and printing the seating list. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Local browser remains intentionally blocked without public Supabase variables; hosted review is recorded separately.
+- Renamed the Operations option to Seating and added prototype controls for table/seats-per-table capacity, name search, sorting by first/last/card type/current table-seat, and printing the seating list. `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted preview `dpl_57LReyrNzTQS13uEWPx5ijZ7Jx75` rendered the revised Score Entry screen without an error overlay; local browser remains intentionally blocked without public Supabase variables.
 
 ## 2026-09-07 navigable format-review prototype
 
