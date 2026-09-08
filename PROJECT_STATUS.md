@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-07 canonical setup and Events/Flyer foundation
+
+- Confirmed **Events and Flyer** is an event-management/reference area with flyer creation inside it, not a flyer-only operation. It now lists Main Event, Consolation Event, and configured Satellite Events without incorrectly treating Topaz (a location) as an event.
+- Made **Set Up Tournament** the prototype’s planned canonical data-entry source. It contains prototype options based on observed sanctioning-request tournament/director/venue fields, Main/Consolation/Satellite configuration menus, two co-director entries, and a disabled flyer-import format preview. Future production reuse is explicitly specified for flyer, seating, results, finance, and a director-assisted draft worksheet; no automatic portal submission is claimed without a documented ACC API/import contract.
+- Refined the review surfaces: larger permanent scorecard ID, inline tournament context on seating print, searchable/cached/online Rulebook labels, and category-first results. Regenerated the synthetic qualifier PDF so the winners lead the qualifier order.
+- `pnpm lint`, `pnpm test` (25 tests), `pnpm build`, `pnpm verify`, and `pnpm verify:handoff` passed. Browser phone/desktop and physical-print verification remain pending after deployment.
+
 ## 2026-09-07 score-entry and scorecard format review
 
 - Updated the review shell to use the approved player-facing Score Entry/Game Result language and to preview both players’ game and reciprocal spread entries.

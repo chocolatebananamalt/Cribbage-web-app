@@ -43,6 +43,34 @@ This review-shell change implements the user-approved visual language only. It m
 2. Seating assignment/verification IDs remain unavailable during check-in and are shown as assigned only after registration closes.
 3. The review layout renders all configured event types, including Canadian Doubles as a team-scorecard configuration, without claiming that unimplemented team verification is authoritative.
 4. The Flyer editor opens a viewable sample; the Rulebook area opens an app quick reference, the permitted cached 2025 PDF, and the official external source.
+5. Tournament setup has one reusable, director-confirmed source of information for the event tracker, flyer, seating, results, finance, and a director-assisted draft worksheet aligned to observed fields. It must offer the observed Main/Consolation/Satellite option sets without treating an unverified portal integration as available.
+
+## Continued-review evidence - 2026-09-07
+
+- Updated the visible prototype to keep **Events and Flyer** as the event-management and reference area, with flyer creation as an action inside that area. It is not a flyer-only workflow.
+- Expanded **Set Up Tournament** with prototype options based on the observed tournament/director/venue fields, Main and Consolation styles and game-count menus, six Q-pool types, Satellite style/game/payout menus, two co-director entries, and optional additional request information. The source remains a review representation; it does not save or submit any data.
+- Added the flyer-import format preview. Its input and extraction control are intentionally disabled; production extraction must require director confirmation before it becomes canonical setup data.
+- Results now start from Main Event, Consolation Event, and Satellite Events categories, then reveal event details; the earlier incorrect `Topaz Satellite` example was removed. Canadian Doubles is an available configured Satellite style and remains gated on an approved team-event ruleset and verification workflow before standings use.
+- Made the scorecard’s permanent `ID #` and its value more prominent. The seating print heading now places the tournament context beside `Seating Assignments`; the page targets half-inch margins, compact `A-5` values, repeated headings, and left-column-first ordering (28 entries per column, 56 per Letter-page target).
+- Renamed Rulebook actions to **Quick Reference Search**, **ACC Rulebook Cached**, and **ACC Rulebook Online**. The quick reference now filters app-organized topics; the full cached PDF remains the official-text reading/search destination.
+- Regenerated the synthetic sample qualification PDF so qualifiers begin with the winner and runner-up: Casey Kim, Jordan Patel, then Robin Lee. Poppler page render inspection found one legible Letter page with its `SAMPLE - NOT OFFICIAL` banner.
+
+### Executed checks
+
+| Check | Result |
+|---|---|
+| `pnpm lint` | Pass |
+| `pnpm test` | Pass: 25 tests |
+| `pnpm build` | Pass: Next.js production build |
+| `pnpm verify` | Pass: 6 workspace checks |
+| `pnpm verify:handoff` | Pass: 6 handoff checks |
+| PDF artifact visual inspection | Pass: regenerated `output/pdf/qualifiers-summary.pdf` rendered cleanly with Poppler |
+
+### Limitations
+
+- Browser UI verification at both real phone and desktop sizes is still required after the hosted deployment. The local browser remains deliberately blocked without public Supabase environment values.
+- Print rendering with a full 56-entry page remains an implementation target; the prototype has not yet been printed in a physical browser print dialog.
+- ACC portal submission, flyer field extraction, team scoring, Q-pool calculations, MRP awards, and results calculations are not implemented or approved by this visual prototype. The flyer remains labeled `SAMPLE - SANCTIONING PENDING` until the director has an approval decision.
 
 ## Limitation
 

@@ -47,8 +47,8 @@ def build():
     ]
     qualifiers = [
         ["Qualifier", "Master Rating Points", "Q Pool Award"],
-        ["1. Barb Stevens", "10", "$50.00"],
-        ["2. Steve Hall", "8", "$35.00"],
+        ["1. Casey Kim", "10", "$50.00"],
+        ["2. Jordan Patel", "8", "$35.00"],
         ["3. Robin Lee", "6", "$25.00"],
     ]
 
