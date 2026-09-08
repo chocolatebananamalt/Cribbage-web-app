@@ -9,6 +9,7 @@ This review-shell change implements the user-approved visual language only. It m
 3. Show a 12-game scorecard with compact grouped paper-card-inspired headers, permanent `ID #`, a vertically scrolling body, and fixed header/total/summary rows without player-facing prototype explanations.
 4. Keep invalid score entry disabled and retain the existing 1–121 validation in program logic.
 5. Provide a reviewable navigation prototype for Score Entry, Review Result, Scorecard, Operations, Seating, Cross Check, Flyer & Events, Financials, and Results; Seating must support capacity setup, name search, sorting, and printing.
+6. Provide review layouts for tournament setup, player check-in, table-plan exceptions, judge desk, flyer editing, and qualification preview without claiming their prototype controls persist authoritative data.
 
 ## Executed checks
 
@@ -21,6 +22,7 @@ This review-shell change implements the user-approved visual language only. It m
 | Browser local preview | Blocked intentionally by missing local public Supabase values: Next proxy refuses to run without the two public environment variables. |
 | Hosted Preview desktop | Pass: deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the score-entry controls, 12-game grouped scorecard, four navigation sections, and no development error overlay. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after the permanent-ID, fixed-scorecard, and Seating controls update. `pnpm test`: 25 tests. |
+| `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after keypad, print-layout, and additional operations/results review screens. `pnpm test`: 25 tests. |
 | Hosted Preview desktop | Pass: deployment `dpl_57LReyrNzTQS13uEWPx5ijZ7Jx75` rendered the revised Score Entry screen with permanent IDs and separate current Table/Seat assignments, with no development error overlay. |
 
 ## Limitation

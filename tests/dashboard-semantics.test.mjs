@@ -20,7 +20,8 @@ test("score entry uses the approved result wording and rejects an impossible spr
   assert.match(source, /marginText \? "Enter a possible spread point number\." : "Enter spread points\."/);
   assert.match(source, /Enter a possible spread point number\./);
   assert.match(source, /old\.length >= 3 \? old/);
-  assert.match(source, /<output id="margin"[\s\S]*?<label htmlFor="margin">Spread Points<\/label><Skunk/);
+  assert.match(source, /<label htmlFor="margin">Spread Points:<\/label><output id="margin"[\s\S]*?<Skunk/);
+  assert.match(source, /Game 3 · Barb: Table A \/ Seat 7 · Steve: Table A \/ Seat 8/);
   assert.match(source, /won by \{score\.margin\}/);
   assert.match(source, /Main \(\{eventGames\} games\)/);
 });
@@ -44,9 +45,14 @@ test("prototype navigation includes review and all requested operational screens
   assert.match(source, /setScreen\("review"\)/);
   assert.match(source, /title="Review Current Game Result"/);
   assert.match(source, /title="Seating"/);
-  assert.match(source, /Set tables and publish assignments/);
+  assert.match(source, /Assignments and table plan/);
   assert.match(source, /Search player name/);
   assert.match(source, /Scorecard type/);
+  assert.match(source, /title="Table Plan"/);
+  assert.match(source, /title="Tournament Flyer"/);
+  assert.match(source, /title="Qualification Preview"/);
+  assert.match(source, /PrintableSeatingList/);
+  assert.match(source, /Main, Consy, and Satellites/);
   assert.match(source, /title="Scorecard Review"/);
   assert.match(source, /title="Tournament Events"/);
   assert.match(source, /title="Tournament Financials"/);
