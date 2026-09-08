@@ -15,8 +15,9 @@ This review-shell change implements the user-approved visual language only. It m
 |---|---|
 | `pnpm test` | Pass: 25 tests, including the new scorecard header/label regression assertions. |
 | `pnpm build` | Pass: optimized Next.js production build completed. |
-| Browser local preview | Blocked intentionally by missing local public Supabase values: Next proxy refuses to run without the two public environment variables. Hosted Preview has those values and is the required browser verification target. |
+| Browser local preview | Blocked intentionally by missing local public Supabase values: Next proxy refuses to run without the two public environment variables. |
+| Hosted Preview desktop | Pass: deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the score-entry controls, 12-game grouped scorecard, four navigation sections, and no development error overlay. |
 
 ## Limitation
 
-The Review Result control remains a non-persistent prototype control. This visual review does not claim that the display is wired to the authoritative two-submission/two-confirmation API workflow.
+The Review Result control remains a non-persistent prototype control. This visual review does not claim that the display is wired to the authoritative two-submission/two-confirmation API workflow. A true phone-device/browser pass remains required before this format is accepted as a responsive production design.

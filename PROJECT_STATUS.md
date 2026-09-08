@@ -4,7 +4,7 @@
 
 - Updated the review shell to use the approved player-facing Score Entry/Game Result language and to preview both players’ game and reciprocal spread entries.
 - Reworked the scorecard into the requested 12-game, paper-card-inspired grouped header format, with the player ACC number, Table/Seat, current game, opponent, Verification ID #, and Games Won. Removed prototype explanations, initials, loss count, and Checked by from the visible card.
-- Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests) and `pnpm build` passed. Hosted browser verification remains required after the Preview deployment for this commit is ready.
+- Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted Preview deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the revised desktop review shell; a real phone browser pass remains required.
 
 ## 2026-09-07 release-readiness audit
 
