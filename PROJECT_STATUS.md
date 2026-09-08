@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-07 score-entry and scorecard format review
+
+- Updated the review shell to use the approved player-facing Score Entry/Game Result language and to preview both players’ game and reciprocal spread entries.
+- Reworked the scorecard into the requested 12-game, paper-card-inspired grouped header format, with the player ACC number, Table/Seat, current game, opponent, Verification ID #, and Games Won. Removed prototype explanations, initials, loss count, and Checked by from the visible card.
+- Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests) and `pnpm build` passed. Hosted browser verification remains required after the Preview deployment for this commit is ready.
+
 ## 2026-09-07 release-readiness audit
 
 - Recorded a current-state, evidence-based release audit in `docs/quality/2026-09-07-release-readiness-audit.md`. The Preview and bounded pilot score API have evidence, but production deployment, real score-entry integration, role views, corrections/disputes, offline/hybrid operation, event/finance/results/export, rule fixtures, and operational exercises remain critical release blockers.

@@ -2,7 +2,7 @@
 
 > **Normative baseline:** [production-requirements.md](production-requirements.md) is the authoritative, self-contained production requirements document. This file remains the traceability summary and historical source map; when a summary line and the normative document differ, the normative document and its cited decision/source control.
 
-Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-06. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
+Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-07. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
 
 Precedence: current user decisions and verified current ACC rules; v1.1 specification; v1.3 prototype as illustration; older mockups as history. Flag contradictions.
 
@@ -30,6 +30,9 @@ Precedence: current user decisions and verified current ACC rules; v1.1 specific
 - Current ACC qualifying order is game points, games won, net point spread, plus points, head-to-head (when available), then a one-game playoff. Minus points support net-spread calculation and cross-checking but are not an additional tie-breaker.
 - Cross checkers may correct paper or digital cards other than their own. Corrections use a signed plus/minus control, preserve the prior verification, prior value, editor, and timestamp, and recalculate dependent totals immediately by default without player reconfirmation. A reason is available and optional by default; tournament directors can require a reason and/or an additional cross-checker or director approval, in which case the correction remains pending. Corrections to published results create a new result version.
 - The judge experience includes an in-app searchable quick reference and a link to the dated official ACC rulebook. Cached offline access is preferred but not required.
+- Score Entry presents the tournament context (name, city, date, and event), `Game Result`, `Game Winner:`, and the large Spread Points keypad on one screen. Once both values are present, it previews both cards: winner/loser wording, each player’s Game Points, and reciprocal signed Spread Points. The appropriate player-facing skunk aid appears alongside the entered spread.
+- The digital scorecard keeps the familiar 12-game paper-card hierarchy without copying it exactly: player name followed by ACC number, Table/Seat in the card header, current `Game n of 12`, opponent name, grouped `Game` (#/Points), grouped `Spread Points` (+/-), `Opponent`, and grouped `Verification` (ID #). It displays Games Won, but does not display initials, a loss-count field, or `Checked by` to the player.
+- After registration closes and seating is assigned, digital players receive their Table/Seat in the app. The director, co-director, and authorized administrative staff need a printable/viewable paper-player seating list so that Table/Seat values can be written on and distributed with paper cards. SMS delivery is a future optional notification channel only after consent, a provider, and message-delivery/error requirements are approved; it is not an assumed fallback.
 
 ## Confirmed event, flyer, results, and financial decisions
 
