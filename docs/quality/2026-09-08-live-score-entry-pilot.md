@@ -34,6 +34,8 @@ The scope does not certify the full tournament suite, offline queue, director gu
 | Pilot RPC positive read | Pass — a synthetic checked-in assigned actor received only its mismatch-game context, including own submission ID and `canConfirm: false` |
 | Pilot RPC rejection read | Pass — an unassigned synthetic actor received `null` |
 | Pilot function configuration | Pass — SECURITY DEFINER, empty search path, authenticated execute only; no profile/participant identifiers in function source |
+| Higher-risk Sol review | Pass after remediation — four findings on stale confirmation, refresh-time confirmation context, malformed 2xx retry, and verified recovery were fixed; follow-up found and corrected one fresh-schema confirmation eligibility placement issue |
+| Hosted Preview | Pass — deployment `dpl_DVrpjbWYsXYHuwNk1Uokdq3EpUi3` is Ready for commit `414ccd5`; its root prototype renders without a runtime error and Vercel reports no runtime error clusters in the one-hour scan |
 
 ## Security/advisor interpretation
 
@@ -43,7 +45,7 @@ The pre-existing leaked-password advisory remains unresolved because the user de
 
 ## Remaining limitations
 
-- No real authenticated browser role is seeded in the pilot, so independent two-session submit/confirm and browser phone/desktop checks are not yet evidence.
-- This is not a production deployment. It needs a fresh preview deployment and an independent review before promotion.
+- No real authenticated browser role is seeded in the pilot, so independent two-session submit/confirm and browser phone/desktop checks of the live score route are not yet evidence.
+- This is not a production deployment. The Preview is current, but independent live-route browser sessions are required before any promotion.
 - The brief player hybrid instruction is implemented; the fuller director Start Here guide is specified but not yet implemented.
 - No claim is made that the broader production release is ready.
