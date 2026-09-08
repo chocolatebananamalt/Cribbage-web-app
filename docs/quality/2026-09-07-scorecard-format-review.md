@@ -65,6 +65,7 @@ This review-shell change implements the user-approved visual language only. It m
 | `pnpm verify` | Pass: 6 workspace checks |
 | `pnpm verify:handoff` | Pass: 6 handoff checks |
 | PDF artifact visual inspection | Pass: regenerated `output/pdf/qualifiers-summary.pdf` rendered cleanly with Poppler |
+| Hosted Preview desktop | Pass: deployment `dpl_68JMBS9YFzgGtP7aZmWyrx1USHUK` (commit `77fd8da`) reached `READY`; Chrome rendered the Score Entry panel, senior-sized keypad, permanent IDs, top navigation, and no error overlay. |
 
 ### Limitations
 
