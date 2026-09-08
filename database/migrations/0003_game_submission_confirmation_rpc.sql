@@ -62,6 +62,13 @@ begin
     return coalesce(v_existing.response_payload, jsonb_build_object('status', v_existing.outcome));
   end if;
   if not exists (select 1 from app.tournaments where id = v_game.tournament_id and status = 'open') then raise exception using errcode = 'P0001', message = 'tournament is not open'; end if;
+  if not exists (
+    select 1 from app.events e
+    join app.ruleset_versions rv on rv.id = e.ruleset_version_id and rv.tournament_id = e.tournament_id
+    where e.id = v_game.event_id and e.tournament_id = v_game.tournament_id
+      and e.format = 'standard_singles' and e.scoring_method = 'digital'
+      and rv.format = 'standard_singles' and rv.approved_at is not null
+  ) then raise exception using errcode = 'P0001', message = 'event is not approved for digital scoring'; end if;
   if p_submission_slot not in (1, 2) or p_winner_side not in ('a', 'b') or p_margin not between 1 and 121 then
     raise exception using errcode = 'P0001', message = 'invalid Standard Singles score submission';
   end if;
@@ -181,7 +188,7 @@ begin
   return v_response;
   exception when sqlstate 'P0001' then
     get stacked diagnostics v_error = message_text;
-    v_error_code := case v_error when 'authentication required' then 'authentication_required' when 'required confirmation argument is null' then 'invalid_request' when 'game not found' then 'game_not_found' when 'idempotency conflict' then 'idempotency_conflict' when 'tournament is not open' then 'tournament_closed' when 'submission not found for game' then 'submission_not_found' when 'only the assigned player may confirm own submission' then 'not_submission_owner' when 'assigned player is not currently checked in' then 'not_checked_in' when 'game is not awaiting player confirmations' then 'invalid_game_state' else 'confirmation_rejected' end;
+    v_error_code := case v_error when 'authentication required' then 'authentication_required' when 'required confirmation argument is null' then 'invalid_request' when 'game not found' then 'game_not_found' when 'idempotency conflict' then 'idempotency_conflict' when 'tournament is not open' then 'tournament_closed' when 'event is not approved for digital scoring' then 'event_not_approved' when 'submission not found for game' then 'submission_not_found' when 'only the assigned player may confirm own submission' then 'not_submission_owner' when 'assigned player is not currently checked in' then 'not_checked_in' when 'game is not awaiting player confirmations' then 'invalid_game_state' else 'confirmation_rejected' end;
     insert into app.operation_conflicts (actor_profile_id, game_id, operation_type, attempted_idempotency_key, attempted_request_hash, prior_receipt_id, reason_code)
       values (v_actor, p_game_id, 'confirm_game_score', p_idempotency_key, coalesce(v_request_hash, ''), v_prior_receipt_id, v_error_code);
     if v_actor is not null and v_game.tournament_id is not null and v_prior_receipt_id is null then

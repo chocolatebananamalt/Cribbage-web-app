@@ -48,6 +48,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | R-FLYER-01 | Flyer builder captures event formats, disclosures, payouts/qualifiers, and satellite details | approved flyer renders configured event information and Muggins disclosure | missing required disclosure or unsupported format claim blocks publication |
 | R-ATTACH-01 | Attachments are classified, access-controlled, retained, and linked to event/ledger/result records | allowed attachment is classified and auditable | unsupported type, oversize/private-source upload, wrong role, or unclassified financial evidence is rejected |
 | R-UX-01 | Friendly skunk bands, signed-in audience, cache permission, and measurable accessibility targets are explicit | icons and accessible scorecard pass phone/desktop checks | unofficial labels presented as ACC rules, anonymous access, stale/unpermitted cache, or accessibility failure is rejected |
+| R-GUIDE-01 | Brief in-app Start Here / How To guidance supports players and directors, prioritizing the hybrid paper/digital score flow | assigned player can open plain-language hybrid guidance at score entry; director guidance covers check-in, seating publication, and exceptions | guidance cannot claim a paper transcription, one entry, or one confirmation is verified |
 
 ## 2. Product boundary and release stages
 
@@ -115,6 +116,10 @@ The two entries MUST be independently captured by the two distinct assigned play
 `PaperOrHybridDraft → PlayerAEntryPending + PlayerBEntryPending → BothEntriesSubmitted → ConfirmationAPending/ConfirmationBPending → Verified`.
 
 The paper card is the source artifact and MUST retain its event/card identity. The primary path is: each assigned player independently enters the paper result on a shared or personal device using their context-only PIN, cannot see the other player's entry before comparison, and confirms their own entry. Each entry and confirmation is bound to that assigned player and canonical card/match. A player who is unavailable leaves the result `PendingCrossCheck`; staff may capture paper evidence and record a pending transcription, but staff cannot substitute for that player's entry or confirmation unless a future, separately approved exception is enabled. A dead-phone/shared-device PIN confirms context only; it never grants account access or bypasses these safeguards. Offline entries remain pending until each player's authenticated action reaches the server. If either entry is missing, the result cannot become server-verified. If entries disagree, the result enters `MismatchNeedsCrossCheck` and requires an eligible cross-check/judge workflow; it cannot be resolved by a single staff transcription or local success message.
+
+### 5.3.1 Start Here / How To guidance
+
+The app MUST provide concise, accessible, in-app guidance for players and directors. The player score-entry screen MUST make the hybrid paper/digital sequence available in plain language: each assigned player independently enters the paper result, each confirms their own entry, and the score is official only after both entries match and both confirmations are accepted by the server. It MUST direct an unavailable player or a mismatch to the pending cross-check workflow; it MUST NOT suggest that a director, one player, or a paper card alone can verify a result. The director guide MUST cover the essential operational actions—check-in, closing registration, publishing seating, handling paper cards, and resolving exceptions—and link to the fuller rule/reference material. Guidance is contextual and brief; it does not replace enforcement, audit, or role controls.
 
 ### 5.4 Post-verification correction
 

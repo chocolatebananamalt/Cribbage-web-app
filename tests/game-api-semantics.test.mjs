@@ -52,6 +52,44 @@ test('rejection audit boundary preserves stable codes and does not swallow audit
   assert.doesNotMatch(sql, /record_rejected_game_operation/);
 });
 
+test('assigned game context and live score entry stay server-authoritative', () => {
+  const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql');
+  const confirmationHardening = read('database/migrations/0008_confirmation_eligibility_hardening.sql');
+  const contextDal = read('src/lib/games/assigned-game-context.ts');
+  const liveScore = read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx');
+  assert.match(contextSql, /create or replace function public\.get_assigned_game_context/);
+  assert.match(contextSql, /security definer/);
+  assert.match(contextSql, /player_participant\.profile_id = auth\.uid\(\)/);
+  assert.match(contextSql, /player_participant\.status = 'checked_in'/);
+  assert.match(contextSql, /t\.status = 'open'/);
+  assert.match(contextSql, /rv\.approved_at is not null/);
+  assert.match(contextSql, /e\.format = 'standard_singles'/);
+  assert.match(contextSql, /cg\.state in \('pending', 'submitted', 'confirmation_pending', 'mismatch', 'verified'\)/);
+  assert.match(contextSql, /'ownSubmission', case when own_submission\.id is null then null else jsonb_build_object\('id', own_submission\.id, 'winnerSide', own_submission\.winner_side, 'margin', own_submission\.margin\)/);
+  assert.match(contextSql, /'ownConfirmed', own_confirmation\.id is not null/);
+  assert.match(contextSql, /'canConfirm', cg\.state = 'confirmation_pending'/);
+  assert.match(contextSql, /revoke all on function public\.get_assigned_game_context/);
+  assert.match(contextDal, /data\.tournamentId !== tournamentId/);
+  assert.match(contextDal, /player\.side === data\.opponent\.side/);
+  assert.doesNotMatch(contextSql, /profileId|participantId/);
+  assert.match(liveScore, /Submit My Independent Entry/);
+  assert.match(liveScore, /Confirm My Entry/);
+  assert.match(liveScore, /crypto\.randomUUID\(\)/);
+  assert.match(liveScore, /window\.sessionStorage/);
+  assert.match(liveScore, /operationId\("submission", `id:\$\{fingerprint\}`\)/);
+  assert.match(liveScore, /response\.status < 500/);
+  assert.match(liveScore, /server response was incomplete/);
+  assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
+  assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
+  assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
+  assert.match(read('database/migrations/0003_game_submission_confirmation_rpc.sql'), /event is not approved for digital scoring/);
+  assert.match(liveScore, /canConfirm/);
+  assert.match(liveScore, /Playing with one paper card and one digital card/);
+  assert.match(liveScore, /\/api\/v1\/games\/\$\{context\.gameId\}\/submissions/);
+  assert.match(liveScore, /\/api\/v1\/games\/\$\{context\.gameId\}\/confirmations/);
+  assert.doesNotMatch(liveScore, /service_role/);
+});
+
 test('pilot trigger correction migration hardens existing deferred functions', () => {
   const sql = read('database/migrations/0004_trigger_security_hardening.sql').toLowerCase();
   assert.match(sql, /alter function app\.revalidate_game\(uuid\) security definer/);
