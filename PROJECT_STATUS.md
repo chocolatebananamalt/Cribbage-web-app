@@ -6,6 +6,13 @@
 - Reworked the scorecard into the requested 12-game, paper-card-inspired grouped header format, with the player ACC number, Table/Seat, current game, opponent, Verification ID #, and Games Won. Removed prototype explanations, initials, loss count, and Checked by from the visible card.
 - Recorded the future paper-player seating-list requirement and the consent/provider gate for optional SMS notifications. `pnpm test` (25 tests), `pnpm build`, and `pnpm verify` passed. Hosted Preview deployment `dpl_8Res9v9BjVDAz9P5G4ksqSEs7C7m` rendered the revised desktop review shell; a real phone browser pass remains required.
 
+## 2026-09-07 scorecard totals, seating print, and rulebook cache review
+
+- Moved the pending-opponent notice into the unused right side of the fixed scorecard total row and changed it to `Updated Total Calculations Pending Opponent Entry`; enlarged the stacked Opponent/Verification headers and made the Plus/Minus header symbols match.
+- Changed the top context badge to `GAME 3`; production must advance this only after the current game is server verified.
+- Renamed seating columns to `Assigned Table - Seat`; both printed columns now repeat Player, Scorecard, and Assigned Table - Seat headers, use compact `A-5` values, preserve left-column-first pagination, and use one-half-inch print margins.
+- The user recorded permission to cache the full ACC Rulebook. Verified and cached the dated official 64-page 2025 PDF from the ACC rules URL; the Rulebook tab now opens that local copy. This is a prototype asset integration, not an assertion that every rule implementation is complete or current.
+
 ## 2026-09-07 scorecard ID and Seating review
 
 - Distinguished a permanent player `ID #` (used for scorecard verification throughout the tournament) from each game’s changing Table/Seat assignment. The Score Entry and Review Result screens now display both concepts separately.

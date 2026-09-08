@@ -12,7 +12,8 @@ This review-shell change implements the user-approved visual language only. It m
 6. Provide review layouts for tournament setup, player check-in, table-plan exceptions, judge desk, flyer editing, and qualification preview without claiming their prototype controls persist authoritative data.
 7. Keep an entered but unverified game visibly excluded from the scorecard totals; show the reason near both the card status and the totals.
 8. Print active seating data in sort/filter order, filling the left column before the right column, with a simple print-only heading.
-9. Expose a public rulebook route without copying ACC content, and label the qualifier report as a synthetic, non-official sample.
+9. Expose a public Rulebook route with the permitted cached, dated ACC Rulebook and label the qualifier report as a synthetic, non-official sample.
+10. Place the pending-opponent total notice in the unused total-row right-side cells, keep matching large Plus/Minus header symbols, and print two repeated seating-column headings using compact assigned-seat values and one-half-inch margins.
 
 ## Executed checks
 
@@ -32,6 +33,8 @@ This review-shell change implements the user-approved visual language only. It m
 | Qualifier PDF render | Pass: `scripts/create-qualifiers-pdf.py` produced `output/pdf/qualifiers-summary.pdf`; Poppler render inspection confirmed one readable Letter page with prominent `SAMPLE — NOT OFFICIAL` marking and synthetic-data disclaimer. |
 | `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after pending-total, left-first print, rulebook, Operations, results, and PDF-sample changes. `pnpm test`: 25 tests. |
 | Hosted Preview desktop | Pass: deployment `dpl_4kb59L4Pn27hbo1RnejZDPqnZuy1` rendered the revised Score Entry view and its five top-level navigation tabs, including Rulebook, with no error overlay. |
+| ACC Rulebook cache verification | Pass: downloaded the official ACC 2025 Rulebook from the dated ACC source URL. `pdfinfo` reports a 64-page, unencrypted PDF created July 9, 2025; Poppler-rendered first-page inspection matched the ACC green 2025 cover. User-recorded permission for full-rulebook copy/cache is documented in the product decision and requirements. |
+| `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm verify` | Pass after total-row placement, header sizing, Game 3 label, assigned-seat print layout, and ACC Rulebook cache changes. `pnpm test`: 25 tests. |
 
 ## Limitation
 

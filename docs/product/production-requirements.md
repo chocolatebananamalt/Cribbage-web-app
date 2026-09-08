@@ -138,7 +138,7 @@ An event MUST remain `Open` or `PendingFinalization` until all configured score 
 
 The Judge view MUST provide a searchable in-app quick reference and a link to the dated official ACC rulebook. The app SHOULD cache an approved version before an event, display its effective/source date, and fall back to the online official source when available. A stale or missing cache MUST be disclosed; it MUST NOT silently present an undated rule as current.
 
-Cached rulebook text/PDF is permitted only after separate ACC/copyright permission is recorded for the selected asset and distribution scope. Without that permission, the app may cache only the app-owned quick reference and a link/metadata for the official source.
+Cached rulebook text/PDF is permitted only after separate ACC/copyright permission is recorded for the selected asset and distribution scope. The user recorded this permission on 2026-09-07 for the full ACC Rulebook; the selected asset is the official 2025 edition PDF at `https://www.cribbage.org/NewSite/rules/rulebook_2025.pdf`. The app must retain edition/source metadata and replace it only with a later dated official asset.
 
 ## 7. Events, flyers, Q-pools, and finance
 
