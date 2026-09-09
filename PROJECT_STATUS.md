@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 hosted password-provider release blocker
+
+- A no-account probe using fake credentials found that the active Supabase
+  pilot accepts a password grant and proceeds to credential validation. The
+  app itself remains magic-link-only, but the provider-level password flow is
+  enabled. This is a critical release blocker because it leaves an unreviewed
+  authentication path outside the app UI. See
+  `docs/quality/2026-09-09-password-provider-probe.md`.
+- No account, player data, or secret credential was used. Disabling the hosted
+  Email/Password provider requires an authorized dashboard or management API
+  setting change, which this workspace has not performed.
+
 ## 2026-09-09 passwordless sign-in regression boundary
 
 - Confirmed the application sign-in page uses only Supabase OTP/magic-link
