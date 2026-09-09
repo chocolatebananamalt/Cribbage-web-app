@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-09 full-build and live-pilot recheck
+
+- A fresh full application test pass now has 75 passing checks and a successful
+  Next.js 16 production build. The build enumerates the intended protected
+  application routes and no new local compile, type, or test failure appeared.
+- The connected Supabase pilot is `ACTIVE_HEALTHY` on PostgreSQL 17 and has
+  applied migration `revoke_browser_roster_account_link`. Its current security
+  advisor posture remains the intentionally private model: 40 forced-RLS/no-
+  policy private tables, two narrowly public registration RPCs, and 31
+  authenticated role-checked RPCs. The empty synthetic pilot's unused-index
+  notices are not a reason to remove required integrity indexes before
+  representative-load testing.
+- No unexpected deployment or pilot drift was found. This does not clear the
+  external hosted password-provider blocker or substitute for the missing
+  multi-user, offline/hybrid, results/finance/finalization, ACC-fixture,
+  recovery, accessibility, and simulated-event release gates.
+
 ## 2026-09-09 activation-link raw-value exposure hardening
 
 - A forward-looking identity review found that a normal URL carrying a raw
