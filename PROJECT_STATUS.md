@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 passwordless sign-in regression boundary
+
+- Confirmed the application sign-in page uses only Supabase OTP/magic-link
+  authentication, has no password input, and does not call password sign-in or
+  sign-up APIs. Added a regression assertion that fails if any of those paths
+  appears. The full local suite (74 tests), lint, production build, workspace,
+  and private-handoff checks pass.
+- The hosted Supabase password-provider setting could not be read because the
+  browser-control connection timed out twice before it could inspect the
+  already signed-in dashboard. It remains a non-waivable release verification
+  item; this source-level guard does not claim to prove provider configuration.
+
 ## 2026-09-09 live pilot advisor recheck
 
 - The active pilot is healthy and contains no result-draft migration. Its
