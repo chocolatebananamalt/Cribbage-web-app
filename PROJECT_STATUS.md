@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 registration claim-review contract
+
+- A focused high-risk review established the next `R-REG-01` increment: a director/co-director-only, immutable registration-claim decision queue. It can only mark a claim `approved_for_roster` or `rejected`; it cannot create an Auth account/profile, roster role, event participant, payment record, check-in, seat, or verification ID.
+- Recorded the required same-tournament collision resolution, locking, replay/conflict, receipt/audit, private-data, and rollback acceptance matrix in `docs/decisions/2026-09-09-registration-claim-review-contract.md`. This is an implementation contract, not a claim that the workflow is already built.
+
 ## 2026-09-09 director correction-policy workspace
 
 - Added a protected director/co-director **Correction Policy** screen linked from Score Corrections. It exposes the approved defaults—immediate correction authority and optional reason—and lets an authorized official require a short correction reason and/or one independent approval for future corrections. The database remains authoritative; clients neither read private policy tables nor select a policy version.
