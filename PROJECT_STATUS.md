@@ -4,6 +4,7 @@
 
 - Removed a direct signed-in-browser bypass around the receipt-bound lifecycle API wrappers. Pilot migration `0066` revokes `authenticated` execution on the four superseded check-in, initial-seating, roster-account-link, and event-enrollment writers; their v2 `SECURITY DEFINER` wrappers remain the only callable application mutation boundary.
 - Pilot catalog confirms legacy functions are unavailable to `authenticated`/`anon`, v2 wrappers remain authenticated-only, and unauthenticated v2 calls fail closed. Focused Sol review found no P0/P1. Lint, 71 tests, production build, workspace verification, and private-handoff verification pass. See `docs/quality/2026-09-09-legacy-lifecycle-rpc-exposure.md`.
+- The refreshed meta audit records these closed lifecycle boundaries while keeping all full-product release blockers active; a Ready Preview or green CI is not treated as production certification.
 
 ## 2026-09-09 roster lifecycle API boundary
 

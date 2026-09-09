@@ -149,3 +149,32 @@ was empty.
 This improves `R-ROLE-01` and the private setup portion of `R-REG-01`, but it
 does **not** change any row in the requirement matrix from a release blocker.
 The critical blockers listed above are still current and non-waivable.
+
+## Follow-up audit — lifecycle mutation boundaries
+
+The current branch was re-reviewed at `0d184c5` after adding receipt-bound
+application routes for check-in, initial seating, independent roster-account
+linking, and Standard Singles enrollment. The review found that the original
+four lifecycle writer RPCs remained directly executable by any authenticated
+browser session. Although each writer had a role guard, this bypassed the
+application's stricter request/response receipt binding and left a future
+misuse path.
+
+Migration `0066_revoke_legacy_lifecycle_rpc_execute` closes that path. Pilot
+catalog evidence confirms the four legacy writers are executable by neither
+`anon` nor `authenticated`; only their v2 `SECURITY DEFINER` wrappers remain
+authenticated-callable. The wrappers retain owner access internally and all
+four return SQL `null` for an ineligible caller. The direct application
+routes, their exact response validators, role rechecks, and canonical request
+hashes have focused Sol review evidence with no P0/P1 findings.
+
+Current checks passed: local lint, 71 application tests, production build,
+workspace verification, private-handoff verification, and GitHub's `Verify`
+run `34346969890`. Vercel deployed `0d184c5` as Ready Preview deployment
+`dpl_FeTtt15VxTuP2UZN1VgHhtJG7kqx`.
+
+This closes a concrete future-bypass risk in the implemented lifecycle slice.
+It does not resolve the release-blocker matrix above: the missing operations,
+independent-session evidence, offline/hybrid behavior, results/finance/
+finalization, authoritative fixtures, recovery drills, and accessibility
+evidence remain non-waivable.
