@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 payment-operation recovery hardening
+
+- Applied pilot migration `0043_payment_operation_reconciliation_hardening`. Payment recovery is now bound to current actor, tournament, roster identity, exact record/void operation type, idempotency key, and canonical request hash. This prevents a retry from treating a void as a receipt or otherwise recovering a different financial action.
+- The focused review identified this as a prerequisite P1 before any payment mutation UI. Static regression coverage and `pnpm test` pass; payment actions themselves still require strict routes, opaque retry envelopes, and real-session lifecycle testing.
+
 ## 2026-09-09 protected manual-payment evidence workspace
 
 - Applied pilot migration `0042_roster_payment_workspace`. A dynamic, director/co-director-only payment workspace now displays only private roster display names and immutable manual receipt/void history. It deliberately excludes email, ACC number, balance, paid-in-full/reconciliation claims, registration preference, seating, check-in, scoring, standings, and operational side effects.
