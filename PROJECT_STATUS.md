@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 exact manual-payment response contract
+
+- Manual payment record, void, and retry-recovery paths now accept only their exact migration-defined response shapes. Record and void rejection codes are distinct, so an opposite-operation response can no longer falsely clear a financial retry lock.
+- Focused Sol review found one P1 in the initial response-shape repair and the operation-aware follow-up closed it; final review found no P0/P1. Lint, 65 tests, production build, and diff checks pass locally. See `docs/quality/2026-09-09-payment-response-contract.md`.
+
 ## 2026-09-09 exact correction response contract
 
 - Correction proposal and review routes now accept only their exact, migration-defined response shapes and bind rejection replies to the requested game or correction. Extra/private fields, mixed shapes, unsupported codes, malformed versions, and cross-request replies fail closed instead of being returned to a browser.

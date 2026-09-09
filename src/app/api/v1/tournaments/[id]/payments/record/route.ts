@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { data, error } = await supabase.rpc("record_manual_roster_payment", { p_tournament_id: id, p_roster_entry_id: body.rosterEntryId, p_expected_payment_version: body.expectedPaymentVersion, p_amount_minor: body.amountMinor, p_currency_code: "USD", p_payment_method: body.paymentMethod, p_payment_received_at: body.paymentReceivedAt, p_note: body.note, p_idempotency_key: body.idempotencyKey });
   if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   if (isRecordedPayment(data, body)) return apiJson(data);
-  if (isRejectedPayment(data, body.rosterEntryId)) return apiJson(data, { status: 409 });
+  if (isRejectedPayment(data, body.rosterEntryId, "record_manual_roster_payment")) return apiJson(data, { status: 409 });
   return apiJson({ error: "operation_unavailable" }, { status: 503 });
   });
 }

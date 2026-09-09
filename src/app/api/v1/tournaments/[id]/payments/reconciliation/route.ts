@@ -17,7 +17,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   if (!data || typeof data !== "object" || (data as Record<string, unknown>).authorized !== true || !("result" in (data as Record<string, unknown>))) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   const result = (data as Record<string, unknown>).result;
-  if (result === null || isRecoveredPayment(result, body) || isRejectedPayment(result, body.rosterEntryId)) return apiJson({ result });
+  if (result === null || isRecoveredPayment(result, body) || isRejectedPayment(result, body.rosterEntryId, body.operationType)) return apiJson({ result });
   return apiJson({ error: "operation_unavailable" }, { status: 503 });
   });
 }
