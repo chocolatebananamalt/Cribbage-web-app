@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 legacy lifecycle RPC exposure closure
+
+- Removed a direct signed-in-browser bypass around the receipt-bound lifecycle API wrappers. Pilot migration `0066` revokes `authenticated` execution on the four superseded check-in, initial-seating, roster-account-link, and event-enrollment writers; their v2 `SECURITY DEFINER` wrappers remain the only callable application mutation boundary.
+- Pilot catalog confirms legacy functions are unavailable to `authenticated`/`anon`, v2 wrappers remain authenticated-only, and unauthenticated v2 calls fail closed. Focused Sol review found no P0/P1. Lint, 71 tests, production build, workspace verification, and private-handoff verification pass. See `docs/quality/2026-09-09-legacy-lifecycle-rpc-exposure.md`.
+
 ## 2026-09-09 roster lifecycle API boundary
 
 - Exposed the existing independent roster-account link and pre-seating Standard Singles enrollment transactions through strict same-origin, verified-claims, private/no-store application routes. Pilot migration `0065` provides current-official, exact-receipt wrappers so malformed, stale, cross-operation, missing-receipt, or role-revoked replies fail closed instead of becoming browser success or rejection messages.

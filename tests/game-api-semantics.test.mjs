@@ -191,6 +191,17 @@ test('roster lifecycle writers are same-origin, claims-checked RPC boundaries wi
   assert.doesNotMatch(migration, /(?:insert into|update|delete from) app\./);
 });
 
+test('legacy lifecycle RPCs are not directly executable by signed-in browser sessions', () => {
+  const migration = read('database/migrations/0066_revoke_legacy_lifecycle_rpc_execute.sql');
+  for (const signature of [
+    'record_roster_check_in_event(uuid, uuid, text, text, uuid)',
+    'publish_initial_seating(uuid, smallint, smallint, jsonb, uuid)',
+    'link_roster_entry_to_account(uuid, uuid, uuid, uuid)',
+    'enroll_linked_roster_entry_in_event(uuid, uuid, uuid, uuid)',
+  ]) assert.ok(migration.includes(`revoke execute on function public.${signature} from authenticated;`));
+  assert.doesNotMatch(migration, /grant execute.*authenticated/i);
+});
+
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
