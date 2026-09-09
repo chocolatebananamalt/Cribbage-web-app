@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 reconciliation authorization envelopes
+
+- Applied pilot migration `0057_reconciliation_authorization_envelopes`: correction-policy and roster-promotion retry lookups now distinguish a currently authorized caller with no receipt from a revoked, unauthenticated, malformed, or unauthorized request. The corresponding routes fail closed on any non-authorized envelope and validate returned roster results.
+- `pnpm test` (60) and the production build pass. Full release verification and focused review remain required before this broader API hardening pass is closed.
+
 ## 2026-09-09 game API response-boundary hardening
 
 - The Standard Singles submission and confirmation routes now reject malformed or cross-bound backend responses instead of reporting a false success. Both routes distinguish an auth-service outage (`503`) from no authenticated subject (`401`), contain thrown external failures, and make every response `private, no-store`.

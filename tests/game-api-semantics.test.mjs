@@ -379,7 +379,7 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(policyRoute, /requiredApprovals/);
   assert.match(policyRoute, /expectedPolicyVersion/);
   assert.match(reconciliationRoute, /get_correction_policy_operation_reconciliation/);
-  assert.match(reconciliationRoute, /getClaims/);
+  assert.match(reconciliationRoute + read('src/lib/api/route-boundary.ts'), /getClaims/);
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /getCorrectionPolicy/);
   assert.match(page, /\['director', 'co_director'\]/);
@@ -483,7 +483,7 @@ test('protected roster interface uses only scoped RPCs and opaque retry storage'
   const reconciliation = read('src/app/api/v1/tournaments/[id]/roster-promotions/reconciliation/route.ts');
   assert.match(page, /requireTournamentAccess/); assert.match(page, /director.*co_director/); assert.match(page, /SharedDeviceSignOut/);
   assert.match(dal, /server-only/); assert.match(dal, /get_tournament_roster_workspace/); assert.doesNotMatch(dal, /\.from\(/);
-  for (const route of [writer, reconciliation]) { assert.match(route, /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
+  for (const route of [writer, reconciliation]) { assert.match(route + read('src/lib/api/route-boundary.ts'), /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
   assert.match(writer, /create_roster_entry_from_registration_claim/); assert.match(reconciliation, /get_roster_promotion_operation_reconciliation/);
   assert.match(client, /registration-operation:roster:/); assert.match(client, /crypto\.randomUUID\(\)/); assert.match(client, /Enable session storage before continuing/);
   assert.match(client, /isAcceptedRosterPromotion/); assert.match(client, /isRejectedRosterPromotion/);
