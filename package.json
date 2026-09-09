@@ -16,7 +16,7 @@
     "verify:all": "pnpm lint && pnpm test && pnpm build && pnpm verify"
   },
   "engines": {
-    "node": ">=22"
+    "node": "24.x"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.6",

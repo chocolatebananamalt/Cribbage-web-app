@@ -22,6 +22,11 @@ test('Supabase auth scaffolding fails closed and does not expose server secrets'
   assert.match(browser, /process\.env\.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY/);
 });
 
+test('deployment runtime is pinned to the tested Node major', () => {
+  const packageJson = JSON.parse(read('package.json'));
+  assert.equal(packageJson.engines.node, '24.x');
+});
+
 test('callback only accepts same-origin relative redirect paths', () => {
   const route = read('src/app/auth/callback/route.ts');
   assert.match(route, /startsWith\("\/\/"\)/);

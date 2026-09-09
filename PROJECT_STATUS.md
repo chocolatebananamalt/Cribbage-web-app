@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-09 deployment runtime pin
+
+- Replaced the open-ended Node engine range (`>=22`) with the tested `24.x` major to prevent Vercel from silently selecting a future Node major. The CI workflow and current local runtime already use Node 24. Added a regression check; lint, 42 tests, and the production build passed.
+
 ## 2026-09-09 shared-device sign-out and clear boundary
 
 - Added a protected-screen **Sign out and clear this device** control to the tournament workspace, live score-entry, correction, and how-to views. It clears only this browser’s application retry/registration artifacts, calls a same-origin, origin-checked server route for **local-only** Supabase sign-out, propagates only Supabase cookie changes, and sends `Clear-Site-Data` for cache/storage before hard replacement to sign-in.
