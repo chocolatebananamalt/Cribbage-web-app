@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 site-wide browser-security headers
+
+- Closed a browser-level defense gap: every Next.js-served route now rejects
+  framing and MIME sniffing, suppresses referrers and DNS prefetch, and denies
+  unused camera, location, microphone, payment, and USB capabilities. The
+  intentionally strict referrer policy also protects current and future
+  bearer-style link flows without changing their server authorization rules.
+- Lint, 77 application tests, the production build, workspace/private-handoff
+  verification, and diff validation pass. Hosted-preview header confirmation
+  remains to be recorded once the Git deployment is Ready; this does not alter
+  the larger non-waivable release blockers.
+
 ## 2026-09-09 local production-build exposure audit
 
 - A release-exposure scan found no tracked credential, private handoff source,

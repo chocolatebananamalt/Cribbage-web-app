@@ -50,6 +50,21 @@ test('deployment runtime is pinned to the tested Node major', () => {
   assert.equal(packageJson.engines.node, '24.x');
 });
 
+test('site-wide browser hardening headers prevent framing, referrer leakage, and unused device access', () => {
+  const config = read('next.config.ts');
+  assert.match(config, /source: "\/:path\*"/);
+  assert.match(config, /X-Content-Type-Options/, 'responses must prevent MIME sniffing');
+  assert.match(config, /value: "nosniff"/);
+  assert.match(config, /X-Frame-Options/, 'the app must not be frameable');
+  assert.match(config, /value: "DENY"/);
+  assert.match(config, /Referrer-Policy/, 'sensitive routes must not send referrers');
+  assert.match(config, /value: "no-referrer"/);
+  assert.match(config, /Permissions-Policy/);
+  assert.match(config, /camera=\(\), geolocation=\(\), microphone=\(\), payment=\(\), usb=\(\)/);
+  assert.match(config, /X-DNS-Prefetch-Control/);
+  assert.match(config, /value: "off"/);
+});
+
 test('callback only accepts same-origin relative redirect paths', () => {
   const route = read('src/app/auth/callback/route.ts');
   assert.match(route, /startsWith\("\/\/"\)/);
