@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 private foreign-key index repair
+
+- Live Supabase performance review found 14 advisor-recommended indexes for private append-only foreign keys. Applied pilot migration `0058_private_foreign_key_indexes`, then reran the advisor: `unindexed_foreign_keys` cleared. Focused independent review found 13 duplicate existing equality paths, so follow-up pilot migration `0059_prune_redundant_private_foreign_key_indexes` removes only those extra indexes and keeps the one unambiguously needed profile lookup index. The final advisor scan deliberately reports the 13 INFO notices again because it recognizes only exact covering definitions; neither migration changes data, access, rules, score, or finance behavior.
+- Empty-pilot unused-index notices remain expected; representative-load/query-plan evidence is still required before capacity claims. See `docs/quality/2026-09-09-private-foreign-key-indexes.md`.
+
 ## 2026-09-09 GitHub release-control audit
 
 - Confirmed that the repository Verify workflow runs the pinned install, lint, tests, production build, and workspace verification on pushes and pull requests; prior reviewed commits passed it.

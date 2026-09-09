@@ -99,3 +99,37 @@ test('advisor baseline covers listed private-schema foreign keys without opening
   assert.match(baseline, /enforce passwordless auth/);
   assert.doesNotMatch(baseline, /grant select on table|create policy/);
 });
+
+test('private append-only foreign keys retain covering indexes without granting access', () => {
+  const indexes = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0058_private_foreign_key_indexes.sql'), 'utf8').toLowerCase();
+  const executableIndexes = indexes.replace(/^--.*$/gm, '');
+  for (const definition of [
+    'initial_seating_assignments_publication_scope_idx\\s+on app\\.initial_seating_assignments\\(publication_id, tournament_id\\)',
+    'initial_seating_assignments_roster_scope_idx\\s+on app\\.initial_seating_assignments\\(roster_entry_id, tournament_id\\)',
+    'initial_seating_publications_receipt_scope_idx\\s+on app\\.initial_seating_publications\\(operation_receipt_id, tournament_id\\)',
+    'roster_account_links_receipt_scope_idx\\s+on app\\.roster_account_links\\(operation_receipt_id, tournament_id\\)',
+    'roster_account_links_profile_id_idx\\s+on app\\.roster_account_links\\(profile_id\\)',
+    'roster_account_links_roster_scope_idx\\s+on app\\.roster_account_links\\(roster_entry_id, tournament_id\\)',
+    'roster_check_in_events_receipt_scope_idx\\s+on app\\.roster_check_in_events\\(operation_receipt_id, tournament_id\\)',
+    'roster_check_in_events_roster_scope_idx\\s+on app\\.roster_check_in_events\\(roster_entry_id, tournament_id\\)',
+    'tournament_setup_event_versions_revision_scope_idx\\s+on app\\.tournament_setup_event_versions\\(setup_revision_id, tournament_id\\)',
+    'tournament_setup_official_versions_revision_scope_idx\\s+on app\\.tournament_setup_official_versions\\(setup_revision_id, tournament_id\\)',
+    'tournament_setup_operation_conflicts_receipt_scope_idx\\s+on app\\.tournament_setup_operation_conflicts\\(prior_receipt_id, tournament_id, actor_profile_id\\)',
+    'tournament_setup_q_pool_versions_event_scope_idx\\s+on app\\.tournament_setup_q_pool_versions\\(setup_event_version_id, tournament_id, setup_revision_id\\)',
+    'tournament_setup_revisions_receipt_scope_idx\\s+on app\\.tournament_setup_revisions\\(operation_receipt_id, tournament_id\\)',
+    'tournament_setup_revisions_receipt_actor_scope_idx\\s+on app\\.tournament_setup_revisions\\(operation_receipt_id, tournament_id, actor_profile_id\\)',
+  ]) assert.match(executableIndexes, new RegExp(`create index if not exists ${definition}`));
+  assert.doesNotMatch(executableIndexes, /\bgrant\b|\bcreate\s+policy\b|\balter\s+table\b/);
+
+  const pruning = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0059_prune_redundant_private_foreign_key_indexes.sql'), 'utf8').toLowerCase();
+  for (const indexName of [
+    'initial_seating_assignments_publication_scope_idx', 'initial_seating_assignments_roster_scope_idx',
+    'initial_seating_publications_receipt_scope_idx', 'roster_account_links_receipt_scope_idx',
+    'roster_account_links_roster_scope_idx', 'roster_check_in_events_receipt_scope_idx',
+    'roster_check_in_events_roster_scope_idx', 'tournament_setup_event_versions_revision_scope_idx',
+    'tournament_setup_official_versions_revision_scope_idx', 'tournament_setup_operation_conflicts_receipt_scope_idx',
+    'tournament_setup_q_pool_versions_event_scope_idx', 'tournament_setup_revisions_receipt_scope_idx',
+    'tournament_setup_revisions_receipt_actor_scope_idx',
+  ]) assert.match(pruning, new RegExp(`drop index if exists app\\.${indexName}`));
+  assert.doesNotMatch(pruning, /roster_account_links_profile_id_idx|\bgrant\b|\bcreate\s+policy\b|\balter\s+table\b/);
+});
