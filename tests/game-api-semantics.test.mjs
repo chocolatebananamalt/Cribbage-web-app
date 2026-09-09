@@ -804,6 +804,7 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
   const save = read('src/app/api/v1/tournaments/[id]/setup/route.ts');
   const recovery = read('src/app/api/v1/tournaments/[id]/setup/reconciliation/route.ts');
   const validators = read('src/lib/api/setup.ts');
+  const readDecision = read('src/lib/api/setup-read-decision.ts');
   for (const source of [save, recovery]) {
     assert.match(source, /isSameOriginRequest/); assert.match(source, /getClaims/); assert.match(source, /operation_unavailable/);
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
@@ -811,10 +812,10 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
   }
   assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
   assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
-  assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/);
+  assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/); assert.match(save, /decideSetupRead/);
   assert.match(validators, /director_configured_unverified/);
-  assert.match(save, /setup_unavailable/); assert.match(save, /operation_unavailable/); assert.match(save, /invalid_json.*privateNoStore/); assert.match(save, /privateNoStore/);
-  assert.match(recovery, /get_tournament_setup_operation_reconciliation/); assert.match(recovery, /isSetupRecoveryRequest/);
+  assert.match(readDecision, /setup_unavailable/); assert.match(save, /operation_unavailable/); assert.match(save, /invalid_json.*privateNoStore/); assert.match(save, /privateNoStore/); assert.match(save, /catch/);
+  assert.match(recovery, /get_tournament_setup_operation_reconciliation/); assert.match(recovery, /isSetupRecoveryRequest/); assert.match(recovery, /invalid_json.*privateNoStore/); assert.match(recovery, /catch/);
 });
 
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {

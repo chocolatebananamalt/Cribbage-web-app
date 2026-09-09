@@ -69,3 +69,23 @@ and retry-safe browser client, real independent director/co-director sessions,
 real authorized/unauthorized database assertions, concurrency testing, DST
 fold policy, approved ACC option fixtures, and all downstream operational
 workflows remain release gates.
+
+## Focused high-risk review repair
+
+A focused Sol review found no P0 and four P1 issues. All were repaired before
+this boundary was retained:
+
+1. Only the deliberate pair of `null` RPC sentinels now becomes private `404`;
+   a non-null malformed workspace or choices response becomes generic `503`.
+2. The reconciliation route now sends `private, no-store` on every success and
+   failure response, including invalid origin/JSON and unexpected failures.
+3. The read validator now rejects non-contiguous/mismatched history, a current
+   event-count mismatch, duplicate or invalid officials, duplicate Q-pool
+   slots, Q-pools on unsupported event kinds, and duplicate official choices.
+4. Client construction, claim lookup, and RPC promise exceptions are caught
+   and returned only as generic, non-cacheable `503`; a claims-service error is
+   not misrepresented as a signed-out user.
+
+`tests/setup-read-decision.test.mjs` exercises private absence, RPC failure,
+malformed non-null responses, and valid responses through the same decision
+helper used by the route. The full suite now contains 58 passing tests.
