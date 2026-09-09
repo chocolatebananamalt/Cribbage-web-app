@@ -33,8 +33,20 @@ results.
 
 - Serialize creation per event; use a locked, ordered version allocation,
   exact actor/key receipt replay, and conflict evidence for changed retries.
-- Use composite tournament/event foreign keys for every child. Forced RLS and
-  revoked direct privileges remain mandatory.
+- Bind the selected event, source ruleset version, and scoring method in one
+  server-derived composite identity; a same-tournament but different ruleset
+  or scoring method is invalid. Use composite tournament/event/game foreign
+  keys for every child. Forced RLS and revoked direct privileges remain
+  mandatory.
+- Seal the header, complete source-game/scoreline set, canonicalization
+  algorithm version, lowercase-hex manifest hash, blockers, receipt, and
+  audit evidence in one private transaction. Child rows have no independently
+  callable insert path, and the database must reject late, missing, extra, or
+  cross-game rows.
+- Snapshot each game’s two server-held participant identities and enforce the
+  matching live invariants: exactly two reciprocal sides for verified or
+  corrected games, and no result scorelines for unresolved states. A source
+  scoreline must name the same canonical game as its source-game record.
 - The writer is director/co-director scoped, rechecks current role in the
   transaction and at receipt lookup, uses empty `search_path`, and returns
   only opaque draft metadata/counts/blockers.
@@ -44,7 +56,11 @@ results.
 
 ## Proof required before pilot application
 
-Executed database tests must cover cross-tournament denial, non-role and
-revoked-role denial, exact/changed retry, concurrent ordered drafts,
-correction race coherence, stale-source detection, blocker-only behavior, no
-public reads/calculations/artifacts, and rollback fault injection.
+Executed database tests must cover cross-tournament and same-tournament
+wrong-ruleset/method denial, non-role and revoked-role denial, exact/changed
+retry, concurrent ordered drafts, correction race coherence, stale-source
+detection, blocker-only behavior, no public reads/calculations/artifacts, and
+rollback fault injection. They must also reject malformed hashes, late child
+appends, omitted/extra source rows, cross-game scorelines, unrelated
+participants, duplicate sides, and inconsistent verified or unresolved source
+facts.

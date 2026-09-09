@@ -1,5 +1,20 @@
 # Project Status
 
+## 2026-09-09 result-draft integrity review repair
+
+- A focused independent review found that the first local result-draft
+  migration could mix an event with a different same-tournament ruleset,
+  permitted an unsealed or partial manifest, and did not prove each snapshot
+  scoreline belonged to its source game and exact participants. The private
+  tables themselves were not browser-exposed, but the draft was removed before
+  commit or database application because a numbered migration is not a safe
+  place to defer those integrity controls.
+- The approved result-draft contract and database acceptance gates now require
+  an atomic, server-only writer that binds event/ruleset/method provenance,
+  seals a canonical source manifest and blocker set, and rejects incoherent
+  source facts. No pilot database, public result, export, qualifier, payout,
+  or publication state changed in this repair.
+
 ## 2026-09-09 result-draft integrity foundation
 
 - A focused Sol design review rejected a simplistic result/export record because

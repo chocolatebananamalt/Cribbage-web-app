@@ -8,7 +8,9 @@ before it is applied outside a disposable database:
   evidence in one transaction, with no placement, qualifier, payout,
   finalization, publication, or export fields.
 - It derives event, ruleset, scoring method, canonical games, scorelines, and
-  unresolved state only from locked server rows.
+  unresolved state only from locked server rows, and binds the derived event,
+  ruleset, and scoring method together so no same-tournament substitution is
+  possible.
 - It rejects unauthenticated, cross-tournament, non-official, revoked-role,
   malformed, changed-idempotency, and stale-scope requests.
 - Same-key replay returns the exact stored receipt. Concurrent creates receive
@@ -17,7 +19,13 @@ before it is applied outside a disposable database:
   after manifest, never mixed source facts. A later correction leaves a draft
   immutable and makes its current-source comparison fail.
 - Failure to record any child, receipt, or audit record rolls back all draft
-  rows. Direct `anon` and `authenticated` table access is denied.
+  rows. The canonicalized lowercase-hex hash, complete expected child set,
+  and blocker evidence are sealed atomically; direct `anon` and
+  `authenticated` table access is denied.
+- Database rejection tests prove that no child can be appended after sealing;
+  that each scoreline names its source game and one of its exact participants;
+  and that source-game state, winner, margin, sides, game points, and
+  Plus/Minus facts remain reciprocal and coherent.
 - Missing approved rules, unresolved verification/correction, finance
   reconciliation, or export mapping produce blocker evidence only. They never
   cause official calculation, artifact generation, or publication.
