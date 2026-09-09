@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 protected correction workspace route
+
+- Added the signed-in tournament-scoped correction workspace at `/tournament/[tournamentId]/corrections`. Its server-only data layer accepts only the narrow `get_correction_workspace` RPC shape and never reads private tables directly. The page makes Pending’s no-standings/no-export effect explicit and renders no actionable data if the database returns empty role-scoped collections.
+- `pnpm test` passed with 36 tests, `pnpm lint` passed, and `pnpm build` passed with the protected correction route compiled. Mutation controls, retry UI, real role sessions, and browser verification are deliberate remaining gates; this route alone is not an operational correction workflow.
+
 ## 2026-09-09 protected correction workspace foundation
 
 - Added a private actor-scoped correction workspace read RPC and narrow proposal/review HTTP boundaries. The workspace derives roles server-side, exposes only Draft Standard Singles candidates/pending reviews, excludes a cross checker from their own game and a reviewer from their own edit or either player’s game, and reveals optional reasons only to independently eligible reviewers. Authenticated users retain no direct read access to correction/private-state tables.

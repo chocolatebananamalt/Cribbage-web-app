@@ -307,6 +307,19 @@ test('correction workspace read model is server-scoped and suppresses non-action
   assert.doesNotMatch(workspace, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
 });
 
+test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
+  const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
+  const dal = read('src/lib/corrections/workspace.ts');
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /getCorrectionWorkspace/);
+  assert.match(page, /pending correction does not change scorecards, standings, or exports/i);
+  assert.match(dal, /server-only/);
+  assert.match(dal, /get_correction_workspace/);
+  assert.match(dal, /proposalCandidates/);
+  assert.match(dal, /pendingReviews/);
+  assert.doesNotMatch(dal, /\.from\(/);
+});
+
 test('correction reason limit is enforced inside the private schema', () => {
   const reasonLimit = read('database/migrations/0032_correction_reason_limit.sql');
   assert.match(reasonLimit, /create or replace function app\.enforce_correction_reason_limit/);
