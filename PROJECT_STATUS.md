@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 protected roster-promotion interface
+
+- Added a director/co-director-only roster review page and server-only workspace DAL, plus protected roster-promotion and reconciliation routes. The client calls RPCs only, validates exact accepted/rejected results, and states explicitly that promotion does not create an account, payment, check-in, event enrollment, Table/Seat, or verification ID.
+- Retry storage holds only an opaque decision ID and idempotency key under the existing shared-device-cleared `registration-operation:` prefix. Storage failure blocks submission; recovery reconciles before enabling actions; ambiguous network/5xx/malformed outcomes retain and lock the original request.
+- Focused Sol review found and repaired three P1 retry defects (double-activation envelope replacement, unhandled reconciliation transport failure, and permissive terminal rejection handling). Final re-review found no P0/P1. Lint, 47 tests, and production build pass. Real independent-session/browser and persisted database assertions remain release gates.
+
 ## 2026-09-09 roster workspace recovery boundary
 
 - Applied pilot migration `0039_roster_workspace_reconciliation`. The director/co-director-only roster read model now returns only approved, unpromoted same-tournament claims as promotion candidates, alongside existing private roster entries. It exposes a caller/tournament/decision/idempotency-scoped reconciliation RPC for interrupted roster-promotion requests.

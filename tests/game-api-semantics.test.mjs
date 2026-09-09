@@ -456,6 +456,24 @@ test('registration review and roster foreign keys have advisor-covering indexes'
   assert.doesNotMatch(sql, /grant\\s+|policy|alter table/i);
 });
 
+test('protected roster interface uses only scoped RPCs and opaque retry storage', () => {
+  const page = read('src/app/tournament/[tournamentId]/roster/page.tsx');
+  const dal = read('src/lib/roster/workspace.ts');
+  const client = read('src/app/tournament/[tournamentId]/roster/roster-client.tsx');
+  const writer = read('src/app/api/v1/tournaments/[id]/roster-promotions/route.ts');
+  const reconciliation = read('src/app/api/v1/tournaments/[id]/roster-promotions/reconciliation/route.ts');
+  assert.match(page, /requireTournamentAccess/); assert.match(page, /director.*co_director/); assert.match(page, /SharedDeviceSignOut/);
+  assert.match(dal, /server-only/); assert.match(dal, /get_tournament_roster_workspace/); assert.doesNotMatch(dal, /\.from\(/);
+  for (const route of [writer, reconciliation]) { assert.match(route, /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
+  assert.match(writer, /create_roster_entry_from_registration_claim/); assert.match(reconciliation, /get_roster_promotion_operation_reconciliation/);
+  assert.match(client, /registration-operation:roster:/); assert.match(client, /crypto\.randomUUID\(\)/); assert.match(client, /Enable session storage before continuing/);
+  assert.match(client, /isAcceptedRosterPromotion/); assert.match(client, /isRejectedRosterPromotion/);
+  assert.match(client, /setLocked\(envelope\); void promote\(envelope\)/); assert.match(client, /catch \{ return "unresolved"; \}/);
+  assert.match(client, /response\.status === 409/); assert.match(client, /if \(busy\) return/);
+  assert.match(read('src/lib/api/roster.ts'), /\["authentication_required", "not_director"/);
+  assert.doesNotMatch(client, /sessionStorage[^\n]*(displayName|email|accNumber|intendedPaymentMethod)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
