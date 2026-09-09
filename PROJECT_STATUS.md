@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-09 correction write failure boundary
+
+- Correction proposal and review mutations now use verified-claims failure handling, contain external exceptions, and make every response private and non-cacheable. Their existing strict success/rejection validators remain the authority for accepted responses. Lint, 61 tests, production build, and diff checks pass.
+
 ## 2026-09-09 public registration response boundary
 
 - Public registration now projects only a bounded tournament name from its anonymous RPC; unexpected, malformed, or extra backend fields fail closed. Every public registration outcome is non-cacheable and thrown dependency failures are contained. Local lint, 61 tests, production build, and diff checks pass.

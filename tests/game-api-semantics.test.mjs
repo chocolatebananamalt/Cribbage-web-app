@@ -43,7 +43,7 @@ test('correction API handlers validate request shapes and discriminate accepted 
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
   const reconciliation = read('src/app/api/v1/corrections/[id]/reconciliation/route.ts');
   const contract = read('src/lib/api/correction.ts');
-  for (const source of [proposal, review]) {
+  for (const source of [proposal + read('src/lib/api/route-boundary.ts'), review + read('src/lib/api/route-boundary.ts')]) {
     assert.match(source, /getClaims/);
     assert.match(source, /isUuid/);
     assert.match(source, /idempotencyKey/);
