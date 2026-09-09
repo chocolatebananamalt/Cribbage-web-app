@@ -487,6 +487,7 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   const paymentRecordRoute = read('src/app/api/v1/tournaments/[id]/payments/record/route.ts');
   const paymentVoidRoute = read('src/app/api/v1/tournaments/[id]/payments/void/route.ts');
   const paymentRecoveryRoute = read('src/app/api/v1/tournaments/[id]/payments/reconciliation/route.ts');
+  const paymentClient = read('src/app/tournament/[tournamentId]/payments/payment-client.tsx');
   assert.match(sql, /create table app\.roster_payment_events/);
   assert.match(sql, /event_type text not null check \(event_type in \('received', 'voided'\)\)/);
   assert.match(sql, /amount_minor integer not null check \(amount_minor > 0\)/);
@@ -550,6 +551,16 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.match(paymentPage, /does not mean paid in full, reconciled, checked in, seated, enrolled, or eligible/i);
   assert.match(paymentPage, /SharedDeviceSignOut/);
   assert.doesNotMatch(paymentPage, /entry\.(email|accNumber|balance|paidInFull|reconciled)/i);
+  assert.match(paymentPage, /PaymentClient/);
+  assert.match(paymentClient, /payment-operation:\$\{actorId\}:\$\{tournamentId\}/);
+  assert.match(paymentClient, /clearOtherActors/); assert.match(paymentClient, /crypto\.randomUUID\(\)/); assert.match(paymentClient, /Enable session storage before continuing/);
+  assert.match(paymentClient, /const state = await reconcile/); assert.match(paymentClient, /credentials: "same-origin"/); assert.match(paymentClient, /isRecordedPayment/); assert.match(paymentClient, /isVoidedPayment/);
+  assert.match(paymentClient, /const inFlight = useRef\(false\)/); assert.match(paymentClient, /inFlight\.current = true/);
+  assert.match(paymentClient, /dollarsToMinor/); assert.match(paymentClient, /isPaymentRecordRequest/); assert.match(paymentClient, /isPaymentVoidRequest/);
+  assert.match(paymentClient, /response\.ok &&/); assert.match(paymentClient, /server rejected that payment action/i);
+  assert.doesNotMatch(paymentClient, /Math\.round\(Number\(amount\) \* 100\)/);
+  assert.doesNotMatch(paymentClient, /sessionStorage[^\n]*(amountMinor|paymentMethod|paymentReceivedAt|voidReason|note)/);
+  assert.match(read('src/lib/client-session-storage.ts'), /"payment-operation:"/);
   for (const route of [paymentRecordRoute, paymentVoidRoute, paymentRecoveryRoute]) { assert.match(route, /isSameOriginRequest/); assert.match(route, /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
   assert.match(paymentRecordRoute, /record_manual_roster_payment/); assert.match(paymentRecordRoute, /isPaymentRecordRequest/); assert.match(paymentRecordRoute, /isRecordedPayment/);
   assert.match(paymentVoidRoute, /void_manual_roster_payment/); assert.match(paymentVoidRoute, /isPaymentVoidRequest/); assert.match(paymentVoidRoute, /isVoidedPayment/);

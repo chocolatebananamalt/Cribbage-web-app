@@ -65,6 +65,23 @@ no remaining P0/P1 findings.
   authorization-checked. The existing leaked-password-protection warning
   remains the user-approved magic-link/no-upgrade decision.
 
+## Protected browser client
+
+- The protected director/co-director page now offers receipt and current-receipt
+  void controls on the narrow server-authorized routes. Decimal entry is parsed
+  from digit groups rather than a floating-point multiplication; only positive
+  values within the PostgreSQL integer-cent range are submitted.
+- Before sending a request, the client validates the exact request shape and
+  stores a recovery envelope scoped to the current account and tournament.
+  The envelope intentionally omits amount, payment method, timestamp, note,
+  and void reason. A synchronous in-flight ref blocks repeated activation
+  while the envelope digest is calculated.
+- The UI treats success only as an HTTP-success response matching the exact
+  request's accepted receipt/void result. The one strict conflict response is
+  shown as a rejected no-change action. Network, authorization, malformed, or
+  unexpected server results remain recovery-locked; only the role-scoped
+  reconciliation endpoint can resolve them.
+
 ## Local checks
 
 All passed after the final repair:
@@ -77,6 +94,17 @@ pnpm verify
 pnpm verify:handoff
 git diff --check
 ```
+
+## Hosted preview check
+
+- Vercel built commit `5be9915` as a Ready Preview deployment. Its protected
+  share check returned HTTP 200, and a browser accessibility inspection found
+  the expected ACC Tournament Desk score-entry shell and navigation without a
+  visible render failure.
+- The payment workspace is intentionally director/co-director-only. No real
+  director, co-director, player, or financial fixture was created merely to
+  make that screen visible, so receipt/void controls still require the planned
+  independent authenticated lifecycle exercise before release.
 
 ## Protected mutation boundary
 
@@ -93,9 +121,13 @@ git diff --check
   receipt. `0046` exposes `{ authorized: true, result }` only after server
   role/scope checks, so only explicit authorized-null can prove no operation
   committed. Authorization or response uncertainty remains retry-locked.
-- Focused Sol review repaired five P1 response/recovery boundary issues and
-  the final re-review found no P0/P1. The page intentionally remains read-only
-  until the browser retry client is implemented and independently exercised.
+- Focused Sol review repaired the response/recovery boundary issues before the
+  client was added. Its final focused client re-review found no P0/P1: the
+  pre-digest double-click guard, exact decimal parsing, request validation,
+  accepted/rejected response discrimination, opaque recovery storage, and
+  same-origin protected routes all held. Real independent director and
+  co-director sessions remain required; no real payment, player, or production
+  tournament data was created.
 
 ## Remaining release evidence
 

@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 retry-safe manual-payment client
+
+- Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.
+- The browser retains only an opaque, per-account/per-tournament retry envelope containing operation identity, expected version, source receipt identity where applicable, idempotency key, and a local change detector. It never stores money, method, time, note, or reason. Ambiguous actions are locked and reconciled through the current-role server boundary; an explicit accepted result refreshes, an explicit rejection states that no evidence changed, and all authorization/network/malformed uncertainty remains locked.
+- The client applies a synchronous double-activation guard before asynchronous digest work, rejects invalid local request shapes before storage or network activity, and treats any non-OK or mismatched response as nonterminal except for the strict known conflict shape. `pnpm lint`, 48 tests, production build, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` passed locally. Focused Sol re-review found no P0/P1; real independent director/co-director browser/database lifecycle evidence remains required before release.
+
 ## 2026-09-09 protected manual-payment mutation boundary
 
 - Added strict same-origin, cookie-authenticated receipt, void, and recovery routes. They call only the existing narrowly authorized payment RPCs, validate canonical UTC receipt timestamps and integer USD cents, bind all accepted/rejected responses to the requested roster/version/receipt state, and send no direct-table or service-role request.
