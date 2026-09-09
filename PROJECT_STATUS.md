@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 API mutation origin gateway
+
+- Added one fail-closed, no-store same-origin gate for every non-read `/api/v1/` request before a handler or database RPC is reached. This protects existing and future private mutations consistently; individual routes and database RPCs still enforce their own identity, role, data, idempotency, and audit rules.
+- Lint, 58 tests, production build, and diff validation pass locally. A real authenticated browser cross-origin rejection test remains a release gate; see `docs/quality/2026-09-09-api-mutation-origin-gateway.md`.
+
 ## 2026-09-09 release-matrix follow-up
 
 - Re-ran the requirement-level release audit after the setup and verified-claims repairs. No new P0 was found; the focused high-risk review's four P1 setup findings are closed and covered. The current Review deployment is Ready without a one-hour runtime-error cluster.

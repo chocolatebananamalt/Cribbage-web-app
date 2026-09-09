@@ -51,6 +51,10 @@ test('proxy refreshes claims and protected tournament data requires server membe
   const dal = read('src/lib/auth/require-tournament-access.ts');
   const page = read('src/app/tournament/[tournamentId]/page.tsx');
   assert.match(proxy, /getClaims/);
+  assert.match(proxy, /pathname\.startsWith\("\/api\/v1\/"\)/);
+  assert.match(proxy, /request\.headers\.get\("origin"\) !== request\.nextUrl\.origin/);
+  assert.match(proxy, /invalid_origin/);
+  assert.match(proxy, /private, no-store/);
   assert.match(proxy, /response\.cookies\.set/);
   assert.match(proxy, /refreshedHeaders/);
   assert.match(proxy, /setAll\(cookiesToSet, headersToSet\)/);
