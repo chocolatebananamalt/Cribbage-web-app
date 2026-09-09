@@ -25,6 +25,10 @@ an unavailable private workspace, rather than distinguishing an unauthorized
 tournament from another unavailable condition. All outcomes use
 `Cache-Control: private, no-store`.
 
+An RPC/database failure is instead returned as a generic `503` so an outage is
+not misreported as a missing tournament. Invalid JSON on the save endpoint is
+also private/no-store; no response path is left cacheable.
+
 The parallel save route retains its same-origin check and now uses the same
 private no-store policy for every response path.
 

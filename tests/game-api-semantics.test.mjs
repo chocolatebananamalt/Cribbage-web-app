@@ -813,7 +813,7 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
   assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
   assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/);
   assert.match(validators, /director_configured_unverified/);
-  assert.match(save, /setup_unavailable/); assert.match(save, /privateNoStore/);
+  assert.match(save, /setup_unavailable/); assert.match(save, /operation_unavailable/); assert.match(save, /invalid_json.*privateNoStore/); assert.match(save, /privateNoStore/);
   assert.match(recovery, /get_tournament_setup_operation_reconciliation/); assert.match(recovery, /isSetupRecoveryRequest/);
 });
 
