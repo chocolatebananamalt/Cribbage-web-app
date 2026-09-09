@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 local production-build exposure audit
+
+- A release-exposure scan found no tracked credential, private handoff source,
+  server-only Supabase module reference, server secret environment identifier,
+  or secret-key-shaped value in the local production browser bundle. Public
+  files are limited to the approved logo, permitted Rulebook copy, and an
+  anonymized sample PDF; local `tmp/` remains untracked and untouched.
+- This evidence is deliberately limited to the local build. Future hosted
+  telemetry, registrations, and environment changes still require their own
+  platform/browser checks; the fragment-only registration QR lifecycle remains
+  an unimplemented, test-environment-gated feature.
+
 ## 2026-09-09 registration-link lifecycle design repair
 
 - A production audit found that the public registration claim flow lacked the
