@@ -4,7 +4,7 @@
 
 - Payment record, void, and retry-reconciliation routes, plus correction-policy and roster-promotion writers, now contain unexpected external failures, distinguish claims outages from absent sessions, and mark every outcome private and non-cacheable. Existing server RPC authorization and response validation remain authoritative.
 - Focused Sol review found and this pass closed three P1 response-boundary gaps: correction-policy replies now bind to the requested next version, roster-promotion replies reject mixed/extra fields, and verified-claims success/absence/outage behavior executes in local tests.
-- Local lint, 63 tests, production build, diff check, workspace verification, and private-handoff verification pass. Deployment evidence remains in progress; see `docs/quality/2026-09-09-private-api-failure-boundary.md`.
+- Local lint, 63 tests, production build, diff check, workspace verification, and private-handoff verification pass. Vercel Review deployment `dpl_3Bh5yNgqCaMyEMf8Ui9vkbpNoosW` for commit `d5b47e7` is Ready; build logs show no build/type/package error. Authenticated multi-user browser verification remains a release gate; see `docs/quality/2026-09-09-private-api-failure-boundary.md`.
 
 ## 2026-09-09 correction write failure boundary
 
