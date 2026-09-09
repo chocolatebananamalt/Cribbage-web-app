@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 Vercel framework configuration
+
+- Pinned the Vercel project to the explicit **Next.js** framework preset while preserving the blank root directory, default build commands, and tested Node `24.x` runtime. Vercel’s connected project record now reports `framework: nextjs` rather than auto-detected `null`.
+- The project remains intentionally preview-only (`live: false`); this removes a deployment configuration drift risk but does not waive any production release gate. See `docs/quality/2026-09-09-vercel-framework-preset.md`.
+
 ## 2026-09-09 private API failure-boundary hardening
 
 - Payment record, void, and retry-reconciliation routes, plus correction-policy and roster-promotion writers, now contain unexpected external failures, distinguish claims outages from absent sessions, and mark every outcome private and non-cacheable. Existing server RPC authorization and response validation remain authoritative.
