@@ -326,6 +326,52 @@ test('correction operation reconciliation exposes only the caller receipt and no
   assert.doesNotMatch(sql, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
 });
 
+test('director correction policy workspace is scoped, append-only, and retry-safe', () => {
+  const sql = read('database/migrations/0034_correction_policy_workspace.sql');
+  const policyDal = read('src/lib/corrections/policy.ts');
+  const policyRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/route.ts');
+  const reconciliationRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/reconciliation/route.ts');
+  const page = read('src/app/tournament/[tournamentId]/correction-policy/page.tsx');
+  const client = read('src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx');
+  assert.match(sql, /create or replace function public\.get_correction_policy/);
+  assert.match(sql, /create or replace function public\.get_correction_policy_operation_reconciliation/);
+  assert.match(sql, /security definer/);
+  assert.match(sql, /set search_path = ''/);
+  assert.match(sql, /auth\.uid\(\)/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /order by version desc/);
+  assert.match(sql, /actor_profile_id = v_actor/);
+  assert.match(sql, /operation_type = 'configure_correction_policy'/);
+  assert.match(sql, /drop function public\.configure_correction_policy\(uuid, boolean, smallint, uuid\)/);
+  assert.match(sql, /p_expected_policy_version integer/);
+  assert.match(sql, /v_current_policy_version is distinct from p_expected_policy_version/);
+  assert.match(sql, /'stale correction policy'/);
+  assert.match(sql, /'stale_policy'/);
+  assert.match(sql, /configure_correction_policy\(uuid, boolean, smallint, integer, uuid\)/);
+  assert.match(sql, /revoke all on function public\.get_correction_policy/);
+  assert.match(sql, /grant execute on function public\.get_correction_policy\(uuid\) to authenticated/);
+  assert.doesNotMatch(sql, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
+  assert.match(policyDal, /server-only/);
+  assert.match(policyDal, /get_correction_policy/);
+  assert.doesNotMatch(policyDal, /\.from\(/);
+  assert.match(policyRoute, /getClaims/);
+  assert.match(policyRoute, /configure_correction_policy/);
+  assert.match(policyRoute, /idempotencyKey/);
+  assert.match(policyRoute, /requiredApprovals/);
+  assert.match(policyRoute, /expectedPolicyVersion/);
+  assert.match(reconciliationRoute, /get_correction_policy_operation_reconciliation/);
+  assert.match(reconciliationRoute, /getClaims/);
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /getCorrectionPolicy/);
+  assert.match(page, /\['director', 'co_director'\]/);
+  assert.match(client, /acc-correction:policy:/);
+  assert.match(client, /sessionStorage/);
+  assert.match(client, /reconciliation/);
+  assert.match(client, /crypto\.randomUUID\(\)/);
+  assert.match(client, /expectedPolicyVersion: policy\.policyVersion/);
+  assert.match(client, /router\.refresh\(\)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');

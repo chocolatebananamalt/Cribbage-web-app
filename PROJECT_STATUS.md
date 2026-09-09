@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-09 director correction-policy workspace
+
+- Added a protected director/co-director **Correction Policy** screen linked from Score Corrections. It exposes the approved defaults—immediate correction authority and optional reason—and lets an authorized official require a short correction reason and/or one independent approval for future corrections. The database remains authoritative; clients neither read private policy tables nor select a policy version.
+- Applied pilot migration `0034_correction_policy_workspace`. It adds narrowly granted authenticated-only read/reconciliation RPCs and replaces the writer with an expected-policy-version guard. The legacy writer signature is removed, so two officials cannot silently overwrite each other: the first writer advances the version and a stale second request receives an immutable, reconcilable `stale_policy` rejection.
+- Focused Sol review found and prompted repair of the stale-policy overwrite P1; the re-review found no P0/P1. Pilot inspection verified the guarded writer exists, the legacy signature is absent, `anon` cannot execute any new RPC, authenticated execution is limited to the narrowly authorized functions, and all three functions use `SECURITY DEFINER` with an empty search path. The Supabase advisory scan reports only the pre-existing private-table / intentionally authenticated-RPC notices and the previously accepted password-protection warning.
+- `pnpm lint`, `pnpm test` (43 tests), and `pnpm build` passed. A real director/co-director browser concurrency exercise is still required before release.
+
 ## 2026-09-09 deployment runtime pin
 
 - Replaced the open-ended Node engine range (`>=22`) with the tested `24.x` major to prevent Vercel from silently selecting a future Node major. The CI workflow and current local runtime already use Node 24. Added a regression check; lint, 42 tests, and the production build passed.

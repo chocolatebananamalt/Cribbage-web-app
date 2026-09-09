@@ -8,11 +8,11 @@ This audit compares the current repository, pilot service evidence, and hosted P
 
 | Area | Current evidence | Status |
 |---|---|---|
-| Repository integrity | On 2026-09-09, `pnpm lint`, `pnpm test` (38 tests), `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` passed | Pass, limited scope |
+| Repository integrity | On 2026-09-09, `pnpm lint`, `pnpm test` (43 tests), and `pnpm build` passed after the director correction-policy workspace change. Full handoff verification is rerun before this change is committed. | Pass, limited scope |
 | Score derivation | Unit tests cover 1–121 bounds, winner requirement, reciprocal Plus/Minus, 0/2/3 points, and informal band display | Pass |
 | Preview hosting | Git-driven Vercel Preview `dpl_2CmckNGe3ooDLtsEKtxHybSbd54m` built commit `49d4e52`; its root returned the expected app shell with HTTP 200 and no runtime-error cluster in the bounded scan | Pass for Preview only |
 | Live score-entry boundary | Protected assigned-game route reads only a server-authorized game context; its client uses the private submit/confirm RPC routes, validates 1–121 spread points, and holds game verification until two independent matching submissions and confirmations | Pass for source and pilot-RPC boundary; real independent-browser proof remains open |
-| Correction workflow boundary | Protected correction workspace, private scoped read RPC, append-only policy/review lifecycle, and caller-scoped retry reconciliation are implemented. A focused Sol review found no remaining P0/P1 after repair. | Pass for source, pilot migration, and focused review; real-role browser and concurrency proof remain open |
+| Correction workflow boundary | Protected correction workspace, director/co-director policy controls, append-only policy/review lifecycle, expected-policy-version stale-write rejection, and caller-scoped retry reconciliation are implemented. Pilot permissions confirm the writer/read/reconciliation RPCs deny `anon`, use empty-search-path SECURITY DEFINER functions, and the obsolete writer signature is absent. A focused Sol re-review found no P0/P1 after the stale-policy repair. | Pass for source, pilot migration, and focused review; real-role browser and concurrency proof remain open |
 | Pilot score API | Prior pilot evidence records applied private-schema migrations, dual submissions, two confirmations, mismatch, authorization, closed-event, and replay rejection paths | Pass for the bounded pilot slice |
 | Prototype accessibility baseline | Prior browser checks cover key targets and responsive layout; the most recent hosted browser check confirms the score-entry panel renders | Partial; 200% zoom and user testing remain open |
 
