@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 protected manual-payment evidence workspace
+
+- Applied pilot migration `0042_roster_payment_workspace`. A dynamic, director/co-director-only payment workspace now displays only private roster display names and immutable manual receipt/void history. It deliberately excludes email, ACC number, balance, paid-in-full/reconciliation claims, registration preference, seating, check-in, scoring, standings, and operational side effects.
+- The server-only DAL calls only the narrowed RPC and fails closed unless the returned history is contiguous, correctly ordered and alternated, and internally consistent with its latest version/state/current receipt. The protected page has both server membership and database-role checks plus shared-device sign-out.
+- Focused Sol review found and repaired two P1s before completion (empty authorized roster return shape and insufficient ledger relationship validation). Final review found no P0/P1. Lint, 48 tests including malformed-ledger rejections, production build, and diff check pass. Real independent director/co-director browser and database lifecycle tests remain release gates.
+
 ## 2026-09-09 immutable manual roster-payment evidence
 
 - Applied pilot migrations `0040_manual_roster_payment_ledger` and `0041_roster_payment_history_indexes`. A director/co-director can now record a positive USD cash/check/other receipt for an existing private roster identity or void its current receipt with a reason. The ledger is immutable, versioned (`received → voided → received`), expected-version/idempotency guarded, privately audited, and never marks a player paid-in-full or reconciled.

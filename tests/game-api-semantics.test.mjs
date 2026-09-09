@@ -474,9 +474,12 @@ test('protected roster interface uses only scoped RPCs and opaque retry storage'
   assert.doesNotMatch(client, /sessionStorage[^\n]*(displayName|email|accNumber|intendedPaymentMethod)/);
 });
 
-test('manual roster payments are immutable director-only evidence, never enrollment or paid-in-full authority', () => {
+test('manual roster payments are immutable director-only evidence, never enrollment or paid-in-full authority', async () => {
   const sql = read('database/migrations/0040_manual_roster_payment_ledger.sql');
   const indexes = read('database/migrations/0041_roster_payment_history_indexes.sql');
+  const workspace = read('database/migrations/0042_roster_payment_workspace.sql');
+  const paymentDal = read('src/lib/payments/workspace.ts');
+  const paymentPage = read('src/app/tournament/[tournamentId]/payments/page.tsx');
   assert.match(sql, /create table app\.roster_payment_events/);
   assert.match(sql, /event_type text not null check \(event_type in \('received', 'voided'\)\)/);
   assert.match(sql, /amount_minor integer not null check \(amount_minor > 0\)/);
@@ -509,6 +512,35 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.match(sql, /'reconciled', false/);
   assert.match(indexes, /create index roster_payment_events_roster_entry_scope_idx/);
   assert.match(indexes, /on app\.roster_payment_events\(roster_entry_id, tournament_id\)/);
+  assert.match(workspace, /create or replace function public\.get_roster_payment_workspace/);
+  assert.match(workspace, /security definer set search_path = ''/);
+  assert.match(workspace, /role in \('director', 'co_director'\)/);
+  assert.match(workspace, /'displayName', r\.claimed_display_name/);
+  assert.match(workspace, /'paymentState', coalesce\(current_event\.event_type, 'unrecorded'\)/);
+  assert.match(workspace, /'currentReceiptEventId', case when current_event\.event_type = 'received'/);
+  assert.match(workspace, /'history', coalesce\(history\.events/);
+  assert.match(workspace, /where r\.tournament_id = p_tournament_id[\s\S]*?\), '\[\]'::jsonb\)/);
+  assert.match(workspace, /revoke all on function public\.get_roster_payment_workspace\(uuid\) from public, anon/);
+  assert.doesNotMatch(workspace, /claimed_email|claimed_acc_number|'paidInFull'|'reconciled'|'balance'/i);
+  assert.match(paymentDal, /server-only/);
+  assert.match(paymentDal, /get_roster_payment_workspace/);
+  assert.doesNotMatch(paymentDal, /\.from\(/);
+  assert.match(paymentPage, /dynamic = "force-dynamic"/);
+  assert.match(paymentPage, /requireTournamentAccess/);
+  assert.match(paymentPage, /director.*co_director/);
+  assert.match(paymentPage, /getPaymentWorkspace/);
+  assert.match(paymentPage, /does not mean paid in full, reconciled, checked in, seated, enrolled, or eligible/i);
+  assert.match(paymentPage, /SharedDeviceSignOut/);
+  assert.doesNotMatch(paymentPage, /entry\.(email|accNumber|balance|paidInFull|reconciled)/i);
+  const payment = await import(pathToFileURL(path.join(root, 'src/lib/api/payment.ts')).href);
+  const event = { paymentEventId: '00000000-0000-4000-8000-000000000001', version: 1, eventType: 'received', amountMinor: 2500, currencyCode: 'USD', paymentMethod: 'cash', paymentReceivedAt: '2026-09-09T10:00:00.000Z', paymentVoidedAt: null, receiptNote: null, voidReason: null, recorderDisplayName: 'Director', recordedAt: '2026-09-09T10:01:00.000Z' };
+  const validPaymentWorkspace = { rosterEntries: [{ rosterEntryId: '00000000-0000-4000-8000-000000000002', displayName: 'Sample Player', paymentVersion: 1, paymentState: 'received', currentReceiptEventId: event.paymentEventId, history: [event] }] };
+  assert.equal(payment.isPaymentWorkspace(validPaymentWorkspace), true);
+  assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], paymentState: 'unrecorded' }] }), false);
+  assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], currentReceiptEventId: '00000000-0000-4000-8000-000000000003' }] }), false);
+  assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], paymentVersion: 2 }] }), false);
+  assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], history: [{ ...event, paymentVoidedAt: '2026-09-09T10:02:00.000Z', voidReason: 'wrong amount' }] }] }), false);
+  assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], paymentVersion: 0, paymentState: 'unrecorded', currentReceiptEventId: null, history: [event] }] }), false);
 });
 
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {

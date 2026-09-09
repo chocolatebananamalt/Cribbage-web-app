@@ -12,6 +12,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <h1 id="tournament-title">Tournament workspace</h1>
         <p className="lede">Access granted for role: {access.role}.</p>
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
+        {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
         <SharedDeviceSignOut />
       </section>
     </main>
