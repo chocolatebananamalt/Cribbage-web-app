@@ -2,7 +2,7 @@
 
 ## 2026-09-09 passwordless account bootstrap
 
-- Repaired the account-creation gap required by the safe player activation flow. Magic-link sign-in now permits creation of a passwordless account, and migration `0067_passwordless_profile_bootstrap` creates/backfills only the required private profile row. It deliberately creates no tournament role, roster identity, event participation, seat, payment, or other authority. Lint, 73 tests, production build, and diff validation pass locally; applying and exercising the migration on the pilot remains required before release.
+- Repaired the account-creation gap required by the safe player activation flow. Magic-link sign-in now permits creation of a passwordless account, and migration `0067_passwordless_profile_bootstrap` creates/backfills only the required private profile row. It deliberately creates no tournament role, roster identity, event participation, seat, payment, or other authority. The migration is applied to the pilot: catalog evidence found zero auth users without a profile, zero orphan profiles, exactly one bootstrap trigger, and zero public/anonymous/authenticated execute grants for its internal function. Lint, 73 tests, production build, and diff validation pass locally; a real fresh-account browser test remains required before release.
 
 ## 2026-09-09 player-account-link activation gap
 
