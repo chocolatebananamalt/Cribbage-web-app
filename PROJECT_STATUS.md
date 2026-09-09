@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 release-audit evidence refresh
+
+- Corrected the release audit after verifying the current implementation rather than relying on its older baseline: the signed-in, assignment-scoped live score-entry route and the protected correction workspace are implemented in the supported Standard Singles pilot slice. The Vercel Preview for commit `49d4e52` is Ready and returned the expected root app shell without a runtime-error cluster in the bounded scan.
+- This is evidence correction, not a production claim. The critical next proof remains two independent authenticated browser sessions against disposable synthetic data, followed by the documented rejection, race, and recovery paths. Broader event, finance, offline, results, rules, deployment, and operational gates remain open.
+
 ## 2026-09-09 protected correction workspace mutations
 
 - Added the signed-in correction proposal and independent review controls to the protected workspace. They use only the existing server-authoritative API boundaries, display pending corrections as non-authoritative, and refresh the server-scoped workspace after an accepted outcome.
