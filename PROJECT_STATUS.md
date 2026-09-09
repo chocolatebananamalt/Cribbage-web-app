@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 CI and branch-protection audit
+
+- The clean-clone `Verify` workflow is healthy: its latest current-branch
+  GitHub Actions run `34408978018` passed after the security-header evidence
+  update. It pins the intended Node/pnpm versions and runs install, lint,
+  application tests, production build, and clean-clone verification.
+- GitHub's branch-protection API confirmed that enforceable protection is not
+  available for this private repository on the current plan. This is a release
+  governance gap, not a reason to expose the repository publicly. Until an
+  owner changes that plan/policy, every production-candidate commit must carry
+  an independently recorded successful workflow run and review.
+
 ## 2026-09-09 site-wide browser-security headers
 
 - Closed a browser-level defense gap: every Next.js-served route now rejects
