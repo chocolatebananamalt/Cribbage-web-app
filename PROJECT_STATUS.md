@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-09 activation-link raw-value exposure hardening
+
+- A forward-looking identity review found that a normal URL carrying a raw
+  account-link activation could leak it through history, referrers, telemetry,
+  request capture, or an authentication continuation. The strengthened
+  activation contract now requires a fragment-only QR value, initial response
+  no-referrer policy and restrictive route CSP, synchronous pre-hydration
+  replacement with fail-closed behavior, no third-party or external activity
+  for the raw value's entire in-memory lifetime, explicit same-origin no-store
+  redemption, immediate variable clearing, and redacted diagnostics/audit
+  fields. An unauthenticated player must sign in before reopening the link;
+  the raw value can never cross the sign-in flow.
+- This is a required implementation and real-browser/network-evidence gate for
+  the future server-only activation workflow; no activation endpoint or raw
+  value exists today. A focused Sol re-review found no remaining P0/P1 contract
+  defect after the repairs. It specifically keeps implementation evidence open:
+  real browser/network ordering, history/BFCache and failure behavior,
+  unauthenticated reopen, service-worker absence, header/CSP inspection, and
+  canary scans through platform and application diagnostics.
+
 ## 2026-09-09 raw profile-ID linking exposure closed
 
 - Removed the unused browser route that accepted a director-supplied player

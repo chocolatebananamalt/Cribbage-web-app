@@ -40,8 +40,41 @@ or type a profile ID.
 - Activation values are stored only as a salted digest, are scoped to one
   tournament and roster entry, expire promptly, and have one use. A raw value
   is returned only once over a private, no-store response and is never retained
-  in browser storage, logs, URLs/referrers beyond immediate redemption, or the
-  database.
+  in browser storage, logs, or the database.
+- A QR/link activation value MUST be carried only in the URL fragment, never
+  a path or query string, because fragments are not sent in HTTP requests or
+  referrer headers. The initial HTTP response for the dedicated activation
+  route must set `Referrer-Policy: no-referrer` and a route-level restrictive
+  CSP before any subresource can load. Its CSP must use `default-src 'self'`
+  and tightly limit `script-src`, `connect-src`, `img-src`, `form-action`,
+  `base-uri`, and `frame-ancestors`; it must allow no third-party script,
+  image, font, analytics, replay, APM, prefetch, service-worker, or external
+  network request for the entire lifetime in which a raw value is in memory.
+  Before React hydration, analytics, service-worker registration, prefetching,
+  or any other application request, a minimal bootstrap must strictly parse a
+  bounded fragment grammar and synchronously replace it with one fixed,
+  sanitized same-route URL using `history.replaceState`. Parse or replacement
+  failure must fail closed: do not redeem, navigate, hydrate the activation
+  experience, or load further page content. The raw value may live only in a
+  local non-rendered variable for the bounded same-origin redemption attempt;
+  it must never enter React props/state, the DOM, browser storage, a cookie,
+  cache, a redirect target, or a client error payload, and must be cleared on
+  success, rejection, abort, unmount, and `pagehide`.
+- The redemption request must be an explicit same-origin `POST` with
+  `credentials: 'same-origin'` and `cache: 'no-store'`. The server must
+  enforce same-origin `Origin` and Fetch-Metadata checks, bound the request
+  body, return a private `Cache-Control: no-store` response, and ensure that
+  platform logging, request capture, APM, telemetry, errors, middleware, and
+  audit fields never retain the body. A redirect must never preserve a raw
+  value. Immediate replacement is required to ensure no retrievable
+  application/session-history entry retains it; it cannot eliminate transient
+  address-bar exposure or capture by browser extensions, operating systems, or
+  crash recovery, so short expiry and one use remain mandatory exposure limits.
+- An unauthenticated visitor must sign in before opening an activation and then
+  rescan/reopen it after authentication. The value must never be carried across
+  authentication in `redirectTo`, a query/path, cookie, storage, session state,
+  or any other continuation. A future alternative one-time server exchange
+  needs separate security review before it may be designed or implemented.
 - Creating, opening, expiring, cancelling, requesting, rejecting, and
   approving each create append-only receipt/audit evidence.
 - The authenticated profile is learned only from verified server claims at
@@ -107,8 +140,12 @@ Two independent disposable player accounts and a director account must prove:
    revoked-role races fail closed, and fault injection around nested approval
    leaves neither a partial roster-account link nor an approved event; and
 8. raw activation values never appear in the database, logs, browser storage,
-   cache, or referrers, and all new private tables/functions deny direct
-   browser access.
+  cache, URLs sent to the server, telemetry, error reports, referrers, redirect
+  targets, or retrievable application/session history. A QR uses only a URL
+  fragment; its dedicated no-third-party route removes it synchronously before
+  hydration or any further request and retains it only for the bounded
+  redemption attempt. All new private tables/functions deny direct browser
+  access.
 9. a direct authenticated Supabase RPC call to the activation functions is
    denied; only the protected server route succeeds. Concurrent directors
    issuing an activation for one roster identity produce exactly one live
