@@ -58,7 +58,7 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(review, /\["approve", "reject"\]/);
   assert.match(review, /isAcceptedCorrectionReview/);
   assert.match(reconciliation, /get_correction_operation_reconciliation/);
-  assert.match(reconciliation, /getClaims/);
+  assert.match(reconciliation + read('src/lib/api/route-boundary.ts'), /getClaims/);
   assert.match(reconciliation, /idempotencyKey/);
   assert.doesNotMatch(reconciliation, /\.from\(|service_role/);
   assert.match(contract, /value\.status === "approved" && value\.decision === "approve"/);
