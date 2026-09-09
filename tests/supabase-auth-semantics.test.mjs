@@ -175,6 +175,7 @@ test('public flyer registration is a non-enumerating claim queue, not access or 
   const fingerprintRepair = read('database/migrations/0018_public_registration_fingerprint_repair.sql');
   const route = read('src/app/api/v1/registration/[token]/route.ts');
   const form = read('src/app/register/[token]/registration-form.tsx');
+  const publicContext = read('src/lib/api/public-registration.ts');
   assert.match(migration, /add column if not exists registration_status/);
   assert.match(migration, /create table app\.tournament_registration_links/);
   assert.match(migration, /token_hash text not null unique/);
@@ -209,7 +210,9 @@ test('public flyer registration is a non-enumerating claim queue, not access or 
   assert.match(migration, /grant execute on function public\.submit_public_registration_claim[\s\S]* to anon, authenticated/);
   assert.doesNotMatch(migration, /insert into app\.(event_participants|tournament_roles|card_scorelines)/);
   assert.match(route, /tokenPattern/);
-  assert.match(route, /cache-control/);
+  assert.match(route + read('src/lib/api/route-boundary.ts'), /cache-control/);
+  assert.match(route, /readPublicRegistrationContext/);
+  assert.match(route, /withApiFailureBoundary/);
   assert.match(route, /registration_unavailable/);
   assert.match(route, /registration_retry_conflict/);
   assert.match(route, /registration_temporarily_unavailable/);
@@ -221,4 +224,14 @@ test('public flyer registration is a non-enumerating claim queue, not access or 
   assert.match(form, /temporarily busy/);
   assert.match(form, /This does not assign a seat or confirm payment/);
   assert.match(form, /planned payment method/i);
+  assert.match(publicContext, /Object\.keys\(item\)\.length !== 1/);
+});
+
+test('public registration context projects only the permitted tournament name', async () => {
+  const { readPublicRegistrationContext } = await import(pathToFileURL(path.join(root, 'src/lib/api/public-registration.ts')).href);
+  assert.deepEqual(readPublicRegistrationContext({ tournamentName: '  Sample Open  ' }), { tournamentName: 'Sample Open' });
+  assert.equal(readPublicRegistrationContext({ tournamentName: 'Sample Open', email: 'private@example.test' }), null);
+  assert.equal(readPublicRegistrationContext({ tournamentName: '' }), null);
+  assert.equal(readPublicRegistrationContext([]), null);
+  assert.equal(readPublicRegistrationContext(null), null);
 });

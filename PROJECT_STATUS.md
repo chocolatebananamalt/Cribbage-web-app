@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-09 public registration response boundary
+
+- Public registration now projects only a bounded tournament name from its anonymous RPC; unexpected, malformed, or extra backend fields fail closed. Every public registration outcome is non-cacheable and thrown dependency failures are contained. Local lint, 61 tests, production build, and diff checks pass.
+
 ## 2026-09-09 reconciliation authorization envelopes
 
 - Applied pilot migration `0057_reconciliation_authorization_envelopes`: correction-policy and roster-promotion retry lookups now distinguish a currently authorized caller with no receipt from a revoked, unauthenticated, malformed, or unauthorized request. The corresponding routes fail closed on any non-authorized envelope and validate returned roster results.
