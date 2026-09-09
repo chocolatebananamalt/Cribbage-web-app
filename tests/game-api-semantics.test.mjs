@@ -160,3 +160,15 @@ test('correction history foreign keys have local covering indexes', () => {
   assert.match(sql, /correction_operation_conflicts_prior_receipt_id_idx/);
   assert.doesNotMatch(sql, /grant\s+/i);
 });
+
+test('correction policy versions are private, append-only, and seeded safely', () => {
+  const sql = read('database/migrations/0021_correction_policy_versions.sql');
+  assert.match(sql, /create table app\.correction_policy_versions/);
+  assert.match(sql, /primary key \(tournament_id, version\)/);
+  assert.match(sql, /required_approvals smallint not null default 0 check \(required_approvals between 0 and 1\)/);
+  assert.match(sql, /correction_policy_versions_immutable/);
+  assert.match(sql, /revoke all on table app\.correction_policy_versions from public, anon, authenticated/);
+  assert.match(sql, /insert into app\.correction_policy_versions/);
+  assert.match(sql, /provision_default_correction_policy/);
+  assert.match(sql, /game_corrections_policy_version_fk/);
+});
