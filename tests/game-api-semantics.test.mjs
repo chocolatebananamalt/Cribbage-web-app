@@ -660,6 +660,23 @@ test('roster-account links are director-authorized, immutable, and do not grant 
   assert.match(sql, /'roleGranted',false/);
 });
 
+test('event enrollment requires linked checked-in identity and approved digital singles before seating', () => {
+  const sql = read('database/migrations/0049_event_enrollment_boundary.sql');
+  assert.match(sql, /enroll_linked_roster_entry_in_event/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director','co_director'\)/);
+  assert.match(sql, /enrollment closed after seating/);
+  assert.match(sql, /event not approved for digital enrollment/);
+  assert.match(sql, /linked roster identity required/);
+  assert.match(sql, /checked in roster required/);
+  assert.match(sql, /participant already enrolled/);
+  assert.match(sql, /event_participant_enrollment_rejected/);
+  assert.match(sql, /'enrollment_closed_after_seating'/);
+  assert.match(sql, /order by c\.version desc limit 1/);
+  assert.match(sql, /insert into app\.event_participants/);
+  assert.doesNotMatch(sql, /insert into app\.(canonical_games|score_submissions|score_confirmations|tournament_roles)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
