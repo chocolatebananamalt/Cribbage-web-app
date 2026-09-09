@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 release-matrix follow-up
+
+- Re-ran the requirement-level release audit after the setup and verified-claims repairs. No new P0 was found; the focused high-risk review's four P1 setup findings are closed and covered. The current Review deployment is Ready without a one-hour runtime-error cluster.
+- The audit deliberately leaves every full-product release blocker active: real two-user verification, offline/hybrid operation, rules fixtures, results/finalization/finance/export, backup/restore/monitoring, accessibility, and a supervised simulated tournament are still unproven. See `docs/quality/2026-09-09-meta-release-readiness-audit.md`.
+
 ## 2026-09-09 protected page verified-claims repair
 
 - Standardized the shared protected-page access guard on Supabase verified claims. A claims-service failure now fails closed, a missing verified subject redirects to sign-in, and tournament authorization still comes only from the server-side role RPC. Protected pages receive only the authenticated profile ID they need, rather than a broader user object.

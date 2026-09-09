@@ -119,3 +119,33 @@ remaining blockers are missing full-product capabilities and real-system
 evidence, not items that a build or Preview can prove away. The next
 implementation review must continue to close these requirements without
 weakening their server-authoritative and audit boundaries.
+
+## Follow-up audit — current reviewed branch
+
+This follow-up rechecked the current branch at commit `f488018` after the
+original matrix. It found two concrete implementation gaps in the new private
+tournament-setup boundary and one cross-cutting claims inconsistency. They are
+resolved in commits `3f08f27`, `5486bd2`, `ca3239e`, and `f488018`:
+
+- setup configuration can now be read only through a claim-checked, scoped,
+  no-store route that separately retrieves the minimal current workspace and
+  current official choices;
+- the response boundary rejects malformed non-null data, inconsistent setup
+  history, invalid official/Q-pool combinations, unexpected RPC/auth failures,
+  and cacheable recovery responses rather than misrepresenting them as a new
+  setup or successful recovery;
+- all protected server pages now use verified claims before their existing
+  tournament-role RPC, returning only the profile identifier their client
+  component requires.
+
+The focused Sol review of the setup boundary reported no P0. Its four P1
+findings were repaired and added to executable/static regression coverage.
+Current local evidence is `pnpm lint`, `pnpm test` (58 passing), `pnpm build`,
+`pnpm verify`, `pnpm verify:handoff`, and `git diff --check`, all passing.
+Vercel built `f488018` as Ready Preview deployment
+`dpl_6fCRQTzt69y8YubWQvwsgaEYu6Lh`; the one-hour grouped runtime-error scan
+was empty.
+
+This improves `R-ROLE-01` and the private setup portion of `R-REG-01`, but it
+does **not** change any row in the requirement matrix from a release blocker.
+The critical blockers listed above are still current and non-waivable.
