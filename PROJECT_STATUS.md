@@ -15,6 +15,11 @@
 
 - Identified and documented the next required server transition in `docs/decisions/2026-09-09-event-enrollment-contract.md`: only a director/co-director may turn a linked, currently checked-in roster identity into one participant for an approved digital Standard Singles event. It rejects post-seating enrollment until an approved late-entry policy exists and makes no game, seat, score, payment, or role change.
 
+## 2026-09-09 identity linking and guarded enrollment pilot
+
+- Applied pilot migrations `0048` and `0049`: immutable independent roster-to-account linking and pre-seating director/co-director Standard Singles enrollment. The link rejects self-linking and creates no role/event/score authority; enrollment requires a linked, latest-state checked-in roster identity and an approved digital event, then creates no game or seat.
+- Static regression coverage passed with 51 tests. Vercel built commit `36e1e14` Ready, returned a normal auth redirect, and had no grouped runtime errors in the one-hour scan. Real independent authenticated-session/database lifecycle evidence remains a release gate; see `docs/quality/2026-09-09-identity-enrollment-pilot.md`.
+
 ## 2026-09-09 retry-safe manual-payment client
 
 - Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.
