@@ -70,5 +70,3 @@ end; $$;
 
 revoke all on function public.propose_game_correction(uuid,uuid,integer,text,integer,text,uuid) from public, anon;
 grant execute on function public.propose_game_correction(uuid,uuid,integer,text,integer,text,uuid) to authenticated;
-
-
