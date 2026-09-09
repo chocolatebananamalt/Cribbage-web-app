@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-09 offline score-sync design boundary
+
+- Focused Sol review confirms that the current one-item session retry envelope
+  is not an offline queue. It lacks durable actor/session binding,
+  tamper-resistant capability protection, queued-confirmation safeguards, and
+  replay reconciliation. It remains correctly limited to a foreground retry.
+- The approved contract now requires a separate versioned IndexedDB queue,
+  server-issued capability/device-key integrity, one audited atomic replay
+  wrapper, and real two-session/reconnect evidence before offline scoring can
+  be enabled. See `docs/decisions/2026-09-09-offline-score-sync-contract.md`
+  and `docs/quality/2026-09-09-offline-score-sync-acceptance.md`.
+
 ## 2026-09-09 hosted password-provider release blocker
 
 - A no-account probe using fake credentials found that the active Supabase
