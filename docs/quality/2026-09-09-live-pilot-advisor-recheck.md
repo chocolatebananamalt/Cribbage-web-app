@@ -17,6 +17,11 @@ or configuration.
   Those functions are separately role/scope checked and remain required for
   the application boundary; the warning is not a permission to broaden table
   access.
+- The advisor also reports leaked-password protection disabled. Separately,
+  a fake-credential, no-account password-grant probe established that the
+  hosted Email/Password provider is enabled even though the app offers only
+  magic-link sign-in. That provider configuration remains a critical release
+  blocker; this read-only recheck did not change it.
 - Performance notices are unused-index observations on a pilot with little
   production traffic. They are not evidence that required foreign-key or
   receipt indexes are redundant and must not be removed without representative

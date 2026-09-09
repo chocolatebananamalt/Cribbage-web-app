@@ -26,6 +26,12 @@ The positive path is one accepted, idempotent claim. Rejection paths are malform
 ## Limitations and next gates
 
 - No public link is enabled permanently in the pilot and no real player data was inserted.
-- Director/co-director claim review, identity association, audited manual-payment receipt, check-in, shared-device clearing, and seating assignment are not implemented yet. A public claim remains non-authoritative until those protected workflows exist.
+- Director/co-director claim review, roster promotion, account-linking,
+  audited manual-payment receipt, check-in, shared-device clearing, and
+  immutable initial seating now have protected pilot boundaries. They were
+  added after this narrow registration report and remain incomplete without
+  real independent-session and full-lifecycle evidence. A public claim is
+  still non-authoritative until those later workflow gates are successfully
+  completed.
 - The public UI needs a hosted browser pass using a temporary synthetic link after the reviewed deployment is available. It must not be tested by submitting real player information.
 - The database enforces configurable per-link total/hourly claim caps. Before a production flyer URL is opened, add operational edge/WAF rate limits and monitoring as a second layer; database caps protect integrity but cannot identify a network source by themselves.

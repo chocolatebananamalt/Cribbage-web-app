@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-09 live advisor and report-consistency recheck
+
+- A fresh read-only security-advisor pass found no new private-table exposure:
+  the 40 private RLS/no-policy notices, two public registration RPCs, and 32
+  authenticated role-checked RPCs match the intentional pilot boundary. It
+  reconfirmed the hosted password-provider release blocker.
+- Corrected an older registration-pilot report that inaccurately described
+  later lifecycle safeguards as unimplemented. Those guarded boundaries now
+  exist but still require real independent-session and full-lifecycle proof.
+
 ## 2026-09-09 preview browser smoke evidence
 
 - A browser smoke check exercised the public score-entry prototype through
