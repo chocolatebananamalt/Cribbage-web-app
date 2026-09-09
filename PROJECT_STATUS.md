@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-09 protected registration roster boundary
+
+- Applied pilot migrations `0036_registration_claim_roster_boundary`, `0037_registration_review_roster_indexes`, and `0038_roster_promotion_authorization_repair`. An immutable director/co-director-approved claim can now create exactly one private roster identity snapshot, with composite same-tournament approval enforcement, replay/conflict handling, receipts, audit events, and no direct table access.
+- The roster operation intentionally creates **no** Auth user/profile association, role, event participant, payment, check-in, Table/Seat, verification ID, or scorecard. Claim identity fields remain unverified intake data; account association and every operational state stay separate future controls.
+- Focused Sol review found a P1 in the first writer (a revoked director could replay old identifiers and an unauthorized caller could write audit noise). `0038` now checks current director/co-director authorization before replay lookup and permits rejection/conflict audit writes only for an authorized actor. Final Sol re-review found no P0/P1. Pilot inspection confirms forced RLS, no direct `anon`/`authenticated` table access, authenticated-only RPC grants, empty function search paths, and no advisor `unindexed_foreign_keys` finding.
+- `pnpm test` passed with 46 tests. Real independent-session authorization, concurrent replay, rollback injection, and persisted-data verification remain release gates; no UI was added in this integrity increment.
+
 ## 2026-09-09 protected registration-claim review boundary
 
 - Applied pilot migration `0035_registration_claim_review_workspace`: director/co-director-only review decisions are immutable, collision-aware, idempotent, receipted, and audited. The decision response explicitly states that no roster, payment, or check-in record was created.

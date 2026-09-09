@@ -393,6 +393,61 @@ test('registration claim review remains an immutable non-enrollment boundary', (
   assert.doesNotMatch(sql, /insert into auth\.users/);
 });
 
+test('approved registration claims promote only to an immutable private roster identity', () => {
+  const sql = read('database/migrations/0036_registration_claim_roster_boundary.sql');
+  const authorizationRepair = read('database/migrations/0038_roster_promotion_authorization_repair.sql');
+  assert.match(sql, /unique \(id, tournament_id, claim_id, decision\)/);
+  assert.match(sql, /create table app\.tournament_roster_entries/);
+  assert.match(sql, /approval_decision text not null default 'approved_for_roster'/);
+  assert.match(sql, /references app\.registration_claim_decisions\(id, tournament_id, claim_id, decision\)/);
+  assert.match(sql, /unique \(source_claim_id\)/);
+  assert.match(sql, /unique \(approval_decision_id\)/);
+  assert.match(sql, /tournament_roster_entries_immutable/);
+  assert.match(sql, /create_roster_entry_from_registration_claim/);
+  assert.match(sql, /get_tournament_roster_workspace/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /v_authorized boolean := false/);
+  assert.match(sql, /v_authorized := true;[\s\S]*?select \* into v_existing/);
+  assert.match(sql, /elsif v_authorized and v_tournament_exists then/);
+  assert.match(authorizationRepair, /v_authorized := true;[\s\S]*?select \* into v_existing/);
+  assert.match(authorizationRepair, /elsif v_authorized and v_tournament_exists then/);
+  assert.match(sql, /v_status not in \('draft', 'open'\)/);
+  assert.match(sql, /approved claim decision required/);
+  assert.match(sql, /claim already promoted/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /idempotency conflict/);
+  assert.match(sql, /roster_entry_operation_conflicts/);
+  assert.match(sql, /'profileLinked', false/);
+  assert.match(sql, /'roleGranted', false/);
+  assert.match(sql, /'eventEnrolled', false/);
+  assert.match(sql, /'paymentRecorded', false/);
+  assert.match(sql, /'checkedIn', false/);
+  assert.match(sql, /'seatAssigned', false/);
+  assert.match(sql, /revoke all on table app\.tournament_roster_entries from public, anon, authenticated/);
+  assert.match(sql, /revoke all on function public\.create_roster_entry_from_registration_claim/);
+  assert.doesNotMatch(sql, /insert into (auth\.users|app\.(profiles|tournament_roles|event_participants))/);
+  assert.doesNotMatch(sql, /\n\s*profile_id uuid/);
+  assert.doesNotMatch(sql, /table_seat|verification_id|check_in|payment_status/i);
+});
+
+test('registration review and roster foreign keys have advisor-covering indexes', () => {
+  const sql = read('database/migrations/0037_registration_review_roster_indexes.sql');
+  for (const index of [
+    'registration_claim_decisions_actor_profile_id_idx',
+    'registration_claim_decisions_claim_scope_idx',
+    'registration_claim_decisions_duplicate_claim_scope_idx',
+    'registration_claim_decisions_operation_receipt_scope_idx',
+    'registration_claim_operation_conflicts_actor_profile_id_idx',
+    'registration_claim_operation_conflicts_tournament_id_idx',
+    'registration_claim_operation_conflicts_prior_receipt_id_idx',
+    'tournament_roster_entries_approval_decision_scope_idx',
+    'tournament_roster_entries_source_claim_scope_idx',
+    'tournament_roster_entries_operation_receipt_scope_idx',
+  ]) assert.match(sql, new RegExp(`create index ${index}`));
+  assert.doesNotMatch(sql, /grant\\s+|policy|alter table/i);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
