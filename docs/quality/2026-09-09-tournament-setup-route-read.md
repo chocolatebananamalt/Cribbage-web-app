@@ -89,3 +89,7 @@ this boundary was retained:
 `tests/setup-read-decision.test.mjs` exercises private absence, RPC failure,
 malformed non-null responses, and valid responses through the same decision
 helper used by the route. The full suite now contains 58 passing tests.
+
+Vercel built the repaired commit `ca3239efc9c82b445925b70ffdbf35e102023755`
+as Ready Preview deployment `dpl_ijqWQLG63wsimj6xDi6urc5tfcid`; the one-hour
+runtime-error scan remained empty.
