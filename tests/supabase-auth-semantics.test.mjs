@@ -62,6 +62,8 @@ test('proxy refreshes claims and protected tournament data requires server membe
   assert.match(dal, /\.rpc\("get_tournament_role"/);
   assert.match(dal, /notFound/);
   assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /director.*co_director/);
+  assert.match(page, /\/roster/);
 });
 
 test('protected screens offer a shared-device clear and local sign-out boundary', () => {

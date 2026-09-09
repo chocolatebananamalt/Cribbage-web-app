@@ -1,5 +1,6 @@
 import { requireTournamentAccess } from "../../../lib/auth/require-tournament-access";
 import { SharedDeviceSignOut } from "../../../components/shared-device-sign-out";
+import Link from "next/link";
 
 export default async function ProtectedTournamentPage({ params }: { params: Promise<{ tournamentId: string }> }) {
   const { tournamentId } = await params;
@@ -10,6 +11,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <p className="eyebrow">AUTHORIZED TOURNAMENT</p>
         <h1 id="tournament-title">Tournament workspace</h1>
         <p className="lede">Access granted for role: {access.role}.</p>
+        {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
         <SharedDeviceSignOut />
       </section>
     </main>
