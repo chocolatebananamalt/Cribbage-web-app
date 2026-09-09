@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-09 dependency-audit CI safeguard
+
+- GitHub's hosted Dependabot, Code Scanning, and Secret Scanning alerts are
+  unavailable/disabled for the current private repository configuration. The
+  repository was not exposed and no plan was changed. The clean-clone `Verify`
+  workflow now runs a high-severity production dependency audit after frozen
+  installation, before all existing checks.
+- The audit found no known production dependency vulnerability. Lint, 78
+  application tests, production build, workspace/private-handoff verification,
+  and diff validation pass.
+
 ## 2026-09-09 touch-target and keyboard-focus accessibility repair
 
 - A style review found 38px seating-sort and 42px event-tab controls, below
