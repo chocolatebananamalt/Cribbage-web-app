@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 launch-plan accuracy repair
+
+- Reconciled `docs/operations/LAUNCH_PLAN.md` with the current pilot branch so it no longer states that the application has no backend, no database, or only a placeholder deployment. It now accurately describes the guarded pilot boundaries and the separate, still-unreleased production path.
+- This is documentation accuracy only: it does not waive any release gate. The complete, evidence-backed list remains in `docs/quality/2026-09-09-meta-release-readiness-audit.md`.
+
 ## 2026-09-09 private check-in and initial seating boundary
 
 - Applied pilot migration `0047_check_in_and_initial_seating`. Current directors/co-directors can record append-only check-in evidence and, only after registration is closed, publish one immutable initial Table/Seat list. That initial value becomes the permanent tournament verification ID; it is not a player's changing per-game seat.

@@ -7,7 +7,16 @@ Use Vercel for the production frontend and Supabase for PostgreSQL, Auth, privat
 Vercel GitHub preview deployment documentation: https://vercel.com/docs/git/vercel-for-github
 Supabase services and Vercel integration: https://vercel.com/marketplace/supabase/supabase
 Supabase security/availability production checklist: https://supabase.com/docs/guides/deployment/going-into-prod
-As of 2026-09-06, the GitHub-connected Vercel project and Supabase project are reachable and healthy. The Vercel project has only a placeholder production deployment; it returns 404 because no application has been built. Supabase has no migrations or public tables. Confirm current plan eligibility, limits, backup retention and costs before provisioning production data.
+As of 2026-09-09, the GitHub-connected Vercel project and Supabase pilot are
+reachable and healthy. The reviewed branch has a protected Vercel Preview and
+private, forced-RLS Supabase pilot boundaries for registration claims, roster
+review, manual payment evidence, check-in/initial seating, event enrollment,
+corrections, and versioned tournament setup. They are deliberately partial
+foundations, not a production release: the production domain remains separate
+from this review branch, and the complete tournament workflow has not yet been
+implemented or proven. Confirm current plan eligibility, limits, backup
+retention, costs, and the staging/production separation before provisioning
+production data.
 
 GitHub stores code/history. GitHub Pages can serve a demo but cannot itself provide a shared authenticated tournament database. A managed server is an alternative if venue-local hosting becomes essential, with more operational work. Cloud hosting does not solve offline synchronization by itself.
 
@@ -22,4 +31,13 @@ GitHub stores code/history. GitHub Pages can serve a demo but cannot itself prov
 
 ## Current blockers
 
-No backend/database, authentic roles, dual verification, durable audit, offline queue or real calculation engines. Demo PIN and feedback injection defects; incomplete official rule fixtures. No production tests/restore/user-pilot evidence. The Vercel project and Supabase project exist, but separate staging/production configuration, domain, environment contract, monitoring, backup/restore, and rollback readiness remain to be established. Original chat is missing but recovered artifacts are sufficient to start implementation.
+The app has a guarded pilot backend, but not a completed production system.
+The remaining blockers are the full server-authoritative setup/check-in/seating
+workflow; real authenticated dual-player verification; offline/hybrid and
+paper/dead-phone operation; results, export, finalization and finance;
+approved ACC rule fixtures; backup/restore, monitoring and rollback proof; and
+accessibility plus a supervised simulated tournament. The Vercel and Supabase
+projects exist, but separate staging/production configuration, domain,
+environment contract, monitoring, backup/restore, and rollback readiness must
+still be proven. See the current release matrix in
+`docs/quality/2026-09-09-meta-release-readiness-audit.md`.
