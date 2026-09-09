@@ -22,6 +22,7 @@ test('game API handlers validate, authenticate with claims, and call RPCs only',
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
+  const reconciliation = read('src/app/api/v1/corrections/[id]/reconciliation/route.ts');
   const contract = read('src/lib/api/correction.ts');
   for (const source of [proposal, review]) {
     assert.match(source, /getClaims/);
@@ -37,6 +38,10 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(review, /review_game_correction/);
   assert.match(review, /\["approve", "reject"\]/);
   assert.match(review, /isAcceptedCorrectionReview/);
+  assert.match(reconciliation, /get_correction_operation_reconciliation/);
+  assert.match(reconciliation, /getClaims/);
+  assert.match(reconciliation, /idempotencyKey/);
+  assert.doesNotMatch(reconciliation, /\.from\(|service_role/);
   assert.match(contract, /value\.status === "approved" && value\.decision === "approve"/);
   assert.match(contract, /value\.status === "rejected" && value\.decision === "reject"/);
   assert.match(contract, /typeof value\.code === "string"/);
@@ -307,9 +312,24 @@ test('correction workspace read model is server-scoped and suppresses non-action
   assert.doesNotMatch(workspace, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
 });
 
+test('correction operation reconciliation exposes only the caller receipt and no private table grants', () => {
+  const sql = read('database/migrations/0033_correction_operation_reconciliation.sql');
+  assert.match(sql, /create or replace function public\.get_correction_operation_reconciliation/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /v_actor uuid := auth\.uid\(\)/);
+  assert.match(sql, /actor_profile_id = v_actor/);
+  assert.match(sql, /client_operation_id = p_idempotency_key/);
+  assert.match(sql, /operation_type = 'review_game_correction' and target_id = p_correction_id/);
+  assert.match(sql, /operation_type = 'propose_game_correction' and response_payload->>'correction_id' = p_correction_id::text/);
+  assert.match(sql, /revoke all on function public\.get_correction_operation_reconciliation\(uuid,uuid\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_correction_operation_reconciliation\(uuid,uuid\) to authenticated/);
+  assert.doesNotMatch(sql, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
+  const client = read('src/app/tournament/[tournamentId]/corrections/corrections-client.tsx');
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /getCorrectionWorkspace/);
   assert.match(page, /pending correction does not change scorecards, standings, or exports/i);
@@ -318,6 +338,37 @@ test('protected correction workspace reads only the scoped RPC and never direct 
   assert.match(dal, /proposalCandidates/);
   assert.match(dal, /pendingReviews/);
   assert.doesNotMatch(dal, /\.from\(/);
+  assert.match(client, /crypto\.randomUUID\(\)/);
+  assert.match(client, /crypto\.subtle\.digest/);
+  assert.match(client, /window\.sessionStorage/);
+  assert.match(client, /clearOtherCorrectionActors/);
+  assert.match(client, /Refresh before changing this result/);
+  assert.match(client, /Refresh before changing its decision/);
+  assert.match(client, /router\.refresh\(\)/);
+  assert.match(client, /does not affect scorecards, standings, or exports yet/i);
+  assert.match(client, /response\.status < 500/);
+  assert.match(client, /server response was incomplete/i);
+  assert.match(client, /Save correction/);
+  assert.match(client, /Approve correction/);
+  assert.match(client, /Reject correction/);
+  assert.doesNotMatch(client, /proposal:\$\{fingerprint\}|review:\$\{item\.correctionId\}:\$\{decision\}/);
+  assert.doesNotMatch(client, /service_role|supabase\.(?:from|rpc)/);
+});
+
+test('correction retry storage keys omit private fields and stale actor envelopes are cleared', async () => {
+  const operations = await import(pathToFileURL(path.join(root, 'src/lib/corrections/operation-envelope.ts')).href);
+  const actorA = '00000000-0000-4000-8000-000000000001';
+  const actorB = '00000000-0000-4000-8000-000000000002';
+  const gameId = '00000000-0000-4000-8000-000000000003';
+  const reason = 'Private reason: Barb Stevens asked for a correction.';
+  const key = operations.proposalOperationKey(actorA, gameId);
+  assert.doesNotMatch(key, /Private|Barb|reason/i);
+  const values = new Map([[key, JSON.stringify({ reason })], [operations.reviewOperationKey(actorB, gameId), JSON.stringify({ decision: 'approve' })], ['unrelated', 'keep']]);
+  const storage = { get length() { return values.size; }, key(index) { return [...values.keys()][index] ?? null; }, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, value); }, removeItem(key) { values.delete(key); } };
+  operations.clearOtherCorrectionActors(storage, actorB);
+  assert.equal(values.has(key), false);
+  assert.equal(values.has(operations.reviewOperationKey(actorB, gameId)), true);
+  assert.equal(values.get('unrelated'), 'keep');
 });
 
 test('correction reason limit is enforced inside the private schema', () => {

@@ -75,7 +75,24 @@ The new proposal/review HTTP handlers validate UUIDs, margin/version/decision in
 | Repository checks after API contract repair | Pass — `pnpm test` (35), `pnpm lint`, `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` |
 | Focused Sol review | Pass after three P1 repairs — scoped correction read model, authoritative reason limit, and exact accepted-response/request binding were reviewed with no remaining P0/P1 finding |
 
-This remains a backend/API foundation, not a completed correction workspace. It still needs a protected browser screen using the read model, real independently authenticated role sessions, direct-RPC role-visibility tests, concurrent terminal-review tests, and result-version/supersession implementation before release.
+## Protected correction workspace client — 2026-09-09
+
+The signed-in `/tournament/[tournamentId]/corrections` route now renders only the actor-scoped workspace RPC data and sends proposals/reviews solely to the existing authenticated HTTP boundaries. It is deliberately not an optimistic standings interface: a pending proposal visibly has no scorecard, standings, or export effect, and the client calls `router.refresh()` only after an accepted server outcome.
+
+The client creates a separate, actor-scoped, opaque retry envelope per proposed game or pending review. The storage key and serialized proposal envelope contain no player name or optional reason; the browser keeps a reason only in the current page’s memory. The envelope holds opaque identifiers, expected game version, non-sensitive result fields, and a SHA-256 canonical-payload digest. On hydration, a narrowly scoped server reconciliation endpoint checks only the caller’s immutable receipt. A resolved receipt is discarded and the server view refreshes; otherwise controls remain disabled until the exact retry state is known. A network error, 5xx, or malformed 2xx locks the result or review decision; the user cannot change it or reverse an approval/rejection while its outcome is unknown. On a same-origin account switch, the mounted client removes every other actor's correction envelope before it can be reused. The eventual sign-out/shared-device clearing workflow remains a broader `R-REG-01` release gate and must call the same namespace-clearing behavior.
+
+| Check | Result |
+| --- | --- |
+| `pnpm lint` | Pass |
+| `pnpm test` | Pass — 37 tests, including retry-key privacy and actor-switch clearing coverage |
+| `pnpm build` | Pass — protected correction route compiled |
+| `pnpm verify` | Pass — 6 workspace integrity checks |
+| `pnpm verify:handoff` | Pass — 6 local private-handoff checks |
+| `git diff --check` | Pass |
+| Local browser smoke | Limited/fail-closed — the local host intentionally has no public Supabase variables, so the proxy raised the expected configuration error before any route rendered. This does not establish a browser session test; the hosted Preview has the variables and must be checked with seeded independent accounts. |
+| Independent Sol review | Pass after three P1 repairs — raw-reason persistence, ambiguity allowing changed/reversed operations, and proposal-versus-review receipt targeting were corrected. The final review found no P0/P1 issue; actor scoping and operation-type reconciliation prevent cross-actor or cross-operation disclosure. |
+
+The protected correction screen is now an implemented client boundary, but it is not release evidence for multi-user correction behavior. Real, separately authenticated cross-checker/director sessions, direct-RPC role/revocation checks, two-connection terminal-review and publish-race tests, result-version/supersession, sign-out/shared-device clearing, and phone/desktop browser verification remain mandatory.
 
 ## Remaining limitations
 

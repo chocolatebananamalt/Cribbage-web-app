@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-09 protected correction workspace mutations
+
+- Added the signed-in correction proposal and independent review controls to the protected workspace. They use only the existing server-authoritative API boundaries, display pending corrections as non-authoritative, and refresh the server-scoped workspace after an accepted outcome.
+- Hardened ambiguous retry handling after an independent Sol review found two P1 issues: storage keys now contain no player names or correction reason and are scoped to the authenticated account; an opaque envelope locks the exact result or review decision after network/5xx/malformed-response ambiguity, so a user can retry it safely but cannot create a changed or reverse operation before refresh. Switching accounts on the same browser clears stale envelopes. A future sign-out/shared-device-clear control must use the same cleanup routine.
+- Added a caller-scoped immutable-receipt reconciliation endpoint for ambiguous correction responses. It distinguishes proposal receipts (which target the game but contain an immutable correction ID) from review receipts (which target the correction); no reason is returned.
+- `pnpm lint`, `pnpm test` (38 tests), `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` passed. The pilot migration is applied. The final Sol review found no P0/P1 after the privacy, ambiguity, and receipt-target repairs. Local browser rendering is intentionally fail-closed without local public Supabase variables; hosted real-role phone/desktop verification remains a required release gate.
+
 ## 2026-09-09 protected correction workspace route
 
 - Added the signed-in tournament-scoped correction workspace at `/tournament/[tournamentId]/corrections`. Its server-only data layer accepts only the narrow `get_correction_workspace` RPC shape and never reads private tables directly. The page makes Pending’s no-standings/no-export effect explicit and renders no actionable data if the database returns empty role-scoped collections.
