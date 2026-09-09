@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 private check-in and initial seating boundary
+
+- Applied pilot migration `0047_check_in_and_initial_seating`. Current directors/co-directors can record append-only check-in evidence and, only after registration is closed, publish one immutable initial Table/Seat list. That initial value becomes the permanent tournament verification ID; it is not a player's changing per-game seat.
+- Focused Sol review repaired five P1 defects before application: a clean-chain duplicate constraint, replay after lifecycle changes, timestamp-based current-state ordering, incomplete conflict attribution, and post-publication roster/check-in drift. Final re-review found no P0/P1. Pilot catalog evidence confirms forced RLS, no direct anonymous/authenticated table access, authenticated-only empty-search-path RPCs, immutable history, same-tournament composite assignment provenance, and unique Table/Seat/verification IDs.
+- This is deliberately narrower than an operational seating feature. The current roster has no player-account association, so player delivery, SMS/printing, round rotation, late-entry policy, table playthrough, and real multi-session lifecycle tests remain release gates. Details and exact remaining evidence are in `docs/quality/2026-09-09-check-in-initial-seating-pilot.md`.
+
 ## 2026-09-09 retry-safe manual-payment client
 
 - Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.

@@ -591,6 +591,51 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.equal(payment.isRejectedPayment({ status: 'rejected', code: 'stale_payment_history', rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1 }, paymentRecord.rosterEntryId), false);
 });
 
+test('check-in and initial seating are private, immutable, closed-registration operations, not rotation', () => {
+  const sql = read('database/migrations/0047_check_in_and_initial_seating.sql');
+  assert.match(sql, /create table app\.roster_check_in_events/);
+  assert.match(sql, /version integer not null check \(version > 0\)/);
+  assert.match(sql, /unique \(roster_entry_id, version\)/);
+  assert.match(sql, /check_in_state text not null check \(check_in_state in \('checked_in', 'withdrawn', 'late', 'absent'\)\)/);
+  assert.match(sql, /roster_check_in_events_immutable/);
+  assert.match(sql, /create table app\.initial_seating_publications/);
+  assert.match(sql, /tournament_id uuid not null unique/);
+  assert.match(sql, /create table app\.initial_seating_assignments/);
+  assert.match(sql, /verification_id text generated always as \(initial_table_seat\) stored/);
+  assert.match(sql, /unique \(tournament_id, initial_table_seat\)/);
+  assert.match(sql, /unique \(tournament_id, verification_id\)/);
+  assert.match(sql, /initial_seating_assignments_immutable/);
+  assert.match(sql, /attempted_operation_type text not null check \(attempted_operation_type in \('record_roster_check_in_event', 'publish_initial_seating'\)\)/);
+  assert.match(sql, /attempted_target_id uuid/);
+  for (const table of ['roster_check_in_events', 'initial_seating_publications', 'initial_seating_assignments', 'check_in_operation_conflicts']) {
+    assert.match(sql, new RegExp(`alter table app\\.${table} enable row level security`));
+    assert.match(sql, new RegExp(`alter table app\\.${table} force row level security`));
+    assert.match(sql, new RegExp(`revoke all on table app\\.${table} from public, anon, authenticated`));
+  }
+  assert.match(sql, /create or replace function public\.record_roster_check_in_event/);
+  assert.match(sql, /create or replace function public\.publish_initial_seating/);
+  assert.match(sql, /create or replace function public\.get_initial_seating_workspace/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /registration must be closed/);
+  assert.match(sql, /checked in roster required/);
+  assert.match(sql, /duplicate seating assignment/);
+  assert.match(sql, /initial seating already published/);
+  assert.match(sql, /prevent_roster_entry_after_initial_seating/);
+  assert.match(sql, /tournament_roster_entries_block_after_initial_seating/);
+  assert.match(sql, /unassigned_check_in_after_seating/);
+  assert.match(sql, /p_check_in_state = 'checked_in' and exists \([\s\S]*initial_seating_publications/);
+  assert.match(sql, /return v_existing\.response_payload;[\s\S]*?if v_status not in \('draft', 'open'\)/);
+  assert.match(sql, /return v_existing\.response_payload;[\s\S]*?if v_tournament_status <> 'open'/);
+  assert.match(sql, /order by c\.version desc limit 1/);
+  assert.match(sql, /roundRotationGenerated', false/);
+  assert.doesNotMatch(sql, /insert into (auth\.users|app\.(profiles|tournament_roles|event_participants|canonical_games))/);
+  assert.match(sql, /grant execute on function public\.record_roster_check_in_event[\s\S]*authenticated/);
+  assert.match(sql, /grant execute on function public\.publish_initial_seating[\s\S]*authenticated/);
+  assert.match(sql, /grant execute on function public\.get_initial_seating_workspace[\s\S]*authenticated/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
