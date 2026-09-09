@@ -11,6 +11,10 @@
 - The scoring engine requires an authenticated assigned participant, while the approved roster intentionally has no account link. Recorded the next safe boundary in `docs/decisions/2026-09-09-roster-account-linking-contract.md`: a director/co-director explicitly links a pre-existing authenticated profile to one private roster entry, with immutable receipt/audit history and no name/email inference.
 - This contract expressly does not create an account, role, payment, check-in, seat, event participant, or score action. Its implementation and real multi-account authorization evidence are still required before digital players can safely receive assignments or score.
 
+## 2026-09-09 event enrollment contract
+
+- Identified and documented the next required server transition in `docs/decisions/2026-09-09-event-enrollment-contract.md`: only a director/co-director may turn a linked, currently checked-in roster identity into one participant for an approved digital Standard Singles event. It rejects post-seating enrollment until an approved late-entry policy exists and makes no game, seat, score, payment, or role change.
+
 ## 2026-09-09 retry-safe manual-payment client
 
 - Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.
