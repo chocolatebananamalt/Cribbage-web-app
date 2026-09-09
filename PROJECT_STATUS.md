@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-09 preview browser smoke evidence
+
+- A browser smoke check exercised the public score-entry prototype through
+  winner selection, a 99-point triple-skunk result, reciprocal game/spread
+  output, and the pre-submission review screen. The current branch Preview
+  correctly stops an anonymous visitor at Vercel sign-in; no access control
+  was bypassed and no submission was sent.
+- This is partial visual evidence only. Authenticated two-user, persisted
+  backend, phone/zoom/accessibility, session-recovery, and offline tests stay
+  open. See `docs/quality/2026-09-09-preview-browser-smoke.md`.
+
 ## 2026-09-09 score retry authentication-expiry repair
 
 - A temporary expired browser session no longer clears the one exact pending
