@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-09 touch-target and keyboard-focus accessibility repair
+
+- A style review found 38px seating-sort and 42px event-tab controls, below
+  the agreed 44px primary-touch minimum, and no explicit keyboard focus ring.
+  Both are corrected: the controls are 44px minimum and all interactive
+  keyboard targets use a clear 3px offset focus indicator; score-entry
+  winner/keypad controls remain 56px minimum.
+- Lint, 78 application tests, production build, workspace/private-handoff
+  verification, and diff validation pass. Authenticated phone/desktop/zoom
+  and assistive-technology checks remain required release evidence.
+
 ## 2026-09-09 Vercel configuration recheck
 
 - Vercel now explicitly reports Next.js and Node 24 for the project and the

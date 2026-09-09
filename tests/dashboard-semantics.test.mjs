@@ -94,3 +94,12 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /title="Tournament Financials"/);
   assert.match(source, /title="Tournament Results"/);
 });
+
+test("interactive controls meet the baseline touch-target and keyboard-focus contract", () => {
+  assert.match(styles, /button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible/);
+  assert.match(styles, /outline:3px solid #2058b6/);
+  assert.match(styles, /\.sort-controls button \{ min-height:44px/);
+  assert.match(styles, /\.event-tabs button \{ min-height:44px/);
+  assert.match(styles, /\.keypad button \{ min-height:56px/);
+  assert.match(styles, /\.pick \{ min-height:56px/);
+});
