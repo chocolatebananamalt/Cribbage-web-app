@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 protected check-in and seating workspace
+
+- Added the missing director/co-director operational screen for check-in and immutable initial seating. It reads only a narrow server-authorized workspace, records bounded status changes through the guarded API, prepares a complete starting Table/Seat plan, safeguards the one permanent publication with a confirmation, and provides a print view. One unresolved request is safely retained and retry-locked per actor/tournament; shared-device sign-out clears that recovery state.
+- Local lint, 73 tests, production build, workspace verification, private-handoff verification, and diff validation pass. The real UI/browser and independent-session checks are not complete: localhost was blocked by the available browser surface and the browser automation binary is unavailable. The feature is not release-certified; round rotation, player delivery, offline/hybrid, results/finance/finalization/export, authoritative fixtures, and real-event proof remain open.
+
 ## 2026-09-09 hybrid guidance regression boundary
 
 - Added regression coverage to ensure the protected Start Here guide keeps the required independent paper/digital entries, individual confirmations, and pending cross-check path explicit. Local lint and 72 tests pass.

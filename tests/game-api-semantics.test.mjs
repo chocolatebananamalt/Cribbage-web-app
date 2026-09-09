@@ -111,6 +111,39 @@ test('check-in and initial-seating writers are same-origin, claims-checked RPC b
   assert.match(publish, /isRejectedInitialSeating/);
 });
 
+test('protected seating workspace validates the narrow director-only read and preserves immutable publication semantics', async () => {
+  const workspace = await import(pathToFileURL(path.join(root, 'src/lib/api/seating-workspace.ts')).href);
+  const rosterEntryId = '00000000-0000-4000-8000-000000000001';
+  const publicationId = '00000000-0000-4000-8000-000000000002';
+  const valid = {
+    checkIn: [{ rosterEntryId, displayName: 'Sample Player', state: 'checked_in' }],
+    publication: { publicationId, tableCount: 1, seatsPerTable: 2, publishedAt: '2026-09-09T12:00:00.000Z', assignments: [{ rosterEntryId, displayName: 'Sample Player', initialTableSeat: 'A-1', verificationId: 'A-1' }] },
+  };
+  assert.equal(workspace.isSeatingWorkspace(valid), true);
+  assert.equal(workspace.isSeatingWorkspace({ ...valid, unexpected: 'private' }), false);
+  assert.equal(workspace.isSeatingWorkspace({ ...valid, publication: { ...valid.publication, assignments: [{ ...valid.publication.assignments[0], verificationId: 'A-2' }] } }), false);
+  assert.equal(workspace.isSeatingWorkspace({ ...valid, checkIn: [{ ...valid.checkIn[0], state: 'present' }] }), false);
+  const page = read('src/app/tournament/[tournamentId]/seating/page.tsx');
+  const client = read('src/app/tournament/[tournamentId]/seating/seating-client.tsx');
+  const workspaceSource = read('src/lib/seating/workspace.ts');
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /director.*co_director/);
+  assert.match(page, /getSeatingWorkspace/);
+  assert.match(workspaceSource, /get_initial_seating_workspace/);
+  assert.match(workspaceSource, /server-only/);
+  assert.doesNotMatch(workspaceSource, /\.from\(/);
+  assert.match(client, /seating-operation:\$\{actorId\}:\$\{tournamentId\}/);
+  assert.match(client, /crypto\.randomUUID\(\)/);
+  assert.match(client, /Retry the same protected request/);
+  assert.match(client, /credentials:"same-origin"/);
+  assert.match(client, /Publish permanent initial seating/);
+  assert.match(page, /permanent starting Table\/Seat list/);
+  assert.match(client, /Review recovered request/);
+  assert.match(client, /flight\.current/);
+  assert.doesNotMatch(client, /supabase\.(?:from|rpc)|service_role/);
+  assert.match(read('src/lib/client-session-storage.ts'), /"seating-operation:"/);
+});
+
 test('roster-account linking and event enrollment use exact, receipt-bound private API envelopes', async () => {
   const lifecycle = await import(pathToFileURL(path.join(root, 'src/lib/api/roster-lifecycle.ts')).href);
   const tournamentId = '00000000-0000-4000-8000-000000000001';

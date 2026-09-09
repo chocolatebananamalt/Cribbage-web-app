@@ -1,4 +1,4 @@
-const appStoragePrefixes = ["acc-score:", "acc-correction:", "registration-operation:", "payment-operation:"];
+const appStoragePrefixes = ["acc-score:", "acc-correction:", "registration-operation:", "payment-operation:", "seating-operation:"];
 
 export function clearAppSessionStorage(storage: Storage) {
   for (let index = storage.length - 1; index >= 0; index -= 1) {

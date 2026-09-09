@@ -178,3 +178,24 @@ It does not resolve the release-blocker matrix above: the missing operations,
 independent-session evidence, offline/hybrid behavior, results/finance/
 finalization, authoritative fixtures, recovery drills, and accessibility
 evidence remain non-waivable.
+
+## Follow-up audit — protected check-in and initial seating workspace
+
+The current branch now has a protected director/co-director workspace for the
+already-receipt-bound check-in and initial-seating APIs. Its read is a
+server-only, exact DTO validation of `get_initial_seating_workspace`; the
+browser never gains direct table access. It supports bounded check-in status,
+an unpublished Table Plan, a full unique starting Table/Seat draft, a clear
+irreversible-publication confirmation, and a printable published list. The
+client preserves only one actor-scoped unresolved operation and permits retry
+of that exact request rather than allowing a changed follow-up request.
+
+This is an operational screen, not evidence that the actual tournament
+lifecycle is complete. It intentionally does not produce round rotation,
+play-through direction, player delivery, event enrollment, or results. The
+local suite now has 73 passing tests plus lint, production build, workspace
+verification, private-handoff verification, and diff validation. Visual
+phone/desktop browser verification could not be performed on this host: the
+available browser blocks localhost and the required browser-automation binary
+is unavailable. The UI and multi-user browser requirements therefore remain
+unverified and non-waivable.
