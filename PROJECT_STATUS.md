@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 account-link activation review repair
+
+- Focused independent review found two P1 design gaps in the planned account-link activation flow: bearer-token redemption alone cannot prove the intended person is present, and approval needed explicit inner-link idempotency/atomicity semantics. The contract now requires an in-person, one-time confirmation phrase and a single transaction that uses separate stable approval and link operation IDs, rolling back both on nested-link failure.
+- The secure database/API implementation and its real multi-account tests remain open; no activation data path was exposed by this contract repair.
+
 ## 2026-09-09 seating print regression repair
 
 - Repaired the protected seating workspace print stylesheet so the published seating assignments remain in the printed document. The earlier rule mistakenly hid the seating list along with interactive controls.
