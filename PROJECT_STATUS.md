@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 GitHub release-control audit
+
+- Confirmed that the repository Verify workflow runs the pinned install, lint, tests, production build, and workspace verification on pushes and pull requests; prior reviewed commits passed it.
+- GitHub returns a plan limitation when querying branch protection for this private repository: enforceable required checks require GitHub Pro or a public repository. This is documented as an open production release-control gate, not auto-remediated by changing plan or visibility. See `docs/quality/2026-09-09-github-release-control-audit.md`.
+
 ## 2026-09-09 Vercel framework configuration
 
 - Pinned the Vercel project to the explicit **Next.js** framework preset while preserving the blank root directory, default build commands, and tested Node `24.x` runtime. Vercel’s connected project record now reports `framework: nextjs` rather than auto-detected `null`.
