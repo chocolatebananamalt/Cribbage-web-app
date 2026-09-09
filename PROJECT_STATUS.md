@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-09 player-account-link activation gap
+
+- The receipt-bound roster-account-link writer has no safe source for a director to obtain an authenticated player profile ID. A name/email/ACC-number lookup would violate the approved non-inference identity rule and could mislink a player. Recorded a director-issued, one-time activation-and-approval contract in `docs/decisions/2026-09-09-player-account-link-activation-contract.md`; no unsafe typed-ID interface was added.
+
 ## 2026-09-09 protected check-in and seating workspace
 
 - Added the missing director/co-director operational screen for check-in and immutable initial seating. It reads only a narrow server-authorized workspace, records bounded status changes through the guarded API, prepares a complete starting Table/Seat plan, safeguards the one permanent publication with a confirmation, and provides a print view. One unresolved request is safely retained and retry-locked per actor/tournament; shared-device sign-out clears that recovery state.
