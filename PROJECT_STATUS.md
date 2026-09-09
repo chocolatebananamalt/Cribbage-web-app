@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 server-only activation execution prerequisite
+
+- Verified the current project configuration contains only public Supabase connection values; it has no server-only database execution identity. This is correct for current browser-session RPCs but insufficient for the reviewed activation feature, whose functions must not be callable by authenticated browsers.
+- Recorded the required Vercel/server-only credential boundary in `docs/decisions/2026-09-09-server-only-database-execution.md`. No secret was requested, read, logged, or added. Activation implementation remains intentionally paused until its server-only boundary can be provisioned and proven.
+
 ## 2026-09-09 account-link activation implementation review
 
 - A focused Sol review rejected the first local activation-migration draft before it reached any database. It found five P1 risks: a nested-link failure could commit a link without approval, the issuance retry fingerprint omitted its salt, authenticated browsers could directly execute the functions, concurrent officials could issue competing activations, and cancellation/rejection state was missing. The draft migration and its inadequate regex-only test were removed rather than applied.
