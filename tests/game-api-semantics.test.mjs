@@ -719,6 +719,42 @@ test('tournament setup drafts are private immutable configuration, not operation
   assert.doesNotMatch(sql, /insert into app\.(events|ruleset_versions|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events)/);
 });
 
+test('tournament setup writer is an authenticated, versioned, draft-only transaction boundary', () => {
+  const sql = read('database/migrations/0052_tournament_setup_save_rpc.sql');
+  assert.match(sql, /create or replace function public\.save_tournament_setup_version/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /auth\.uid\(\)/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /from app\.tournaments where id = p_tournament_id for update/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /select \* into v_existing from app\.operation_receipts/);
+  assert.match(sql, /return v_existing\.response_payload/);
+  assert.match(sql, /p_expected_version <> v_current_version/);
+  assert.match(sql, /stale setup version/);
+  assert.match(sql, /initial_seating_publications/);
+  assert.match(sql, /app\.rounds/);
+  assert.match(sql, /app\.canonical_games/);
+  assert.match(sql, /ps\.state <> 'draft'/);
+  assert.match(sql, /assert_setup_object_keys/);
+  assert.match(sql, /parse_setup_timestamp/);
+  assert.match(sql, /pg_catalog\.pg_timezone_names/);
+  assert.match(sql, /qualification_note/);
+  assert.match(sql, /jsonb_array_length\(v_event->'qPools'\) > 2/);
+  assert.match(sql, /v_event_kind not in \('main','consolation'\)/);
+  assert.match(sql, /tournament_setup_operation_conflicts/);
+  assert.match(sql, /case when v_existing\.tournament_id=p_tournament_id then v_existing\.id else null end/);
+  assert.match(sql, /'operationalEventsCreated',false/);
+  assert.match(sql, /'accSubmissionCreated',false/);
+  assert.match(sql, /insert into app\.tournament_setup_revisions/);
+  assert.match(sql, /insert into app\.tournament_setup_official_versions/);
+  assert.match(sql, /insert into app\.tournament_setup_event_versions/);
+  assert.match(sql, /insert into app\.tournament_setup_q_pool_versions/);
+  assert.match(sql, /insert into app\.audit_events/);
+  assert.match(sql, /revoke all on function public\.save_tournament_setup_version.*from public, anon/);
+  assert.match(sql, /grant execute on function public\.save_tournament_setup_version.*to authenticated/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\.(events|ruleset_versions|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events|initial_seating_)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');

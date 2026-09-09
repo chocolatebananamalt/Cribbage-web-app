@@ -34,7 +34,7 @@ Each immutable version records the following typed, validated content:
   entries;
 - for every event: director-provided display name, date/time, style, format,
   game count, nonnegative integer USD-cent entry fee, bounded fee-includes
-  description, payout/qualification notes, eligibility notes, and explicit
+  description, distinct payout, qualification, and eligibility notes, and explicit
   Muggins state (`unset`, `in_effect`, or `not_in_effect`);
 - for Main and Consolation only: no more than two Q-pool descriptors, each with
   type, entry fee, and director-provided explanatory text;
@@ -73,7 +73,16 @@ with an empty search path and current server-side tournament-role checks.
 ## Writer contract
 
 `save_tournament_setup_version(tournament_id, expected_version, payload,
-idempotency_key)` must:
+idempotency_key)` is the implemented authenticated-only writer. Its payload
+has exactly these root keys: `tournamentName`, `city`, `venue`, `startsAt`,
+`endsAt`, `timezone`, `contactDetails`, `sanctioningFeeCents`, `officials`, and
+`events`. Each official has only `profileId` and `role`. Each event has only
+`clientRowId`, `eventKind`, `displayName`, `startsAt`, `timezone`, `styleCode`,
+`formatCode`, `gameCount`, `entryFeeCents`, `feeIncludesNote`, `payoutNote`,
+`qualificationNote`, `eligibilityNote`, `mugginsStatus`, and `qPools`; each
+Q-pool has only `poolTypeCode`, `entryFeeCents`, and `note`.
+
+The writer must:
 
 1. require an authenticated current director or co-director;
 2. advisory-lock the actor/idempotency key, lock the tournament row, then check
@@ -96,6 +105,11 @@ idempotency_key)` must:
 7. return an explicit response that says the configuration remains draft-only
    and that no operational event, scoring, payment, seat, flyer, result, or ACC
    submission was created.
+
+The current implementation rejects syntactically invalid ISO-local timestamps
+and unknown IANA timezone names. A formal policy for ambiguous local times at
+DST folds remains a release gate; no stored timestamp is represented as an
+official ACC schedule interpretation yet.
 
 The reader must return only the current authorized tournament configuration and
 the minimum immutable history needed for a director to compare versions. It
