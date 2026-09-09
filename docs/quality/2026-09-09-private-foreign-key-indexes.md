@@ -21,7 +21,8 @@ policy, trigger, function, tournament rule, score, or financial calculation.
 Because the local Supabase CLI is not installed, the reviewed migration was
 applied through the connected Supabase migration service. The first migration
 is recorded as `private_foreign_key_indexes` at version `20260909101945`; the
-pruning migration is recorded separately after review.
+pruning migration is recorded as
+`prune_redundant_private_foreign_key_indexes` at version `20260909102445`.
 
 ## Verification
 
@@ -37,6 +38,12 @@ pruning migration is recorded separately after review.
 - The static regression test asserts exact initial index table/column
   definitions, the exact 13 pruning statements, retention of the one needed
   profile index, and prohibition of grants, policies, or table alterations.
+- Local verification after the review repair passed: lint, 64 tests, production
+  build, workspace verification, private-handoff verification, and diff check.
+- GitHub Verify run `34340141490` for commit `db93c8d` completed successfully.
+  Vercel Preview deployment `dpl_9mCDQZpr7ZGzztkt1HjRcj69gRLU` for the same
+  commit is Ready under the explicit Next.js preset. This is preview evidence,
+  not a public production release.
 
 ## Limits
 
