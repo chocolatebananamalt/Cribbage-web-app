@@ -51,6 +51,66 @@ test('private API failure boundary distinguishes unavailable claims, missing ses
   assert.match(responseBoundary, /catch \{\s*return apiJson\(\{ error: "operation_unavailable" \}, \{ status: 503 \}\);/);
 });
 
+test('check-in and initial-seating routes accept only strict, bounded, migration-defined request and response shapes', async () => {
+  const seating = await import(pathToFileURL(path.join(root, 'src/lib/api/seating.ts')).href);
+  const rosterEntryId = '00000000-0000-4000-8000-000000000001';
+  const otherRosterEntryId = '00000000-0000-4000-8000-000000000002';
+  const operationId = '00000000-0000-4000-8000-000000000003';
+  const publicationId = '00000000-0000-4000-8000-000000000004';
+  const tournamentId = '00000000-0000-4000-8000-000000000005';
+  const otherOperationId = '00000000-0000-4000-8000-000000000006';
+  const checkIn = { rosterEntryId, checkInState: 'checked_in', reason: '', idempotencyKey: operationId };
+  assert.equal(seating.isCheckInRequest(checkIn), true);
+  assert.equal(seating.isCheckInRequest({ ...checkIn, internal_detail: 'private' }), false);
+  assert.equal(seating.isCheckInRequest({ ...checkIn, reason: 'x'.repeat(501) }), false);
+  assert.equal(seating.isCheckInRequest({ ...checkIn, checkInState: 'present' }), false);
+  const acceptedCheckIn = { status: 'check_in_recorded', checkInEventId: publicationId, rosterEntryId, checkInState: 'checked_in', eventEnrolled: false, seatAssigned: false, verificationIdAssigned: false, tournamentId, operationId };
+  assert.equal(seating.isAcceptedCheckIn(acceptedCheckIn, tournamentId, checkIn), true);
+  assert.equal(seating.isAcceptedCheckIn({ ...acceptedCheckIn, operationId: otherOperationId }, tournamentId, checkIn), false);
+  assert.equal(seating.isAcceptedCheckIn({ ...acceptedCheckIn, tournamentId: otherOperationId }, tournamentId, checkIn), false);
+  assert.equal(seating.isAcceptedCheckIn({ ...acceptedCheckIn, internal_detail: 'private' }, tournamentId, checkIn), false);
+  const rejectedCheckIn = { status: 'rejected', code: 'not_director', rosterEntryId, tournamentId, operationId };
+  assert.equal(seating.isRejectedCheckIn(rejectedCheckIn, tournamentId, checkIn), true);
+  assert.equal(seating.isRejectedCheckIn({ ...rejectedCheckIn, operationId: otherOperationId }, tournamentId, checkIn), false);
+  assert.equal(seating.isRejectedCheckIn({ ...rejectedCheckIn, code: 'registration_open' }, tournamentId, checkIn), false);
+  const initial = { tableCount: 1, seatsPerTable: 2, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId: otherRosterEntryId, tableSeat: 'A-2' }], idempotencyKey: operationId };
+  assert.equal(seating.isInitialSeatingRequest(initial), true);
+  assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'a-1' }] }), false);
+  assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId, tableSeat: 'A-2' }] }), false);
+  assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId: otherRosterEntryId, tableSeat: 'A-3' }] }), false);
+  const acceptedInitial = { status: 'initial_seating_published', publicationId, assignmentCount: 2, registrationClosed: true, roundRotationGenerated: false, tournamentId, operationId };
+  assert.equal(seating.isAcceptedInitialSeating(acceptedInitial, tournamentId, initial), true);
+  assert.equal(seating.isAcceptedInitialSeating({ ...acceptedInitial, operationId: otherOperationId }, tournamentId, initial), false);
+  assert.equal(seating.isAcceptedInitialSeating({ ...acceptedInitial, tournamentId: otherOperationId }, tournamentId, initial), false);
+  assert.equal(seating.isAcceptedInitialSeating({ ...acceptedInitial, internal_detail: 'private' }, tournamentId, initial), false);
+  const rejectedInitial = { status: 'rejected', code: 'registration_open', tournamentId, operationId };
+  assert.equal(seating.isRejectedInitialSeating(rejectedInitial, tournamentId, initial), true);
+  assert.equal(seating.isRejectedInitialSeating({ ...rejectedInitial, operationId: otherOperationId }, tournamentId, initial), false);
+  assert.equal(seating.isRejectedInitialSeating({ ...rejectedInitial, code: 'roster_entry_unavailable' }, tournamentId, initial), false);
+});
+
+test('check-in and initial-seating writers are same-origin, claims-checked RPC boundaries with no direct data access', () => {
+  const checkIn = read('src/app/api/v1/tournaments/[id]/seating/check-in/route.ts');
+  const publish = read('src/app/api/v1/tournaments/[id]/seating/publish/route.ts');
+  const boundary = read('src/lib/api/route-boundary.ts');
+  for (const source of [checkIn + boundary, publish + boundary]) {
+    assert.match(source, /isSameOriginRequest/);
+    assert.match(source, /requireVerifiedSubject/);
+    assert.match(source, /withApiFailureBoundary/);
+    assert.match(source, /operation_unavailable/);
+    assert.match(source, /private, no-store/);
+    assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
+  }
+  assert.match(checkIn, /record_roster_check_in_event_v2/);
+  assert.match(checkIn, /isCheckInRequest/);
+  assert.match(checkIn, /isAcceptedCheckIn/);
+  assert.match(checkIn, /isRejectedCheckIn/);
+  assert.match(publish, /publish_initial_seating_v2/);
+  assert.match(publish, /isInitialSeatingRequest/);
+  assert.match(publish, /isAcceptedInitialSeating/);
+  assert.match(publish, /isRejectedInitialSeating/);
+});
+
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
@@ -696,6 +756,31 @@ test('check-in and initial seating are private, immutable, closed-registration o
   assert.match(sql, /grant execute on function public\.record_roster_check_in_event[\s\S]*authenticated/);
   assert.match(sql, /grant execute on function public\.publish_initial_seating[\s\S]*authenticated/);
   assert.match(sql, /grant execute on function public\.get_initial_seating_workspace[\s\S]*authenticated/);
+});
+
+test('versioned check-in and seating RPC wrappers bind every application response to an exact authoritative receipt', () => {
+  const sql = read('database/migrations/0064_check_in_seating_receipt_role_lookup_guard.sql');
+  assert.match(sql, /create or replace function public\.record_roster_check_in_event_v2/);
+  assert.match(sql, /create or replace function public\.publish_initial_seating_v2/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /if auth\.uid\(\) is null or not exists \(\s*select 1 from app\.tournament_roles r where r\.tournament_id = p_tournament_id\s*and r\.profile_id = auth\.uid\(\) and r\.role in \('director', 'co_director'\)\s*\) then return null; end if/);
+  assert.match(sql, /v_hash := encode\(extensions\.digest\(convert_to\(jsonb_build_array\(/);
+  assert.match(sql, /from app\.operation_receipts o/);
+  assert.match(sql, /o\.actor_profile_id = auth\.uid\(\)/);
+  assert.match(sql, /o\.tournament_id = p_tournament_id/);
+  assert.match(sql, /o\.client_operation_id = p_idempotency_key/);
+  assert.match(sql, /o\.request_hash = v_hash/);
+  assert.match(sql, /and exists \(select 1 from app\.tournament_roles r where r\.tournament_id = p_tournament_id\s*and r\.profile_id = auth\.uid\(\) and r\.role in \('director', 'co_director'\)\)/);
+  assert.match(sql, /if v_stored is null then return null; end if/);
+  assert.match(sql, /return v_stored \|\| jsonb_build_object\(\s*'tournamentId', p_tournament_id,\s*'operationId', p_idempotency_key/);
+  assert.match(sql, /public\.record_roster_check_in_event\(/);
+  assert.match(sql, /public\.publish_initial_seating\(/);
+  assert.match(sql, /revoke all on function public\.record_roster_check_in_event_v2.*from public, anon/);
+  assert.match(sql, /revoke all on function public\.publish_initial_seating_v2.*from public, anon/);
+  assert.match(sql, /grant execute on function public\.record_roster_check_in_event_v2.*to authenticated/);
+  assert.match(sql, /grant execute on function public\.publish_initial_seating_v2.*to authenticated/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\./);
+  assert.doesNotMatch(sql, /coalesce\(v_stored, v_result\)|return v_result/);
 });
 
 test('roster-account links are director-authorized, immutable, and do not grant scoring authority', () => {

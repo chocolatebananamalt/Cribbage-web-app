@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 check-in and initial seating API boundary
+
+- Exposed director/co-director check-in and immutable initial-seating operations through strict same-origin, verified-claims, private/no-store application routes. Focused Sol review found that `0047` replies could not prove they belonged to the exact browser operation; four intermediate response-wrapper repairs were insufficient. Applied pilot migrations `0060`–`0064`; the final wrapper requires the caller's current official role, recomputes the 0047 request fingerprint, and returns only the caller/tournament/operation/target-scoped stored receipt before adding the submitted IDs. Its receipt lookup repeats the role predicate to avoid role-change replay races. It returns no actionable envelope if no receipt proves provenance or the role was revoked. The browser now rejects malformed IDs, states, reasons, capacity, Table/Seat assignments, duplicates, extra fields, and cross-operation backend reply shapes rather than passing them through.
+- Local lint, 68 tests, and production build pass; pilot grants, wrapper security posture, empty historical receipt audit, and anonymous fail-closed behavior were checked. This is an API boundary, not an operational seating screen or proof of a real tournament lifecycle; the independent-session and end-to-end release evidence remains open. See `docs/quality/2026-09-09-check-in-initial-seating-api-boundary.md`.
+
 ## 2026-09-09 exact manual-payment response contract
 
 - Manual payment record, void, and retry-recovery paths now accept only their exact migration-defined response shapes. Record and void rejection codes are distinct, so an opposite-operation response can no longer falsely clear a financial retry lock.
