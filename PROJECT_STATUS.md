@@ -8,6 +8,11 @@
 - Independent Sol security re-review found no remaining P0/P1 issues. Vercel Preview deployment `dpl_HiNqnX8is9tLTRfnf2Qv3P9rdsER` from `f883a3b` rendered the dashboard and the generic closed/unavailable registration state without a runtime-error cluster.
 - Director/co-director review, manual-payment ledger, check-in, shared-device clearing, and seating remain explicit implementation gates. No public registration link is enabled permanently in the pilot.
 
+## 2026-09-09 correction fingerprint compatibility hardening
+
+- Replaced the correction RPC's delimiter-based request fingerprint with canonical JSON for fresh installations, and applied pilot repairs `0019`/`0020`. Existing immutable correction receipts remain replay-compatible through an exact legacy-hash comparison while all new receipts use canonical fingerprints.
+- A transactional pilot test confirmed an old-format receipt replays its saved response and a changed reason containing `|` returns `idempotency_conflict`; all fixture writes rolled back. Independent Sol review found no remaining P0/P1 issue after the compatibility repair.
+
 ## 2026-09-08 correction-foundation pilot verification
 
 - Applied `0011_correction_foundation` to the isolated synthetic-data pilot. It provides append-only correction/state/conflict records and an authenticated, cross-checker-only correction RPC. It preserves original verification evidence, denies self-corrections, applies the default immediate-authority/optional-reason policy atomically, and safely rejects non-identical reuse of an idempotency key.

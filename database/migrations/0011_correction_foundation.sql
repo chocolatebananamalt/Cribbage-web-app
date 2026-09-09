@@ -73,7 +73,7 @@ begin
   if p_game_id is null or p_correction_id is null or p_expected_game_version is null or p_winner_side is null or p_margin is null or p_winner_side not in ('a','b') or p_margin not between 1 and 121 or p_idempotency_key is null then
     raise exception using errcode = 'P0001', message = 'invalid correction request';
   end if;
-  v_hash := encode(extensions.digest(convert_to(concat_ws('|','propose_game_correction',p_game_id::text,p_correction_id::text,p_expected_game_version::text,p_winner_side,p_margin::text,coalesce(p_reason,''),p_idempotency_key::text),'utf8'),'sha256'),'hex');
+  v_hash := encode(extensions.digest(convert_to(jsonb_build_array('propose_game_correction', p_game_id::text, p_correction_id::text, p_expected_game_version::text, p_winner_side, p_margin::text, coalesce(p_reason, ''), p_idempotency_key::text)::text, 'utf8'), 'sha256'), 'hex');
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_actor::text || ':' || p_idempotency_key::text, 0));
   select * into v_game from app.canonical_games where id = p_game_id for update;
   if not found then raise exception using errcode = 'P0001', message = 'game not found'; end if;

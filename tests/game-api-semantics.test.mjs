@@ -113,6 +113,8 @@ test('pilot trigger correction migration hardens existing deferred functions', (
 
 test('correction foundation is append-only and server-authorized', () => {
   const sql = read('database/migrations/0011_correction_foundation.sql');
+  const fingerprintRepair = read('database/migrations/0019_correction_idempotency_fingerprint_repair.sql');
+  const legacyCompatibility = read('database/migrations/0020_correction_legacy_replay_compatibility.sql');
   assert.match(sql, /create table app\.game_corrections/);
   assert.match(sql, /create table app\.correction_state_events/);
   assert.match(sql, /game_corrections_immutable/);
@@ -138,6 +140,11 @@ test('correction foundation is append-only and server-authorized', () => {
   assert.match(sql, /confirmations require two submissions and an eligible game state/);
   assert.match(sql, /confirmations require matching submission winner and margin/);
   assert.match(sql, /idempotency_conflict/);
+  assert.match(sql, /jsonb_build_array\('propose_game_correction'/);
+  assert.doesNotMatch(sql, /concat_ws\('\|','propose_game_correction'/);
+  assert.match(fingerprintRepair, /jsonb_build_array\('propose_game_correction'/);
+  assert.match(fingerprintRepair, /v_existing\.request_hash <> v_hash and v_existing\.request_hash <> v_legacy_hash/);
+  assert.match(legacyCompatibility, /v_existing\.request_hash <> v_hash and v_existing\.request_hash <> v_legacy_hash/);
   assert.match(sql, /update app\.card_scorelines set/);
   assert.match(sql, /state='corrected'/);
   assert.match(sql, /revoke all on function public\.propose_game_correction/);
