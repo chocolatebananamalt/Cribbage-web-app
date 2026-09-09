@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 protected manual-payment mutation boundary
+
+- Added strict same-origin, cookie-authenticated receipt, void, and recovery routes. They call only the existing narrowly authorized payment RPCs, validate canonical UTC receipt timestamps and integer USD cents, bind all accepted/rejected responses to the requested roster/version/receipt state, and send no direct-table or service-role request.
+- Migration `0046_payment_operation_identity_recovery_authorization` changes recovery to return an explicit `{ authorized: true, result }` envelope for current director/co-director callers. The UI may treat only explicit `result: null` as an uncommitted operation; revoked-role or malformed recovery remains locked rather than silently discarded.
+- Focused Sol review found and repaired four P1s (authorization/null ambiguity, loose recovery shape, ambiguous date/cents inputs, mixed rejected/success shapes) and a final response-discriminator P1. Final re-review found no P0/P1. The protected page remains evidence-only; its retry-safe mutation client and independent real-session lifecycle tests are still required before a director can record payment in the UI.
+
 ## 2026-09-09 meta release-readiness audit
 
 - Completed a fresh requirement-by-requirement audit in `docs/quality/2026-09-09-meta-release-readiness-audit.md`. It confirms the current reviewed branch deploys as a protected Vercel Preview and has no seven-day runtime-error cluster, but it is not a production deployment and must not be represented as one.

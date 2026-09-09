@@ -481,8 +481,12 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   const reconciliation = read('database/migrations/0043_payment_operation_reconciliation_hardening.sql');
   const retiredReconciliation = read('database/migrations/0044_remove_legacy_payment_operation_reconciliation.sql');
   const identityReconciliation = read('database/migrations/0045_payment_operation_identity_reconciliation.sql');
+  const identityAuthorization = read('database/migrations/0046_payment_operation_identity_recovery_authorization.sql');
   const paymentDal = read('src/lib/payments/workspace.ts');
   const paymentPage = read('src/app/tournament/[tournamentId]/payments/page.tsx');
+  const paymentRecordRoute = read('src/app/api/v1/tournaments/[id]/payments/record/route.ts');
+  const paymentVoidRoute = read('src/app/api/v1/tournaments/[id]/payments/void/route.ts');
+  const paymentRecoveryRoute = read('src/app/api/v1/tournaments/[id]/payments/reconciliation/route.ts');
   assert.match(sql, /create table app\.roster_payment_events/);
   assert.match(sql, /event_type text not null check \(event_type in \('received', 'voided'\)\)/);
   assert.match(sql, /amount_minor integer not null check \(amount_minor > 0\)/);
@@ -535,6 +539,7 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.match(identityReconciliation, /o\.operation_type=p_operation_type limit 1/);
   assert.doesNotMatch(identityReconciliation, /p_request_hash/);
   assert.match(identityReconciliation, /revoke all on function public\.get_roster_payment_operation_identity_reconciliation\(uuid,uuid,text,uuid\)[\s\S]*from public, anon/);
+  assert.match(identityAuthorization, /jsonb_build_object\('authorized', true, 'result'/);
   assert.match(paymentDal, /server-only/);
   assert.match(paymentDal, /get_roster_payment_workspace/);
   assert.doesNotMatch(paymentDal, /\.from\(/);
@@ -545,6 +550,10 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.match(paymentPage, /does not mean paid in full, reconciled, checked in, seated, enrolled, or eligible/i);
   assert.match(paymentPage, /SharedDeviceSignOut/);
   assert.doesNotMatch(paymentPage, /entry\.(email|accNumber|balance|paidInFull|reconciled)/i);
+  for (const route of [paymentRecordRoute, paymentVoidRoute, paymentRecoveryRoute]) { assert.match(route, /isSameOriginRequest/); assert.match(route, /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
+  assert.match(paymentRecordRoute, /record_manual_roster_payment/); assert.match(paymentRecordRoute, /isPaymentRecordRequest/); assert.match(paymentRecordRoute, /isRecordedPayment/);
+  assert.match(paymentVoidRoute, /void_manual_roster_payment/); assert.match(paymentVoidRoute, /isPaymentVoidRequest/); assert.match(paymentVoidRoute, /isVoidedPayment/);
+  assert.match(paymentRecoveryRoute, /get_roster_payment_operation_identity_reconciliation/); assert.match(paymentRecoveryRoute, /isPaymentRecoveryRequest/); assert.match(paymentRecoveryRoute, /isRecoveredPayment/); assert.match(paymentRecoveryRoute, /authorized !== true/); assert.doesNotMatch(paymentRecoveryRoute, /amountMinor|paymentMethod|paymentReceivedAt|voidReason|note/);
   const payment = await import(pathToFileURL(path.join(root, 'src/lib/api/payment.ts')).href);
   const event = { paymentEventId: '00000000-0000-4000-8000-000000000001', version: 1, eventType: 'received', amountMinor: 2500, currencyCode: 'USD', paymentMethod: 'cash', paymentReceivedAt: '2026-09-09T10:00:00.000Z', paymentVoidedAt: null, receiptNote: null, voidReason: null, recorderDisplayName: 'Director', recordedAt: '2026-09-09T10:01:00.000Z' };
   const validPaymentWorkspace = { rosterEntries: [{ rosterEntryId: '00000000-0000-4000-8000-000000000002', displayName: 'Sample Player', paymentVersion: 1, paymentState: 'received', currentReceiptEventId: event.paymentEventId, history: [event] }] };
@@ -554,6 +563,21 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], paymentVersion: 2 }] }), false);
   assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], history: [{ ...event, paymentVoidedAt: '2026-09-09T10:02:00.000Z', voidReason: 'wrong amount' }] }] }), false);
   assert.equal(payment.isPaymentWorkspace({ rosterEntries: [{ ...validPaymentWorkspace.rosterEntries[0], paymentVersion: 0, paymentState: 'unrecorded', currentReceiptEventId: null, history: [event] }] }), false);
+  const paymentRecord = { rosterEntryId: validPaymentWorkspace.rosterEntries[0].rosterEntryId, expectedPaymentVersion: 0, amountMinor: 2500, paymentMethod: 'cash', paymentReceivedAt: '2026-09-09T10:00:00.000Z', note: '', idempotencyKey: '00000000-0000-4000-8000-000000000010' };
+  assert.equal(payment.isPaymentRecordRequest(paymentRecord), true); assert.equal(payment.isPaymentRecordRequest({ ...paymentRecord, amountMinor: 0 }), false); assert.equal(payment.isPaymentRecordRequest({ ...paymentRecord, amountMinor: 2147483648 }), false); assert.equal(payment.isPaymentRecordRequest({ ...paymentRecord, paymentReceivedAt: '2026-09-09' }), false); assert.equal(payment.isPaymentRecordRequest({ ...paymentRecord, note: 'x'.repeat(501) }), false);
+  const paymentVoid = { rosterEntryId: paymentRecord.rosterEntryId, expectedPaymentVersion: 1, paymentEventId: event.paymentEventId, voidReason: 'Incorrect amount', idempotencyKey: '00000000-0000-4000-8000-000000000011' };
+  assert.equal(payment.isPaymentVoidRequest(paymentVoid), true); assert.equal(payment.isPaymentVoidRequest({ ...paymentVoid, voidReason: '   ' }), false);
+  const recordRecovery = { rosterEntryId: paymentRecord.rosterEntryId, operationType: 'record_manual_roster_payment', expectedPaymentVersion: 0, paymentEventId: null, idempotencyKey: paymentRecord.idempotencyKey };
+  const voidRecovery = { rosterEntryId: paymentRecord.rosterEntryId, operationType: 'void_manual_roster_payment', expectedPaymentVersion: 1, paymentEventId: event.paymentEventId, idempotencyKey: paymentVoid.idempotencyKey };
+  assert.equal(payment.isPaymentRecoveryRequest(recordRecovery), true); assert.equal(payment.isPaymentRecoveryRequest(voidRecovery), true); assert.equal(payment.isPaymentRecoveryRequest({ ...recordRecovery, operationType: 'wrong' }), false);
+  assert.equal(payment.isRecordedPayment({ status: 'payment_recorded', paymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1, paymentState: 'received', paymentRecorded: true, paidInFull: false, reconciled: false }, paymentRecord), true);
+  assert.equal(payment.isRecordedPayment({ status: 'payment_recorded', paymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1, paymentState: 'received', paymentRecorded: true, paidInFull: true, reconciled: false }, paymentRecord), false);
+  assert.equal(payment.isRecordedPayment({ status: 'payment_recorded', paymentEventId: event.paymentEventId, voidedPaymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1, paymentState: 'received', paymentRecorded: true, paidInFull: false, reconciled: false }, paymentRecord), false);
+  assert.equal(payment.isRecordedPayment({ status: 'payment_recorded', code: 'stale_payment_history', paymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1, paymentState: 'received', paymentRecorded: true, paidInFull: false, reconciled: false }, paymentRecord), false);
+  assert.equal(payment.isVoidedPayment({ status: 'payment_voided', paymentEventId: '00000000-0000-4000-8000-000000000012', voidedPaymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 2, paymentState: 'voided', paymentRecorded: false, paidInFull: false, reconciled: false }, paymentVoid), true);
+  assert.equal(payment.isRecoveredPayment({ status: 'payment_recorded', paymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1, paymentState: 'received', paymentRecorded: true, paidInFull: false, reconciled: false }, recordRecovery), true);
+  assert.equal(payment.isRecoveredPayment({ status: 'payment_voided', paymentEventId: '00000000-0000-4000-8000-000000000012', voidedPaymentEventId: event.paymentEventId, rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 2, paymentState: 'voided', paymentRecorded: false, paidInFull: false, reconciled: false }, { ...voidRecovery, expectedPaymentVersion: 0 }), false);
+  assert.equal(payment.isRejectedPayment({ status: 'rejected', code: 'stale_payment_history', rosterEntryId: paymentRecord.rosterEntryId, paymentVersion: 1 }, paymentRecord.rosterEntryId), false);
 });
 
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {

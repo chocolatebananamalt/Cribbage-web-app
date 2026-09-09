@@ -78,6 +78,25 @@ pnpm verify:handoff
 git diff --check
 ```
 
+## Protected mutation boundary
+
+- Receipt and void HTTP routes are same-origin-only, validate a current
+  Supabase claim, and call only the role-authorized RPCs. A receipt requires
+  positive USD integer cents at or below PostgreSQL's integer maximum, an
+  allowlisted manual method, canonical UTC RFC3339 time, and an optional
+  bounded note. A void requires the exact current receipt and a bounded,
+  nonblank reason.
+- Both accepted and rejected JSON shapes are strict and mutually exclusive;
+  a malformed mixed payload is treated as unavailable rather than terminal.
+- The recovery route carries no amount, method, timestamp, note, or reason.
+  It requires an expected payment version and, for a void, the exact source
+  receipt. `0046` exposes `{ authorized: true, result }` only after server
+  role/scope checks, so only explicit authorized-null can prove no operation
+  committed. Authorization or response uncertainty remains retry-locked.
+- Focused Sol review repaired five P1 response/recovery boundary issues and
+  the final re-review found no P0/P1. The page intentionally remains read-only
+  until the browser retry client is implemented and independently exercised.
+
 ## Remaining release evidence
 
 No real authenticated disposable pilot accounts or director/co-director
