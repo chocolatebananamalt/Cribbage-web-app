@@ -67,6 +67,26 @@ or type a profile ID.
   idempotency key; approval accepts only the request, decision/phrase, and an
   idempotency key.
 
+## Required server-only execution boundary
+
+The activation functions must not be directly executable from a browser's
+authenticated Supabase client. They require a server-only database credential
+or equivalent non-browser execution identity. The Next.js route first verifies
+the current user and same-origin request, then passes the verified subject to a
+private database function. The database function must verify that trusted
+server identity before it accepts that subject. A browser-supplied profile ID,
+even if it matches the current session, is never accepted as authority.
+
+Every operation must be serialized on the tournament/roster identity, not just
+on the caller and idempotency key. Only one live activation can exist for a
+roster identity. The state machine includes append-only `issued`, `requested`,
+`cancelled`, `rejected`, and `approved` events; cancellation and rejection
+must release the affected player or roster identity for a later safe activation.
+The approval implementation must use an exception subtransaction around its
+nested link writer and raise on a null, malformed, or role-revoked nested
+result. Returning a normal failure after a nested writer may commit that
+writer's work and is prohibited.
+
 ## Acceptance evidence before release
 
 Two independent disposable player accounts and a director account must prove:
@@ -89,6 +109,11 @@ Two independent disposable player accounts and a director account must prove:
 8. raw activation values never appear in the database, logs, browser storage,
    cache, or referrers, and all new private tables/functions deny direct
    browser access.
+9. a direct authenticated Supabase RPC call to the activation functions is
+   denied; only the protected server route succeeds. Concurrent directors
+   issuing an activation for one roster identity produce exactly one live
+   activation, and a nested-link fault or role-revocation race leaves no link,
+   approval event, or receipt behind.
 
 This is the required identity increment before a director-facing account-link
 screen or player assignment delivery can be safely built.

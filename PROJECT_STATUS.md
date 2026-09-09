@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 account-link activation implementation review
+
+- A focused Sol review rejected the first local activation-migration draft before it reached any database. It found five P1 risks: a nested-link failure could commit a link without approval, the issuance retry fingerprint omitted its salt, authenticated browsers could directly execute the functions, concurrent officials could issue competing activations, and cancellation/rejection state was missing. The draft migration and its inadequate regex-only test were removed rather than applied.
+- The activation contract and acceptance criteria now require a server-only execution identity, roster-scoped serialization, full cancellation/rejection lifecycle, and an exception-subtransaction rollback proof. A disposable database branch or equivalent executed database test is required before a replacement migration may touch the pilot.
+
 ## 2026-09-09 account-link activation review repair
 
 - Focused independent review found two P1 design gaps in the planned account-link activation flow: bearer-token redemption alone cannot prove the intended person is present, and approval needed explicit inner-link idempotency/atomicity semantics. The contract now requires an in-person, one-time confirmation phrase and a single transaction that uses separate stable approval and link operation IDs, rolling back both on nested-link failure.
