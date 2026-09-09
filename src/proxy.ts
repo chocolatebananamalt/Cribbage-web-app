@@ -14,7 +14,14 @@ export async function proxy(request: NextRequest) {
   })) {
     return NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
   }
-  return updateSession(request);
+  try {
+    return await updateSession(request);
+  } catch {
+    return NextResponse.json(
+      { error: "operation_unavailable" },
+      { status: 503, headers: { "cache-control": "private, no-store" } },
+    );
+  }
 }
 
 export const config = {

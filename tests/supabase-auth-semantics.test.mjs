@@ -53,6 +53,9 @@ test('proxy refreshes claims and protected tournament data requires server membe
   assert.match(proxy, /getClaims/);
   assert.match(proxy, /invalid_origin/);
   assert.match(proxy, /private, no-store/);
+  assert.match(proxy, /operation_unavailable/);
+  assert.match(proxy, /await updateSession/);
+  assert.match(proxy, /catch/);
   assert.match(proxy, /"\/api\/v1\/:path\*"/);
   assert.match(proxy, /response\.cookies\.set/);
   assert.match(proxy, /refreshedHeaders/);

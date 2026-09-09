@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 game API response-boundary hardening
+
+- The Standard Singles submission and confirmation routes now reject malformed or cross-bound backend responses instead of reporting a false success. Both routes distinguish an auth-service outage (`503`) from no authenticated subject (`401`), contain thrown external failures, and make every response `private, no-store`.
+- The shared request proxy now contains an auth-refresh exception rather than bypassing API route failure handling. Local lint, 60 tests, production build, and diff checks pass. The remaining non-game API routes are under the same focused review and are not represented as closed; see `docs/quality/2026-09-09-game-api-response-boundary.md`.
+
 ## 2026-09-09 API mutation origin gateway
 
 - Added one fail-closed, no-store same-origin gate for every non-read `/api/v1/` request before a handler or database RPC is reached. This protects existing and future private mutations consistently; individual routes and database RPCs still enforce their own identity, role, data, idempotency, and audit rules.

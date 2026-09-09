@@ -8,15 +8,34 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 test('game API handlers validate, authenticate with claims, and call RPCs only', () => {
   const submission = read('src/app/api/v1/games/[id]/submissions/route.ts');
   const confirmation = read('src/app/api/v1/games/[id]/confirmations/route.ts');
-  for (const source of [submission, confirmation]) {
+  const boundary = read('src/lib/api/route-boundary.ts');
+  for (const source of [submission + boundary, confirmation + boundary]) {
     assert.match(source, /getClaims/); assert.match(source, /isUuid/); assert.match(source, /idempotencyKey/); assert.match(source, /\.rpc\(/);
     assert.doesNotMatch(source, /record_rejected_game_operation/);
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(/);
     assert.match(source, /operation_unavailable/);
-    assert.match(source, /status === "rejected"/);
+    assert.match(source, /isRejectedGameOperation/);
     assert.doesNotMatch(source, /error\.message/);
   }
   assert.match(submission, /submit_game_score/); assert.match(confirmation, /confirm_game_score/);
+  assert.match(submission, /isAcceptedSubmission/); assert.match(confirmation, /isAcceptedConfirmation/);
+  assert.match(submission + confirmation, /withApiFailureBoundary/);
+  assert.match(submission + confirmation, /requireVerifiedSubject/);
+});
+
+test('game operation responses bind to the requested game and submission before returning success', async () => {
+  const game = await import(pathToFileURL(path.join(root, 'src/lib/api/game-operation.ts')).href);
+  const gameId = '00000000-0000-4000-8000-000000000001';
+  const otherGameId = '00000000-0000-4000-8000-000000000002';
+  const submissionId = '00000000-0000-4000-8000-000000000003';
+  assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: gameId, submission_id: submissionId }, gameId, submissionId), true);
+  assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: otherGameId, submission_id: submissionId }, gameId, submissionId), false);
+  assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: gameId, submission_id: otherGameId }, gameId, submissionId), false);
+  assert.equal(game.isAcceptedSubmission(null, gameId, submissionId), false);
+  assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: gameId }, gameId), true);
+  assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: otherGameId }, gameId), false);
+  assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: otherGameId }, gameId), false);
 });
 
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
