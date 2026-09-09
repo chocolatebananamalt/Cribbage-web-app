@@ -24,6 +24,11 @@
 - Applied pilot migrations `0048` and `0049`: immutable independent roster-to-account linking and pre-seating director/co-director Standard Singles enrollment. The link rejects self-linking and creates no role/event/score authority; enrollment requires a linked, latest-state checked-in roster identity and an approved digital event, then creates no game or seat.
 - Static regression coverage passed with 51 tests. Vercel built commit `36e1e14` Ready, returned a normal auth redirect, and had no grouped runtime errors in the one-hour scan. Real independent authenticated-session/database lifecycle evidence remains a release gate; see `docs/quality/2026-09-09-identity-enrollment-pilot.md`.
 
+## 2026-09-09 event-enrollment replay and lifecycle repair
+
+- Repaired the guarded enrollment RPC before further use: changed idempotency-key reuse now creates a private immutable conflict record rather than colliding with the one-receipt-per-actor/key constraint, authorized closed-lifecycle rejections are now receipted/audited, and the qualifying event row is locked with the tournament before a participant is created.
+- Applied pilot migration `0050_event_enrollment_idempotency_and_lifecycle_repair`. A focused Sol review found and repaired the missing event lock; final re-review found no P0/P1. Local tests (51), lint, production build, workspace/handoff verification, and database catalog/grant checks pass. Real independent-session lifecycle and race evidence remain release gates; see `docs/quality/2026-09-09-event-enrollment-repair-pilot.md`.
+
 ## 2026-09-09 retry-safe manual-payment client
 
 - Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.

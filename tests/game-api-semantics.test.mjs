@@ -661,10 +661,19 @@ test('roster-account links are director-authorized, immutable, and do not grant 
 });
 
 test('event enrollment requires linked checked-in identity and approved digital singles before seating', () => {
-  const sql = read('database/migrations/0049_event_enrollment_boundary.sql');
+  const sql = read('database/migrations/0050_event_enrollment_idempotency_and_lifecycle_repair.sql');
+  assert.match(sql, /create table app\.event_enrollment_operation_conflicts/);
+  assert.match(sql, /force row level security/);
+  assert.match(sql, /event_enrollment_operation_conflicts_immutable/);
+  assert.match(sql, /revoke all on table app\.event_enrollment_operation_conflicts from public, anon, authenticated/);
   assert.match(sql, /enroll_linked_roster_entry_in_event/);
   assert.match(sql, /security definer set search_path = ''/);
   assert.match(sql, /role in \('director','co_director'\)/);
+  assert.match(sql, /select status into v_status from app\.tournaments where id=p_tournament_id for update/);
+  assert.match(sql, /for update of e/);
+  assert.match(sql, /if v_status <> 'open'/);
+  assert.match(sql, /if v_error='idempotency conflict' then[\s\S]*insert into app\.event_enrollment_operation_conflicts/);
+  assert.match(sql, /if v_error='idempotency conflict' then\s*insert into app\.event_enrollment_operation_conflicts[\s\S]*?;\s*else\s*insert into app\.operation_receipts/);
   assert.match(sql, /enrollment closed after seating/);
   assert.match(sql, /event not approved for digital enrollment/);
   assert.match(sql, /linked roster identity required/);
