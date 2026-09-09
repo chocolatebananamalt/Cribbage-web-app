@@ -23,15 +23,24 @@ no remaining P0/P1 findings.
 - Applied `roster_payment_history_indexes` (repository migration `0041`) after
   the performance advisor identified the missing `(roster_entry_id,
   tournament_id)` foreign-key covering index.
+- Applied `payment_operation_reconciliation_hardening` (`0043`) and
+  `remove_legacy_payment_operation_reconciliation` (`0044`). The only
+  callable reconciliation signature now requires tournament, roster identity,
+  exact operation type, canonical request hash, and idempotency key.
 
 ## Direct inspection
 
 - `app.roster_payment_events` and
   `app.roster_payment_operation_conflicts` both have RLS enabled and forced;
   neither `anon` nor `authenticated` has direct table DML/read privilege.
-- The three public RPCs are `SECURITY DEFINER`, have an empty `search_path`,
+- The payment RPCs are `SECURITY DEFINER`, have an empty `search_path`,
   deny `anon` execution, and allow only `authenticated` invocation. Each writer
   performs its own `auth.uid()` and current tournament-role check.
+- Direct catalog inspection confirms the legacy
+  `get_roster_payment_operation_reconciliation(uuid,uuid,uuid)` signature has
+  no dependencies and was removed without `CASCADE`; only the exact five-arg
+  function remains. It is `SECURITY DEFINER`, has an empty search path, denies
+  `anon`, and permits `authenticated` execution.
 - The append-only payment table has both the composite roster/tournament FK and
   deferred sequence/transition revalidation. The pilot exposes its received /
   voided receipt state only through the narrow writer and caller-scoped

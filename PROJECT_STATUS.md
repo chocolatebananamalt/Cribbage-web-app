@@ -2,8 +2,8 @@
 
 ## 2026-09-09 payment-operation recovery hardening
 
-- Applied pilot migration `0043_payment_operation_reconciliation_hardening`. Payment recovery is now bound to current actor, tournament, roster identity, exact record/void operation type, idempotency key, and canonical request hash. This prevents a retry from treating a void as a receipt or otherwise recovering a different financial action.
-- The focused review identified this as a prerequisite P1 before any payment mutation UI. Static regression coverage and `pnpm test` pass; payment actions themselves still require strict routes, opaque retry envelopes, and real-session lifecycle testing.
+- Applied pilot migrations `0043_payment_operation_reconciliation_hardening` and `0044_remove_legacy_payment_operation_reconciliation`. Payment recovery is now bound to current actor, tournament, roster identity, exact record/void operation type, idempotency key, and canonical request hash. The older three-argument recovery RPC was deliberately removed, leaving no weaker callable fallback. This prevents a retry from treating a void as a receipt or otherwise recovering a different financial action.
+- Focused Sol review confirmed the older RPC was not a current disclosure but should be removed to eliminate an avoidable `SECURITY DEFINER` surface and future misuse path. Pilot inspection confirms only the exact five-argument RPC remains; it has an empty search path, denies `anon`, and is executable by `authenticated` callers only. Static regression coverage and `pnpm test` pass; payment actions themselves still require strict routes, opaque retry envelopes, and real-session lifecycle testing.
 
 ## 2026-09-09 protected manual-payment evidence workspace
 
