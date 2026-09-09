@@ -11,6 +11,7 @@ test('Supabase auth scaffolding fails closed and does not expose server secrets'
   const env = read('src/lib/env.ts');
   const browser = read('src/lib/supabase/client.ts');
   const server = read('src/lib/supabase/server.ts');
+  const privateAdmin = read('src/lib/supabase/private-admin.ts');
   assert.match(env, /NEXT_PUBLIC_SUPABASE_URL/);
   assert.match(env, /NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY/);
   assert.match(env, /throw new Error/);
@@ -20,6 +21,28 @@ test('Supabase auth scaffolding fails closed and does not expose server secrets'
   assert.match(server, /cookies\(\)/);
   assert.match(browser, /process\.env\.NEXT_PUBLIC_SUPABASE_URL/);
   assert.match(browser, /process\.env\.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY/);
+  assert.match(privateAdmin, /import "server-only"/);
+  assert.match(privateAdmin, /SUPABASE_SECRET_KEY/);
+  assert.match(privateAdmin, /startsWith\("sb_secret_"\)/);
+  assert.match(privateAdmin, /persistSession: false/);
+  assert.match(privateAdmin, /autoRefreshToken: false/);
+  assert.doesNotMatch(browser + server, /SUPABASE_SECRET_KEY/);
+  assert.doesNotMatch(read('.env.example'), /SUPABASE_SECRET_KEY|sb_secret_/);
+});
+
+test('server-only Supabase configuration rejects absent or malformed credentials', async () => {
+  const { getServerOnlySupabaseEnv } = await import(pathToFileURL(path.join(root, 'src/lib/supabase/private-admin.ts')).href);
+  const publicEnv = {
+    NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co',
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_example',
+  };
+  assert.throws(() => getServerOnlySupabaseEnv(publicEnv), /not configured/);
+  assert.throws(() => getServerOnlySupabaseEnv({ ...publicEnv, SUPABASE_SECRET_KEY: '   ' }), /not configured/);
+  assert.throws(() => getServerOnlySupabaseEnv({ ...publicEnv, SUPABASE_SECRET_KEY: 'legacy-or-public-key' }), /scoped secret API key/);
+  assert.deepEqual(
+    getServerOnlySupabaseEnv({ ...publicEnv, SUPABASE_SECRET_KEY: ' sb_secret_example ' }),
+    { url: 'https://example.supabase.co', secretKey: 'sb_secret_example' },
+  );
 });
 
 test('deployment runtime is pinned to the tested Node major', () => {

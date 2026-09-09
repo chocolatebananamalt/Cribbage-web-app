@@ -8,10 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src tests next.config.ts eslint.config.mjs",
-    "test": "node --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs tests/game-api-semantics.test.mjs tests/setup-read-decision.test.mjs",
+    "test": "node --conditions=react-server --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs tests/game-api-semantics.test.mjs tests/setup-read-decision.test.mjs",
     "verify": "node --test tests/workspace.test.mjs",
     "verify:handoff": "node --test tests/handoff.test.mjs",
-    "test:score": "node --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs",
+    "test:score": "node --conditions=react-server --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs",
     "verify:local": "pnpm lint && pnpm test && pnpm build && pnpm verify && pnpm verify:handoff",
     "verify:all": "pnpm lint && pnpm test && pnpm build && pnpm verify"
   },
@@ -23,7 +23,8 @@
     "@supabase/supabase-js": "2.115.0",
     "next": "16.3.4",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@types/node": "^26.4.1",

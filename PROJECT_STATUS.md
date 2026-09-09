@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-09 server-only admin-client boundary
+
+- Added a narrowly scoped, `server-only` Supabase admin-client helper for the
+  future account-activation transaction. It rejects absent, blank, malformed,
+  legacy, and public keys; accepts only the modern server-only key format; and
+  disables session persistence, refresh, and URL session parsing. It is not
+  imported by player/browser/session helpers or exposed through a route.
+- A focused Sol design review found no P0/P1 in this unused boundary, provided
+  all future callers independently verify the signed-in actor, role,
+  tournament, and idempotency before a narrow private database operation. A
+  synthetic-secret production build scan confirmed the secret canary and its
+  environment-variable identifier are absent from `.next` output. Lint, 74
+  tests, production build, workspace/private-handoff verification, and diff
+  validation pass. The credential has not been provisioned and account
+  activation remains intentionally unimplemented.
+
 ## 2026-09-09 current preview deployment check
 
 - Pushed the verified `codex/production-readiness-baseline` branch through GitHub. Vercel created preview deployment `dpl_DQtqwboXBFEphehbYUoyC6PzcBax` for commit `1714b7c`; it is `READY` with the explicit Next.js framework, and its branch alias returned HTTP 200. The Vercel runtime-error scan found no errors in the selected one-hour window.
