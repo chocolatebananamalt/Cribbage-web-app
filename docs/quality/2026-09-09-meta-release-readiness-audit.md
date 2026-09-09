@@ -73,8 +73,11 @@ retirement removes a material future-misuse path.
   private `app` tables whose direct client privileges are revoked. The two
   anonymous registration RPCs are intentional public intake endpoints; the
   authenticated `SECURITY DEFINER` warnings are individually role-checked
-  narrow RPCs. The user-approved magic-link/no-upgrade decision leaves leaked
-  password protection disabled; password login is not offered by this app.
+  narrow RPCs. The app offers magic-link only, but a no-account probe has
+  since shown that the hosted password grant is still enabled. That external
+  provider configuration is a separate critical release blocker; it is not
+  resolved by the absence of a password form or by the user's decision not to
+  pay for leaked-password protection.
 - The performance advisor has no unindexed-foreign-key finding. Its unused
   index notices are expected on the empty synthetic pilot and are not a basis
   for index removal before representative-load testing.
@@ -199,3 +202,27 @@ phone/desktop browser verification could not be performed on this host: the
 available browser blocks localhost and the required browser-automation binary
 is unavailable. The UI and multi-user browser requirements therefore remain
 unverified and non-waivable.
+
+## Follow-up audit — hosted password path and score-retry expiry
+
+At commit `570b66b`, source inspection and a deliberately fake-credential,
+no-account provider probe establish two distinct facts:
+
+- the application has no password field, password sign-in, or sign-up call;
+- the active hosted Supabase project nonetheless accepts the password-grant
+  protocol and reaches credential validation.
+
+The latter leaves an unreviewed sign-in path outside the app UI. It is a
+critical release blocker until an authorized project administrator disables
+the Email/Password provider or an equivalent supported management setting
+proves the grant unavailable. Leaked-password protection is unrelated to that
+minimum requirement and is not being used as a reason to upgrade plans.
+
+The same follow-up repaired an ambiguous-score recovery defect: an HTTP 401
+no longer deletes the exact persisted score entry, because the request may
+have reached the server before the session expired. Only 400/403 or an exact,
+same-game allowlisted 409 rejection is terminal. Local lint, 74 tests,
+production build, workspace/private-handoff verification, and diff check
+passed; focused Sol review found no P0/P1. A real browser/network test of
+lost-response -> expired-session -> reauthentication -> exact retry remains
+required. This is not an offline queue and does not change the release matrix.
