@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-08 correction-foundation pilot verification
+
+- Applied `0011_correction_foundation` to the isolated synthetic-data pilot. It provides append-only correction/state/conflict records and an authenticated, cross-checker-only correction RPC. It preserves original verification evidence, denies self-corrections, applies the default immediate-authority/optional-reason policy atomically, and safely rejects non-identical reuse of an idempotency key.
+- Applied `0012_correction_history_indexes` after the hosted advisor identified missing foreign-key covering indexes in the new history tables. The re-scan cleared those findings; unused-index notices are expected while the pilot contains only synthetic transactions.
+- Forced-deferred pilot transactions passed for the positive correction, self-correction rejection, and idempotency-conflict paths. Each test was rolled back, leaving no test correction records in the pilot. A focused Sol review found no P0/P1 findings after remediation.
+- This is a database foundation, not a finished correction feature: protected official UI, role management, independent browser sessions, published-result versioning, and broader release gates remain outstanding.
+
 ## 2026-09-08 public registration and manual-payment requirement
 
 - Added the agreed public tournament registration boundary to the normative requirements: a non-guessable flyer QR code/link permits self-registration only while server-side registration is open; it never grants a role or private data access. Duplicate identity claims require director review.

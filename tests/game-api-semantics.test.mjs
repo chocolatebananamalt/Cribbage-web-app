@@ -110,3 +110,46 @@ test('pilot trigger correction migration hardens existing deferred functions', (
   assert.match(sql, /revoke all on function app\.revalidate_game\(uuid\) from public, anon, authenticated/);
   assert.doesNotMatch(sql, /grant execute/);
 });
+
+test('correction foundation is append-only and server-authorized', () => {
+  const sql = read('database/migrations/0011_correction_foundation.sql');
+  assert.match(sql, /create table app\.game_corrections/);
+  assert.match(sql, /create table app\.correction_state_events/);
+  assert.match(sql, /game_corrections_immutable/);
+  assert.match(sql, /correction_state_events_immutable/);
+  assert.match(sql, /correction_operation_conflicts/);
+  assert.match(sql, /correction_operation_conflicts_immutable/);
+  assert.match(sql, /security definer/);
+  assert.match(sql, /auth\.uid\(\)/);
+  assert.match(sql, /role = 'cross_checker'/);
+  assert.match(sql, /cannot correct own game/);
+  assert.match(sql, /only verified games may be corrected/);
+  assert.match(sql, /stale game version/);
+  assert.match(sql, /correction must change result/);
+  assert.match(sql, /p_winner_side is null/);
+  assert.match(sql, /p_margin is null/);
+  assert.match(sql, /corrections require an open tournament/);
+  assert.match(sql, /event is not approved for digital Standard Singles correction/);
+  assert.match(sql, /select \* into v_existing[\s\S]*?corrections require an open tournament/);
+  assert.match(sql, /exception when sqlstate 'P0001'/);
+  assert.match(sql, /'correction_rejected'/);
+  assert.match(sql, /'correction_rejected',v_response/);
+  assert.match(sql, /when others then raise/);
+  assert.match(sql, /confirmations require two submissions and an eligible game state/);
+  assert.match(sql, /confirmations require matching submission winner and margin/);
+  assert.match(sql, /idempotency_conflict/);
+  assert.match(sql, /update app\.card_scorelines set/);
+  assert.match(sql, /state='corrected'/);
+  assert.match(sql, /revoke all on function public\.propose_game_correction/);
+});
+
+test('correction history foreign keys have local covering indexes', () => {
+  const sql = read('database/migrations/0012_correction_history_indexes.sql');
+  assert.match(sql, /game_corrections_canonical_scope_idx/);
+  assert.match(sql, /game_corrections_editor_profile_id_idx/);
+  assert.match(sql, /correction_state_events_correction_scope_idx/);
+  assert.match(sql, /correction_state_events_actor_profile_id_idx/);
+  assert.match(sql, /correction_operation_conflicts_actor_profile_id_idx/);
+  assert.match(sql, /correction_operation_conflicts_prior_receipt_id_idx/);
+  assert.doesNotMatch(sql, /grant\s+/i);
+});
