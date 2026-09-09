@@ -474,6 +474,43 @@ test('protected roster interface uses only scoped RPCs and opaque retry storage'
   assert.doesNotMatch(client, /sessionStorage[^\n]*(displayName|email|accNumber|intendedPaymentMethod)/);
 });
 
+test('manual roster payments are immutable director-only evidence, never enrollment or paid-in-full authority', () => {
+  const sql = read('database/migrations/0040_manual_roster_payment_ledger.sql');
+  const indexes = read('database/migrations/0041_roster_payment_history_indexes.sql');
+  assert.match(sql, /create table app\.roster_payment_events/);
+  assert.match(sql, /event_type text not null check \(event_type in \('received', 'voided'\)\)/);
+  assert.match(sql, /amount_minor integer not null check \(amount_minor > 0\)/);
+  assert.match(sql, /currency_code text not null check \(currency_code = 'USD'\)/);
+  assert.match(sql, /receipt_note text/);
+  assert.match(sql, /v_note := nullif\(trim\(p_note\), ''\)/);
+  assert.match(sql, /payment_received_at,receipt_note,actor_profile_id/);
+  assert.match(sql, /attempted_roster_entry_id uuid/);
+  assert.doesNotMatch(sql, /roster_entry_id uuid references app\.tournament_roster_entries/);
+  assert.match(sql, /roster_payment_events_immutable/);
+  assert.match(sql, /revalidate_roster_payment_history/);
+  assert.match(sql, /payment event versions must be contiguous/);
+  assert.match(sql, /payment event types must alternate received and voided/);
+  assert.match(sql, /payment void must reference the immediately preceding matching receipt/);
+  assert.match(sql, /create or replace function public\.record_manual_roster_payment/);
+  assert.match(sql, /create or replace function public\.void_manual_roster_payment/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /p_expected_payment_version/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /idempotency conflict/);
+  assert.match(sql, /current receipt must be voided before recording another/);
+  assert.match(sql, /current payment receipt required/);
+  assert.match(sql, /get_roster_payment_operation_reconciliation/);
+  assert.match(sql, /revoke all on table app\.roster_payment_events from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.record_manual_roster_payment[\s\S]*authenticated/);
+  assert.doesNotMatch(sql, /insert into (auth\.users|app\.(profiles|tournament_roles|event_participants))/);
+  assert.doesNotMatch(sql, /table_seat|verification_id|check_in/i);
+  assert.match(sql, /'paidInFull', false/);
+  assert.match(sql, /'reconciled', false/);
+  assert.match(indexes, /create index roster_payment_events_roster_entry_scope_idx/);
+  assert.match(indexes, /on app\.roster_payment_events\(roster_entry_id, tournament_id\)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');

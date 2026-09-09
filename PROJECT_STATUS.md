@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 immutable manual roster-payment evidence
+
+- Applied pilot migrations `0040_manual_roster_payment_ledger` and `0041_roster_payment_history_indexes`. A director/co-director can now record a positive USD cash/check/other receipt for an existing private roster identity or void its current receipt with a reason. The ledger is immutable, versioned (`received → voided → received`), expected-version/idempotency guarded, privately audited, and never marks a player paid-in-full or reconciled.
+- This deliberately does **not** process cards, treat a registrant's stated payment preference as proof, calculate fee balance, create a profile/role/participant/check-in/seat/verification ID, or affect scoring, standings, qualification, payout, export, or finalization. The optional receipt note is normalized and retained; void history preserves the original receipt.
+- Focused Sol review found and repaired two P1 defects before application (discarded accepted note and cross-scope changed-retry conflict reference); final re-review found no P0/P1. Pilot inspection confirms forced RLS, no direct `anon`/`authenticated` access, authenticated-only narrowly authorized RPCs with empty search paths, and no remaining unindexed-foreign-key advisory. Lint, 48 tests, build, workspace/handoff verification, and diff check passed. Real multi-session receipt/void/replay/race/rollback testing and the broader finance reconciliation/payout implementation remain release gates.
+
 ## 2026-09-09 protected roster-promotion interface
 
 - Added a director/co-director-only roster review page and server-only workspace DAL, plus protected roster-promotion and reconciliation routes. The client calls RPCs only, validates exact accepted/rejected results, and states explicitly that promotion does not create an account, payment, check-in, event enrollment, Table/Seat, or verification ID.
