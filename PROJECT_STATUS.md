@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-09 live pilot advisor recheck
+
+- The active pilot is healthy and contains no result-draft migration. Its
+  current advisor findings match the intentionally private-RLS/RPC-only access
+  model; no new exposed-table defect was found. The recheck confirms that a
+  future result writer must derive event ruleset/method, participant identity,
+  and game facts from locked server records. It does not clear any release
+  gate. See `docs/quality/2026-09-09-live-pilot-advisor-recheck.md`.
+
 ## 2026-09-09 result-draft integrity review repair
 
 - A focused independent review found that the first local result-draft
