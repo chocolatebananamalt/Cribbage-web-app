@@ -53,6 +53,11 @@ The regression test asserts that the route uses claims, both scoped RPCs,
 strict response validators, a private no-store policy, and no direct table or
 service-role access. The production build lists the route as dynamic.
 
+Vercel built commit `3f08f27927457cbb19b3848e6084504d36c3814e` as Ready
+Preview deployment `dpl_6nPsAAfGRV5mBPBxS6fE4ruuh27w`. The one-hour runtime
+error scan returned no grouped error. The protected Preview remains a review
+environment; this verifies deployability, not an authenticated setup workflow.
+
 ## Limits still requiring release evidence
 
 This route does not make the setup feature complete. A protected setup page
