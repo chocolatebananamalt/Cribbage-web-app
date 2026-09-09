@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-09 result-draft integrity foundation
+
+- A focused Sol design review rejected a simplistic result/export record because
+  event/ruleset references alone would silently change meaning after a score
+  correction. The next results foundation is now constrained to a private,
+  immutable source-manifest draft with explicit blocker evidence; it defers
+  calculations, export artifacts, public publication, and finalization until
+  their approved fixtures and reconciliation controls exist.
+- The review also prohibits a parallel publication lifecycle: the existing
+  immutable correction publication guard remains authoritative until a future
+  append-only transition design can atomically replace every guard. See
+  `docs/decisions/2026-09-09-event-result-draft-foundation.md`.
+
 ## 2026-09-09 server-only admin-client boundary
 
 - Added a narrowly scoped, `server-only` Supabase admin-client helper for the
