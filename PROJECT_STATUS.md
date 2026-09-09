@@ -20,6 +20,13 @@
 - Applied the first safe foundation: private immutable versioned policy rows, default version-0 provisioning for existing and future tournaments, and a foreign-key link from correction snapshots to policy versions. Configuration and pending-review RPCs are not implemented yet, so this schema does not present unavailable controls as working capability.
 - Added the authenticated, director/co-director-only append-only policy configuration RPC. A pilot transaction created policy version 1 requiring a reason and one approval, then exact-replayed without creating another version; all transaction data rolled back. Proposal/review enforcement remains explicitly incomplete.
 
+## 2026-09-09 correction-policy proposal safety repair
+
+- Corrected two findings from the high-risk review before any production claim: the configuration repair migration now tolerates the clean `0022` to `0024` migration chain, and the policy-aware proposal function locks/reads the tournament row before accepting a new correction. The already-migrated pilot received repair `0026`.
+- Added all missing foreign-key indexes for policy versions and configuration-conflict history in `0027`; the pilot performance advisor now reports no unindexed-foreign-key finding. The remaining unused-index notices are expected for a synthetic pilot with no representative workload.
+- A synthetic transactional pilot confirmed exact policy-configuration replay remains available after finalization while a fresh configuration is rejected and immutably audited. Full repository checks passed (30 tests, lint, build, verification, private-handoff verification, and whitespace check). A focused Sol review found no P0/P1 issue after remediation.
+- This remains a safe partial foundation, not finished `R-CORR-01`: approval-required corrections are pending/no-effect, but independent approval/rejection, a deferred lifecycle invariant, two-connection serialization proof, and clean-disposable-chain proof remain release gates.
+
 ## 2026-09-08 correction-foundation pilot verification
 
 - Applied `0011_correction_foundation` to the isolated synthetic-data pilot. It provides append-only correction/state/conflict records and an authenticated, cross-checker-only correction RPC. It preserves original verification evidence, denies self-corrections, applies the default immediate-authority/optional-reason policy atomically, and safely rejects non-identical reuse of an idempotency key.

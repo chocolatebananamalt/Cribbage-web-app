@@ -1,4 +1,4 @@
-create table app.correction_policy_operation_conflicts (
+create table if not exists app.correction_policy_operation_conflicts (
   id uuid primary key default extensions.gen_random_uuid(),
   actor_profile_id uuid references app.profiles(id) on delete restrict,
   tournament_id uuid references app.tournaments(id) on delete restrict,
@@ -11,6 +11,7 @@ create table app.correction_policy_operation_conflicts (
 alter table app.correction_policy_operation_conflicts enable row level security;
 alter table app.correction_policy_operation_conflicts force row level security;
 revoke all on table app.correction_policy_operation_conflicts from public, anon, authenticated;
+drop trigger if exists correction_policy_operation_conflicts_immutable on app.correction_policy_operation_conflicts;
 create trigger correction_policy_operation_conflicts_immutable before update or delete on app.correction_policy_operation_conflicts
 for each row execute function app.reject_immutable_history();
 

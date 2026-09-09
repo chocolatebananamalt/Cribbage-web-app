@@ -115,6 +115,8 @@ test('correction foundation is append-only and server-authorized', () => {
   const sql = read('database/migrations/0011_correction_foundation.sql');
   const fingerprintRepair = read('database/migrations/0019_correction_idempotency_fingerprint_repair.sql');
   const legacyCompatibility = read('database/migrations/0020_correction_legacy_replay_compatibility.sql');
+  const policyAware = read('database/migrations/0023_policy_aware_correction_proposals.sql');
+  const lockRepair = read('database/migrations/0026_correction_policy_tournament_lock_repair.sql');
   assert.match(sql, /create table app\.game_corrections/);
   assert.match(sql, /create table app\.correction_state_events/);
   assert.match(sql, /game_corrections_immutable/);
@@ -145,6 +147,14 @@ test('correction foundation is append-only and server-authorized', () => {
   assert.match(fingerprintRepair, /jsonb_build_array\('propose_game_correction'/);
   assert.match(fingerprintRepair, /v_existing\.request_hash <> v_hash and v_existing\.request_hash <> v_legacy_hash/);
   assert.match(legacyCompatibility, /v_existing\.request_hash <> v_hash and v_existing\.request_hash <> v_legacy_hash/);
+  assert.match(policyAware, /v_policy\.reason_required/);
+  assert.match(policyAware, /'correction reason required'/);
+  assert.match(policyAware, /'pending correction already exists'/);
+  assert.match(policyAware, /'status','pending'/);
+  assert.match(policyAware, /if v_policy\.required_approvals = 1 then/);
+  assert.match(policyAware, /select status into v_tournament_status from app\.tournaments where id = v_game\.tournament_id for update/);
+  assert.match(policyAware, /v_tournament_status is distinct from 'open'/);
+  assert.match(lockRepair, /select status into v_tournament_status from app\.tournaments where id = v_game\.tournament_id for update/);
   assert.match(sql, /update app\.card_scorelines set/);
   assert.match(sql, /state='corrected'/);
   assert.match(sql, /revoke all on function public\.propose_game_correction/);
@@ -152,18 +162,26 @@ test('correction foundation is append-only and server-authorized', () => {
 
 test('correction history foreign keys have local covering indexes', () => {
   const sql = read('database/migrations/0012_correction_history_indexes.sql');
+  const policySql = read('database/migrations/0027_correction_policy_history_indexes.sql');
   assert.match(sql, /game_corrections_canonical_scope_idx/);
   assert.match(sql, /game_corrections_editor_profile_id_idx/);
   assert.match(sql, /correction_state_events_correction_scope_idx/);
   assert.match(sql, /correction_state_events_actor_profile_id_idx/);
   assert.match(sql, /correction_operation_conflicts_actor_profile_id_idx/);
   assert.match(sql, /correction_operation_conflicts_prior_receipt_id_idx/);
+  assert.match(policySql, /correction_policy_versions_creator_profile_id_idx/);
+  assert.match(policySql, /game_corrections_policy_version_scope_idx/);
+  assert.match(policySql, /correction_policy_operation_conflicts_actor_profile_id_idx/);
+  assert.match(policySql, /correction_policy_operation_conflicts_tournament_id_idx/);
+  assert.match(policySql, /correction_policy_operation_conflicts_prior_receipt_id_idx/);
   assert.doesNotMatch(sql, /grant\s+/i);
+  assert.doesNotMatch(policySql, /grant\s+/i);
 });
 
 test('correction policy versions are private, append-only, and seeded safely', () => {
   const sql = read('database/migrations/0021_correction_policy_versions.sql');
   const configure = read('database/migrations/0022_configure_correction_policy.sql');
+  const repair = read('database/migrations/0024_correction_policy_configuration_repair.sql');
   assert.match(sql, /create table app\.correction_policy_versions/);
   assert.match(sql, /primary key \(tournament_id, version\)/);
   assert.match(sql, /required_approvals smallint not null default 0 check \(required_approvals between 0 and 1\)/);
@@ -179,4 +197,8 @@ test('correction policy versions are private, append-only, and seeded safely', (
   assert.match(configure, /jsonb_build_array\('configure_correction_policy'/);
   assert.match(configure, /revoke all on function public\.configure_correction_policy/);
   assert.match(configure, /grant execute on function public\.configure_correction_policy[\s\S]*authenticated/);
+  assert.match(configure, /create table app\.correction_policy_operation_conflicts/);
+  assert.match(configure, /correction_policy_operation_conflicts_immutable/);
+  assert.match(repair, /create table if not exists app\.correction_policy_operation_conflicts/);
+  assert.match(repair, /drop trigger if exists correction_policy_operation_conflicts_immutable/);
 });
