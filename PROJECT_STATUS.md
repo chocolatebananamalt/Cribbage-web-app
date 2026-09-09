@@ -15,6 +15,10 @@
 
 - Identified and documented the next required server transition in `docs/decisions/2026-09-09-event-enrollment-contract.md`: only a director/co-director may turn a linked, currently checked-in roster identity into one participant for an approved digital Standard Singles event. It rejects post-seating enrollment until an approved late-entry policy exists and makes no game, seat, score, payment, or role change.
 
+## 2026-09-09 results and finalization contract
+
+- Confirmed the results screens/PDF are prototype-only. Recorded the required immutable, versioned server publication lifecycle and rule/finance/export gates in `docs/decisions/2026-09-09-results-finalization-contract.md`; no authoritative results or export capability is claimed.
+
 ## 2026-09-09 identity linking and guarded enrollment pilot
 
 - Applied pilot migrations `0048` and `0049`: immutable independent roster-to-account linking and pre-seating director/co-director Standard Singles enrollment. The link rejects self-linking and creates no role/event/score authority; enrollment requires a linked, latest-state checked-in roster identity and an approved digital event, then creates no game or seat.
