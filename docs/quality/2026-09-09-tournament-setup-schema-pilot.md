@@ -40,18 +40,18 @@ or ACC portal behavior.
 | Pilot migration `tournament_setup_draft_boundary` | Applied successfully |
 | Pilot table catalog | All five new tables have RLS and forced RLS; neither `anon` nor `authenticated` has direct data access |
 | Security advisor | New private no-policy notices are expected because direct grants are revoked; no new anonymous executable function was introduced |
+| All-rollback database constraint probe | Pass — a valid director revision survived deferred validation and a zero-official revision raised `invalid setup official count`; no test data was retained |
 
 ## Attempted transactional proof and limitation
 
-An all-rollback transaction was prepared to prove both a valid director setup
-revision and the deferred zero-official rejection. The pilot reports one
-tournament but **zero** current director-role fixtures, so the test stopped
-before any write with `missing synthetic director fixture`. No pilot data was
-changed.
+The pilot reports one tournament but **zero** current director-role fixtures.
+To avoid creating a real user or persisting a role, the probe temporarily added
+the existing synthetic tournament director's role inside one transaction,
+executed `SET CONSTRAINTS ALL IMMEDIATE`, verified a valid revision plus the
+zero-official rejection, and rolled the entire transaction back.
 
-That means the migration compiles/applies and its catalog/permission shape is
-verified, but deferred-trigger execution, composite-provenance rejection, and
-valid official persistence are not yet proven against a real disposable
-director/co-director fixture. The missing fixture is a release gate and must be
-created only through a documented disposable-auth test harness, not by adding
-an unverified production-like account directly.
+This proves migration compilation/application and the deferred official-set
+accept/reject behavior. It does not prove the future authenticated writer,
+composite-provenance rejection, idempotency/retry behavior, co-director access,
+or real independent sessions. Those require a documented disposable-auth test
+harness before release.

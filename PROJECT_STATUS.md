@@ -27,7 +27,7 @@
 ## 2026-09-09 private tournament setup schema foundation
 
 - Applied pilot migration `0051_tournament_setup_draft_boundary`: immutable private revision, official, configured-event, Q-pool, and changed-retry conflict records now exist independently of operational `app.events`. They cannot be directly accessed by anonymous or signed-in clients and contain no writer, reader, UI, event mapping, or official calculation.
-- A focused Sol review repaired three P1s before application: actor/tournament receipt provenance, invalid immutable fee/official shapes, and a zero-official deferred-trigger bypass. Final review found no P0/P1. Static checks pass; direct catalog checks confirm forced RLS and revoked direct grants. The pilot has no disposable director-role fixture, so real deferred-trigger/authorization transaction evidence remains required; see `docs/quality/2026-09-09-tournament-setup-schema-pilot.md`.
+- A focused Sol review repaired three P1s before application: actor/tournament receipt provenance, invalid immutable fee/official shapes, and a zero-official deferred-trigger bypass. Final review found no P0/P1. Static checks pass; direct catalog checks confirm forced RLS and revoked direct grants. An all-rollback pilot transaction now proves valid deferred official persistence and zero-official rejection without retaining a role or setup record. Future writer authorization/retry/co-director and independent-session evidence remains required; see `docs/quality/2026-09-09-tournament-setup-schema-pilot.md`.
 
 ## 2026-09-09 identity linking and guarded enrollment pilot
 
