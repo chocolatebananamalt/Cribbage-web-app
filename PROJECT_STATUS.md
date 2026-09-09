@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-09 Vercel configuration recheck
+
+- Vercel now explicitly reports Next.js and Node 24 for the project and the
+  current branch deployment. Commit `fc616ee` built as Ready Preview with a
+  healthy branch alias, `live: false`, and no grouped runtime errors in the
+  preceding day. The earlier framework auto-detection uncertainty is no longer
+  an active configuration concern.
+
 ## 2026-09-09 CI and branch-protection audit
 
 - The clean-clone `Verify` workflow is healthy: its latest current-branch
