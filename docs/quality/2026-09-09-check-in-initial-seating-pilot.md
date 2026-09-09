@@ -83,6 +83,15 @@ pnpm verify:handoff
 git diff --check
 ```
 
+## Hosted preview check
+
+- Vercel built commit `bcb5434` as a Ready Preview deployment. Its protected
+  root request returned HTTP 200 with the expected ACC Tournament Desk shell.
+- Vercel reported no grouped runtime-error cluster for the project in the
+  one-hour inspection after deployment. This verifies the hosted build and
+  public shell only; no role-scoped check-in/seating mutation was exercised in
+  a real browser session.
+
 ## Remaining release evidence
 
 No real director/co-director/player account fixtures or real tournament roster
