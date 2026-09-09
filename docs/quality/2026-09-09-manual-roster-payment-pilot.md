@@ -27,6 +27,11 @@ no remaining P0/P1 findings.
   `remove_legacy_payment_operation_reconciliation` (`0044`). The only
   callable reconciliation signature now requires tournament, roster identity,
   exact operation type, canonical request hash, and idempotency key.
+- Applied `payment_operation_identity_reconciliation` (`0045`) for the
+  future browser client. It reconciles a caller's immutable receipt by exact
+  operation identity rather than requiring the browser to recreate PostgreSQL
+  JSONB/timestamp/hash normalization. It is a distinct function, not an
+  ambiguous overload.
 
 ## Direct inspection
 
@@ -41,6 +46,11 @@ no remaining P0/P1 findings.
   no dependencies and was removed without `CASCADE`; only the exact five-arg
   function remains. It is `SECURITY DEFINER`, has an empty search path, denies
   `anon`, and permits `authenticated` execution.
+- The four-argument identity-reconciliation function is likewise
+  `SECURITY DEFINER` with an empty search path, denies `anon`, is callable by
+  `authenticated` only, and performs current director/co-director, tournament,
+  roster target, and exact record/void-kind checks before returning a caller's
+  own immutable receipt. A focused Sol re-review found no P0/P1 issue.
 - The append-only payment table has both the composite roster/tournament FK and
   deferred sequence/transition revalidation. The pilot exposes its received /
   voided receipt state only through the narrow writer and caller-scoped

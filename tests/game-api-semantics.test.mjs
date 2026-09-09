@@ -480,6 +480,7 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   const workspace = read('database/migrations/0042_roster_payment_workspace.sql');
   const reconciliation = read('database/migrations/0043_payment_operation_reconciliation_hardening.sql');
   const retiredReconciliation = read('database/migrations/0044_remove_legacy_payment_operation_reconciliation.sql');
+  const identityReconciliation = read('database/migrations/0045_payment_operation_identity_reconciliation.sql');
   const paymentDal = read('src/lib/payments/workspace.ts');
   const paymentPage = read('src/app/tournament/[tournamentId]/payments/page.tsx');
   assert.match(sql, /create table app\.roster_payment_events/);
@@ -529,6 +530,11 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.match(reconciliation, /actor_profile_id=auth\.uid\(\)/);
   assert.match(retiredReconciliation, /revoke all on function public\.get_roster_payment_operation_reconciliation\(uuid,uuid,uuid\)/);
   assert.match(retiredReconciliation, /drop function public\.get_roster_payment_operation_reconciliation\(uuid,uuid,uuid\)/);
+  assert.match(identityReconciliation, /get_roster_payment_operation_identity_reconciliation/);
+  assert.match(identityReconciliation, /p_operation_type in \('record_manual_roster_payment', 'void_manual_roster_payment'\)/);
+  assert.match(identityReconciliation, /o\.operation_type=p_operation_type limit 1/);
+  assert.doesNotMatch(identityReconciliation, /p_request_hash/);
+  assert.match(identityReconciliation, /revoke all on function public\.get_roster_payment_operation_identity_reconciliation\(uuid,uuid,text,uuid\)[\s\S]*from public, anon/);
   assert.match(paymentDal, /server-only/);
   assert.match(paymentDal, /get_roster_payment_workspace/);
   assert.doesNotMatch(paymentDal, /\.from\(/);

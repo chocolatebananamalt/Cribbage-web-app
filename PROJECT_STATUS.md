@@ -6,6 +6,12 @@
 - The audit resolved one newly discovered hardening gap by retiring the legacy three-argument payment-recovery RPC in migration `0044`; a Sol review and direct pilot catalog check confirm only the exact, role-scoped five-argument recovery function remains.
 - The audit records the still-critical full-product release blockers: authoritative setup/check-in/seating, real dual-session scoring evidence, offline/hybrid operation, results/export/finalization/finance, approved ACC fixtures, backup/restore/rollback/monitoring, and accessibility/simulated-tournament evidence. These remain active work, not waived requirements.
 
+## 2026-09-09 payment-operation identity recovery
+
+- Applied pilot migration `0045_payment_operation_identity_reconciliation`. A future payment client can now safely reconcile an ambiguous receipt/void request using only the current actor, tournament, roster target, exact operation type, and idempotency key. It does not have to reproduce PostgreSQL's canonical financial-request hash in the browser.
+- The client contract requires a pre-request opaque envelope with no money, method, time, note, or reason; its local digest is only a change detector, not authority. The original exact hash-bound reconciliation RPC remains available for server use, while the retired ambiguous three-argument signature remains absent.
+- Focused Sol re-review found no P0/P1: the new function is current-role gated, exact-kind scoped, has an empty search path, denies `anon`, and is callable only by `authenticated` users. Lint, 48 tests, build, workspace/handoff verification, and diff check passed.
+
 ## 2026-09-09 payment-operation recovery hardening
 
 - Applied pilot migrations `0043_payment_operation_reconciliation_hardening` and `0044_remove_legacy_payment_operation_reconciliation`. Payment recovery is now bound to current actor, tournament, roster identity, exact record/void operation type, idempotency key, and canonical request hash. The older three-argument recovery RPC was deliberately removed, leaving no weaker callable fallback. This prevents a retry from treating a void as a receipt or otherwise recovering a different financial action.
