@@ -19,6 +19,11 @@
 
 - Confirmed the results screens/PDF are prototype-only. Recorded the required immutable, versioned server publication lifecycle and rule/finance/export gates in `docs/decisions/2026-09-09-results-finalization-contract.md`; no authoritative results or export capability is claimed.
 
+## 2026-09-09 canonical tournament setup contract
+
+- Closed a critical design gap before implementation by defining `Set Up Tournament` as a private, immutable versioned configuration history—not an edit path for operational scoring events. It captures the director-confirmed tournament, venue, event, fee, Q-pool, payout-note, and Muggins configuration that future Flyer, Seating, Results, and Finance features will consume.
+- The reviewed contract blocks setup changes after seating or gameplay begins, requires existing current official roles rather than granting them from a form, preserves changed retries as conflicts, and prohibits any unapproved ACC calculation, public flyer, operational-event creation, or portal submission. Exact portal option lists and official payout/qualification fixtures remain source gates; see `docs/decisions/2026-09-09-canonical-tournament-setup-contract.md`.
+
 ## 2026-09-09 identity linking and guarded enrollment pilot
 
 - Applied pilot migrations `0048` and `0049`: immutable independent roster-to-account linking and pre-seating director/co-director Standard Singles enrollment. The link rejects self-linking and creates no role/event/score authority; enrollment requires a linked, latest-state checked-in roster identity and an approved digital event, then creates no game or seat.
