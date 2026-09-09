@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import test from 'node:test';
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -16,6 +17,48 @@ test('game API handlers validate, authenticate with claims, and call RPCs only',
     assert.doesNotMatch(source, /error\.message/);
   }
   assert.match(submission, /submit_game_score/); assert.match(confirmation, /confirm_game_score/);
+});
+
+test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
+  const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
+  const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
+  const contract = read('src/lib/api/correction.ts');
+  for (const source of [proposal, review]) {
+    assert.match(source, /getClaims/);
+    assert.match(source, /isUuid/);
+    assert.match(source, /idempotencyKey/);
+    assert.match(source, /operation_unavailable/);
+    assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
+  }
+  assert.match(proposal, /propose_game_correction/);
+  assert.match(proposal, /expectedGameVersion/);
+  assert.match(proposal, /winnerSide/);
+  assert.match(proposal, /maxReasonLength = 500/);
+  assert.match(review, /review_game_correction/);
+  assert.match(review, /\["approve", "reject"\]/);
+  assert.match(review, /isAcceptedCorrectionReview/);
+  assert.match(contract, /value\.status === "approved" && value\.decision === "approve"/);
+  assert.match(contract, /value\.status === "rejected" && value\.decision === "reject"/);
+  assert.match(contract, /typeof value\.code === "string"/);
+});
+
+test('correction response validators bind successful responses to the submitted operation', async () => {
+  const contract = await import(pathToFileURL(path.join(root, 'src/lib/api/correction.ts')).href);
+  const correctionId = '00000000-0000-4000-8000-000000000001';
+  const otherCorrectionId = '00000000-0000-4000-8000-000000000002';
+  const gameId = '00000000-0000-4000-8000-000000000003';
+  const otherGameId = '00000000-0000-4000-8000-000000000004';
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, gameId, 7), true);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: otherCorrectionId, game_id: gameId, version: 7 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'applied', correction_id: correctionId, game_id: otherGameId, version: 8 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: -1 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, 'reject'), true);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, 'approve'), false);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'approved', decision: 'approve', correction_id: correctionId, game_id: gameId, version: 8 }, correctionId, 'approve'), true);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'approved', decision: 'approve', correction_id: correctionId, game_id: gameId, version: 8 }, correctionId, 'reject'), false);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: otherCorrectionId, game_id: gameId, version: 7 }, correctionId, 'reject'), false);
+  assert.equal(contract.isRejectedCorrectionOperation({ status: 'rejected', code: 'not_pending_review' }), true);
+  assert.equal(contract.isRejectedCorrectionOperation({ status: 'rejected', decision: 'reject', code: 'not_pending_review' }), false);
 });
 test('game RPC migration is private, atomic, authenticated, and derives verified scorelines', () => {
   const sql = (read('database/migrations/0001_vertical_slice_core.sql') + read('database/migrations/0003_game_submission_confirmation_rpc.sql')).toLowerCase();
@@ -241,4 +284,36 @@ test('approval-required corrections have an independent, sequenced review bounda
   assert.match(proposalRepair, /result publication guard blocks correction/);
   assert.match(publicationIndexes, /event_publication_states_event_scope_idx/);
   assert.doesNotMatch(publicationIndexes, /grant\s+/i);
+});
+
+test('correction workspace read model is server-scoped and suppresses non-actionable records', () => {
+  const workspace = read('database/migrations/0031_correction_workspace_read_model.sql');
+  assert.match(workspace, /create or replace function public\.get_correction_workspace/);
+  assert.match(workspace, /security definer/);
+  assert.match(workspace, /set search_path = ''/);
+  assert.match(workspace, /auth\.uid\(\)/);
+  assert.match(workspace, /t\.status = 'open'/);
+  assert.match(workspace, /may_propose/);
+  assert.match(workspace, /may_review/);
+  assert.match(workspace, /role = 'cross_checker'/);
+  assert.match(workspace, /role in \('cross_checker', 'director', 'co_director'\)/);
+  assert.match(workspace, /s\.profile_id not in \(side_a\.profile_id, side_b\.profile_id\)/);
+  assert.match(workspace, /s\.profile_id <> c\.editor_profile_id/);
+  assert.match(workspace, /ps\.state = 'draft'/);
+  assert.match(workspace, /c\.required_approvals = 1/);
+  assert.match(workspace, /cse\.state = 'pending' and cse\.transition_sequence = 1/);
+  assert.match(workspace, /revoke all on function public\.get_correction_workspace\(uuid\) from public, anon/);
+  assert.match(workspace, /grant execute on function public\.get_correction_workspace\(uuid\) to authenticated/);
+  assert.doesNotMatch(workspace, /grant\s+(select|insert|update|delete|all)\s+on\s+table/i);
+});
+
+test('correction reason limit is enforced inside the private schema', () => {
+  const reasonLimit = read('database/migrations/0032_correction_reason_limit.sql');
+  assert.match(reasonLimit, /create or replace function app\.enforce_correction_reason_limit/);
+  assert.match(reasonLimit, /security definer/);
+  assert.match(reasonLimit, /set search_path = ''/);
+  assert.match(reasonLimit, /char_length\(new\.reason\) > 500/);
+  assert.match(reasonLimit, /octet_length\(new\.reason\) > 2000/);
+  assert.match(reasonLimit, /before insert on app\.game_corrections/);
+  assert.match(reasonLimit, /revoke all on function app\.enforce_correction_reason_limit/);
 });

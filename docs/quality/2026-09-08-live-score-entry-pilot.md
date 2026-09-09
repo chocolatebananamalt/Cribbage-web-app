@@ -61,6 +61,22 @@ The pilot still reports private `app` tables with RLS enabled and no policies. T
 
 The pre-existing leaked-password advisory remains unresolved because the user declined a paid Supabase upgrade. The app's supported sign-in flow is passwordless magic link; password login must remain disabled/unsupported before a release can be considered.
 
+## Correction workspace and HTTP-boundary evidence — 2026-09-09
+
+The isolated pilot received migrations `0031_correction_workspace_read_model` and `0032_correction_reason_limit`. The workspace read RPC returns only actionable, Draft-publication Standard Singles records: proposal candidates require a tournament-scoped cross-checker role and exclude the caller's own games; pending reviews require an independent eligible cross checker/director/co-director and exclude both players and the original editor. It returns correction reasons only in the eligible-reviewer collection. Direct authenticated table reads remain denied.
+
+The new proposal/review HTTP handlers validate UUIDs, margin/version/decision inputs, authenticate with verified claims, call only their respective RPC, and treat an accepted `reject` review decision as success rather than an operation failure. Their response contracts bind returned IDs, game ID, expected version, and requested review decision to the submitted request; malformed or mismatched 2xx responses are converted to retryable 503 responses. They do not retire an idempotency key client-side; the future protected client must retain it through network, 5xx, and malformed-response failures.
+
+| Pilot check | Result |
+| --- | --- |
+| Workspace unauthenticated/no-scope call | Pass — returns `{ proposalCandidates: [], pendingReviews: [] }` |
+| Workspace execute/table privilege check | Pass — `anon` cannot execute; `authenticated` can execute; authenticated has no `SELECT` on `game_corrections`, `correction_state_events`, or `event_publication_states` |
+| Reason-limit trigger harness | Pass — 501-character input raised `correction reason too long`; 500-character input inserted; temporary transaction rolled back |
+| Repository checks after API contract repair | Pass — `pnpm test` (35), `pnpm lint`, `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` |
+| Focused Sol review | Pass after three P1 repairs — scoped correction read model, authoritative reason limit, and exact accepted-response/request binding were reviewed with no remaining P0/P1 finding |
+
+This remains a backend/API foundation, not a completed correction workspace. It still needs a protected browser screen using the read model, real independently authenticated role sessions, direct-RPC role-visibility tests, concurrent terminal-review tests, and result-version/supersession implementation before release.
+
 ## Remaining limitations
 
 - No real authenticated browser role is seeded in the pilot, so independent two-session submit/confirm and browser phone/desktop checks of the live score route are not yet evidence.

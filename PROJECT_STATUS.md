@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-09 protected correction workspace foundation
+
+- Added a private actor-scoped correction workspace read RPC and narrow proposal/review HTTP boundaries. The workspace derives roles server-side, exposes only Draft Standard Singles candidates/pending reviews, excludes a cross checker from their own game and a reviewer from their own edit or either player’s game, and reveals optional reasons only to independently eligible reviewers. Authenticated users retain no direct read access to correction/private-state tables.
+- Corrected three P1 findings during independent Sol reviews: the workspace’s missing read boundary, a reason-length rule that could otherwise be bypassed by direct RPC calls, and overly permissive accepted-response handling. New corrections now enforce both a 500-character/2,000-byte reason limit inside the private schema; endpoint contracts bind returned correction/game/version/decision fields to the exact request and preserve retries after malformed/mismatched responses.
+- Pilot evidence: no-scope callers receive empty collections; `anon` cannot execute the new workspace function; authenticated has no direct `SELECT` on correction, state-event, or publication tables; a temporary trigger test rejected 501 characters and accepted 500 before rollback. Repository verification passed: 35 tests, lint, build, workspace, private handoff, and whitespace checks.
+- This is not a release claim. A protected correction browser workspace, independent authenticated role sessions, direct-RPC visibility/revocation tests, concurrency tests, and immutable result-version/supersession remain required.
+
 ## 2026-09-09 public registration claim pilot
 
 - Added the public QR/link registration foundation required by `R-REG-01`: high-entropy token hashes, a separate open/closed registration state, private append-only registration claims, and a small public API/page. The public boundary accepts only a registration claim and an intended payment method; it cannot create an account, role, roster/event participant, payment receipt, Table/Seat, or permanent verification ID.
