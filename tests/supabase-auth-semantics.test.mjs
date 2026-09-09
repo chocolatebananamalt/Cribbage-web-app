@@ -38,7 +38,12 @@ test('callback only accepts same-origin relative redirect paths', () => {
 test('sign-in uses publishable browser auth and keeps the prototype route available', () => {
   const page = read('src/app/sign-in/page.tsx');
   assert.match(page, /signInWithOtp/);
-  assert.match(page, /shouldCreateUser: false/);
+  assert.match(page, /shouldCreateUser: true/);
+  const bootstrap = read('database/migrations/0067_passwordless_profile_bootstrap.sql');
+  assert.match(bootstrap, /after insert on auth\.users/);
+  assert.match(bootstrap, /security definer set search_path = ''/);
+  assert.match(bootstrap, /revoke all on function app\.create_profile_for_auth_user/);
+  assert.doesNotMatch(bootstrap, /insert into app\.(tournament_roles|event_participants|tournament_roster_entries)/);
   assert.match(page, /requestedNext/);
   assert.match(page, /encodeURIComponent\(next\)/);
   assert.match(page, /auth\/callback/);

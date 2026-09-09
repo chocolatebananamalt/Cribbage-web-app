@@ -21,7 +21,7 @@ function SignInForm() {
       const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
       const result = await supabase.auth.signInWithOtp({
         email: email.trim(),
-        options: { emailRedirectTo: redirectTo, shouldCreateUser: false },
+        options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
       });
       if (result.error) throw result.error;
       setStatus("Check your email for a secure sign-in link.");
