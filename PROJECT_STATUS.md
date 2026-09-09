@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-09 production Rulebook reference route
+
+- Closed a production continuity gap: Start Here had instructed users to use a
+  Rulebook area that existed only in the retired review prototype. Authorized
+  tournament users now have a protected, searchable reference route linked
+  from the workspace and Start Here, with separately labeled cached and online
+  ACC Rulebook actions. The cached 2025 PDF hash was rechecked against the
+  recorded approved source metadata.
+- The quick reference is deliberately a navigation aid, not an ACC
+  interpretation or rules engine. Local lint, 76 tests, and the Next.js
+  production build pass. Authenticated phone/desktop visual evidence remains
+  open, as do all authority fixtures and the broader release gates.
+
 ## 2026-09-09 full-build and live-pilot recheck
 
 - A fresh full application test pass now has 75 passing checks and a successful

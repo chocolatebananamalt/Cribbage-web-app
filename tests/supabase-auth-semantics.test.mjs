@@ -302,3 +302,21 @@ test('protected hybrid guidance preserves the independent-entry verification bou
   assert.match(guide, /both players independently submit matching results/);
   assert.match(guide, /requireTournamentAccess/);
 });
+
+test('protected Rulebook reference provides dated cached and online ACC sources without treating quick help as a rule decision', () => {
+  const page = read('src/app/tournament/[tournamentId]/rulebook/page.tsx');
+  const reference = read('src/app/tournament/[tournamentId]/rulebook/rulebook-reference.tsx');
+  const workspace = read('src/app/tournament/[tournamentId]/page.tsx');
+  const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /isUuid/);
+  assert.match(page, /ACC Rulebook Cached/);
+  assert.match(page, /ACC Rulebook Online/);
+  assert.match(page, /acc-rulebook-2025\.pdf/);
+  assert.match(page, /DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD/);
+  assert.match(page, /rel="noreferrer"/);
+  assert.match(reference, /Search a topic or rule word/);
+  assert.match(reference, /does not replace the dated ACC Rulebook/);
+  assert.match(workspace, /\/rulebook/);
+  assert.match(guide, /Open ACC Rulebook/);
+});

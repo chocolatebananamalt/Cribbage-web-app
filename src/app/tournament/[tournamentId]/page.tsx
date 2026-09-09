@@ -11,6 +11,8 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <p className="eyebrow">AUTHORIZED TOURNAMENT</p>
         <h1 id="tournament-title">Tournament workspace</h1>
         <p className="lede">Access granted for role: {access.role}.</p>
+        <Link className="guide-link" href={`/tournament/${tournamentId}/how-to`}>Start Here / How To</Link>
+        <Link className="guide-link" href={`/tournament/${tournamentId}/rulebook`}>ACC Rulebook</Link>
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
