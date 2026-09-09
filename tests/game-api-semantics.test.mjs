@@ -755,6 +755,21 @@ test('tournament setup writer is an authenticated, versioned, draft-only transac
   assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\.(events|ruleset_versions|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events|initial_seating_)/);
 });
 
+test('tournament setup workspace read is director-scoped and exposes no operational tables', () => {
+  const sql = read('database/migrations/0054_tournament_setup_reader_shape_repair.sql');
+  assert.match(sql, /create or replace function public\.get_tournament_setup_workspace/);
+  assert.match(sql, /stable security definer set search_path = ''/);
+  assert.match(sql, /auth\.uid\(\) is not null/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /order by r\.version desc/);
+  assert.doesNotMatch(sql, /'revisionId', r\.id, 'version', r\.version, 'createdAt'/);
+  assert.match(sql, /qualificationNote/);
+  assert.match(sql, /revoke all on function public\.get_tournament_setup_workspace\(uuid\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_tournament_setup_workspace\(uuid\) to authenticated/);
+  assert.doesNotMatch(sql, /app\.(events|ruleset_versions|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events|initial_seating_)/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
