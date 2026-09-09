@@ -636,6 +636,30 @@ test('check-in and initial seating are private, immutable, closed-registration o
   assert.match(sql, /grant execute on function public\.get_initial_seating_workspace[\s\S]*authenticated/);
 });
 
+test('roster-account links are director-authorized, immutable, and do not grant scoring authority', () => {
+  const sql = read('database/migrations/0048_roster_account_link_boundary.sql');
+  assert.match(sql, /create table app\.roster_account_links/);
+  assert.match(sql, /unique \(tournament_id, roster_entry_id\)/);
+  assert.match(sql, /unique \(tournament_id, profile_id\)/);
+  assert.match(sql, /roster_account_links_immutable/);
+  assert.match(sql, /enable row level security/);
+  assert.match(sql, /force row level security/);
+  assert.match(sql, /revoke all on table app\.roster_account_links from public, anon, authenticated/);
+  assert.match(sql, /create or replace function public\.link_roster_entry_to_account/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director','co_director'\)/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /if p_profile_id=v_actor then raise exception using errcode='P0001', message='independent linker required'/);
+  assert.match(sql, /'independent_linker_required'/);
+  assert.match(sql, /roster entry already linked/);
+  assert.match(sql, /profile already linked/);
+  assert.match(sql, /idempotency conflict/);
+  assert.match(sql, /grant execute on function public\.link_roster_entry_to_account[\s\S]*authenticated/);
+  assert.doesNotMatch(sql, /insert into (auth\.users|app\.(profiles|tournament_roles|event_participants|score_submissions|score_confirmations))/);
+  assert.match(sql, /'eventEnrolled',false/);
+  assert.match(sql, /'roleGranted',false/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
