@@ -28,6 +28,9 @@ only. It does not encode, calculate, or adjudicate an ACC rule.
   reference wording, and Start Here/workspace navigation assertions.
 - `pnpm build` passed and lists dynamic route
   `/tournament/[tournamentId]/rulebook`.
+- Vercel built commit `d8389ea` as Ready Preview deployment
+  `dpl_CxRTZb63TSsrTFSdHQfW8xa2DEoh`; its Next.js framework metadata and
+  branch alias have no deployment or alias error.
 
 ## Limits
 
