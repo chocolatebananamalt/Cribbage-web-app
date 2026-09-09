@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-09 registration-link lifecycle design repair
+
+- A production audit found that the public registration claim flow lacked the
+  director workflow needed to safely issue, rotate, close, and audit its QR
+  link. The approved replacement contract requires server-only privileged
+  lifecycle operations, immutable historical headers/events plus one locked
+  active head, composite claim/link provenance, exact replay safety, shared
+  claim/close/rotate locking, and a one-time director QR display.
+- Focused Sol review initially found eight P1 gaps, including hosted path-token
+  leakage, lifecycle-state ambiguity, close/claim races, legacy migration,
+  token custody, and issuer-side QR handling. The final contract closes them:
+  v2 links use fragment-only `link-id.secret` values, random per-link salt plus
+  SHA-256 rather than a shared secret, and no token-in-path route; the pilot
+  migration must atomically close legacy links and remove/revoke old token-path
+  surfaces before opening v2. The final re-review has no P0/P1 findings.
+- This is not implemented or applied. A disposable database chain, staged
+  rollout, two-connection race tests, catalog-grant proof, and real
+  browser/platform raw-token scans are mandatory before the feature may touch
+  the pilot.
+
 ## 2026-09-09 production Rulebook reference route
 
 - Closed a production continuity gap: Start Here had instructed users to use a
