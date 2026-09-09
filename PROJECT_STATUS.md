@@ -1,5 +1,9 @@
 # Project Status
 
+## 2026-09-09 hybrid guidance regression boundary
+
+- Added regression coverage to ensure the protected Start Here guide keeps the required independent paper/digital entries, individual confirmations, and pending cross-check path explicit. Local lint and 72 tests pass.
+
 ## 2026-09-09 legacy lifecycle RPC exposure closure
 
 - Removed a direct signed-in-browser bypass around the receipt-bound lifecycle API wrappers. Pilot migration `0066` revokes `authenticated` execution on the four superseded check-in, initial-seating, roster-account-link, and event-enrollment writers; their v2 `SECURITY DEFINER` wrappers remain the only callable application mutation boundary.

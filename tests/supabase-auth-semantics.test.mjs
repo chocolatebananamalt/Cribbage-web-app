@@ -262,3 +262,13 @@ test('public registration context projects only the permitted tournament name', 
   assert.equal(readPublicRegistrationContext([]), null);
   assert.equal(readPublicRegistrationContext(null), null);
 });
+
+test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
+  const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
+  assert.match(guide, /One paper card and one digital card/);
+  assert.match(guide, /Each assigned player independently enters the same paper result/);
+  assert.match(guide, /confirms their own entry/);
+  assert.match(guide, /entries disagree, leave it pending for cross-checking/);
+  assert.match(guide, /both players independently submit matching results/);
+  assert.match(guide, /requireTournamentAccess/);
+});
