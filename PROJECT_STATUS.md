@@ -13,6 +13,11 @@
 - Replaced the correction RPC's delimiter-based request fingerprint with canonical JSON for fresh installations, and applied pilot repairs `0019`/`0020`. Existing immutable correction receipts remain replay-compatible through an exact legacy-hash comparison while all new receipts use canonical fingerprints.
 - A transactional pilot test confirmed an old-format receipt replays its saved response and a changed reason containing `|` returns `idempotency_conflict`; all fixture writes rolled back. Independent Sol review found no remaining P0/P1 issue after the compatibility repair.
 
+## 2026-09-09 correction-policy gap review
+
+- The review confirmed an unimplemented `R-CORR-01` capability: directors cannot yet require a correction reason or independent approval. The existing correction engine remains safe for its immediate/optional-reason default, but does not satisfy the configurable-policy requirement.
+- Recorded the reviewed implementation contract for append-only policy versions, immutable correction snapshots, pending-no-effect behavior, independent non-self approval, stale/published guards, lifecycle invariants, and the required concurrency/replay/rollback test matrix. No scoring behavior was broadened or guessed.
+
 ## 2026-09-08 correction-foundation pilot verification
 
 - Applied `0011_correction_foundation` to the isolated synthetic-data pilot. It provides append-only correction/state/conflict records and an authenticated, cross-checker-only correction RPC. It preserves original verification evidence, denies self-corrections, applies the default immediate-authority/optional-reason policy atomically, and safely rejects non-identical reuse of an idempotency key.
