@@ -1,5 +1,20 @@
 # Project Status
 
+## 2026-09-09 raw profile-ID linking exposure closed
+
+- Removed the unused browser route that accepted a director-supplied player
+  profile ID for roster linking. This conflicted with the approved witnessed
+  activation ceremony and could have linked the wrong account if an ID were
+  known. Applied pilot migration `revoke_browser_roster_account_link` now
+  denies `anon` and `authenticated` execution of both roster-link writers,
+  while retaining server-role internal execution for the future server-only
+  activation transaction.
+- Independent Sol review found no P0/P1 implementation defect and required
+  the live permission check before release. Catalog proof confirms the link
+  v1/v2 functions deny browser roles; the separate enrollment v2 function
+  still permits authenticated officials and denies anonymous callers. Fresh
+  disposable-chain and real authenticated-browser evidence remain open.
+
 ## 2026-09-09 live advisor and report-consistency recheck
 
 - A fresh read-only security-advisor pass found no new private-table exposure:
