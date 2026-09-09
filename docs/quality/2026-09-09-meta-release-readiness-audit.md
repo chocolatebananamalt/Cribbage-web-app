@@ -10,7 +10,7 @@ not evidence that a tournament workflow is safe to release.
 
 ## Evidence inspected
 
-- Current branch `codex/production-readiness-baseline`, commit `ecb9fb2`.
+- Current branch `codex/production-readiness-baseline`, commit `8f5bec1`.
 - Repository static checks and production build run locally on Node 24.
 - Pilot Supabase project schema/RPC catalog and security/performance advisors.
 - Vercel project/deployment metadata and the current protected Preview shell.
@@ -22,7 +22,7 @@ not evidence that a tournament workflow is safe to release.
 
 | Requirement | Current evidence | Honest status |
 |---|---|---|
-| `R-REG-01` registration/roster/payment/check-in/seating | Public claim, private review, roster promotion, and manual receipt evidence boundaries exist. Check-in and authoritative Table/Seat assignment do not. | Incomplete — release blocker |
+| `R-REG-01` registration/roster/payment/check-in/seating | Public claim, private review, roster promotion, manual receipt, append-only check-in, initial immutable Table/Seat, director-authorized account linking, and guarded Standard Singles enrollment boundaries exist. Player delivery, dynamic rotation, and real multi-session evidence do not. | Partial — release blocker |
 | `R-ROLE-01` server roles | Protected routes and narrowly scoped RPCs derive identity from verified claims and tournament role. Real independent role sessions are absent. | Partial — release blocker |
 | `R-OPS-01` rotation/eligibility | Prototype controls only; approved dated ACC scheduling/eligibility fixtures are absent. | Incomplete — release blocker |
 | `R-SCORE-01` score derivation | Unit/rejection tests and private server RPC boundary cover 1–121, reciprocal lines, and 0/2/3 game points. | Partial — needs real backend/browser proof |
