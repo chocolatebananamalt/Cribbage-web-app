@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 protected registration-claim review boundary
+
+- Applied pilot migration `0035_registration_claim_review_workspace`: director/co-director-only review decisions are immutable, collision-aware, idempotent, receipted, and audited. The decision response explicitly states that no roster, payment, or check-in record was created.
+- Focused Sol review found four P1 integrity issues (collision approval branch, approved-claim collision visibility, unsuitable duplicate references, and null decision validation); all were repaired and the final re-review found no P0/P1. Pilot inspection confirms the writer exists, `anon` cannot execute it, and neither `anon` nor `authenticated` has direct table access.
+- The review queue and future roster/payment/check-in/seating workflows remain distinct required increments. This is not a claim that a registration is enrolled or paid.
+
 ## 2026-09-09 registration claim-review contract
 
 - A focused high-risk review established the next `R-REG-01` increment: a director/co-director-only, immutable registration-claim decision queue. It can only mark a claim `approved_for_roster` or `rejected`; it cannot create an Auth account/profile, roster role, event participant, payment record, check-in, seat, or verification ID.
