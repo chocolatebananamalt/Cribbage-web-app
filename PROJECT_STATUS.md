@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 protected page verified-claims repair
+
+- Standardized the shared protected-page access guard on Supabase verified claims. A claims-service failure now fails closed, a missing verified subject redirects to sign-in, and tournament authorization still comes only from the server-side role RPC. Protected pages receive only the authenticated profile ID they need, rather than a broader user object.
+- `pnpm lint`, 58 tests, production build, and diff check pass. Independent authenticated browser/session evidence remains a release gate; see `docs/quality/2026-09-09-protected-page-claims.md`.
+
 ## 2026-09-09 protected tournament setup read route
 
 - Added a private read route for the existing setup workspace and official-choice bootstrap RPCs. It verifies cookie-backed claims, uses no direct table or service-role access, validates the exact narrow DTOs, fails closed, and marks every response `private, no-store`.

@@ -58,7 +58,9 @@ test('proxy refreshes claims and protected tournament data requires server membe
   assert.match(proxy, /private, no-store/);
   assert.doesNotMatch(proxy, /x-supabase-session-refresh/);
   assert.match(proxy, /matcher/);
-  assert.match(dal, /getUser/);
+  assert.match(dal, /getClaims/);
+  assert.match(dal, /claimsError/);
+  assert.doesNotMatch(dal, /getUser/);
   assert.match(dal, /\.rpc\("get_tournament_role"/);
   assert.match(dal, /notFound/);
   assert.match(page, /requireTournamentAccess/);
