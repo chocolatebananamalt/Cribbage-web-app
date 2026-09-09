@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 current preview deployment check
+
+- Pushed the verified `codex/production-readiness-baseline` branch through GitHub. Vercel created preview deployment `dpl_DQtqwboXBFEphehbYUoyC6PzcBax` for commit `1714b7c`; it is `READY` with the explicit Next.js framework, and its branch alias returned HTTP 200. The Vercel runtime-error scan found no errors in the selected one-hour window.
+- This is only preview build/smoke evidence. It does not replace authenticated multi-user, mobile/browser, data-persistence, security, backup/restore, monitoring, or simulated-tournament release gates.
+
 ## 2026-09-09 server-only activation execution prerequisite
 
 - Verified the current project configuration contains only public Supabase connection values; it has no server-only database execution identity. This is correct for current browser-session RPCs but insufficient for the reviewed activation feature, whose functions must not be callable by authenticated browsers.
