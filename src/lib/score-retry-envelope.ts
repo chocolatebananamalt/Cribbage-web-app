@@ -68,7 +68,9 @@ export function pendingSubmissionRecovery(pending: PendingScoreSubmission | null
 }
 
 export function isDefinitiveScoreMutationFailure(status: number, payload: unknown, gameId: string) {
-  if ([400, 401, 403].includes(status)) return true;
+  // A session can expire after the browser has sent the request. Preserve the
+  // exact envelope across 401 so the signed-in player can safely retry it.
+  if ([400, 403].includes(status)) return true;
   return status === 409 && isRejectedGameOperation(payload, gameId);
 }
 import { isRejectedGameOperation } from "./api/game-operation.ts";

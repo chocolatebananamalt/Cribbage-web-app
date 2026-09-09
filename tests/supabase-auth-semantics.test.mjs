@@ -196,6 +196,7 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'unknown_code' }, 'game-1'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'wrong-game', code: 'not_assigned' }, 'game-1'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned', submission_id: 'mixed' }, 'game-1'), false);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(401, { error: 'unauthorized' }, 'game-1'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(429, { error: 'rate_limited' }, 'game-1'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(404, { error: 'not_found' }, 'game-1'), false);
   assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /Retry This Same Entry/);

@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-09 score retry authentication-expiry repair
+
+- A temporary expired browser session no longer clears the one exact pending
+  score-entry envelope. The player must sign in again, then can retry only the
+  original entry; request-validation, origin, and exact authoritative
+  rejection paths still clear it. This prevents silent loss when the request
+  may already have reached the server.
+- Focused Sol review found no P0/P1 in the repair. Local lint, 74 tests,
+  production build, workspace/private-handoff verification, and diff check
+  pass. A browser/network test of an accepted request followed by a lost
+  response, session expiry, and reauthentication remains a release-evidence
+  gap.
+- This remains foreground retry recovery, not offline scoring.
+
 ## 2026-09-09 offline score-sync design boundary
 
 - Focused Sol review confirms that the current one-item session retry envelope
