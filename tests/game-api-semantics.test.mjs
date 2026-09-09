@@ -800,15 +800,20 @@ test('tournament setup bootstrap exposes only current official choices to curren
   assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
 });
 
-test('setup routes are same-origin, claim-checked RPC boundaries with no direct table access', () => {
+test('setup routes are same-origin mutations and private, claim-checked RPC boundaries with no direct table access', () => {
   const save = read('src/app/api/v1/tournaments/[id]/setup/route.ts');
   const recovery = read('src/app/api/v1/tournaments/[id]/setup/reconciliation/route.ts');
+  const validators = read('src/lib/api/setup.ts');
   for (const source of [save, recovery]) {
     assert.match(source, /isSameOriginRequest/); assert.match(source, /getClaims/); assert.match(source, /operation_unavailable/);
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
     assert.match(source, /cache-control.*private, no-store/);
   }
   assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
+  assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
+  assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/);
+  assert.match(validators, /director_configured_unverified/);
+  assert.match(save, /setup_unavailable/); assert.match(save, /privateNoStore/);
   assert.match(recovery, /get_tournament_setup_operation_reconciliation/); assert.match(recovery, /isSetupRecoveryRequest/);
 });
 

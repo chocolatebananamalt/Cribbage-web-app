@@ -36,3 +36,47 @@ export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRe
 export function isSavedSetup(value: unknown, request: SetupSaveRequest) { if (!value || typeof value !== "object") return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
 export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string"; }
 export function isRecoveredSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "setup_draft_saved" && isUuid((value as Record<string, unknown>).revisionId) && Number.isSafeInteger((value as Record<string, unknown>).version); }
+const workspaceKeys = ["current", "history"];
+const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "createdAt", "officials", "events"];
+const workspaceEventKeys = [...eventKeys, "sourceStatus"];
+const workspacePoolKeys = ["slot", ...poolKeys, "sourceStatus"];
+const historyKeys = ["version", "createdAt", "eventCount"];
+const status = (value: unknown) => value === "director_configured_unverified";
+function workspaceEvent(value: unknown) {
+  if (!value || typeof value !== "object" || !own(value, workspaceEventKeys)) return false;
+  const e = value as Record<string, unknown>;
+  return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
+    && text(e.displayName, 200, true) && typeof e.startsAt === "string" && text(e.timezone, 128, true)
+    && text(e.styleCode, 160, true) && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(e.formatCode as string)
+    && Number.isSafeInteger(e.gameCount) && (e.gameCount as number) >= 1 && (e.gameCount as number) <= 99 && money(e.entryFeeCents)
+    && text(e.feeIncludesNote, 1000) && text(e.payoutNote, 2000) && text(e.qualificationNote, 2000) && text(e.eligibilityNote, 2000)
+    && ["unset", "in_effect", "not_in_effect"].includes(e.mugginsStatus as string) && status(e.sourceStatus)
+    && Array.isArray(e.qPools) && e.qPools.length <= 2 && e.qPools.every((pool) => !!pool && typeof pool === "object" && own(pool, workspacePoolKeys)
+      && Number.isSafeInteger((pool as Record<string, unknown>).slot) && [(pool as Record<string, unknown>).slot].every((slot) => slot === 1 || slot === 2)
+      && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents)
+      && text((pool as Record<string, unknown>).note, 1000) && status((pool as Record<string, unknown>).sourceStatus));
+}
+export function isSetupWorkspace(value: unknown) {
+  if (!value || typeof value !== "object" || !own(value, workspaceKeys)) return false;
+  const workspace = value as Record<string, unknown>;
+  if (!Array.isArray(workspace.history) || !workspace.history.every((item) => !!item && typeof item === "object" && own(item, historyKeys)
+    && Number.isSafeInteger((item as Record<string, unknown>).version) && ((item as Record<string, unknown>).version as number) >= 1
+    && typeof (item as Record<string, unknown>).createdAt === "string" && Number.isSafeInteger((item as Record<string, unknown>).eventCount) && ((item as Record<string, unknown>).eventCount as number) >= 0)) return false;
+  if (workspace.current === null) return workspace.history.length === 0;
+  if (!workspace.current || typeof workspace.current !== "object" || !own(workspace.current, currentKeys)) return false;
+  const current = workspace.current as Record<string, unknown>;
+  return isUuid(current.revisionId) && Number.isSafeInteger(current.version) && (current.version as number) >= 1
+    && text(current.tournamentName, 200, true) && text(current.city, 160, true) && text(current.venue, 240, true)
+    && typeof current.startsAt === "string" && typeof current.endsAt === "string" && text(current.timezone, 128, true)
+    && text(current.contactDetails, 1000) && money(current.sanctioningFeeCents, true) && typeof current.createdAt === "string"
+    && Array.isArray(current.officials) && current.officials.length >= 1 && current.officials.length <= 3
+    && current.officials.every((official) => !!official && typeof official === "object" && own(official, officialKeys) && isUuid((official as Record<string, unknown>).profileId) && ["director", "co_director"].includes((official as Record<string, unknown>).role as string))
+    && Array.isArray(current.events) && current.events.length <= 32 && current.events.every(workspaceEvent);
+}
+export function isSetupOfficialChoices(value: unknown) {
+  if (!value || typeof value !== "object" || !own(value, ["directorProfileId", "coDirectorProfileIds"])) return false;
+  const choices = value as Record<string, unknown>;
+  return isUuid(choices.directorProfileId) && Array.isArray(choices.coDirectorProfileIds)
+    && choices.coDirectorProfileIds.length <= 2 && choices.coDirectorProfileIds.every(isUuid)
+    && !choices.coDirectorProfileIds.includes(choices.directorProfileId);
+}

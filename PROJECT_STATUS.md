@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 protected tournament setup read route
+
+- Added a private read route for the existing setup workspace and official-choice bootstrap RPCs. It verifies cookie-backed claims, uses no direct table or service-role access, validates the exact narrow DTOs, fails closed, and marks every response `private, no-store`.
+- The review caught and repaired an otherwise release-blocking validator mismatch: persisted source rows use the exact value `director_configured_unverified`; accepting invented labels would have rejected every valid setup response. `pnpm lint`, 57 tests, production build, workspace/handoff verification, and diff check pass. Real authorized/unauthorized sessions and the actual setup UI remain required; see `docs/quality/2026-09-09-tournament-setup-route-read.md`.
+
 ## 2026-09-09 launch-plan accuracy repair
 
 - Reconciled `docs/operations/LAUNCH_PLAN.md` with the current pilot branch so it no longer states that the application has no backend, no database, or only a placeholder deployment. It now accurately describes the guarded pilot boundaries and the separate, still-unreleased production path.
