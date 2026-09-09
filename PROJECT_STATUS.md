@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-09 API cache-boundary regression guard
+
+- A manual API-route audit found no current no-store bypass. To prevent future
+  drift, a route-discovery test now requires every API v1 route to use the
+  private response boundary; the proxy remains the same-origin mutation gate.
+- Lint, 79 application tests, production build, workspace/private-handoff
+  verification, and diff validation pass. Hosted authenticated API evidence is
+  still a separate release gate.
+
 ## 2026-09-09 dependency-audit CI safeguard
 
 - GitHub's hosted Dependabot, Code Scanning, and Secret Scanning alerts are

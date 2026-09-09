@@ -6,6 +6,11 @@ import test from 'node:test';
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const collectRoutes = (directory) => fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+  const fullPath = path.join(directory, entry.name);
+  if (entry.isDirectory()) return collectRoutes(fullPath);
+  return entry.name === 'route.ts' ? [fullPath] : [];
+});
 
 test('Supabase auth scaffolding fails closed and does not expose server secrets', () => {
   const env = read('src/lib/env.ts');
@@ -135,6 +140,19 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);
   assert.equal(check('/api/v2/games/example/submissions', 'POST', 'https://other.example'), false);
+});
+
+test('every API v1 route uses a private no-store response boundary', () => {
+  const routes = collectRoutes(path.join(root, 'src/app/api/v1'));
+  assert.ok(routes.length > 0);
+  for (const route of routes) {
+    const source = fs.readFileSync(route, 'utf8');
+    assert.match(
+      source,
+      /apiJson|privateNoStore/,
+      `${path.relative(root, route)} must use the private no-store response boundary`,
+    );
+  }
 });
 
 test('protected screens offer a shared-device clear and local sign-out boundary', () => {
