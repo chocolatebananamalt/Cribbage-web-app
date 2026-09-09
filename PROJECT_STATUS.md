@@ -6,6 +6,11 @@
 - Focused Sol review repaired five P1 defects before application: a clean-chain duplicate constraint, replay after lifecycle changes, timestamp-based current-state ordering, incomplete conflict attribution, and post-publication roster/check-in drift. Final re-review found no P0/P1. Pilot catalog evidence confirms forced RLS, no direct anonymous/authenticated table access, authenticated-only empty-search-path RPCs, immutable history, same-tournament composite assignment provenance, and unique Table/Seat/verification IDs.
 - This is deliberately narrower than an operational seating feature. The current roster has no player-account association, so player delivery, SMS/printing, round rotation, late-entry policy, table playthrough, and real multi-session lifecycle tests remain release gates. Details and exact remaining evidence are in `docs/quality/2026-09-09-check-in-initial-seating-pilot.md`.
 
+## 2026-09-09 roster-to-account linking contract
+
+- The scoring engine requires an authenticated assigned participant, while the approved roster intentionally has no account link. Recorded the next safe boundary in `docs/decisions/2026-09-09-roster-account-linking-contract.md`: a director/co-director explicitly links a pre-existing authenticated profile to one private roster entry, with immutable receipt/audit history and no name/email inference.
+- This contract expressly does not create an account, role, payment, check-in, seat, event participant, or score action. Its implementation and real multi-account authorization evidence are still required before digital players can safely receive assignments or score.
+
 ## 2026-09-09 retry-safe manual-payment client
 
 - Added the protected director/co-director manual-payment workspace controls for the existing private roster ledger. A receipt can be recorded only as a strict positive decimal USD amount, an allowlisted manual method, canonical UTC timestamp, optional bounded note, and a fresh idempotency key; a current receipt can be voided only with a bounded nonblank reason. Neither action asserts paid-in-full, reconciliation, check-in, seating, enrollment, eligibility, or any financial balance.
