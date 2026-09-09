@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-08 public registration and manual-payment requirement
+
+- Added the agreed public tournament registration boundary to the normative requirements: a non-guessable flyer QR code/link permits self-registration only while server-side registration is open; it never grants a role or private data access. Duplicate identity claims require director review.
+- Recorded the first-release financial boundary: payment remains manual (cash/check or other director-recorded method), and only an authorized director/co-director can mark it received in a private audited ledger. Online payments remain a future separately reconciled integration.
+
 ## 2026-09-08 live score-entry pilot hardening
 
 - Added the protected, server-backed Standard Singles score-entry route. It loads only a signed-in, checked-in assigned player's active game context through a narrow authenticated RPC; it uses the existing server-authoritative submission/confirmation routes and does not expose direct private-table access.
