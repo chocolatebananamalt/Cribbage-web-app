@@ -26,6 +26,9 @@ features.
 - `pnpm verify:all` passed: lint, 78 application tests, production build, and
   clean workspace verification.
 - `pnpm verify:handoff` and `git diff --check` passed.
+- GitHub Actions run `34409826764` completed successfully for the exact CI
+  change. Its clean-clone job ran the new audit step followed by lint, all 78
+  application tests, production build, and workspace verification.
 
 ## Limit
 

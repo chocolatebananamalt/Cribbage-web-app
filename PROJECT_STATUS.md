@@ -9,7 +9,8 @@
   installation, before all existing checks.
 - The audit found no known production dependency vulnerability. Lint, 78
   application tests, production build, workspace/private-handoff verification,
-  and diff validation pass.
+  and diff validation pass. Independent GitHub Actions run `34409826764` also
+  passed the new audit step and all clean-clone checks.
 
 ## 2026-09-09 touch-target and keyboard-focus accessibility repair
 
