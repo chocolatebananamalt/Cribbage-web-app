@@ -47,14 +47,13 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
 });
 
 test('proxy refreshes claims and protected tournament data requires server membership', () => {
-  const proxy = read('src/proxy.ts') + read('src/lib/supabase/proxy.ts');
+  const proxy = read('src/proxy.ts') + read('src/lib/api/mutation-origin-gateway.ts') + read('src/lib/supabase/proxy.ts');
   const dal = read('src/lib/auth/require-tournament-access.ts');
   const page = read('src/app/tournament/[tournamentId]/page.tsx');
   assert.match(proxy, /getClaims/);
-  assert.match(proxy, /pathname\.startsWith\("\/api\/v1\/"\)/);
-  assert.match(proxy, /request\.headers\.get\("origin"\) !== request\.nextUrl\.origin/);
   assert.match(proxy, /invalid_origin/);
   assert.match(proxy, /private, no-store/);
+  assert.match(proxy, /"\/api\/v1\/:path\*"/);
   assert.match(proxy, /response\.cookies\.set/);
   assert.match(proxy, /refreshedHeaders/);
   assert.match(proxy, /setAll\(cookiesToSet, headersToSet\)/);
@@ -70,6 +69,25 @@ test('proxy refreshes claims and protected tournament data requires server membe
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /director.*co_director/);
   assert.match(page, /\/roster/);
+});
+
+test('API v1 mutation origin decision rejects only unsafe cross-origin writes', async () => {
+  const { apiMutationOriginMatcher, apiMutationOriginRejection, rejectsApiMutationOrigin } = await import(pathToFileURL(path.join(root, 'src/lib/api/mutation-origin-gateway.ts')).href);
+  const requestOrigin = 'https://example.test';
+  const check = (pathname, method, origin) => rejectsApiMutationOrigin({ pathname, method, origin, requestOrigin });
+  assert.equal(apiMutationOriginMatcher, '/api/v1/:path*');
+  assert.deepEqual(apiMutationOriginRejection, {
+    body: { error: 'invalid_origin' },
+    init: { status: 403, headers: { 'cache-control': 'private, no-store' } },
+  });
+  assert.equal(check('/api/v1/games/example/submissions', 'POST', 'https://other.example'), true);
+  assert.equal(check('/api/v1/registration/example.jpg', 'POST', 'https://other.example'), true);
+  assert.equal(check('/api/v1/games/example/submissions', 'POST', null), true);
+  assert.equal(check('/api/v1/games/example/submissions', 'POST', requestOrigin), false);
+  assert.equal(check('/api/v1/games/example/submissions', 'GET', null), false);
+  assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
+  assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);
+  assert.equal(check('/api/v2/games/example/submissions', 'POST', 'https://other.example'), false);
 });
 
 test('protected screens offer a shared-device clear and local sign-out boundary', () => {

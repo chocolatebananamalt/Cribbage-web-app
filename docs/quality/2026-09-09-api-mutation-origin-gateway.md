@@ -3,9 +3,11 @@
 ## Scope
 
 The shared Next request gateway now rejects cross-origin mutation requests to every
-`/api/v1/` route before the route handler, Supabase client, or RPC runs.  This
-closes a consistency gap in which newer mutation routes could accidentally omit
-their own same-origin check.
+`/api/v1/` route before the route handler, Supabase client, or RPC runs. Its
+explicit API matcher includes API paths that look like static assets, so a future
+unusual route suffix cannot bypass the gateway through the ordinary page/static
+matcher. This closes a consistency gap in which newer mutation routes could
+accidentally omit their own same-origin check.
 
 ## Acceptance criteria
 
@@ -24,13 +26,23 @@ On the local Windows workspace after the gateway and its static regression
 checks were added:
 
 - `pnpm lint` — pass.
-- `pnpm test` — pass, 58 tests.
+- `pnpm test` — pass, 59 tests.
 - `pnpm build` — pass.
 - `git diff --check` — pass.
 
-The regression test asserts that the gateway scopes to API v1, compares the
-incoming origin to the effective request origin, returns the generic error, and
-sets the non-cacheable header.
+The regression test executes the extracted gateway decision for a same-origin
+POST, cross-origin POST, missing-origin POST, all three safe methods, a non-v1
+API path, and an API mutation path ending in `.jpg`. It also asserts the explicit
+API matcher and generic non-cacheable rejection response.
+
+## Focused review and repair
+
+A focused Sol security review found no P0 and two P1 issues before the change was
+accepted: the prior general matcher could exclude future API paths ending in a
+static-looking extension, and source-text assertions would not prove the
+decision. The explicit literal API matcher and executed decision/rejection
+configuration coverage above close both findings. The production build also
+verified the framework's requirement that exported matchers remain literal.
 
 ## Limitation / remaining release evidence
 

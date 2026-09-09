@@ -3,7 +3,7 @@
 ## 2026-09-09 API mutation origin gateway
 
 - Added one fail-closed, no-store same-origin gate for every non-read `/api/v1/` request before a handler or database RPC is reached. This protects existing and future private mutations consistently; individual routes and database RPCs still enforce their own identity, role, data, idempotency, and audit rules.
-- Lint, 58 tests, production build, and diff validation pass locally. A real authenticated browser cross-origin rejection test remains a release gate; see `docs/quality/2026-09-09-api-mutation-origin-gateway.md`.
+- Focused Sol review found two P1s before release: the general page/static matcher could omit a future image-suffixed API path, and the original test inspected text rather than behavior. The gateway now has a literal explicit API matcher plus executed same-origin/missing-origin/safe-method/API-suffix decision coverage. Lint, 59 tests, production build, workspace/handoff verification, and diff validation pass locally. A real authenticated browser cross-origin rejection test remains a release gate; see `docs/quality/2026-09-09-api-mutation-origin-gateway.md`.
 
 ## 2026-09-09 release-matrix follow-up
 
