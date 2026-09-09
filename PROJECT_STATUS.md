@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 shared-device sign-out and clear boundary
+
+- Added a protected-screen **Sign out and clear this device** control to the tournament workspace, live score-entry, correction, and how-to views. It clears only this browser’s application retry/registration artifacts, calls a same-origin, origin-checked server route for **local-only** Supabase sign-out, propagates only Supabase cookie changes, and sends `Clear-Site-Data` for cache/storage before hard replacement to sign-in.
+- Corrected four P1 findings in the first pass (the actual registration retry prefix, local rather than global sign-out scope, storage-failure continuation, and hard navigation) and two P1 findings in the re-review (no forwarding of Next internal request-override headers and a visible persistent local-cleanup warning). The final Sol re-review found no P0/P1 findings. `pnpm lint`, `pnpm test` (41 tests), `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check` passed.
+- This closes an implementation gap in `R-REG-01`; a real HTTPS browser Back/Forward and cookie/storage-clear exercise with an authenticated disposable account remains a release-verification gate.
+
 ## 2026-09-09 release-audit evidence refresh
 
 - Corrected the release audit after verifying the current implementation rather than relying on its older baseline: the signed-in, assignment-scoped live score-entry route and the protected correction workspace are implemented in the supported Standard Singles pilot slice. The Vercel Preview for commit `49d4e52` is Ready and returned the expected root app shell without a runtime-error cluster in the bounded scan.

@@ -1,12 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "../../lib/supabase/client";
 
-export default function SignInPage() {
+function SignInForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const handoffWarning = useSearchParams().get("notice") === "local_clear_review";
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,6 +36,7 @@ export default function SignInPage() {
         <p className="eyebrow">ACC TOURNAMENT DESK</p>
         <h1 id="sign-in-title">Sign in</h1>
         <p className="lede">Use your email to receive a secure, one-time sign-in link.</p>
+        {handoffWarning ? <p className="error-text" role="alert">Sign-out completed, but this browser could not confirm that local tournament data was cleared. Close this browser before another person uses this device.</p> : null}
         <form onSubmit={submit}>
           <label htmlFor="email">Email address</label>
           <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
@@ -45,4 +48,8 @@ export default function SignInPage() {
       </section>
     </main>
   );
+}
+
+export default function SignInPage() {
+  return <Suspense fallback={<main className="auth-shell"><section className="auth-card"><p className="eyebrow">ACC TOURNAMENT DESK</p><p role="status">Opening sign-in…</p></section></main>}><SignInForm /></Suspense>;
 }

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import test from 'node:test';
 
 const root = process.cwd();
@@ -56,6 +57,59 @@ test('proxy refreshes claims and protected tournament data requires server membe
   assert.match(dal, /\.rpc\("get_tournament_role"/);
   assert.match(dal, /notFound/);
   assert.match(page, /requireTournamentAccess/);
+});
+
+test('protected screens offer a shared-device clear and local sign-out boundary', () => {
+  const control = read('src/components/shared-device-sign-out.tsx');
+  const storage = read('src/lib/client-session-storage.ts');
+  const signOut = read('src/app/auth/sign-out/route.ts');
+  const protectedScreens = [
+    'src/app/tournament/[tournamentId]/page.tsx',
+    'src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx',
+    'src/app/tournament/[tournamentId]/corrections/page.tsx',
+    'src/app/tournament/[tournamentId]/how-to/page.tsx',
+  ].map(read).join('\n');
+  assert.match(control, /clearThenSignOut\(window\.sessionStorage/);
+  assert.match(control, /fetch\("\/auth\/sign-out"/);
+  assert.match(control, /window\.location\.replace\(destination\.toString\(\)\)/);
+  assert.match(signOut, /request\.headers\.get\("origin"\) !== request\.nextUrl\.origin/);
+  assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
+  assert.match(signOut, /Clear-Site-Data/);
+  assert.match(signOut, /"cache", "storage"/);
+  assert.match(signOut, /cache-control/);
+  assert.doesNotMatch(signOut, /source\.headers\.forEach/);
+  assert.match(storage, /"acc-score:"/);
+  assert.match(storage, /"acc-correction:"/);
+  assert.match(storage, /"registration-operation:"/);
+  assert.match(storage, /storage\.removeItem\(key\)/);
+  assert.equal((protectedScreens.match(/SharedDeviceSignOut/g) ?? []).length, 8);
+});
+
+test('shared-device cleanup recognizes the actual registration key and propagates storage failures', async () => {
+  const storage = await import(pathToFileURL(path.join(root, 'src/lib/client-session-storage.ts')).href);
+  const removed = [];
+  const fixture = {
+    get length() { return 3; },
+    key(index) { return ['registration-operation:opaque-token', 'acc-score:opaque-operation', 'unrelated'][index] ?? null; },
+    removeItem(key) { removed.push(key); if (key.startsWith('acc-score:')) throw new Error('storage unavailable'); },
+  };
+  assert.throws(() => storage.clearAppSessionStorage(fixture), /storage unavailable/);
+  assert.deepEqual(removed, ['acc-score:opaque-operation']);
+});
+
+test('shared-device sign-out continues when local storage cleanup fails', async () => {
+  const storage = await import(pathToFileURL(path.join(root, 'src/lib/client-session-storage.ts')).href);
+  let signOutCalls = 0;
+  const fixture = {
+    get length() { return 1; },
+    key() { return 'registration-operation:opaque-token'; },
+    removeItem() { throw new Error('storage unavailable'); },
+  };
+  const result = await storage.clearThenSignOut(fixture, async () => { signOutCalls += 1; return true; });
+  assert.equal(signOutCalls, 1);
+  assert.deepEqual(result, { localClearFailed: true, signedOut: true });
+  assert.match(read('src/app/sign-in/page.tsx'), /local_clear_review/);
+  assert.match(read('src/app/sign-in/page.tsx'), /Close this browser before another person uses this device/);
 });
 
 test('route callback propagates refreshed cookies and membership function is narrowly granted', () => {
