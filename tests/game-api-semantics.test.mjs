@@ -111,6 +111,86 @@ test('check-in and initial-seating writers are same-origin, claims-checked RPC b
   assert.match(publish, /isRejectedInitialSeating/);
 });
 
+test('roster-account linking and event enrollment use exact, receipt-bound private API envelopes', async () => {
+  const lifecycle = await import(pathToFileURL(path.join(root, 'src/lib/api/roster-lifecycle.ts')).href);
+  const tournamentId = '00000000-0000-4000-8000-000000000001';
+  const rosterEntryId = '00000000-0000-4000-8000-000000000002';
+  const profileId = '00000000-0000-4000-8000-000000000003';
+  const eventId = '00000000-0000-4000-8000-000000000004';
+  const participantId = '00000000-0000-4000-8000-000000000005';
+  const operationId = '00000000-0000-4000-8000-000000000006';
+  const otherOperationId = '00000000-0000-4000-8000-000000000007';
+  const link = { rosterEntryId, profileId, idempotencyKey: operationId };
+  const enrollment = { eventId, rosterEntryId, idempotencyKey: operationId };
+  assert.equal(lifecycle.isRosterAccountLinkRequest(link), true);
+  assert.equal(lifecycle.isRosterAccountLinkRequest({ ...link, extra: 'private' }), false);
+  assert.equal(lifecycle.isEventEnrollmentRequest(enrollment), true);
+  assert.equal(lifecycle.isEventEnrollmentRequest({ ...enrollment, eventId: 'not-a-uuid' }), false);
+  const linked = { status: 'roster_account_linked', rosterEntryId, profileLinked: true, eventEnrolled: false, roleGranted: false, checkedIn: false, seatAssigned: false, tournamentId, operationId };
+  assert.equal(lifecycle.isAcceptedRosterAccountLink(linked, tournamentId, link), true);
+  assert.equal(lifecycle.isAcceptedRosterAccountLink({ ...linked, operationId: otherOperationId }, tournamentId, link), false);
+  assert.equal(lifecycle.isAcceptedRosterAccountLink({ ...linked, tournamentId: otherOperationId }, tournamentId, link), false);
+  assert.equal(lifecycle.isAcceptedRosterAccountLink({ ...linked, rosterEntryId: profileId }, tournamentId, link), false);
+  assert.equal(lifecycle.isAcceptedRosterAccountLink({ ...linked, profileLinked: false }, tournamentId, link), false);
+  assert.equal(lifecycle.isRejectedRosterAccountLink({ status: 'rejected', code: 'independent_linker_required', rosterEntryId, tournamentId, operationId }, tournamentId, link), true);
+  assert.equal(lifecycle.isRejectedRosterAccountLink({ status: 'rejected', code: 'independent_linker_required', rosterEntryId: profileId, tournamentId, operationId }, tournamentId, link), false);
+  assert.equal(lifecycle.isRejectedRosterAccountLink({ status: 'rejected', code: 'independent_linker_required', rosterEntryId, tournamentId: otherOperationId, operationId }, tournamentId, link), false);
+  assert.equal(lifecycle.isRejectedRosterAccountLink({ status: 'rejected', code: 'independent_linker_required', rosterEntryId, tournamentId, operationId: otherOperationId }, tournamentId, link), false);
+  assert.equal(lifecycle.isRejectedRosterAccountLink({ status: 'rejected', code: 'event_not_approved', rosterEntryId, tournamentId, operationId }, tournamentId, link), false);
+  const enrolled = { status: 'event_participant_enrolled', eventId, rosterEntryId, participantId, participantStatus: 'checked_in', gameCreated: false, seatAssigned: false, tournamentId, operationId };
+  assert.equal(lifecycle.isAcceptedEventEnrollment(enrolled, tournamentId, enrollment), true);
+  assert.equal(lifecycle.isAcceptedEventEnrollment({ ...enrolled, eventId: profileId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isAcceptedEventEnrollment({ ...enrolled, rosterEntryId: profileId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isAcceptedEventEnrollment({ ...enrolled, operationId: otherOperationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isAcceptedEventEnrollment({ ...enrolled, tournamentId: otherOperationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'not_checked_in', eventId, rosterEntryId, tournamentId, operationId }, tournamentId, enrollment), true);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'not_checked_in', eventId: profileId, rosterEntryId, tournamentId, operationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'not_checked_in', eventId, rosterEntryId: profileId, tournamentId, operationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'not_checked_in', eventId, rosterEntryId, tournamentId: otherOperationId, operationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'not_checked_in', eventId, rosterEntryId, tournamentId, operationId: otherOperationId }, tournamentId, enrollment), false);
+  assert.equal(lifecycle.isRejectedEventEnrollment({ status: 'rejected', code: 'profile_already_linked', eventId, rosterEntryId, tournamentId, operationId }, tournamentId, enrollment), false);
+});
+
+test('roster lifecycle writers are same-origin, claims-checked RPC boundaries without direct table access', () => {
+  const link = read('src/app/api/v1/tournaments/[id]/roster-links/route.ts');
+  const enroll = read('src/app/api/v1/tournaments/[id]/event-enrollments/route.ts');
+  const migration = read('database/migrations/0065_roster_lifecycle_operation_response_binding.sql');
+  for (const source of [link + read('src/lib/api/route-boundary.ts'), enroll + read('src/lib/api/route-boundary.ts')]) {
+    assert.match(source, /isSameOriginRequest/); assert.match(source, /requireVerifiedSubject/); assert.match(source, /operation_unavailable/); assert.match(source, /private, no-store/);
+    assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
+  }
+  assert.match(link, /link_roster_entry_to_account_v2/); assert.match(enroll, /enroll_linked_roster_entry_in_event_v2/);
+  assert.match(migration, /security definer set search_path = ''/);
+  const linkWrapper = migration.match(/create or replace function public\.link_roster_entry_to_account_v2[\s\S]*?\n\$\$;/)?.[0] ?? '';
+  const enrollmentWrapper = migration.match(/create or replace function public\.enroll_linked_roster_entry_in_event_v2[\s\S]*?\n\$\$;/)?.[0] ?? '';
+  for (const [source, legacy, hashArguments, operation] of [
+    [linkWrapper, 'link_roster_entry_to_account', /'link_roster_entry_to_account', p_tournament_id::text, p_roster_entry_id::text,\s*p_profile_id::text, p_idempotency_key::text/, 'link_roster_entry_to_account'],
+    [enrollmentWrapper, 'enroll_linked_roster_entry_in_event', /'enroll_linked_roster_entry_in_event', p_tournament_id::text, p_event_id::text,\s*p_roster_entry_id::text, p_idempotency_key::text/, 'enroll_linked_roster_entry_in_event'],
+  ]) {
+    assert.notEqual(source, '');
+    assert.match(source, new RegExp(`perform public\\.${legacy}\\(`));
+    assert.match(source, hashArguments);
+    assert.match(source, /v_hash := encode\(extensions\.digest\(convert_to\(jsonb_build_array\([\s\S]*?\)::text, 'utf8'\), 'sha256'\), 'hex'\);/);
+    assert.match(source, /select o\.response_payload into v_stored from app\.operation_receipts o/);
+    assert.match(source, /o\.actor_profile_id = auth\.uid\(\)/);
+    assert.match(source, /o\.tournament_id = p_tournament_id/);
+    assert.match(source, new RegExp(`o\\.operation_type = '${operation}'`));
+    assert.match(source, /o\.target_id = p_roster_entry_id/);
+    assert.match(source, /o\.client_operation_id = p_idempotency_key/);
+    assert.match(source, /o\.request_hash = v_hash/);
+    const performIndex = source.indexOf(`perform public.${legacy}`);
+    const queryRoleIndex = source.lastIndexOf("r.role in ('director', 'co_director')");
+    assert.ok(queryRoleIndex > performIndex, 'receipt query must recheck the current role after the legacy writer');
+    assert.match(source, /and exists \(select 1 from app\.tournament_roles r where r\.tournament_id = p_tournament_id\s*and r\.profile_id = auth\.uid\(\) and r\.role in \('director', 'co_director'\)\)/);
+    assert.match(source, /if v_stored is null then return null; end if/);
+    assert.match(source, /return v_stored \|\| jsonb_build_object/);
+    assert.doesNotMatch(source, /return v_result|coalesce\(v_stored/);
+    const returns = [...source.matchAll(/\breturn\s+([\s\S]*?);/g)].map((match) => match[1].replace(/\s+/g, ' ').trim());
+    assert.deepEqual(returns, ['null', 'null', "v_stored || jsonb_build_object('tournamentId', p_tournament_id, 'operationId', p_idempotency_key)"]);
+  }
+  assert.doesNotMatch(migration, /(?:insert into|update|delete from) app\./);
+});
+
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');

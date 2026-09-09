@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 roster lifecycle API boundary
+
+- Exposed the existing independent roster-account link and pre-seating Standard Singles enrollment transactions through strict same-origin, verified-claims, private/no-store application routes. Pilot migration `0065` provides current-official, exact-receipt wrappers so malformed, stale, cross-operation, missing-receipt, or role-revoked replies fail closed instead of becoming browser success or rejection messages.
+- Local lint, 70 tests, production build, workspace verification, and private-handoff verification pass. Focused Sol review found no P0/P1 after receipt-binding regression coverage was strengthened. Pilot catalog and unauthenticated fail-closed checks pass. This closes an application boundary only; real account-link protocol/UI, independent sessions, and full tournament lifecycle evidence remain open. See `docs/quality/2026-09-09-roster-lifecycle-api-boundary.md`.
+
 ## 2026-09-09 check-in and initial seating API boundary
 
 - Exposed director/co-director check-in and immutable initial-seating operations through strict same-origin, verified-claims, private/no-store application routes. Focused Sol review found that `0047` replies could not prove they belonged to the exact browser operation; four intermediate response-wrapper repairs were insufficient. Applied pilot migrations `0060`–`0064`; the final wrapper requires the caller's current official role, recomputes the 0047 request fingerprint, and returns only the caller/tournament/operation/target-scoped stored receipt before adding the submitted IDs. Its receipt lookup repeats the role predicate to avoid role-change replay races. It returns no actionable envelope if no receipt proves provenance or the role was revoked. The browser now rejects malformed IDs, states, reasons, capacity, Table/Seat assignments, duplicates, extra fields, and cross-operation backend reply shapes rather than passing them through.
