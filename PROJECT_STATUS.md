@@ -18,7 +18,7 @@
 ## 2026-09-09 live advisor and report-consistency recheck
 
 - A fresh read-only security-advisor pass found no new private-table exposure:
-  the 40 private RLS/no-policy notices, two public registration RPCs, and 32
+  the 40 private RLS/no-policy notices, two public registration RPCs, and 31
   authenticated role-checked RPCs match the intentional pilot boundary. It
   reconfirmed the hosted password-provider release blocker.
 - Corrected an older registration-pilot report that inaccurately described
