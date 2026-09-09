@@ -686,6 +686,39 @@ test('event enrollment requires linked checked-in identity and approved digital 
   assert.doesNotMatch(sql, /insert into app\.(canonical_games|score_submissions|score_confirmations|tournament_roles)/);
 });
 
+test('tournament setup drafts are private immutable configuration, not operational events', () => {
+  const sql = read('database/migrations/0051_tournament_setup_draft_boundary.sql');
+  for (const table of [
+    'tournament_setup_revisions',
+    'tournament_setup_official_versions',
+    'tournament_setup_event_versions',
+    'tournament_setup_q_pool_versions',
+    'tournament_setup_operation_conflicts',
+  ]) {
+    assert.match(sql, new RegExp(`create table app\\.${table}`));
+    assert.match(sql, new RegExp(`alter table app\\.${table} enable row level security`));
+    assert.match(sql, new RegExp(`alter table app\\.${table} force row level security`));
+    assert.match(sql, new RegExp(`revoke all on table app\\.${table} from public, anon, authenticated`));
+  }
+  assert.match(sql, /unique \(tournament_id, version\)/);
+  assert.match(sql, /tournament_setup_event_versions_one_main_idx/);
+  assert.match(sql, /tournament_setup_event_versions_one_consolation_idx/);
+  assert.match(sql, /slot smallint not null check \(slot in \(1, 2\)\)/);
+  assert.match(sql, /entry_fee_cents integer not null check \(entry_fee_cents between 0 and 100000000\)/);
+  assert.match(sql, /q pools require main or consolation setup event/);
+  assert.match(sql, /invalid setup official count/);
+  assert.match(sql, /tournament_setup_revision_official_set_guard/);
+  assert.match(sql, /assert_tournament_setup_official_set_for_revision/);
+  assert.match(sql, /setup director must match tournament director/);
+  assert.match(sql, /setup official role unavailable/);
+  assert.match(sql, /operation_receipts_id_tournament_actor_key/);
+  assert.match(sql, /foreign key \(operation_receipt_id, tournament_id, actor_profile_id\)/);
+  assert.match(sql, /foreign key \(prior_receipt_id, tournament_id, actor_profile_id\)/);
+  assert.match(sql, /muggins_status text not null check \(muggins_status in \('unset', 'in_effect', 'not_in_effect'\)\)/);
+  assert.match(sql, /source_status = 'director_configured_unverified'/);
+  assert.doesNotMatch(sql, /insert into app\.(events|ruleset_versions|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');

@@ -24,6 +24,11 @@
 - Closed a critical design gap before implementation by defining `Set Up Tournament` as a private, immutable versioned configuration history—not an edit path for operational scoring events. It captures the director-confirmed tournament, venue, event, fee, Q-pool, payout-note, and Muggins configuration that future Flyer, Seating, Results, and Finance features will consume.
 - The reviewed contract blocks setup changes after seating or gameplay begins, requires existing current official roles rather than granting them from a form, preserves changed retries as conflicts, and prohibits any unapproved ACC calculation, public flyer, operational-event creation, or portal submission. Exact portal option lists and official payout/qualification fixtures remain source gates; see `docs/decisions/2026-09-09-canonical-tournament-setup-contract.md`.
 
+## 2026-09-09 private tournament setup schema foundation
+
+- Applied pilot migration `0051_tournament_setup_draft_boundary`: immutable private revision, official, configured-event, Q-pool, and changed-retry conflict records now exist independently of operational `app.events`. They cannot be directly accessed by anonymous or signed-in clients and contain no writer, reader, UI, event mapping, or official calculation.
+- A focused Sol review repaired three P1s before application: actor/tournament receipt provenance, invalid immutable fee/official shapes, and a zero-official deferred-trigger bypass. Final review found no P0/P1. Static checks pass; direct catalog checks confirm forced RLS and revoked direct grants. The pilot has no disposable director-role fixture, so real deferred-trigger/authorization transaction evidence remains required; see `docs/quality/2026-09-09-tournament-setup-schema-pilot.md`.
+
 ## 2026-09-09 identity linking and guarded enrollment pilot
 
 - Applied pilot migrations `0048` and `0049`: immutable independent roster-to-account linking and pre-seating director/co-director Standard Singles enrollment. The link rejects self-linking and creates no role/event/score authority; enrollment requires a linked, latest-state checked-in roster identity and an approved digital event, then creates no game or seat.

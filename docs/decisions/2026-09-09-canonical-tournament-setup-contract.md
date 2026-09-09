@@ -12,12 +12,13 @@ an already-approved scoring context; a setup version represents what a director
 has configured or reviewed. One must never be silently converted into the
 other.
 
-The first implementation is a private, append-only, director/co-director-only
-configuration history. It can save a complete reviewed draft and provide a
-single current version to future Flyer, Seating, Results, and Finance features.
-Saving configuration does **not** publish a flyer, create an event, enroll a
-player, open registration, assign a seat, calculate a payout/qualification,
-create a result, create a financial obligation, or submit anything to ACC.
+The first implementation will be a private, append-only, director/co-director-
+only configuration history. Its future writer can save a complete reviewed
+draft and provide a single current version to Flyer, Seating, Results, and
+Finance features. Saving configuration will **not** publish a flyer, create an
+event, enroll a player, open registration, assign a seat, calculate a
+payout/qualification, create a result, create a financial obligation, or
+submit anything to ACC.
 
 ## Required configuration scope
 
@@ -55,7 +56,7 @@ enumerations without rewriting prior history.
 
 The implementation uses private, forced-RLS tables:
 
-1. `tournament_setup_versions`: immutable version number, normalized
+1. `tournament_setup_revisions`: immutable version number, normalized
    tournament-level content, author, operation receipt, and timestamp.
 2. `tournament_setup_event_versions`: immutable ordered child records linked to
    exactly one setup version; never linked to, or identified by, an operational
