@@ -18,6 +18,7 @@
 - The review confirmed an unimplemented `R-CORR-01` capability: directors cannot yet require a correction reason or independent approval. The existing correction engine remains safe for its immediate/optional-reason default, but does not satisfy the configurable-policy requirement.
 - Recorded the reviewed implementation contract for append-only policy versions, immutable correction snapshots, pending-no-effect behavior, independent non-self approval, stale/published guards, lifecycle invariants, and the required concurrency/replay/rollback test matrix. No scoring behavior was broadened or guessed.
 - Applied the first safe foundation: private immutable versioned policy rows, default version-0 provisioning for existing and future tournaments, and a foreign-key link from correction snapshots to policy versions. Configuration and pending-review RPCs are not implemented yet, so this schema does not present unavailable controls as working capability.
+- Added the authenticated, director/co-director-only append-only policy configuration RPC. A pilot transaction created policy version 1 requiring a reason and one approval, then exact-replayed without creating another version; all transaction data rolled back. Proposal/review enforcement remains explicitly incomplete.
 
 ## 2026-09-08 correction-foundation pilot verification
 
