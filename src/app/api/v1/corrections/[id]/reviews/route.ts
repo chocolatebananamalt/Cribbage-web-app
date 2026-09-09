@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
-import { correctionRejectionStatus, isAcceptedCorrectionReview, isRejectedCorrectionOperation } from "../../../../../../lib/api/correction";
+import { correctionRejectionStatus, isAcceptedCorrectionReview, isRejectedCorrectionReview } from "../../../../../../lib/api/correction";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   });
   if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   if (isAcceptedCorrectionReview(data, id, body.decision as "approve" | "reject")) return apiJson(data, { status: 200 });
-  if (isRejectedCorrectionOperation(data)) return apiJson(data, { status: correctionRejectionStatus(data.code) });
+  if (isRejectedCorrectionReview(data, id)) return apiJson(data, { status: correctionRejectionStatus(data.code) });
   return apiJson({ error: "operation_unavailable" }, { status: 503 });
   });
 }

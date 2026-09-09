@@ -76,7 +76,9 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.doesNotMatch(reconciliation, /\.from\(|service_role/);
   assert.match(contract, /value\.status === "approved" && value\.decision === "approve"/);
   assert.match(contract, /value\.status === "rejected" && value\.decision === "reject"/);
-  assert.match(contract, /typeof value\.code === "string"/);
+  assert.match(contract, /isRejectedCorrectionProposal/);
+  assert.match(contract, /isRejectedCorrectionReview/);
+  assert.match(contract, /Object\.keys\(value\)\.length === 3/);
 });
 
 test('correction response validators bind successful responses to the submitted operation', async () => {
@@ -85,17 +87,25 @@ test('correction response validators bind successful responses to the submitted 
   const otherCorrectionId = '00000000-0000-4000-8000-000000000002';
   const gameId = '00000000-0000-4000-8000-000000000003';
   const otherGameId = '00000000-0000-4000-8000-000000000004';
-  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, gameId, 7), true);
-  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: otherCorrectionId, game_id: gameId, version: 7 }, correctionId, gameId, 7), false);
-  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'applied', correction_id: correctionId, game_id: otherGameId, version: 8 }, correctionId, gameId, 7), false);
-  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: -1 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: 7, policy_version: 1 }, correctionId, gameId, 7), true);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: 7, policy_version: 1, internal_detail: 'must not reach the browser' }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: otherCorrectionId, game_id: gameId, version: 7, policy_version: 1 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'applied', correction_id: correctionId, game_id: otherGameId, version: 8, policy_version: 1 }, correctionId, gameId, 7), false);
+  assert.equal(contract.isAcceptedCorrectionProposal({ status: 'pending', correction_id: correctionId, game_id: gameId, version: -1, policy_version: 1 }, correctionId, gameId, 7), false);
   assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, 'reject'), true);
+  assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: correctionId, game_id: gameId, version: 7, internal_detail: 'must not reach the browser' }, correctionId, 'reject'), false);
   assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: correctionId, game_id: gameId, version: 7 }, correctionId, 'approve'), false);
   assert.equal(contract.isAcceptedCorrectionReview({ status: 'approved', decision: 'approve', correction_id: correctionId, game_id: gameId, version: 8 }, correctionId, 'approve'), true);
   assert.equal(contract.isAcceptedCorrectionReview({ status: 'approved', decision: 'approve', correction_id: correctionId, game_id: gameId, version: 8 }, correctionId, 'reject'), false);
   assert.equal(contract.isAcceptedCorrectionReview({ status: 'rejected', decision: 'reject', correction_id: otherCorrectionId, game_id: gameId, version: 7 }, correctionId, 'reject'), false);
-  assert.equal(contract.isRejectedCorrectionOperation({ status: 'rejected', code: 'not_pending_review' }), true);
-  assert.equal(contract.isRejectedCorrectionOperation({ status: 'rejected', decision: 'reject', code: 'not_pending_review' }), false);
+  assert.equal(contract.isRejectedCorrectionProposal({ status: 'rejected', code: 'not_pending_review', game_id: gameId }, gameId), false);
+  assert.equal(contract.isRejectedCorrectionProposal({ status: 'rejected', code: 'not_cross_checker', game_id: gameId }, gameId), true);
+  assert.equal(contract.isRejectedCorrectionProposal({ status: 'rejected', code: 'not_cross_checker', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
+  assert.equal(contract.isRejectedCorrectionProposal({ status: 'rejected', code: 'not_cross_checker', game_id: otherGameId }, gameId), false);
+  assert.equal(contract.isRejectedCorrectionReview({ status: 'rejected', code: 'not_pending_review', correction_id: correctionId }, correctionId), true);
+  assert.equal(contract.isRejectedCorrectionReview({ status: 'rejected', code: 'not_pending_review', correction_id: correctionId, internal_detail: 'must not reach the browser' }, correctionId), false);
+  assert.equal(contract.isRejectedCorrectionReview({ status: 'rejected', code: 'not_pending_review', correction_id: otherCorrectionId }, correctionId), false);
 });
 test('game RPC migration is private, atomic, authenticated, and derives verified scorelines', () => {
   const sql = (read('database/migrations/0001_vertical_slice_core.sql') + read('database/migrations/0003_game_submission_confirmation_rpc.sql')).toLowerCase();

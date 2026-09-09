@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
-import { correctionRejectionStatus, isAcceptedCorrectionProposal, isRejectedCorrectionOperation } from "../../../../../../lib/api/correction";
+import { correctionRejectionStatus, isAcceptedCorrectionProposal, isRejectedCorrectionProposal } from "../../../../../../lib/api/correction";
 
 const maxReasonLength = 500;
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   });
   if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   if (isAcceptedCorrectionProposal(data, body.correctionId as string, id, body.expectedGameVersion as number)) return apiJson(data, { status: 200 });
-  if (isRejectedCorrectionOperation(data)) return apiJson(data, { status: correctionRejectionStatus(data.code) });
+  if (isRejectedCorrectionProposal(data, id)) return apiJson(data, { status: correctionRejectionStatus(data.code) });
   return apiJson({ error: "operation_unavailable" }, { status: 503 });
   });
 }

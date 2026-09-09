@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 exact correction response contract
+
+- Correction proposal and review routes now accept only their exact, migration-defined response shapes and bind rejection replies to the requested game or correction. Extra/private fields, mixed shapes, unsupported codes, malformed versions, and cross-request replies fail closed instead of being returned to a browser.
+- Pilot receipt-shape aggregation found no historical correction receipts needing compatibility handling. Focused Sol review found no P0/P1. Lint, 65 tests, production build, workspace/handoff verification, and diff checks pass locally. See `docs/quality/2026-09-09-correction-response-contract.md`.
+
 ## 2026-09-09 exact game accepted-response contract
 
 - Standard Singles submission and confirmation handlers now return only the exact, documented accepted RPC fields. Extended, malformed, cross-game, cross-submission, or unsupported accepted responses fail closed rather than forwarding unexpected private data to the browser.
