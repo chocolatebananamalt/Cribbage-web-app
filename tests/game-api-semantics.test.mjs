@@ -8,7 +8,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 test('game API handlers validate, authenticate with claims, and call RPCs only', () => {
   const submission = read('src/app/api/v1/games/[id]/submissions/route.ts');
   const confirmation = read('src/app/api/v1/games/[id]/confirmations/route.ts');
-  const boundary = read('src/lib/api/route-boundary.ts');
+  const boundary = read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts');
   for (const source of [submission + boundary, confirmation + boundary]) {
     assert.match(source, /getClaims/); assert.match(source, /isUuid/); assert.match(source, /idempotencyKey/); assert.match(source, /\.rpc\(/);
     assert.doesNotMatch(source, /record_rejected_game_operation/);
@@ -38,12 +38,23 @@ test('game operation responses bind to the requested game and submission before 
   assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: otherGameId }, gameId), false);
 });
 
+test('private API failure boundary distinguishes unavailable claims, missing sessions, and thrown operations', async () => {
+  const boundary = await import(pathToFileURL(path.join(root, 'src/lib/api/verified-subject.ts')).href);
+  const subject = await boundary.requireVerifiedSubject({ auth: { getClaims: async () => ({ data: { claims: { sub: '00000000-0000-4000-8000-000000000001' } }, error: null }) } });
+  assert.equal(subject, '00000000-0000-4000-8000-000000000001');
+  assert.equal(await boundary.requireVerifiedSubject({ auth: { getClaims: async () => ({ data: { claims: {} }, error: null }) } }), null);
+  await assert.rejects(() => boundary.requireVerifiedSubject({ auth: { getClaims: async () => ({ data: null, error: { message: 'unavailable' } }) } }));
+  const responseBoundary = read('src/lib/api/route-boundary.ts');
+  assert.match(responseBoundary, /headers\.set\("cache-control", "private, no-store"\)/);
+  assert.match(responseBoundary, /catch \{\s*return apiJson\(\{ error: "operation_unavailable" \}, \{ status: 503 \}\);/);
+});
+
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
   const reconciliation = read('src/app/api/v1/corrections/[id]/reconciliation/route.ts');
   const contract = read('src/lib/api/correction.ts');
-  for (const source of [proposal + read('src/lib/api/route-boundary.ts'), review + read('src/lib/api/route-boundary.ts')]) {
+  for (const source of [proposal + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), review + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts')]) {
     assert.match(source, /getClaims/);
     assert.match(source, /isUuid/);
     assert.match(source, /idempotencyKey/);
@@ -58,7 +69,7 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(review, /\["approve", "reject"\]/);
   assert.match(review, /isAcceptedCorrectionReview/);
   assert.match(reconciliation, /get_correction_operation_reconciliation/);
-  assert.match(reconciliation + read('src/lib/api/route-boundary.ts'), /getClaims/);
+  assert.match(reconciliation + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/);
   assert.match(reconciliation, /idempotencyKey/);
   assert.doesNotMatch(reconciliation, /\.from\(|service_role/);
   assert.match(contract, /value\.status === "approved" && value\.decision === "approve"/);
@@ -373,13 +384,15 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(policyDal, /server-only/);
   assert.match(policyDal, /get_correction_policy/);
   assert.doesNotMatch(policyDal, /\.from\(/);
-  assert.match(policyRoute, /getClaims/);
+  assert.match(policyRoute + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/);
   assert.match(policyRoute, /configure_correction_policy/);
   assert.match(policyRoute, /idempotencyKey/);
   assert.match(policyRoute, /requiredApprovals/);
   assert.match(policyRoute, /expectedPolicyVersion/);
   assert.match(reconciliationRoute, /get_correction_policy_operation_reconciliation/);
-  assert.match(reconciliationRoute + read('src/lib/api/route-boundary.ts'), /getClaims/);
+  assert.match(reconciliationRoute, /isPolicyReconciliationResult/);
+  assert.match(reconciliationRoute, /item\.tournament_id === tournamentId/);
+  assert.match(reconciliationRoute + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/);
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /getCorrectionPolicy/);
   assert.match(page, /\['director', 'co_director'\]/);
@@ -410,6 +423,16 @@ test('registration claim review remains an immutable non-enrollment boundary', (
   assert.match(sql, /revoke all on table app\.registration_claim_decisions from public, anon, authenticated/);
   assert.doesNotMatch(sql, /insert into app\.(profiles|tournament_roles|event_participants)/);
   assert.doesNotMatch(sql, /insert into auth\.users/);
+});
+
+test('roster promotion outcomes reject mixed and extra backend response fields', async () => {
+  const roster = await import(pathToFileURL(path.join(root, 'src/lib/api/roster.ts')).href);
+  const decisionId = '00000000-0000-4000-8000-000000000001';
+  const accepted = { status: 'roster_entry_created', rosterEntryId: '00000000-0000-4000-8000-000000000002', sourceClaimId: '00000000-0000-4000-8000-000000000003', approvalDecisionId: decisionId, profileLinked: false, roleGranted: false, eventEnrolled: false, paymentRecorded: false, checkedIn: false, seatAssigned: false };
+  assert.equal(roster.isAcceptedRosterPromotion(accepted, decisionId), true);
+  assert.equal(roster.isAcceptedRosterPromotion({ ...accepted, code: 'not_director' }, decisionId), false);
+  assert.equal(roster.isRejectedRosterPromotion({ status: 'rejected', code: 'not_director', approvalDecisionId: decisionId }, decisionId), true);
+  assert.equal(roster.isRejectedRosterPromotion({ status: 'rejected', code: 'not_director', approvalDecisionId: decisionId, rosterEntryId: accepted.rosterEntryId }, decisionId), false);
 });
 
 test('approved registration claims promote only to an immutable private roster identity', () => {
@@ -483,7 +506,7 @@ test('protected roster interface uses only scoped RPCs and opaque retry storage'
   const reconciliation = read('src/app/api/v1/tournaments/[id]/roster-promotions/reconciliation/route.ts');
   assert.match(page, /requireTournamentAccess/); assert.match(page, /director.*co_director/); assert.match(page, /SharedDeviceSignOut/);
   assert.match(dal, /server-only/); assert.match(dal, /get_tournament_roster_workspace/); assert.doesNotMatch(dal, /\.from\(/);
-  for (const route of [writer, reconciliation]) { assert.match(route + read('src/lib/api/route-boundary.ts'), /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
+  for (const route of [writer, reconciliation]) { assert.match(route + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
   assert.match(writer, /create_roster_entry_from_registration_claim/); assert.match(reconciliation, /get_roster_promotion_operation_reconciliation/);
   assert.match(client, /registration-operation:roster:/); assert.match(client, /crypto\.randomUUID\(\)/); assert.match(client, /Enable session storage before continuing/);
   assert.match(client, /isAcceptedRosterPromotion/); assert.match(client, /isRejectedRosterPromotion/);
@@ -580,7 +603,7 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.doesNotMatch(paymentClient, /Math\.round\(Number\(amount\) \* 100\)/);
   assert.doesNotMatch(paymentClient, /sessionStorage[^\n]*(amountMinor|paymentMethod|paymentReceivedAt|voidReason|note)/);
   assert.match(read('src/lib/client-session-storage.ts'), /"payment-operation:"/);
-  for (const route of [paymentRecordRoute, paymentVoidRoute, paymentRecoveryRoute]) { assert.match(route, /isSameOriginRequest/); assert.match(route, /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
+  for (const route of [paymentRecordRoute, paymentVoidRoute, paymentRecoveryRoute]) { assert.match(route, /isSameOriginRequest/); assert.match(route + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/); assert.doesNotMatch(route, /\.from\(|service_role/); }
   assert.match(paymentRecordRoute, /record_manual_roster_payment/); assert.match(paymentRecordRoute, /isPaymentRecordRequest/); assert.match(paymentRecordRoute, /isRecordedPayment/);
   assert.match(paymentVoidRoute, /void_manual_roster_payment/); assert.match(paymentVoidRoute, /isPaymentVoidRequest/); assert.match(paymentVoidRoute, /isVoidedPayment/);
   assert.match(paymentRecoveryRoute, /get_roster_payment_operation_identity_reconciliation/); assert.match(paymentRecoveryRoute, /isPaymentRecoveryRequest/); assert.match(paymentRecoveryRoute, /isRecoveredPayment/); assert.match(paymentRecoveryRoute, /authorized !== true/); assert.doesNotMatch(paymentRecoveryRoute, /amountMinor|paymentMethod|paymentReceivedAt|voidReason|note/);

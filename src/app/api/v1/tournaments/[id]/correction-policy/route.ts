@@ -1,25 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
+import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 
-function accepted(value: unknown, tournamentId: string, reasonRequired: boolean, requiredApprovals: 0 | 1) {
-  if (!value || typeof value !== "object") return false;
+const policyRejectionCodes = ["authentication_required", "invalid_request", "tournament_not_configurable", "not_director", "stale_policy", "idempotency_conflict", "policy_rejected"];
+
+function accepted(value: unknown, tournamentId: string, reasonRequired: boolean, requiredApprovals: 0 | 1, expectedPolicyVersion: number) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  return item.status === "configured" && item.tournament_id === tournamentId
-    && Number.isSafeInteger(item.policy_version) && (item.policy_version as number) >= 1
+  return Object.keys(item).length === 5 && item.status === "configured" && item.tournament_id === tournamentId
+    && item.policy_version === expectedPolicyVersion + 1
     && item.reason_required === reasonRequired && item.required_approvals === requiredApprovals;
 }
 
+function rejected(value: unknown, tournamentId: string) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const item = value as Record<string, unknown>;
+  return Object.keys(item).length === 3 && item.status === "rejected" && item.tournament_id === tournamentId && policyRejectionCodes.includes(item.code as string);
+}
+
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return withApiFailureBoundary(async () => {
   const { id } = await params;
   let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return NextResponse.json({ error: "invalid_json" }, { status: 400 }); }
+  try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
   if (!isUuid(id) || typeof body.reasonRequired !== "boolean" || ![0, 1].includes(body.requiredApprovals as number) || !Number.isSafeInteger(body.expectedPolicyVersion) || (body.expectedPolicyVersion as number) < 0 || !isUuid(body.idempotencyKey)) {
-    return NextResponse.json({ error: "invalid_policy" }, { status: 400 });
+    return apiJson({ error: "invalid_policy" }, { status: 400 });
   }
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  if (!claims?.claims?.sub) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
   const requiredApprovals = body.requiredApprovals as 0 | 1;
   const { data, error } = await supabase.rpc("configure_correction_policy", {
     p_tournament_id: id,
@@ -28,8 +37,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     p_expected_policy_version: body.expectedPolicyVersion,
     p_idempotency_key: body.idempotencyKey,
   });
-  if (error) return NextResponse.json({ error: "operation_unavailable" }, { status: 503 });
-  if (accepted(data, id, body.reasonRequired as boolean, requiredApprovals)) return NextResponse.json(data, { status: 200 });
-  if (data && typeof data === "object" && (data as Record<string, unknown>).status === "rejected") return NextResponse.json(data, { status: 409 });
-  return NextResponse.json({ error: "operation_unavailable" }, { status: 503 });
+  if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+  if (accepted(data, id, body.reasonRequired as boolean, requiredApprovals, body.expectedPolicyVersion as number)) return apiJson(data);
+  if (rejected(data, id)) return apiJson(data, { status: 409 });
+  return apiJson({ error: "operation_unavailable" }, { status: 503 });
+  });
 }

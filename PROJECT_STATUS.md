@@ -1,5 +1,11 @@
 # Project Status
 
+## 2026-09-09 private API failure-boundary hardening
+
+- Payment record, void, and retry-reconciliation routes, plus correction-policy and roster-promotion writers, now contain unexpected external failures, distinguish claims outages from absent sessions, and mark every outcome private and non-cacheable. Existing server RPC authorization and response validation remain authoritative.
+- Focused Sol review found and this pass closed three P1 response-boundary gaps: correction-policy replies now bind to the requested next version, roster-promotion replies reject mixed/extra fields, and verified-claims success/absence/outage behavior executes in local tests.
+- Local lint, 63 tests, production build, diff check, workspace verification, and private-handoff verification pass. Deployment evidence remains in progress; see `docs/quality/2026-09-09-private-api-failure-boundary.md`.
+
 ## 2026-09-09 correction write failure boundary
 
 - Correction proposal and review mutations now use verified-claims failure handling, contain external exceptions, and make every response private and non-cacheable. Their existing strict success/rejection validators remain the authority for accepted responses. Lint, 61 tests, production build, and diff checks pass.
