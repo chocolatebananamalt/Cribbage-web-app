@@ -372,6 +372,27 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(client, /router\.refresh\(\)/);
 });
 
+test('registration claim review remains an immutable non-enrollment boundary', () => {
+  const sql = read('database/migrations/0035_registration_claim_review_workspace.sql');
+  assert.match(sql, /create table app\.registration_claim_decisions/);
+  assert.match(sql, /unique \(claim_id\)/);
+  assert.match(sql, /registration_claim_decisions_immutable/);
+  assert.match(sql, /get_registration_claim_review_workspace/);
+  assert.match(sql, /review_registration_claim/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director','co_director'\)/);
+  assert.match(sql, /p_decision is null/);
+  assert.match(sql, /od\.decision is distinct from 'rejected'/);
+  assert.match(sql, /p_duplicate_resolution is distinct from 'confirmed_distinct_person'/);
+  assert.match(sql, /od\.decision='approved_for_roster'/);
+  assert.match(sql, /'rosterCreated',false/);
+  assert.match(sql, /'paymentRecorded',false/);
+  assert.match(sql, /'checkedIn',false/);
+  assert.match(sql, /revoke all on table app\.registration_claim_decisions from public, anon, authenticated/);
+  assert.doesNotMatch(sql, /insert into app\.(profiles|tournament_roles|event_participants)/);
+  assert.doesNotMatch(sql, /insert into auth\.users/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
