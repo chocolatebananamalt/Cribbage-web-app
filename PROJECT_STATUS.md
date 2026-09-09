@@ -29,6 +29,16 @@
 - Applied pilot migration `0052_tournament_setup_save_rpc`: current directors/co-directors can now save a complete private, immutable, versioned tournament-setup draft through one authenticated, empty-search-path RPC. It validates only the approved typed configuration shape, preserves payout/qualification/eligibility notes separately, requires existing official roles, rejects stale/later-lifecycle writes, replays exact retries, and preserves changed retries as private conflict evidence.
 - It is deliberately a configuration boundary only: it creates no operational event, ruleset, registration, roster, seat, score, finance record, result, export, flyer, or ACC submission. Pilot rollback fixtures proved accepted persistence and no operational side effects, plus replay/conflict/stale behavior. Catalog checks confirm forced RLS, no direct client table access, and authenticated-only execute. The remaining release evidence includes real independent director/co-director sessions, concurrency, a reader/UI, DST policy, authoritative ACC options/fixtures, and every downstream operational workflow; see `docs/quality/2026-09-09-tournament-setup-schema-pilot.md`.
 
+## 2026-09-09 tournament setup retry reconciliation
+
+- Fixed a P0 discovered during focused UI review: an opaque browser retry envelope could not determine whether an interrupted private setup save succeeded. Applied pilot migration `0055_tournament_setup_operation_reconciliation`, which lets only the same current director/co-director reconcile their own same-tournament setup-save receipt by idempotency key. It does not return any other operation or create data.
+- Rollback pilot evidence proves the authorized response and non-member denial. A later UI must still provide a strict, same-origin, non-caching route and never store private setup content for recovery; see `docs/quality/2026-09-09-tournament-setup-reconciliation-pilot.md`.
+
+## 2026-09-09 tournament setup official bootstrap
+
+- Fixed a second P0 from focused UI review: a co-director could not safely initialize version 1 because the empty setup reader has no saved official snapshot. Applied pilot migration `0056_tournament_setup_official_choices`, returning only the canonical director and current co-director choices to a current official. The setup writer still independently validates those roles and grants none.
+- Rollback pilot evidence confirms current-official access and non-member denial. The future protected form must treat these as transient choices and handle stale-role rejection; see `docs/quality/2026-09-09-tournament-setup-bootstrap-pilot.md`.
+
 ## 2026-09-09 private tournament setup reader
 
 - Applied pilot migrations `0053` and `0054`: a current director/co-director can retrieve the latest private setup configuration and minimal version/timestamp/event-count history through one authenticated, empty-search-path read RPC; an unauthorized caller receives no data. Sol review found no P0 and one data-minimization P1, repaired before use by removing the historical revision ID.

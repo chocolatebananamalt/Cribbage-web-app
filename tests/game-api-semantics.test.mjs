@@ -770,6 +770,36 @@ test('tournament setup workspace read is director-scoped and exposes no operatio
   assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
 });
 
+test('tournament setup retry reconciliation is actor, tournament, and operation scoped', () => {
+  const sql = read('database/migrations/0055_tournament_setup_operation_reconciliation.sql');
+  assert.match(sql, /create or replace function public\.get_tournament_setup_operation_reconciliation/);
+  assert.match(sql, /stable security definer set search_path = ''/);
+  assert.match(sql, /auth\.uid\(\) is not null/);
+  assert.match(sql, /role in \('director','co_director'\)/);
+  assert.match(sql, /o\.actor_profile_id=auth\.uid\(\)/);
+  assert.match(sql, /o\.tournament_id=p_tournament_id/);
+  assert.match(sql, /o\.target_id=p_tournament_id/);
+  assert.match(sql, /o\.client_operation_id=p_idempotency_key/);
+  assert.match(sql, /o\.operation_type='save_tournament_setup_version'/);
+  assert.match(sql, /'authorized', true, 'result'/);
+  assert.match(sql, /revoke all on function public\.get_tournament_setup_operation_reconciliation\(uuid, uuid\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_tournament_setup_operation_reconciliation\(uuid, uuid\) to authenticated/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
+});
+
+test('tournament setup bootstrap exposes only current official choices to current officials', () => {
+  const sql = read('database/migrations/0056_tournament_setup_official_choices.sql');
+  assert.match(sql, /create or replace function public\.get_tournament_setup_official_choices/);
+  assert.match(sql, /stable security definer set search_path = ''/);
+  assert.match(sql, /caller\.profile_id=auth\.uid\(\)/);
+  assert.match(sql, /caller\.role in \('director','co_director'\)/);
+  assert.match(sql, /'directorProfileId', t\.director_profile_id/);
+  assert.match(sql, /'coDirectorProfileIds'/);
+  assert.match(sql, /revoke all on function public\.get_tournament_setup_official_choices\(uuid\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_tournament_setup_official_choices\(uuid\) to authenticated/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
