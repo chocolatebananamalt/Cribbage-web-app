@@ -40,12 +40,15 @@ claimed here; it requires its own App Router/script compatibility review.
   headers.
 - `pnpm verify` and `pnpm verify:handoff` passed.
 - `git diff --check` passed.
+- Vercel built commit `68dfb0d` as Ready Preview deployment
+  `dpl_E6vKfZYGrafvbiZUm7dwsAAkFCmP`. An authenticated Vercel deployment
+  fetch of its root response confirmed all five configured headers with their
+  exact intended values. The protected Preview response is `200`; it has no
+  deployment alias error.
 
 ## Limits
 
-The local build proves configuration and compilation, not an authenticated
-browser's final response headers. The corresponding protected Vercel Preview
-deployment must be checked after its Git deployment becomes Ready. This
-hardening does not replace the separately gated registration-link lifecycle,
-offline/hybrid, results/finance/finalization, multi-user, restore, or
-accessibility release work.
+The local build and hosted response prove this configuration, not every future
+platform or browser behavior. This hardening does not replace the separately
+gated registration-link lifecycle, offline/hybrid, results/finance/finalization,
+multi-user, restore, or accessibility release work.

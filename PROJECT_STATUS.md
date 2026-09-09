@@ -8,9 +8,9 @@
   intentionally strict referrer policy also protects current and future
   bearer-style link flows without changing their server authorization rules.
 - Lint, 77 application tests, the production build, workspace/private-handoff
-  verification, and diff validation pass. Hosted-preview header confirmation
-  remains to be recorded once the Git deployment is Ready; this does not alter
-  the larger non-waivable release blockers.
+  verification, and diff validation pass. Vercel deployment
+  `dpl_E6vKfZYGrafvbiZUm7dwsAAkFCmP` is Ready and returned each exact expected
+  header. This does not alter the larger non-waivable release blockers.
 
 ## 2026-09-09 local production-build exposure audit
 
