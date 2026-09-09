@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 roster workspace recovery boundary
+
+- Applied pilot migration `0039_roster_workspace_reconciliation`. The director/co-director-only roster read model now returns only approved, unpromoted same-tournament claims as promotion candidates, alongside existing private roster entries. It exposes a caller/tournament/decision/idempotency-scoped reconciliation RPC for interrupted roster-promotion requests.
+- Focused Sol review found no P0/P1: candidates remain limited to approved/unpromoted decisions; PII is still private; reconciliation cannot cross actor, tournament, decision, or operation scope; and anonymous execution is revoked. A UI/API client still must validate exact responses, retain opaque retry envelopes only, and receive real independent-session testing before release.
+
 ## 2026-09-09 protected registration roster boundary
 
 - Applied pilot migrations `0036_registration_claim_roster_boundary`, `0037_registration_review_roster_indexes`, and `0038_roster_promotion_authorization_repair`. An immutable director/co-director-approved claim can now create exactly one private roster identity snapshot, with composite same-tournament approval enforcement, replay/conflict handling, receipts, audit events, and no direct table access.

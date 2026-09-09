@@ -396,6 +396,7 @@ test('registration claim review remains an immutable non-enrollment boundary', (
 test('approved registration claims promote only to an immutable private roster identity', () => {
   const sql = read('database/migrations/0036_registration_claim_roster_boundary.sql');
   const authorizationRepair = read('database/migrations/0038_roster_promotion_authorization_repair.sql');
+  const workspaceRepair = read('database/migrations/0039_roster_workspace_reconciliation.sql');
   assert.match(sql, /unique \(id, tournament_id, claim_id, decision\)/);
   assert.match(sql, /create table app\.tournament_roster_entries/);
   assert.match(sql, /approval_decision text not null default 'approved_for_roster'/);
@@ -412,6 +413,13 @@ test('approved registration claims promote only to an immutable private roster i
   assert.match(sql, /elsif v_authorized and v_tournament_exists then/);
   assert.match(authorizationRepair, /v_authorized := true;[\s\S]*?select \* into v_existing/);
   assert.match(authorizationRepair, /elsif v_authorized and v_tournament_exists then/);
+  assert.match(workspaceRepair, /'promotionCandidates'/);
+  assert.match(workspaceRepair, /d\.decision = 'approved_for_roster'/);
+  assert.match(workspaceRepair, /and e\.id is null/);
+  assert.match(workspaceRepair, /get_roster_promotion_operation_reconciliation/);
+  assert.match(workspaceRepair, /o\.actor_profile_id = auth\.uid\(\)/);
+  assert.match(workspaceRepair, /o\.target_id = p_approval_decision_id/);
+  assert.match(workspaceRepair, /revoke all on function public\.get_roster_promotion_operation_reconciliation/);
   assert.match(sql, /v_status not in \('draft', 'open'\)/);
   assert.match(sql, /approved claim decision required/);
   assert.match(sql, /claim already promoted/);
