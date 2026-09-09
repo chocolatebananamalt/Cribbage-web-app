@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 seating print regression repair
+
+- Repaired the protected seating workspace print stylesheet so the published seating assignments remain in the printed document. The earlier rule mistakenly hid the seating list along with interactive controls.
+- Local lint, 73 tests, production build, workspace verification, private-handoff verification, and diff validation pass. Visual print-preview verification remains open because the available browser automation surface cannot access localhost.
+
 ## 2026-09-09 passwordless account bootstrap
 
 - Repaired the account-creation gap required by the safe player activation flow. Magic-link sign-in now permits creation of a passwordless account, and migration `0067_passwordless_profile_bootstrap` creates/backfills only the required private profile row. It deliberately creates no tournament role, roster identity, event participation, seat, payment, or other authority. The migration is applied to the pilot: catalog evidence found zero auth users without a profile, zero orphan profiles, exactly one bootstrap trigger, and zero public/anonymous/authenticated execute grants for its internal function. Lint, 73 tests, production build, and diff validation pass locally; a real fresh-account browser test remains required before release.
