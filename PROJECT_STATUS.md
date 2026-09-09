@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 exact score retry recovery
+
+- Repaired a focused review finding in the live Standard Singles client: an interrupted submission now preserves and locks one exact request rather than allowing a changed second request while the first may be unresolved. Stale local retry state never overrides an existing server submission, and unknown client/platform failures remain safely retry-locked.
+- This is request recovery, not an offline queue or verification claim. Lint, 65 tests, production build, workspace/handoff verification, and diff checks pass locally. See `docs/quality/2026-09-09-score-retry-envelope.md`.
+
 ## 2026-09-09 private foreign-key index repair
 
 - Live Supabase performance review found 14 advisor-recommended indexes for private append-only foreign keys. Applied pilot migration `0058_private_foreign_key_indexes`, then reran the advisor: `unindexed_foreign_keys` cleared. Focused independent review found 13 duplicate existing equality paths, so follow-up pilot migration `0059_prune_redundant_private_foreign_key_indexes` removes only those extra indexes and keeps the one unambiguously needed profile lookup index. The final advisor scan deliberately reports the 13 INFO notices again because it recognizes only exact covering definitions; neither migration changes data, access, rules, score, or finance behavior.

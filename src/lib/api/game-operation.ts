@@ -20,8 +20,10 @@ export function isAcceptedConfirmation(value: unknown, gameId: string): value is
 }
 
 export function isRejectedGameOperation(value: unknown, gameId: string): value is JsonRecord {
+  const allowedCodes = ["authentication_required", "invalid_request", "invalid_submission", "game_not_found", "idempotency_conflict", "tournament_closed", "event_not_approved", "not_assigned", "submission_conflict", "submission_rejected", "submission_not_found", "not_submission_owner", "not_checked_in", "invalid_game_state", "confirmation_rejected"];
   return record(value)
+    && Object.keys(value).length === 3
     && value.status === "rejected"
-    && typeof value.code === "string"
-    && value.game_id === gameId;
+    && value.game_id === gameId
+    && allowedCodes.includes(value.code as string);
 }

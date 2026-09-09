@@ -146,6 +146,33 @@ test('shared-device sign-out continues when local storage cleanup fails', async 
   assert.match(read('src/app/sign-in/page.tsx'), /Close this browser before another person uses this device/);
 });
 
+test('ambiguous score submission locks one exact persisted retry envelope', async () => {
+  const retry = await import(pathToFileURL(path.join(root, 'src/lib/score-retry-envelope.ts')).href);
+  const values = new Map();
+  const storage = {
+    getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, value); },
+    removeItem(key) { values.delete(key); },
+  };
+  const envelope = { version: 1, kind: 'submission', tournamentId: 'tournament-1', gameId: 'game-1', playerSide: 'a', submissionId: 'submission-1', idempotencyKey: 'operation-1', submissionSlot: 1, winnerSide: 'a', margin: 31 };
+  assert.equal(retry.writePendingScoreSubmission(storage, envelope), true);
+  assert.deepEqual(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'a'), envelope);
+  assert.equal(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'b'), null);
+  values.set(retry.scoreSubmissionStorageKey('tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
+  assert.equal(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'a'), null);
+  assert.equal(values.size, 0);
+  assert.deepEqual(retry.pendingSubmissionRecovery(envelope, 'different-server-submission'), { action: 'clear' });
+  assert.deepEqual(retry.pendingSubmissionRecovery(envelope, null), { action: 'retry', envelope });
+  assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned' }, 'game-1'), true);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'unknown_code' }, 'game-1'), false);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'wrong-game', code: 'not_assigned' }, 'game-1'), false);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned', submission_id: 'mixed' }, 'game-1'), false);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(429, { error: 'rate_limited' }, 'game-1'), false);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(404, { error: 'not_found' }, 'game-1'), false);
+  assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /Retry This Same Entry/);
+  assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /cannot safely preserve your entry for recovery/);
+});
+
 test('route callback propagates refreshed cookies and membership function is narrowly granted', () => {
   const callback = read('src/app/auth/callback/route.ts');
   const migration = read('database/migrations/0002_pilot_membership_authorization.sql');
