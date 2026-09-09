@@ -6,6 +6,7 @@ function record(value: unknown): value is JsonRecord {
 
 export function isAcceptedSubmission(value: unknown, gameId: string, submissionId: string): value is JsonRecord {
   return record(value)
+    && Object.keys(value).length === 3
     && value.game_id === gameId
     && value.submission_id === submissionId
     && ["submitted", "confirmation_pending", "mismatch"].includes(value.status as string)
@@ -14,6 +15,7 @@ export function isAcceptedSubmission(value: unknown, gameId: string, submissionI
 
 export function isAcceptedConfirmation(value: unknown, gameId: string): value is JsonRecord {
   return record(value)
+    && Object.keys(value).length === 2
     && value.game_id === gameId
     && ["confirmation_pending", "verified"].includes(value.status as string)
     && !Object.hasOwn(value, "code");

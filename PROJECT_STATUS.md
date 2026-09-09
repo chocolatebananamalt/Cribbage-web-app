@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-09-09 exact game accepted-response contract
+
+- Standard Singles submission and confirmation handlers now return only the exact, documented accepted RPC fields. Extended, malformed, cross-game, cross-submission, or unsupported accepted responses fail closed rather than forwarding unexpected private data to the browser.
+- Focused Sol review found no P0/P1. Lint, 65 tests, production build, workspace/handoff verification, and diff checks pass locally. This is API-boundary hardening only; authenticated two-user browser verification and the broader release gates remain open. See `docs/quality/2026-09-09-game-accepted-response-contract.md`.
+
 ## 2026-09-09 exact score retry recovery
 
 - Repaired a focused review finding in the live Standard Singles client: an interrupted submission now preserves and locks one exact request rather than allowing a changed second request while the first may be unresolved. Stale local retry state never overrides an existing server submission, and unknown client/platform failures remain safely retry-locked.

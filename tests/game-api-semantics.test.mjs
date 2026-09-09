@@ -29,10 +29,12 @@ test('game operation responses bind to the requested game and submission before 
   const otherGameId = '00000000-0000-4000-8000-000000000002';
   const submissionId = '00000000-0000-4000-8000-000000000003';
   assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: gameId, submission_id: submissionId }, gameId, submissionId), true);
+  assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: gameId, submission_id: submissionId, internal_detail: 'must not reach the browser' }, gameId, submissionId), false);
   assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: otherGameId, submission_id: submissionId }, gameId, submissionId), false);
   assert.equal(game.isAcceptedSubmission({ status: 'submitted', game_id: gameId, submission_id: otherGameId }, gameId, submissionId), false);
   assert.equal(game.isAcceptedSubmission(null, gameId, submissionId), false);
   assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: gameId }, gameId), true);
+  assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
   assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: otherGameId }, gameId), false);
   assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: otherGameId }, gameId), false);
