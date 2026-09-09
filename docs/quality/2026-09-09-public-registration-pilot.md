@@ -21,6 +21,7 @@ The positive path is one accepted, idempotent claim. Rejection paths are malform
 | Migration-chain repair review | Pass — the chain now conditionally adds the fingerprint constraint, temporarily removes/reinstates claim immutability only for the controlled backfill, and uses canonical JSON fingerprints in both fresh and pilot-repair paths |
 | Supabase performance advisor | Pass after remediation — added the missing `registration_claims.registration_link_id` index; no unindexed foreign-key finding remains for the registration tables |
 | Supabase security advisor | Reviewed — RLS-without-policy notices are expected because direct access to the private `app` schema is revoked. The two anonymous SECURITY DEFINER warnings are intentional for the token-gated context/claim endpoints; their scope is covered by the direct grant, RLS, no-escalation, and database transaction checks above. |
+| Hosted preview smoke test | Pass — Vercel Preview deployment `dpl_HiNqnX8is9tLTRfnf2Qv3P9rdsER` from commit `f883a3b` rendered the dashboard and its intended top-level controls. A synthetic closed-link registration URL rendered the generic unavailable state without revealing tournament, roster, or claim data. No runtime-error clusters were reported for the project after the check. |
 
 ## Limitations and next gates
 
