@@ -800,6 +800,18 @@ test('tournament setup bootstrap exposes only current official choices to curren
   assert.doesNotMatch(sql, /(?:insert into|update|delete from)/);
 });
 
+test('setup routes are same-origin, claim-checked RPC boundaries with no direct table access', () => {
+  const save = read('src/app/api/v1/tournaments/[id]/setup/route.ts');
+  const recovery = read('src/app/api/v1/tournaments/[id]/setup/reconciliation/route.ts');
+  for (const source of [save, recovery]) {
+    assert.match(source, /isSameOriginRequest/); assert.match(source, /getClaims/); assert.match(source, /operation_unavailable/);
+    assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
+    assert.match(source, /cache-control.*private, no-store/);
+  }
+  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
+  assert.match(recovery, /get_tournament_setup_operation_reconciliation/); assert.match(recovery, /isSetupRecoveryRequest/);
+});
+
 test('protected correction workspace reads only the scoped RPC and never direct tables', () => {
   const page = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const dal = read('src/lib/corrections/workspace.ts');
