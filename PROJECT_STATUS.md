@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 assigned game-context contract gate
+
+- Hardened the protected score-entry page against database/code version drift.
+  An absent assigned game remains hidden; an RPC failure or incompatible
+  response now renders a non-actionable availability notice rather than any
+  score-entry control. This is currently relevant because the shared pilot
+  database does not yet have migration `0103`, which supplies the authenticated
+  actor identifier required by the current retry-isolation code. No pilot
+  migration or setting was changed. Local `pnpm verify` (152 tests, build,
+  audit, lint, workspace) and `pnpm verify:handoff` (6 tests) pass. Details:
+  `docs/quality/2026-09-10-assigned-game-context-contract-gate.md`.
+
 ## 2026-09-10 protected preview authentication preflight
 
 - Hosting review confirmed the current protected preview is `READY` but found

@@ -470,12 +470,33 @@ test('rejection audit boundary preserves stable codes and does not swallow audit
   assert.doesNotMatch(sql, /record_rejected_game_operation/);
 });
 
+test('assigned game-context contract rejects unavailable and cross-context responses before score entry', async () => {
+  const context = await import(pathToFileURL(path.join(root, 'src/lib/games/assigned-game-context-decision.ts')).href);
+  const tournamentId = '00000000-0000-4000-8000-000000000001';
+  const valid = {
+    actorId: '00000000-0000-4000-8000-000000000002', gameId: '00000000-0000-4000-8000-000000000003', tournamentId,
+    eventId: '00000000-0000-4000-8000-000000000004', roundNumber: 1, matchInstance: 1, state: 'pending', eventName: 'Main',
+    ownSubmission: null, ownConfirmed: false, canConfirm: false,
+    player: { displayName: 'Player One', side: 'a', tableSeat: 'A-1', verificationId: 'A-1' },
+    opponent: { displayName: 'Player Two', side: 'b', tableSeat: 'A-2', verificationId: 'A-2' },
+  };
+  assert.equal(context.decideAssignedGameContextRead({ data: null, error: null, tournamentId }), 'not_found');
+  assert.equal(context.decideAssignedGameContextRead({ data: valid, error: { code: 'PGRST' }, tournamentId }), 'unavailable');
+  const missingActor = { ...valid };
+  delete missingActor.actorId;
+  assert.equal(context.decideAssignedGameContextRead({ data: missingActor, error: null, tournamentId }), 'unavailable');
+  assert.equal(context.decideAssignedGameContextRead({ data: { ...valid, tournamentId: '00000000-0000-4000-8000-000000000005' }, error: null, tournamentId }), 'not_found');
+  assert.equal(context.decideAssignedGameContextRead({ data: { ...valid, opponent: { ...valid.opponent, side: 'a' } }, error: null, tournamentId }), 'not_found');
+  assert.equal(context.decideAssignedGameContextRead({ data: valid, error: null, tournamentId }), 'available');
+});
+
 test('assigned game context and live score entry stay server-authoritative', () => {
-  const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql') + read('database/migrations/0087_assigned_game_context_verification_ids.sql');
+  const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql') + read('database/migrations/0087_assigned_game_context_verification_ids.sql') + read('database/migrations/0103_assigned_game_context_actor_scoped_retry.sql');
   const confirmationHardening = read('database/migrations/0008_confirmation_eligibility_hardening.sql');
   const submissionStateHardening = read('database/migrations/0009_submission_state_hardening.sql');
   const submittedInvariant = read('database/migrations/0010_submitted_state_invariant.sql');
   const contextDal = read('src/lib/games/assigned-game-context.ts');
+  const contextDecision = read('src/lib/games/assigned-game-context-decision.ts');
   const liveScore = read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx');
   const howTo = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(contextSql, /create or replace function public\.get_assigned_game_context/);
@@ -491,11 +512,18 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(contextSql, /'canConfirm', cg\.state = 'confirmation_pending'/);
   assert.match(contextSql, /'verificationId', player_seating\.verification_id/);
   assert.match(contextSql, /'verificationId', opponent_seating\.verification_id/);
+  assert.match(contextSql, /'actorId', auth\.uid\(\)/);
   assert.match(contextSql, /join app\.roster_account_links player_link/);
   assert.match(contextSql, /join app\.initial_seating_assignments player_seating/);
   assert.match(contextSql, /revoke all on function public\.get_assigned_game_context/);
-  assert.match(contextDal, /data\.tournamentId !== tournamentId/);
-  assert.match(contextDal, /player\.side === data\.opponent\.side/);
+  assert.match(contextDecision, /data\.tournamentId !== tournamentId/);
+  assert.match(contextDecision, /player\.side === data\.opponent\.side/);
+  assert.match(contextDal, /decideAssignedGameContextRead\(\{ data, error, tournamentId \}\)/);
+  assert.match(contextDal, /if \(decision === "unavailable"\) return \{ status: "unavailable" \}/);
+  const gamePage = read('src/app/tournament/[tournamentId]/game/[gameId]/page.tsx');
+  assert.match(gamePage, /result\.status === "unavailable"/);
+  assert.match(gamePage, /Game workspace temporarily unavailable/);
+  assert.match(gamePage, /No result can be recorded/);
   assert.doesNotMatch(contextSql, /profileId|participantId/);
   assert.match(liveScore, /Submit My Independent Entry/);
   assert.match(liveScore, /Confirm My Entry/);
