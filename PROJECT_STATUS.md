@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 exact Supabase CSP connection source
+
+- Narrowed the site-wide browser connection policy from every Supabase tenant
+  to the exact configured Supabase HTTPS/WebSocket origin. Malformed
+  configuration now permits no external connection. Focused lint and 32
+  Supabase/auth checks passed; hosted-header and browser evidence remains open
+  until the Vercel deployment quota resets. Details:
+  `docs/quality/2026-09-10-exact-supabase-csp-connect-source.md`.
+
 ## 2026-09-10 account-activation lifetime boundary
 
 - Tightened the disabled account-activation issue route so impossible

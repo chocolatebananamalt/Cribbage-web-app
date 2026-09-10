@@ -4,10 +4,12 @@ import {
   rejectsApiMutationOrigin,
 } from "./lib/api/mutation-origin-gateway";
 import { accountActivationEnabled } from "./lib/api/account-activation-release";
+import { configuredSupabaseConnectSources } from "./lib/browser-connect-policy";
 import { updateSession } from "./lib/supabase/proxy";
 
 function registrationContentSecurityPolicy(nonce: string) {
   const development = process.env.NODE_ENV === "development";
+  const supabaseConnectSources = configuredSupabaseConnectSources(process.env.NEXT_PUBLIC_SUPABASE_URL);
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${development ? " 'unsafe-eval'" : ""}`,
@@ -15,9 +17,9 @@ function registrationContentSecurityPolicy(nonce: string) {
     "img-src 'self' blob: data:",
     "font-src 'self'",
     // Browser authentication is the only current cross-origin connection.
-    // Keep the allow-list narrowly scoped so a future integration must be
-    // consciously reviewed before it can receive operational browser data.
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+    // Bind it to this deployment's configured project, never every Supabase
+    // tenant, so a future integration needs an explicit security review.
+    `connect-src 'self'${supabaseConnectSources.length ? ` ${supabaseConnectSources.join(" ")}` : ""}`,
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
