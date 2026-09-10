@@ -21,6 +21,10 @@ They must state that:
 - Updated the protected Rulebook quick-reference wording to match.
 - Added source-level regression assertions in
   `tests/supabase-auth-semantics.test.mjs`.
+- The live score-entry screen now declines to create a retry envelope when the
+  browser reports it is offline, and plainly states that neither the result
+  nor confirmation has been saved. A network failure after an attempted
+  online request remains an ambiguous foreground retry, not an offline queue.
 
 This corrects guidance only. It does **not** add the required authenticated
 offline queue, paper-card capture workflow, OCR/transcription review, or a
@@ -30,7 +34,8 @@ paper-only alternate verification method.
 
 | Check | Result |
 | --- | --- |
-| `pnpm test:score` | Pass — 64 tests, including the new hybrid-boundary assertions. |
+| `pnpm verify` | Pass — audit, lint, 151 tests, production build, and workspace integrity. |
+| `pnpm verify:handoff` | Pass — 6 local recovery tests. |
 | Browser verification | Unavailable in this environment: the available browser surfaces reject `http://localhost:3000` with `ERR_BLOCKED_BY_CLIENT`, and Vercel has reached its free-plan daily deployment cap. This is not browser acceptance evidence. |
 
 ## Remaining release evidence

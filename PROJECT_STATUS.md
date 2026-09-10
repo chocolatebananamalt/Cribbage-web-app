@@ -7,9 +7,10 @@
   opponent's authenticated independent entry. On a shared device, the first
   player must sign out before the other player signs in. A missing signed-in
   opponent entry remains pending for the authorized cross-check or judge
-  process; a single digital entry cannot be described as verified. This is a
-  guidance correction only, not the still-required hybrid/offline or
-  paper-capture implementation. Details:
+  process; a single digital entry cannot be described as verified. The score
+  screen also refuses to save a retry envelope when the browser is plainly
+  offline. This is a safety boundary, not the still-required hybrid/offline
+  or paper-capture implementation. Details:
   `docs/quality/2026-09-10-hybrid-guidance-boundary.md`.
 
 ## 2026-09-10 actor-scoped score retry

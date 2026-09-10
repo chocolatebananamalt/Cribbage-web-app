@@ -536,6 +536,10 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(submittedInvariant, /g\.state in \('mismatch', 'confirmation_pending', 'verified', 'corrected'\) and submission_count <> 2/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
+  assert.match(liveScore, /Both assigned players must sign in as themselves/);
+  assert.match(liveScore, /navigator\.onLine/);
+  assert.match(liveScore, /This result has not been saved\. Reconnect before submitting\./);
+  assert.match(liveScore, /This confirmation has not been saved\. Reconnect before confirming\./);
   assert.match(liveScore, /Open Start Here \/ How To/);
   assert.match(howTo, /requireTournamentAccess/);
   assert.match(howTo, /One paper card and one digital card/);
