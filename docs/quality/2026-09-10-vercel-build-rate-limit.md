@@ -10,6 +10,15 @@ its public landing page. It then rate-limited the immediate later commit
 `8fbba96` with the same message. The Vercel project remains configured for
 Next.js, Node 24, and Preview deployments.
 
+The quota intermittently accepted another Preview, deployment
+`dpl_BhZ7zZdvTqjKzN68KpqLrfBwynjg`, for commit `87cc65b` on the review branch;
+Vercel marked it `READY`. The protected endpoint fetch correctly reached the
+project but returned Vercel SSO `302`, so it does not substitute for a
+signed-in browser test. GitHub's Vercel status for the immediately following
+commit `c46b5f5` again reports `Deployment rate limited — retry in 24 hours.`
+Therefore that registration-page repair has local verification only until the
+provider accepts another build.
+
 ## Interpretation
 
 This is a hosting-plan build quota limit, not a failed application build or a

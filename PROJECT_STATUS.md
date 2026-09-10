@@ -80,16 +80,16 @@
 
 ## 2026-09-10 Vercel preview build-rate limit
 
-- The Vercel Git deployment for the current branch is paused by the hosting
-  provider's build-rate limit: its GitHub status explicitly says to retry in
-  24 hours. This is not an application build/runtime failure; the existing
-  older Preview is Ready with no recent runtime-error report. No billing or
-  Vercel plan change was made. Hosted verification of commits after `de8a247`
-  remains unavailable until a new Ready Preview is created. See
-  `docs/quality/2026-09-10-vercel-build-rate-limit.md`. A later Ready Preview
-  for documentation commit `6508e4c` returned `200 OK`, but the immediate
-  following commit was rate-limited again. The current branch therefore still
-  lacks hosted evidence for its latest revision.
+- Vercel intermittently accepts branch previews, confirming the project can
+  build and route Next.js. It marked deployment
+  `dpl_BhZ7zZdvTqjKzN68KpqLrfBwynjg` for commit `87cc65b` Ready. However, the
+  immediate newer commit `c46b5f5` was again rejected with the provider's
+  `Deployment rate limited — retry in 24 hours` status. This is a hosting-plan
+  quota limit, not an application build/runtime failure. No billing, plan,
+  deployment target, custom domain, or environment change was made. The latest
+  code still lacks hosted evidence; protected endpoint requests also remain
+  behind Vercel SSO and do not replace signed-in browser testing. See
+  `docs/quality/2026-09-10-vercel-build-rate-limit.md`.
 
 ## 2026-09-10 pilot foreign-key index coverage
 
