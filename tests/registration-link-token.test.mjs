@@ -47,3 +47,12 @@ test('invalid registration digests are rejected before the serialized claim lock
   assert.match(sql.slice(prelock, lock), /if not found then return jsonb_build_object\('status', 'unavailable'\); end if;/);
   assert.match(sql.slice(lock), /or not app\.fixed_32_byte_equal\(v_link\.token_digest, p_digest\)/, 'the locked state still rechecks the digest');
 });
+
+test('the v2 issuer receives the link ID before it stores the credential digest', async () => {
+  const sql = await import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0073_registration_link_issuer_supplied_id.sql', 'utf8'));
+  assert.match(sql, /p_link_id uuid, p_salt bytea, p_digest bytea/i);
+  assert.match(sql, /p_link_id::text,\s*\n\s*encode\(p_salt, 'hex'\)/i, 'idempotency binds the supplied link ID');
+  assert.match(sql, /values \(\s*\n\s*p_link_id, p_tournament_id, null, 2, p_salt, p_digest/i);
+  assert.match(sql, /jsonb_build_object\('status', 'issued', 'linkId', p_link_id/i);
+  assert.doesNotMatch(sql, /v_link_id uuid := extensions\.gen_random_uuid/i);
+});

@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 registration issuer-supplied ID repair
+
+- The review caught and corrected a critical v2 issuance mismatch: a QR
+  credential’s ID must exist before its digest is calculated, so migration
+  `0073_registration_link_issuer_supplied_id` replaces the old
+  database-generated ID with a server-supplied opaque UUID. The ID is bound
+  to the digest fingerprint, header insert, and receipt. The disposable
+  database catalog confirmed only the corrected issue/rotate signatures,
+  with browser roles denied; the correction then applied to the pilot.
+- There were zero issued v2 links, so no link was disrupted. Server-only
+  routes, a configured secret, and real lifecycle/browser evidence remain
+  required. See
+  `docs/quality/2026-09-10-registration-link-issuer-supplied-id-repair.md`.
+
 ## 2026-09-10 registration invalid-digest pre-lock repair
 
 - Migration `0072_registration_claim_invalid_digest_prelock_rejection` now
