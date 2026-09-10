@@ -59,7 +59,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
   const slot = context.player.side === "a" ? 1 : 2;
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const pending = readPendingScoreSubmission(window.sessionStorage, context.tournamentId, context.gameId, context.player.side);
+      const pending = readPendingScoreSubmission(window.sessionStorage, context.actorId, context.tournamentId, context.gameId, context.player.side);
       const recovery = pendingSubmissionRecovery(pending, context.ownSubmission?.id ?? null);
       if (recovery.action === "clear" && pending) {
         clearPendingScoreSubmission(window.sessionStorage, pending);
@@ -72,9 +72,9 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       setHydrated(true);
     });
     return () => window.clearTimeout(timer);
-  }, [context.gameId, context.ownSubmission?.id, context.player.side, context.tournamentId]);
+  }, [context.actorId, context.gameId, context.ownSubmission?.id, context.player.side, context.tournamentId]);
   const operationId = (kind: "confirmation", fingerprint: string) => {
-    const storageKey = `acc-score:${context.gameId}:${kind}:${fingerprint}`;
+    const storageKey = `acc-score:${context.actorId}:${context.gameId}:${kind}:${fingerprint}`;
     try {
       const existing = window.sessionStorage.getItem(storageKey);
       if (existing) return { storageKey, value: existing };
@@ -93,7 +93,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
     if (busy || submissionId || !hydrated) return;
     const envelope = pendingSubmission ?? (() => {
       if (!derived || !winner) return null;
-      const next: PendingScoreSubmission = { version: 1, kind: "submission", tournamentId: context.tournamentId, gameId: context.gameId, playerSide: context.player.side, submissionId: crypto.randomUUID(), idempotencyKey: crypto.randomUUID(), submissionSlot: slot, winnerSide, margin: derived.margin };
+      const next: PendingScoreSubmission = { version: 1, kind: "submission", actorId: context.actorId, tournamentId: context.tournamentId, gameId: context.gameId, playerSide: context.player.side, submissionId: crypto.randomUUID(), idempotencyKey: crypto.randomUUID(), submissionSlot: slot, winnerSide, margin: derived.margin };
       if (!writePendingScoreSubmission(window.sessionStorage, next)) {
         setStatus("This browser cannot safely preserve your entry for recovery. Enable session storage before submitting.");
         return null;

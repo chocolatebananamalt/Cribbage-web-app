@@ -501,6 +501,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /crypto\.randomUUID\(\)/);
   assert.match(liveScore, /window\.sessionStorage/);
   assert.match(liveScore, /writePendingScoreSubmission/);
+  assert.match(liveScore, /context\.actorId/);
   assert.match(liveScore, /Retry This Same Entry/);
   assert.match(liveScore, /isDefinitiveScoreMutationFailure/);
   assert.match(liveScore, /server response was incomplete/);

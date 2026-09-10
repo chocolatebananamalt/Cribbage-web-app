@@ -248,12 +248,16 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
     setItem(key, value) { values.set(key, value); },
     removeItem(key) { values.delete(key); },
   };
-  const envelope = { version: 1, kind: 'submission', tournamentId: 'tournament-1', gameId: 'game-1', playerSide: 'a', submissionId: 'submission-1', idempotencyKey: 'operation-1', submissionSlot: 1, winnerSide: 'a', margin: 31 };
+  const envelope = { version: 1, kind: 'submission', actorId: 'actor-1', tournamentId: 'tournament-1', gameId: 'game-1', playerSide: 'a', submissionId: 'submission-1', idempotencyKey: 'operation-1', submissionSlot: 1, winnerSide: 'a', margin: 31 };
   assert.equal(retry.writePendingScoreSubmission(storage, envelope), true);
-  assert.deepEqual(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'a'), envelope);
-  assert.equal(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'b'), null);
-  values.set(retry.scoreSubmissionStorageKey('tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
-  assert.equal(retry.readPendingScoreSubmission(storage, 'tournament-1', 'game-1', 'a'), null);
+  assert.deepEqual(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), envelope);
+  assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
+  values.set(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a'), JSON.stringify(envelope));
+  assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
+  assert.equal(values.has(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a')), false);
+  assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'b'), null);
+  values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
+  assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), null);
   assert.equal(values.size, 0);
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, 'different-server-submission'), { action: 'clear' });
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, null), { action: 'retry', envelope });

@@ -61,6 +61,16 @@ test('independent Rule 12 correction foundation rejects mismatched cards, incons
   assert.match(triggerRepairSql, /v_correction_id := new\.correction_id/);
 });
 
+test('assigned-game retry context is actor-scoped without widening table access', () => {
+  const actorScopeSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0103_assigned_game_context_actor_scoped_retry.sql'), 'utf8').toLowerCase();
+  assert.match(actorScopeSql, /'actorid', auth\.uid\(\)/);
+  assert.match(actorScopeSql, /security definer/);
+  assert.match(actorScopeSql, /set search_path = ''/);
+  assert.match(actorScopeSql, /revoke all on function public\.get_assigned_game_context\(uuid\) from public, anon/);
+  assert.match(actorScopeSql, /grant execute on function public\.get_assigned_game_context\(uuid\) to authenticated/);
+  assert.doesNotMatch(actorScopeSql, /grant (select|insert|update|delete|all) on table/i);
+});
+
 test('game scope, assignments, immutable submissions, and exact verification boundaries are explicit', () => {
   assert.match(sql, /foreign key \(round_id, tournament_id, event_id\) references app\.rounds/);
   assert.match(sql, /foreign key \(side_a_participant_id, event_id, tournament_id\) references app\.event_participants/);

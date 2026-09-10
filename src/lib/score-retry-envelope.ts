@@ -1,6 +1,7 @@
 export type PendingScoreSubmission = {
   version: 1;
   kind: "submission";
+  actorId: string;
   tournamentId: string;
   gameId: string;
   playerSide: "a" | "b";
@@ -11,18 +12,19 @@ export type PendingScoreSubmission = {
   margin: number;
 };
 
-export function scoreSubmissionStorageKey(tournamentId: string, gameId: string, playerSide: "a" | "b") {
-  return `acc-score:${tournamentId}:${gameId}:${playerSide}:submission`;
+export function scoreSubmissionStorageKey(actorId: string, tournamentId: string, gameId: string, playerSide: "a" | "b") {
+  return `acc-score:${actorId}:${tournamentId}:${gameId}:${playerSide}:submission`;
 }
 
 function isPendingScoreSubmission(value: unknown): value is PendingScoreSubmission {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  const expectedKeys = ["version", "kind", "tournamentId", "gameId", "playerSide", "submissionId", "idempotencyKey", "submissionSlot", "winnerSide", "margin"];
+  const expectedKeys = ["version", "kind", "actorId", "tournamentId", "gameId", "playerSide", "submissionId", "idempotencyKey", "submissionSlot", "winnerSide", "margin"];
   return Object.keys(item).length === expectedKeys.length
     && expectedKeys.every((key) => Object.hasOwn(item, key))
     && item.version === 1
     && item.kind === "submission"
+    && typeof item.actorId === "string" && item.actorId.length > 0
     && typeof item.tournamentId === "string"
     && typeof item.gameId === "string"
     && ["a", "b"].includes(item.playerSide as string)
@@ -37,19 +39,19 @@ function isPendingScoreSubmission(value: unknown): value is PendingScoreSubmissi
 
 export function writePendingScoreSubmission(storage: Storage, envelope: PendingScoreSubmission) {
   try {
-    storage.setItem(scoreSubmissionStorageKey(envelope.tournamentId, envelope.gameId, envelope.playerSide), JSON.stringify(envelope));
+    storage.setItem(scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide), JSON.stringify(envelope));
     return true;
   } catch {
     return false;
   }
 }
 
-export function readPendingScoreSubmission(storage: Storage, tournamentId: string, gameId: string, playerSide: "a" | "b") {
-  const key = scoreSubmissionStorageKey(tournamentId, gameId, playerSide);
+export function readPendingScoreSubmission(storage: Storage, actorId: string, tournamentId: string, gameId: string, playerSide: "a" | "b") {
+  const key = scoreSubmissionStorageKey(actorId, tournamentId, gameId, playerSide);
   try {
     const raw = storage.getItem(key);
     const value: unknown = raw ? JSON.parse(raw) : null;
-    if (isPendingScoreSubmission(value) && value.tournamentId === tournamentId && value.gameId === gameId && value.playerSide === playerSide) return value;
+    if (isPendingScoreSubmission(value) && value.actorId === actorId && value.tournamentId === tournamentId && value.gameId === gameId && value.playerSide === playerSide) return value;
     if (raw) storage.removeItem(key);
   } catch {
     // An unreadable local record is never trusted as a score mutation.
@@ -57,8 +59,8 @@ export function readPendingScoreSubmission(storage: Storage, tournamentId: strin
   return null;
 }
 
-export function clearPendingScoreSubmission(storage: Storage, envelope: Pick<PendingScoreSubmission, "tournamentId" | "gameId" | "playerSide">) {
-  try { storage.removeItem(scoreSubmissionStorageKey(envelope.tournamentId, envelope.gameId, envelope.playerSide)); } catch { /* The server remains authoritative. */ }
+export function clearPendingScoreSubmission(storage: Storage, envelope: Pick<PendingScoreSubmission, "actorId" | "tournamentId" | "gameId" | "playerSide">) {
+  try { storage.removeItem(scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide)); } catch { /* The server remains authoritative. */ }
 }
 
 export function pendingSubmissionRecovery(pending: PendingScoreSubmission | null, serverSubmissionId: string | null) {

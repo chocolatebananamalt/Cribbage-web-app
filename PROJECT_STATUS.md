@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 actor-scoped score retry
+
+- Corrected a shared-device retry-scope gap: saved score-submission and
+  confirmation retry envelopes are now bound to the authenticated assigned
+  player, and a mismatched envelope is removed rather than displayed or
+  retried. The isolated synthetic database confirms the assigned-game context
+  returns only the simulated caller's actor ID. This is online retry hardening,
+  not an offline queue or verification shortcut. Details:
+  `docs/quality/2026-09-10-actor-scoped-score-retry.md`.
+
 ## 2026-09-10 traceability-status reconciliation
 
 - Reconciled the non-normative requirements summary with the current code and

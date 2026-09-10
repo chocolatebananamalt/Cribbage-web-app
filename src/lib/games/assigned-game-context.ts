@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "../supabase/server";
 
 export type AssignedGameContext = {
+  actorId: string;
   gameId: string;
   tournamentId: string;
   eventId: string;
@@ -28,7 +29,7 @@ function isContext(value: unknown): value is AssignedGameContext {
   };
   const ownSubmission = item.ownSubmission;
   const validSubmission = ownSubmission === null || (typeof ownSubmission === "object" && ownSubmission !== null && typeof (ownSubmission as Record<string, unknown>).id === "string" && ["a", "b"].includes((ownSubmission as Record<string, unknown>).winnerSide as string) && typeof (ownSubmission as Record<string, unknown>).margin === "number");
-  return typeof item.gameId === "string" && typeof item.tournamentId === "string" && typeof item.eventId === "string" && typeof item.roundNumber === "number" && typeof item.matchInstance === "number" && ["pending", "submitted", "confirmation_pending", "mismatch", "verified"].includes(item.state as string) && typeof item.eventName === "string" && validSubmission && typeof item.ownConfirmed === "boolean" && typeof item.canConfirm === "boolean" && person(item.player) && person(item.opponent);
+  return typeof item.actorId === "string" && item.actorId.length > 0 && typeof item.gameId === "string" && typeof item.tournamentId === "string" && typeof item.eventId === "string" && typeof item.roundNumber === "number" && typeof item.matchInstance === "number" && ["pending", "submitted", "confirmation_pending", "mismatch", "verified"].includes(item.state as string) && typeof item.eventName === "string" && validSubmission && typeof item.ownConfirmed === "boolean" && typeof item.canConfirm === "boolean" && person(item.player) && person(item.opponent);
 }
 
 export async function getAssignedGameContext(gameId: string, tournamentId: string) {
