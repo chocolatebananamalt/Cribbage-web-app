@@ -59,10 +59,13 @@ pilot.
   releases the roster/profile for a later ceremony, and cannot create a link.
 - Server-side route contracts now accept only exact, bounded issue, decision,
   and cancellation request shapes before a server-only database client can run.
+- The entire activation ceremony is release-gated by an explicit environment
+  switch that defaults off. It cannot be enabled until the private migrations
+  and required live independent-session evidence exist.
 
 ## Verification
 
-- `pnpm test` — pass, 139 tests.
+- `pnpm test` — pass, 140 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits

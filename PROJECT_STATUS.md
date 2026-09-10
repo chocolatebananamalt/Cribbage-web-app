@@ -20,7 +20,8 @@
   witnessed phrase and rolls back completely if its nested account link fails.
   Directors can also cancel a pending or unused activation, releasing it for a
   later safe ceremony. Strict server-route request contracts now reject malformed
-  activation commands before they reach database code. The feature is still unavailable: no route, QR,
+  activation commands before they reach database code. The feature is release-gated
+  off by default. The feature is still unavailable: no route, QR,
   director workspace, or pilot migration has been enabled. See
   `docs/quality/2026-09-10-account-activation-foundation.md`.
 
