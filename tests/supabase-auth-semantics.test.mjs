@@ -75,6 +75,7 @@ test('callback only accepts same-origin relative redirect paths', () => {
   assert.match(route, /startsWith\("\/\/"\)/);
   assert.match(route, /startsWith\("\/"\)/);
   assert.match(route, /exchangeCodeForSession/);
+  assert.match(route, /response\.headers\.set\("cache-control", "private, no-store"\)/);
   assert.match(route, /error=missing_code/);
 });
 

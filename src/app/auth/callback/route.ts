@@ -32,6 +32,8 @@ function withCookies(response: NextResponse, source: NextResponse): NextResponse
   source.headers.forEach((value, name) => response.headers.set(name, value));
   const cookies = source.cookies.getAll();
   cookies.forEach(({ name, value, ...options }) => response.cookies.set(name, value, options));
-  if (cookies.length > 0) response.headers.set("cache-control", "private, no-store");
+  // This route receives a one-time exchange code in its request URL. Even an
+  // unsuccessful redirect must never be eligible for a shared cache.
+  response.headers.set("cache-control", "private, no-store");
   return response;
 }

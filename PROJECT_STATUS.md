@@ -1,5 +1,12 @@
 # Project Status
 
+## 2026-09-10 magic-link callback cache hardening
+
+- Every magic-link callback redirect is now private and non-cacheable, even
+  for missing-code or failed-exchange paths that do not set a cookie. Full
+  verification and private-handoff checks pass. See
+  `docs/quality/2026-09-10-auth-callback-cache-hardening.md`.
+
 ## 2026-09-10 meta review cycle 3
 
 - Completed the requested post-repair meta review against the normative
