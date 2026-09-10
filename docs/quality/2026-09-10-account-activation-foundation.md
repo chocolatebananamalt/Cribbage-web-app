@@ -4,9 +4,11 @@
 
 This increment creates the local, un-applied private persistence contract and
 the server-only 256-bit activation-token primitive for the witnessed
-roster-account linking ceremony. It does **not** open a browser route, issue a
-QR/link, redeem a credential, expose a director workspace, or apply a database
-migration to the pilot.
+roster-account linking ceremony. It also adds the server-only issuer adapter,
+which returns a credential only when an exact future database receipt binds it
+to the freshly generated activation ID. It does **not** open a browser route,
+issue a QR/link, redeem a credential, expose a director workspace, or apply a
+database migration to the pilot.
 
 ## Acceptance evidence in this increment
 
@@ -24,10 +26,13 @@ migration to the pilot.
   tournament/profile prevent replay and cross-roster profile association.
 - Events are append-only. No table stores a raw token, secret, claimed email,
   ACC number, or other identity search field.
+- The issuer sends only bytea salt/digest values to its intended private RPC.
+  A replayed accepted receipt returns `credential_unavailable`; a malformed
+  receipt cannot masquerade as a valid replay.
 
 ## Verification
 
-- `pnpm test` — pass, 128 tests.
+- `pnpm test` — pass, 131 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
