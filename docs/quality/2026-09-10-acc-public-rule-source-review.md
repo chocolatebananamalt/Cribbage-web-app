@@ -44,6 +44,11 @@ The canonical rule fixtures and financial schedules remain a separate task.
   requirements wording incorrectly tied the third judge only to disagreement
   between the first two judges; that conflict was corrected in
   `production-requirements.md` before the feature is implemented.
+- Rule 11.4 provides an implementable, narrow post-lunch absence fixture:
+  five-minute grace, a 2/+10 outcome for the opponent and 0/-10 for the late
+  player, continued rotation, and only one such award. Rule 13.1 separately
+  defines playoff absence forfeits. Both are now explicit requirements, while
+  broader rotation/replacement rules remain blocked pending source fixtures.
 
 ## Still unconfirmed and therefore not encoded as official results
 

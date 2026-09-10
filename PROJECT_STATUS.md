@@ -10,7 +10,10 @@
   sources. The review also corrected the judge-escalation requirement: a third
   judge may be summoned when a player disagrees with the first two judges'
   decision, rather than only when those judges disagree. See
-  `docs/quality/2026-09-10-acc-public-rule-source-review.md`.
+  `docs/quality/2026-09-10-acc-public-rule-source-review.md`. The same review
+  added the narrow Rule 11.4 post-lunch and Rule 13.1 playoff absence/forfeit
+  fixtures to the production requirements without inventing broader rotation
+  or replacement policy.
 
 ## 2026-09-10 hosted registration lifecycle audit
 
