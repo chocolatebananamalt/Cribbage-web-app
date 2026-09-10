@@ -31,6 +31,12 @@ application references on rejection, abort, unmount, and `pagehide`.
   cleanup, request abort, and abort signalling remain present.
 - `pnpm build` — pass; `/register` remains a dynamic route.
 - `git diff --check` — pass.
+- Hosted Preview deployment `dpl_5TzYi1Z1VGYcyuTezWmCVKtham3L` — Ready for
+  commit `194e1db`. A protected fetch of `/register` returned `200` with the
+  per-response nonce policy, `no-store` cache controls, and no recent runtime
+  error cluster for that route.
 
-This is local/static evidence only. A real-browser history/BFCache/network
-canary remains required before public registration can be enabled.
+The hosted response confirms the server-rendered boundary, but it does not
+exercise a browser's back/forward cache, fragment removal, or request abort.
+A real-browser history/BFCache/network canary remains required before public
+registration can be enabled.

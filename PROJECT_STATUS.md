@@ -11,7 +11,11 @@
   requests are aborted during navigation. It still uses no browser storage and
   public registration remains release-gated. Local lint, **92** tests,
   production build, and diff validation pass. Real-browser
-  history/BFCache/network evidence remains a release gate. See
+  history/BFCache/network evidence remains a release gate. Hosted Preview
+  deployment `dpl_5TzYi1Z1VGYcyuTezWmCVKtham3L` is Ready for commit `194e1db`;
+  its protected `/register` response is `200` with the expected nonce and
+  no-store protections, and Vercel reports no recent route runtime errors.
+  See
   `docs/quality/2026-09-10-registration-credential-lifetime-repair.md`.
 
 ## 2026-09-10 registration fragment CSP repair
