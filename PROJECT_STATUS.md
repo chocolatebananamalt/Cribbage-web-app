@@ -20,7 +20,10 @@
   are operational surfaces, not approved public search content. A regression
   test keeps this policy alongside the existing browser-hardening headers. It
   is not an authorization substitute and does not create a public-results
-  release. Details: `docs/quality/2026-09-10-browser-indexing-hardening.md`.
+  release. GitHub Actions passed for commit `4faa088`; Vercel Preview
+  `dpl_DmcKzD2g5vDkgkxm5PAxkpe5UG48` is `READY` and its hosted sign-in response
+  returned the exact no-index header. Details:
+  `docs/quality/2026-09-10-browser-indexing-hardening.md`.
 
 ## 2026-09-10 evidence-history reconciliation
 

@@ -27,7 +27,13 @@ results publication workflow, so search indexing would be inappropriate.
 - `tests/supabase-auth-semantics.test.mjs` now asserts the header alongside
   existing anti-framing, no-referrer, MIME-sniffing, device-permission, and
   DNS-prefetch protections.
-- `pnpm verify` and `pnpm verify:handoff` were run after the change.
+- `pnpm verify` and `pnpm verify:handoff` passed after the change.
+- GitHub Actions verification run `34479538460` for commit `4faa088` passed.
+- Vercel Preview deployment `dpl_DmcKzD2g5vDkgkxm5PAxkpe5UG48` from that
+  commit reached `READY`. A hosted fetch of `/sign-in` returned HTTP 200 and
+  the exact `x-robots-tag: noindex, nofollow, noarchive` header alongside the
+  existing no-referrer, anti-framing, MIME-sniffing, device-permission, and
+  DNS-prefetch headers. No sign-in email was requested or sent.
 
 This header asks compliant crawlers not to index a response; it is not an
 authorization mechanism and does not replace the server-side membership,
