@@ -33,6 +33,41 @@ test('game API handlers validate, authenticate with claims, and call RPCs only',
   assert.match(submission + confirmation, /requireVerifiedSubject/);
 });
 
+test('score mutation routes bound JSON bodies before database work', async () => {
+  const boundary = await import(pathToFileURL(path.join(root, 'src/lib/api/bounded-json.ts')).href);
+  const cases = [
+    new Request('https://example.test', { method: 'POST', headers: { 'content-type': 'text/plain' }, body: '{}' }),
+    new Request('https://example.test', { method: 'POST', headers: { 'content-type': 'application/json', 'content-length': '2049' }, body: '{}' }),
+    new Request('https://example.test', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ note: 'x'.repeat(2100) }) }),
+    new Request('https://example.test', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{' }),
+  ];
+  for (const request of cases) assert.equal(await boundary.readSmallJson(request), null);
+  assert.deepEqual(await boundary.readSmallJson(new Request('https://example.test', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{"ok":true}' })), { ok: true });
+  let reads = 0;
+  let cancelled = false;
+  const chunks = [new Uint8Array(1024), new Uint8Array(1025), new Uint8Array(1)];
+  const streamLikeRequest = {
+    headers: new Headers({ 'content-type': 'application/json' }),
+    body: {
+      getReader: () => ({
+        read: async () => ({ done: reads >= chunks.length, value: chunks[reads++] }),
+        cancel: async () => { cancelled = true; },
+        releaseLock: () => {},
+      }),
+    },
+  };
+  assert.equal(await boundary.readSmallJson(streamLikeRequest), null);
+  assert.equal(reads, 2);
+  assert.equal(cancelled, true);
+  for (const route of [
+    read('src/app/api/v1/games/[id]/submissions/route.ts'),
+    read('src/app/api/v1/games/[id]/confirmations/route.ts'),
+  ]) {
+    assert.match(route, /readSmallJson\(request\)/);
+    assert.doesNotMatch(route, /request\.json\(\)/);
+  }
+});
+
 test('game operation responses bind to the requested game and submission before returning success', async () => {
   const game = await import(pathToFileURL(path.join(root, 'src/lib/api/game-operation.ts')).href);
   const gameId = '00000000-0000-4000-8000-000000000001';

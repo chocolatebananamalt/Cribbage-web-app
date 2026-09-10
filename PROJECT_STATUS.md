@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 score mutation bounded-body hardening
+
+- Closed an input-boundary gap in the live score-submission and confirmation
+  routes. Both now reject non-JSON, malformed, declared-oversize, and actual
+  bodies larger than 2 KiB before they can reach a scoring RPC; the streaming
+  reader cancels as soon as it crosses that limit rather than buffering the
+  full oversized body. Direct regression coverage proves every rejection
+  path, a valid request, and early stream cancellation; existing exact-shape,
+  session, role, idempotency, and database verification controls remain
+  unchanged. Local checks pass: **118 tests**, lint, production build,
+  workspace verification, private-handoff verification, and diff check. Real
+  independent-session browser evidence remains a release gate. See
+  `docs/quality/2026-09-10-score-mutation-bounded-json.md`.
+
 ## 2026-09-10 protected player scorecard reader
 
 - Closed the production-screen gap where the verified scorecard existed only

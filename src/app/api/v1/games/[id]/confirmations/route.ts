@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { isAcceptedConfirmation, isRejectedConfirmationOperation } from "../../../../../../lib/api/game-operation";
-import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { createClient } from "../../../../../../lib/supabase/server";
 
@@ -13,8 +13,9 @@ function rejectionStatus(code: unknown) {
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
     const { id } = await params;
-    let body: Record<string, unknown>;
-    try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
+    const rawBody = await readSmallJson(request);
+    if (!rawBody || typeof rawBody !== "object") return apiJson({ error: "invalid_confirmation" }, { status: 400 });
+    const body = rawBody as Record<string, unknown>;
     if (!isUuid(id) || !isUuid(body.submissionId) || !isUuid(body.idempotencyKey)) return apiJson({ error: "invalid_confirmation" }, { status: 400 });
     const supabase = await createClient();
     if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
