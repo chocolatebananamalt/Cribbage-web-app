@@ -52,6 +52,12 @@ export type RegistrationLinkRotateResult =
   | { status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number }
   | { status: "rejected"; code: "link_unavailable" | "idempotency_conflict" };
 
+export type RegistrationCloseRequest = { operationId: string };
+
+export type RegistrationCloseResult =
+  | { status: "registration_closed"; registrationClosed: true; linkClosed: boolean }
+  | { status: "rejected"; code: "registration_unavailable" | "idempotency_conflict" };
+
 function own(value: object, keys: string[]) {
   return Object.keys(value).length === keys.length && keys.every((key) => key in value);
 }
@@ -93,6 +99,11 @@ export function isRegistrationLinkCloseRequest(value: unknown): value is Registr
   return isExpectedLink(request) && isUuid(request.operationId);
 }
 
+export function isRegistrationCloseRequest(value: unknown): value is RegistrationCloseRequest {
+  return !!value && typeof value === "object" && own(value, ["operationId"])
+    && isUuid((value as Record<string, unknown>).operationId);
+}
+
 export function isRegistrationLinkCloseResult(value: unknown): value is RegistrationLinkCloseResult {
   if (!value || typeof value !== "object") return false;
   const result = value as Record<string, unknown>;
@@ -117,6 +128,18 @@ export function isRegistrationLinkRotateResult(value: unknown): value is Registr
   return own(result, ["status", "code"])
     && result.status === "rejected"
     && (result.code === "link_unavailable" || result.code === "idempotency_conflict");
+}
+
+export function isRegistrationCloseResult(value: unknown): value is RegistrationCloseResult {
+  if (!value || typeof value !== "object") return false;
+  const result = value as Record<string, unknown>;
+  if (result.status === "registration_closed") {
+    return own(result, ["status", "registrationClosed", "linkClosed"])
+      && result.registrationClosed === true && typeof result.linkClosed === "boolean";
+  }
+  return own(result, ["status", "code"])
+    && result.status === "rejected"
+    && (result.code === "registration_unavailable" || result.code === "idempotency_conflict");
 }
 
 export function isRegistrationLinkState(value: unknown): value is RegistrationLinkState {

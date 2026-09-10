@@ -477,6 +477,25 @@ test('director rotation route is release-gated, strict, server-only, and returns
   assert.match(contract, /status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number/);
 });
 
+test('registration closure atomically closes its active link and is exposed only through the protected server boundary', () => {
+  const close = read('database/migrations/0082_atomic_tournament_registration_close.sql');
+  const route = read('src/app/api/v1/tournaments/[id]/registration-close/route.ts');
+  const contract = read('src/lib/api/registration-link.ts');
+  assert.match(close, /pg_catalog\.pg_advisory_xact_lock/);
+  assert.match(close, /update app\.tournaments set registration_status = 'closed'/);
+  assert.match(close, /update app\.tournament_registration_links[\s\S]*lifecycle_state = 'closed', enabled = false/s);
+  assert.match(close, /update app\.tournament_registration_link_heads[\s\S]*state = 'closed', version = version \+ 1/s);
+  assert.match(close, /revoke all on function public\.close_tournament_registration_v2.*from public, anon, authenticated/);
+  assert.match(close, /grant execute on function public\.close_tournament_registration_v2.*to service_role/);
+  assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /readRegistrationLinkJson/);
+  assert.match(route, /isRegistrationCloseRequest/);
+  assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /close_tournament_registration_v2/);
+  assert.doesNotMatch(route, /from\("tournaments/);
+  assert.match(contract, /status: "registration_closed"; registrationClosed: true; linkClosed: boolean/);
+});
+
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
   const route = read('src/app/api/v1/registration/claims/route.ts');
   const contract = read('src/lib/api/public-registration-v2.ts');

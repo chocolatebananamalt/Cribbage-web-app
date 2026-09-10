@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-10 atomic tournament-registration closure
+
+- Added one service-only, director/co-director-authorized operation that
+  atomically closes tournament registration and disables the current issued
+  QR registration link under the same lifecycle lock used by claims, rotation,
+  and manual link closure. Exact retries return their immutable receipt; a
+  changed operation-ID reuse is a durable conflict. The protected HTTP
+  boundary is same-origin, session-checked, bounded, and never returns QR
+  credential material. Migration `0082` was applied first to disposable
+  synthetic project `donfxulkliuyteiannir` and then pilot
+  `fnjkwymxpnsqvxtpronk`; catalogs confirm browser roles cannot execute it and
+  service role can. Local lint, **111** tests, and production build pass. An
+  independent high-risk review found no P0/P1 implementation defect. See
+  `docs/quality/2026-09-10-atomic-registration-close.md`. Public registration
+  remains disabled; real seeded lifecycle/concurrency and protected-browser
+  evidence, plus a director UI, remain release gates.
+
 ## 2026-09-10 registration-link rotation compare-and-swap
 
 - Replaced the unsafe rotation function with a server-only, exact
