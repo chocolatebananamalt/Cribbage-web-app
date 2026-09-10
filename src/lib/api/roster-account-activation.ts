@@ -6,6 +6,7 @@ function exact(value: RecordValue, keys: string[]) { return Object.keys(value).l
 const phrase = /^[A-Z]{4}-[A-Z]{4}$/;
 
 export type ActivationIssueRequest = { rosterEntryId: string; expiresAt: string; operationId: string };
+export type ActivationRedeemRequest = { credential: string; operationId: string };
 export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string };
 export type ActivationCancelRequest = { activationId: string; operationId: string };
 
@@ -13,6 +14,12 @@ export function isActivationIssueRequest(value: unknown): value is ActivationIss
   if (!isRecord(value) || !exact(value, ["rosterEntryId", "expiresAt", "operationId"])) return false;
   const date = typeof value.expiresAt === "string" ? new Date(value.expiresAt) : null;
   return isUuid(value.rosterEntryId) && isUuid(value.operationId) && !!date && Number.isFinite(date.valueOf()) && date.toISOString() === value.expiresAt;
+}
+
+export function isActivationRedeemRequest(value: unknown): value is ActivationRedeemRequest {
+  return isRecord(value) && exact(value, ["credential", "operationId"])
+    && typeof value.credential === "string" && value.credential.length >= 1 && value.credential.length <= 512
+    && isUuid(value.operationId);
 }
 
 export function isActivationDecisionRequest(value: unknown): value is ActivationDecisionRequest {

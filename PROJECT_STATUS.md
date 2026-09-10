@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 account-activation server route boundary
+
+- Added strict, same-origin, verified-session server routes for the
+  release-gated account-activation issue, redemption, witnessed decision, and
+  cancellation commands. Browser callers cannot receive the server-only
+  Supabase credential; malformed input and malformed database success receipts
+  fail closed. The local test suite now includes the command-adapter and route
+  boundary cases (145 passing), and the Next.js production build passes. The
+  activation feature remains unavailable because migrations `0090`–`0095`, a
+  live multi-session pilot, and the user-facing QR ceremony remain unfinished.
+  See `docs/quality/2026-09-10-account-activation-route-boundary.md`.
+
 ## 2026-09-10 witnessed account-activation foundation
 
 - Began the server-only account-link activation implementation after the
