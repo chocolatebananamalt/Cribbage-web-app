@@ -31,7 +31,10 @@
   older Preview is Ready with no recent runtime-error report. No billing or
   Vercel plan change was made. Hosted verification of commits after `de8a247`
   remains unavailable until a new Ready Preview is created. See
-  `docs/quality/2026-09-10-vercel-build-rate-limit.md`.
+  `docs/quality/2026-09-10-vercel-build-rate-limit.md`. A later Ready Preview
+  for documentation commit `6508e4c` returned `200 OK`, but the immediate
+  following commit was rate-limited again. The current branch therefore still
+  lacks hosted evidence for its latest revision.
 
 ## 2026-09-10 pilot foreign-key index coverage
 
