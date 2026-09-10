@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 protected registration-link issue route
+
+- Added a strict same-origin, claims-checked director issue route. It accepts
+  only bounded issuance inputs, uses the server-only client, and returns a
+  credential only after an exact private receipt. Without the required server
+  secret it fails closed as unavailable; no public redemption route exists.
+- Lint, **90** tests, and the production build pass. Hosted secret
+  configuration and real transaction/browser evidence remain required.
+
 ## 2026-09-10 server-only registration issuer adapter
 
 - Added a tested server-only issuer adapter that generates the supplied v2

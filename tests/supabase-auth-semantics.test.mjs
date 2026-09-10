@@ -354,6 +354,19 @@ test('v2 registration lifecycle stores only digest material and is service-role-
   assert.doesNotMatch(lifecycle, /grant execute[\s\S]*to anon, authenticated/);
 });
 
+test('director registration-link issuance is a strict same-origin server-only boundary', () => {
+  const route = read('src/app/api/v1/tournaments/[id]/registration-links/route.ts');
+  const contract = read('src/lib/api/registration-link.ts');
+  assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /createServerOnlyAdminClient/);
+  assert.match(route, /issueRegistrationLink/);
+  assert.doesNotMatch(route, /NEXT_PUBLIC_SUPABASE/);
+  assert.match(contract, /Object\.keys\(value\)\.length === keys\.length/);
+  assert.match(contract, /maxClaims.*<= 2000/);
+  assert.match(contract, /maxClaimsPerHour.*<= 1000/);
+});
+
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);
