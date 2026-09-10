@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { isRegistrationLinkIssueRequest, isRegistrationLinkState } from "../../../../../../lib/api/registration-link";
+import { isRegistrationLinkIssueRequest, isRegistrationLinkState, readRegistrationLinkJson } from "../../../../../../lib/api/registration-link";
 import { publicRegistrationEnabled } from "../../../../../../lib/api/public-registration-v2";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
@@ -28,8 +28,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!publicRegistrationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
-    let body: unknown;
-    try { body = await request.json(); } catch { return apiJson({ error: "invalid_request" }, { status: 400 }); }
+    const body = await readRegistrationLinkJson(request);
     if (!isUuid(id) || !isRegistrationLinkIssueRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });

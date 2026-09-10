@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 bounded registration-link request boundary
+
+- Registration-link issue requests now require a bounded JSON body before
+  parsing. The shared reader rejects non-JSON, malformed, declared-oversize,
+  and actual-oversize bodies; it is the required boundary for the forthcoming
+  rotate and close routes as well. Executed tests cover all rejection paths.
+  Local lint, **101** tests, production build, workspace verification,
+  private-handoff verification, and diff validation pass. The rotate/close
+  database lifecycle itself remains an active release-blocking implementation
+  item under its reviewed compare-and-swap contract.
+
 ## 2026-09-10 registration-link expired-state repair
 
 - Follow-up independent review found that an expired link could still be

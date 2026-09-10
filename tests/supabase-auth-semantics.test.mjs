@@ -369,6 +369,10 @@ test('director registration-link issuance is a strict same-origin server-only bo
   assert.match(contract, /maxClaimsPerHour.*<= 1000/);
   assert.match(route, /credential_unavailable/);
   assert.match(read('src/lib/registration-link-issuer.ts'), /new Date\(value\)\.valueOf\(\) === expected\.valueOf\(\)/);
+  assert.match(route, /readRegistrationLinkJson/);
+  assert.match(contract, /registrationLinkRequestBodyLimit = 2048/);
+  assert.match(contract, /contentType\.startsWith\("application\/json"\)/);
+  assert.match(contract, /byteLength > registrationLinkRequestBodyLimit/);
 });
 
 test('registration-link lifecycle conflicts are durable business outcomes, never bearer retries', () => {

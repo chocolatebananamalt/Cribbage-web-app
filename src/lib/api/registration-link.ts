@@ -1,4 +1,18 @@
-import { isUuid } from "./validation";
+import { isUuid } from "./validation.ts";
+
+export const registrationLinkRequestBodyLimit = 2048;
+
+export async function readRegistrationLinkJson(request: Request): Promise<unknown | null> {
+  const contentType = request.headers.get("content-type")?.toLowerCase() ?? "";
+  const contentLength = request.headers.get("content-length");
+  if (!contentType.startsWith("application/json")
+    || (contentLength !== null && (!/^\d+$/.test(contentLength) || Number(contentLength) > registrationLinkRequestBodyLimit))) {
+    return null;
+  }
+  const body = await request.text();
+  if (new TextEncoder().encode(body).byteLength > registrationLinkRequestBodyLimit) return null;
+  try { return JSON.parse(body) as unknown; } catch { return null; }
+}
 
 export type RegistrationLinkIssueRequest = {
   expiresAt: string;
