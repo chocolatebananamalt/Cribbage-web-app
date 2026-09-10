@@ -95,8 +95,8 @@ test('advisor baseline covers listed private-schema foreign keys without opening
   assert.match(baseline, /policy-free/);
   assert.match(baseline, /security-definer rpc/);
   assert.match(baseline, /magic-link\/otp only/);
-  assert.match(baseline, /before treating[\s\S]*leaked-password[\s\S]*non-applicable/);
-  assert.match(baseline, /enforce passwordless auth/);
+  assert.match(baseline, /hosted email provider combines[\s\S]*password-only switch/);
+  assert.match(baseline, /password authentication remains unsupported by the application/);
   assert.doesNotMatch(baseline, /grant select on table|create policy/);
 });
 

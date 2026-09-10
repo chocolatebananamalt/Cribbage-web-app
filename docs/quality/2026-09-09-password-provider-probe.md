@@ -1,5 +1,15 @@
 # Password-provider probe — 2026-09-09
 
+> **Superseded clarification — 2026-09-10:** The hosted Email provider
+> combines password and magic-link email authentication; its dashboard offers
+> no supported password-only disablement while magic links and new-user
+> creation remain enabled. The HTTP probe remains accurate, but its conclusion
+> that this must be disabled is withdrawn. The release boundary is instead:
+> the application contains no password UI/API path, raw provider-created
+> accounts receive no role or tournament data, and every protected action
+> remains server/database authorized. Leaked-password protection is optional
+> for the app's magic-link-only flow, not a release blocker.
+
 ## Acceptance criterion
 
 The supported authentication model is passwordless email magic links. A

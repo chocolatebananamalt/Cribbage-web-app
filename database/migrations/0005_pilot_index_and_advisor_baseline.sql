@@ -4,9 +4,10 @@
 -- The app schema intentionally remains private and policy-free in this pilot:
 -- direct anon/authenticated table DML is revoked; only narrowly scoped,
 -- security-definer RPCs with auth.uid() checks are executable by authenticated.
--- The app UI is magic-link/OTP only. Before treating Supabase's leaked-password
--- lint as non-applicable, production must also enforce passwordless Auth in the
--- service configuration (or enable leaked-password protection).
+-- The app UI is magic-link/OTP only. Supabase's hosted Email provider combines
+-- password and magic-link settings, so no password-only switch is assumed.
+-- Password authentication remains unsupported by the application and a raw
+-- provider account has no tournament authority.
 
 create index if not exists audit_events_actor_profile_id_idx
   on app.audit_events (actor_profile_id);

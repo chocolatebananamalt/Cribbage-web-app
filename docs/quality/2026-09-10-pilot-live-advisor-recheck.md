@@ -20,9 +20,11 @@ local security hardening changes.
   previously catalog-audited. The review found no new anonymous/PUBLIC
   execution finding.
 - The sole remaining security warning is `auth_leaked_password_protection`.
-  The user has declined the paid add-on. It remains non-blocking only if the
-  hosted Email/Password provider itself is disabled, because the app supports
-  magic-link authentication only.
+  The user has declined the paid add-on. The hosted Email provider combines
+  password and magic-link settings, so it cannot be disabled without breaking
+  the supported magic-link flow. The app exposes no password UI/API and a raw
+  provider account receives no tournament authority; the advisory is recorded
+  but is not a release blocker for this magic-link-only app flow.
 - The performance advisor reports only unused-index notices on the empty
   pilot. It reports no unindexed foreign-key finding. The indexes support
   foreign keys, immutable receipts, and future scoped reads; they must not be

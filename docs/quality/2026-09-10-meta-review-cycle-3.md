@@ -38,9 +38,10 @@ multi-user or operational workflow.
 - No new anonymous/PUBLIC table/function exposure or unindexed foreign-key
   finding was observed. Private RLS and authenticated role-checked RPC advisor
   notices remain intentional and documented.
-- The hosted password-provider configuration is still not proven disabled.
-  Leaked-password protection is a separate paid-plan advisory; its absence is
-  not an excuse to leave an unsupported password-login path enabled.
+- The hosted Email provider combines password and magic-link settings. The
+  application exposes no password UI/API and raw provider accounts receive no
+  tournament authority, so the paid leaked-password advisory is recorded but
+  is not treated as a blocker for the supported magic-link app flow.
 - The server-only `SUPABASE_SECRET_KEY` configuration cannot be inspected by
   the available hosting connector. Without it, the witnessed player-account
   activation flow must remain unavailable rather than degrade to unsafe

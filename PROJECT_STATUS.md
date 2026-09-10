@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 hosted email-provider clarification
+
+- Corrected an inaccurate release gate. Supabase's current hosted Email
+  provider combines password and magic-link settings, so there is no supported
+  password-only switch to use while preserving magic links and new-user
+  creation. The app itself exposes only magic-link authentication, and an
+  externally created provider account has no role or tournament authority.
+  The paid leaked-password advisory remains documented but is not a blocker
+  for this flow. No Supabase setting needs changing. See
+  `docs/quality/2026-09-09-password-provider-probe.md`.
+
 ## 2026-09-10 magic-link callback cache hardening
 
 - Every magic-link callback redirect is now private and non-cacheable, even
