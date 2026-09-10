@@ -2,25 +2,25 @@
 
 > **Normative baseline:** [production-requirements.md](production-requirements.md) is the authoritative, self-contained production requirements document. This file remains the traceability summary and historical source map; when a summary line and the normative document differ, the normative document and its cited decision/source control.
 
-Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-07. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
+Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-10. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
 
 Precedence: current user decisions and verified current ACC rules; v1.1 specification; v1.3 prototype as illustration; older mockups as history. Flag contradictions.
 
 | ID | Requirement group | Source sections | Current status |
 |---|---|---|---|
-| ACC-01 / R-REG-01 | ACC identity/profile, private PIN/reset, registration/check-in and shared-tablet clearing | 3-6 | Design only |
-| ACC-02 / R-ROLE-01 | Per-tournament server-enforced roles, judge isolation, no self cross-check, hidden standings | 7,9,17,23-25 | Visual demo |
+| ACC-01 / R-REG-01 | ACC identity/profile, private PIN/reset, registration/check-in and shared-tablet clearing | 3-6 | Partial: guarded registration/roster/check-in/seating foundations; real player delivery and independent sessions remain |
+| ACC-02 / R-ROLE-01 | Per-tournament server-enforced roles, judge isolation, no self cross-check, hidden standings | 7,9,17,23-25 | Partial: scoped server roles and private boundaries exist; judge workflow and independent-session proof remain |
 | ACC-03 / R-OPS-01 | Physical table geometry, anchors, approved family restrictions, rotation/sit-outs, disputes, and Consolation eligibility | 8,10 | Rules unresolved; official schedule/eligibility gated |
-| ACC-04 / R-VERIFY-01 | Two reciprocal independent entries AND two distinct eligible confirmations before atomic verification | 12-13 | Missing |
-| ACC-05 | Hybrid/dead-phone handoff with opponent authentication; distinguish method | 14-15 | Scripted hybrid only |
+| ACC-04 / R-VERIFY-01 | Two reciprocal independent entries AND two distinct eligible confirmations before atomic verification | 12-13 | Partial: server transaction and isolated real-identity evidence exist; independent browser/hybrid proof remains |
+| ACC-05 | Hybrid/dead-phone handoff with opponent authentication; distinguish method | 14-15 | Guidance only; authoritative hybrid workflow remains incomplete |
 | ACC-06 / R-OFFLINE-01 | Authenticated pending queue, reconnect, duplicate/replay protection; authoritative server verification | 16 | Missing |
-| ACC-07 / R-SCORE-01 | Paper-style scrollable scorecard: game points, separate plus/minus columns, opponent full name and permanent verification ID; canonical per-card lines linked to a match; verified-only derived totals | 11-12,26; user decision 2026-09-07 | Partial demo; redesign approved |
-| ACC-08 / R-CORR-01 | Cross-check corrections retain actor, timestamp, and old/new values; explicit Pending/Applied state; reason and second approval are director-configurable, optional by default | 17,23,25; user decision 2026-09-06 | Mock screens |
-| ACC-09 / R-FINAL-01 | Cross-check gate, ranking/ties, qualification/byes, Consolation eligibility, and event finalization | 18-19 | Missing |
-| ACC-10 | Separate Main/pool ledgers, versioned MRP/payout rules, reconciliation | 20-22,36-38 | Static demo |
-| ACC-11 | Guided creation, configuration-only duplication, feature dependencies/readiness | 31-35,40-42 | Mostly missing |
-| ACC-12 / R-FLYER-01 / R-FIN-01 / R-ATTACH-01 / R-EXP-01 | Manual expense/attachments, reviewed extraction, flyer/QR, configurable satellite events, Muggins disclosure, signed-in results, financial tracking, and internal director-assisted export | 36-40; user decision 2026-09-06 | Mock screens |
-| ACC-13 | Large type, contrast, keyboard access, mobile/tablet/desktop and older-player usability | 26,41-42 | Needs user/browser tests |
+| ACC-07 / R-SCORE-01 | Paper-style scrollable scorecard: game points, separate plus/minus columns, opponent full name and permanent verification ID; canonical per-card lines linked to a match; verified-only derived totals | 11-12,26; user decision 2026-09-07 | Partial: production scorecard reader and score derivation exist; full browser/accessibility evidence remains |
+| ACC-08 / R-CORR-01 | Cross-check corrections retain actor, timestamp, and old/new values; explicit Pending/Applied state; reason and second approval are director-configurable, optional by default | 17,23,25; user decision 2026-09-06 | Safety foundation only: incomplete shared-result correction path is disabled pending all Rule 12.2 fixtures and lifecycle work |
+| ACC-09 / R-FINAL-01 | Cross-check gate, ranking/ties, qualification/byes, Consolation eligibility, and event finalization | 18-19 | Partial numeric preview only; authoritative finalization and full tie/eligibility fixtures are absent |
+| ACC-10 | Separate Main/pool ledgers, versioned MRP/payout rules, reconciliation | 20-22,36-38 | Partial manual-payment evidence only; MRP/payout/reconciliation remain incomplete |
+| ACC-11 | Guided creation, configuration-only duplication, feature dependencies/readiness | 31-35,40-42 | Partial private setup-draft foundation; guided creation and duplication remain incomplete |
+| ACC-12 / R-FLYER-01 / R-FIN-01 / R-ATTACH-01 / R-EXP-01 | Manual expense/attachments, reviewed extraction, flyer/QR, configurable satellite events, Muggins disclosure, signed-in results, financial tracking, and internal director-assisted export | 36-40; user decision 2026-09-06 | Prototype/setup fragments only; flyer, attachments, results, finance, and export workflows remain incomplete |
+| ACC-13 | Large type, contrast, keyboard access, mobile/tablet/desktop and older-player usability | 26,41-42 | Partial static checks and protected-preview smoke; real browser/usability evidence remains |
 | ACC-14 / R-SCAN-01 | Authorized paper-card photography, human-reviewed OCR transcription, evidence comparison, and exception-only cross-check queue; a scan is never automatic verification | User decision 2026-09-09; decision 2026-09-10 | Design only; provider/storage/policy and real-device evidence required |
 
 ## Confirmed scoring, scorecard, and accessibility decisions

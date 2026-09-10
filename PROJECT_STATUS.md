@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 traceability-status reconciliation
+
+- Reconciled the non-normative requirements summary with the current code and
+  isolated database evidence. It now distinguishes actual partial server/API
+  foundations from guidance/prototype-only work and explicitly describes Rule
+  12 corrections as disabled safety work, not mock functionality. This closes
+  a planning-accuracy conflict without relaxing any production gate. Details:
+  `docs/quality/2026-09-10-traceability-status-reconciliation.md`.
+
 ## 2026-09-10 Rule 12.2 independent-card foundation hardening
 
 - Hardened the inert private Rule 12 correction projection foundation only in
