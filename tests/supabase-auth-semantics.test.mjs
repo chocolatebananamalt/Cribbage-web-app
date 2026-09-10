@@ -103,20 +103,23 @@ test('callback only accepts same-origin relative redirect paths', () => {
 
 test('sign-in uses publishable browser auth and keeps the prototype route available', () => {
   const page = read('src/app/sign-in/page.tsx');
-  assert.match(page, /signInWithOtp/);
-  assert.doesNotMatch(page, /signInWithPassword|signUp\s*\(|type="password"/);
-  assert.match(page, /shouldCreateUser: true/);
+  const form = read('src/app/sign-in/sign-in-form.tsx');
+  assert.match(page, /await searchParams/);
+  assert.match(page, /handoffWarning/);
+  assert.match(form, /signInWithOtp/);
+  assert.doesNotMatch(form, /signInWithPassword|signUp\s*\(|type="password"/);
+  assert.match(form, /shouldCreateUser: true/);
   const bootstrap = read('database/migrations/0067_passwordless_profile_bootstrap.sql');
   assert.match(bootstrap, /after insert on auth\.users/);
   assert.match(bootstrap, /security definer set search_path = ''/);
   assert.match(bootstrap, /revoke all on function app\.create_profile_for_auth_user/);
   assert.doesNotMatch(bootstrap, /insert into app\.(tournament_roles|event_participants|tournament_roster_entries)/);
-  assert.match(page, /requestedNext/);
-  assert.match(page, /encodeURIComponent\(next\)/);
-  assert.match(page, /auth\/callback/);
-  assert.match(page, /type="email"/);
-  assert.match(page, /passwordless email sign-in/);
-  assert.doesNotMatch(page, /Authentication is not connected/);
+  assert.match(form, /requestedNext/);
+  assert.match(form, /encodeURIComponent\(next\)/);
+  assert.match(form, /auth\/callback/);
+  assert.match(form, /type="email"/);
+  assert.match(form, /passwordless email sign-in/);
+  assert.doesNotMatch(form, /Authentication is not connected/);
   assert.match(read('src/app/page.tsx'), /export default|TournamentDashboard/);
 });
 
@@ -274,7 +277,7 @@ test('shared-device sign-out continues when local storage cleanup fails', async 
   assert.equal(signOutCalls, 1);
   assert.deepEqual(result, { localClearFailed: true, signedOut: true });
   assert.match(read('src/app/sign-in/page.tsx'), /local_clear_review/);
-  assert.match(read('src/app/sign-in/page.tsx'), /Close this browser before another person uses this device/);
+  assert.match(read('src/app/sign-in/sign-in-form.tsx'), /Close this browser before another person uses this device/);
 });
 
 test('ambiguous score submission locks one exact persisted retry envelope', async () => {
