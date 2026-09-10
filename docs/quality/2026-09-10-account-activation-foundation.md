@@ -57,10 +57,12 @@ pilot.
 - Migration `0095` closes a director-cancelled activation through the same
   server-only, receipt/audit/event boundary. It rejects any pending request,
   releases the roster/profile for a later ceremony, and cannot create a link.
+- Server-side route contracts now accept only exact, bounded issue, decision,
+  and cancellation request shapes before a server-only database client can run.
 
 ## Verification
 
-- `pnpm test` — pass, 138 tests.
+- `pnpm test` — pass, 139 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits

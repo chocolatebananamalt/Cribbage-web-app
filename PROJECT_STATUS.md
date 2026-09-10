@@ -19,7 +19,8 @@
   atomic director-approval transaction. That transaction now requires the
   witnessed phrase and rolls back completely if its nested account link fails.
   Directors can also cancel a pending or unused activation, releasing it for a
-  later safe ceremony. The feature is still unavailable: no route, QR,
+  later safe ceremony. Strict server-route request contracts now reject malformed
+  activation commands before they reach database code. The feature is still unavailable: no route, QR,
   director workspace, or pilot migration has been enabled. See
   `docs/quality/2026-09-10-account-activation-foundation.md`.
 
