@@ -13,5 +13,5 @@ test("account activation is release-gated and defaults closed", () => {
 test("incomplete Rule 12.2 correction mutation defaults closed", () => {
   assert.equal(rule12CorrectionEnabled({}), false);
   assert.equal(rule12CorrectionEnabled({ ACC_RULE12_CORRECTION_ENABLED: "true" }), false);
-  assert.equal(rule12CorrectionEnabled({ ACC_RULE12_CORRECTION_ENABLED: "approved" }), true);
+  assert.equal(rule12CorrectionEnabled({ ACC_RULE12_CORRECTION_ENABLED: "approved" }), false);
 });

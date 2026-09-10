@@ -37,8 +37,9 @@ cannot represent the cited (b) or (h) outcomes faithfully.
 
 ## Immediate safety control
 
-- `ACC_RULE12_CORRECTION_ENABLED` defaults to off and accepts only the value
-  `approved` at the web boundary.
+- The web boundary is hard-disabled. No environment value can enable the
+  incomplete feature; a future reviewed release must deliberately replace the
+  hard stop after every exit criterion has direct evidence.
 - The correction page, correction-policy page, proposal/review routes, and
   their reconciliation routes return absent/not-found while the switch is off.
 - Migrations `0096_suspend_incomplete_rule12_corrections.sql` and

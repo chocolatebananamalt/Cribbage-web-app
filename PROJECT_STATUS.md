@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-10 Rule 12 hard release stop
+
+- Strengthened the incomplete Rule 12 correction release boundary: no
+  environment value can enable it. A future, separately reviewed release must
+  replace the hard stop only after the complete independent-card workflow and
+  all required evidence exist. Details:
+  `docs/decisions/2026-09-10-rule12-independent-card-corrections.md`.
+
 ## 2026-09-10 CI supersession guard
 
 - Added a per-workflow/per-ref GitHub verification concurrency guard. A newer
