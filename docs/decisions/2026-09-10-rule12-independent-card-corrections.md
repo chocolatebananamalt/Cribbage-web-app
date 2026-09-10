@@ -62,10 +62,18 @@ cannot represent the cited (b) or (h) outcomes faithfully.
 
 ## Foundation progress
 
-Migration `0099_independent_card_correction_projection_foundation.sql` adds
-private, immutable, ungranted structures for an independent correction case
-and exactly one original/adjudicated projection for each card side. It records
-the source Rule 12.2 case without requiring the two adjudicated card values to
-be reciprocal. It intentionally has no writer, reader, lifecycle transition,
+Migrations `0099` through `0102` add private, immutable, ungranted structures
+for an independent correction case and exactly one original/adjudicated
+projection for each card side. The canonical scoreline is an identity link only,
+not a substitute for the original claim: Rule 12.2(b) and (h) require that each
+source card's independently recorded value be retained even when it differs
+from the shared verified baseline or the other card. The projection checks
+require correct game/card scope and internally consistent original and
+adjudicated values without forcing the two cards to be reciprocal. The feature
+intentionally has no writer, reader, lifecycle transition,
 standing calculation, or release switch, and therefore does not reduce any
 exit criterion or enable correction handling.
+
+The isolated live database check records the Rule 12.2(b) 17/16-to-16/17
+example and malformed-claim rejection in
+`docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.

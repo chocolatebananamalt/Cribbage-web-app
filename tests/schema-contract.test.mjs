@@ -35,6 +35,32 @@ test('independent Rule 12 correction projections preserve both card claims witho
   assert.doesNotMatch(projectionSql, /^grant\s+/im);
 });
 
+test('independent Rule 12 correction foundation rejects mismatched cards, inconsistent claims, and incomplete pairs', () => {
+  const invariantSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0100_independent_card_correction_projection_invariants.sql'), 'utf8').toLowerCase();
+  assert.match(invariantSql, /for update/);
+  assert.match(invariantSql, /correction base game version is stale/);
+  assert.match(invariantSql, /correction sequence must be next for game/);
+  assert.match(invariantSql, /correction card side must match original scoreline/);
+  assert.match(invariantSql, /correction adjudicated score is internally inconsistent/);
+  assert.match(invariantSql, /correction requires exactly two independent card projections/);
+  assert.match(invariantSql, /if tg_table_name = 'independent_card_corrections' then/);
+  assert.match(invariantSql, /deferrable initially deferred/);
+  assert.match(invariantSql, /revoke all on function app\.assert_independent_card_correction_sequence\(\) from public, anon, authenticated/);
+  assert.doesNotMatch(invariantSql, /^grant\s+/im);
+
+  const repairSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0101_independent_card_correction_claim_preservation_repair.sql'), 'utf8').toLowerCase();
+  assert.match(repairSql, /rename column original_scoreline_id to canonical_scoreline_id/);
+  assert.match(repairSql, /correction card side must match canonical scoreline/);
+  assert.match(repairSql, /correction original claim is internally inconsistent/);
+  assert.match(repairSql, /correction adjudicated score is internally inconsistent/);
+  assert.doesNotMatch(repairSql, /original snapshot does not match/);
+
+  const triggerRepairSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0102_independent_card_correction_trigger_context_repair.sql'), 'utf8').toLowerCase();
+  assert.match(triggerRepairSql, /if tg_table_name = 'independent_card_corrections' then/);
+  assert.match(triggerRepairSql, /v_correction_id := new\.id/);
+  assert.match(triggerRepairSql, /v_correction_id := new\.correction_id/);
+});
+
 test('game scope, assignments, immutable submissions, and exact verification boundaries are explicit', () => {
   assert.match(sql, /foreign key \(round_id, tournament_id, event_id\) references app\.rounds/);
   assert.match(sql, /foreign key \(side_a_participant_id, event_id, tournament_id\) references app\.event_participants/);

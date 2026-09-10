@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 Rule 12.2 independent-card foundation hardening
+
+- Hardened the inert private Rule 12 correction projection foundation only in
+  the separate synthetic validation project. The new enforcement serializes
+  correction sequence/version checks, links each card claim to the correct
+  canonical card identity, validates original and adjudicated card arithmetic,
+  and requires exactly two distinct card projections. A live rolled-back
+  fixture proves Rule 12.2(b)'s distinct 17-point-win/16-point-loss original
+  claims can become the required 16-point-win/17-point-loss adjudications;
+  an internally inconsistent original claim is rejected. The correction
+  feature has no user-facing writer or reader and remains disabled. Details:
+  `docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.
+
 ## 2026-09-10 isolated real-identity score flow
 
 - Ran the installed score RPCs against two separately simulated signed-in
