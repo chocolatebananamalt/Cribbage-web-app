@@ -15,7 +15,9 @@
   real concurrent and browser-session evidence still remains before release.
   An isolated two-request redemption/cancellation race now completes with no
   deadlock and the expected cancelled/no-link final state; reverse-order and
-  decision/cancellation races remain required before release.
+  decision/cancellation races remain required before release. A concurrent
+  decision/cancellation race now also completes with no deadlock and the same
+  safe cancelled/no-link state.
 
 ## 2026-09-10 account-activation lock-order repair
 

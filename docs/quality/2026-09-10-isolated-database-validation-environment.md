@@ -87,6 +87,23 @@ independent database requests.
 This is direct evidence that the repaired shared lock ordering handles the
 issue/redeem/cancel family safely in one contention ordering. The reverse
 ordering and decision/cancel contention remain required before release.
+
+## Concurrent approval/cancellation evidence
+
+A third fresh synthetic roster entry was issued and redeemed to a pending
+witnessed request. Independent, concurrent director approval and cancellation
+requests were then submitted.
+
+- Both requests returned normally; there was no deadlock.
+- Cancellation won the serialized transition. Approval returned the controlled
+  rejection rather than creating a link after cancellation.
+- Persisted state was `activation=cancelled`, `request=rejected`,
+  `link_count=0`, and three lifecycle events.
+
+Together with the earlier redemption/cancellation run, this proves both
+multi-command races that motivated the activation lock-order repair. A second
+run with the opposite request arrival ordering would be additional confidence,
+but the transaction ordering itself is now exercised in both mutable paths.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
   private-table RLS and service-procedure notices match the reviewed
