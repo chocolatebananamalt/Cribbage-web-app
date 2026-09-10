@@ -37,6 +37,15 @@ plus `Updated Total Calculations Pending Opponent Entry` when applicable.
   the exact `auth.uid()` player binding, and the verified/corrected-line
   filter.
 - A no-auth disposable execution returned no card.
+- A complete disposable synthetic fixture now creates the otherwise required
+  registration claim, roster approval, account link, and immutable initial
+  seating chain for both existing synthetic players. As authenticated Player
+  A, the reader returned precisely two verified lines, permanent IDs `A-7`
+  and `A-8`, 5 game points, +43 spread points, zero pending games, and no
+  internal identifiers. An authenticated but unlinked Player D received no
+  card. The catalog also proves that neither `anon` nor `authenticated` can
+  select `app.card_scorelines` directly, while only `authenticated` can
+  execute the narrow reader.
 - Static regression coverage proves the database filter, private DAL, route
   access check, display of pending-total warnings, and absence of client table
   reads or service credentials.
@@ -45,8 +54,7 @@ plus `Updated Total Calculations Pending Opponent Entry` when applicable.
 
 ## Remaining limitation
 
-The current disposable scoring fixture has verified synthetic scorelines but
-zero roster-account links and zero initial-seating assignments. It therefore
-cannot exercise the authenticated positive reader result without creating a
-new end-to-end seeded player fixture. That fixture, two independent signed-in
-browser sessions, and phone/desktop visual evidence remain release gates.
+The database boundary is now exercised with a complete synthetic player chain.
+Two independent signed-in browser sessions and phone/desktop visual evidence
+remain release gates; the database-console authenticated context is not a
+substitute for real browser sessions or a production pilot.

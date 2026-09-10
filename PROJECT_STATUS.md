@@ -10,9 +10,11 @@
   The protected server-rendered card has grouped Game and Spread Points
   headers, separate plus/minus columns, opponent name and ID, fixed totals,
   Games Won, Net Spread Points, and the approved pending-total warning.
-  Disposable and pilot catalogs confirm the intended grants and binding; the
-  current synthetic fixture lacks linked initial seating, so a positive
-  authenticated execution and phone/desktop rendering remain release gates.
+  Disposable and pilot catalogs confirm the intended grants and binding. A
+  complete disposable registration-to-seating fixture now proves an
+  authenticated player receives only their verified card and an unlinked
+  signed-in player receives none. Real independent browser sessions and
+  phone/desktop rendering remain release gates.
   See `docs/quality/2026-09-10-player-scorecard-reader.md`.
 
 ## 2026-09-10 live score-entry skunk aid parity
