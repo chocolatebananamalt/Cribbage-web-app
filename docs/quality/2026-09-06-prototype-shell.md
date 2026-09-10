@@ -1,5 +1,13 @@
 # Fresh Prototype Shell Verification - 2026-09-06
 
+> **Historical note — superseded 2026-09-10.** This early record's statement
+> about leaked-password protection as a production blocker no longer applies.
+> The approved authentication design is passwordless magic-link sign-in; a
+> password-provider toggle is neither an authorization boundary nor a release
+> gate. Current authority is
+> `docs/quality/2026-09-10-meta-release-readiness-delta.md` and the active
+> working outline.
+
 ## Acceptance criteria
 
 - App Router TypeScript page builds successfully.
