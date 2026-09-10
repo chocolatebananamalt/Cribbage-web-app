@@ -95,6 +95,17 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   assert.match(read('src/app/page.tsx'), /export default|TournamentDashboard/);
 });
 
+test('the synthetic review dashboard is unavailable from a production deployment', async () => {
+  const { allowsReviewPrototype } = await import(pathToFileURL(path.join(root, 'src/lib/review-prototype-boundary.ts')).href);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'production' }), false);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview' }), true);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'development' }), true);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production' }), false);
+  const page = read('src/app/page.tsx');
+  assert.match(page, /allowsReviewPrototype/);
+  assert.match(page, /notFound\(\)/);
+});
+
 test('proxy refreshes claims and protected tournament data requires server membership', () => {
   const proxy = read('src/proxy.ts') + read('src/lib/api/mutation-origin-gateway.ts') + read('src/lib/supabase/proxy.ts');
   const dal = read('src/lib/auth/require-tournament-access.ts');

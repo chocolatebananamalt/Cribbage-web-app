@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 review-prototype production boundary
+
+- The review dashboard at the root route uses synthetic tournament, player,
+  scoring, and financial data. It remains available for the ongoing protected
+  Preview format review, but a Vercel Production deployment (or a
+  production-like build without an explicit Preview environment) now returns
+  a not-found response before that dashboard renders. This prevents an
+  accidental deployment from presenting review controls as live tournament
+  operations.
+- Local lint, 82 application tests, production build, workspace verification,
+  and private-handoff verification pass. This is a deployment-safety control,
+  not a release claim: authenticated multi-user evidence and the other listed
+  release gates remain open.
+
 ## 2026-09-10 CI action-runtime compatibility repair
 
 - GitHub Actions reported that the clean-clone `Verify` workflow still used
