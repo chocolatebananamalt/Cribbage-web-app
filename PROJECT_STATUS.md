@@ -47,7 +47,10 @@
   closed. The current Vercel preview has a clean build, no recent runtime
   errors, and no observed browser-console errors. A direct anonymous-role
   database call to the registration-close procedure is rejected by its
-  server-only guard before it can mutate anything.
+  server-only guard before it can mutate anything. A two-request isolated
+  check-in/registration-close race is also safe: closure wins, the check-in
+  receives a durable `registration_closed` rejection, and no check-in event
+  is written.
 
 ## 2026-09-10 account-activation lock-order repair
 

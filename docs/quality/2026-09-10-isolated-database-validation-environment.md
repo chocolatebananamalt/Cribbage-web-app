@@ -197,6 +197,29 @@ or change any fixture. This independently confirms the service-only guard is
 live in the disposable database, in addition to the catalog privilege and
 static route checks.
 
+## Concurrent check-in/registration-close evidence
+
+An existing explicitly synthetic fixture with a director role, an eligible
+synthetic roster entry, and an open registration link was used for one final
+two-request contention check. The check-in wrapper was called with a
+synthetic authenticated director subject while
+`close_tournament_registration_v2` ran concurrently with its service-only
+claim.
+
+- Registration closure returned `registration_closed` and retired the active
+  link.
+- The check-in returned the controlled `registration_closed` rejection with
+  its exact tournament, roster-entry, and operation identifiers.
+- Persisted state was closed at head version 2 with the link closed and
+  disabled. There were zero roster check-in events for the target entry,
+  exactly two operation receipts, and the expected rejected-check-in audit
+  record.
+
+This is direct database evidence that attendance cannot change after the
+serialized registration-close transition wins. It does not substitute for a
+real director browser session or a reverse arrival-order test in which a
+check-in commits before close, both of which remain release evidence gates.
+
 ## Consequence and next safe path
 
 The required real two-connection proof can now be performed against this
