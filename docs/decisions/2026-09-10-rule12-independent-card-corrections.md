@@ -77,3 +77,6 @@ exit criterion or enable correction handling.
 The isolated live database check records the Rule 12.2(b) 17/16-to-16/17
 example and malformed-claim rejection in
 `docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.
+The source-case-by-case executable-fixture ledger is maintained separately in
+`docs/quality/2026-09-10-rule12-fixture-ledger.md`; no ledger row is a release
+approval until its stated database and browser evidence exists.

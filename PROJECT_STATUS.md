@@ -12,6 +12,9 @@
   an internally inconsistent original claim is rejected. The correction
   feature has no user-facing writer or reader and remains disabled. Details:
   `docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.
+  The source-case ledger now records the remaining executable fixtures and
+  rejection conditions for Rule 12.2(a)–(i), without claiming they exist:
+  `docs/quality/2026-09-10-rule12-fixture-ledger.md`.
 
 ## 2026-09-10 isolated real-identity score flow
 
