@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 event-finalization gate foundation
+
+- Added a pure fail-closed finalization checklist for all configured required
+  evidence: verification, disputes, corrections, seating/eligibility, finance,
+  attachments, result version, director approval, source version, and scoring
+  method. Every missing item remains separately visible. This does not add a
+  database transition or allow an event to be finalized. Evidence:
+  `docs/quality/2026-09-10-event-finalization-gate.md`.
+
 ## 2026-09-10 consolidated shared-pilot containment packet
 
 - Replaced the fragmented 0090–0103 packet plus two amendments with one exact
