@@ -22,7 +22,8 @@
 - This is intentionally not a public-registration release. Routes, secret-key
   configuration, real service-role transaction evidence, fragment/network
   canaries, and independent browser sessions remain required before a v2 link
-  can be opened. See
+  can be opened. Preview deployment `dpl_68GdZV6r4QcgGfJBL5SZmB1Fxyeq` built
+  commit `cb6866f` successfully with no subsequent runtime-error cluster. See
   `docs/quality/2026-09-10-registration-link-v2-schema-boundary.md`.
 
 ## 2026-09-10 legacy registration-token surface retired

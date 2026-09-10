@@ -56,3 +56,11 @@ Supabase secret key. Before any v2 link may open, the project still requires
 route/UI validation, service-role transaction tests with synthetic director and
 player accounts, issue/rotate/close/claim race tests, direct browser denial,
 fragment/network/storage canary evidence, and independent browser sessions.
+
+## Hosted build evidence
+
+Vercel Preview deployment `dpl_68GdZV6r4QcgGfJBL5SZmB1Fxyeq` for commit
+`cb6866f` reached `READY`. The Vercel runtime-error summary reported no error
+cluster in the following 30-minute check. This verifies the build and hosting
+path only; it cannot exercise the deliberately unconfigured server-only v2
+routes.
