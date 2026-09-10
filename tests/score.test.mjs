@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { classifySkunk, deriveScore, formatSignedNet, isScoreEntryReady } from "../src/lib/score.ts";
+import { classifySkunk, deriveScore, formatScorecardSpread, formatSignedNet, isScoreEntryReady } from "../src/lib/score.ts";
 
 test("score boundaries classify informal skunk bands and derive game points", () => {
   const cases = [
@@ -66,6 +66,14 @@ test("signed net formatter handles positive, zero, and negative totals", () => {
   assert.equal(formatSignedNet(38), "+38");
   assert.equal(formatSignedNet(0), "0");
   assert.equal(formatSignedNet(-12), "-12");
+});
+
+test("scorecard display preserves ACC leading-zero convention for one-digit game spreads", () => {
+  assert.equal(formatScorecardSpread(1), "01");
+  assert.equal(formatScorecardSpread(8), "08");
+  assert.equal(formatScorecardSpread(10), "10");
+  assert.equal(formatScorecardSpread(121), "121");
+  for (const spread of [0, 122, 1.5]) assert.throws(() => formatScorecardSpread(spread), RangeError);
 });
 
 test("score-entry readiness requires both a valid margin and winner", () => {

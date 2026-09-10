@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { deriveScore, formatSignedNet, isScoreEntryReady } from "../lib/score";
+import { deriveScore, formatScorecardSpread, formatSignedNet, isScoreEntryReady } from "../lib/score";
 
 const keypad = [1, 2, 3, 4, 5, 6, 7, 8, 9, "clear", 0, "backspace"] as const;
 const eventGames = 12;
@@ -97,11 +97,12 @@ function List({ rows }: { rows: string[][] }) { return <div className="list">{ro
 
 function Scorecard({ score, pending }: { score: ReturnType<typeof deriveScore> | null; pending: boolean }) {
   const columns = <colgroup><col className="game-number" /><col className="game-points" /><col className="spread-plus" /><col className="spread-minus" /><col className="opponent-name" /><col className="verification-id" /></colgroup>;
+  const spreadCell = (value: number) => value === 0 ? "—" : formatScorecardSpread(value);
   const rows = Array.from({ length: eventGames }, (_, index) => {
     const number = index + 1;
-    const saved = number === 1 ? [2, 10, "—", "Steve Hall", "A-8"] : number === 2 ? [2, 11, "—", "Robin Lee", "B-3"] : null;
+    const saved = number === 1 ? { points: 2, plus: 10, minus: 0, opponent: "Steve Hall", id: "A-8" } : number === 2 ? { points: 2, plus: 11, minus: 0, opponent: "Robin Lee", id: "B-3" } : null;
     const current = number === 3;
-    return <tr key={number} className={current ? "current" : undefined}><th scope="row">{number}</th><td>{current && score ? score.playerGamePoints : saved?.[0] ?? "—"}</td><td>{current && score ? score.playerPlus || "—" : saved?.[1] ?? "—"}</td><td>{current && score ? score.playerMinus || "—" : saved?.[2] ?? "—"}</td><td>{current ? "Steve Hall" : saved?.[3] ?? "—"}</td><td>{current ? "A-8" : saved?.[4] ?? "—"}</td></tr>;
+    return <tr key={number} className={current ? "current" : undefined}><th scope="row">{number}</th><td>{current && score ? score.playerGamePoints : saved?.points ?? "—"}</td><td>{current && score ? spreadCell(score.playerPlus) : saved ? spreadCell(saved.plus) : "—"}</td><td>{current && score ? spreadCell(score.playerMinus) : saved ? spreadCell(saved.minus) : "—"}</td><td>{current ? "Steve Hall" : saved?.opponent ?? "—"}</td><td>{current ? "A-8" : saved?.id ?? "—"}</td></tr>;
   });
   return (
     <div className="scorecard-frame">

@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 scorecard leading-zero format correction
+
+- The current 2025 ACC Rulebook source review identified a small paper-card
+  display convention missing from the prototype: each populated single-digit
+  per-game spread must render as `01` through `09`. The shared score helper
+  now applies this convention only to individual paper-style card cells;
+  stored values and totals remain integers. Regression coverage rejects invalid
+  display inputs. Local checks pass: **115 tests**, lint, production build,
+  workspace and private-handoff verification, dependency audit, and diff
+  check. Browser visual verification is still an explicit release gate because
+  the available browser bridge timed out. See
+  `docs/quality/2026-09-10-scorecard-leading-zero-format.md`.
+
 ## 2026-09-10 ACC public rule-source review
 
 - Verified current public ACC sources for the 2025 Rulebook, cross-checking,

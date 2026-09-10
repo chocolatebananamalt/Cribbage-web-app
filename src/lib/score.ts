@@ -21,6 +21,18 @@ export function formatSignedNet(value: number): string {
   return value > 0 ? `+${value}` : String(value);
 }
 
+/**
+ * ACC Rule 12.1's paper-scorecard convention: a one-digit per-game spread
+ * is written with a leading zero. This is display-only; persisted arithmetic
+ * remains an integer.
+ */
+export function formatScorecardSpread(value: number): string {
+  if (!Number.isInteger(value) || value < 1 || value > 121) {
+    throw new RangeError("Scorecard spread must be a whole number from 1 through 121.");
+  }
+  return String(value).padStart(2, "0");
+}
+
 export function isScoreEntryReady(margin: number, winner: unknown): boolean {
   return Number.isInteger(margin) && margin >= 1 && margin <= 121 && (winner === "player" || winner === "opponent");
 }

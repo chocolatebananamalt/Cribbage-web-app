@@ -30,6 +30,10 @@ The canonical rule fixtures and financial schedules remain a separate task.
 
 - The existing 1–121 margin boundary and derived 0/2/3 game points match the
   public scoring baseline.
+- Rule 12.1's scorecard convention requires a leading zero for a one-digit
+  per-game spread. The display contract is therefore `01` through `09` for a
+  populated game-row spread cell, while stored and calculated values remain
+  integers.
 - Separate plus/minus values are necessary: net spread and plus points have
   distinct places in the qualifying hierarchy.
 - The ranking calculation must never substitute minus points as another
