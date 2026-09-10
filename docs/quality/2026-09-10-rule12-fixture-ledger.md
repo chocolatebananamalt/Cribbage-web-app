@@ -34,7 +34,7 @@ and any direct signed-in caller bypassing the approved server workflow.
 | 12.2(f) | If only one card says win but both spreads are in the same column, that win stands and the incorrect card moves to the appropriate column. | Do not alter the correctly recorded win. | Pure source-bound oracle pass; database/workflow not implemented. |
 | 12.2(g) | Any discrepancy correction adjusts affected game-point and spread-point totals. | Totals, standings input, qualification preview, and result version derive from adjudicated cards. | Pure source-bound derivation/recalculation signal pass; database/workflow not implemented. |
 | 12.2(h) | If an apparent qualifier's discrepancy is already adverse (15-point win versus 20-point loss), both cards stand as recorded. | A no-change decision remains append-only evidence and produces no score rewrite. | Pure source-bound oracle pass; database/workflow not implemented. |
-| 12.2(i) | A discrepancy changing qualification fact or position notifies the affected player with relevant card evidence. | Notification is queued/audited without exposing private correction reasons publicly. | Pure source-bound notification condition pass; delivery/audit/workflow not implemented. |
+| 12.2(i) | A discrepancy changing qualification fact or position notifies the affected player with relevant card evidence. | Notification is attached to the underlying (a)-(f) correction and is queued/audited without exposing private correction reasons publicly. | Pure source-bound notification condition pass; delivery/audit/workflow not implemented. |
 
 ## Current evidence and honest boundary
 

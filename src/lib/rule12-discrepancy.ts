@@ -10,7 +10,13 @@
  * DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD.
  */
 
-export type Rule12Case = "a" | "b" | "c" | "d" | "e" | "f" | "h" | "i";
+/**
+ * Rule 12.2(a)-(f) and (h) state the corrective disposition. Rule 12.2(g)
+ * is the resulting total adjustment and (i) is a notice duty when that
+ * correction changes qualifying. Neither (g) nor (i) is a standalone
+ * scorecard disposition.
+ */
+export type Rule12Case = "a" | "b" | "c" | "d" | "e" | "f" | "h";
 export type CardOutcome = "win" | "loss";
 export type RecordedSpreadColumn = "plus" | "minus" | "blank";
 
@@ -72,11 +78,12 @@ function cardsById(cards: readonly Rule12CardClaim[]): readonly [Rule12CardClaim
 }
 
 function final(ruleCase: Rule12Case, first: AdjudicatedCardProjection, second: AdjudicatedCardProjection, qualificationChanged: boolean): Rule12Adjudication {
+  require(!(ruleCase === "h" && qualificationChanged), "Rule 12.2(h) makes no scorecard change and cannot itself change qualifying.");
   return {
     ruleCase,
     cards: [first, second],
-    totalsMustRecalculate: ruleCase !== "h" && ruleCase !== "i",
-    qualificationNoticeRequired: ruleCase === "i" && qualificationChanged,
+    totalsMustRecalculate: ruleCase !== "h",
+    qualificationNoticeRequired: qualificationChanged,
   };
 }
 
@@ -147,7 +154,5 @@ export function adjudicateRule12Fixture(
     return final(ruleCase, projection(first, first.recordedOutcome, firstMargin), projection(second, second.recordedOutcome, secondMargin), qualificationChanged);
   }
 
-  require(ruleCase === "i", "Unsupported Rule 12 fixture case.");
-  require(qualificationChanged, "Rule 12.2(i) applies only when qualification fact or position changes.");
-  return final(ruleCase, projection(first, first.recordedOutcome, firstMargin), projection(second, second.recordedOutcome, secondMargin), qualificationChanged);
+  throw new RangeError("Unsupported Rule 12 fixture case.");
 }

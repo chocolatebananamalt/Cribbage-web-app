@@ -21,6 +21,11 @@ It has no database client, route, user interface, release switch, or authority
 to change a game, card, standing, result, or export. Rule 12 correction routes
 remain hard-disabled.
 
+Paragraph (i) is modeled as a condition on the underlying corrective case,
+not as an independent score disposition: when that correction changes the
+fact or position of qualifying, the oracle requires the affected-player notice
+condition. The no-change (h) example cannot itself produce that condition.
+
 ## Source and tested cases
 
 The cached source is `public/rulebook/acc-rulebook-2025.pdf`, SHA-256
@@ -35,7 +40,7 @@ The tests cover the exact Rule 12.2 examples and their rejection conditions:
 | (d)-(f) | Plus/minus column conflicts derive the mandated winner/loss columns and game points. |
 | (g) | Every score-changing disposition signals recalculation and returns derived totals. |
 | (h) | The documented 15-win/20-loss already-adverse result remains unchanged. |
-| (i) | A qualification change requires an explicit affected-player notice condition. |
+| (i) | A qualification change on the underlying correction requires an explicit affected-player notice condition. |
 
 Malformed margins, duplicate/no discrepancy inputs, two blank cards, and
 non-applicable cases are rejected by the oracle tests.

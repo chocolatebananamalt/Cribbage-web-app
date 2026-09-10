@@ -48,21 +48,24 @@ test("Rule 12.2(d), (e), and (f) derive corrected columns and game points", () =
   ]);
 });
 
-test("Rule 12.2(h) preserves an already adverse apparent qualifier and (i) requires a qualifying change notice", () => {
+test("Rule 12.2(h) preserves an already adverse apparent qualifier", () => {
   const h = adjudicateRule12Fixture("h", [card("a", true, "win", 15, "plus"), card("b", false, "loss", 20, "minus")]);
   assert.deepEqual(values(h), [
     { id: "a", outcome: "win", margin: 15, plusPoints: 15, minusPoints: 0, gamePoints: 2 },
     { id: "b", outcome: "loss", margin: 20, plusPoints: 0, minusPoints: 20, gamePoints: 0 },
   ]);
   assert.equal(h.totalsMustRecalculate, false);
-  const i = adjudicateRule12Fixture("i", [card("a", true, "win", 16, "plus"), card("b", false, "loss", 17, "minus")], { qualificationChanged: true });
-  assert.equal(i.qualificationNoticeRequired, true);
-  assert.equal(i.totalsMustRecalculate, false);
+});
+
+test("Rule 12.2(i) adds the affected-player notice to the underlying correction", () => {
+  const result = adjudicateRule12Fixture("a", [card("a", true, "win", 21, "plus"), card("b", false, "loss", 16, "minus")], { qualificationChanged: true });
+  assert.equal(result.qualificationNoticeRequired, true);
+  assert.equal(result.totalsMustRecalculate, true);
+  assert.throws(() => adjudicateRule12Fixture("h", [card("a", true, "win", 15, "plus"), card("b", false, "loss", 20, "minus")], { qualificationChanged: true }), /cannot itself change qualifying/);
 });
 
 test("Rule 12 fixture oracle rejects malformed or non-applicable cases", () => {
   assert.throws(() => adjudicateRule12Fixture("a", [card("a", true, "win", 17, "plus"), card("b", false, "loss", 17, "minus")]), /requires a discrepancy/);
   assert.throws(() => adjudicateRule12Fixture("c", [card("a", false, "win", null, "blank"), card("b", false, "loss", null, "blank")]), /exactly one blank/);
-  assert.throws(() => adjudicateRule12Fixture("i", [card("a", true, "win", 16, "plus"), card("b", false, "loss", 16, "minus")]), /applies only/);
   assert.throws(() => adjudicateRule12Fixture("d", [card("a", false, "win", 122, "plus"), card("b", false, "win", 16, "minus")]), /both recorded spreads/);
 });

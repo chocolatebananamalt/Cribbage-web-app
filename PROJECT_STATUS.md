@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 Rule 12 notification-model correction
+
+- Re-read the exact cached Rule 12.2 source text and corrected the fixture
+  oracle's model of paragraph (i): it is an affected-player notification duty
+  attached to a qualifying-changing scorecard correction, not a standalone
+  scoring disposition. The pure oracle now requires an underlying (a)-(f)
+  outcome before it can signal the notice, and rejects incorrectly treating
+  the no-change (h) example as a qualifying change. Focused lint and 24
+  Rule-12/schema checks pass. This remains a non-authoritative safety fixture;
+  no correction workflow, database, pilot setting, or user record changed.
+
 ## 2026-09-10 Rule 12 source-fixture oracle
 
 - Validated the exact cached 2025 Rule 12.2 text and added a pure,
