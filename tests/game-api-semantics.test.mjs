@@ -451,6 +451,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /Game Points/);
   assert.match(liveScore, /Spread Points/);
   assert.match(liveScore, /<ResultPreview context=\{context\} score=\{derived\} \/>/);
+  assert.match(liveScore, /Review Current Game Result/);
+  assert.match(liveScore, /Review Result/);
+  assert.match(liveScore, /Edit Result/);
+  assert.match(liveScore, /setReviewing\(true\)/);
+  assert.match(liveScore, /setReviewing\(false\)/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];

@@ -9,8 +9,10 @@
   the requested two-player result preview before submission: both outcomes,
   Game Points, and signed Spread Points. Regression coverage asserts the live
   route retains all three labels, passes the derived skunk level directly to
-  the rendering helper, and displays the two-record preview. Phone/desktop
-  browser visual evidence remains a release gate.
+  the rendering helper, and displays the two-record preview. The approved
+  non-authoritative `Review Result` → `Review Current Game Result` → `Edit
+  Result` path now exists before first submission; a persisted retry remains
+  immutable. Phone/desktop browser visual evidence remains a release gate.
 
 ## 2026-09-10 live score-entry permanent verification ID
 

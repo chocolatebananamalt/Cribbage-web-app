@@ -193,7 +193,9 @@ test('protected screens offer a shared-device clear and local sign-out boundary'
   assert.match(storage, /"acc-correction:"/);
   assert.match(storage, /"registration-operation:"/);
   assert.match(storage, /storage\.removeItem\(key\)/);
-  assert.equal((protectedScreens.match(/SharedDeviceSignOut/g) ?? []).length, 8);
+  // The score-entry component has distinct entry and review render paths; both
+  // must preserve the clear-and-sign-out control for a shared device.
+  assert.equal((protectedScreens.match(/SharedDeviceSignOut/g) ?? []).length, 9);
 });
 
 test('shared-device cleanup recognizes the actual registration key and propagates storage failures', async () => {
