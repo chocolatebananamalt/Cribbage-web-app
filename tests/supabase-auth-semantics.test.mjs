@@ -92,10 +92,12 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   assert.match(page, /encodeURIComponent\(next\)/);
   assert.match(page, /auth\/callback/);
   assert.match(page, /type="email"/);
+  assert.match(page, /passwordless email sign-in/);
+  assert.doesNotMatch(page, /Authentication is not connected/);
   assert.match(read('src/app/page.tsx'), /export default|TournamentDashboard/);
 });
 
-test('the synthetic review dashboard is unavailable from a production deployment', async () => {
+test('the synthetic review dashboard is unavailable from a production deployment while production offers safe sign-in discovery', async () => {
   const { allowsReviewPrototype } = await import(pathToFileURL(path.join(root, 'src/lib/review-prototype-boundary.ts')).href);
   assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'production' }), false);
   assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-q81o14eoc-cribbage-app.vercel.app' }), true);
@@ -107,7 +109,10 @@ test('the synthetic review dashboard is unavailable from a production deployment
   assert.match(page, /await headers\(\)/);
   assert.match(page, /requestHeaders\.get\("host"\)/);
   assert.match(page, /allowsReviewPrototype/);
-  assert.match(page, /notFound\(\)/);
+  assert.match(page, /return <TournamentDashboard/);
+  assert.match(page, /href="\/sign-in"/);
+  assert.match(page, /Tournament registration uses the QR code or registration link/);
+  assert.doesNotMatch(page, /notFound\(/);
 });
 
 test('proxy refreshes claims and protected tournament data requires server membership', () => {

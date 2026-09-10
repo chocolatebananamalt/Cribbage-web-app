@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 production entry-point repair
+
+- Closed a launch usability gap: production root requests no longer become a
+  404 merely because the synthetic review dashboard is correctly disabled
+  there. They now offer a neutral passwordless sign-in entrance, while the
+  dashboard remains preview/local-only. The stale sign-in message claiming
+  configuration was not connected was also removed. Full automated tests,
+  lint, and production build pass. Browser visual evidence remains a release
+  gate because the local browser verifier is unavailable and Vercel is
+  currently rate-limiting new builds. See
+  `docs/quality/2026-09-10-production-entry-point-repair.md`.
+
 ## 2026-09-10 pilot database surface re-audit
 
 - Re-ran the pilot Supabase security review and directly inspected table and

@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ACC Tournament Desk",
-  description: "Accessible tournament operations prototype for American Cribbage Congress events.",
+  description: "Accessible tournament operations for American Cribbage Congress events.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

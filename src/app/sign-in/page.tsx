@@ -44,7 +44,7 @@ function SignInForm() {
         </form>
         {status ? <p role="status">{status}</p> : null}
         {error ? <p className="error-text" role="alert">{error}</p> : null}
-        <p className="auth-note">Authentication is not connected until the two public Supabase environment variables are configured.</p>
+        <p className="auth-note">This app uses passwordless email sign-in.</p>
       </section>
     </main>
   );
