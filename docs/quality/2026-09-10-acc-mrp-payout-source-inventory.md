@@ -27,6 +27,11 @@ mistaken for a current, production-authoritative financial rule.
 5. The public [payout-percentages PDF](https://www.cribbage.org/NewSite/sched/Payout-Percentages-25_120-Players.pdf)
    is labelled as a **sample** in the resource index. The text extraction did
    not expose its percentage table, so it is not a fixture source yet.
+6. A fresh public-site check on 2026-09-10 confirms that the ACC's 2026/2027
+   national standings and recent 2026 player-result records actively display
+   MRP values. This establishes that MRP recording is current operational
+   practice, but it does not identify a current effective calculation table,
+   Q-pool rule, or payout-rounding fixture.
 
 ## Safe application consequence
 
@@ -57,5 +62,7 @@ mistaken for a current, production-authoritative financial rule.
   Consolation sheets.
 - Reviewed the existing product requirements and finalization boundary to
   confirm this inventory does not relax any official-result gate.
+- Checked current public ACC standings and 2026 player-result records to
+  distinguish active MRP recording from an authoritative calculation schedule.
 
 This is source-inventory evidence, not financial-calculation certification.

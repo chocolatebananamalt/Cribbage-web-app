@@ -76,7 +76,10 @@
   official financial calculations. The documented gates still prevent MRP,
   Q-pool, payout, result finalization, and ACC export from being calculated or
   published without current ACC-authorized schedules and executable fixtures.
-  See `docs/quality/2026-09-10-acc-mrp-payout-source-inventory.md`.
+  A later fresh public-site check confirms that 2026 standings and player
+  records actively display MRP values, but it does not supply the missing
+  current calculation/payout fixtures. See
+  `docs/quality/2026-09-10-acc-mrp-payout-source-inventory.md`.
 
 ## 2026-09-10 Vercel preview build-rate limit
 
