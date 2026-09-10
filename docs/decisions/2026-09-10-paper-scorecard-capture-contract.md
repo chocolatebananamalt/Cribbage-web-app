@@ -13,11 +13,28 @@ authority or replacement for the independent-entry/confirmation state machine.
 - The system binds the capture to the game and permanent verification ID.
   OCR produces a confidence-labelled editable draft. The cross checker must
   review the image and explicitly accept or correct the draft before any
-  comparison occurs.
+  comparison occurs. The accepted draft is a **reviewable digital
+  transcription** of that specific paper card, linked to its image and audit
+  record; it is not the player's canonical digital scorecard or an automatic
+  score correction.
 - A paper/digital game compares the reviewed paper draft with the separately
-  submitted digital result. A paper/paper game captures and reviews both cards
-  independently, then compares them. Missing, unreadable, unlinked,
-  low-confidence, and mismatched results go to the existing cross-check queue.
+  submitted digital result. When that digital result is already
+  server-verified, an exact reviewed paper match records a completed
+  paper-evidence comparison and removes that card from the cross-check
+  exception queue. It never turns a single unverified digital entry into a
+  verified result.
+- A paper/paper game captures and reviews **both** players' cards separately,
+  then compares the two reviewed transcriptions. Exact matches may be marked
+  `paper evidence complete` for the authorized cross-check workflow; they do
+  not silently become an authoritative score, change standings, or bypass the
+  tournament's required paper-verification/dispute policy. Missing,
+  unreadable, unlinked, low-confidence, and mismatched results go to the
+  existing cross-check queue.
+- The cross-check dashboard MUST prioritize only exceptions after a scan batch:
+  unreadable cards, uncertain OCR fields, mismatches, missing counterpart
+  cards, unverified digital results, and any card selected for required
+  audit sampling. It MUST NOT imply that paper/paper games are the only games
+  that can need follow-up.
 - A scan, OCR result, image, or staff transcription by itself never verifies a
   game, satisfies an assigned player’s entry or confirmation, changes a
   scorecard, changes standings, or creates an export result.

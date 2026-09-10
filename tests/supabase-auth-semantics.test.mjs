@@ -379,9 +379,10 @@ test('public registration remains release-gated and sends only a derived digest 
 });
 
 test('registration page clears its fragment before hydration and uses no browser persistence', () => {
-  const bootstrap = read('public/registration-bootstrap.js'); const page = read('src/app/register/page.tsx'); const form = read('src/app/register/registration-form.tsx'); const config = read('next.config.ts');
+  const bootstrap = read('public/registration-bootstrap.js'); const page = read('src/app/register/page.tsx'); const form = read('src/app/register/registration-form.tsx'); const config = read('next.config.ts'); const proxy = read('src/proxy.ts'); const sessionProxy = read('src/lib/supabase/proxy.ts');
   assert.match(bootstrap, /history\.replaceState/); assert.match(page, /strategy="beforeInteractive"/); assert.match(form, /delete window\.__accRegistrationCredential/);
-  assert.doesNotMatch(bootstrap + form, /localStorage|sessionStorage/); assert.match(config, /source: "\/register"/); assert.match(config, /Content-Security-Policy/);
+  assert.doesNotMatch(bootstrap + form, /localStorage|sessionStorage/); assert.match(config, /Referrer-Policy/);
+  assert.match(page, /await connection\(\)/); assert.match(proxy, /registrationContentSecurityPolicy/); assert.match(proxy, /request\.nextUrl\.pathname !== "\/register"/); assert.match(proxy, /requestHeaders\.set\("x-nonce", nonce\)/); assert.match(proxy, /response\.headers\.set\("Content-Security-Policy", policy\)/); assert.match(proxy, /'strict-dynamic'/); assert.match(proxy, /base-uri 'none'/); assert.match(sessionProxy, /requestHeaders = new Headers\(request\.headers\)/); assert.match(sessionProxy, /NextResponse\.next\(\{ request: \{ headers: requestHeaders \} \}\)/);
 });
 
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {

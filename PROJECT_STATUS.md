@@ -1,12 +1,24 @@
 # Project Status
 
+## 2026-09-10 registration fragment CSP repair
+
+- A hosted response review caught that the prior static `/register` Content
+  Security Policy would block Next.js's own inline bootstrap/hydration scripts.
+  It has been replaced with a dynamic, per-request nonce policy forwarded by
+  the proxy; the registration route is explicitly dynamic so Next.js can
+  attach that nonce to its genuine scripts. The Supabase session proxy
+  preserves the forwarded nonce headers when it refreshes cookies. Local lint,
+  **92** tests, production build, and diff validation pass; hosted response and
+  browser lifecycle proof remains required before the registration gate can be
+  enabled. See `docs/quality/2026-09-10-registration-fragment-csp-repair.md`.
+
 ## 2026-09-10 fragment-only registration browser handoff
 
 - Added the release-gated `/register` page and a self-hosted pre-hydration
   bootstrap script. It validates and removes a `link-id.secret` fragment from
   the address bar before the app hydrates, holds it only briefly in memory,
-  then deletes it before submission. The page has a route-specific restrictive
-  content policy and no local/session-storage use.
+  then deletes it before submission. It uses no local/session-storage. Its
+  nonce-based restrictive content policy is recorded separately above.
 - Lint, **92** tests, and the production build pass. Real browser network,
   history/BFCache, error-path, and independent-session proof still remain
   mandatory before enabling public registration.
