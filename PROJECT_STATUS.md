@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 CI action-runtime compatibility repair
+
+- GitHub Actions reported that the clean-clone `Verify` workflow still used
+  Node-20 action wrappers, which GitHub was temporarily forcing onto Node 24.
+  The workflow now uses `actions/checkout@v7`, `pnpm/action-setup@v6`, and
+  `actions/setup-node@v6`, with an executable regression check to prevent a
+  downgrade.
+- GitHub run `34430545807` passed all frozen-install, production-audit, lint,
+  test, build, and workspace-verification steps on commit `1bbc496`, without
+  the preceding deprecated-runtime annotation.
+
 ## 2026-09-10 legacy registration-token path release blocker
 
 - The current public registration routes accept their bearer value in the URL
