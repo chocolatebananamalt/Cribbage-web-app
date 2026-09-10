@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 ACC MRP and payout source inventory
+
+- Reviewed the public ACC Director Resources index and its Main,
+  Consolation, Double-Elimination, and sample-payout references. The Main and
+  Consolation MRP sheets explicitly say they were effective August 1, 2016,
+  so they are preserved as source inventory rather than enabled as current
+  official financial calculations. The documented gates still prevent MRP,
+  Q-pool, payout, result finalization, and ACC export from being calculated or
+  published without current ACC-authorized schedules and executable fixtures.
+  See `docs/quality/2026-09-10-acc-mrp-payout-source-inventory.md`.
+
 ## 2026-09-10 Vercel preview build-rate limit
 
 - The Vercel Git deployment for the current branch is paused by the hosting
