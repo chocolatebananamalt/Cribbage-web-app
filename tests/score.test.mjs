@@ -115,6 +115,14 @@ test("ACC qualification and byes round up only the qualifier count, never to the
   assert.equal(preview.qualifierCount, 27);
   assert.equal(preview.bracketSize, 32);
   assert.equal(preview.firstRoundByes, 5);
+  assert.equal(preview.firstRoundParticipants, 22);
+
+  const thirtyThreeQualifiers = Array.from({ length: 132 }, (_, index) => ({ id: `thirty-three-${index}`, displayName: `Player ${index}`, gamePoints: 500 - index, gamesWon: 0, netSpreadPoints: 0, positiveSpreadPoints: 0 }));
+  const largePreview = previewQualification(thirtyThreeQualifiers);
+  assert.equal(largePreview.qualifierCount, 33);
+  assert.equal(largePreview.bracketSize, 64);
+  assert.equal(largePreview.firstRoundByes, 31);
+  assert.equal(largePreview.firstRoundParticipants, 2);
 });
 
 test("an exact numeric tie is never silently finalized and a cutoff tie is visibly unresolved", () => {

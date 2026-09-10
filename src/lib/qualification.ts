@@ -13,6 +13,8 @@ export type QualificationPreview = {
   qualifierCount: number;
   bracketSize: number;
   firstRoundByes: number;
+  /** Rule 13.2(d): the remaining qualifiers play in the first round. */
+  firstRoundParticipants: number;
   finalizable: boolean;
   ranked: Array<QualificationCandidate & { numericRank: number; qualificationStatus: QualificationStatus }>;
   unresolvedTies: Array<{
@@ -100,10 +102,12 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
   }
 
   const bracketSize = nextFullBracketSize(qualifierCountValue);
+  const firstRoundByes = bracketSize - qualifierCountValue;
   return {
     qualifierCount: qualifierCountValue,
     bracketSize,
-    firstRoundByes: bracketSize - qualifierCountValue,
+    firstRoundByes,
+    firstRoundParticipants: qualifierCountValue - firstRoundByes,
     finalizable: !hasTie,
     ranked: output,
     unresolvedTies,

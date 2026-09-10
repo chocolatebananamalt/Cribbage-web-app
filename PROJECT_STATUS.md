@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-10 Rule 13.2 first-round bracket invariant
+
+- The qualification preview now reports the exact number of first-round
+  participants after top qualifiers receive the Rule 13.2 byes. Fixtures cover
+  both 27-of-108 and 33-of-132 examples, preventing an interface from
+  accidentally treating the whole qualifier field as first-round players. It
+  remains a preview only and does not create a bracket or official result.
+
 ## 2026-09-10 Rule 13.1 playoff-absence fixture boundary
 
 - Added a separate, source-bound playoff absence timing fixture. It keeps the
