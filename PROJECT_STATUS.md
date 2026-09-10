@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 pilot foreign-key index coverage
+
+- The pilot Supabase performance advisor identified 24 missing foreign-key
+  index prefixes. Migration `0089` adds the exact non-destructive B-tree
+  coverage indexes and was applied successfully to the pilot. A fresh advisor
+  run no longer reports an unindexed foreign key; its remaining unused-index
+  notices are expected on the low-traffic pilot and do not warrant destructive
+  pruning. The live security review also confirms the inspected authenticated
+  RPCs have no anonymous/PUBLIC execute grant and retain an empty
+  `search_path`. Local tests pass: **124 tests** and lint. See
+  `docs/quality/2026-09-10-pilot-foreign-key-index-coverage.md`.
+
 ## 2026-09-10 all live mutation request bounds
 
 - Extended streaming JSON request limits across every implemented API POST

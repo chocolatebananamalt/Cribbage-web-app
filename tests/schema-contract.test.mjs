@@ -100,6 +100,20 @@ test('advisor baseline covers listed private-schema foreign keys without opening
   assert.doesNotMatch(baseline, /grant select on table|create policy/);
 });
 
+test('every foreign-key prefix reported by the pilot advisor has a durable local coverage repair', () => {
+  const repair = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0089_foreign_key_coverage.sql'), 'utf8');
+  for (const prefix of [
+    'initial_seating_assignments(publication_id, tournament_id)',
+    'initial_seating_assignments(roster_entry_id, tournament_id)',
+    'registration_link_lifecycle_events(operation_receipt_id, tournament_id)',
+    'registration_link_operation_conflicts(prior_receipt_id, prior_receipt_tournament_id)',
+    'roster_check_in_events(roster_entry_id, tournament_id)',
+    'tournament_setup_operation_conflicts(prior_receipt_id, tournament_id, actor_profile_id)',
+    'tournament_setup_q_pool_versions(setup_event_version_id, tournament_id, setup_revision_id)',
+  ]) assert.match(repair, new RegExp(prefix.replaceAll('(', '\\(').replaceAll(')', '\\)')));
+  assert.doesNotMatch(repair, /drop\s+(table|index)|delete\s+from|grant\s+/i);
+});
+
 test('private append-only foreign keys retain covering indexes without granting access', () => {
   const indexes = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0058_private_foreign_key_indexes.sql'), 'utf8').toLowerCase();
   const executableIndexes = indexes.replace(/^--.*$/gm, '');
