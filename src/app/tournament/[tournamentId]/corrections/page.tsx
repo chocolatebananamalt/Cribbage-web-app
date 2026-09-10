@@ -5,8 +5,10 @@ import { getCorrectionWorkspace } from "../../../../lib/corrections/workspace";
 import CorrectionsClient from "./corrections-client";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
 import Link from "next/link";
+import { rule12CorrectionEnabled } from "../../../../lib/api/rule12-correction-release";
 
 export default async function CorrectionsPage({ params }: { params: Promise<{ tournamentId: string }> }) {
+  if (!rule12CorrectionEnabled()) notFound();
   const { tournamentId } = await params;
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);

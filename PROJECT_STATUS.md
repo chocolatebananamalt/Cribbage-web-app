@@ -63,6 +63,19 @@
   playoff tie resolution explicit release gates. No official calculation,
   correction, payout, or export boundary was relaxed.
 
+## 2026-09-10 Rule 12.2 correction safety suspension
+
+- The detailed Rule 12.2 review exposed a material model conflict: its
+  apparent-qualifier and no-harm/no-foul examples can retain different
+  adjudicated values on the two scorecards, while the preliminary correction
+  writer forces both records into one reciprocal canonical result. That writer
+  is not safe to present as ACC-complete. It is now default-off at the app
+  boundary, and migration `0096` revokes direct authenticated mutation grants
+  until an independent-card replacement and all nine source fixtures exist.
+  The revocation was applied and catalog-verified only in the separate
+  synthetic test project; the shared pilot was not changed. See
+  `docs/decisions/2026-09-10-rule12-independent-card-corrections.md`.
+
 ## 2026-09-10 account-activation lock-order repair
 
 - Repaired a pre-release deadlock risk in the un-applied account-activation

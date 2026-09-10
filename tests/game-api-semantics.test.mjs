@@ -330,6 +330,9 @@ test('legacy lifecycle RPCs are not directly executable by signed-in browser ses
 test('correction API handlers validate request shapes and discriminate accepted rejection from operation failure', () => {
   const proposal = read('src/app/api/v1/games/[id]/corrections/route.ts');
   const review = read('src/app/api/v1/corrections/[id]/reviews/route.ts');
+  const correctionPage = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
+  const correctionRelease = read('src/lib/api/rule12-correction-release.ts');
+  const correctionSuspension = read('database/migrations/0096_suspend_incomplete_rule12_corrections.sql');
   const reconciliation = read('src/app/api/v1/corrections/[id]/reconciliation/route.ts');
   const contract = read('src/lib/api/correction.ts');
   for (const source of [proposal + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), review + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts')]) {
@@ -340,6 +343,12 @@ test('correction API handlers validate request shapes and discriminate accepted 
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
   }
   assert.match(proposal, /propose_game_correction/);
+  assert.match(proposal, /rule12CorrectionEnabled\(\)/);
+  assert.match(review, /rule12CorrectionEnabled\(\)/);
+  assert.match(correctionPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
+  assert.match(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED === "approved"/);
+  assert.match(correctionSuspension, /revoke all on function public\.propose_game_correction[\s\S]*from authenticated/);
+  assert.match(correctionSuspension, /revoke all on function public\.review_game_correction[\s\S]*from authenticated/);
   assert.match(proposal, /expectedGameVersion/);
   assert.match(proposal, /winnerSide/);
   assert.match(proposal, /maxReasonLength = 500/);
