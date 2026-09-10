@@ -44,6 +44,10 @@ export type RegistrationLinkState =
     version: number;
   };
 
+export type RegistrationLinkCloseResult =
+  | { status: "closed"; linkId: string; state: "closed"; version: number }
+  | { status: "rejected"; code: "link_unavailable" | "idempotency_conflict" };
+
 function own(value: object, keys: string[]) {
   return Object.keys(value).length === keys.length && keys.every((key) => key in value);
 }
@@ -83,6 +87,19 @@ export function isRegistrationLinkCloseRequest(value: unknown): value is Registr
   if (!value || typeof value !== "object" || !own(value, ["expectedLinkId", "expectedVersion", "operationId"])) return false;
   const request = value as Record<string, unknown>;
   return isExpectedLink(request) && isUuid(request.operationId);
+}
+
+export function isRegistrationLinkCloseResult(value: unknown): value is RegistrationLinkCloseResult {
+  if (!value || typeof value !== "object") return false;
+  const result = value as Record<string, unknown>;
+  if (result.status === "closed") {
+    return own(result, ["status", "linkId", "state", "version"])
+      && isUuid(result.linkId) && result.state === "closed"
+      && Number.isSafeInteger(result.version) && (result.version as number) > 0;
+  }
+  return own(result, ["status", "code"])
+    && result.status === "rejected"
+    && (result.code === "link_unavailable" || result.code === "idempotency_conflict");
 }
 
 export function isRegistrationLinkState(value: unknown): value is RegistrationLinkState {

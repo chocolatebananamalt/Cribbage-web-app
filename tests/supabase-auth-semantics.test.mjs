@@ -424,6 +424,20 @@ test('registration-link close is a service-only compare-and-swap with durable sa
   assert.match(close, /grant execute on function public\.close_registration_link_v2.*to service_role/);
 });
 
+test('director close route is release-gated, strict, and server-only', () => {
+  const route = read('src/app/api/v1/tournaments/[id]/registration-links/close/route.ts');
+  const contract = read('src/lib/api/registration-link.ts');
+  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /readRegistrationLinkJson/);
+  assert.match(route, /isRegistrationLinkCloseRequest/);
+  assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /close_registration_link_v2/);
+  assert.match(route, /isRegistrationLinkCloseResult/);
+  assert.match(contract, /status: "closed"; linkId: string; state: "closed"; version: number/);
+  assert.doesNotMatch(route, /from\("tournament_registration_link/);
+});
+
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
   const route = read('src/app/api/v1/registration/claims/route.ts');
   const contract = read('src/lib/api/public-registration-v2.ts');
