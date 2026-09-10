@@ -1,6 +1,6 @@
 # ACC Rule and Operations Confirmation Checklist
 
-**Last updated:** 2026-09-10  
+**Last updated:** 2026-09-10
 **Purpose:** Turn published ACC requirements into dated, testable application
 rules without treating a prototype or a remembered practice as an official
 rule.
