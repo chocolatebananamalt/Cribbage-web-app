@@ -13,6 +13,9 @@
   longer reports anonymous executable functions. Public registration is
   deliberately unavailable until the separately designed fragment-only v2
   lifecycle is fully implemented and independently tested.
+- Vercel Preview deployment `dpl_2iWed624oBafxNrjsR8Cp9eBPagg` reached
+  `READY`; its former `/register/[token]` path returns an application 404 and
+  Vercel reported no runtime-error cluster in the following check.
 
 ## 2026-09-10 registration-link token boundary
 

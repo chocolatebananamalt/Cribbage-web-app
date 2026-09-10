@@ -44,6 +44,14 @@ pnpm verify:handoff       PASS
 git diff --check          PASS
 ```
 
+## Hosted verification
+
+Vercel Preview deployment `dpl_2iWed624oBafxNrjsR8Cp9eBPagg` for commit
+`c4e33ce` reached `READY`. Fetching the former dynamic-path shape
+`/register/not-a-valid-registration-token` returned the application 404 page,
+not a registration page. The Vercel runtime-error summary for the project had
+no error cluster in the preceding 30 minutes.
+
 ## Remaining boundary
 
 The app has no public registration flow now. A production-capable v2 flow
