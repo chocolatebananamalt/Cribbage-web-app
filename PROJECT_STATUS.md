@@ -16,8 +16,10 @@
   redemption creates a pending witnessed request and phrase, never an account
   link. Its pending request now retains a separate internal link-operation ID
   and a service-only equivalent of the existing link writer, ready for the
-  atomic director-approval transaction. The feature is still unavailable: no
-  route, QR, director approval, or pilot migration has been enabled. See
+  atomic director-approval transaction. That transaction now requires the
+  witnessed phrase and rolls back completely if its nested account link fails.
+  The feature is still unavailable: no route, QR, director workspace, or pilot
+  migration has been enabled. See
   `docs/quality/2026-09-10-account-activation-foundation.md`.
 
 ## 2026-09-10 hosted email-provider clarification

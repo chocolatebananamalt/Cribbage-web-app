@@ -212,3 +212,15 @@ test('witnessed approval has a server-only nested link writer with a distinct st
   assert.match(sql, /revoke all on function app\.link_roster_account_service_v1[\s\S]*from public, anon, authenticated/);
   assert.doesNotMatch(sql, /grant execute.*authenticated/i);
 });
+
+test('activation approval is server-only, phrase-witnessed, and rolls back a failed nested link', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0094_roster_account_activation_approval_rpc.sql'), 'utf8');
+  assert.match(sql, /decide_roster_account_activation_v1/);
+  assert.match(sql, /roster_account_activation_service_only/);
+  assert.match(sql, /p_decision not in \('approve', 'reject'\)[\s\S]*p_confirmation_phrase is null/);
+  assert.match(sql, /p_confirmation_phrase <> v_request\.confirmation_phrase/);
+  assert.match(sql, /begin[\s\S]*app\.link_roster_account_service_v1[\s\S]*exception when others[\s\S]*activation approval unavailable/);
+  assert.match(sql, /v_request\.link_operation_id/);
+  assert.match(sql, /revoke all on function public\.decide_roster_account_activation_v1.*from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.decide_roster_account_activation_v1.*to service_role/);
+});

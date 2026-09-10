@@ -49,16 +49,21 @@ pilot.
   for the later approval transaction; it rechecks the official role and all
   collision rules and remains unavailable to browser roles. It is not yet an
   approval path by itself.
+- Migration `0094` adds the server-only witnessed director decision. An
+  approval requires the exact generated phrase and invokes that inner writer
+  inside an exception subtransaction; malformed, failed, or revoked-role inner
+  work raises and rolls the whole approval back. A rejection finalizes only the
+  pending request/activation and releases it for a later ceremony.
 
 ## Verification
 
-- `pnpm test` — pass, 136 tests.
+- `pnpm test` — pass, 137 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
 
 The migrations are not yet applied. The remaining work must implement and test
-the service-only cancel/approve transaction around the inner writer, stable receipts,
+the service-only cancellation transaction, exact route envelopes, stable receipts,
 the nested link rollback, exact route envelopes, fragment-clearing no-third-
 party page, and real independent-session/browser evidence before this feature
 can be enabled. This increment neither changes player access nor weakens the
