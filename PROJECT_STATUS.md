@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 verification inventory guard
+
+- Added a regression guard ensuring every ordinary `tests/*.test.mjs` file is
+  included in the normal application-test command. This closes a release
+  process gap found while adding account-activation route coverage: a newly
+  created test could otherwise pass when run manually yet be omitted by the
+  standard verification command. The workspace check passes locally. The
+  remaining hosted deployment gap is an invalid local Vercel CLI login token;
+  it does not change the tested source state.
+
 ## 2026-09-10 account-activation server route boundary
 
 - Added strict, same-origin, verified-session server routes for the
