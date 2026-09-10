@@ -279,14 +279,12 @@ test('route callback propagates refreshed cookies and membership function is nar
   assert.doesNotMatch(envExample, /service_role|secret|eyJ[a-zA-Z0-9_-]+\./i);
 });
 
-test('public flyer registration is a non-enumerating claim queue, not access or payment authority', () => {
+test('legacy public registration is retired before the fragment-only replacement exists', () => {
   const migration = read('database/migrations/0013_public_registration_claims.sql');
   const immutableRepair = read('database/migrations/0016_public_registration_immutable.sql');
   const hardening = read('database/migrations/0017_public_registration_replay_and_rate_limits.sql');
   const fingerprintRepair = read('database/migrations/0018_public_registration_fingerprint_repair.sql');
-  const route = read('src/app/api/v1/registration/[token]/route.ts');
-  const form = read('src/app/register/[token]/registration-form.tsx');
-  const publicContext = read('src/lib/api/public-registration.ts');
+  const retirement = read('database/migrations/0070_retire_legacy_public_registration_surface.sql');
   assert.match(migration, /add column if not exists registration_status/);
   assert.match(migration, /create table app\.tournament_registration_links/);
   assert.match(migration, /token_hash text not null unique/);
@@ -317,34 +315,19 @@ test('public flyer registration is a non-enumerating claim queue, not access or 
   assert.doesNotMatch(hardening, /concat_ws\('\|', 'public_registration'/);
   assert.match(fingerprintRepair, /drop trigger if exists registration_claims_immutable/);
   assert.match(fingerprintRepair, /jsonb_build_array\('public_registration'/);
-  assert.match(migration, /revoke all on function public\.submit_public_registration_claim/);
-  assert.match(migration, /grant execute on function public\.submit_public_registration_claim[\s\S]* to anon, authenticated/);
+  assert.match(retirement, /legacy registration-link history is incoherent/);
+  assert.match(retirement, /set enabled = false/);
+  assert.match(retirement, /revoke all on function public\.get_public_registration_context/);
+  assert.match(retirement, /revoke all on function public\.submit_public_registration_claim/);
+  assert.match(retirement, /drop function public\.get_public_registration_context/);
+  assert.match(retirement, /drop function public\.submit_public_registration_claim/);
   assert.doesNotMatch(migration, /insert into app\.(event_participants|tournament_roles|card_scorelines)/);
-  assert.match(route, /tokenPattern/);
-  assert.match(route + read('src/lib/api/route-boundary.ts'), /cache-control/);
-  assert.match(route, /readPublicRegistrationContext/);
-  assert.match(route, /withApiFailureBoundary/);
-  assert.match(route, /registration_unavailable/);
-  assert.match(route, /registration_retry_conflict/);
-  assert.match(route, /registration_temporarily_unavailable/);
-  assert.match(route, /isUuid\(body\.idempotencyKey\)/);
-  assert.match(route, /submit_public_registration_claim/);
-  assert.doesNotMatch(route, /getClaims|signInWithOtp|service_role|payment.*received/i);
-  assert.match(form, /crypto\.randomUUID\(\)/);
-  assert.match(form, /window\.sessionStorage/);
-  assert.match(form, /temporarily busy/);
-  assert.match(form, /This does not assign a seat or confirm payment/);
-  assert.match(form, /planned payment method/i);
-  assert.match(publicContext, /Object\.keys\(item\)\.length !== 1/);
-});
-
-test('public registration context projects only the permitted tournament name', async () => {
-  const { readPublicRegistrationContext } = await import(pathToFileURL(path.join(root, 'src/lib/api/public-registration.ts')).href);
-  assert.deepEqual(readPublicRegistrationContext({ tournamentName: '  Sample Open  ' }), { tournamentName: 'Sample Open' });
-  assert.equal(readPublicRegistrationContext({ tournamentName: 'Sample Open', email: 'private@example.test' }), null);
-  assert.equal(readPublicRegistrationContext({ tournamentName: '' }), null);
-  assert.equal(readPublicRegistrationContext([]), null);
-  assert.equal(readPublicRegistrationContext(null), null);
+  for (const file of [
+    'src/app/api/v1/registration/[token]/route.ts',
+    'src/app/register/[token]/page.tsx',
+    'src/app/register/[token]/registration-form.tsx',
+    'src/lib/api/public-registration.ts',
+  ]) assert.equal(fs.existsSync(path.join(root, file)), false, `${file} must not retain a path-token surface`);
 });
 
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {

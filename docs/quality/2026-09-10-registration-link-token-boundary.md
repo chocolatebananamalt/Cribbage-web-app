@@ -33,8 +33,9 @@ pnpm verify:handoff       PASS (6 private-handoff checks)
 git diff --check          PASS
 ```
 
-This is a safe primitive only. It does not expose a new route, issue a link,
-persist a token, enable registration, or retire the legacy path-token surface.
-Those steps remain gated on the reviewed lifecycle migration, server-only
-credential configuration, browser/network evidence, and owner-authorized
-legacy retirement.
+This is a safe primitive only. It does not expose a v2 route, issue a link,
+persist a token, or enable registration. Companion migration `0070` retired
+the legacy path-token surface after its safe zero-link audit; it is not a
+replacement v2 lifecycle. V2 remains gated on the reviewed lifecycle
+migration, server-only credential configuration, browser/network evidence,
+and independent-user tests.

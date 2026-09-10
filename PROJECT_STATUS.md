@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 legacy registration-token surface retired
+
+- Migration `0070_retire_legacy_public_registration_surface` disables every
+  legacy link, verifies legacy claim/link coherence, revokes and drops the two
+  anonymous legacy registration RPCs, and never deletes historical claims.
+  The obsolete path-token page, API route, and client helper have been removed
+  from the application.
+- It was applied and aggregate-checked first in the disposable synthetic
+  project and then in the pilot: both have zero legacy links, zero enabled
+  links, zero incoherent claims, and no remaining legacy RPC. The advisor no
+  longer reports anonymous executable functions. Public registration is
+  deliberately unavailable until the separately designed fragment-only v2
+  lifecycle is fully implemented and independently tested.
+
 ## 2026-09-10 registration-link token boundary
 
 - Added a server-only v2 registration-link credential primitive: it produces
@@ -7,14 +21,16 @@
   and malformed shapes, derives only a 32-byte salted digest for database use,
   and uses constant-time equality for fixed-length digests. It is covered by
   three positive/rejection tests and does not itself open or change public
-  registration.
+  registration. Migration `0070` separately retired the unsafe legacy
+  path-token surface; this primitive is not yet a complete v2 lifecycle.
 
 ## 2026-09-10 Supabase advisor recheck
 
 - Fresh pilot and disposable-database advisor scans found no new direct
-  browser data exposure. Both still report the intentional private-RPC model
-  and the two known legacy public-registration functions, which remain a
-  public-release blocker pending their fragment-only replacement.
+  browser data exposure. After migration `0070`, neither reports an anonymous
+  executable function; 31 reviewed authenticated RPCs remain. The secure
+  fragment-only registration replacement is still required before public
+  signup can be enabled.
 - The current advisor emits 13 INFO-level unindexed-foreign-key notices; this
   corrects an earlier inaccurate zero-notice statement. Catalog inspection
   confirmed each has equivalent existing leading unique/index coverage, so no
@@ -56,18 +72,15 @@
   test, build, and workspace-verification steps on commit `1bbc496`, without
   the preceding deprecated-runtime annotation.
 
-## 2026-09-10 legacy registration-token path release blocker
+## 2026-09-10 public registration release posture
 
-- The current public registration routes accept their bearer value in the URL
-  path, which can reach server/CDN logs before the application can protect it.
-  A safe pilot aggregate check found zero legacy links and zero enabled links,
-  so no active signup is being disrupted. This remains a non-waivable public
-  release blocker until the legacy surface is retired and the reviewed
-  fragment-only lifecycle replaces it.
-- Retiring it would intentionally disable public signup until that replacement
-  exists, so the customer-visible change is awaiting owner approval. The
-  hosted Email/Password-provider setting is a separate dashboard-only release
-  blocker; no unsupported browser change was attempted.
+- The unsafe legacy public-registration route and anonymous database surface
+  have been retired without disrupting an active link. The app intentionally
+  has no public signup surface at present. A secure fragment-only v2 lifecycle
+  (issue, rotate, close, claim, audit, browser/network canary, and independent
+  user tests) is still required before public registration can be enabled.
+- The hosted Email/Password-provider setting is a separate dashboard-only
+  release blocker; no unsupported browser change was attempted.
 
 ## 2026-09-10 controlled score-duplicate race repair
 
@@ -108,8 +121,9 @@
   chain applied successfully there.
 - Catalog verification found the intended boundary: 40 private `app` tables
   all have RLS, no private-table policy or private-function browser grant
-  exists, and only the reviewed two anonymous registration RPCs and 31
-  authenticated RPCs are executable. Supabase advisor findings match the
+  exists. After migration `0070`, only the reviewed 31 authenticated RPCs are
+  executable; the anonymous legacy registration RPCs have been removed.
+  Supabase advisor findings match the
   existing private-RLS/RPC-only model; unused-index notices are expected on an
   empty test database.
 - The environment is now available for synthetic authorization, concurrency,

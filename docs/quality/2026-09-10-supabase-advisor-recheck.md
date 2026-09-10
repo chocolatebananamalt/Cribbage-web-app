@@ -9,13 +9,13 @@ records were read.
 
 ## Security result
 
-Both projects report the same intentional private-RPC posture:
+The initial scan found the following intentional private-RPC posture:
 
 - 40 private `app` tables have forced RLS and no policies while direct browser
   table grants remain revoked.
-- The two currently legacy public-registration `SECURITY DEFINER` functions
-  remain anonymously callable. They are the already-recorded path-token
-  release blocker and are not a new exposure.
+- Two legacy public-registration `SECURITY DEFINER` functions were
+  anonymously callable. They were the already-recorded path-token release
+  blocker, not direct access to private tables.
 - 31 authenticated `SECURITY DEFINER` functions remain the reviewed,
   role-checked application RPC boundary. This evidence does not replace the
   required real independent-session tests.
@@ -44,5 +44,13 @@ indexes before representative-load testing.
 ## Result
 
 No newly discovered browser data exposure or actionable missing-index defect
-was found. The secure replacement of the two legacy public registration
-functions remains required before any public registration release.
+was found.
+
+## Superseding current result — 2026-09-10
+
+After migration `0070_retire_legacy_public_registration_surface` was applied
+to the disposable database first and then the pilot, a fresh catalog/security
+advisor check found no anonymous executable legacy registration function in
+either project. The 31 authenticated, role-checked RPCs remain the reviewed
+application boundary. The secure fragment-only replacement lifecycle remains
+required before any public registration release.
