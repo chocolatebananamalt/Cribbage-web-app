@@ -6,9 +6,10 @@
   on its static “Opening sign-in…” loading fallback. Replaced the client-only
   query-string rendering boundary with Next's request-time page parameters, so
   the passwordless form is server-rendered and the browser-only portion holds
-  only the actual sign-in action. Lint, focused auth tests, and the optimized
-  production build pass. The fresh hosted visual check remains required after
-  Vercel accepts a new preview deployment; no email was sent and no hosted
+  only the actual sign-in action. The fresh protected Preview
+  `dpl_GRDf33N52vQJRkKYEJQQMsFEjaxT` now visibly renders the email form; GitHub
+  Actions and the full local verification suites pass, and no current runtime
+  error was reported. No address was entered, no email was sent, and no hosted
   setting changed. Details:
   `docs/quality/2026-09-10-sign-in-prerender-boundary-repair.md`.
 

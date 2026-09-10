@@ -26,8 +26,14 @@ login.
 - focused `tests/supabase-auth-semantics.test.mjs` — 34 pass.
 - `pnpm build` — pass; `/sign-in` is now request-rendered.
 - `git diff --check` — pass.
+- GitHub Actions `Verify` run `34489405152` — pass for commit
+  `23ecb27bad6d92e58d7e9e80767f6a67b4404ddd`.
+- Protected Vercel Preview `dpl_GRDf33N52vQJRkKYEJQQMsFEjaxT` — `READY`.
+  A logged-in browser opened its exact `/sign-in` URL and showed the email
+  field and “Email me a sign-in link” control immediately. No address was
+  entered and no sign-in message was sent. Vercel reported no grouped runtime
+  error in the following one-hour review window.
 
-The next protected hosted deployment must be checked visually before this is
-treated as hosted evidence. Vercel's daily Hobby deployment limit was active
-when the defect was observed, so no manual deployment or paid workaround was
-attempted.
+This verifies the visible hosted form and the no-error observation only. It
+does not substitute for the still-required separate-user magic-link callback
+and tournament-membership evidence.
