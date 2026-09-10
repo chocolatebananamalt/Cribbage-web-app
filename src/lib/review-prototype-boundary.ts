@@ -4,10 +4,16 @@
  * never become an accidental public production operations screen.
  */
 export function allowsReviewPrototype(environment: {
+  host?: string | null;
   nodeEnv?: string;
   vercelEnv?: string;
 }): boolean {
   if (environment.vercelEnv === "production") return false;
-  if (environment.vercelEnv === "preview" || environment.vercelEnv === "development") return true;
+  const hostname = environment.host?.trim().toLowerCase().replace(/:\d+$/, "");
+  if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+  if (hostname) {
+    return hostname !== "cribbage-web-app.vercel.app"
+      && hostname.endsWith("-cribbage-app.vercel.app");
+  }
   return environment.nodeEnv !== "production";
 }

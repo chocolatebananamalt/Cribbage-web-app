@@ -98,10 +98,14 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
 test('the synthetic review dashboard is unavailable from a production deployment', async () => {
   const { allowsReviewPrototype } = await import(pathToFileURL(path.join(root, 'src/lib/review-prototype-boundary.ts')).href);
   assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'production' }), false);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview' }), true);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'development' }), true);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-q81o14eoc-cribbage-app.vercel.app' }), true);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'development', host: 'localhost:3000' }), true);
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-app.vercel.app' }), false, 'promotion must not turn the default production hostname into a review surface');
+  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'tournament.example.org' }), false, 'an unlisted custom production hostname must fail closed');
   assert.equal(allowsReviewPrototype({ nodeEnv: 'production' }), false);
   const page = read('src/app/page.tsx');
+  assert.match(page, /await headers\(\)/);
+  assert.match(page, /requestHeaders\.get\("host"\)/);
   assert.match(page, /allowsReviewPrototype/);
   assert.match(page, /notFound\(\)/);
 });

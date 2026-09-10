@@ -4,9 +4,11 @@
 
 - The review dashboard at the root route uses synthetic tournament, player,
   scoring, and financial data. It remains available for the ongoing protected
-  Preview format review, but a Vercel Production deployment (or a
-  production-like build without an explicit Preview environment) now returns
-  a not-found response before that dashboard renders. This prevents an
+  Preview format review, but a Vercel Production deployment, the default
+  production hostname, an unlisted custom hostname, or a production-like build
+  now returns a not-found response before that dashboard renders. The guard
+  reads the actual request host so a previously built Preview deployment also
+  remains safe if it is later promoted without a rebuild. This prevents an
   accidental deployment from presenting review controls as live tournament
   operations.
 - Local lint, 82 application tests, production build, workspace verification,

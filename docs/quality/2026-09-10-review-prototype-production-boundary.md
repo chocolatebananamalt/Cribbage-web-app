@@ -4,24 +4,28 @@
 
 1. The synthetic review dashboard remains available in local development and
    Vercel Preview, so the approved format-review process is not disrupted.
-2. A Vercel Production deployment, and a production-like build without an
-   explicit Preview environment, cannot render the synthetic dashboard as a
-   live tournament operations surface.
+2. A Vercel Production deployment, promoted Preview, custom production host,
+   and a production-like build without an explicit safe host cannot render the
+   synthetic dashboard as a live tournament operations surface.
 3. The boundary is small, deterministic, regression-tested, and does not
    alter authenticated tournament routes.
 
 ## Evidence
 
 - Added `src/lib/review-prototype-boundary.ts`. It permits only local
-  development and explicit Vercel Preview/Development environments; it denies
-  Vercel Production and an unspecified production-like environment.
-- The root route calls `notFound()` before rendering `TournamentDashboard`
-  whenever that guard denies the environment. This prevents the sample
-  tournament, fictional finance values, and editable review controls from
-  becoming a public production surface by deployment mistake.
-- `tests/supabase-auth-semantics.test.mjs` exercises Production denial,
-  Preview allowance, local-development allowance, unspecified-production
-  denial, and verifies that the root route enforces the guard.
+  development and an actual Vercel Preview host; it denies Vercel Production,
+  the default production hostname, unlisted custom hosts, and an unspecified
+  production-like environment. This host check matters because Vercel can
+  promote an already-built Preview deployment without rebuilding it.
+- The root route reads the request host and calls `notFound()` before rendering
+  `TournamentDashboard` whenever that guard denies it. This prevents the
+  sample tournament, fictional finance values, and editable review controls
+  from becoming a public production surface by deployment mistake or Preview
+  promotion.
+- `tests/supabase-auth-semantics.test.mjs` exercises Production/default-domain
+  denial, actual Preview-host allowance, local-development allowance,
+  unlisted-custom-host denial, unspecified-production denial, and verifies
+  that the root route reads the request host before enforcing the guard.
 
 ## Executed verification
 
