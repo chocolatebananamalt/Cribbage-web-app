@@ -29,6 +29,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | TR-06 | ACC Official Tournament Rules 2025: Judge Protocols, Rule 10.1(b), Appendix A items 1–3, rules 12.1–12.2 and 13.2, plus Cross-Checking Guidelines item 20 as applicable | source reviewed 2026-09-06 | Dated approved fixtures; rule-source link shown in rule register |
 | TR-07 | ACC read-only sanctioning portal review: Main, Consolation, Satellites, Templates, Side Pool Calculator | reviewed 2026-09-06 | Portal-shaped export validation; manual submission checklist |
 | TR-08 | AGENTS.md and `docs/quality/VERIFICATION.md`: two entries/two confirmations, server roles, pending sync, audit, real backend | current repository guidance | Required integration/e2e/rejection and release-gate evidence |
+| TR-09 | User paper-scorecard capture/OCR decision: scans accelerate cross-checking but do not replace independent verification | 2026-09-10 | Restricted capture/storage, human-review, comparison, and rejection-path evidence |
 
 | Requirement ID | Normative requirement | Minimum positive test | Minimum rejection test |
 |---|---|---|---|
@@ -49,6 +50,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | R-ATTACH-01 | Attachments are classified, access-controlled, retained, and linked to event/ledger/result records | allowed attachment is classified and auditable | unsupported type, oversize/private-source upload, wrong role, or unclassified financial evidence is rejected |
 | R-UX-01 | Friendly skunk bands, signed-in audience, cache permission, and measurable accessibility targets are explicit | icons and accessible scorecard pass phone/desktop checks | unofficial labels presented as ACC rules, anonymous access, stale/unpermitted cache, or accessibility failure is rejected |
 | R-GUIDE-01 | Brief in-app Start Here / How To guidance supports players and directors, prioritizing the hybrid paper/digital score flow | assigned player can open plain-language hybrid guidance at score entry; director guidance covers check-in, seating publication, and exceptions | guidance cannot claim a paper transcription, one entry, or one confirmation is verified |
+| R-SCAN-01 | Authorized paper-scorecard capture and OCR accelerate cross-check comparison without creating verification authority | an authorized cross checker captures, reviews, and compares one or two paper cards against their assigned game | self-card capture/review, unlinked/low-confidence scan, unauthorized image access, OCR-only verification, or silent overwrite is blocked |
 
 ## 2. Product boundary and release stages
 
@@ -119,7 +121,37 @@ The two entries MUST be independently captured by the two distinct assigned play
 
 The paper card is the source artifact and MUST retain its event/card identity. The primary path is: each assigned player independently enters the paper result on a shared or personal device using their context-only PIN, cannot see the other player's entry before comparison, and confirms their own entry. Each entry and confirmation is bound to that assigned player and canonical card/match. A player who is unavailable leaves the result `PendingCrossCheck`; staff may capture paper evidence and record a pending transcription, but staff cannot substitute for that player's entry or confirmation unless a future, separately approved exception is enabled. A dead-phone/shared-device PIN confirms context only; it never grants account access or bypasses these safeguards. Offline entries remain pending until each player's authenticated action reaches the server. If either entry is missing, the result cannot become server-verified. If entries disagree, the result enters `MismatchNeedsCrossCheck` and requires an eligible cross-check/judge workflow; it cannot be resolved by a single staff transcription or local success message.
 
-### 5.3.1 Start Here / How To guidance
+### 5.3.1 Paper-scorecard capture and OCR assistance
+
+An eligible cross checker MAY capture a paper scorecard with a device camera or
+authorized file upload to accelerate review. The capture MUST be linked to the
+specific tournament, canonical game, current card side, and permanent
+verification ID before it can be used. OCR produces only an editable,
+confidence-labelled draft; the cross checker must visually compare and accept
+or correct every scoring value before it becomes a transcription or comparison
+input. A cross checker MUST NOT capture, review, or resolve their own card.
+
+For a paper/digital game, the approved scanned draft MAY be compared with the
+digital player’s independently submitted result. For a paper/paper game, each
+card is captured independently and the app compares the two approved drafts.
+Only missing, unreadable, unlinked, low-confidence, or mismatched results may
+enter the cross-check queue. A matching OCR draft, one scanned card, a paper
+image, or a staff transcription alone MUST NOT create `Verified`, satisfy a
+player entry or confirmation, or silently modify a scorecard, standings,
+export, or payment record.
+
+Card images and OCR drafts are restricted evidence, not public attachments.
+They require role/tournament authorization, encrypted restricted storage,
+immutable capture/review/comparison audit data, retention/hold treatment, and
+explicit download/view access controls. The capture route must request camera
+access only when opened; camera permission remains disabled elsewhere. No
+paper-card image or OCR text may be sent to an unapproved third-party service.
+The selected OCR implementation, image retention period, supported card
+layouts, image size/type limits, deletion/restore behavior, and false-read
+fixtures require separate technical and data-governance approval before this
+capability is enabled.
+
+### 5.3.2 Start Here / How To guidance
 
 The app MUST provide concise, accessible, in-app guidance for players and directors. The player score-entry screen MUST make the hybrid paper/digital sequence available in plain language: each assigned player independently enters the paper result, each confirms their own entry, and the score is official only after both entries match and both confirmations are accepted by the server. It MUST direct an unavailable player or a mismatch to the pending cross-check workflow; it MUST NOT suggest that a director, one player, or a paper card alone can verify a result. The director guide MUST cover the essential operational actions—check-in, closing registration, publishing seating, handling paper cards, and resolving exceptions—and link to the fuller rule/reference material. Guidance is contextual and brief; it does not replace enforcement, audit, or role controls.
 

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { isAcceptedSubmission, isRejectedGameOperation } from "../../../../../../lib/api/game-operation";
+import { isAcceptedSubmission, isRejectedSubmissionOperation } from "../../../../../../lib/api/game-operation";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { createClient } from "../../../../../../lib/supabase/server";
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
     const { data, error } = await supabase.rpc("submit_game_score", { p_game_id: id, p_submission_id: body.submissionId, p_submission_slot: body.submissionSlot, p_winner_side: body.winnerSide, p_margin: body.margin, p_idempotency_key: body.idempotencyKey });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
-    if (isRejectedGameOperation(data, id)) return apiJson(data, { status: rejectionStatus(data.code) });
+    if (isRejectedSubmissionOperation(data, id)) return apiJson(data, { status: rejectionStatus(data.code) });
     if (isAcceptedSubmission(data, id, body.submissionId as string)) return apiJson(data, { status: 200 });
     return apiJson({ error: "operation_unavailable" }, { status: 503 });
   });

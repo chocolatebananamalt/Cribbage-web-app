@@ -93,7 +93,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       const response = await fetch(`/api/v1/games/${context.gameId}/submissions`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ submissionId: envelope.submissionId, submissionSlot: envelope.submissionSlot, winnerSide: envelope.winnerSide, margin: envelope.margin, idempotencyKey: envelope.idempotencyKey }) });
       const payload: unknown = await response.json().catch(() => null);
       if (!response.ok) {
-        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId)) { clearPendingScoreSubmission(window.sessionStorage, envelope); setPendingSubmission(null); }
+        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId, "submission")) { clearPendingScoreSubmission(window.sessionStorage, envelope); setPendingSubmission(null); }
         setStatus(publicMessage(response.status, payload));
         return;
       }
@@ -119,7 +119,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       const response = await fetch(`/api/v1/games/${context.gameId}/confirmations`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ submissionId, idempotencyKey: request.value }) });
       const payload: unknown = await response.json().catch(() => null);
       if (!response.ok) {
-        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId)) window.sessionStorage.removeItem(request.storageKey);
+        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId, "confirmation")) window.sessionStorage.removeItem(request.storageKey);
         setStatus(publicMessage(response.status, payload));
         return;
       }

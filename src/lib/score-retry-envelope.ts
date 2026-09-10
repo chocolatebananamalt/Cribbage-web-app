@@ -67,10 +67,12 @@ export function pendingSubmissionRecovery(pending: PendingScoreSubmission | null
   return { action: "retry" as const, envelope: pending };
 }
 
-export function isDefinitiveScoreMutationFailure(status: number, payload: unknown, gameId: string) {
+export function isDefinitiveScoreMutationFailure(status: number, payload: unknown, gameId: string, operation: "submission" | "confirmation") {
   // A session can expire after the browser has sent the request. Preserve the
   // exact envelope across 401 so the signed-in player can safely retry it.
   if ([400, 403].includes(status)) return true;
-  return status === 409 && isRejectedGameOperation(payload, gameId);
+  return status === 409 && (operation === "submission"
+    ? isRejectedSubmissionOperation(payload, gameId)
+    : isRejectedConfirmationOperation(payload, gameId));
 }
-import { isRejectedGameOperation } from "./api/game-operation.ts";
+import { isRejectedConfirmationOperation, isRejectedSubmissionOperation } from "./api/game-operation.ts";

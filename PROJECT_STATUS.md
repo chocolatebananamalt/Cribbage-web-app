@@ -1,5 +1,33 @@
 # Project Status
 
+## 2026-09-10 controlled score-duplicate race repair
+
+- An independent high-risk review found that a same-player concurrent score
+  submission with a different operation ID could lose a unique-index race as a
+  generic server error rather than a controlled, auditable conflict. Migration
+  0069 handles only the known score-submission uniqueness constraints and
+  records the losing attempt as `duplicate_submission`; unrelated database
+  errors still fail visibly.
+- Only the private submission API recognizes that exact rejection shape as a
+  409 for the requested game, allowing only the affected submission-retry
+  envelope to clear rather than being retried indefinitely. Confirmation,
+  wrong-game, or expanded payloads still fail closed as unavailable.
+- The repair was applied and exercised only on the disposable synthetic test
+  database. A true two-request race produced exactly one accepted score, one
+  rejected receipt, one conflict record, and no false verification. The
+  complete two-player score/confirmation path also verified reciprocal +31/-31
+  scorelines and 3/0 game points. Real independent browser-session evidence
+  remains a release gate.
+
+## 2026-09-10 paper-scorecard scan/OCR requirement
+
+- The product baseline now requires an authorized, restricted paper-card
+  capture and OCR-assisted comparison workflow for cross-checking. It may
+  accelerate paper/digital and paper/paper review, but cannot replace assigned
+  player entries/confirmations or auto-verify a score. Provider, storage,
+  retention, browser-permission, and false-read decisions remain explicit
+  implementation gates.
+
 ## 2026-09-10 disposable database test environment
 
 - The owner approved use of the otherwise empty existing Supabase project as

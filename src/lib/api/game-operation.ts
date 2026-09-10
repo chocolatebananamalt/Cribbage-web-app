@@ -22,10 +22,28 @@ export function isAcceptedConfirmation(value: unknown, gameId: string): value is
 }
 
 export function isRejectedGameOperation(value: unknown, gameId: string): value is JsonRecord {
-  const allowedCodes = ["authentication_required", "invalid_request", "invalid_submission", "game_not_found", "idempotency_conflict", "tournament_closed", "event_not_approved", "not_assigned", "submission_conflict", "submission_rejected", "submission_not_found", "not_submission_owner", "not_checked_in", "invalid_game_state", "confirmation_rejected"];
+  const allowedCodes = ["authentication_required", "invalid_request", "game_not_found", "idempotency_conflict", "tournament_closed", "event_not_approved"];
   return record(value)
     && Object.keys(value).length === 3
     && value.status === "rejected"
     && value.game_id === gameId
     && allowedCodes.includes(value.code as string);
+}
+
+export function isRejectedSubmissionOperation(value: unknown, gameId: string): value is JsonRecord {
+  return isRejectedGameOperation(value, gameId)
+    || (record(value)
+      && Object.keys(value).length === 3
+      && value.status === "rejected"
+      && value.game_id === gameId
+      && ["invalid_submission", "not_assigned", "submission_conflict", "duplicate_submission", "submission_rejected"].includes(value.code as string));
+}
+
+export function isRejectedConfirmationOperation(value: unknown, gameId: string): value is JsonRecord {
+  return isRejectedGameOperation(value, gameId)
+    || (record(value)
+      && Object.keys(value).length === 3
+      && value.status === "rejected"
+      && value.game_id === gameId
+      && ["submission_not_found", "not_submission_owner", "not_checked_in", "invalid_game_state", "confirmation_rejected"].includes(value.code as string));
 }

@@ -14,11 +14,11 @@ test('game API handlers validate, authenticate with claims, and call RPCs only',
     assert.doesNotMatch(source, /record_rejected_game_operation/);
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(/);
     assert.match(source, /operation_unavailable/);
-    assert.match(source, /isRejectedGameOperation/);
     assert.doesNotMatch(source, /error\.message/);
   }
   assert.match(submission, /submit_game_score/); assert.match(confirmation, /confirm_game_score/);
   assert.match(submission, /isAcceptedSubmission/); assert.match(confirmation, /isAcceptedConfirmation/);
+  assert.match(submission, /isRejectedSubmissionOperation/); assert.match(confirmation, /isRejectedConfirmationOperation/);
   assert.match(submission + confirmation, /withApiFailureBoundary/);
   assert.match(submission + confirmation, /requireVerifiedSubject/);
 });
@@ -36,7 +36,15 @@ test('game operation responses bind to the requested game and submission before 
   assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: gameId }, gameId), true);
   assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
   assert.equal(game.isAcceptedConfirmation({ status: 'verified', game_id: otherGameId }, gameId), false);
-  assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), false);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), false);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), false);
+  assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), false);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: otherGameId }, gameId), false);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
   assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'not_assigned', game_id: otherGameId }, gameId), false);
 });
 
@@ -304,6 +312,27 @@ test('game RPC migration is private, atomic, authenticated, and derives verified
   assert.match(sql, /hashtextextended/);
   assert.match(sql, /select \* into v_existing[\s\S]*?if not exists \(select 1 from app\.tournaments/);
   assert.doesNotMatch(sql, /grant (select|insert|update|delete|all) on table/i);
+});
+
+test('same-player duplicate score submissions become an audited controlled rejection', () => {
+  const sql = read('database/migrations/0069_score_submission_duplicate_conflict_repair.sql');
+  assert.match(sql, /create or replace function public\.submit_game_score/);
+  assert.match(sql, /exception when unique_violation then/);
+  assert.match(sql, /get stacked diagnostics v_constraint = constraint_name/);
+  assert.match(sql, /score_submissions_pkey/);
+  assert.match(sql, /score_submissions_canonical_game_id_submission_slot_key/);
+  assert.match(sql, /score_submissions_canonical_game_id_submitter_profile_id_key/);
+  assert.match(sql, /raise exception using errcode = 'P0001', message = 'duplicate submission'/);
+  assert.match(sql, /when 'duplicate submission' then 'duplicate_submission'/);
+  assert.match(sql, /insert into app\.operation_conflicts/);
+  assert.match(sql, /insert into app\.operation_receipts/);
+  assert.match(sql, /'submission_rejected'/);
+  assert.doesNotMatch(sql, /when unique_violation then[\s\S]*?when others then[\s\S]*?return/);
+  const operation = read('src/lib/api/game-operation.ts');
+  const route = read('src/app/api/v1/games/[id]/submissions/route.ts');
+  assert.match(operation, /"duplicate_submission"/);
+  assert.match(route, /isRejectedSubmissionOperation\(data, id\).*?rejectionStatus\(data\.code\)/s);
+  assert.match(route, /return 409/);
 });
 
 test('rejection audit boundary preserves stable codes and does not swallow audit failures', () => {
