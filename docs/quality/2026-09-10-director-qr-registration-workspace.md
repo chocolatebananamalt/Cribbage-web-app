@@ -31,6 +31,10 @@ render a QR code for the single active tournament registration link.
   before permitting a later compare-and-swap replace or close action. A
   conflict or unavailable re-read does not invent a state or regenerate a
   credential.
+- If the server-only state reader itself is unavailable after authorization,
+  the page renders a clear temporary-unavailable state. It neither attempts a
+  mutation nor reveals any link state; the generic framework error page is not
+  used as operational guidance.
 
 ## Acceptance checks
 
@@ -40,8 +44,9 @@ render a QR code for the single active tournament registration link.
 2. The existing route and database-contract tests continue to enforce
    same-origin, verified-subject, private RPC-only, one-time credential,
    compare-and-swap, and release-gate boundaries.
-3. `pnpm lint`, `pnpm test` (156 checks), and `pnpm build` passed locally on
-   2026-09-10.
+3. `pnpm verify` (including lint, 157 application checks, production build,
+   workspace checks, and dependency audit) and `pnpm verify:handoff` passed
+   locally on 2026-09-10. `git diff --check` also passed.
 
 ## Still required before it can be enabled
 

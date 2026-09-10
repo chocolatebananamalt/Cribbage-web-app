@@ -8,7 +8,11 @@
   non-secret link state, and is guarded by a separate default-off director
   management gate from public claims. It does not enable public registration,
   change the shared pilot, or complete real-browser validation.
-  Focused lint, 156 application checks, and a production build passed. Details:
+  An authorized director now also receives a clear, non-actionable temporary
+  availability screen if the private link-state reader is unavailable; no link
+  is created or changed in that case. Focused lint, 157 application checks,
+  the full verification suite, private-handoff check, and a production build
+  passed. Details:
   `docs/quality/2026-09-10-director-qr-registration-workspace.md`.
 
 ## 2026-09-10 ACC public flyer-source review

@@ -545,6 +545,8 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /\["director", "co_director"\]/);
   assert.match(page, /getRegistrationLinkWorkspace/);
+  assert.match(page, /Registration link management is temporarily unavailable/);
+  assert.match(page, /No link was created or changed/);
   assert.match(workspace, /import "server-only"/);
   assert.match(workspace, /get_registration_link_state_v2/);
   assert.match(client, /QRCode\.toDataURL/);
