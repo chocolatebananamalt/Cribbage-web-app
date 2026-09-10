@@ -79,6 +79,9 @@
   in the separate
   synthetic test project; the shared pilot was not changed. See
   `docs/decisions/2026-09-10-rule12-independent-card-corrections.md`.
+  Migration `0099` now provides only the private, immutable independent-card
+  correction projection foundation required by the rule; it has no writer,
+  reader, grant, or release flag and does not re-enable corrections.
 
 ## 2026-09-10 account-activation lock-order repair
 

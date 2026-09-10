@@ -59,3 +59,13 @@ cannot represent the cited (b) or (h) outcomes faithfully.
    against a real backend.
 4. Obtain independent high-risk review and real cross-checker/director browser
    evidence before a new explicit release decision enables mutation.
+
+## Foundation progress
+
+Migration `0099_independent_card_correction_projection_foundation.sql` adds
+private, immutable, ungranted structures for an independent correction case
+and exactly one original/adjudicated projection for each card side. It records
+the source Rule 12.2 case without requiring the two adjudicated card values to
+be reciprocal. It intentionally has no writer, reader, lifecycle transition,
+standing calculation, or release switch, and therefore does not reduce any
+exit criterion or enable correction handling.

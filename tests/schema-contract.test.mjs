@@ -20,6 +20,21 @@ test('local schema is private, UUID-backed, RLS-forced, and non-destructive', ()
   assert.doesNotMatch(sql, /create policy[\s\S]*using \(true\)/, 'no broad allow-all policy');
 });
 
+test('independent Rule 12 correction projections preserve both card claims without granting access', () => {
+  const projectionSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0099_independent_card_correction_projection_foundation.sql'), 'utf8').toLowerCase();
+  assert.match(projectionSql, /create table app\.independent_card_corrections/);
+  assert.match(projectionSql, /rule_case text not null check \(rule_case in \('12\.2a', '12\.2b', '12\.2c', '12\.2d', '12\.2e', '12\.2f', '12\.2g', '12\.2h', '12\.2i'\)\)/);
+  assert.match(projectionSql, /create table app\.independent_card_correction_projections/);
+  assert.match(projectionSql, /original_is_winner boolean not null/);
+  assert.match(projectionSql, /adjudicated_is_winner boolean not null/);
+  assert.match(projectionSql, /unique \(correction_id, card_side\)/);
+  assert.match(projectionSql, /references app\.card_scorelines\(id, canonical_game_id\)/);
+  assert.match(projectionSql, /enable row level security/);
+  assert.match(projectionSql, /force row level security/);
+  assert.match(projectionSql, /revoke all on table app\.independent_card_corrections, app\.independent_card_correction_projections from public, anon, authenticated/);
+  assert.doesNotMatch(projectionSql, /^grant\s+/im);
+});
+
 test('game scope, assignments, immutable submissions, and exact verification boundaries are explicit', () => {
   assert.match(sql, /foreign key \(round_id, tournament_id, event_id\) references app\.rounds/);
   assert.match(sql, /foreign key \(side_a_participant_id, event_id, tournament_id\) references app\.event_participants/);

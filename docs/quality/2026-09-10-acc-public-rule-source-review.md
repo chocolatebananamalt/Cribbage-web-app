@@ -119,3 +119,18 @@ the separate free-plan limitation that leaked-password protection cannot be
 enabled. Those items are documented release considerations; neither was
 relaxed or changed here. The suspended correction functions no longer appear
 as authenticated-executable findings.
+
+## 2026-09-10 independent-card foundation verification
+
+**Acceptance criterion:** the replacement schema can retain the original and
+adjudicated values for each individual scorecard without imposing reciprocal
+correction values, and it does not expose a new writer or reader.
+
+Migration `0099_independent_card_correction_projection_foundation` applied
+cleanly to the separate synthetic validation project. It creates private,
+RLS-forced, immutable case and projection tables with one projection for each
+card side, retains source Rule 12.2 case codes `12.2a` through `12.2i`, and
+has no grant. Static contract coverage and the full local verification suite
+pass. This proves only that the inert structural foundation is valid; it does
+not prove lifecycle, adjudication, standings, qualification, or browser
+behavior and does not re-enable the correction feature.
