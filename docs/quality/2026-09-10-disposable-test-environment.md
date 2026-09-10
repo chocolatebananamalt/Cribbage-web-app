@@ -9,8 +9,10 @@ credentials, player records, or real tournament data were copied into it.
 
 ## Acceptance criteria
 
-1. The ordered 0001–0068 database migration chain applies to the test project
-   without a migration failure.
+1. At the time of this evidence, the ordered `0001`–`0068` database migration
+   chain applies to the test project without a migration failure. This is a
+   historical baseline, not a claim that the shared pilot has that exact
+   schema level today.
 2. The resulting private data model has the same intentional access boundary
    as the pilot: every `app` table has RLS, no `app` table policy grants a
    browser role access, and no `app` function is executable by `anon` or
@@ -45,4 +47,6 @@ The disposable database is ready for synthetic authorization, concurrency,
 and transaction tests. This is schema/grant evidence only. It does not prove
 real independent browser sessions, authentication provider settings, offline
 recovery, ACC scoring/qualification/payout fixtures, results finalization,
-backup/restore, or a simulated tournament.
+backup/restore, or a simulated tournament. Later migrations and later test
+evidence are tracked separately; the current shared-pilot parity position is
+in `docs/quality/2026-09-10-live-pilot-security-and-parity-review.md`.

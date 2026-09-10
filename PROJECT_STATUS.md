@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 evidence-history reconciliation
+
+- Marked the older disposable-environment and meta-readiness records as
+  historical where later evidence had made particular statements stale. The
+  records now distinguish the former `0001`–`0068` test baseline from the
+  current shared-pilot `0089` baseline, and no longer present completed
+  registration-link work or an unavailable Supabase password toggle as current
+  blockers. The actual remaining independent-session and browser evidence
+  gates are retained. No application code, pilot setting, or pilot data was
+  changed.
+
 ## 2026-09-10 shared-pilot migration change control
 
 - Corrected the database guide to reflect the actual shared-pilot schema
@@ -1161,8 +1172,11 @@
 
 - The owner approved use of the otherwise empty existing Supabase project as
   a no-cost disposable test environment; it is separate from the ACC pilot
-  and contains no copied pilot or player data. The full 0001–0068 migration
-  chain applied successfully there.
+  and contains no copied pilot or player data. The then-current full
+  `0001`–`0068` migration chain applied successfully there. Later reviewed
+  work has subsequently been exercised there; the shared pilot's distinct
+  current baseline is recorded at the top of this file and in
+  `docs/operations/PILOT_MIGRATION_CHANGE_CONTROL.md`.
 - Catalog verification found the intended boundary: 40 private `app` tables
   all have RLS, no private-table policy or private-function browser grant
   exists. After migration `0070`, only the reviewed 31 authenticated RPCs are

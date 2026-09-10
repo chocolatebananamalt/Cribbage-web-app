@@ -1,5 +1,18 @@
 # Meta Release-Readiness Delta Review — 2026-09-10
 
+> **Historical snapshot.** This review was accurate when first recorded, but
+> later work completed the director registration-link rotate/close/read
+> boundaries, configured the required Preview-only server credential, and
+> clarified that Supabase's hosted Email provider does not offer the assumed
+> password-only switch while retaining magic links. The app exposes only
+> passwordless magic-link sign-in, and a provider-level account alone confers
+> no app role or tournament authority. The registration lifecycle and
+> independent-session/browser evidence remain release gates. See
+> `2026-09-10-hosted-email-provider-clarification.md`,
+> `2026-09-10-registration-lifecycle-hosted-audit.md`, and
+> `2026-09-10-live-pilot-security-and-parity-review.md` for the later
+> evidence.
+
 ## Review method
 
 This is a fresh delta review against the normative production baseline,
@@ -20,8 +33,8 @@ of an unimplemented multi-user, financial, or operational requirement.
 
 | Requirement area | Current state | What would prove closure |
 | --- | --- | --- |
-| Registration lifecycle (`R-REG-01`) | Legacy public signup remains intentionally disabled. V2 now has a service-role-only lifecycle schema, a server-only director **issue** route, a gated same-origin **redeem** route, fragment-only browser bootstrap, and a nonce-protected dynamic registration page. However, director rotate/close/read routes and UI are absent; no hosted secret is configured; the release gate remains off; and no real service-role transaction, independent-user, or browser-network lifecycle evidence exists. | Complete server-authorized issue/rotate/close/read lifecycle, direct-RPC denial and disposable concurrency tests for every transition, configured hosted secret, and real-browser/network canaries plus independent-user evidence before deliberately enabling the release gate. |
-| Hosted auth boundary (`R-ROLE-01`) | The application uses magic links, but the hosted Supabase project still accepts the password grant outside the intended UI. | Authorized administrator disables the Email/Password provider (or an equivalent supported setting is verified), followed by a no-account provider probe. |
+| Registration lifecycle (`R-REG-01`) | **Superseded in part.** Later evidence added the server-authorized rotate/close/read boundaries, configured the Preview-only server credential, and recorded additional lifecycle concurrency checks. The release gate remains off; real independent-user and browser-network lifecycle proof remain required. | Preserve direct-RPC denial and transition-race evidence, then obtain real independent-session/browser canaries before deliberately enabling the release gate. |
+| Hosted auth boundary (`R-ROLE-01`) | **Superseded.** The app exposes only magic-link authentication. Current hosted Email-provider configuration cannot separately disable password login while retaining magic links and new-user creation; this is not a release gate because an external provider account does not grant a role or tournament access. | Continue to keep role/membership authorization server-side and validate the actual magic-link callback in an independent browser session. |
 | Operations/rules (`R-OPS-01`, `R-RULE-01`) | Starting seating/check-in boundaries exist; rotation, play-through, Consolation eligibility, dispute/judge capacity workflow, and dated official fixtures are not implemented. | Dated ACC sources and test fixtures plus server-authoritative lifecycle and independent-session tests. |
 | Offline and hybrid (`R-OFFLINE-01`) | Pending/retry handling exists for selected online mutations; no encrypted/auth-bound offline queue, replay, or dead-phone/paper workflow exists. | Queue implementation and reconnect, replay, session-switch, conflict, and shared-device tests. |
 | Paper-card scan/OCR | Contract is defined but no restricted storage, camera capture, approved OCR provider, or comparison UI exists. | Approved provider/layout/type limits; storage/RLS/audit implementation; false-read, self-capture, and real-device tests. |
