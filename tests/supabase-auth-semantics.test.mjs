@@ -414,6 +414,7 @@ test('registration-link state cannot call disabled, retired, or registration-clo
 
 test('registration-link close is a service-only compare-and-swap with durable safe replays', () => {
   const close = read('database/migrations/0078_registration_link_close_compare_and_swap.sql');
+  const headRepair = read('database/migrations/0079_registration_link_close_head_presence_repair.sql');
   assert.match(close, /p_expected_link_id uuid/);
   assert.match(close, /p_expected_version integer/);
   assert.match(close, /v_head\.registration_link_id <> p_expected_link_id/);
@@ -422,6 +423,11 @@ test('registration-link close is a service-only compare-and-swap with durable sa
   assert.match(close, /outcome, response_payload.*\n.*'rejected'/s);
   assert.match(close, /revoke all on function public\.close_registration_link_v2.*from public, anon, authenticated/);
   assert.match(close, /grant execute on function public\.close_registration_link_v2.*to service_role/);
+  assert.match(headRepair, /v_head_found := found/);
+  assert.match(headRepair, /v_link_found := found/);
+  assert.match(headRepair, /not v_head_found or not v_link_found/);
+  assert.match(headRepair, /revoke all on function public\.close_registration_link_v2.*from public, anon, authenticated/);
+  assert.match(headRepair, /grant execute on function public\.close_registration_link_v2.*to service_role/);
 });
 
 test('director close route is release-gated, strict, and server-only', () => {

@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 registration-link close head-presence repair
+
+- A close-transaction review found that a malformed historical state with a
+  link but no registration-link head could encounter nullable comparisons
+  rather than an explicit rejection. Migration `0079` now records both locked
+  lookup outcomes and fails closed unless the exact head and link are present.
+  It was applied first to disposable synthetic project
+  `donfxulkliuyteiannir` and then to pilot `fnjkwymxpnsqvxtpronk`; both
+  catalogs confirm browser roles cannot execute the function and service role
+  can. See
+  `docs/quality/2026-09-10-registration-link-close-head-presence-repair.md`.
+  The public-registration release switch remains disabled; real seeded
+  concurrency and browser evidence remain release gates.
+
 ## 2026-09-10 registration-link close compare-and-swap
 
 - Replaced the unsafe close operation with a service-only compare-and-swap
