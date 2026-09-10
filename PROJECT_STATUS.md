@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 API mutation-boundary review
+
+- Reviewed every current API route for direct data access and origin-gate
+  coverage. All state-changing `/api/v1` routes are protected by the shared
+  Proxy origin gateway before route execution and use RPC/server-only command
+  boundaries rather than direct table queries. A new repository-wide
+  regression preserves that invariant. Details:
+  `docs/quality/2026-09-10-api-mutation-boundary-review.md`.
+
 ## 2026-09-10 assigned game-context contract gate
 
 - Hardened the protected score-entry page against database/code version drift.

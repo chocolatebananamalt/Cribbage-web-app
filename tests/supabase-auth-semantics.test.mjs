@@ -184,6 +184,21 @@ test('every API v1 route uses a private no-store response boundary', () => {
   }
 });
 
+test('every API v1 mutation remains behind the shared origin gate and RPC-only data boundary', () => {
+  const proxy = read('src/proxy.ts');
+  const routes = collectRoutes(path.join(root, 'src/app/api/v1'));
+  assert.match(proxy, /rejectsApiMutationOrigin\(/);
+  assert.match(proxy, /"\/api\/v1\/:path\*"/);
+  assert.ok(routes.length > 0);
+  for (const route of routes) {
+    const source = fs.readFileSync(route, 'utf8');
+    assert.doesNotMatch(source, /\b(?:supabase|admin|client)\.from\(/, `${path.relative(root, route)} must not query an application table directly`);
+    if (/export async function POST/.test(source)) {
+      assert.match(source, /withApiFailureBoundary|catch\s*\{[\s\S]*?operation_unavailable/, `${path.relative(root, route)} must preserve a private unavailable-operation failure boundary`);
+    }
+  }
+});
+
 test('protected screens offer a shared-device clear and local sign-out boundary', () => {
   const control = read('src/components/shared-device-sign-out.tsx');
   const storage = read('src/lib/client-session-storage.ts');
