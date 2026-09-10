@@ -1,6 +1,6 @@
 # Qualification preview boundary
 
-**Date:** 2026-09-10  
+**Date:** 2026-09-10
 **Status:** Accepted for the server-authoritative results foundation; not an
 event-finalization authorization.
 
