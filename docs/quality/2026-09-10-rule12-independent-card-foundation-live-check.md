@@ -35,9 +35,11 @@ constraints, read the projections, and rolled the transaction back.
 The database accepted that non-reciprocal pair. A separate disposable attempt
 to state a 17-point winning original claim with only 16 plus points failed at
 the projection trigger with `correction original claim is internally
-inconsistent`. A post-check catalog query found zero rows for either fixture
-identifier and zero `authenticated` execute privileges on the three private
-assertion functions.
+inconsistent`. A third disposable attempt with only one otherwise valid card
+projection failed when deferred constraints were forced with `correction
+requires exactly two independent card projections`. A post-check catalog query
+found zero rows for all fixture identifiers and zero `authenticated` execute
+privileges on the three private assertion functions.
 
 ## Foundation repairs included
 

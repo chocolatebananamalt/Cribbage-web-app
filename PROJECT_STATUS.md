@@ -9,8 +9,9 @@
   and requires exactly two distinct card projections. A live rolled-back
   fixture proves Rule 12.2(b)'s distinct 17-point-win/16-point-loss original
   claims can become the required 16-point-win/17-point-loss adjudications;
-  an internally inconsistent original claim is rejected. The correction
-  feature has no user-facing writer or reader and remains disabled. Details:
+  an internally inconsistent original claim and an incomplete one-card
+  correction are rejected. The correction feature has no user-facing writer
+  or reader and remains disabled. Details:
   `docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.
   The source-case ledger now records the remaining executable fixtures and
   rejection conditions for Rule 12.2(a)–(i), without claiming they exist:
