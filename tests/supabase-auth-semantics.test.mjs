@@ -378,6 +378,12 @@ test('public registration remains release-gated and sends only a derived digest 
   assert.doesNotMatch(route, /p_credential|canonicalToken.*rpc/);
 });
 
+test('registration page clears its fragment before hydration and uses no browser persistence', () => {
+  const bootstrap = read('public/registration-bootstrap.js'); const page = read('src/app/register/page.tsx'); const form = read('src/app/register/registration-form.tsx'); const config = read('next.config.ts');
+  assert.match(bootstrap, /history\.replaceState/); assert.match(page, /strategy="beforeInteractive"/); assert.match(form, /delete window\.__accRegistrationCredential/);
+  assert.doesNotMatch(bootstrap + form, /localStorage|sessionStorage/); assert.match(config, /source: "\/register"/); assert.match(config, /Content-Security-Policy/);
+});
+
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);

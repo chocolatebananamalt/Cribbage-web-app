@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 fragment-only registration browser handoff
+
+- Added the release-gated `/register` page and a self-hosted pre-hydration
+  bootstrap script. It validates and removes a `link-id.secret` fragment from
+  the address bar before the app hydrates, holds it only briefly in memory,
+  then deletes it before submission. The page has a route-specific restrictive
+  content policy and no local/session-storage use.
+- Lint, **92** tests, and the production build pass. Real browser network,
+  history/BFCache, error-path, and independent-session proof still remain
+  mandatory before enabling public registration.
+
 ## 2026-09-10 public registration redemption release gate
 
 - Added the server-side claim boundary needed for fragment-only registration,

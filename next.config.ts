@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
           { key: "X-DNS-Prefetch-Control", value: "off" },
         ],
       },
+      {
+        source: "/register",
+        headers: [
+          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" },
+        ],
+      },
     ];
   },
 };
