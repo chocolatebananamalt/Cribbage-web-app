@@ -1,7 +1,8 @@
 # ACC Tournament Desk — Working Outline
 
-**Last updated:** 2026-09-10  
-**How to ask for this:** `Show Outline`  
+**Last updated:** 2026-09-10
+
+**How to ask for this:** `Show Outline`
 **Planning baseline:** This is a living delivery tracker, not a promise that
 an unverified feature is ready. Estimates assume prompt decisions, continued
 access to the current Vercel/Supabase projects, and no newly discovered ACC
