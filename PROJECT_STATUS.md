@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 sign-out Fetch-Metadata hardening
+
+- Aligned the passwordless session-clearing endpoint with the shared
+  same-origin and Fetch-Metadata decision, including a private non-cacheable
+  rejection response. Existing local sign-out, cookie propagation, and
+  shared-device cleanup behavior remain covered. Full local tests, lint,
+  production build, recovery checks, and diff validation pass. See
+  `docs/quality/2026-09-10-sign-out-fetch-metadata-hardening.md`.
+
 ## 2026-09-10 API mutation Fetch-Metadata gateway hardening
 
 - Strengthened the shared `/api/v1` unsafe-request gateway. It already

@@ -196,7 +196,8 @@ test('protected screens offer a shared-device clear and local sign-out boundary'
   assert.match(control, /clearThenSignOut\(window\.sessionStorage/);
   assert.match(control, /fetch\("\/auth\/sign-out"/);
   assert.match(control, /window\.location\.replace\(destination\.toString\(\)\)/);
-  assert.match(signOut, /request\.headers\.get\("origin"\) !== request\.nextUrl\.origin/);
+  assert.match(signOut, /isSameOriginRequest\(request\)/);
+  assert.match(signOut, /private, no-store/);
   assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
   assert.match(signOut, /Clear-Site-Data/);
   assert.match(signOut, /"cache", "storage"/);
