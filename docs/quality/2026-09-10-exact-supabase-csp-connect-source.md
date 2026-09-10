@@ -20,6 +20,10 @@ separately; this policy does not make an invalid deployment usable.
 - Focused lint passed.
 - The 32-check Supabase/auth suite passed, including exact-origin and malformed
   configuration cases.
+- A local optimized-server request without public Supabase configuration
+  returned the expected private `503` and retained the full CSP with
+  `connect-src 'self'`; no external source was silently allowed. The temporary
+  server was stopped after the check.
 
 Hosted header and browser verification remain open while Vercel's daily code
 deployment quota is exhausted. This local/source evidence is not substituted
