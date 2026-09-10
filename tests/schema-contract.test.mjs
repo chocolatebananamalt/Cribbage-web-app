@@ -166,3 +166,22 @@ test('witnessed roster-account activation storage is private, digest-only, and h
   assert.match(sql, /roster_account_activation_events_immutable/);
   assert.doesNotMatch(sql, /token(?:_| )?(?:value|secret|raw)|claimed_email|claimed_acc_number/i);
 });
+
+test('activation issuance is a server-only, receipt-bound, role-checked database transaction', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0091_roster_account_activation_issue_rpc.sql'), 'utf8');
+  assert.match(sql, /roster_account_activation_service_only/);
+  assert.match(sql, /auth\.role\(\).*service_role/);
+  assert.match(sql, /issue_roster_account_activation_v1/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /octet_length\(p_salt\) <> 32/);
+  assert.match(sql, /octet_length\(p_digest\) <> 32/);
+  assert.match(sql, /roster_account_activation_operation_conflicts/);
+  assert.match(sql, /roster_account_activation_operation_conflicts_actor_idx/);
+  assert.match(sql, /idempotency_conflict/);
+  assert.match(sql, /update app\.roster_account_activation_requests set state = 'rejected'/);
+  assert.match(sql, /revoke all on function public\.issue_roster_account_activation_v1.*from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.issue_roster_account_activation_v1.*to service_role/);
+  assert.doesNotMatch(sql, /raw token|p_token|claimed_email|claimed_acc_number/i);
+});

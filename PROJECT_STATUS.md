@@ -6,10 +6,14 @@
   Preview-only `SUPABASE_SECRET_KEY` was confirmed in Vercel. The repository
   now has a strictly parsed 256-bit fragment-token primitive and an un-applied
   private digest-only migration for activation, pending-request, and immutable
-  event records. Its server-only issuer adapter sends only salted digest
-  material and never recreates a credential after an ambiguous retry. The
-  feature is still unavailable: no route, QR, redemption, approval, or pilot
-  migration has been enabled. See
+  event records. The next local migration adds the service-only, receipt-bound
+  issuance transaction: it serializes each roster identity, rechecks the
+  director/co-director role, expires stale pending requests safely, and retains
+  changed idempotency-key collisions as immutable private evidence. Its
+  server-only issuer adapter sends only salted digest material and never
+  recreates a credential after an ambiguous retry. The feature is still
+  unavailable: no route, QR, redemption, approval, or pilot migration has
+  been enabled. See
   `docs/quality/2026-09-10-account-activation-foundation.md`.
 
 ## 2026-09-10 hosted email-provider clarification

@@ -4,11 +4,12 @@
 
 This increment creates the local, un-applied private persistence contract and
 the server-only 256-bit activation-token primitive for the witnessed
-roster-account linking ceremony. It also adds the server-only issuer adapter,
-which returns a credential only when an exact future database receipt binds it
-to the freshly generated activation ID. It does **not** open a browser route,
-issue a QR/link, redeem a credential, expose a director workspace, or apply a
-database migration to the pilot.
+roster-account linking ceremony. It also adds the server-only issuer adapter
+and its private, receipt-bound issue transaction, which returns a credential
+only when an exact future database receipt binds it to the freshly generated
+activation ID. It does **not** open a browser route, issue a QR/link, redeem a
+credential, expose a director workspace, or apply a database migration to the
+pilot.
 
 ## Acceptance evidence in this increment
 
@@ -29,16 +30,23 @@ database migration to the pilot.
 - The issuer sends only bytea salt/digest values to its intended private RPC.
   A replayed accepted receipt returns `credential_unavailable`; a malformed
   receipt cannot masquerade as a valid replay.
+- Migration `0091` exposes issuance only to `service_role`, rechecks that the
+  supplied actor is the current director or co-director, serializes the
+  tournament/roster identity, records an immutable receipt/audit/event, and
+  preserves changed-operation-ID collisions as private immutable evidence.
+  It expires a stale pending request before a replacement activation can be
+  issued, releasing that profile for a later witnessed ceremony. It never
+  receives or records the raw activation value.
 
 ## Verification
 
-- `pnpm test` — pass, 131 tests.
+- `pnpm test` — pass, 132 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
 
-The migration is not yet applied. The remaining work must implement and test
-the service-only issue/redeem/cancel/approve transactions, stable receipts,
+The migrations are not yet applied. The remaining work must implement and test
+the service-only redeem/cancel/approve transactions, stable receipts,
 the nested link rollback, exact route envelopes, fragment-clearing no-third-
 party page, and real independent-session/browser evidence before this feature
 can be enabled. This increment neither changes player access nor weakens the
