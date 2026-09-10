@@ -72,6 +72,8 @@
   is not safe to present as ACC-complete. It is now default-off at the app
   boundary, and migration `0096` revokes direct authenticated mutation grants
   until an independent-card replacement and all nine source fixtures exist.
+  Related correction-policy and reconciliation surfaces are also absent while
+  the same gate is off, so no partial configuration workflow remains exposed.
   The revocation was applied and catalog-verified only in the separate
   synthetic test project; the shared pilot was not changed. See
   `docs/decisions/2026-09-10-rule12-independent-card-corrections.md`.

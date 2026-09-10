@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { createClient } from "../../../../../../lib/supabase/server";
+import { rule12CorrectionEnabled } from "../../../../../../lib/api/rule12-correction-release";
 
 function isBoundResolvedCorrection(value: unknown, correctionId: string) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
@@ -12,6 +13,7 @@ function isBoundResolvedCorrection(value: unknown, correctionId: string) {
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
+    if (!rule12CorrectionEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     const { id } = await params;
     const parsed = await readSmallJson(request);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });

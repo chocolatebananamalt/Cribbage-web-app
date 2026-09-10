@@ -345,6 +345,8 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(proposal, /propose_game_correction/);
   assert.match(proposal, /rule12CorrectionEnabled\(\)/);
   assert.match(review, /rule12CorrectionEnabled\(\)/);
+  assert.match(reconciliation, /rule12CorrectionEnabled\(\)/);
+  assert.match(reconciliation, /requireVerifiedSubject/);
   assert.match(correctionPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
   assert.match(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED === "approved"/);
   assert.match(correctionSuspension, /revoke all on function public\.propose_game_correction[\s\S]*from authenticated/);
@@ -750,6 +752,7 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   const reconciliationRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/reconciliation/route.ts');
   const page = read('src/app/tournament/[tournamentId]/correction-policy/page.tsx');
   const client = read('src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx');
+  const correctionRelease = read('src/lib/api/rule12-correction-release.ts');
   assert.match(sql, /create or replace function public\.get_correction_policy/);
   assert.match(sql, /create or replace function public\.get_correction_policy_operation_reconciliation/);
   assert.match(sql, /security definer/);
@@ -772,16 +775,19 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(policyDal, /get_correction_policy/);
   assert.doesNotMatch(policyDal, /\.from\(/);
   assert.match(policyRoute + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/);
+  assert.match(policyRoute, /rule12CorrectionEnabled\(\)/);
   assert.match(policyRoute, /configure_correction_policy/);
   assert.match(policyRoute, /idempotencyKey/);
   assert.match(policyRoute, /requiredApprovals/);
   assert.match(policyRoute, /expectedPolicyVersion/);
   assert.match(reconciliationRoute, /get_correction_policy_operation_reconciliation/);
   assert.match(reconciliationRoute, /isPolicyReconciliationResult/);
+  assert.match(reconciliationRoute, /rule12CorrectionEnabled\(\)/);
   assert.match(reconciliationRoute, /item\.tournament_id === tournamentId/);
   assert.match(reconciliationRoute + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), /getClaims/);
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /getCorrectionPolicy/);
+  assert.match(page, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
   assert.match(page, /\['director', 'co_director'\]/);
   assert.match(client, /acc-correction:policy:/);
   assert.match(client, /sessionStorage/);
@@ -789,6 +795,7 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(client, /crypto\.randomUUID\(\)/);
   assert.match(client, /expectedPolicyVersion: policy\.policyVersion/);
   assert.match(client, /router\.refresh\(\)/);
+  assert.match(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED === "approved"/);
 });
 
 test('registration claim review remains an immutable non-enrollment boundary', () => {

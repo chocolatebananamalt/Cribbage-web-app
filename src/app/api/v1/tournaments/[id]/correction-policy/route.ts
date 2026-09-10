@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { rule12CorrectionEnabled } from "../../../../../../lib/api/rule12-correction-release";
 
 const policyRejectionCodes = ["authentication_required", "invalid_request", "tournament_not_configurable", "not_director", "stale_policy", "idempotency_conflict", "policy_rejected"];
 
@@ -21,6 +22,7 @@ function rejected(value: unknown, tournamentId: string) {
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
+  if (!rule12CorrectionEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
   const { id } = await params;
   const parsed = await readSmallJson(request);
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });

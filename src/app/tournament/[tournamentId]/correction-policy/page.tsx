@@ -4,8 +4,10 @@ import { requireTournamentAccess } from "../../../../lib/auth/require-tournament
 import { isUuid } from "../../../../lib/api/validation";
 import { getCorrectionPolicy } from "../../../../lib/corrections/policy";
 import { CorrectionPolicyClient } from "./policy-client";
+import { rule12CorrectionEnabled } from "../../../../lib/api/rule12-correction-release";
 
 export default async function CorrectionPolicyPage({ params }: { params: Promise<{ tournamentId: string }> }) {
+  if (!rule12CorrectionEnabled()) notFound();
   const { tournamentId } = await params;
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);

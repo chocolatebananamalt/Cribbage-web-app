@@ -39,8 +39,8 @@ cannot represent the cited (b) or (h) outcomes faithfully.
 
 - `ACC_RULE12_CORRECTION_ENABLED` defaults to off and accepts only the value
   `approved` at the web boundary.
-- The correction page plus proposal/review routes return absent/not-found while
-  the switch is off.
+- The correction page, correction-policy page, proposal/review routes, and
+  their reconciliation routes return absent/not-found while the switch is off.
 - Migration `0096_suspend_incomplete_rule12_corrections.sql` revokes direct
   authenticated execution of the two mutation RPCs. Re-enabling requires a
   separately reviewed migration after the replacement model and all fixtures
