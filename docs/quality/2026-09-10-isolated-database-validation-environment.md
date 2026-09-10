@@ -42,6 +42,11 @@ not used for this work.
   create another activation. This is rejection-path evidence only; it does not
   substitute for the still-required new-fixture issue/redeem/decision race
   matrix.
+- A separate issue attempt naming a player rather than a director was rejected
+  by the database before any activation row was created. A follow-up count
+  confirmed zero activation rows; only the earlier authorized-but-ineligible
+  rejection receipt exists. This proves the authorization check fails without
+  mutating activation state in this fixture.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
   private-table RLS and service-procedure notices match the reviewed
