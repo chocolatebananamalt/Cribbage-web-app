@@ -20,6 +20,31 @@ test('registration-link request reader rejects non-JSON, malformed, declared-ove
   for (const request of cases) assert.equal(await registrationLink.readRegistrationLinkJson(request), null);
 });
 
+test('registration-link request reader cancels an oversized stream before later chunks are read', async () => {
+  let reads = 0;
+  let canceled = false;
+  const request = {
+    headers: new Headers({ 'content-type': 'application/json' }),
+    body: {
+      getReader() {
+        return {
+          async read() {
+            reads += 1;
+            if (reads === 1) return { done: false, value: new Uint8Array(2000) };
+            if (reads === 2) return { done: false, value: new Uint8Array(49) };
+            throw new Error('reader must not consume a later chunk');
+          },
+          async cancel() { canceled = true; },
+          releaseLock() {},
+        };
+      },
+    },
+  };
+  assert.equal(await registrationLink.readRegistrationLinkJson(request), null);
+  assert.equal(reads, 2);
+  assert.equal(canceled, true);
+});
+
 test('rotation and closure require an exact current link/version and a canonical expiry', () => {
   const valid = {
     expectedLinkId: '0f2f2d31-12ab-4bcd-8b8c-1234567890ab', expectedVersion: 2,

@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 registration-link streaming-body repair
+
+- Closed the same input-buffering gap in the live registration-link issue,
+  rotate, close, and registration-close mutations. Those server-only director
+  operations now reject non-JSON, malformed, declared-oversize, and actual
+  bodies over 2 KiB through the shared streaming reader, which cancels before
+  consuming later chunks. Existing exact-shape, same-origin, role,
+  idempotency, credential, and database controls are unchanged. Local checks
+  pass: **122 tests**, lint, production build, workspace verification,
+  private-handoff verification, and diff check. See
+  `docs/quality/2026-09-10-registration-link-streaming-boundary.md`.
+
 ## 2026-09-10 source-bound qualification preview
 
 - Added a pure, source-bound ACC qualification preview: ranks by game points,
