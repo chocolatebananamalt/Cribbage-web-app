@@ -14,7 +14,10 @@ function registrationContentSecurityPolicy(nonce: string) {
     `style-src 'self'${development ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
     "img-src 'self' blob: data:",
     "font-src 'self'",
-    "connect-src 'self'",
+    // Browser authentication is the only current cross-origin connection.
+    // Keep the allow-list narrowly scoped so a future integration must be
+    // consciously reviewed before it can receive operational browser data.
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
@@ -34,20 +37,21 @@ export async function proxy(request: NextRequest) {
     return NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
   }
   try {
-    // A disabled feature must stay absent even when an unconfigured local
-    // environment cannot initialize the unrelated authenticated-session proxy.
-    if (request.nextUrl.pathname === "/activate" && !accountActivationEnabled()) {
-      return NextResponse.next();
-    }
-    const protectsFragmentCredential = request.nextUrl.pathname === "/register"
-      || request.nextUrl.pathname === "/activate";
-    if (!protectsFragmentCredential) return await updateSession(request);
-
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
     const policy = registrationContentSecurityPolicy(nonce);
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-nonce", nonce);
     requestHeaders.set("Content-Security-Policy", policy);
+
+    // A disabled feature must stay absent even when an unconfigured local
+    // environment cannot initialize the unrelated authenticated-session proxy.
+    // It still receives the same browser isolation policy as every other page.
+    if (request.nextUrl.pathname === "/activate" && !accountActivationEnabled()) {
+      const response = NextResponse.next({ request: { headers: requestHeaders } });
+      response.headers.set("Content-Security-Policy", policy);
+      return response;
+    }
+
     const response = await updateSession(request, requestHeaders);
     response.headers.set("Content-Security-Policy", policy);
     return response;

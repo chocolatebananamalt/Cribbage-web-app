@@ -70,6 +70,12 @@ test('site-wide browser hardening headers prevent framing, indexing, referrer le
   assert.match(config, /camera=\(\), geolocation=\(\), microphone=\(\), payment=\(\), usb=\(\)/);
   assert.match(config, /X-DNS-Prefetch-Control/);
   assert.match(config, /value: "off"/);
+  const proxy = read('src/proxy.ts');
+  assert.match(proxy, /Content-Security-Policy/, 'every matched application response must set a CSP');
+  assert.match(proxy, /connect-src 'self' https:\/\/\*\.supabase\.co wss:\/\/\*\.supabase\.co/, 'the CSP must allow only the authenticated Supabase browser connection');
+  assert.match(proxy, /frame-ancestors 'none'/, 'the CSP must independently deny framing');
+  assert.match(proxy, /object-src 'none'/, 'the CSP must deny plugin content');
+  assert.doesNotMatch(proxy, /if \(!protectsFragmentCredential\) return await updateSession/, 'CSP must not be restricted to registration pages');
 });
 
 test('callback only accepts same-origin relative redirect paths', () => {
@@ -551,7 +557,7 @@ test('registration page clears its fragment before hydration and uses no browser
   assert.match(bootstrap, /history\.replaceState/); assert.match(page, /publicRegistrationEnabled/); assert.match(page, /if \(!publicRegistrationEnabled\(\)\) notFound\(\)/); assert.match(page, /strategy="beforeInteractive"/); assert.match(form, /delete window\.__accRegistrationCredential/);
   assert.doesNotMatch(bootstrap + form, /localStorage|sessionStorage/); assert.match(config, /Referrer-Policy/);
   assert.doesNotMatch(form, /useState<string/); assert.match(form, /const \[canRegister, setCanRegister\] = useState\(false\)/); assert.match(form, /credentialRef\.current = null/); assert.match(form, /setCanRegister\(false\)/); assert.match(form, /window\.addEventListener\("pagehide", onPageHide\)/); assert.match(form, /requestRef\.current\?\.abort\(\)/); assert.match(form, /dropCredential\(\);/); assert.match(form, /signal: controller\.signal/);
-  assert.match(page, /await connection\(\)/); assert.match(proxy, /registrationContentSecurityPolicy/); assert.match(proxy, /request\.nextUrl\.pathname === "\/register"/); assert.match(proxy, /request\.nextUrl\.pathname === "\/activate"/); assert.match(proxy, /requestHeaders\.set\("x-nonce", nonce\)/); assert.match(proxy, /response\.headers\.set\("Content-Security-Policy", policy\)/); assert.match(proxy, /'strict-dynamic'/); assert.match(proxy, /base-uri 'none'/); assert.match(sessionProxy, /requestHeaders = new Headers\(request\.headers\)/); assert.match(sessionProxy, /NextResponse\.next\(\{ request: \{ headers: requestHeaders \} \}\)/);
+  assert.match(page, /await connection\(\)/); assert.match(proxy, /registrationContentSecurityPolicy/); assert.match(proxy, /request\.nextUrl\.pathname === "\/activate"/); assert.match(proxy, /requestHeaders\.set\("x-nonce", nonce\)/); assert.match(proxy, /response\.headers\.set\("Content-Security-Policy", policy\)/); assert.match(proxy, /'strict-dynamic'/); assert.match(proxy, /base-uri 'none'/); assert.match(sessionProxy, /requestHeaders = new Headers\(request\.headers\)/); assert.match(sessionProxy, /NextResponse\.next\(\{ request: \{ headers: requestHeaders \} \}\)/);
 });
 
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
