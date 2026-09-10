@@ -536,6 +536,26 @@ test('director rotation route is release-gated, strict, server-only, and returns
   assert.match(contract, /status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number/);
 });
 
+test('director QR registration workspace is role-gated and holds a one-time credential only in memory', () => {
+  const page = read('src/app/tournament/[tournamentId]/registration/page.tsx');
+  const client = read('src/app/tournament/[tournamentId]/registration/registration-link-client.tsx');
+  const workspace = read('src/lib/registration-link-workspace.ts');
+  const tournament = read('src/app/tournament/[tournamentId]/page.tsx');
+  assert.match(page, /publicRegistrationEnabled\(\)/);
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /\["director", "co_director"\]/);
+  assert.match(page, /getRegistrationLinkWorkspace/);
+  assert.match(workspace, /import "server-only"/);
+  assert.match(workspace, /get_registration_link_state_v2/);
+  assert.match(client, /QRCode\.toDataURL/);
+  assert.match(client, /\/register#\$\{result\.credential\}/);
+  assert.match(client, /setOneTimeLink\(null\)/);
+  assert.match(client, /isRegistrationLinkState/);
+  assert.doesNotMatch(client, /localStorage|sessionStorage/);
+  assert.match(tournament, /Registration link and QR code/);
+  assert.match(tournament, /publicRegistrationEnabled\(\)/);
+});
+
 test('registration closure atomically closes its active link and is exposed only through the protected server boundary', () => {
   const close = read('database/migrations/0082_atomic_tournament_registration_close.sql');
   const route = read('src/app/api/v1/tournaments/[id]/registration-close/route.ts');
