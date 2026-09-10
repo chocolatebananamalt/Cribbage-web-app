@@ -9,6 +9,7 @@
   hard-disabled correction routes, and roster-promotion operations. A
   repository-wide regression test now requires every API POST route to use
   that gate. No database behavior or hosted configuration was changed.
+  Evidence: `docs/quality/2026-09-10-api-mutation-and-function-surface-review.md`.
 
 ## 2026-09-10 director QR-registration workspace
 
