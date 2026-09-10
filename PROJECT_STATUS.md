@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 Supabase advisor recheck
+
+- Fresh pilot and disposable-database advisor scans found no new direct
+  browser data exposure. Both still report the intentional private-RPC model
+  and the two known legacy public-registration functions, which remain a
+  public-release blocker pending their fragment-only replacement.
+- The current advisor emits 13 INFO-level unindexed-foreign-key notices; this
+  corrects an earlier inaccurate zero-notice statement. Catalog inspection
+  confirmed each has equivalent existing leading unique/index coverage, so no
+  redundant index was added. Empty-database unused-index notices remain
+  non-actionable until representative-load testing.
+
 ## 2026-09-10 dependency and repository-history security audit
 
 - A fresh production dependency audit found no known high-severity production
