@@ -89,6 +89,7 @@ test('check-in and initial-seating routes accept only strict, bounded, migration
   assert.equal(seating.isAcceptedCheckIn({ ...acceptedCheckIn, internal_detail: 'private' }, tournamentId, checkIn), false);
   const rejectedCheckIn = { status: 'rejected', code: 'not_director', rosterEntryId, tournamentId, operationId };
   assert.equal(seating.isRejectedCheckIn(rejectedCheckIn, tournamentId, checkIn), true);
+  assert.equal(seating.isRejectedCheckIn({ ...rejectedCheckIn, code: 'registration_closed' }, tournamentId, checkIn), true);
   assert.equal(seating.isRejectedCheckIn({ ...rejectedCheckIn, operationId: otherOperationId }, tournamentId, checkIn), false);
   assert.equal(seating.isRejectedCheckIn({ ...rejectedCheckIn, code: 'registration_open' }, tournamentId, checkIn), false);
   const initial = { tableCount: 1, seatsPerTable: 2, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId: otherRosterEntryId, tableSeat: 'A-2' }], idempotencyKey: operationId };
@@ -175,6 +176,20 @@ test('seating workspace reports registration closure only to the current directo
   assert.match(sql, /'registrationClosed', \(select t\.registration_status = 'closed'/);
   assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\./);
   assert.doesNotMatch(sql, /(?:registration_link_secret|credential|digest|salt)/i);
+});
+
+test('check-in closure guard serializes new attendance changes with registration closure but preserves exact retries', () => {
+  const sql = read('database/migrations/0084_check_in_registration_closure_guard.sql');
+  assert.match(sql, /create or replace function public\.record_roster_check_in_event_v2/);
+  assert.match(sql, /security definer set search_path = ''/);
+  assert.match(sql, /'registration-link-v2:' \|\| p_tournament_id::text/);
+  assert.match(sql, /select status, registration_status into v_status, v_registration_status[\s\S]*for update/);
+  assert.match(sql, /select \* into v_existing[\s\S]*for update[\s\S]*if found then[\s\S]*return v_existing\.response_payload/);
+  assert.match(sql, /if v_registration_status <> 'open' then[\s\S]*'registration_closed'/);
+  assert.match(sql, /insert into app\.operation_receipts[\s\S]*'rejected'/);
+  assert.match(sql, /insert into app\.audit_events/);
+  assert.match(sql, /perform public\.record_roster_check_in_event/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\.(?:tournaments|tournament_registration_links|tournament_registration_link_heads)/);
 });
 
 test('event enrollment uses an exact, receipt-bound private API envelope', async () => {

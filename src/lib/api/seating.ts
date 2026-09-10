@@ -4,7 +4,7 @@ export type InitialSeatingAssignment = { rosterEntryId: string; tableSeat: strin
 export type InitialSeatingRequest = { tableCount: number; seatsPerTable: number; assignments: InitialSeatingAssignment[]; idempotencyKey: string };
 
 const checkInStates: CheckInState[] = ["checked_in", "withdrawn", "late", "absent"];
-const checkInRejectionCodes = ["authentication_required", "not_director", "roster_entry_unavailable", "unassigned_check_in_after_seating", "idempotency_conflict", "invalid_request", "check_in_rejected"];
+const checkInRejectionCodes = ["authentication_required", "not_director", "registration_closed", "roster_entry_unavailable", "unassigned_check_in_after_seating", "idempotency_conflict", "invalid_request", "check_in_rejected"];
 const seatingRejectionCodes = ["authentication_required", "not_director", "registration_open", "checked_in_roster_required", "seating_capacity_exceeded", "duplicate_seating_assignment", "initial_seating_already_published", "idempotency_conflict", "invalid_request", "initial_seating_rejected"];
 const isUuid = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 

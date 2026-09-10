@@ -36,6 +36,22 @@
   signed-in phone/desktop and independent-session browser evidence remain
   required before release.
 
+## 2026-09-10 check-in registration-closure server guard
+
+- Independent high-risk review found that client-only attendance locking was
+  insufficient: a stale or custom authenticated request could otherwise
+  change check-in after registration closure. Migration
+  `0084_check_in_registration_closure_guard.sql` fixes this in the actual
+  check-in RPC. It shares the registration lifecycle lock, reconciles an exact
+  prior receipt before evaluating current status, and records any new
+  post-closure request as an auditable `registration_closed` rejection.
+- It was applied and executed first in disposable project
+  `donfxulkliuyteiannir`, where the rejection and exact replay left exactly one
+  receipt and one audit record, then applied to pilot
+  `fnjkwymxpnsqvxtpronk`. Pilot catalog confirms no anonymous execute grant,
+  `SECURITY DEFINER`, and an empty search path. Real independent-connection
+  race and signed-in-browser evidence remain release gates.
+
 ## 2026-09-10 atomic tournament-registration closure
 
 - Added one service-only, director/co-director-authorized operation that

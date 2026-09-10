@@ -55,6 +55,16 @@ same-origin request from a verified session and uses the server-only client.
   confirms that same security posture. The protected Seating workspace now
   requires explicit director confirmation to close registration before it
   enables permanent initial-seating publication.
+- Independent review found and migration
+  `0084_check_in_registration_closure_guard.sql` fixes a P1 gap: the old
+  check-in writer could accept a stale direct request after registration had
+  closed. The replacement wrapper obtains the same tournament lifecycle lock
+  as closure, reconciles an exact prior receipt before checking current
+  registration state, and durably rejects new attendance changes with
+  `registration_closed`. Disposable execution proves that rejected result and
+  its exact retry retained one receipt and one audit event. The migration was
+  applied to the pilot; its catalog retains no anonymous execute grant,
+  `SECURITY DEFINER`, and the empty search path.
 
 ## Remaining release evidence
 
