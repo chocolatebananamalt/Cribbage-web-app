@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 Rule 12 apparent-qualifier contract
+
+- The isolated correction foundation now retains the card side(s) identified
+  as apparent qualifiers for the Rule 12.2 dispositions that require that
+  fact. Source-case shapes are database-constrained and the browser-grant
+  audit remains empty for all seven suspended legacy correction functions.
+  This was validated only in the synthetic database; no pilot data, setting,
+  or correction release switch changed. Evidence:
+  `docs/quality/2026-09-10-rule12-apparent-qualifier-contract-validation.md`.
+
 ## 2026-09-10 cross-check/judge protocol fixture foundation
 
 - Added source-bound, pure fixtures for the ACC 2025 cross-checker capacity

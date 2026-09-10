@@ -63,7 +63,7 @@ cannot represent the cited (b) or (h) outcomes faithfully.
 
 ## Foundation progress
 
-Migrations `0099` through `0104` add private, immutable, ungranted structures
+Migrations `0099` through `0105` add private, immutable, ungranted structures
 for an independent correction case and exactly one original/adjudicated
 projection for each card side. The canonical scoreline is an identity link only,
 not a substitute for the original claim: Rule 12.2(b) and (h) require that each
@@ -80,6 +80,10 @@ selected corrective disposition. Rule 12.2(g) (total adjustment) and (i)
 (affected-player notification) are effects of an underlying correction, not
 independent score outcomes; the no-change 12.2(h) disposition cannot itself be
 recorded as changing qualifying.
+
+Migration `0105` also preserves the apparent-qualifier card side(s) required
+by Rule 12.2(a), (b), and (h); the fact is supplied by a future authorized
+workflow and must never be inferred from names or a correction outcome.
 
 The isolated live database check records the Rule 12.2(b) 17/16-to-16/17
 example and malformed-claim rejection in

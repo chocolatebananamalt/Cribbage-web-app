@@ -2,6 +2,10 @@
 
 **Status:** Preparation only; not authority to change the shared pilot.
 
+**Supersession note:** this amendment's endpoint is amended by
+`PILOT_MIGRATION_PACKET_0090_0105_AMENDMENT.md`. Any future approval must
+review the complete 0090–0105 range.
+
 This amendment supersedes the endpoint of the prior
 `PILOT_MIGRATION_PACKET_0090_0103.md` packet. A future approved maintenance
 window must apply its reviewed migrations `0090` through `0103` in their exact

@@ -45,6 +45,15 @@ test('independent Rule 12 correction foundation keeps total adjustment and quali
   assert.match(sql, /revoke all on table app\.independent_card_corrections from public, anon, authenticated/);
 });
 
+test('independent Rule 12 correction foundation preserves the source-required apparent-qualifier card shape', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0105_rule12_apparent_qualifier_contract.sql'), 'utf8').toLowerCase();
+  assert.match(sql, /add column apparent_qualifier_sides text\[\] not null default array\[\]::text\[\]/);
+  assert.match(sql, /rule_case in \('12\.2a', '12\.2h'\).*cardinality\(apparent_qualifier_sides\) = 1/s);
+  assert.match(sql, /rule_case = '12\.2b'.*cardinality\(apparent_qualifier_sides\) = 2/s);
+  assert.match(sql, /rule_case in \('12\.2c', '12\.2d', '12\.2e', '12\.2f'\).*cardinality\(apparent_qualifier_sides\) = 0/s);
+  assert.match(sql, /revoke all on table app\.independent_card_corrections from public, anon, authenticated/);
+});
+
 test('independent Rule 12 correction foundation rejects mismatched cards, inconsistent claims, and incomplete pairs', () => {
   const invariantSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0100_independent_card_correction_projection_invariants.sql'), 'utf8').toLowerCase();
   assert.match(invariantSql, /for update/);
