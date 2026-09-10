@@ -46,6 +46,33 @@ processing, or defects found in real multi-person and venue testing.
 The detailed rule/ACC decision split is maintained in
 `docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`.
 
+## ACC confirmation checklist
+
+### Part A — Codex confirms from official ACC sources
+
+| Confirmation | Status | Target |
+| --- | --- | --- |
+| Current Rulebook edition plus game-point, spread, scorecard, and cross-check fixtures | In progress | 2026-09-17 |
+| Qualification order, playoff count, bracket, and bye fixtures | Not started | 2026-09-22 |
+| Event styles, game-count options, sanctioning fields, flyer requirements, and role vocabulary | Not started | 2026-09-24 |
+| MRP, Q-pool, payout, and reporting-source inventory | Not started | 2026-09-30 |
+| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Not started | 2026-10-02 |
+
+### Part B — ACC/director confirmations needed
+
+| Your checklist item | Status | Needed by |
+| --- | --- | --- |
+| Written approval to use the app as an official digital operational record | Waiting for ACC/director response | Before pilot acceptance of Step 3 |
+| Approved ACC portal API, import, or director-reviewed export process | Waiting for ACC/director response | Before Step 5 |
+| Current authoritative MRP, Q-pool, and payout schedules for supported events | Waiting for ACC/director response | Before Step 5 |
+| Paper-scorecard image/OCR retention and access policy | Waiting for ACC/director response | Before Step 4 |
+| Confirmed official role list, including multiple co-directors | Waiting for ACC/director response | Before Step 3 acceptance |
+| Payment authority and processor choice, only if app payments are enabled | Not yet needed | Before enabling payments |
+
+The detailed checklist explains the source, purpose, and exact evidence for
+each item. When either side completes an item, its status and date are updated
+here and in the detailed record.
+
 ## Rules for status updates
 
 - **Complete** means the stated definition of done has direct recorded
