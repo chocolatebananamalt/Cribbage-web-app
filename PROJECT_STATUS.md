@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 cross-check/judge protocol fixture foundation
+
+- Added source-bound, pure fixtures for the ACC 2025 cross-checker capacity
+  threshold (two through 24 players, three above), the qualifying-relationship
+  third-checker safeguard, two-judge hearing start, third-judge disagreement
+  escalation, duplicate-official rejection, and self-dispute rejection.
+  The implementation deliberately creates no operational assignment, role, or
+  UI authority; `R-RULE-01` remains incomplete until its server lifecycle and
+  real-session evidence exist. Evidence:
+  `docs/quality/2026-09-10-cross-check-and-judge-protocol-fixtures.md`.
+
 ## 2026-09-10 Rule 12 disposition/notice database contract
 
 - Closed a source-model gap in the isolated validation database: Rule 12.2(g)
