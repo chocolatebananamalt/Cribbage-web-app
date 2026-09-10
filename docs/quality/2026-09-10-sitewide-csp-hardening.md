@@ -40,11 +40,14 @@ future browser integration requires an intentional allow-list review.
   The available browser-control tools reject localhost before the development
   server receives a request, so no local visual result is being represented as
   evidence.
-- At the time of this record, Vercel's Git integration had not created a new
-  deployment after the commit. The latest available hosted preview remains
+- The Vercel deployment screen confirms that the connected Git source is
+  correct, but the Hobby plan has reached its daily code-deployment limit:
+  “Resource is limited - try again in 24 hours (more than 100, code:
+  `api-deployments-free-per-day`).” The latest available hosted preview remains
   `dpl_DmcKzD2g5vDkgkxm5PAxkpe5UG48` from earlier commit `4faa088`, so it
-  cannot verify this CSP change. Hosted response and phone/desktop browser
-  evidence remains open.
+  cannot verify this CSP change. No attempt was made to bypass the limit or
+  incur a charge. Hosted response and phone/desktop browser evidence remains
+  open after the limit resets.
 
 This is browser isolation hardening, not a substitute for database grants,
 role enforcement, migration parity, or release approval.
