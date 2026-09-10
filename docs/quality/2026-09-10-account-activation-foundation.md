@@ -54,16 +54,19 @@ pilot.
   inside an exception subtransaction; malformed, failed, or revoked-role inner
   work raises and rolls the whole approval back. A rejection finalizes only the
   pending request/activation and releases it for a later ceremony.
+- Migration `0095` closes a director-cancelled activation through the same
+  server-only, receipt/audit/event boundary. It rejects any pending request,
+  releases the roster/profile for a later ceremony, and cannot create a link.
 
 ## Verification
 
-- `pnpm test` — pass, 137 tests.
+- `pnpm test` — pass, 138 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
 
 The migrations are not yet applied. The remaining work must implement and test
-the service-only cancellation transaction, exact route envelopes, stable receipts,
+exact route envelopes, stable receipts,
 the nested link rollback, exact route envelopes, fragment-clearing no-third-
 party page, and real independent-session/browser evidence before this feature
 can be enabled. This increment neither changes player access nor weakens the

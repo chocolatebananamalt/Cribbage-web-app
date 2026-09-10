@@ -224,3 +224,13 @@ test('activation approval is server-only, phrase-witnessed, and rolls back a fai
   assert.match(sql, /revoke all on function public\.decide_roster_account_activation_v1.*from public, anon, authenticated/);
   assert.match(sql, /grant execute on function public\.decide_roster_account_activation_v1.*to service_role/);
 });
+
+test('activation cancellation is server-only, receipt-bound, and releases a pending request', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0095_roster_account_activation_cancel_rpc.sql'), 'utf8');
+  assert.match(sql, /cancel_roster_account_activation_v1/);
+  assert.match(sql, /roster_account_activation_service_only/);
+  assert.match(sql, /state = 'cancelled', terminal_at = now\(\)/);
+  assert.match(sql, /roster_account_activation_requests set state = 'rejected'/);
+  assert.match(sql, /revoke all on function public\.cancel_roster_account_activation_v1.*from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.cancel_roster_account_activation_v1.*to service_role/);
+});
