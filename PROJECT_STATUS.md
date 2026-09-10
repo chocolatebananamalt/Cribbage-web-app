@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 server-only registration issuer adapter
+
+- Added a tested server-only issuer adapter that generates the supplied v2
+  link ID, derives fixed-length salt/digest values, sends PostgreSQL bytea
+  values to the private RPC, and returns a credential only after an exact
+  matching issued receipt. The raw secret is never an RPC argument. This is a
+  foundation for the future authenticated director route, not a public route.
+- Lint, **89** tests, and the production build pass. A configured hosted
+  server key and real service-role transaction remain required.
+
 ## 2026-09-10 registration issuer-supplied ID repair
 
 - The review caught and corrected a critical v2 issuance mismatch: a QR
