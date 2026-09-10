@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 pilot live advisor and migration recheck
+
+- Rechecked the connected pilot's current migration history and live
+  security/performance advisors. Its 43 private RLS-without-policy notices
+  and 29 authenticated role-checked `SECURITY DEFINER` RPC notices remain
+  intentional under the private-table design; no anonymous/PUBLIC execution
+  or unindexed foreign-key finding appeared. The remaining password advisory
+  is only safe to waive if the hosted password provider is disabled. No
+  database state was changed. See
+  `docs/quality/2026-09-10-pilot-live-advisor-recheck.md`.
+
 ## 2026-09-10 sign-out Fetch-Metadata hardening
 
 - Aligned the passwordless session-clearing endpoint with the shared
