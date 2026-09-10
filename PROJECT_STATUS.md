@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 account-activation lifetime boundary
+
+- Tightened the disabled account-activation issue route so impossible
+  short/long credential lifetimes are rejected before any server-only database
+  call. The private database rule remains authoritative. Focused lint and
+  deterministic rejection tests passed; this does not enable the feature or
+  apply its migrations. Details:
+  `docs/quality/2026-09-10-account-activation-lifetime-boundary.md`.
+
 ## 2026-09-10 review-prototype new-tab isolation
 
 - Closed a review-surface browser boundary: every prototype link that opens a
