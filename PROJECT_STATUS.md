@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 registration-link token boundary
+
+- Added a server-only v2 registration-link credential primitive: it produces
+  a 256-bit URL-safe secret only as `link-id.secret`, rejects URL/path/query
+  and malformed shapes, derives only a 32-byte salted digest for database use,
+  and uses constant-time equality for fixed-length digests. It is covered by
+  three positive/rejection tests and does not itself open or change public
+  registration.
+
 ## 2026-09-10 Supabase advisor recheck
 
 - Fresh pilot and disposable-database advisor scans found no new direct
