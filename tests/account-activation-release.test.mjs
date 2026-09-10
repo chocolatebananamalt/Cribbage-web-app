@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
 import test from "node:test";
@@ -14,4 +15,12 @@ test("incomplete Rule 12.2 correction mutation defaults closed", () => {
   assert.equal(rule12CorrectionEnabled({}), false);
   assert.equal(rule12CorrectionEnabled({ ACC_RULE12_CORRECTION_ENABLED: "true" }), false);
   assert.equal(rule12CorrectionEnabled({ ACC_RULE12_CORRECTION_ENABLED: "approved" }), false);
+});
+
+test("deployment template makes staged feature defaults explicitly closed", async () => {
+  const example = await readFile(path.join(process.cwd(), ".env.example"), "utf8");
+  assert.match(example, /^ACC_REGISTRATION_LINK_MANAGEMENT_V2=disabled$/m);
+  assert.match(example, /^ACC_PUBLIC_REGISTRATION_V2=disabled$/m);
+  assert.match(example, /^ACC_ACCOUNT_ACTIVATION_ENABLED=false$/m);
+  assert.doesNotMatch(example, /SUPABASE.*(?:SERVICE|SECRET)/i);
 });

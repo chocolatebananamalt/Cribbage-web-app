@@ -69,3 +69,16 @@ environment, and run a real two-browser test. That test must prove that a
 director can obtain the QR code once, a visitor can claim only while the link
 is active, a closed/replaced/expired link is denied, and a public claim creates
 neither a role nor a payment, check-in, seat, or verification ID.
+
+## Safe environment defaults
+
+`.env.example` deliberately keeps all staged capabilities closed:
+
+- `ACC_REGISTRATION_LINK_MANAGEMENT_V2=disabled`
+- `ACC_PUBLIC_REGISTRATION_V2=disabled`
+- `ACC_ACCOUNT_ACTIVATION_ENABLED=false`
+
+The template contains only public Supabase client placeholders and these safe
+switches. It must never receive the server-only Supabase credential. An
+environment is not eligible to change any switch merely because a deployment
+builds successfully; it must satisfy the documented release evidence first.

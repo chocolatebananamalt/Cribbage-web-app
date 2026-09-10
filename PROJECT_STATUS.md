@@ -15,6 +15,15 @@
   passed. Details:
   `docs/quality/2026-09-10-director-qr-registration-workspace.md`.
 
+## 2026-09-10 explicit safe deployment defaults
+
+- Added explicit default-off registration-link management, public
+  registration, and account-activation switches to the environment template,
+  with a regression test that rejects a server credential placeholder. The
+  template remains guidance only: no feature was enabled and no shared hosted
+  configuration changed. The release plan now records the evidence required
+  before any of those switches may be changed.
+
 ## 2026-09-10 ACC public flyer-source review
 
 - Recorded a dated, source-backed ACC flyer field inventory from the public
