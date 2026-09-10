@@ -41,3 +41,9 @@ projects exist, but separate staging/production configuration, domain,
 environment contract, monitoring, backup/restore, and rollback readiness must
 still be proven. See the current release matrix in
 `docs/quality/2026-09-09-meta-release-readiness-audit.md`.
+
+A successful protected-preview root response is not evidence that an
+authenticated route has the current Supabase public URL and publishable key.
+Each candidate must have an authenticated `/sign-in` and magic-link callback
+smoke test, followed by a deployment-specific runtime-error review. See
+`docs/quality/2026-09-10-protected-preview-auth-preflight.md`.

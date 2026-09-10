@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 protected preview authentication preflight
+
+- Hosting review confirmed the current protected preview is `READY` but found
+  an older Vercel middleware configuration failure caused by missing public
+  Supabase settings. The current deployment has no identified runtime failure,
+  yet protected tooling cannot complete an authenticated browser session to
+  prove its environment values. Authenticated `/sign-in`, magic-link callback,
+  and deployment-specific error review are now explicit release evidence, not
+  an assumed configuration. Details:
+  `docs/quality/2026-09-10-protected-preview-auth-preflight.md`.
+
 ## 2026-09-10 Rule 12 hard release stop
 
 - Strengthened the incomplete Rule 12 correction release boundary: no
