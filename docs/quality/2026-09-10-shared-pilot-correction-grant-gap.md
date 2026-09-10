@@ -67,6 +67,17 @@ The Supabase security advisor reports the corresponding signed-in
 expected for private, directly revoked tables and are not a substitute for the
 function-grant containment repair.
 
+## Separate validation-environment contrast
+
+A read-only check of the separate synthetic validation database on 2026-09-10
+shows source migrations through `0103_assigned_game_context_actor_scoped_retry`
+and **zero** authenticated execute grants for the same seven correction
+functions. Its security advisor correspondingly reports 22 remaining signed-in
+`SECURITY DEFINER` functions—the reviewed current tournament operations—not
+the seven suspended correction functions. This proves the revocation migration
+sequence has the intended effect in validation. It does not alter, substitute
+for, or authorize the required shared-pilot maintenance change.
+
 Read-only aggregate scope check on 2026-09-10:
 
 ```text

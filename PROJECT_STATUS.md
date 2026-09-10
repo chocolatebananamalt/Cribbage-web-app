@@ -20,6 +20,10 @@
   was made. The source safeguards, including the application hard stop and
   revocation migrations `0096`–`0098`, remain ready for the separately
   required approved maintenance packet.
+- The separate synthetic validation database is current through source
+  migration `0103` and has zero authenticated grants on those seven functions,
+  confirming the reviewed revocation sequence works before any shared-pilot
+  change is considered.
 
 ## 2026-09-10 director QR-registration workspace
 
