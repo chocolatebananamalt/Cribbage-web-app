@@ -25,6 +25,10 @@ The canonical rule fixtures and financial schedules remain a separate task.
    a loss. It also records the ranking order: game points, games won, net
    spread, plus points, head-to-head if available, then a one-game playoff.
    It must not supersede the 2025 Rulebook where the two conflict.
+5. Appendix B of the 2025 Rulebook covers traditional and Canadian Doubles.
+   It says that singles rules generally apply to doubles, then supplies distinct
+   team seating/rotation, four-player cut-for-deal, Canadian hand-configuration,
+   incorrect-card, and table-talk rules.
 
 ## Confirmed application implications
 
@@ -53,11 +57,20 @@ The canonical rule fixtures and financial schedules remain a separate task.
   player, continued rotation, and only one such award. Rule 13.1 separately
   defines playoff absence forfeits. Both are now explicit requirements, while
   broader rotation/replacement rules remain blocked pending source fixtures.
+- Doubles cannot reuse the singles data model unchanged. Appendix B assigns a
+  seat to a **team**, permits multiple rotation systems, and makes Canadian
+  Doubles hand configuration and four-player play materially different. A
+  future team workflow must model two named members per side, team-scoped
+  seating/rotation, and appropriate independent record/confirmation authority.
+  The source is sufficient to reject a false claim that team events are just
+  two singles cards; it is not yet a completed, fixture-tested digital
+  team-scorecard specification.
 
 ## Still unconfirmed and therefore not encoded as official results
 
-- The exact 2025 rulebook passages for all team/doubles, consolation,
-  double-elimination, judge, late/forfeit, and seating/play-through cases.
+- Exact digital scorecard, independent-entry/confirmation, standings,
+  qualification, payout, and reporting fixtures for team/doubles, Consolation,
+  double-elimination, and all configured satellite event variants.
 - Effective MRP, Q-pool, payout, report, and portal-import schedules.
 - ACC permission to recognize the app's digital verification and corrections
   as official records.

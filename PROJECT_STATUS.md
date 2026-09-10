@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 doubles source-boundary review
+
+- Reviewed the 2025 ACC Rulebook Appendix B directly. Traditional and Canadian
+  Doubles are real distinct rule variants, not two singles cards: the source
+  assigns seats to teams, permits multiple rotations, uses a four-player
+  cut-for-deal, and adds Canadian hand-configuration rules. The app's
+  existing Standard Singles boundary is therefore retained and the ACC
+  confirmation checklist now records the doubles source review. A team data,
+  scoring, verification, standings, qualification, and reporting fixture set
+  is still required before digital team scoring can be enabled.
+
 ## 2026-09-10 scorecard leading-zero format correction
 
 - The current 2025 ACC Rulebook source review identified a small paper-card
