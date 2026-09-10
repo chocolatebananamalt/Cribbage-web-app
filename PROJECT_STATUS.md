@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 Rule 11.4 late-lunch fixture boundary
+
+- Added a narrowly source-bound late-lunch decision fixture: it retains the
+  full five-minute grace period, then models only the first documented
+  2-game-point/+10 versus 0/-10 result and the next-opponent rotation return.
+  A repeat award or second post-lunch game is deliberately referred to a
+  director rather than being silently disqualified or reseated. It does not
+  enable attendance, scheduling, score, or role changes. Evidence:
+  `docs/quality/2026-09-10-late-lunch-absence-fixture.md`.
+
 ## 2026-09-10 qualification tie-resolution signal
 
 - Qualification previews now expose each unresolved numeric tie and the
