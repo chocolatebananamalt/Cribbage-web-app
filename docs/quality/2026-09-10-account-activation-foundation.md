@@ -44,16 +44,21 @@ pilot.
   generated phrase only; it does not link an account or alter tournament,
   enrollment, score, payment, check-in, or seating state. Rejected and expired
   credentials share a generic result shape.
+- The request stores a distinct, generated inner link-operation ID. Migration
+  `0093` adds the service-only equivalent of the existing roster-link writer
+  for the later approval transaction; it rechecks the official role and all
+  collision rules and remains unavailable to browser roles. It is not yet an
+  approval path by itself.
 
 ## Verification
 
-- `pnpm test` — pass, 135 tests.
+- `pnpm test` — pass, 136 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
 
 The migrations are not yet applied. The remaining work must implement and test
-the service-only cancel/approve transactions, stable receipts,
+the service-only cancel/approve transaction around the inner writer, stable receipts,
 the nested link rollback, exact route envelopes, fragment-clearing no-third-
 party page, and real independent-session/browser evidence before this feature
 can be enabled. This increment neither changes player access nor weakens the

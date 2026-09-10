@@ -14,8 +14,10 @@
   recreates a credential after an ambiguous retry. A second local migration
   and server-only adapter now redeem only a digest after a private salt lookup;
   redemption creates a pending witnessed request and phrase, never an account
-  link. The feature is still unavailable: no route, QR, director approval, or
-  pilot migration has been enabled. See
+  link. Its pending request now retains a separate internal link-operation ID
+  and a service-only equivalent of the existing link writer, ready for the
+  atomic director-approval transaction. The feature is still unavailable: no
+  route, QR, director approval, or pilot migration has been enabled. See
   `docs/quality/2026-09-10-account-activation-foundation.md`.
 
 ## 2026-09-10 hosted email-provider clarification

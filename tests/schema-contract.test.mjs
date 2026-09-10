@@ -163,6 +163,7 @@ test('witnessed roster-account activation storage is private, digest-only, and h
   assert.match(sql, /unique \(activation_id\)/);
   assert.match(sql, /roster_account_activation_requests_one_live_profile_idx/);
   assert.match(sql, /where state = 'pending'/);
+  assert.match(sql, /link_operation_id uuid not null default extensions\.gen_random_uuid\(\) unique/);
   assert.match(sql, /confirmation_phrase text not null/);
   assert.match(sql, /roster_account_activation_events_immutable/);
   assert.doesNotMatch(sql, /token(?:_| )?(?:value|secret|raw)|claimed_email|claimed_acc_number/i);
@@ -199,4 +200,15 @@ test('activation redemption derives its digest outside SQL and creates only a pe
   assert.match(sql, /revoke all on function public\.redeem_roster_account_activation_v1.*from public, anon, authenticated/);
   assert.match(sql, /grant execute on function public\.redeem_roster_account_activation_v1.*to service_role/);
   assert.doesNotMatch(sql, /p_token|raw token|claimed_email|claimed_acc_number/i);
+});
+
+test('witnessed approval has a server-only nested link writer with a distinct stored operation ID', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0093_roster_account_activation_private_link_writer.sql'), 'utf8');
+  assert.match(sql, /app\.link_roster_account_service_v1/);
+  assert.match(sql, /roster_account_activation_service_only/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /p_actor_id = p_profile_id/);
+  assert.match(sql, /link_roster_entry_to_account_service_v1/);
+  assert.match(sql, /revoke all on function app\.link_roster_account_service_v1[\s\S]*from public, anon, authenticated/);
+  assert.doesNotMatch(sql, /grant execute.*authenticated/i);
 });

@@ -32,6 +32,9 @@ create table app.roster_account_activation_requests (
   tournament_id uuid not null references app.tournaments(id) on delete restrict,
   activation_id uuid not null,
   profile_id uuid not null references app.profiles(id) on delete restrict,
+  -- Generated when the player requests the link. Approval reuses this distinct
+  -- internal operation ID, never the director's approval-operation ID.
+  link_operation_id uuid not null default extensions.gen_random_uuid() unique,
   confirmation_phrase text not null check (confirmation_phrase ~ '^[A-Z]{4}-[A-Z]{4}$'),
   state text not null check (state in ('pending', 'rejected', 'approved')),
   requested_at timestamptz not null default now(),
