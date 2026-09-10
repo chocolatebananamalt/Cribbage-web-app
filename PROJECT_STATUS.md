@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 Rule 12 source-fixture oracle
+
+- Validated the exact cached 2025 Rule 12.2 text and added a pure,
+  human-case-selected fixture oracle for every (a)-(i) disposition. It keeps
+  two original card claims independent, derives adjudicated per-card values and
+  0/2/3 points, rejects malformed/non-applicable cases, and signals when totals
+  or an affected-player notice are required. It has no database/UI authority
+  and cannot enable or alter the still-suspended correction workflow. Focused
+  lint, 23 Rule 12/schema checks, and the production build pass. Details:
+  `docs/quality/2026-09-10-rule12-fixture-oracle.md`.
+
 ## 2026-09-10 sign-in prerender boundary repair
 
 - Direct protected-preview observation found the essential sign-in page stuck

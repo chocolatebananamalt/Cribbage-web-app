@@ -26,15 +26,15 @@ and any direct signed-in caller bypassing the approved server workflow.
 
 | Case | Required positive fixture outcome | Additional required assertion | Status |
 | --- | --- | --- | --- |
-| 12.2(a) | An apparent qualifier's claimed 21-point win against an opponent's 16-point loss changes the apparent qualifier's card to a 16-point win; the opponent card remains the recorded 16-point loss. | Card values are independent, not forced reciprocal. | Source mapped; not implemented. |
-| 12.2(b) | Two apparent qualifiers' 17-point-win and 16-point-loss cards become a 16-point win and a 17-point loss respectively. | Preserve both originals and prove non-reciprocal adjudicated values. | Private foundation live-checked; no workflow. |
-| 12.2(c) | Where only one card supplies a spread, accept that spread for both cards and fill the blank card. | Populate the correct card column and recompute the affected totals. | Not implemented. |
-| 12.2(d) | If both cards say win or both say loss but one spread is plus and the other minus, the plus-column card wins. | Preserve the two separate card records and recompute 0/2/3 points. | Not implemented. |
-| 12.2(e) | If both cards say win or both say loss and their spreads are in the same column, both cards become losses and any plus spread moves to minus. | Both cards' game points become 0 and their totals update. | Not implemented. |
-| 12.2(f) | If only one card says win but both spreads are in the same column, that win stands and the incorrect card moves to the appropriate column. | Do not alter the correctly recorded win. | Not implemented. |
-| 12.2(g) | Any discrepancy correction adjusts affected game-point and spread-point totals. | Totals, standings input, qualification preview, and result version derive from adjudicated cards. | Not implemented. |
-| 12.2(h) | If an apparent qualifier's discrepancy is already adverse (15-point win versus 20-point loss), both cards stand as recorded. | A no-change decision remains append-only evidence and produces no score rewrite. | Not implemented. |
-| 12.2(i) | A discrepancy changing qualification fact or position notifies the affected player with relevant card evidence. | Notification is queued/audited without exposing private correction reasons publicly. | Not implemented. |
+| 12.2(a) | An apparent qualifier's claimed 21-point win against an opponent's 16-point loss changes the apparent qualifier's card to a 16-point win; the opponent card remains the recorded 16-point loss. | Card values are independent, not forced reciprocal. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(b) | Two apparent qualifiers' 17-point-win and 16-point-loss cards become a 16-point win and a 17-point loss respectively. | Preserve both originals and prove non-reciprocal adjudicated values. | Private foundation live-checked; pure oracle pass; no workflow. |
+| 12.2(c) | Where only one card supplies a spread, accept that spread for both cards and fill the blank card. | Populate the correct card column and recompute the affected totals. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(d) | If both cards say win or both say loss but one spread is plus and the other minus, the plus-column card wins. | Preserve the two separate card records and recompute 0/2/3 points. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(e) | If both cards say win or both say loss and their spreads are in the same column, both cards become losses and any plus spread moves to minus. | Both cards' game points become 0 and their totals update. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(f) | If only one card says win but both spreads are in the same column, that win stands and the incorrect card moves to the appropriate column. | Do not alter the correctly recorded win. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(g) | Any discrepancy correction adjusts affected game-point and spread-point totals. | Totals, standings input, qualification preview, and result version derive from adjudicated cards. | Pure source-bound derivation/recalculation signal pass; database/workflow not implemented. |
+| 12.2(h) | If an apparent qualifier's discrepancy is already adverse (15-point win versus 20-point loss), both cards stand as recorded. | A no-change decision remains append-only evidence and produces no score rewrite. | Pure source-bound oracle pass; database/workflow not implemented. |
+| 12.2(i) | A discrepancy changing qualification fact or position notifies the affected player with relevant card evidence. | Notification is queued/audited without exposing private correction reasons publicly. | Pure source-bound notification condition pass; delivery/audit/workflow not implemented. |
 
 ## Current evidence and honest boundary
 
