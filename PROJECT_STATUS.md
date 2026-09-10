@@ -112,8 +112,9 @@
 - The product baseline now requires an authorized, restricted paper-card
   capture and OCR-assisted comparison workflow for cross-checking. It may
   accelerate paper/digital and paper/paper review, but cannot replace assigned
-  player entries/confirmations or auto-verify a score. Provider, storage,
-  retention, browser-permission, and false-read decisions remain explicit
+  player entries/confirmations or auto-verify a score. Its evidence follows
+  the already-approved restricted-hold/no-automatic-purge baseline; provider,
+  storage/RLS, browser-permission, and false-read controls remain explicit
   implementation gates.
 
 ## 2026-09-10 disposable database test environment

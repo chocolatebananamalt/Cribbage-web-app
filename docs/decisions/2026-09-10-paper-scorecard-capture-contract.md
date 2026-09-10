@@ -29,13 +29,16 @@ authority or replacement for the independent-entry/confirmation state machine.
 
 Paper-card images and OCR text are restricted evidence. They require
 tournament-scoped authorization, encrypted restricted storage, explicit
-view/download controls, retention/hold treatment, and a tested deletion and
-restore policy. Camera access must be enabled only for the dedicated capture
-route, never globally. No unapproved third-party OCR or image service may
-receive a card image or its text.
+view/download controls, and the normative restricted-hold policy: **no
+automatic purge** before an ACC retention period is approved. Any authorized
+deletion or restore must follow the audited hold/deletion and isolated restore
+rules in `R-RET-01`; the feature must not invent a 30-, 60-, or 90-day period.
+Camera access must be enabled only for the dedicated capture route, never
+globally. No unapproved third-party OCR or image service may receive a card
+image or its text.
 
 The actual OCR provider, supported paper-card layouts, image size/type limits,
-retention duration, restore behavior, and false-read fixtures remain open
-implementation decisions. The feature stays disabled until those decisions,
-storage/RLS policies, browser permission behavior, and real capture/comparison
-tests are complete.
+future ACC-approved retention duration, restore implementation, and false-read
+fixtures remain open implementation decisions. The feature stays disabled
+until the storage/RLS policy, browser permission behavior, and real
+capture/comparison tests are complete.
