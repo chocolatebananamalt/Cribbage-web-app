@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 offline score-queue contract foundation
+
+- Added a strict, unconnected contract for the future authenticated offline
+  score queue. It rejects sensitive/extra fields, fake local verification,
+  expired capabilities, and mismatched replay receipts. It deliberately does
+  not add IndexedDB, background replay, or offline scoring authority; the
+  existing short retry envelope remains distinct. Evidence:
+  `docs/quality/2026-09-10-offline-score-queue-contract.md`.
+
 ## 2026-09-10 Rule 13.2 first-round bracket invariant
 
 - The qualification preview now reports the exact number of first-round
