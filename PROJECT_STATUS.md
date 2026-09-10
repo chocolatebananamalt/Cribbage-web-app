@@ -4,10 +4,11 @@
 
 - Checked the available Supabase paths for the required real concurrency
   tests without touching the shared pilot. Free-plan preview branches are not
-  available, and the connected migration endpoint rejects the application's
-  `auth.users`-referencing schema in an otherwise empty disposable project.
-  No pilot migration, data, auth setting, or release flag changed. The exact
-  limitation and the controlled-test acceptance criteria are recorded in
+  available, so the existing separate, synthetic-fixture test project is the
+  controlled validation target. The reviewed activation chain `0090`–`0095`
+  now applies there successfully. No pilot migration, data, auth setting, or
+  release flag changed. Temporary connector probes were removed immediately;
+  the controlled-test acceptance criteria are recorded in
   `docs/quality/2026-09-10-isolated-database-validation-environment.md`.
 
 ## 2026-09-10 account-activation lock-order repair
