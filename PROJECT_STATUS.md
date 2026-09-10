@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 working delivery outline
+
+- Added `docs/operations/WORKING_OUTLINE.md` as the single living delivery
+  tracker. It records completed dates, evidence-based status, explicit
+  definitions of done, dependencies, and conservative pilot/production
+  estimates. The user can request `Show Outline` at any time for this tracked
+  view. It does not relabel a prototype or partial backend as a completed
+  production milestone.
+
 ## 2026-09-10 atomic tournament-registration closure
 
 - Added one service-only, director/co-director-authorized operation that
