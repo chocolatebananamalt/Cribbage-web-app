@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-10 disposable database test environment
+
+- The owner approved use of the otherwise empty existing Supabase project as
+  a no-cost disposable test environment; it is separate from the ACC pilot
+  and contains no copied pilot or player data. The full 0001–0068 migration
+  chain applied successfully there.
+- Catalog verification found the intended boundary: 40 private `app` tables
+  all have RLS, no private-table policy or private-function browser grant
+  exists, and only the reviewed two anonymous registration RPCs and 31
+  authenticated RPCs are executable. Supabase advisor findings match the
+  existing private-RLS/RPC-only model; unused-index notices are expected on an
+  empty test database.
+- The environment is now available for synthetic authorization, concurrency,
+  and transaction evidence. It does not clear browser, identity-provider,
+  results/finance, offline, recovery, or simulated-tournament release gates.
+
 ## 2026-09-09 API cache-boundary regression guard
 
 - A manual API-route audit found no current no-store bypass. To prevent future
