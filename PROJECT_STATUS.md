@@ -6,7 +6,8 @@
   Director Resources and Policy Manual. It distinguishes the known required
   and recommended fields from the still-unconfirmed current regional form,
   payout/Q-pool vocabulary, and any portal integration. No ACC portal or
-  tournament data was accessed. Details:
+  tournament data was accessed. The full local suite, private-handoff check,
+  and clean GitHub Actions verification for `38beb51` passed. Details:
   `docs/quality/2026-09-10-acc-flyer-public-source-review.md`.
 
 ## 2026-09-10 exact Supabase CSP connection source

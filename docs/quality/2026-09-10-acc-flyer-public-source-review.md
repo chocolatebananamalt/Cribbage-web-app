@@ -36,3 +36,17 @@ The planned Events and Flyer workflow needs fields for:
 
 No portal login, submission, or tournament data was accessed or changed in
 this review.
+
+## Verification record
+
+On 2026-09-10, after this source inventory was added, the repository passed
+the complete local `pnpm verify` suite (production dependency audit, lint,
+155 application checks, optimized production build, and workspace integrity)
+and the local private-handoff integrity check. The clean GitHub Actions
+`Verify` run for commit `38beb5190b20209f9a82bbafae7953c1c37b83e1` also
+completed successfully:
+
+- https://github.com/chocolatebananamalt/Cribbage-web-app/actions/runs/34484328460
+
+Those checks verify the documentation change and current source build; they
+do not verify a regional ACC form or authorize flyer publication.
