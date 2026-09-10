@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 browser indexing hardening
+
+- Added a site-wide `X-Robots-Tag: noindex, nofollow, noarchive` response
+  policy. Current sign-in, protected tournament, and review-preview routes
+  are operational surfaces, not approved public search content. A regression
+  test keeps this policy alongside the existing browser-hardening headers. It
+  is not an authorization substitute and does not create a public-results
+  release. Details: `docs/quality/2026-09-10-browser-indexing-hardening.md`.
+
 ## 2026-09-10 evidence-history reconciliation
 
 - Marked the older disposable-environment and meta-readiness records as

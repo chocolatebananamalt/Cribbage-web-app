@@ -55,7 +55,7 @@ test('deployment runtime is pinned to the tested Node major', () => {
   assert.equal(packageJson.engines.node, '24.x');
 });
 
-test('site-wide browser hardening headers prevent framing, referrer leakage, and unused device access', () => {
+test('site-wide browser hardening headers prevent framing, indexing, referrer leakage, and unused device access', () => {
   const config = read('next.config.ts');
   assert.match(config, /source: "\/:path\*"/);
   assert.match(config, /X-Content-Type-Options/, 'responses must prevent MIME sniffing');
@@ -64,6 +64,8 @@ test('site-wide browser hardening headers prevent framing, referrer leakage, and
   assert.match(config, /value: "DENY"/);
   assert.match(config, /Referrer-Policy/, 'sensitive routes must not send referrers');
   assert.match(config, /value: "no-referrer"/);
+  assert.match(config, /X-Robots-Tag/, 'operational surfaces must not be indexed by search engines');
+  assert.match(config, /value: "noindex, nofollow, noarchive"/);
   assert.match(config, /Permissions-Policy/);
   assert.match(config, /camera=\(\), geolocation=\(\), microphone=\(\), payment=\(\), usb=\(\)/);
   assert.match(config, /X-DNS-Prefetch-Control/);
