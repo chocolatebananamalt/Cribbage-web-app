@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 registration lifecycle review reconciliation
+
+- Reconciled the earlier focused registration-link review against the current
+  migrations `0077`–`0084`, server routes, regression tests, and recorded
+  disposable/pilot evidence. The later compare-and-swap, stable-retry,
+  expiration, atomic-close, and post-closure check-in repairs close every
+  previously identified P0/P1 implementation risk in that boundary. Public
+  registration remains disabled by default. Independent browser/race and
+  authentication evidence remain explicit release gates. See
+  `docs/quality/2026-09-10-registration-lifecycle-review-reconciliation.md`.
+
 ## 2026-09-10 source and dependency exposure audit
 
 - Confirmed that current ignore rules protect environment, private-handoff,
