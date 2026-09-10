@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 pilot database surface re-audit
+
+- Re-ran the pilot Supabase security review and directly inspected table and
+  function privileges. All 43 private `app` tables retain RLS with no direct
+  anonymous or authenticated table grant. Its 30 `SECURITY DEFINER` functions
+  have no anonymous or PUBLIC execute grant and explicit empty search paths;
+  the advisor's 29 authenticated-only function notices are the intended,
+  role-checked browser RPC surface rather than a direct anonymous exposure.
+  Password-provider configuration and real signed-in authorization evidence
+  remain release gates. No project state was changed. See
+  `docs/quality/2026-09-10-pilot-database-surface-reaudit.md`.
+
 ## 2026-09-10 ACC MRP and payout source inventory
 
 - Reviewed the public ACC Director Resources index and its Main,
