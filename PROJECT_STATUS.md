@@ -11,6 +11,16 @@
   that gate. No database behavior or hosted configuration was changed.
   Evidence: `docs/quality/2026-09-10-api-mutation-and-function-surface-review.md`.
 
+## 2026-09-10 hosted pilot recheck
+
+- A new read-only catalog and advisor recheck confirms that the shared pilot
+  still ends at logical migration `0089_foreign_key_coverage` and still grants
+  authenticated execution on all seven suspended Rule 12 correction
+  functions. This remains a critical containment item; no shared-pilot change
+  was made. The source safeguards, including the application hard stop and
+  revocation migrations `0096`–`0098`, remain ready for the separately
+  required approved maintenance packet.
+
 ## 2026-09-10 director QR-registration workspace
 
 - Added the director/co-director source workspace for the existing

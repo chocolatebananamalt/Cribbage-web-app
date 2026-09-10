@@ -51,9 +51,16 @@ all seven named functions: anon execute = false; authenticated execute = true
 Read-only recheck later on 2026-09-10:
 
 ```text
-pilot migration history still ends at 0089_foreign_key_coverage
+pilot migration history still ends at logical source migration 0089,
+recorded by Supabase as 20260910072735_foreign_key_coverage
 all seven named functions: anon execute = false; authenticated execute = true
 ```
+
+Final read-only recheck at 2026-09-10 14:11 UTC confirmed the same state.
+The Supabase security advisor continues to identify the seven correction
+functions among its signed-in `SECURITY DEFINER` warnings. This is not an
+advisor-only informational finding: the catalog grant query directly confirms
+that the incomplete functions are callable by the `authenticated` role.
 
 The Supabase security advisor reports the corresponding signed-in
 `SECURITY DEFINER` warning. Its `app`-schema RLS-without-policy notices are
