@@ -441,6 +441,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
   assert.match(liveScore, /ID#: \{context\.player\.verificationId\}/);
   assert.match(liveScore, /ID#: \{context\.opponent\.verificationId\}/);
+  assert.match(liveScore, /Game \{context\.roundNumber\}/);
+  assert.doesNotMatch(liveScore, /Game \{context\.matchInstance\}/);
   assert.match(liveScore, /function SkunkAid/);
   assert.match(liveScore, /\"Skunk\"/);
   assert.match(liveScore, /\"Double skunk\"/);

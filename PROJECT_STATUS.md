@@ -30,6 +30,16 @@
   production build, recovery checks, and diff check pass. See
   `docs/quality/2026-09-10-scorecard-verification-status.md`.
 
+## 2026-09-10 live game-number label correction
+
+- Corrected the live entry and review screens to label the scorecard's
+  sequential `roundNumber` as `Game N`, rather than displaying the internal
+  match-instance number as the game number. This preserves the separate,
+  dynamic Table/Seat and permanent verification-ID meanings while keeping the
+  current game clear. The 117-test suite, lint, production build, and local
+  verification checks pass. See
+  `docs/quality/2026-09-10-live-game-number-label.md`.
+
 ## 2026-09-10 live score-entry skunk aid parity
 
 - The protected player score-entry route now shows the approved visual aid for
