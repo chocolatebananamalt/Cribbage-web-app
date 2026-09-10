@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 meta release-readiness delta review
+
+- Rechecked the current branch against the normative production requirements,
+  not merely its Preview. The legacy registration surface and a paper-evidence
+  retention-document conflict are closed, but secure v2 registration,
+  independent user sessions, official operations/rules, offline/hybrid,
+  OCR/storage, results/finance/export/finalization, and recovery/accessibility
+  evidence remain non-waivable release blockers. See
+  `docs/quality/2026-09-10-meta-release-readiness-delta.md`.
+
 ## 2026-09-10 legacy registration-token surface retired
 
 - Migration `0070_retire_legacy_public_registration_surface` disables every
