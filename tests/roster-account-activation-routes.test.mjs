@@ -22,3 +22,13 @@ test("every activation mutation route defaults off and enforces origin, bounded 
     assert.match(source, /apiJson\(/, relativePath);
   }
 });
+
+test("activation page is release-gated and clears the credential fragment before redemption", async () => {
+  const page = await readFile(path.join(root, "src/app/activate/page.tsx"), "utf8");
+  const client = await readFile(path.join(root, "src/app/activate/activation-form.tsx"), "utf8");
+  assert.match(page, /accountActivationEnabled\(\).*notFound/s);
+  assert.match(client, /history\.replaceState/);
+  assert.match(client, /account-activations\/redemptions/);
+  assert.match(client, /credentials:"same-origin"/);
+  assert.doesNotMatch(client, /localStorage|sessionStorage/);
+});
