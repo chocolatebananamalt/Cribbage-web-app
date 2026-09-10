@@ -7,6 +7,12 @@
   replace the hard stop only after the complete independent-card workflow and
   all required evidence exist. Details:
   `docs/decisions/2026-09-10-rule12-independent-card-corrections.md`.
+- Protected Vercel Preview deployment `dpl_GAFNdW6BSZ5KtZmRH2EbNjcv5h5S`
+  from commit `a038732` reached `READY`; a protected fetch of its root returned
+  HTTP 200 with the expected no-store and browser-hardening headers. No runtime
+  error cluster was present in the preceding 24 hours. This confirms hosting
+  availability only; it is not independent-user workflow or public-release
+  certification.
 
 ## 2026-09-10 CI supersession guard
 
