@@ -28,10 +28,29 @@
 - `pnpm lint`, `pnpm test` (**98** tests), `pnpm build`, `pnpm verify`,
   `pnpm verify:handoff`, and `git diff --check` pass locally.
 
+## Follow-up review and expired-state repair
+
+- Independent review found that the first repair could label an elapsed link
+  `expired` after registration had closed. That distinction is misleading:
+  when the tournament is no longer eligible, the only safe state is `closed`.
+- Migration `0077_registration_link_expired_state_repair` repeats the enabled,
+  issued, headed-open, eligible-tournament, and open-registration predicates
+  before returning `expired`; every other condition returns `closed`.
+- Migration `0077` was applied first to disposable synthetic project
+  `donfxulkliuyteiannir`, then to pilot `fnjkwymxpnsqvxtpronk`. Catalog checks
+  on both confirm `anon` and `authenticated` cannot execute the function,
+  `service_role` can, the expired branch requires eligible/open registration,
+  and the final branch fails closed.
+- The issuer regression suite additionally proves a timestamp-only mismatch
+  returns no one-time credential. `pnpm lint`, `pnpm test` (**99** tests),
+  `pnpm build`, `pnpm verify`, `pnpm verify:handoff`, and `git diff --check`
+  pass locally.
+
 ## Remaining release gates
 
-- Perform the protected-hosted deployment check and a follow-up independent
-  high-risk review.
+- Complete a seeded disposable-backend state/privilege outcome matrix; the
+  catalog test proves the predicate/grant structure but is not a substitute
+  for executing every lifecycle combination.
 - Add director-facing rotate/close controls only with their private atomic
   database operation and independent-session evidence.
 - Prove the complete lifecycle against a real service-role backend, including

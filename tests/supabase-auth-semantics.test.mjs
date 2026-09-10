@@ -398,13 +398,13 @@ test('director registration-link state read is service-only, strict, and exclude
   assert.doesNotMatch(migration, /token_salt|token_digest|credential|registration_claims/);
 });
 
-test('registration-link state cannot call disabled, retired, or registration-closed links open', () => {
-  const repair = read('database/migrations/0076_registration_link_state_usability_repair.sql');
+test('registration-link state cannot call disabled, retired, or registration-closed links open or expired', () => {
+  const repair = read('database/migrations/0077_registration_link_expired_state_repair.sql');
   assert.match(repair, /v_link\.lifecycle_state = 'issued'/);
   assert.match(repair, /v_link\.enabled/);
   assert.match(repair, /v_tournament\.status in \('draft', 'open'\)/);
   assert.match(repair, /v_tournament\.registration_status = 'open'/);
-  assert.match(repair, /v_link\.expires_at <= now\(\).*then 'expired'/);
+  assert.match(repair, /v_link\.expires_at <= now\(\).*v_tournament\.status in \('draft', 'open'\).*registration_status = 'open' then 'expired'/s);
   assert.match(repair, /else 'closed'/);
 });
 

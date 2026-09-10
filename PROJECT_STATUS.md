@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 registration-link expired-state repair
+
+- Follow-up independent review found that an expired link could still be
+  described as expired after its tournament registration had closed. Migration
+  `0077` now reports `expired` only while every other open/eligible lifecycle
+  condition holds; every unavailable combination is `closed`. It was applied
+  first to the disposable synthetic project and then to pilot, where catalog
+  checks confirm browser roles cannot execute the reader and the service role
+  can. Local lint, **99** tests, production build, workspace verification,
+  private-handoff verification, and diff validation pass. A seeded
+  disposable-backend outcome matrix and real concurrent service-role/browser
+  evidence remain release gates. See
+  `docs/quality/2026-09-10-registration-link-timestamp-and-state-repair.md`.
+
 ## 2026-09-10 registration-link timestamp and state repair
 
 - An independent lifecycle review found two release-critical issues before
@@ -11,9 +25,9 @@
   registration are all open; it was applied first to the disposable synthetic
   project and then to pilot. Local lint, **98** tests, production build,
   workspace verification, private-handoff verification, and diff validation
-  pass. Live deployment verification and an additional independent review are
-  in progress; rotate/close controls and real concurrent service-role/browser
-  evidence remain required. See
+  pass. This repair was superseded by the tighter `0077` expired-state
+  condition above; rotate/close controls and real concurrent
+  service-role/browser evidence remain required. See
   `docs/quality/2026-09-10-registration-link-timestamp-and-state-repair.md`.
 
 ## 2026-09-10 registration-link state reader
