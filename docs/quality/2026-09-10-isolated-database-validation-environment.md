@@ -47,6 +47,29 @@ not used for this work.
   confirmed zero activation rows; only the earlier authorized-but-ineligible
   rejection receipt exists. This proves the authorization check fails without
   mutating activation state in this fixture.
+
+## End-to-end witnessed activation evidence
+
+On 2026-09-10, an isolated synthetic fixture completed the full expected
+sequence through the real stored procedures:
+
+1. A service-only director issued a registration link for an open synthetic
+   tournament.
+2. A synthetic registration claim was received, independently approved by the
+   director, and promoted to an unlinked roster entry.
+3. The director issued a 10-minute account activation for that roster entry.
+4. A different, existing synthetic profile redeemed the matching digest and
+   received a confirmation phrase.
+5. The director approved the matching phrase. The database recorded an
+   approved activation and request, exactly one roster/account link to the
+   redeeming profile, and three activation events (issue, request, approval).
+6. Repeating the exact approval operation returned the original approved
+   receipt without another link, event, or receipt (counts remained 1 link,
+   3 events, and 1 approval receipt).
+
+This is genuine sequential database evidence for the issued → pending →
+approved lifecycle and exact replay. It does **not** prove simultaneous race
+outcomes, browser-session behavior, QR presentation, or release readiness.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
   private-table RLS and service-procedure notices match the reviewed

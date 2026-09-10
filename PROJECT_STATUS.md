@@ -10,6 +10,9 @@
   release flag changed. Temporary connector probes were removed immediately;
   the controlled-test acceptance criteria are recorded in
   `docs/quality/2026-09-10-isolated-database-validation-environment.md`.
+  A new synthetic fixture now proves the complete sequential witnessed
+  activation lifecycle and its exact approval replay in that isolated project;
+  real concurrent and browser-session evidence still remains before release.
 
 ## 2026-09-10 account-activation lock-order repair
 
