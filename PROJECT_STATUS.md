@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 registration-link state reader
+
+- Added a narrow, release-gated director/co-director state read so an
+  ambiguous QR-link issuance can be reconciled without exposing link secrets,
+  salts, digests, claims, or player data. Migration `0075` was applied first
+  to the disposable synthetic project and then to pilot. Local lint, **96**
+  tests, production build, workspace verification, private-handoff
+  verification, and diff validation pass. Rotate/close controls plus real
+  service-role/browser lifecycle evidence remain required. See
+  `docs/quality/2026-09-10-registration-link-state-reader.md`.
+
 ## 2026-09-10 registration-link conflict and retry repair
 
 - The release gate now covers director link issuance as well as public

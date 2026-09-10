@@ -380,6 +380,23 @@ test('registration-link lifecycle conflicts are durable business outcomes, never
   assert.doesNotMatch(repair, /raise exception using errcode = 'P0001', message = 'active registration link exists'/);
 });
 
+test('director registration-link state read is service-only, strict, and excludes secret material', () => {
+  const route = read('src/app/api/v1/tournaments/[id]/registration-links/route.ts');
+  const contract = read('src/lib/api/registration-link.ts');
+  const migration = read('database/migrations/0075_registration_link_state_reader.sql');
+  assert.match(route, /export async function GET/);
+  assert.match(route, /get_registration_link_state_v2/);
+  assert.match(route, /isRegistrationLinkState/);
+  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(contract, /status: "none"/);
+  assert.match(contract, /Object\.keys\(value\)\.length === keys\.length/);
+  assert.match(migration, /perform app\.registration_v2_service_only\(\)/);
+  assert.match(migration, /role in \('director', 'co_director'\)/);
+  assert.match(migration, /revoke all on function public\.get_registration_link_state_v2.*from public, anon, authenticated/);
+  assert.match(migration, /grant execute on function public\.get_registration_link_state_v2.*to service_role/);
+  assert.doesNotMatch(migration, /token_salt|token_digest|credential|registration_claims/);
+});
+
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
   const route = read('src/app/api/v1/registration/claims/route.ts');
   const contract = read('src/lib/api/public-registration-v2.ts');
