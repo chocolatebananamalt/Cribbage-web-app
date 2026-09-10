@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 Rule 12 disposition/notice database contract
+
+- Closed a source-model gap in the isolated validation database: Rule 12.2(g)
+  total adjustment and (i) affected-player notice can no longer be stored as
+  independent corrective dispositions. The private foundation now records a
+  qualification-change fact, accepts only the actual (a)-(f)/(h) dispositions,
+  and rejects a qualifying-change claim on the no-change (h) case. The seven
+  suspended legacy correction functions remain ungranted to browser roles.
+  The change was applied and catalog-verified only in the synthetic validation
+  project; it did not touch the shared pilot or enable corrections. Evidence:
+  `docs/quality/2026-09-10-rule12-disposition-contract-validation.md`.
+
 ## 2026-09-10 Rule 12 notification-model correction
 
 - Re-read the exact cached Rule 12.2 source text and corrected the fixture

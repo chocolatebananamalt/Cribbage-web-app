@@ -35,6 +35,16 @@ test('independent Rule 12 correction projections preserve both card claims witho
   assert.doesNotMatch(projectionSql, /^grant\s+/im);
 });
 
+test('independent Rule 12 correction foundation keeps total adjustment and qualifying notice out of standalone dispositions', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0104_rule12_disposition_and_qualification_notice_contract.sql'), 'utf8').toLowerCase();
+  assert.match(sql, /add column qualification_changed boolean not null default false/);
+  assert.match(sql, /rule_case in \('12\.2a', '12\.2b', '12\.2c', '12\.2d', '12\.2e', '12\.2f', '12\.2h'\)/);
+  assert.doesNotMatch(sql, /rule_case in \([^)]*'12\.2g'/);
+  assert.doesNotMatch(sql, /rule_case in \([^)]*'12\.2i'/);
+  assert.match(sql, /not \(rule_case = '12\.2h' and qualification_changed\)/);
+  assert.match(sql, /revoke all on table app\.independent_card_corrections from public, anon, authenticated/);
+});
+
 test('independent Rule 12 correction foundation rejects mismatched cards, inconsistent claims, and incomplete pairs', () => {
   const invariantSql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0100_independent_card_correction_projection_invariants.sql'), 'utf8').toLowerCase();
   assert.match(invariantSql, /for update/);
