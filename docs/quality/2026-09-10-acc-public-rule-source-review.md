@@ -78,7 +78,7 @@ that every related workflow is complete:
 | 2025 Rulebook location | Confirmed rule | Present application state | Release consequence |
 | --- | --- | --- | --- |
 | Rule 12.1 (scorecard) | A win receives 2 points, a win by 31+ receives 3, a loss receives 0; one-digit per-game spreads use a leading zero. | `src/lib/score.ts`, score-card rendering, and boundary tests cover margin, reciprocal values, 0/2/3 points, and `01`–`09` display. | The limited Standard Singles derivation is backed by tests. |
-| Rule 12.2(a)–(i) (cross-check discrepancies) | Resolution may change one or both card records, derived game/spread totals, and a qualification position. Cases (b) and (h) can retain non-reciprocal corrected values on the two cards. | The current shared-result correction writer cannot represent those cases faithfully. It is default-off at the app boundary and its direct authenticated mutation grants are revoked by migration `0096`; the replacement requires independent-card projections and fixtures for all nine cases. | Do not present correction handling as ACC-complete or finalize an affected event from it. |
+| Rule 12.2(a)–(i) (cross-check discrepancies) | Resolution may change one or both card records, derived game/spread totals, and a qualification position. Cases (b) and (h) can retain non-reciprocal corrected values on the two cards. | The current shared-result correction writer cannot represent those cases faithfully. It is default-off at the app boundary. Migrations `0096`–`0098` revoke its direct authenticated writers, policy writer, and correction readers; the replacement requires independent-card projections and fixtures for all nine cases. | Do not present correction handling as ACC-complete or finalize an affected event from it. |
 | Rule 13.2 (qualifiers and brackets) | Cross-check/tally qualifying cards; one in four qualifies, fractions round up; the highest qualifiers receive byes needed to make the second round a full bracket. | `src/lib/qualification.ts` and tests cover numeric order, rounded qualification count, bracket size, and byes. | It remains a preview only until head-to-head/playoff tie resolution and finalization fixtures are implemented. |
 | Appendix A / cross-check guidance | Cross-checking is an operational control, not a decorative scorecard status. | Two independent submissions and confirmations, pending states, audit records, self-check limits, and a protected scorecard reader are implemented in the current slice. | Independent real-browser sessions and full cross-check staffing/exception fixtures remain required. |
 
@@ -98,3 +98,24 @@ unverified result from being exported as official.
 
 No rule-derived finalization, payout, or ACC export may be enabled until these
 items have a dated source and executable positive and rejection fixtures.
+
+## 2026-09-10 direct-RPC suspension verification
+
+**Acceptance criterion:** while Rule 12 correction handling is release-gated,
+an authenticated caller cannot invoke any correction writer, correction-policy
+writer, correction workspace, or correction replay reader directly.
+
+Applied migrations `0097_suspend_incomplete_rule12_correction_policy` and
+`0098_suspend_incomplete_rule12_correction_readers` only to the separate
+synthetic validation project, never the shared pilot. The database catalog
+check returned `authenticated_execute = false` for all five exposed correction
+functions: `configure_correction_policy`, `get_correction_workspace`,
+`get_correction_operation_reconciliation`, `get_correction_policy`, and
+`get_correction_policy_operation_reconciliation`.
+
+The Supabase security advisor continues to report intentional `SECURITY
+DEFINER` RPC exposure for other active, authorization-checked workflows and
+the separate free-plan limitation that leaked-password protection cannot be
+enabled. Those items are documented release considerations; neither was
+relaxed or changed here. The suspended correction functions no longer appear
+as authenticated-executable findings.

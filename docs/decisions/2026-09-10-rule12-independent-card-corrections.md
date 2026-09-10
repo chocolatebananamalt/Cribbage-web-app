@@ -41,10 +41,13 @@ cannot represent the cited (b) or (h) outcomes faithfully.
   `approved` at the web boundary.
 - The correction page, correction-policy page, proposal/review routes, and
   their reconciliation routes return absent/not-found while the switch is off.
-- Migration `0096_suspend_incomplete_rule12_corrections.sql` revokes direct
-  authenticated execution of the two mutation RPCs. Re-enabling requires a
-  separately reviewed migration after the replacement model and all fixtures
-  exist.
+- Migrations `0096_suspend_incomplete_rule12_corrections.sql` and
+  `0097_suspend_incomplete_rule12_correction_policy.sql` revoke direct
+  authenticated execution of the score-correction and correction-policy
+  mutation RPCs. Migration `0098_suspend_incomplete_rule12_correction_readers.sql`
+  also revokes the correction workspace, policy, and replay readers. Re-enabling
+  requires a separately reviewed migration after the replacement model and all
+  fixtures exist.
 
 ## Exit criteria
 

@@ -747,6 +747,8 @@ test('correction operation reconciliation exposes only the caller receipt and no
 
 test('director correction policy workspace is scoped, append-only, and retry-safe', () => {
   const sql = read('database/migrations/0034_correction_policy_workspace.sql');
+  const suspension = read('database/migrations/0097_suspend_incomplete_rule12_correction_policy.sql');
+  const readerSuspension = read('database/migrations/0098_suspend_incomplete_rule12_correction_readers.sql');
   const policyDal = read('src/lib/corrections/policy.ts');
   const policyRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/route.ts');
   const reconciliationRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/reconciliation/route.ts');
@@ -796,6 +798,11 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(client, /expectedPolicyVersion: policy\.policyVersion/);
   assert.match(client, /router\.refresh\(\)/);
   assert.match(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED === "approved"/);
+  assert.match(suspension, /revoke all on function public\.configure_correction_policy\(uuid, boolean, smallint, integer, uuid\) from authenticated/);
+  assert.match(readerSuspension, /revoke all on function public\.get_correction_workspace\(uuid\) from authenticated/);
+  assert.match(readerSuspension, /revoke all on function public\.get_correction_operation_reconciliation\(uuid, uuid\) from authenticated/);
+  assert.match(readerSuspension, /revoke all on function public\.get_correction_policy\(uuid\) from authenticated/);
+  assert.match(readerSuspension, /revoke all on function public\.get_correction_policy_operation_reconciliation\(uuid, uuid\) from authenticated/);
 });
 
 test('registration claim review remains an immutable non-enrollment boundary', () => {
