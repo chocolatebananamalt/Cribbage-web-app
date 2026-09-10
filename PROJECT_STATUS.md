@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 registration credential lifetime repair
+
+- A lifecycle review found that the fragment credential was removed from the
+  URL and browser global but could remain in client component state after a
+  rejected request or navigation. The form now clears its short-lived
+  credential reference on every response, abort, `pagehide`, and unmount;
+  in-flight requests are aborted during navigation. It still uses no browser
+  storage and public registration remains release-gated. Local lint, **92**
+  tests, production build, and diff validation pass. Real-browser
+  history/BFCache/network evidence remains a release gate. See
+  `docs/quality/2026-09-10-registration-credential-lifetime-repair.md`.
+
 ## 2026-09-10 registration fragment CSP repair
 
 - A hosted response review caught that the prior static `/register` Content
