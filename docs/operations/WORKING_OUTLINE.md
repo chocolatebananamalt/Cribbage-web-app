@@ -36,8 +36,9 @@ processing, or defects found in real multi-person and venue testing.
 
 ## Current highest-priority work
 
-1. Execute and document real disposable-database lifecycle tests for secure
-   registration closure/rotation/claim races and direct browser-RPC denial.
+1. Complete dated rule-to-code coverage, beginning with the unimplemented
+   Rule 12.2 discrepancy-case fixture set and the blocked tie-resolution
+   boundary; no unsupported official calculation may be enabled.
 2. Obtain real independent-session browser evidence for the director-facing
    registration and closure workflow at phone and desktop sizes.
 3. Complete the server-authoritative operations path before adding optional

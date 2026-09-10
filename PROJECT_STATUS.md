@@ -28,7 +28,7 @@
   used as current release evidence. Browser exploration also found and
   repaired a scorecard fixture-state contradiction: an unsubmitted local
   result can no longer appear as verified or populate a card whose totals
-  exclude it. A fresh deployed-browser check remains required. Two further
+  exclude it. A fresh deployed-browser check is complete. Two further
   disposable fixtures now prove registration-link rotation and registration
   closure serialize safely in both orders: a closing tournament rejects a
   contending stale rotation, and a later close retires a successfully rotated
@@ -51,6 +51,17 @@
   check-in/registration-close race is also safe: closure wins, the check-in
   receives a durable `registration_closed` rejection, and no check-in event
   is written.
+
+## 2026-09-10 rule-source traceability review
+
+- Re-read the permitted cached 2025 ACC Rulebook and matched its checksum to
+  the protected in-app metadata. Recorded the precise Rule 12.1, Rule 12.2,
+  Rule 13.2, and cross-check implementation boundary in
+  `docs/quality/2026-09-10-acc-public-rule-source-review.md`. The review
+  confirms the current score and numeric qualification preview coverage, and
+  makes the still-missing Rule 12.2 discrepancy fixtures plus head-to-head/
+  playoff tie resolution explicit release gates. No official calculation,
+  correction, payout, or export boundary was relaxed.
 
 ## 2026-09-10 account-activation lock-order repair
 

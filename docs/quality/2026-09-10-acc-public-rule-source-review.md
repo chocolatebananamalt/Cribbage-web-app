@@ -66,6 +66,27 @@ The canonical rule fixtures and financial schedules remain a separate task.
   two singles cards; it is not yet a completed, fixture-tested digital
   team-scorecard specification.
 
+## Cached-edition clause review and implementation ledger
+
+The permitted cached copy was independently re-read on 2026-09-10. Its
+SHA-256 remains
+`DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD`, matching
+the metadata shown in the protected Rulebook page. The following references
+are sufficiently specific to guide implementation work, but are not a claim
+that every related workflow is complete:
+
+| 2025 Rulebook location | Confirmed rule | Present application state | Release consequence |
+| --- | --- | --- | --- |
+| Rule 12.1 (scorecard) | A win receives 2 points, a win by 31+ receives 3, a loss receives 0; one-digit per-game spreads use a leading zero. | `src/lib/score.ts`, score-card rendering, and boundary tests cover margin, reciprocal values, 0/2/3 points, and `01`–`09` display. | The limited Standard Singles derivation is backed by tests. |
+| Rule 12.2(a)–(i) (cross-check discrepancies) | Resolution may change one or both card records, derived game/spread totals, and a qualification position. | The data model preserves canonical-game/card linkage and audited corrections, but does **not** yet have an executable fixture set for all nine cases. | Do not present correction handling as ACC-complete or finalize an affected event from it. |
+| Rule 13.2 (qualifiers and brackets) | Cross-check/tally qualifying cards; one in four qualifies, fractions round up; the highest qualifiers receive byes needed to make the second round a full bracket. | `src/lib/qualification.ts` and tests cover numeric order, rounded qualification count, bracket size, and byes. | It remains a preview only until head-to-head/playoff tie resolution and finalization fixtures are implemented. |
+| Appendix A / cross-check guidance | Cross-checking is an operational control, not a decorative scorecard status. | Two independent submissions and confirmations, pending states, audit records, self-check limits, and a protected scorecard reader are implemented in the current slice. | Independent real-browser sessions and full cross-check staffing/exception fixtures remain required. |
+
+The qualification preview deliberately stops rather than inventing a final
+ordering whenever the numeric inputs are tied. That is more conservative than
+using an unimplemented head-to-head or playoff outcome, and it prevents an
+unverified result from being exported as official.
+
 ## Still unconfirmed and therefore not encoded as official results
 
 - Exact digital scorecard, independent-entry/confirmation, standings,
