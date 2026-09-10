@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 active RPC authorization audit
+
+- Audited the remaining authenticated `SECURITY DEFINER` public database
+  surface in the separate synthetic validation project after the Rule 12
+  correction suspension. All 22 active entry points have an empty search path
+  and an explicit signed-in actor check; director/finance/roster/setup/seating
+  functions independently require the director or co-director role, while
+  score readers and writers independently scope access to the assigned player.
+  No anonymous execute grant was found. This is a catalog/static boundary pass,
+  not a substitute for required independent-session and cross-tournament tests.
+  Details: `docs/quality/2026-09-10-active-rpc-authorization-audit.md`.
+
 ## 2026-09-10 isolated database validation environment
 
 - Checked the available Supabase paths for the required real concurrency
