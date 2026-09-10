@@ -9,7 +9,10 @@
   database does not yet have migration `0103`, which supplies the authenticated
   actor identifier required by the current retry-isolation code. No pilot
   migration or setting was changed. Local `pnpm verify` (152 tests, build,
-  audit, lint, workspace) and `pnpm verify:handoff` (6 tests) pass. Details:
+  audit, lint, workspace) and `pnpm verify:handoff` (6 tests) pass. Vercel
+  Preview deployment `dpl_2NZbkTh4QwYgsC1CevinuDEXeH1U` from commit `02d9fce`
+  is `READY`; its protected passwordless sign-in form rendered without sending
+  email, and no runtime errors were reported in the preceding hour. Details:
   `docs/quality/2026-09-10-assigned-game-context-contract-gate.md`.
 
 ## 2026-09-10 protected preview authentication preflight

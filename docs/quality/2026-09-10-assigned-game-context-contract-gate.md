@@ -33,6 +33,14 @@ Executed locally on 2026-09-10:
 - `pnpm verify:handoff` — PASS (6 recovered-source checks).
 - `git diff --check` — PASS.
 
+Hosted deployment evidence on 2026-09-10:
+
+- Vercel Preview deployment `dpl_2NZbkTh4QwYgsC1CevinuDEXeH1U` from commit
+  `02d9fce` reached `READY`.
+- A browser check of its protected `/sign-in` route rendered the passwordless
+  email field and sign-in-link button. No email was entered or sent.
+- Vercel reported no runtime errors for the project in the preceding hour.
+
 This is a safe release boundary, not migration parity. The protected scoring
 workflow remains unavailable against a database that has not been brought to
 the reviewed schema level, and it still requires independent-session browser
