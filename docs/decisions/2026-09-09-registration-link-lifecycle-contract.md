@@ -85,6 +85,27 @@ old one. Every link has a server-generated bounded `expires_at` value.
   no-store responses, and exclude it from request capture/platform logs,
   telemetry, errors, middleware, and audit fields. A redirect must never
   preserve it.
+- **Credential-processing boundary:** the browser sends the fragment value
+  only to the same-origin Next.js registration endpoint. That server parses
+  the bounded `link-id.secret` value, obtains the stored salt by opaque link
+  ID through a service-only database function, and computes the fixed-length
+  digest in server memory. It sends only the link ID, fixed-length digest, and
+  ordinary registration fields to Supabase; it never forwards the raw secret
+  in an RPC argument, SQL parameter, database error, or audit payload. The
+  database still performs the locked lifecycle/capacity checks and a
+  fixed-length constant-time digest comparison before accepting a claim.
+  Issue follows the reciprocal path: Next.js generates the 256-bit secret in
+  server memory, derives its digest locally, and sends only the salt/digest to
+  the service-only header-creation function. This limits bearer handling to
+  the browser's short fragment lifetime and the app server's short request
+  lifetime rather than adding Supabase request telemetry to the secret's
+  exposure surface.
+- The v2 lifecycle functions may sit in the database's API schema only when
+  `PUBLIC`, `anon`, and `authenticated` execution are revoked. Each must be
+  explicitly granted to the server-only service role, accept a claimed actor
+  ID, and independently verify that actor's current director/co-director role
+  inside the database. A browser publishable key must not be capable of
+  invoking a lifecycle, salt-lookup, or claim function directly.
 - QR encoding is local to the browser or generated from the exact returned URL
   without transmitting it to another provider. The page must load no external
   content for the raw token's complete in-memory lifetime.
@@ -124,6 +145,10 @@ the existing tournament registration state and later review claims.
    logs, referrers, QR-provider requests, redirects, or a recoverable issue
    response after the one-time display. It also proves legacy token-in-path
    routes are removed/revoked before the first v2 link opens.
+7. Server/network evidence proves that the raw fragment value reaches only
+   the same-origin endpoint: the corresponding Supabase RPC/query arguments,
+   database receipts, lifecycle events, application diagnostics, and audit
+   fields contain only opaque IDs or fixed-length digests.
 
 ## Implementation gate
 
