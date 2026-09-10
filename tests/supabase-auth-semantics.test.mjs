@@ -412,6 +412,18 @@ test('registration-link state cannot call disabled, retired, or registration-clo
   assert.match(repair, /else 'closed'/);
 });
 
+test('registration-link close is a service-only compare-and-swap with durable safe replays', () => {
+  const close = read('database/migrations/0078_registration_link_close_compare_and_swap.sql');
+  assert.match(close, /p_expected_link_id uuid/);
+  assert.match(close, /p_expected_version integer/);
+  assert.match(close, /v_head\.registration_link_id <> p_expected_link_id/);
+  assert.match(close, /v_head\.version <> p_expected_version/);
+  assert.match(close, /operation_type <> 'registration_link_close_v3'/);
+  assert.match(close, /outcome, response_payload.*\n.*'rejected'/s);
+  assert.match(close, /revoke all on function public\.close_registration_link_v2.*from public, anon, authenticated/);
+  assert.match(close, /grant execute on function public\.close_registration_link_v2.*to service_role/);
+});
+
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
   const route = read('src/app/api/v1/registration/claims/route.ts');
   const contract = read('src/lib/api/public-registration-v2.ts');

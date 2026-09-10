@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 registration-link close compare-and-swap
+
+- Replaced the unsafe close operation with a service-only compare-and-swap
+  transaction. It accepts the expected link ID and head version, reauthorizes
+  the current official under the lifecycle lock, preserves an exact immutable
+  retry receipt, records first safe rejections, and cannot close a replacement
+  link from a stale screen. Migration `0078` was applied first to disposable
+  synthetic project `donfxulkliuyteiannir`, whose catalog confirms no browser
+  role can execute it, then to pilot `fnjkwymxpnsqvxtpronk`. Local lint,
+  **103** tests, production build, workspace verification, private-handoff
+  verification, and diff validation pass. The director route/UI, rotation
+  transaction, real concurrency matrix, and atomically closing links when
+  tournament registration closes remain active release gates.
+
 ## 2026-09-10 bounded registration-link request boundary
 
 - Registration-link issue requests now require a bounded JSON body before
