@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 Fetch-Metadata mutation hardening
+
+- Strengthened the shared same-origin write guard: existing mutations already
+  required an exact Origin match, and now also reject an explicit cross-site
+  Fetch-Metadata signal while retaining compatibility for clients that do not
+  send the optional header. Regression coverage proves both accept and reject
+  paths; full local tests, lint, production build, recovery checks, and diff
+  validation pass. See
+  `docs/quality/2026-09-10-fetch-metadata-mutation-hardening.md`.
+
 ## 2026-09-10 rotation exception source review
 
 - Reviewed the public ACC Tournament Director's Manual for the user-described

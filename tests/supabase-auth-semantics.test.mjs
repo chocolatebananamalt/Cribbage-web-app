@@ -145,6 +145,7 @@ test('proxy refreshes claims and protected tournament data requires server membe
 
 test('API v1 mutation origin decision rejects only unsafe cross-origin writes', async () => {
   const { apiMutationOriginMatcher, apiMutationOriginRejection, rejectsApiMutationOrigin } = await import(pathToFileURL(path.join(root, 'src/lib/api/mutation-origin-gateway.ts')).href);
+  const { isSameOriginRequest } = await import(pathToFileURL(path.join(root, 'src/lib/api/same-origin.ts')).href);
   const requestOrigin = 'https://example.test';
   const check = (pathname, method, origin) => rejectsApiMutationOrigin({ pathname, method, origin, requestOrigin });
   assert.equal(apiMutationOriginMatcher, '/api/v1/:path*');
@@ -160,6 +161,11 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);
   assert.equal(check('/api/v2/games/example/submissions', 'POST', 'https://other.example'), false);
+  const request = (origin, fetchSite = null) => ({ headers: new Headers([["origin", origin], ...(fetchSite ? [["sec-fetch-site", fetchSite]] : [])]), nextUrl: { origin: requestOrigin } });
+  assert.equal(isSameOriginRequest(request(requestOrigin)), true);
+  assert.equal(isSameOriginRequest(request(requestOrigin, 'same-origin')), true);
+  assert.equal(isSameOriginRequest(request(requestOrigin, 'cross-site')), false);
+  assert.equal(isSameOriginRequest(request('https://other.example', 'same-origin')), false);
 });
 
 test('every API v1 route uses a private no-store response boundary', () => {
