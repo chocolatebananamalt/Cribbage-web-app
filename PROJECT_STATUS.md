@@ -31,8 +31,10 @@
   service role can. Local lint, **111** tests, and production build pass. An
   independent high-risk review found no P0/P1 implementation defect. See
   `docs/quality/2026-09-10-atomic-registration-close.md`. Public registration
-  remains disabled; real seeded lifecycle/concurrency and protected-browser
-  evidence, plus a director UI, remain release gates.
+  remains disabled. Seeded disposable execution now proves active-link and
+  no-link closure, exact replay, reused-operation rejection, and direct
+  browser-role denial; independent connection races, protected-browser
+  evidence, and a director UI remain release gates.
 
 ## 2026-09-10 registration-link rotation compare-and-swap
 
