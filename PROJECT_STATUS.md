@@ -1,5 +1,20 @@
 # Project Status
 
+## 2026-09-10 protected player scorecard reader
+
+- Closed the production-screen gap where the verified scorecard existed only
+  in the review prototype. Migration `0088` exposes an authenticated player's
+  own approved Standard Singles card through a narrow, permanent-ID-bound
+  reader. It returns verified/corrected lines and totals separately from
+  pending games, so an opponent-pending entry cannot affect displayed totals.
+  The protected server-rendered card has grouped Game and Spread Points
+  headers, separate plus/minus columns, opponent name and ID, fixed totals,
+  Games Won, Net Spread Points, and the approved pending-total warning.
+  Disposable and pilot catalogs confirm the intended grants and binding; the
+  current synthetic fixture lacks linked initial seating, so a positive
+  authenticated execution and phone/desktop rendering remain release gates.
+  See `docs/quality/2026-09-10-player-scorecard-reader.md`.
+
 ## 2026-09-10 live score-entry skunk aid parity
 
 - The protected player score-entry route now shows the approved visual aid for

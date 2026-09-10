@@ -476,6 +476,30 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.doesNotMatch(liveScore, /service_role/);
 });
 
+test('player scorecard read is own-card scoped and excludes unverified totals', () => {
+  const sql = read('database/migrations/0088_player_scorecard_reader.sql');
+  const reader = read('src/lib/games/player-scorecard.ts');
+  const page = read('src/app/tournament/[tournamentId]/scorecard/page.tsx');
+  assert.match(sql, /create or replace function public\.get_player_scorecard/);
+  assert.match(sql, /stable\s+security definer\s+set search_path = ''/);
+  assert.match(sql, /player_participant\.profile_id = auth\.uid\(\)/);
+  assert.match(sql, /cg\.state in \('verified', 'corrected'\)/);
+  assert.match(sql, /cg\.state in \('pending', 'submitted', 'confirmation_pending', 'mismatch'\)/);
+  assert.match(sql, /revoke all on function public\.get_player_scorecard\(uuid, uuid\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.get_player_scorecard\(uuid, uuid\) to authenticated/);
+  assert.match(reader, /import "server-only"/);
+  assert.match(reader, /get_player_scorecard/);
+  assert.match(reader, /data\.tournamentId !== tournamentId/);
+  assert.match(reader, /data\.eventId !== eventId/);
+  assert.match(page, /requireTournamentAccess/);
+  assert.match(page, /getPlayerScorecard/);
+  assert.match(page, /Verification Pending Opponent Entry/);
+  assert.match(page, /Updated Total Calculations Pending Opponent Entry/);
+  assert.match(page, /Net Spread Points/);
+  assert.match(page, /SharedDeviceSignOut/);
+  assert.doesNotMatch(reader + page, /service_role|\.from\(/);
+});
+
 test('pilot trigger correction migration hardens existing deferred functions', () => {
   const sql = read('database/migrations/0004_trigger_security_hardening.sql').toLowerCase();
   assert.match(sql, /alter function app\.revalidate_game\(uuid\) security definer/);
