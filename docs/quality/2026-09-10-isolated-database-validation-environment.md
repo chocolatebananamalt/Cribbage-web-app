@@ -132,6 +132,35 @@ its exact replay for this isolated fixture. It does not prove concurrent
 claim-versus-close behavior, director browser interaction, or public-release
 readiness.
 
+## Registration-link rotation/closure serialization evidence
+
+Two further explicitly named synthetic fixtures exercised the real
+registration-link lifecycle procedures in the disposable project. Both calls
+used separate connector requests with a service-role claim; no pilot data or
+release setting was changed.
+
+1. **Concurrent rotate/close.** Rotation and registration closure were sent
+   concurrently against one open head at version 1. Closure returned
+   `registration_closed`; rotation returned the controlled
+   `link_unavailable` rejection. The durable final state was
+   `registration_status=closed`, `head_state=closed`, `head_version=2`, and
+   its only link was `closed` and disabled. The two requests produced exactly
+   two operation receipts, one lifecycle event, and one closure audit event.
+   Neither request deadlocked or left an active signup link.
+2. **Rotate then close.** A second fixture first completed an accepted
+   rotation (open head version 2 on a replacement link), then completed the
+   real registration-close procedure. The final state was
+   `registration_status=closed`, `head_state=closed`, `head_version=3`, with
+   the replacement link `closed` and disabled. It retained exactly two
+   operation receipts, three lifecycle events (issuance, rotation, closure),
+   and two audit events (rotation and closure).
+
+Together these cover both safe serializations: a closure can reject a
+contending stale rotation, and a closure that follows a completed rotation
+retires the replacement link rather than leaving registration open. This is
+database contention evidence only; it does not replace authenticated,
+independent browser-session proof or the remaining claim-versus-close test.
+
 ## Consequence and next safe path
 
 The required real two-connection proof can now be performed against this
@@ -146,7 +175,8 @@ proof.
   that no connector probe artifacts remain.
 - Execute concurrent issue/redeem, issue/cancel, approval/cancel, and
   registration close/claim attempts through two independent authenticated
-  sessions.
+  sessions. Rotation/closure serialization is now covered at the database
+  boundary, but still needs browser-session coverage.
 - Confirm one authoritative outcome, durable conflict receipts where required,
   no self-check, no direct browser access to service-only procedures, and no
   leaked credential in storage or URLs.

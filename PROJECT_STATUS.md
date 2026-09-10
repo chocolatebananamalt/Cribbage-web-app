@@ -28,7 +28,11 @@
   used as current release evidence. Browser exploration also found and
   repaired a scorecard fixture-state contradiction: an unsubmitted local
   result can no longer appear as verified or populate a card whose totals
-  exclude it. A fresh deployed-browser check remains required.
+  exclude it. A fresh deployed-browser check remains required. Two further
+  disposable fixtures now prove registration-link rotation and registration
+  closure serialize safely in both orders: a closing tournament rejects a
+  contending stale rotation, and a later close retires a successfully rotated
+  replacement link. No active signup link remains in either final state.
 
 ## 2026-09-10 account-activation lock-order repair
 
