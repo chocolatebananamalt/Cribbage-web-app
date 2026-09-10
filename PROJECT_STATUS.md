@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 public registration page release gate
+
+- Closed a release-gate inconsistency: the public registration claim API was
+  disabled by default, but `/register` still rendered a form shell. The page
+  now uses the same explicit feature decision and returns a real not-found
+  response before it can load its credential fragment bootstrap or form when
+  registration is disabled. Automated tests, lint, and production build pass;
+  public registration remains disabled. See
+  `docs/quality/2026-09-10-public-registration-page-release-gate.md`.
+
 ## 2026-09-10 registration lifecycle review reconciliation
 
 - Reconciled the earlier focused registration-link review against the current
