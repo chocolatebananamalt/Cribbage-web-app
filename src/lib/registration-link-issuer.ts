@@ -37,14 +37,18 @@ function bytea(value: Uint8Array) {
   return `\\x${Buffer.from(value).toString("hex")}`;
 }
 
-function isIssuedResponse(value: unknown, linkId: string, expiresAt: string): boolean {
+function isExactInstant(value: unknown, expected: Date): boolean {
+  return typeof value === "string" && Number.isFinite(new Date(value).valueOf()) && new Date(value).valueOf() === expected.valueOf();
+}
+
+function isIssuedResponse(value: unknown, linkId: string, expiresAt: Date): boolean {
   if (!value || typeof value !== "object") return false;
   const record = value as Record<string, unknown>;
   return Object.keys(record).length === 4
     && record.status === "issued"
     && record.state === "open"
     && record.linkId === linkId
-    && record.expiresAt === expiresAt;
+    && isExactInstant(record.expiresAt, expiresAt);
 }
 
 function isPriorIssuedResponse(value: unknown): boolean {
@@ -92,7 +96,7 @@ export async function issueRegistrationLink(
   if (error) {
     throw new Error("Registration link issuance is unavailable.");
   }
-  if (isIssuedResponse(data, credential.linkId, expiresAt)) return { status: "issued", credential, expiresAt };
+  if (isIssuedResponse(data, credential.linkId, input.expiresAt)) return { status: "issued", credential, expiresAt };
   if (isRejectedResponse(data)) return data;
   // A prior accepted operation can be replayed by PostgreSQL. Its original
   // bearer credential cannot be reconstructed safely, so never return or

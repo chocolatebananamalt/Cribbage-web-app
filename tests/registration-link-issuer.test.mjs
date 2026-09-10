@@ -23,6 +23,21 @@ test('server-only registration issuer binds its returned credential ID and only 
   assert.equal(result.expiresAt, '2027-01-01T00:00:00.000Z');
 });
 
+test('server-only registration issuer accepts PostgreSQL timestamp serialization for the requested instant', async () => {
+  let observed;
+  const admin = { rpc: async (_name, args) => {
+    observed = args;
+    return { data: { status: 'issued', state: 'open', linkId: args.p_link_id, expiresAt: '2027-01-01T00:00:00+00:00' }, error: null };
+  } };
+  const result = await issuer.issueRegistrationLink(admin, {
+    actorId: '0f2f2d31-12ab-4bcd-8b8c-1234567890ab', tournamentId: '1f2f2d31-12ab-4bcd-8b8c-1234567890ab',
+    expiresAt: new Date('2027-01-01T00:00:00.000Z'), maxClaims: 100, maxClaimsPerHour: 10,
+    operationId: '2f2f2d31-12ab-4bcd-8b8c-1234567890ab',
+  });
+  assert.equal(result.status, 'issued');
+  assert.equal(observed.p_expires_at, '2027-01-01T00:00:00.000Z');
+});
+
 test('server-only registration issuer never recovers or regenerates a prior one-time credential', async () => {
   const admin = { rpc: async () => ({ data: {
     status: 'issued', state: 'open', linkId: '0f2f2d31-12ab-4bcd-8b8c-1234567890ab', expiresAt: '2027-01-01T00:00:00.000Z',

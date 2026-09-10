@@ -368,6 +368,7 @@ test('director registration-link issuance is a strict same-origin server-only bo
   assert.match(contract, /maxClaims.*<= 2000/);
   assert.match(contract, /maxClaimsPerHour.*<= 1000/);
   assert.match(route, /credential_unavailable/);
+  assert.match(read('src/lib/registration-link-issuer.ts'), /new Date\(value\)\.valueOf\(\) === expected\.valueOf\(\)/);
 });
 
 test('registration-link lifecycle conflicts are durable business outcomes, never bearer retries', () => {
@@ -395,6 +396,16 @@ test('director registration-link state read is service-only, strict, and exclude
   assert.match(migration, /revoke all on function public\.get_registration_link_state_v2.*from public, anon, authenticated/);
   assert.match(migration, /grant execute on function public\.get_registration_link_state_v2.*to service_role/);
   assert.doesNotMatch(migration, /token_salt|token_digest|credential|registration_claims/);
+});
+
+test('registration-link state cannot call disabled, retired, or registration-closed links open', () => {
+  const repair = read('database/migrations/0076_registration_link_state_usability_repair.sql');
+  assert.match(repair, /v_link\.lifecycle_state = 'issued'/);
+  assert.match(repair, /v_link\.enabled/);
+  assert.match(repair, /v_tournament\.status in \('draft', 'open'\)/);
+  assert.match(repair, /v_tournament\.registration_status = 'open'/);
+  assert.match(repair, /v_link\.expires_at <= now\(\).*then 'expired'/);
+  assert.match(repair, /else 'closed'/);
 });
 
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
