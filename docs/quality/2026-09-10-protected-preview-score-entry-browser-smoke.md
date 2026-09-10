@@ -40,3 +40,22 @@ This is a desktop browser smoke test of the visible Preview fixture. It does
 not prove mobile layout, persisted score submission, independent player
 sessions, dual confirmation, offline behavior, or the release-gated account
 activation ceremony. Those remain explicit production gates.
+
+## Follow-up defect and repair
+
+The same browser exploration found a fixture-state contradiction after a
+reviewable result was entered but before **Submit My Entry**: the scorecard
+displayed the current row while its totals correctly excluded it, yet the
+header said **Current and Verified**. The source now preserves the honest
+state boundary:
+
+- an unsubmitted local result is not passed to the scorecard and is labelled
+  **Entry Not Submitted**;
+- only a submitted entry appears as the current card row, with
+  **Verification Pending Opponent Entry** and the excluded-total notice; and
+- an untouched card can retain **Current and Verified** for its already
+  verified historical totals.
+
+The regression test covers the submitted-only scorecard input. Local focused
+tests pass; a fresh hosted browser check is still required once Vercel builds
+the repair.

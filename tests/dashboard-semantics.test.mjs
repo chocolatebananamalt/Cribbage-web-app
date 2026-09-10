@@ -40,7 +40,8 @@ test("scorecard has grouped paper-card headers and touch scrolling", () => {
   assert.match(source, /formatScorecardSpread/);
   assert.match(source, /const spreadCell = \(value: number\) => value === 0 \? "—" : formatScorecardSpread\(value\)/);
   assert.match(source, /className="total-pending-cell"/);
-  assert.match(source, /pending=\{submitted\}/);
+  assert.match(source, /Entry Not Submitted/);
+  assert.match(source, /<Scorecard score=\{submitted \? score : null\} pending=\{submitted\}/);
   assert.match(source, /aria-live="polite"/);
   assert.match(source, /<th scope="col">\(−\)<\/th>/);
   assert.match(styles, /th:nth-child\(4\) \{ font-size:20px/);

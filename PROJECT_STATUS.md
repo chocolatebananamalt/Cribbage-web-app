@@ -25,7 +25,10 @@
   A fourth isolated fixture now proves atomic registration closure retires the
   active signup link and replays without duplicate receipt/event/audit rows.
   The older cycle-2 readiness report is explicitly historical and cannot be
-  used as current release evidence.
+  used as current release evidence. Browser exploration also found and
+  repaired a scorecard fixture-state contradiction: an unsubmitted local
+  result can no longer appear as verified or populate a card whose totals
+  exclude it. A fresh deployed-browser check remains required.
 
 ## 2026-09-10 account-activation lock-order repair
 
