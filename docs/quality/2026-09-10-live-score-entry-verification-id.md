@@ -31,6 +31,11 @@ skunk icons. It is presentation-only: the shared score derivation remains the
 source of the existing 0/2/3 game-point calculation, and it does not add an
 official ACC record label.
 
+Before submission, the protected screen also previews both card entries from
+that same derivation: each player's `won/lost by` result, Game Points, and
+signed Spread Points. The preview is explicitly not a server record; the
+existing independent-entry and confirmation workflow remains authoritative.
+
 ## Executed evidence
 
 - Local `pnpm test` — **115 passed**, including static contracts proving the

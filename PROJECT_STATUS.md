@@ -5,10 +5,12 @@
 - The protected player score-entry route now shows the approved visual aid for
   a valid skunk result: one, two, or three skunk icons with `Skunk`, `Double
   skunk`, or `Triple skunk`. It uses the already-tested score derivation and
-  changes no stored record or official scoring terminology. Regression
-  coverage asserts that the live route retains all three labels and passes the
-  derived skunk level directly to the rendering helper. Phone/desktop browser
-  visual evidence remains a release gate.
+  changes no stored record or official scoring terminology. It now also shows
+  the requested two-player result preview before submission: both outcomes,
+  Game Points, and signed Spread Points. Regression coverage asserts the live
+  route retains all three labels, passes the derived skunk level directly to
+  the rendering helper, and displays the two-record preview. Phone/desktop
+  browser visual evidence remains a release gate.
 
 ## 2026-09-10 live score-entry permanent verification ID
 
