@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 hosted Preview environment-scope review
+
+- Read-only Vercel review confirms the newest protected Preview deployment is
+  `READY`, has the required masked public Supabase URL/publishable-key settings
+  and an uninspected server-only key, and has no grouped runtime error in the
+  preceding two hours. All three settings are Preview-scoped; this is correct
+  for the current review build but is deliberately not proof of a configured
+  public Production environment. No hosting setting, deployment, domain, key,
+  or pilot data changed. Details:
+  `docs/quality/2026-09-10-hosted-preview-environment-scope-review.md`.
+
 ## 2026-09-10 cross-site mutation hardening
 
 - A source-wide API review found nine signed-in mutation routes that had
