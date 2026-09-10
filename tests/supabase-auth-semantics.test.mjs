@@ -330,6 +330,30 @@ test('legacy public registration is retired before the fragment-only replacement
   ]) assert.equal(fs.existsSync(path.join(root, file)), false, `${file} must not retain a path-token surface`);
 });
 
+test('v2 registration lifecycle stores only digest material and is service-role-only', () => {
+  const lifecycle = read('database/migrations/0071_secure_registration_link_lifecycle_v2.sql');
+  assert.match(lifecycle, /token_version smallint not null default 1/);
+  assert.match(lifecycle, /token_salt bytea/);
+  assert.match(lifecycle, /token_digest bytea/);
+  assert.match(lifecycle, /octet_length\(token_salt\) = 32/);
+  assert.match(lifecycle, /octet_length\(token_digest\) = 32/);
+  assert.match(lifecycle, /create table app\.tournament_registration_link_heads/);
+  assert.match(lifecycle, /create table app\.registration_link_lifecycle_events/);
+  assert.match(lifecycle, /create table app\.registration_link_operation_conflicts/);
+  assert.match(lifecycle, /coalesce\(auth\.role\(\), ''\) <> 'service_role'/);
+  assert.match(lifecycle, /app\.fixed_32_byte_equal/);
+  assert.match(lifecycle, /pg_catalog\.pg_advisory_xact_lock/);
+  assert.match(lifecycle, /public\.issue_registration_link_v2/);
+  assert.match(lifecycle, /public\.rotate_registration_link_v2/);
+  assert.match(lifecycle, /public\.close_registration_link_v2/);
+  assert.match(lifecycle, /public\.get_registration_link_redemption_material_v2/);
+  assert.match(lifecycle, /public\.submit_registration_claim_v2/);
+  assert.match(lifecycle, /revoke all on function public\.issue_registration_link_v2[\s\S]*from public, anon, authenticated/);
+  assert.match(lifecycle, /grant execute on function public\.issue_registration_link_v2[\s\S]*to service_role/);
+  assert.doesNotMatch(lifecycle, /p_token\s+text/i);
+  assert.doesNotMatch(lifecycle, /grant execute[\s\S]*to anon, authenticated/);
+});
+
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);

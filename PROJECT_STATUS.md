@@ -10,6 +10,21 @@
   evidence remain non-waivable release blockers. See
   `docs/quality/2026-09-10-meta-release-readiness-delta.md`.
 
+## 2026-09-10 secure registration-link v2 schema boundary
+
+- Applied migration `0071_secure_registration_link_lifecycle_v2` to the
+  disposable synthetic database first and then to the pilot after a zero-link,
+  zero-claim aggregate preflight. It adds retired-v1 history linkage, v2
+  salt/digest headers, immutable lifecycle/conflict evidence, a locked active
+  head, and five service-role-only database functions. Catalog evidence in
+  both environments proves the new functions deny browser roles and no v2 or
+  enabled link exists.
+- This is intentionally not a public-registration release. Routes, secret-key
+  configuration, real service-role transaction evidence, fragment/network
+  canaries, and independent browser sessions remain required before a v2 link
+  can be opened. See
+  `docs/quality/2026-09-10-registration-link-v2-schema-boundary.md`.
+
 ## 2026-09-10 legacy registration-token surface retired
 
 - Migration `0070_retire_legacy_public_registration_surface` disables every
