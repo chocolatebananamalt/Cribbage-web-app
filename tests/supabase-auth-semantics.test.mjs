@@ -540,9 +540,10 @@ test('registration page clears its fragment before hydration and uses no browser
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);
-  assert.match(guide, /Each assigned player independently enters the same paper result/);
-  assert.match(guide, /confirms their own entry/);
-  assert.match(guide, /entries disagree, leave it pending for cross-checking/);
+  assert.match(guide, /Both assigned players still need to sign in as themselves/);
+  assert.match(guide, /first player must sign out before the second player signs in/);
+  assert.match(guide, /do not treat a single digital entry as verified/);
+  assert.match(guide, /authorized cross-check or judge process/);
   assert.match(guide, /both players independently submit matching results/);
   assert.match(guide, /requireTournamentAccess/);
 });
@@ -556,6 +557,8 @@ test('protected Rulebook reference provides dated cached and online ACC sources 
   assert.match(page, /isUuid/);
   assert.match(page, /ACC Rulebook Cached/);
   assert.match(page, /ACC Rulebook Online/);
+  assert.match(reference, /Each assigned player signs in as themselves/);
+  assert.match(reference, /stays pending for cross-checking or a judge/);
   assert.match(page, /acc-rulebook-2025\.pdf/);
   assert.match(page, /DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD/);
   assert.match(page, /rel="noreferrer"/);
