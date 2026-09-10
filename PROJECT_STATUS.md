@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 ACC public rule-source review
+
+- Verified current public ACC sources for the 2025 Rulebook, cross-checking,
+  one-in-four qualification rounded up, playoff byes, 0/2/3 game points, and
+  the qualifying tie-break order. The source record explicitly separates this
+  evidence from the still-unconfirmed event, payout, reporting, and official
+  digital-record decisions; no finalization logic is enabled from incomplete
+  sources. See `docs/quality/2026-09-10-acc-public-rule-source-review.md`.
+
 ## 2026-09-10 hosted registration lifecycle audit
 
 - Rechecked the actual pilot function grants and migration history for
