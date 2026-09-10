@@ -13,6 +13,7 @@ test('standard verification runs the complete clean-clone safety suite', () => {
   const workflow = readFileSync('.github/workflows/verify.yml', 'utf8');
   assert.match(workflow, /pnpm install --frozen-lockfile/);
   assert.match(workflow, /- run: pnpm verify/);
+  assert.match(workflow, /concurrency:\s+group: verify-\$\{\{ github\.workflow \}\}-\$\{\{ github\.ref \}\}\s+cancel-in-progress: true/s);
 });
 test('the normal application test command cannot silently omit a test file', () => {
   const testCommand = JSON.parse(readFileSync('package.json', 'utf8')).scripts.test;

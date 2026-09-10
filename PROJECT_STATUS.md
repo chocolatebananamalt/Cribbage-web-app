@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 CI supersession guard
+
+- Added a per-workflow/per-ref GitHub verification concurrency guard. A newer
+  push now cancels an obsolete in-progress verification for that same branch,
+  preserving a clearer source-to-check relationship and reducing wasted hosted
+  capacity. This does not change Vercel's separate preview quota or constitute
+  branch-protection evidence. Details:
+  `docs/quality/2026-09-10-ci-supersession-guard.md`.
+
 ## 2026-09-10 hybrid guidance authentication boundary
 
 - Corrected the protected player guide and Rulebook quick reference so a
