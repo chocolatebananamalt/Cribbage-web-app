@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 Vercel preview build-rate limit
+
+- The Vercel Git deployment for the current branch is paused by the hosting
+  provider's build-rate limit: its GitHub status explicitly says to retry in
+  24 hours. This is not an application build/runtime failure; the existing
+  older Preview is Ready with no recent runtime-error report. No billing or
+  Vercel plan change was made. Hosted verification of commits after `de8a247`
+  remains unavailable until a new Ready Preview is created. See
+  `docs/quality/2026-09-10-vercel-build-rate-limit.md`.
+
 ## 2026-09-10 pilot foreign-key index coverage
 
 - The pilot Supabase performance advisor identified 24 missing foreign-key
