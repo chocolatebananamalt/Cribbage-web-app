@@ -22,6 +22,10 @@
   flow and its `122` rejection path; it made no hosted mutation. Mobile and
   persisted multi-user browser evidence remain required before release. See
   `docs/quality/2026-09-10-protected-preview-score-entry-browser-smoke.md`.
+  A fourth isolated fixture now proves atomic registration closure retires the
+  active signup link and replays without duplicate receipt/event/audit rows.
+  The older cycle-2 readiness report is explicitly historical and cannot be
+  used as current release evidence.
 
 ## 2026-09-10 account-activation lock-order repair
 

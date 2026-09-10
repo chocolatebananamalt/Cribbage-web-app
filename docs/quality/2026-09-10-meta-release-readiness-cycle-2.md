@@ -1,4 +1,10 @@
-# Meta release-readiness review, cycle 2 — 2026-09-10
+# Meta release-readiness review, cycle 2 — 2026-09-10 (historical; superseded)
+
+> **Do not use this report as evidence for the current branch or a release
+> decision.** It records the branch at `d199abc`, before migrations
+> `0087`–`0095` and the witnessed account-activation implementation. Current
+> release evidence is in the later project-status entries and current-cycle
+> reviews; the application remains not production-ready.
 
 ## Scope and evidence rule
 
@@ -85,10 +91,10 @@ release blocker and is not softened by the healthy Preview.
    backup/restore and rollback drills, monitoring validation, accessibility
    tests, and a director-supervised tournament simulation.
 
-## Conclusion
+## Historical conclusion
 
-No unresolved P0/P1 defect remains in the implemented paths reviewed during
-this cycle. The app is **not production-ready**: the blockers above are
-missing required capabilities and real-world verification, not optional polish.
-This review is evidence that the existing boundaries are safer than before; it
-is not evidence that an ACC tournament can yet be run or reported officially.
+No unresolved P0/P1 defect remained in the limited paths reviewed at
+`d199abc`. That finding is historical only. The app was and remains **not
+production-ready**: the blockers above are missing required capabilities and
+real-world verification, not optional polish. This review is not evidence that
+an ACC tournament can be run or reported officially.

@@ -106,11 +106,31 @@ run with the opposite request arrival ordering would be additional confidence,
 but the transaction ordering itself is now exercised in both mutable paths.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
-  private-table RLS and service-procedure notices match the reviewed
-  RPC-only architecture.
+private-table RLS and service-procedure notices match the reviewed
+RPC-only architecture.
 - No public feature was enabled.
 - The incomplete activation migrations `0090`–`0095` remain unapplied to the
   pilot.
+
+## Atomic registration-closure evidence
+
+On a fourth, newly seeded, clearly named synthetic fixture in this same
+disposable project, an actual call to `close_tournament_registration_v2` ran
+under the service-role claim. Before the call, the fixture had an open
+tournament registration state, an open head at version 1, and one enabled,
+issued signup link.
+
+- The procedure returned `registration_closed` with both `registrationClosed`
+  and `linkClosed` true.
+- Persisted state was `registration_status=closed`, `head_state=closed`,
+  `head_version=2`, `link_lifecycle_state=closed`, and `enabled=false`.
+- Replaying the exact same operation then left exactly one closure receipt,
+  one link-closure lifecycle event, and one registration-closure audit event.
+
+This proves the stored procedure’s atomic close-plus-link-retirement path and
+its exact replay for this isolated fixture. It does not prove concurrent
+claim-versus-close behavior, director browser interaction, or public-release
+readiness.
 
 ## Consequence and next safe path
 
