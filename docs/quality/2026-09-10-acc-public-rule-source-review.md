@@ -134,3 +134,11 @@ has no grant. Static contract coverage and the full local verification suite
 pass. This proves only that the inert structural foundation is valid; it does
 not prove lifecycle, adjudication, standings, qualification, or browser
 behavior and does not re-enable the correction feature.
+
+The Git-connected Vercel Preview for commit `ba896b4` reached `READY` on
+2026-09-10 with no runtime errors reported in the preceding hour. The preview
+is protected by Vercel authentication, so an unauthenticated request is
+redirected to Vercel sign-in rather than serving the application; this is the
+expected non-public-pilot boundary. Vercel's build-log endpoint is not granted
+to the connected read token, so local `pnpm verify` remains the recorded build
+evidence for this commit.

@@ -82,6 +82,9 @@
   Migration `0099` now provides only the private, immutable independent-card
   correction projection foundation required by the rule; it has no writer,
   reader, grant, or release flag and does not re-enable corrections.
+  Git Preview `dpl_ErDVsh3DCYo3m7WquCBPg1HRZuA6` from commit `ba896b4` is
+  READY and Vercel-protected; its unauthenticated request correctly redirects
+  to Vercel sign-in rather than exposing a public pilot.
 
 ## 2026-09-10 account-activation lock-order repair
 
