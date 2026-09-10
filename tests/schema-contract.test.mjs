@@ -234,3 +234,17 @@ test('activation cancellation is server-only, receipt-bound, and releases a pend
   assert.match(sql, /revoke all on function public\.cancel_roster_account_activation_v1.*from public, anon, authenticated/);
   assert.match(sql, /grant execute on function public\.cancel_roster_account_activation_v1.*to service_role/);
 });
+
+test('activation mutations acquire their shared advisory scope before mutable activation rows', () => {
+  for (const migration of [
+    '0092_roster_account_activation_redeem_rpc.sql',
+    '0094_roster_account_activation_approval_rpc.sql',
+    '0095_roster_account_activation_cancel_rpc.sql',
+  ]) {
+    const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', migration), 'utf8');
+    const advisory = sql.indexOf('pg_advisory_xact_lock');
+    assert.ok(advisory >= 0, `${migration} needs the shared advisory lock`);
+    assert.doesNotMatch(sql.slice(0, advisory), /roster_account_activation(?:s|_requests)[\s\S]{0,500}for update/);
+    assert.match(sql.slice(advisory), /select \* into v_activation from app\.roster_account_activations\s+where[\s\S]*?for update/);
+  }
+});

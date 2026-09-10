@@ -32,6 +32,14 @@ begin
     or octet_length(p_digest) <> 32 then
     return jsonb_build_object('status', 'rejected');
   end if;
+  -- Discover the immutable lock scope without a row lock, then take the
+  -- shared tournament/roster lock before every mutable row lock. Issuance
+  -- already takes that advisory lock first, so reversing it here can deadlock
+  -- an issue-versus-redeem race.
+  select * into v_activation from app.roster_account_activations where id = p_activation_id;
+  if not found then return jsonb_build_object('status', 'rejected'); end if;
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
+    'roster-account-activation:' || v_activation.tournament_id::text || ':' || v_activation.roster_entry_id::text, 0));
   select * into v_activation from app.roster_account_activations where id = p_activation_id for update;
   if not found or v_activation.state <> 'issued' or v_activation.expires_at <= now()
     or p_digest <> v_activation.token_digest then
@@ -48,8 +56,6 @@ begin
   v_hash := encode(extensions.digest(convert_to(jsonb_build_array(
     'roster_account_activation_redeem_v1', p_profile_id::text, p_activation_id::text, p_operation_id::text
   )::text, 'utf8'), 'sha256'), 'hex');
-  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
-    'roster-account-activation:' || v_activation.tournament_id::text || ':' || v_activation.roster_entry_id::text, 0));
   select * into v_existing from app.operation_receipts where actor_profile_id = p_profile_id
     and client_operation_id = p_operation_id for update;
   if found then

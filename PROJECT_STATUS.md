@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 account-activation lock-order repair
+
+- Repaired a pre-release deadlock risk in the un-applied account-activation
+  migrations: issuance already acquired the shared tournament/roster advisory
+  lock first, while redemption, approval, and cancellation had locked a row
+  first. All now discover the immutable lock scope, acquire the shared lock,
+  then re-read mutable rows under it. A schema regression prevents that order
+  from drifting. No local database runtime was available for a two-connection
+  race; the private migrations remain unapplied and the feature stays off.
+  See `docs/quality/2026-09-10-account-activation-lock-order-repair.md`.
+
 ## 2026-09-10 account-activation fragment-boundary repair
 
 - Repaired the gated account-activation page so its credential is parsed and

@@ -16,12 +16,17 @@ begin
     'roster_account_activation_cancel_v1', p_actor_id::text, p_tournament_id::text,
     p_activation_id::text, p_operation_id::text
   )::text, 'utf8'), 'sha256'), 'hex');
+  -- Match the issue/redeem/decision ordering: advisory scope first, then the
+  -- mutable activation row. This prevents an issue-versus-cancel deadlock.
+  select * into v_activation from app.roster_account_activations
+    where id = p_activation_id and tournament_id = p_tournament_id;
+  if not found then return jsonb_build_object('status', 'rejected'); end if;
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
+    'roster-account-activation:' || p_tournament_id::text || ':' || v_activation.roster_entry_id::text, 0));
   select * into v_activation from app.roster_account_activations
     where id = p_activation_id and tournament_id = p_tournament_id for update;
   if not found or not exists (select 1 from app.tournament_roles where tournament_id = p_tournament_id
     and profile_id = p_actor_id and role in ('director', 'co_director')) then return jsonb_build_object('status', 'rejected'); end if;
-  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
-    'roster-account-activation:' || p_tournament_id::text || ':' || v_activation.roster_entry_id::text, 0));
   select * into v_existing from app.operation_receipts where actor_profile_id = p_actor_id
     and client_operation_id = p_operation_id for update;
   if found then
