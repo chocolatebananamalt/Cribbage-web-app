@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 legacy registration-token path release blocker
+
+- The current public registration routes accept their bearer value in the URL
+  path, which can reach server/CDN logs before the application can protect it.
+  A safe pilot aggregate check found zero legacy links and zero enabled links,
+  so no active signup is being disrupted. This remains a non-waivable public
+  release blocker until the legacy surface is retired and the reviewed
+  fragment-only lifecycle replaces it.
+- Retiring it would intentionally disable public signup until that replacement
+  exists, so the customer-visible change is awaiting owner approval. The
+  hosted Email/Password-provider setting is a separate dashboard-only release
+  blocker; no unsupported browser change was attempted.
+
 ## 2026-09-10 controlled score-duplicate race repair
 
 - An independent high-risk review found that a same-player concurrent score
