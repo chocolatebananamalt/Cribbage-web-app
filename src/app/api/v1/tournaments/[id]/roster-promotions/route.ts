@@ -3,9 +3,11 @@ import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { isAcceptedRosterPromotion, isRejectedRosterPromotion } from "../../../../../../lib/api/roster";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
+  if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
   const { id } = await params;
   const parsed = await readSmallJson(request);
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });

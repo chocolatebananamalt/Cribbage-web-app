@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 cross-site mutation hardening
+
+- A source-wide API review found nine signed-in mutation routes that had
+  verified-session and private-RPC boundaries but lacked the shared same-origin
+  rejection used by the other mutation routes. Added that rejection before any
+  body read or database work, covering score submit/confirm, the currently
+  hard-disabled correction routes, and roster-promotion operations. A
+  repository-wide regression test now requires every API POST route to use
+  that gate. No database behavior or hosted configuration was changed.
+
 ## 2026-09-10 director QR-registration workspace
 
 - Added the director/co-director source workspace for the existing

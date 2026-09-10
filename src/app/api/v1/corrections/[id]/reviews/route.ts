@@ -4,10 +4,12 @@ import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { correctionRejectionStatus, isAcceptedCorrectionReview, isRejectedCorrectionReview } from "../../../../../../lib/api/correction";
 import { rule12CorrectionEnabled } from "../../../../../../lib/api/rule12-correction-release";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
   if (!rule12CorrectionEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
+  if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
   const { id } = await params;
   const parsed = await readSmallJson(request);
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });

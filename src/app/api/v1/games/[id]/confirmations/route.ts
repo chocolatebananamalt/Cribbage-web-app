@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { isAcceptedConfirmation, isRejectedConfirmationOperation } from "../../../../../../lib/api/game-operation";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../lib/api/validation";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { createClient } from "../../../../../../lib/supabase/server";
 
 function rejectionStatus(code: unknown) {
@@ -12,6 +13,7 @@ function rejectionStatus(code: unknown) {
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
+    if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const rawBody = await readSmallJson(request);
     if (!rawBody || typeof rawBody !== "object") return apiJson({ error: "invalid_confirmation" }, { status: 400 });
