@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 isolated database validation environment
+
+- Checked the available Supabase paths for the required real concurrency
+  tests without touching the shared pilot. Free-plan preview branches are not
+  available, and the connected migration endpoint rejects the application's
+  `auth.users`-referencing schema in an otherwise empty disposable project.
+  No pilot migration, data, auth setting, or release flag changed. The exact
+  limitation and the controlled-test acceptance criteria are recorded in
+  `docs/quality/2026-09-10-isolated-database-validation-environment.md`.
+
 ## 2026-09-10 account-activation lock-order repair
 
 - Repaired a pre-release deadlock risk in the un-applied account-activation
