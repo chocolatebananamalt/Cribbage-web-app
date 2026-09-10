@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { classifySkunk, deriveScore, formatScorecardSpread, formatSignedNet, isScoreEntryReady } from "../src/lib/score.ts";
+import { getScorecardVerificationStatus } from "../src/lib/games/scorecard-status.ts";
 
 test("score boundaries classify informal skunk bands and derive game points", () => {
   const cases = [
@@ -80,4 +81,11 @@ test("score-entry readiness requires both a valid margin and winner", () => {
   assert.equal(isScoreEntryReady(17, null), false);
   assert.equal(isScoreEntryReady(0, "player"), false);
   assert.equal(isScoreEntryReady(17, "player"), true);
+});
+
+test("scorecard verification notices distinguish future games from in-progress results", () => {
+  assert.deepEqual(getScorecardVerificationStatus(["pending"]), { tone: "current", message: "Current and Verified", totalMessage: null });
+  assert.deepEqual(getScorecardVerificationStatus(["submitted"]), { tone: "pending", message: "Verification Pending Opponent Entry", totalMessage: "Updated Total Calculations Pending Opponent Entry" });
+  assert.deepEqual(getScorecardVerificationStatus(["confirmation_pending"]), { tone: "pending", message: "Verification Pending Player Confirmation", totalMessage: "Updated Total Calculations Pending Player Confirmation" });
+  assert.deepEqual(getScorecardVerificationStatus(["pending", "mismatch"]), { tone: "mismatch", message: "Result Mismatch Needs Review", totalMessage: "Updated Total Calculations Pending Review" });
 });

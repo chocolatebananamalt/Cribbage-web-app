@@ -20,6 +20,16 @@
   unverified.
   See `docs/quality/2026-09-10-player-scorecard-reader.md`.
 
+## 2026-09-10 scorecard verification-status correction
+
+- Corrected a future-game false alarm in the protected scorecard. A scheduled
+  game with no entry now leaves the card `Current and Verified`; only a
+  submitted result, pending confirmation, or mismatch shows an incomplete
+  verification state and total warning. The approved opponent-entry wording
+  remains exact for the one-submission state. The 117-test suite, lint,
+  production build, recovery checks, and diff check pass. See
+  `docs/quality/2026-09-10-scorecard-verification-status.md`.
+
 ## 2026-09-10 live score-entry skunk aid parity
 
 - The protected player score-entry route now shows the approved visual aid for

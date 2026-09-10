@@ -493,8 +493,10 @@ test('player scorecard read is own-card scoped and excludes unverified totals', 
   assert.match(reader, /data\.eventId !== eventId/);
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /getPlayerScorecard/);
-  assert.match(page, /Verification Pending Opponent Entry/);
-  assert.match(page, /Updated Total Calculations Pending Opponent Entry/);
+  const scorecardStatus = read('src/lib/games/scorecard-status.ts');
+  assert.match(scorecardStatus, /Verification Pending Opponent Entry/);
+  assert.match(scorecardStatus, /Updated Total Calculations Pending Opponent Entry/);
+  assert.match(page, /getScorecardVerificationStatus/);
   assert.match(page, /Net Spread Points/);
   assert.match(page, /SharedDeviceSignOut/);
   assert.doesNotMatch(reader + page, /service_role|\.from\(/);
