@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { isPublicRegistrationClaim, publicRegistrationEnabled } from "../../../../../lib/api/public-registration-v2";
-import { apiJson, withApiFailureBoundary } from "../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, withApiFailureBoundary } from "../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../lib/api/same-origin";
 import { digestRegistrationLinkCredential, parseRegistrationLinkCredential } from "../../../../../lib/registration-link-token";
 import { createServerOnlyAdminClient } from "../../../../../lib/supabase/private-admin";
@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
   return withApiFailureBoundary(async () => {
     if (!publicRegistrationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
-    let body: unknown; try { body = await request.json(); } catch { return apiJson({ error: "unavailable" }, { status: 404 }); }
+    const body = await readSmallJson(request);
+    if (body === null) return apiJson({ error: "unavailable" }, { status: 404 });
     if (!isPublicRegistrationClaim(body)) return apiJson({ error: "unavailable" }, { status: 404 });
     const credential = parseRegistrationLinkCredential(body.credential);
     if (!credential) return apiJson({ error: "unavailable" }, { status: 404 });

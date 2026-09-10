@@ -3,10 +3,12 @@ import { createClient } from "../../../../../../../lib/supabase/server";
 import { isSetupRecoveryRequest, isRejectedSetup, isRecoveredSetup } from "../../../../../../../lib/api/setup";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
+import { readSmallJson } from "../../../../../../../lib/api/bounded-json";
 const privateNoStore = { "cache-control": "private, no-store" };
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isSameOriginRequest(request)) return NextResponse.json({ error: "invalid_origin" }, { status: 403, headers: privateNoStore });
-  const { id } = await params; let body: unknown; try { body = await request.json(); } catch { return NextResponse.json({ error: "invalid_json" }, { status: 400, headers: privateNoStore }); }
+  const { id } = await params; const body = await readSmallJson(request);
+  if (body === null) return NextResponse.json({ error: "invalid_json" }, { status: 400, headers: privateNoStore });
   if (!isUuid(id) || !isSetupRecoveryRequest(body)) return NextResponse.json({ error: "invalid_setup_recovery" }, { status: 400, headers: privateNoStore });
   try {
     const supabase = await createClient(); const { data: claims, error: claimsError } = await supabase.auth.getClaims();

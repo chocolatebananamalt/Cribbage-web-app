@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { correctionRejectionStatus, isAcceptedCorrectionReview, isRejectedCorrectionReview } from "../../../../../../lib/api/correction";
@@ -7,8 +7,9 @@ import { correctionRejectionStatus, isAcceptedCorrectionReview, isRejectedCorrec
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
   const { id } = await params;
-  let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
+  const parsed = await readSmallJson(request);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });
+  const body = parsed as Record<string, unknown>;
   if (!isUuid(id) || !isUuid(body.idempotencyKey) || !["approve", "reject"].includes(body.decision as string)) {
     return apiJson({ error: "invalid_correction_review" }, { status: 400 });
   }

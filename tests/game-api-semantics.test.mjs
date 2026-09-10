@@ -68,6 +68,26 @@ test('score mutation routes bound JSON bodies before database work', async () =>
   }
 });
 
+test('every live POST route uses a bounded JSON reader instead of buffering request JSON', () => {
+  const apiRoot = path.join(root, 'src/app/api');
+  const routeFiles = [];
+  const visit = (directory) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const target = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(target);
+      else if (entry.name === 'route.ts') routeFiles.push(target);
+    }
+  };
+  visit(apiRoot);
+  assert.ok(routeFiles.length > 0);
+  for (const routeFile of routeFiles) {
+    const source = fs.readFileSync(routeFile, 'utf8');
+    if (!/export async function POST/.test(source)) continue;
+    assert.doesNotMatch(source, /request\.(json|text)\(\)/, routeFile);
+    assert.match(source, /read(Small|Medium|Large)Json\(request\)|readRegistrationLinkJson\(request\)/, routeFile);
+  }
+});
+
 test('game operation responses bind to the requested game and submission before returning success', async () => {
   const game = await import(pathToFileURL(path.join(root, 'src/lib/api/game-operation.ts')).href);
   const gameId = '00000000-0000-4000-8000-000000000001';

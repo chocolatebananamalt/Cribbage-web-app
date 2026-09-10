@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 all live mutation request bounds
+
+- Extended streaming JSON request limits across every implemented API POST
+  route after a complete mutation-route audit found fourteen remaining uses of
+  framework body buffering. Small operations are limited to 2 KiB; bounded
+  seating publication and setup drafts use documented 64 KiB and 512 KiB
+  ceilings appropriate to their validated data shapes. A regression scan now
+  fails if any live POST route reintroduces `request.json()` or `request.text()`.
+  Local checks pass: **123 tests**, lint, production build, workspace
+  verification, private-handoff verification, and diff check. See
+  `docs/quality/2026-09-10-all-live-mutation-bounds.md`.
+
 ## 2026-09-10 registration-link streaming-body repair
 
 - Closed the same input-buffering gap in the live registration-link issue,

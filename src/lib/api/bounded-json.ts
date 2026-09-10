@@ -1,4 +1,6 @@
 export const smallJsonRequestBodyLimit = 2048;
+export const mediumJsonRequestBodyLimit = 65536;
+export const largeJsonRequestBodyLimit = 524288;
 
 /**
  * Read a bounded JSON mutation request without allowing an unbounded body to
@@ -36,6 +38,16 @@ export async function readBoundedJson(request: Request, byteLimit: number): Prom
 /** Read the standard small mutation body used by score endpoints. */
 export async function readSmallJson(request: Request): Promise<unknown | null> {
   return readBoundedJson(request, smallJsonRequestBodyLimit);
+}
+
+/** Read a bounded seating-assignment mutation body. */
+export async function readMediumJson(request: Request): Promise<unknown | null> {
+  return readBoundedJson(request, mediumJsonRequestBodyLimit);
+}
+
+/** Read a bounded tournament-setup draft body. */
+export async function readLargeJson(request: Request): Promise<unknown | null> {
+  return readBoundedJson(request, largeJsonRequestBodyLimit);
 }
 
 function concat(chunks: Uint8Array[], totalBytes: number) {

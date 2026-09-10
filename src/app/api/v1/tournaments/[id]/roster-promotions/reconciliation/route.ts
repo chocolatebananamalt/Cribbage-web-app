@@ -1,14 +1,15 @@
 import { NextRequest } from "next/server";
 import { isAcceptedRosterPromotion, isRejectedRosterPromotion } from "../../../../../../../lib/api/roster";
-import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { createClient } from "../../../../../../../lib/supabase/server";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
     const { id } = await params;
-    let body: Record<string, unknown>;
-    try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
+    const parsed = await readSmallJson(request);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });
+    const body = parsed as Record<string, unknown>;
     if (!isUuid(id) || !isUuid(body.approvalDecisionId) || !isUuid(body.idempotencyKey)) return apiJson({ error: "invalid_roster_promotion" }, { status: 400 });
     const supabase = await createClient();
     if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });

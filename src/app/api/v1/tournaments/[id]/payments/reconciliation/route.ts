@@ -3,13 +3,13 @@ import { createClient } from "../../../../../../../lib/supabase/server";
 import { isPaymentRecoveryRequest, isRecoveredPayment, isRejectedPayment } from "../../../../../../../lib/api/payment";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
-import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
   if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
-  const { id } = await params; let body: unknown;
-  try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
+  const { id } = await params; const body = await readSmallJson(request);
+  if (body === null) return apiJson({ error: "invalid_json" }, { status: 400 });
   if (!isUuid(id) || !isPaymentRecoveryRequest(body)) return apiJson({ error: "invalid_payment_recovery" }, { status: 400 });
   const supabase = await createClient();
   if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });

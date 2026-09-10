@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { correctionRejectionStatus, isAcceptedCorrectionProposal, isRejectedCorrectionProposal } from "../../../../../../lib/api/correction";
@@ -9,8 +9,9 @@ const maxReasonLength = 500;
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
   const { id } = await params;
-  let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return apiJson({ error: "invalid_json" }, { status: 400 }); }
+  const parsed = await readSmallJson(request);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return apiJson({ error: "invalid_json" }, { status: 400 });
+  const body = parsed as Record<string, unknown>;
   const reason = body.reason;
   if (!isUuid(id) || !isUuid(body.correctionId) || !isUuid(body.idempotencyKey)
     || !Number.isSafeInteger(body.expectedGameVersion) || (body.expectedGameVersion as number) < 1
