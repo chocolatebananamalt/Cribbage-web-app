@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 site-wide browser isolation hardening
+
+- Extended the nonce-bound Content Security Policy from credential-fragment
+  routes to every matched application response. The browser may now connect
+  only to the app itself and Supabase authentication; framing and plugin
+  content are independently denied. Full local verification passed (153
+  application checks, build, audit, workspace, and private handoff), and
+  GitHub Actions passed for commit `d62372f`. The current Vercel Git preview
+  has not yet picked up that commit, so hosted CSP and visual evidence remains
+  explicitly open rather than inferred from the previous preview. Details:
+  `docs/quality/2026-09-10-sitewide-csp-hardening.md`.
+
 ## 2026-09-10 shared-pilot correction-grant containment gap
 
 - A new read-only grant audit found the shared pilot still grants authenticated
