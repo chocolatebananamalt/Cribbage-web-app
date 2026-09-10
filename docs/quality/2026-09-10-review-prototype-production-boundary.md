@@ -39,7 +39,16 @@ pnpm verify               PASS (6 workspace checks)
 pnpm verify:handoff       PASS (6 private-handoff checks)
 ```
 
+Hosted evidence on 2026-09-10:
+
+- Vercel Preview deployment `dpl_5fxwHsoEhyL6n7KCQzJWS36wGxCG` for commit
+  `b120d58` reached `READY` with no alias error. Its preview host returned
+  HTTP 200 and the expected review dashboard.
+- The project default production hostname returned HTTP 404. No production
+  deployment was created or promoted for this test because the app is not
+  release-ready. That observed 404 therefore does not substitute for the
+  guard's automated custom-host/promotion rejection coverage.
+- Vercel reported no runtime errors in the preceding hour.
+
 The protected Preview dashboard remains a visual-review surface; no visual
-layout changed. The production denial is intentionally not deployed as a
-public test because the application is not release-ready and its hosted
-production environment must not be used as a test tournament surface.
+layout changed.
