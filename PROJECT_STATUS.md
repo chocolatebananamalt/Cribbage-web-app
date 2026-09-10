@@ -9,6 +9,14 @@
   view. It does not relabel a prototype or partial backend as a completed
   production milestone.
 
+## 2026-09-10 ACC rule confirmation checklist
+
+- Added `docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`, separating
+  public authoritative-source verification (Codex work) from the limited
+  policy, permission, portal, retention, and payment decisions that only ACC
+  or a tournament authority can make. It gives the user a minimal five-item
+  request list and keeps every app rule tied to a dated source and fixture.
+
 ## 2026-09-10 atomic tournament-registration closure
 
 - Added one service-only, director/co-director-authorized operation that

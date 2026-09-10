@@ -43,6 +43,9 @@ processing, or defects found in real multi-person and venue testing.
 3. Complete the server-authoritative operations path before adding optional
    conveniences such as OCR or payment processing.
 
+The detailed rule/ACC decision split is maintained in
+`docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`.
+
 ## Rules for status updates
 
 - **Complete** means the stated definition of done has direct recorded
