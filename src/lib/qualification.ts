@@ -15,6 +15,12 @@ export type QualificationPreview = {
   firstRoundByes: number;
   finalizable: boolean;
   ranked: Array<QualificationCandidate & { numericRank: number; qualificationStatus: QualificationStatus }>;
+  unresolvedTies: Array<{
+    numericRank: number;
+    candidateIds: string[];
+    affectsQualificationCut: boolean;
+    requiredResolution: "head_to_head_if_available_then_one_game_playoff";
+  }>;
 };
 
 function assertNonNegativeSafeInteger(value: number, field: string) {
@@ -70,6 +76,7 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
   let hasTie = false;
   let index = 0;
   const output: QualificationPreview["ranked"] = [];
+  const unresolvedTies: QualificationPreview["unresolvedTies"] = [];
   while (index < ranked.length) {
     let end = index + 1;
     while (end < ranked.length && sameNumericStanding(ranked[index], ranked[end])) end += 1;
@@ -78,6 +85,14 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
     const qualificationStatus: QualificationStatus = index < qualifierCountValue && end > qualifierCountValue
       ? "cutoff_tie"
       : end <= qualifierCountValue ? "qualified" : "not_qualified";
+    if (tied) {
+      unresolvedTies.push({
+        numericRank: index + 1,
+        candidateIds: ranked.slice(index, end).map((candidate) => candidate.id),
+        affectsQualificationCut: index < qualifierCountValue && end > qualifierCountValue,
+        requiredResolution: "head_to_head_if_available_then_one_game_playoff",
+      });
+    }
     for (let item = index; item < end; item += 1) {
       output.push({ ...ranked[item], numericRank: index + 1, qualificationStatus });
     }
@@ -91,5 +106,6 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
     firstRoundByes: bracketSize - qualifierCountValue,
     finalizable: !hasTie,
     ranked: output,
+    unresolvedTies,
   };
 }

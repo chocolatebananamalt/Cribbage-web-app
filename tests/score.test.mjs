@@ -126,6 +126,12 @@ test("an exact numeric tie is never silently finalized and a cutoff tie is visib
   ]);
   assert.equal(preview.qualifierCount, 1);
   assert.equal(preview.finalizable, false);
+  assert.deepEqual(preview.unresolvedTies, [{
+    numericRank: 2,
+    candidateIds: ["b", "c"],
+    affectsQualificationCut: false,
+    requiredResolution: "head_to_head_if_available_then_one_game_playoff",
+  }]);
   assert.deepEqual(preview.ranked.map(({ id, qualificationStatus }) => ({ id, qualificationStatus })), [
     { id: "a", qualificationStatus: "qualified" },
     { id: "b", qualificationStatus: "not_qualified" },
@@ -145,4 +151,10 @@ test("an exact numeric tie is never silently finalized and a cutoff tie is visib
   assert.equal(cutoffTie.qualifierCount, 2);
   assert.equal(cutoffTie.ranked[1].qualificationStatus, "cutoff_tie");
   assert.equal(cutoffTie.ranked[2].qualificationStatus, "cutoff_tie");
+  assert.deepEqual(cutoffTie.unresolvedTies, [{
+    numericRank: 2,
+    candidateIds: ["b", "c"],
+    affectsQualificationCut: true,
+    requiredResolution: "head_to_head_if_available_then_one_game_playoff",
+  }]);
 });

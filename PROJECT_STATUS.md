@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-10 qualification tie-resolution signal
+
+- Qualification previews now expose each unresolved numeric tie and the
+  ACC-required head-to-head/one-game-playoff next step, including whether it
+  crosses the qualifying cutoff. They remain deliberately non-finalizable and
+  do not invent a result, playoff, payout, or MRP. Evidence:
+  `docs/quality/2026-09-10-qualification-tie-resolution-signal.md`.
+
 ## 2026-09-10 Rule 12 apparent-qualifier contract
 
 - The isolated correction foundation now retains the card side(s) identified
