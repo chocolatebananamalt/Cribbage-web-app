@@ -147,7 +147,7 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   const { apiMutationOriginMatcher, apiMutationOriginRejection, rejectsApiMutationOrigin } = await import(pathToFileURL(path.join(root, 'src/lib/api/mutation-origin-gateway.ts')).href);
   const { isSameOriginRequest } = await import(pathToFileURL(path.join(root, 'src/lib/api/same-origin.ts')).href);
   const requestOrigin = 'https://example.test';
-  const check = (pathname, method, origin) => rejectsApiMutationOrigin({ pathname, method, origin, requestOrigin });
+  const check = (pathname, method, origin, fetchSite = null) => rejectsApiMutationOrigin({ pathname, method, origin, fetchSite, requestOrigin });
   assert.equal(apiMutationOriginMatcher, '/api/v1/:path*');
   assert.deepEqual(apiMutationOriginRejection, {
     body: { error: 'invalid_origin' },
@@ -157,6 +157,8 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   assert.equal(check('/api/v1/registration/example.jpg', 'POST', 'https://other.example'), true);
   assert.equal(check('/api/v1/games/example/submissions', 'POST', null), true);
   assert.equal(check('/api/v1/games/example/submissions', 'POST', requestOrigin), false);
+  assert.equal(check('/api/v1/games/example/submissions', 'POST', requestOrigin, 'same-origin'), false);
+  assert.equal(check('/api/v1/games/example/submissions', 'POST', requestOrigin, 'cross-site'), true);
   assert.equal(check('/api/v1/games/example/submissions', 'GET', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);

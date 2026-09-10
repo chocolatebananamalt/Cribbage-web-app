@@ -27,6 +27,7 @@ export async function proxy(request: NextRequest) {
     pathname: request.nextUrl.pathname,
     method: request.method,
     origin: request.headers.get("origin"),
+    fetchSite: request.headers.get("sec-fetch-site"),
     requestOrigin: request.nextUrl.origin,
   })) {
     return NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);

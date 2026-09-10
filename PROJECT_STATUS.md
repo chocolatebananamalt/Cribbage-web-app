@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 API mutation Fetch-Metadata gateway hardening
+
+- Strengthened the shared `/api/v1` unsafe-request gateway. It already
+  rejected any missing or foreign Origin and now also fails closed when a
+  browser explicitly identifies a mutation as cross-site, while maintaining
+  compatibility with older clients that omit the optional Fetch-Metadata
+  header. Regression tests cover all accept/reject cases; full local tests,
+  lint, production build, recovery checks, and diff validation pass. See
+  `docs/quality/2026-09-10-api-mutation-fetch-metadata-gateway.md`.
+
 ## 2026-09-10 Fetch-Metadata mutation hardening
 
 - Strengthened the shared same-origin write guard: existing mutations already
