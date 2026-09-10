@@ -99,3 +99,8 @@ Preview. It was a fixture-only interaction with no persisted score submission,
 account change, role change, or deployment configuration change. Mobile,
 independent authenticated-player, persistence, and confirmation tests remain
 release gates.
+
+The same fresh Preview had no browser-console warnings or errors after this
+interaction. Vercel’s project-level runtime-error scan for the preceding hour
+also returned no error clusters, and the deployment’s error-only build log
+reported a completed Next.js build without a build error.

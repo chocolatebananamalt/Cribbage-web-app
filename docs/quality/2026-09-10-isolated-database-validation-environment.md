@@ -176,8 +176,15 @@ fresh valid-digest claim submitted after that close returned the generic
 This shows the expected safe boundary in this arrival order: a claim that was
 already committed before closure is retained for director review, while no
 claim can be accepted after closure. It found no deadlock or orphaned active
-link. The opposite arrival order and real independent authenticated browser
-sessions remain required before any public-registration release.
+link.
+
+A final separate fixture exercised the complementary close-first ordering:
+the close returned `registration_closed`, then a valid-digest claimant request
+returned `unavailable`. Persisted state remained closed at head version 2,
+with a closed disabled link, one closure receipt, and **zero** claims. Together
+with the concurrent claim-first run, both ordering outcomes now have direct
+database evidence. Real independent authenticated browser sessions remain
+required before any public-registration release.
 
 ## Consequence and next safe path
 
@@ -194,8 +201,8 @@ proof.
 - Execute concurrent issue/redeem, issue/cancel, approval/cancel, and
   registration close/claim attempts through two independent authenticated
   sessions. Rotation/closure serialization is now covered at the database
-  boundary, and claim/close is covered in one database arrival order; both
-  still need browser-session coverage and the reverse claim/close ordering.
+  boundary, and claim/close is covered in both database ordering outcomes;
+  both still need browser-session coverage.
 - Confirm one authoritative outcome, durable conflict receipts where required,
   no self-check, no direct browser access to service-only procedures, and no
   leaked credential in storage or URLs.

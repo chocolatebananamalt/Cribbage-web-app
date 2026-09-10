@@ -42,7 +42,10 @@
   browser check of the scorecard repair is now complete: a valid but
   unsubmitted fixture result stays out of the card and totals and is honestly
   labelled `Entry Not Submitted`. Persisted multi-user browser evidence
-  remains required.
+  remains required. The complementary close-first fixture is also complete:
+  it leaves zero claims when a valid claimant arrives after registration was
+  closed. The current Vercel preview has a clean build, no recent runtime
+  errors, and no observed browser-console errors.
 
 ## 2026-09-10 account-activation lock-order repair
 
