@@ -27,6 +27,12 @@ function registrationContentSecurityPolicy(nonce: string) {
 }
 
 export async function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const policy = registrationContentSecurityPolicy(nonce);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", policy);
+
   if (rejectsApiMutationOrigin({
     pathname: request.nextUrl.pathname,
     method: request.method,
@@ -34,15 +40,11 @@ export async function proxy(request: NextRequest) {
     fetchSite: request.headers.get("sec-fetch-site"),
     requestOrigin: request.nextUrl.origin,
   })) {
-    return NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
+    const response = NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
+    response.headers.set("Content-Security-Policy", policy);
+    return response;
   }
   try {
-    const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-    const policy = registrationContentSecurityPolicy(nonce);
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-nonce", nonce);
-    requestHeaders.set("Content-Security-Policy", policy);
-
     // A disabled feature must stay absent even when an unconfigured local
     // environment cannot initialize the unrelated authenticated-session proxy.
     // It still receives the same browser isolation policy as every other page.
@@ -56,10 +58,12 @@ export async function proxy(request: NextRequest) {
     response.headers.set("Content-Security-Policy", policy);
     return response;
   } catch {
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: "operation_unavailable" },
       { status: 503, headers: { "cache-control": "private, no-store" } },
     );
+    response.headers.set("Content-Security-Policy", policy);
+    return response;
   }
 }
 

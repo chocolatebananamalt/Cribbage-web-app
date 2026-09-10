@@ -76,6 +76,8 @@ test('site-wide browser hardening headers prevent framing, indexing, referrer le
   assert.match(proxy, /frame-ancestors 'none'/, 'the CSP must independently deny framing');
   assert.match(proxy, /object-src 'none'/, 'the CSP must deny plugin content');
   assert.doesNotMatch(proxy, /if \(!protectsFragmentCredential\) return await updateSession/, 'CSP must not be restricted to registration pages');
+  assert.match(proxy, /NextResponse\.json\(apiMutationOriginRejection\.body, apiMutationOriginRejection\.init\);\s*response\.headers\.set\("Content-Security-Policy", policy\);/s, 'cross-origin write rejections must retain the CSP');
+  assert.match(proxy, /status: 503, headers: \{ "cache-control": "private, no-store" \}[\s\S]*?response\.headers\.set\("Content-Security-Policy", policy\);/, 'unavailable-operation responses must retain the CSP');
 });
 
 test('callback only accepts same-origin relative redirect paths', () => {

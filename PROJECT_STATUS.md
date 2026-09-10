@@ -7,7 +7,9 @@
   only to the app itself and Supabase authentication; framing and plugin
   content are independently denied. Full local verification passed (153
   application checks, build, audit, workspace, and private handoff), and
-  GitHub Actions passed for commit `d62372f`. Vercel has reached the Hobby
+  GitHub Actions passed for commit `d62372f`. A local optimized-server check
+  also proved that both a `403` unsafe-origin rejection and a `503`
+  unavailable sign-in response retain the CSP. Vercel has reached the Hobby
   plan's daily code-deployment limit, so hosted CSP and visual evidence remains
   explicitly open rather than inferred from the previous preview. Details:
   `docs/quality/2026-09-10-sitewide-csp-hardening.md`.

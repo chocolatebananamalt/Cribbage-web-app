@@ -36,6 +36,12 @@ future browser integration requires an intentional allow-list review.
   optimized Next build, and workspace checks.
 - `pnpm verify:handoff` passed: 6 private-handoff integrity checks.
 - GitHub Actions run `34480749402` passed for commit `d62372f`.
+- A local optimized production-server check after the error-path fix proved
+  that a cross-origin `POST /api/v1/games/example/submissions` returned `403`
+  with `{"error":"invalid_origin"}` **and** the CSP. A deliberately
+  unconfigured `GET /sign-in` returned the expected safe `503`, `no-store,
+  private`, and the CSP. This verifies both error responses at runtime without
+  using credentials or sending a sign-in email.
 - The automated local browser verifier is not installed on this workstation.
   The available browser-control tools reject localhost before the development
   server receives a request, so no local visual result is being represented as
