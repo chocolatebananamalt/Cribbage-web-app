@@ -47,11 +47,23 @@ tournaments, and no real player, payment, or tournament data.
    receipt, one rejected receipt, one duplicate conflict, and game state
    `submitted`.
 
+## Pilot application
+
+After the disposable test and final independent review, the same committed
+migration was applied once to the separate ACC pilot database on 2026-09-10.
+A catalog query confirmed its migration record, the `duplicate_submission`
+rejection mapping in `public.submit_game_score`, no anonymous execute grant,
+and the intended authenticated execute grant. This was a schema/function
+change only; it did not create, alter, or inspect player, score, payment, or
+tournament records.
+
 ## Checks and limitations
 
 - Local test suite: 80 passing tests after the database and API-contract
   regression tests.
 - The migration applied successfully to the disposable database.
+- The reviewed migration also applied successfully to the pilot database; real
+  browser-session evidence remains distinct from this catalog verification.
 - These requests used controlled synthetic JWT claim context through the
   database test interface. They prove the database transaction and audit
   boundary, but do not replace later independent browser sessions with real

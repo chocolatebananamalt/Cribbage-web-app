@@ -12,8 +12,11 @@
   409 for the requested game, allowing only the affected submission-retry
   envelope to clear rather than being retried indefinitely. Confirmation,
   wrong-game, or expanded payloads still fail closed as unavailable.
-- The repair was applied and exercised only on the disposable synthetic test
-  database. A true two-request race produced exactly one accepted score, one
+- The repair was exercised first on the disposable synthetic test database and
+  then applied once to the separate pilot database. Pilot catalog verification
+  confirms the migration/function mapping, denies anonymous execution, and
+  retains only the intended signed-in execution path. A true two-request race
+  on the disposable database produced exactly one accepted score, one
   rejected receipt, one conflict record, and no false verification. The
   complete two-player score/confirmation path also verified reciprocal +31/-31
   scorelines and 3/0 game points. Real independent browser-session evidence
