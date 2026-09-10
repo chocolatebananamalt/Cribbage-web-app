@@ -161,7 +161,8 @@ test('witnessed roster-account activation storage is private, digest-only, and h
   assert.match(sql, /token_digest bytea not null check \(octet_length\(token_digest\) = 32\)/);
   assert.match(sql, /where state in \('issued', 'pending'\)/);
   assert.match(sql, /unique \(activation_id\)/);
-  assert.match(sql, /unique \(tournament_id, profile_id\)/);
+  assert.match(sql, /roster_account_activation_requests_one_live_profile_idx/);
+  assert.match(sql, /where state = 'pending'/);
   assert.match(sql, /confirmation_phrase text not null/);
   assert.match(sql, /roster_account_activation_events_immutable/);
   assert.doesNotMatch(sql, /token(?:_| )?(?:value|secret|raw)|claimed_email|claimed_acc_number/i);
@@ -184,4 +185,18 @@ test('activation issuance is a server-only, receipt-bound, role-checked database
   assert.match(sql, /revoke all on function public\.issue_roster_account_activation_v1.*from public, anon, authenticated/);
   assert.match(sql, /grant execute on function public\.issue_roster_account_activation_v1.*to service_role/);
   assert.doesNotMatch(sql, /raw token|p_token|claimed_email|claimed_acc_number/i);
+});
+
+test('activation redemption derives its digest outside SQL and creates only a pending witnessed request', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0092_roster_account_activation_redeem_rpc.sql'), 'utf8');
+  assert.match(sql, /get_roster_account_activation_salt_v1/);
+  assert.match(sql, /redeem_roster_account_activation_v1/);
+  assert.match(sql, /roster_account_activation_service_only/);
+  assert.match(sql, /octet_length\(p_digest\) <> 32/);
+  assert.match(sql, /state = 'pending'/);
+  assert.match(sql, /confirmationPhrase/);
+  assert.match(sql, /roster_account_activation_operation_conflicts/);
+  assert.match(sql, /revoke all on function public\.redeem_roster_account_activation_v1.*from public, anon, authenticated/);
+  assert.match(sql, /grant execute on function public\.redeem_roster_account_activation_v1.*to service_role/);
+  assert.doesNotMatch(sql, /p_token|raw token|claimed_email|claimed_acc_number/i);
 });

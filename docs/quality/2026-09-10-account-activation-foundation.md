@@ -37,16 +37,23 @@ pilot.
   It expires a stale pending request before a replacement activation can be
   issued, releasing that profile for a later witnessed ceremony. It never
   receives or records the raw activation value.
+- Migration `0092` and its server-only adapter redeem only a parsed activation
+  ID plus a fixed-size digest. A narrow private salt lookup lets the
+  application server derive that digest without forwarding the fragment value
+  to SQL. A successful redemption creates a pending witnessed request and its
+  generated phrase only; it does not link an account or alter tournament,
+  enrollment, score, payment, check-in, or seating state. Rejected and expired
+  credentials share a generic result shape.
 
 ## Verification
 
-- `pnpm test` — pass, 132 tests.
+- `pnpm test` — pass, 135 tests.
 - `git diff --check` — pass.
 
 ## Deliberate limits
 
 The migrations are not yet applied. The remaining work must implement and test
-the service-only redeem/cancel/approve transactions, stable receipts,
+the service-only cancel/approve transactions, stable receipts,
 the nested link rollback, exact route envelopes, fragment-clearing no-third-
 party page, and real independent-session/browser evidence before this feature
 can be enabled. This increment neither changes player access nor weakens the

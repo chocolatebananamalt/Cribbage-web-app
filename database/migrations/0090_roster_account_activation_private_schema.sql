@@ -39,11 +39,15 @@ create table app.roster_account_activation_requests (
   foreign key (activation_id, tournament_id)
     references app.roster_account_activations(id, tournament_id) on delete restrict,
   unique (activation_id),
-  unique (tournament_id, profile_id),
   check ((state = 'pending' and resolved_at is null) or (state <> 'pending' and resolved_at is not null))
 );
 create index roster_account_activation_requests_activation_tournament_idx
   on app.roster_account_activation_requests(activation_id, tournament_id);
+-- A rejected or expired witnessed request must not permanently lock a profile
+-- out of a later activation. Only a live request is unique per tournament.
+create unique index roster_account_activation_requests_one_live_profile_idx
+  on app.roster_account_activation_requests(tournament_id, profile_id)
+  where state = 'pending';
 
 create table app.roster_account_activation_events (
   id uuid primary key default extensions.gen_random_uuid(),
