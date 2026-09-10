@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 isolated real-identity score flow
+
+- Ran the installed score RPCs against two separately simulated signed-in
+  identities in the synthetic validation database, inside a fully rolled-back
+  transaction. The assigned players completed the independent submit/confirm
+  flow to an actual verified game with exactly two scorelines and 3/0 points;
+  an attempted wrong-side submission was rejected as `not_assigned`, and an
+  outsider could not read game context. A post-rollback check found zero
+  synthetic accounts, profiles, or tournament rows. This materially strengthens
+  the database evidence but does not replace required independent browser
+  sessions or the wider release gates. Details:
+  `docs/quality/2026-09-10-isolated-real-identity-score-flow.md`.
+
 ## 2026-09-10 active RPC authorization audit
 
 - Audited the remaining authenticated `SECURITY DEFINER` public database
