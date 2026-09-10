@@ -64,3 +64,38 @@ state boundary:
 The regression test covers the submitted-only scorecard input. Local focused
 tests pass; a fresh hosted browser check is still required once Vercel builds
 the repair.
+
+## Fresh hosted deployment check
+
+On 2026-09-10, Vercel completed a Git-integrated Preview deployment for
+commit `a07b900`. An authenticated hosted fetch of that new deployment’s root
+returned HTTP 200 and the expected Next.js score-entry shell, including the
+ACC branding, score-entry heading, game context, winner controls, keypad, and
+disabled initial review control. Response headers included `no-store`,
+`no-referrer`, frame denial, and the app’s restrictive device permissions
+policy. This proves the current branch can build, deploy, and render through
+Vercel again.
+
+This HTTP-level check did not operate the browser controls on the new
+deployment, so it does **not** replace the still-required fresh interactive
+browser confirmation of the unsubmitted-scorecard repair, mobile layout, or
+independent authenticated players.
+
+## Fresh interactive scorecard-repair check
+
+In a separate authenticated Chrome tab against that fresh Preview, the test
+selected **Barb won**, entered `31` through the on-screen keypad, and observed
+the expected skunk result (3 game points and reciprocal `+31`/`-31` spread
+values). It then opened **Scorecard** without pressing **Review Result** or
+**Submit My Entry**.
+
+- The Scorecard showed **Entry Not Submitted**.
+- Game 3 remained blank for points and both spread columns.
+- The established totals stayed `4`, `+21`, and `-0`; the unsubmitted result
+  did not populate the card or affect any total.
+
+This verifies the repaired honest-state behavior on the current Vercel
+Preview. It was a fixture-only interaction with no persisted score submission,
+account change, role change, or deployment configuration change. Mobile,
+independent authenticated-player, persistence, and confirmation tests remain
+release gates.

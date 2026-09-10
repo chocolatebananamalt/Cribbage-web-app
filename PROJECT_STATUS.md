@@ -35,7 +35,14 @@
   replacement link. No active signup link remains in either final state. A
   concurrent valid claim/closure fixture also serializes safely: a claim
   committed before closure is retained, while a fresh post-closure claim is
-  unavailable and cannot create another record.
+  unavailable and cannot create another record. Vercel has also completed a
+  fresh branch Preview from the newest pushed commit and its protected hosted
+  fetch returns the expected score-entry shell with the configured no-store,
+  no-referrer, frame, and device-permission protections. A new interactive
+  browser check of the scorecard repair is now complete: a valid but
+  unsubmitted fixture result stays out of the card and totals and is honestly
+  labelled `Entry Not Submitted`. Persisted multi-user browser evidence
+  remains required.
 
 ## 2026-09-10 account-activation lock-order repair
 
