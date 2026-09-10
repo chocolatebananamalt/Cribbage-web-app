@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 shared-pilot migration change control
+
+- Corrected the database guide to reflect the actual shared-pilot schema
+  baseline (`0089_foreign_key_coverage`) rather than an obsolete earlier
+  migration range. Added a required, non-authorizing shared-pilot change
+  procedure covering ordered migration selection, synthetic validation,
+  security/grant review, recovery planning, explicit authority, and
+  post-apply evidence. This does not apply anything to the pilot or make the
+  unavailable score workspace available. Details:
+  `docs/operations/PILOT_MIGRATION_CHANGE_CONTROL.md`.
+
 ## 2026-09-10 live pilot security and parity review
 
 - Rechecked the shared pilot read-only. Its signed-in `SECURITY DEFINER`
