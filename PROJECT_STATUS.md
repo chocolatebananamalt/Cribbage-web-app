@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 hosted registration lifecycle audit
+
+- Rechecked the actual pilot function grants and migration history for
+  registration-link issue/rotate/close/read and tournament registration
+  closure. The functions are service-only, have no anonymous or authenticated
+  execution grant, use an empty `search_path`, and the pilot includes all
+  current local migrations through `0086`. The review found no new P0/P1
+  defect in that boundary; independent browser/race evidence remains a release
+  gate. See `docs/quality/2026-09-10-registration-lifecycle-hosted-audit.md`.
+
 ## 2026-09-10 meta release-readiness review, cycle 2
 
 - Completed a fresh requirement-by-requirement meta review after the focused
