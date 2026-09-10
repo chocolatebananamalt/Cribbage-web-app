@@ -147,3 +147,22 @@ test('private append-only foreign keys retain covering indexes without granting 
   ]) assert.match(pruning, new RegExp(`drop index if exists app\\.${indexName}`));
   assert.doesNotMatch(pruning, /roster_account_links_profile_id_idx|\bgrant\b|\bcreate\s+policy\b|\balter\s+table\b/);
 });
+
+test('witnessed roster-account activation storage is private, digest-only, and has one live identity binding', () => {
+  const sql = fs.readFileSync(path.join(process.cwd(), 'database', 'migrations', '0090_roster_account_activation_private_schema.sql'), 'utf8');
+  for (const table of ['roster_account_activations', 'roster_account_activation_requests', 'roster_account_activation_events']) {
+    assert.match(sql, new RegExp(`create table app\\.${table}`));
+    assert.match(sql, new RegExp(`'${table}'`));
+  }
+  assert.match(sql, /execute format\('alter table app\.%I enable row level security', table_name\)/);
+  assert.match(sql, /execute format\('alter table app\.%I force row level security', table_name\)/);
+  assert.match(sql, /execute format\('revoke all on table app\.%I from public, anon, authenticated', table_name\)/);
+  assert.match(sql, /token_salt bytea not null check \(octet_length\(token_salt\) = 32\)/);
+  assert.match(sql, /token_digest bytea not null check \(octet_length\(token_digest\) = 32\)/);
+  assert.match(sql, /where state in \('issued', 'pending'\)/);
+  assert.match(sql, /unique \(activation_id\)/);
+  assert.match(sql, /unique \(tournament_id, profile_id\)/);
+  assert.match(sql, /confirmation_phrase text not null/);
+  assert.match(sql, /roster_account_activation_events_immutable/);
+  assert.doesNotMatch(sql, /token(?:_| )?(?:value|secret|raw)|claimed_email|claimed_acc_number/i);
+});

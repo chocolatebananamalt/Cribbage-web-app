@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 witnessed account-activation foundation
+
+- Began the server-only account-link activation implementation after the
+  Preview-only `SUPABASE_SECRET_KEY` was confirmed in Vercel. The repository
+  now has a strictly parsed 256-bit fragment-token primitive and an un-applied
+  private digest-only migration for activation, pending-request, and immutable
+  event records. The feature is still unavailable: no route, QR, redemption,
+  approval, or pilot migration has been enabled. See
+  `docs/quality/2026-09-10-account-activation-foundation.md`.
+
 ## 2026-09-10 hosted email-provider clarification
 
 - Corrected an inaccurate release gate. Supabase's current hosted Email
