@@ -20,17 +20,18 @@ public prototype response as proof that authenticated tournament routes work.
   release gate.
 - Vercel authentication correctly intercepted direct requests to `/sign-in`,
   `/register`, and `/auth/callback` with redirects to its protected SSO flow.
-  The available connected fetch cannot complete that authenticated browser
-  session, so it cannot prove that the current deployment has working
-  Supabase values.
+- A logged-in Vercel browser session then opened the exact current-preview
+  `/sign-in` route. It rendered the passwordless email form and its submit
+  control without the prior `Supabase is not configured` middleware error. No
+  email was entered or sent.
 
 ## Required authenticated smoke evidence
 
 Before this build can advance beyond protected preview, record all of the
 following against the exact deployment URL:
 
-1. An authenticated Vercel browser session reaches `/sign-in` without the
-   `Supabase is not configured` middleware error.
+1. **Passed, 2026-09-10:** an authenticated Vercel browser session reached
+   `/sign-in` without the `Supabase is not configured` middleware error.
 2. A magic-link request uses only the publishable browser key and returns the
    app's safe user-facing result; no service-role key is exposed.
 3. The callback returns to an approved same-origin path and a fresh protected

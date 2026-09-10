@@ -4,11 +4,10 @@
 
 - Hosting review confirmed the current protected preview is `READY` but found
   an older Vercel middleware configuration failure caused by missing public
-  Supabase settings. The current deployment has no identified runtime failure,
-  yet protected tooling cannot complete an authenticated browser session to
-  prove its environment values. Authenticated `/sign-in`, magic-link callback,
-  and deployment-specific error review are now explicit release evidence, not
-  an assumed configuration. Details:
+  Supabase settings. A logged-in Vercel browser session now proves the current
+  preview's passwordless `/sign-in` form renders without that error; no email
+  was sent. Magic-link callback and deployment-specific error review remain
+  explicit release evidence, not assumed configuration. Details:
   `docs/quality/2026-09-10-protected-preview-auth-preflight.md`.
 
 ## 2026-09-10 Rule 12 hard release stop
