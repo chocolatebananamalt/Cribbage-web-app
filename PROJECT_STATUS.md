@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 registration invalid-digest pre-lock repair
+
+- Migration `0072_registration_claim_invalid_digest_prelock_rejection` now
+  rejects an unknown or incorrect registration digest before it obtains the
+  per-tournament advisory claim lock, while retaining the authoritative
+  locked-state/digest recheck for close and rotate races. It was applied to
+  the disposable synthetic database first and then the pilot; catalog proof
+  confirms browser roles remain denied and only `service_role` can execute it.
+- Local lint, **86** tests, production build, workspace verification,
+  private-handoff verification, and diff validation pass. No v2 public route
+  or server key is configured, so a service-role transaction test, browser
+  canary, and independent-user evidence remain release gates. See
+  `docs/quality/2026-09-10-registration-invalid-digest-prelock-repair.md`.
+
 ## 2026-09-10 meta release-readiness delta review
 
 - Rechecked the current branch against the normative production requirements,

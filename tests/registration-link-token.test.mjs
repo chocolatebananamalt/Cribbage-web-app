@@ -37,3 +37,13 @@ test('only a fixed-length digest leaves the application-server credential bounda
   assert.throws(() => token.digestRegistrationLinkCredential(randomBytes(31), credential.canonicalToken), /256 bits/);
   assert.throws(() => token.digestRegistrationLinkCredential(salt, `/register/${credential.canonicalToken}`), /Invalid/);
 });
+
+test('invalid registration digests are rejected before the serialized claim lock', async () => {
+  const sql = await import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0072_registration_claim_invalid_digest_prelock_rejection.sql', 'utf8'));
+  const prelock = sql.indexOf('from app.tournament_registration_links l\n  where l.id = p_link_id and app.fixed_32_byte_equal(l.token_digest, p_digest);');
+  const lock = sql.indexOf("perform pg_catalog.pg_advisory_xact_lock");
+  assert.ok(prelock >= 0, 'the preliminary digest check exists');
+  assert.ok(lock > prelock, 'the advisory lock follows the digest check');
+  assert.match(sql.slice(prelock, lock), /if not found then return jsonb_build_object\('status', 'unavailable'\); end if;/);
+  assert.match(sql.slice(lock), /or not app\.fixed_32_byte_equal\(v_link\.token_digest, p_digest\)/, 'the locked state still rechecks the digest');
+});
