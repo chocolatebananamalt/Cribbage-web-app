@@ -3,6 +3,7 @@ import {
   apiMutationOriginRejection,
   rejectsApiMutationOrigin,
 } from "./lib/api/mutation-origin-gateway";
+import { accountActivationEnabled } from "./lib/api/account-activation-release";
 import { updateSession } from "./lib/supabase/proxy";
 
 function registrationContentSecurityPolicy(nonce: string) {
@@ -33,7 +34,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
   }
   try {
-    if (request.nextUrl.pathname !== "/register") return await updateSession(request);
+    // A disabled feature must stay absent even when an unconfigured local
+    // environment cannot initialize the unrelated authenticated-session proxy.
+    if (request.nextUrl.pathname === "/activate" && !accountActivationEnabled()) {
+      return NextResponse.next();
+    }
+    const protectsFragmentCredential = request.nextUrl.pathname === "/register"
+      || request.nextUrl.pathname === "/activate";
+    if (!protectsFragmentCredential) return await updateSession(request);
 
     const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
     const policy = registrationContentSecurityPolicy(nonce);

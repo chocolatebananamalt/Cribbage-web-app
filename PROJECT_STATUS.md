@@ -1,5 +1,26 @@
 # Project Status
 
+## 2026-09-10 account-activation fragment-boundary repair
+
+- Repaired the gated account-activation page so its credential is parsed and
+  removed from the browser address before React hydration, with the same
+  nonce-based same-origin-only Content-Security-Policy already used for public
+  registration. The page now clears/aborts ephemeral credential use on
+  pagehide and teardown, and regression coverage protects the no-storage,
+  no-third-party boundary. Local lint, 146 tests, production build, and diff
+  validation pass. The activation flag stays off; migrations `0090`–`0095` and
+  real multi-session/browser evidence are still required. See
+  `docs/quality/2026-09-10-account-activation-fragment-boundary.md`.
+
+## 2026-09-10 gated account-activation handoff page
+
+- Added a release-gated `/activate` handoff page for the witnessed
+  roster-account activation ceremony. It is intentionally absent unless the
+  explicit activation switch is enabled after private migration and controlled
+  pilot evidence. The page does not expose a directory, roster data, or a
+  server credential; its fragment-only credential remains an activation
+  request until a director separately confirms the generated phrase.
+
 ## 2026-09-10 verification inventory guard
 
 - Added a regression guard ensuring every ordinary `tests/*.test.mjs` file is
