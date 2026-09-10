@@ -7,8 +7,10 @@
   closure. The functions are service-only, have no anonymous or authenticated
   execution grant, use an empty `search_path`, and the pilot includes all
   current local migrations through `0086`. The review found no new P0/P1
-  defect in that boundary; independent browser/race evidence remains a release
-  gate. See `docs/quality/2026-09-10-registration-lifecycle-hosted-audit.md`.
+  defect in that boundary. The current 114-test suite, lint, production build,
+  recovery/handoff checks, dependency audit, and diff check all pass;
+  independent browser/race evidence remains a release gate. See
+  `docs/quality/2026-09-10-registration-lifecycle-hosted-audit.md`.
 
 ## 2026-09-10 meta release-readiness review, cycle 2
 

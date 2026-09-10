@@ -41,6 +41,21 @@ Existing regression tests cover bounded parsing, exact request shapes,
 credential non-disclosure, one-time retry handling, version advance, and
 response mismatch rejection.
 
+## Re-run checks
+
+Executed in the local worktree after the hosted inspection:
+
+- `pnpm test` — 114 passed, 0 failed;
+- `pnpm lint` — passed;
+- `pnpm build` — passed (Next.js 16.3.4 optimized production build);
+- `pnpm verify` and `pnpm verify:handoff` — passed;
+- `pnpm audit --prod --audit-level=high` — no known vulnerabilities; and
+- `git diff --check` — passed.
+
+These checks validate the current code and recovery material. They do not
+replace the independent authenticated-session and real-database race tests
+listed below.
+
 ## Finding
 
 No new P0/P1 defect was found in this boundary review. Supabase still reports
