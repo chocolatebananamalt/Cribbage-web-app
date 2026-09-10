@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-10 dependency and repository-history security audit
+
+- A fresh production dependency audit found no known high-severity production
+  dependency vulnerability. A credential-safe scan of every reachable commit
+  found no GitHub-token, Supabase-secret-key, AWS-key, or private-key-shaped
+  value outside preserved private source material. This evidence does not
+  replace secret scanning for future commits or hosted-service controls.
+
 ## 2026-09-10 review-prototype production boundary
 
 - The review dashboard at the root route uses synthetic tournament, player,
