@@ -16,8 +16,8 @@ without allowing review.
 - Fixture shown by that Preview: Grass Roots, Honolulu, HI, Main (12 games),
   Game 3; only sample data was viewed.
 - No sign-in, account, role, tournament, score submission, or hosted
-  configuration was changed. The interactions stopped before **Review
-  Result**.
+  configuration was changed. The interactions stopped before **Submit My
+  Entry**.
 
 ## Observed result
 
@@ -33,6 +33,11 @@ without allowing review.
 4. Extending that input to `122` showed exactly “Enter a possible spread point
    number.” and disabled **Review Result**. The derived result was removed,
    so an impossible margin could not advance through this interface.
+5. A valid `31` showed the one-skunk indicator, derived 3 game points for the
+   winner, and opened **Review Current Game Result**. That screen repeated the
+   current game/table-seat context and both card outcomes, and offered
+   **Edit Result** and **Submit My Entry**. Submission was intentionally not
+   pressed.
 
 ## Limits
 
