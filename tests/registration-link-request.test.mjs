@@ -19,3 +19,18 @@ test('registration-link request reader rejects non-JSON, malformed, declared-ove
   ];
   for (const request of cases) assert.equal(await registrationLink.readRegistrationLinkJson(request), null);
 });
+
+test('rotation and closure require an exact current link/version and a canonical expiry', () => {
+  const valid = {
+    expectedLinkId: '0f2f2d31-12ab-4bcd-8b8c-1234567890ab', expectedVersion: 2,
+    expiresAt: '2027-01-01T00:00:00.000Z', maxClaims: 100, maxClaimsPerHour: 10,
+    operationId: '1f2f2d31-12ab-4bcd-8b8c-1234567890ab',
+  };
+  assert.equal(registrationLink.isRegistrationLinkRotateRequest(valid), true);
+  assert.equal(registrationLink.isRegistrationLinkCloseRequest({
+    expectedLinkId: valid.expectedLinkId, expectedVersion: valid.expectedVersion, operationId: valid.operationId,
+  }), true);
+  assert.equal(registrationLink.isRegistrationLinkRotateRequest({ ...valid, expiresAt: '2027-01-01T00:00:00+00:00' }), false);
+  assert.equal(registrationLink.isRegistrationLinkRotateRequest({ ...valid, expectedVersion: 0 }), false);
+  assert.equal(registrationLink.isRegistrationLinkCloseRequest({ ...valid, extra: true }), false);
+});
