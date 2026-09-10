@@ -5,7 +5,7 @@
 - Closed a review-surface browser boundary: every prototype link that opens a
   separate tab now severs opener and referrer access. The protected production
   Rulebook already followed this pattern. A repository regression keeps all
-  prototype `_blank` links aligned. Full local verification passed with 154
+  application `_blank` links aligned. Full local verification passed with 154
   application tests. Details:
   `docs/quality/2026-09-10-review-prototype-new-tab-isolation.md`.
 

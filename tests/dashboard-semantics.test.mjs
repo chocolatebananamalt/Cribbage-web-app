@@ -1,9 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 
 const source = readFileSync("src/app/tournament-dashboard.tsx", "utf8");
 const styles = readFileSync("src/app/globals.css", "utf8");
+
+function collectTsxSources(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = join(directory, entry.name);
+    if (entry.isDirectory()) return collectTsxSources(fullPath);
+    return entry.name.endsWith(".tsx") ? [readFileSync(fullPath, "utf8")] : [];
+  });
+}
 
 test("dashboard keeps initial winner controls unpressed and review gated", () => {
   assert.match(source, /useState<"player" \| "opponent" \| null>\(null\)/);
@@ -98,10 +107,10 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /title="Tournament Results"/);
 });
 
-test("new-tab prototype links cannot retain control of the operational tab", () => {
-  const blankTargets = [...source.matchAll(/target="_blank"([^>]*)/g)];
-  assert.ok(blankTargets.length > 0, "the review prototype intentionally opens reference documents in a new tab");
-  assert.ok(blankTargets.every((match) => /rel="noreferrer"/.test(match[1])), "every new-tab link must sever opener and referrer access");
+test("new-tab links cannot retain control of an application tab", () => {
+  const links = collectTsxSources("src").flatMap((contents) => [...contents.matchAll(/<a\b[^>]*\btarget="_blank"[^>]*>/g)]);
+  assert.ok(links.length > 0, "the app intentionally opens cached and official Rulebook references in a new tab");
+  assert.ok(links.every((match) => /\brel="noreferrer"/.test(match[0])), "every new-tab link must sever opener and referrer access");
 });
 
 test("interactive controls meet the baseline touch-target and keyboard-focus contract", () => {

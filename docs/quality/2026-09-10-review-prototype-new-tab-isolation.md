@@ -17,8 +17,8 @@ attribute; the review surface now follows the same boundary.
 
 ## Evidence
 
-- A new dashboard regression enumerates every `_blank` target in the prototype
-  and fails unless it includes `rel="noreferrer"`.
+- An application-wide regression enumerates every `.tsx` anchor with
+  `target="_blank"` and fails unless it includes `rel="noreferrer"`.
 - `pnpm verify` passed: audit, lint, 154 application tests, production build,
   and workspace verification.
 - `pnpm verify:handoff` passed: 6 private-handoff integrity checks.
