@@ -44,10 +44,22 @@ same-origin request from a verified session and uses the server-only client.
   ID against a different open synthetic tournament returned
   `idempotency_conflict`, left that tournament open with no receipt, and wrote
   one immutable conflict row.
+- Migration `0083_seating_workspace_registration_status.sql` extends the
+  existing protected director/co-director seating read with only the
+  authoritative `registrationClosed` boolean. It was applied to the disposable
+  database first: the synthetic director received `true` for the closed
+  tournament while unauthenticated and unrelated authenticated callers received
+  `null`. The same function has `SECURITY DEFINER`, an explicit empty search
+  path, no anonymous execute grant, and membership enforcement inside its
+  read. The identical migration is applied to the pilot, where its catalog
+  confirms that same security posture. The protected Seating workspace now
+  requires explicit director confirmation to close registration before it
+  enables permanent initial-seating publication.
 
 ## Remaining release evidence
 
 This is not a public-registration release. Before activation, prove role
 revocation, claim-vs-close and rotate-vs-close races using independent database
-connections, resulting seating eligibility, and the protected browser flow.
-The public-registration switch remains disabled.
+connections, resulting seating eligibility, and the protected browser flow at
+phone and desktop sizes in independent signed-in sessions. The public-
+registration switch remains disabled.

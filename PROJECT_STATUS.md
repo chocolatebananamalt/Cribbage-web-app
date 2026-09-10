@@ -17,6 +17,25 @@
   or a tournament authority can make. It gives the user a minimal five-item
   request list and keeps every app rule tied to a dated source and fixture.
 
+## 2026-09-10 protected seating closure-state and director control
+
+- Migration `0083_seating_workspace_registration_status.sql` adds only the
+  authoritative `registrationClosed` boolean to the existing scoped seating
+  workspace read. It was applied to disposable synthetic project
+  `donfxulkliuyteiannir` before pilot `fnjkwymxpnsqvxtpronk`. Disposable
+  execution proves the assigned synthetic director sees the closed state,
+  while unauthenticated and unrelated authenticated callers receive no
+  workspace. Pilot catalog confirms an empty search path, `SECURITY DEFINER`,
+  no anonymous execute grant, and authenticated execution guarded by the
+  function's director/co-director check.
+- The protected director Seating screen now saves a recoverable, exact
+  registration-close request and requires explicit attendance confirmation
+  before it calls the already service-only close route. It disables check-in
+  after closure and does not allow permanent initial-seating publication until
+  closure succeeds. Local lint, 111 tests, and production build pass. Real
+  signed-in phone/desktop and independent-session browser evidence remain
+  required before release.
+
 ## 2026-09-10 atomic tournament-registration closure
 
 - Added one service-only, director/co-director-authorized operation that

@@ -134,11 +134,13 @@ test('protected seating workspace validates the narrow director-only read and pr
   const rosterEntryId = '00000000-0000-4000-8000-000000000001';
   const publicationId = '00000000-0000-4000-8000-000000000002';
   const valid = {
+    registrationClosed: true,
     checkIn: [{ rosterEntryId, displayName: 'Sample Player', state: 'checked_in' }],
     publication: { publicationId, tableCount: 1, seatsPerTable: 2, publishedAt: '2026-09-09T12:00:00.000Z', assignments: [{ rosterEntryId, displayName: 'Sample Player', initialTableSeat: 'A-1', verificationId: 'A-1' }] },
   };
   assert.equal(workspace.isSeatingWorkspace(valid), true);
   assert.equal(workspace.isSeatingWorkspace({ ...valid, unexpected: 'private' }), false);
+  assert.equal(workspace.isSeatingWorkspace({ ...valid, registrationClosed: 'closed' }), false);
   assert.equal(workspace.isSeatingWorkspace({ ...valid, publication: { ...valid.publication, assignments: [{ ...valid.publication.assignments[0], verificationId: 'A-2' }] } }), false);
   assert.equal(workspace.isSeatingWorkspace({ ...valid, checkIn: [{ ...valid.checkIn[0], state: 'present' }] }), false);
   const page = read('src/app/tournament/[tournamentId]/seating/page.tsx');
@@ -153,13 +155,26 @@ test('protected seating workspace validates the narrow director-only read and pr
   assert.match(client, /seating-operation:\$\{actorId\}:\$\{tournamentId\}/);
   assert.match(client, /crypto\.randomUUID\(\)/);
   assert.match(client, /Retry the same protected request/);
-  assert.match(client, /credentials:"same-origin"/);
+  assert.match(client, /credentials:\s*"same-origin"/);
   assert.match(client, /Publish permanent initial seating/);
+  assert.match(client, /Close registration and disable signup/);
+  assert.match(client, /registrationClosed/);
   assert.match(page, /permanent starting Table\/Seat list/);
   assert.match(client, /Review recovered request/);
   assert.match(client, /flight\.current/);
   assert.doesNotMatch(client, /supabase\.(?:from|rpc)|service_role/);
   assert.match(read('src/lib/client-session-storage.ts'), /"seating-operation:"/);
+});
+
+test('seating workspace reports registration closure only to the current director or co-director', () => {
+  const sql = read('database/migrations/0083_seating_workspace_registration_status.sql');
+  assert.match(sql, /create or replace function public\.get_initial_seating_workspace/);
+  assert.match(sql, /stable security definer set search_path = ''/);
+  assert.match(sql, /auth\.uid\(\) is not null/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /'registrationClosed', \(select t\.registration_status = 'closed'/);
+  assert.doesNotMatch(sql, /(?:insert into|update|delete from) app\./);
+  assert.doesNotMatch(sql, /(?:registration_link_secret|credential|digest|salt)/i);
 });
 
 test('event enrollment uses an exact, receipt-bound private API envelope', async () => {

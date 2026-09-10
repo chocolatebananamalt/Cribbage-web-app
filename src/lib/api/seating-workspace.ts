@@ -4,7 +4,7 @@ export type CheckInState = "checked_in" | "withdrawn" | "late" | "absent" | "not
 export type SeatingCheckIn = { rosterEntryId: string; displayName: string; state: CheckInState };
 export type SeatingAssignment = { rosterEntryId: string; displayName: string; initialTableSeat: string; verificationId: string };
 export type SeatingPublication = { publicationId: string; tableCount: number; seatsPerTable: number; publishedAt: string; assignments: SeatingAssignment[] };
-export type SeatingWorkspace = { publication: SeatingPublication | null; checkIn: SeatingCheckIn[] };
+export type SeatingWorkspace = { registrationClosed: boolean; publication: SeatingPublication | null; checkIn: SeatingCheckIn[] };
 
 const tableSeat = (value: unknown) => typeof value === "string" && /^[A-Z]-[1-9][0-9]*$/.test(value);
 const text = (value: unknown) => typeof value === "string" && value.length > 0;
@@ -36,7 +36,7 @@ function publication(value: unknown): value is SeatingPublication {
 export function isSeatingWorkspace(value: unknown): value is SeatingWorkspace {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  if (Object.keys(item).length !== 2 || !Array.isArray(item.checkIn) || !item.checkIn.every(checkIn) || !(item.publication === null || publication(item.publication))) return false;
+  if (Object.keys(item).length !== 3 || typeof item.registrationClosed !== "boolean" || !Array.isArray(item.checkIn) || !item.checkIn.every(checkIn) || !(item.publication === null || publication(item.publication))) return false;
   const checkInIds = item.checkIn.map((entry) => entry.rosterEntryId);
   if (new Set(checkInIds).size !== checkInIds.length) return false;
   if (item.publication === null) return true;
