@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 source and dependency exposure audit
+
+- Confirmed that current ignore rules protect environment, private-handoff,
+  key, archive, and build/test artifact paths; no private handoff or populated
+  environment artifact is tracked. A focused executable-source credential scan
+  found no high-confidence secret pattern, and `pnpm audit --prod
+  --audit-level=high` reports no known vulnerabilities. This is repository
+  evidence only; provider-side secret review and rotation remain release
+  operations. See
+  `docs/quality/2026-09-10-source-and-dependency-exposure-audit.md`.
+
 ## 2026-09-10 GitHub merge-guardrail audit
 
 - Confirmed that the committed GitHub Verify workflow runs frozen install,
