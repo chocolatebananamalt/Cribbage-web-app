@@ -2,7 +2,11 @@
 
 Every task requires observable acceptance criteria and at least one meaningful executed check. One trivial check is insufficient for multi-user or financial behavior.
 
-`pnpm verify` checks project guidance plus prototype behavior and runs in clean CI. `pnpm verify:handoff` requires the private ignored handoff and is local-only. These are recovery checks, not production certification.
+`pnpm verify` is the clean-clone safety suite: production dependency audit,
+lint, application tests, production build, and workspace/recovery integrity.
+It runs in clean CI. `pnpm verify:handoff` requires the private ignored
+handoff and is local-only. Passing either does not constitute production
+certification.
 
 Before coding define success and failure cases. Add regression tests, run relevant checks, review the diff against requirements, then record commands/environment/results/evidence. A missing or failed required check means incomplete.
 

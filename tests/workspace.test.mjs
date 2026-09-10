@@ -2,6 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+test('standard verification runs the complete clean-clone safety suite', () => {
+  const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;
+  assert.match(scripts.verify, /pnpm audit --prod --audit-level=high/);
+  assert.match(scripts.verify, /pnpm lint/);
+  assert.match(scripts.verify, /pnpm test/);
+  assert.match(scripts.verify, /pnpm build/);
+  assert.match(scripts.verify, /tests\/workspace\.test\.mjs/);
+  assert.equal(scripts['verify:all'], 'pnpm verify');
+  const workflow = readFileSync('.github/workflows/verify.yml', 'utf8');
+  assert.match(workflow, /pnpm install --frozen-lockfile/);
+  assert.match(workflow, /- run: pnpm verify/);
+});
 test('entry documents require verification and real guidance', () => {
   for (const f of ['START_HERE.md','AGENTS.md']) {
     const text = readFileSync(f, 'utf8');

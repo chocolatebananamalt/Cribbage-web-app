@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 standard verification command repair
+
+- Closed a release-process gap: `pnpm verify` now actually runs the production
+  dependency audit, lint, full application suite, production build, and
+  workspace checks, instead of only the recovery suite. GitHub CI calls this
+  same audited command after frozen installation, and a regression test
+  prevents future drift. The full clean-clone and private-handoff suites pass.
+  See `docs/quality/2026-09-10-standard-verification-command.md`.
+
 ## 2026-09-10 pilot live advisor and migration recheck
 
 - Rechecked the connected pilot's current migration history and live
