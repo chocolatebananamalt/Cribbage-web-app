@@ -33,6 +33,25 @@ export type AmbiguousRegistrationLinkIssue = {
 
 export type RegistrationLinkIssueResult = IssuedRegistrationLink | RejectedRegistrationLinkIssue | AmbiguousRegistrationLinkIssue;
 
+export type RegistrationLinkRotation = RegistrationLinkIssue & {
+  expectedLinkId: string;
+  expectedVersion: number;
+};
+
+export type RotatedRegistrationLink = {
+  status: "rotated";
+  credential: RegistrationLinkCredential;
+  expiresAt: string;
+  version: number;
+};
+
+export type RejectedRegistrationLinkRotation = {
+  status: "rejected";
+  code: "link_unavailable" | "idempotency_conflict";
+};
+
+export type RegistrationLinkRotationResult = RotatedRegistrationLink | RejectedRegistrationLinkRotation | AmbiguousRegistrationLinkIssue;
+
 function bytea(value: Uint8Array) {
   return `\\x${Buffer.from(value).toString("hex")}`;
 }
@@ -69,6 +88,36 @@ function isRejectedResponse(value: unknown): value is { status: "rejected"; code
     && (record.code === "active_link_exists" || record.code === "idempotency_conflict");
 }
 
+function isRotatedResponse(value: unknown, linkId: string, expiresAt: Date, expectedVersion: number): value is { status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number } {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Object.keys(record).length === 5
+    && record.status === "rotated"
+    && record.state === "open"
+    && record.linkId === linkId
+    && isExactInstant(record.expiresAt, expiresAt)
+    && record.version === expectedVersion + 1;
+}
+
+function isPriorRotatedResponse(value: unknown): value is { status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number } {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Object.keys(record).length === 5
+    && record.status === "rotated"
+    && record.state === "open"
+    && typeof record.linkId === "string"
+    && typeof record.expiresAt === "string"
+    && Number.isSafeInteger(record.version) && (record.version as number) > 0;
+}
+
+function isRejectedRotationResponse(value: unknown): value is RejectedRegistrationLinkRotation {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Object.keys(record).length === 2
+    && record.status === "rejected"
+    && (record.code === "link_unavailable" || record.code === "idempotency_conflict");
+}
+
 /**
  * Creates the only director-displayable credential after the server has
  * received an exact private receipt. Raw credentials never enter a database
@@ -103,4 +152,39 @@ export async function issueRegistrationLink(
   // regenerate one from a later request.
   if (isPriorIssuedResponse(data)) return { status: "credential_unavailable" };
   throw new Error("Registration link issuance is unavailable.");
+}
+
+/**
+ * Replaces only the exact head/version a director read. The raw replacement
+ * credential is returned once, after an exact new receipt; a retry never
+ * reconstructs a prior credential.
+ */
+export async function rotateRegistrationLink(
+  admin: RpcClient,
+  input: RegistrationLinkRotation,
+): Promise<RegistrationLinkRotationResult> {
+  const credential = createRegistrationLinkCredential(randomUUID());
+  const salt = randomBytes(32);
+  const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
+  const expiresAt = input.expiresAt.toISOString();
+  const { data, error } = await admin.rpc("rotate_registration_link_v2", {
+    p_actor_id: input.actorId,
+    p_tournament_id: input.tournamentId,
+    p_expected_link_id: input.expectedLinkId,
+    p_expected_version: input.expectedVersion,
+    p_link_id: credential.linkId,
+    p_salt: bytea(salt),
+    p_digest: bytea(digest),
+    p_expires_at: expiresAt,
+    p_max_claims: input.maxClaims,
+    p_max_claims_per_hour: input.maxClaimsPerHour,
+    p_operation_id: input.operationId,
+  });
+  if (error) throw new Error("Registration link rotation is unavailable.");
+  if (isRotatedResponse(data, credential.linkId, input.expiresAt, input.expectedVersion)) {
+    return { status: "rotated", credential, expiresAt, version: data.version };
+  }
+  if (isRejectedRotationResponse(data)) return data;
+  if (isPriorRotatedResponse(data) && data.linkId !== credential.linkId) return { status: "credential_unavailable" };
+  throw new Error("Registration link rotation is unavailable.");
 }

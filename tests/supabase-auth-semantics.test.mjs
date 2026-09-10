@@ -430,6 +430,24 @@ test('registration-link close is a service-only compare-and-swap with durable sa
   assert.match(headRepair, /grant execute on function public\.close_registration_link_v2.*to service_role/);
 });
 
+test('registration-link rotation is a service-only compare-and-swap that cannot recreate a stale credential', () => {
+  const rotate = read('database/migrations/0080_registration_link_rotate_compare_and_swap.sql');
+  const retryRepair = read('database/migrations/0081_registration_link_rotate_stable_retry_hash.sql');
+  assert.match(rotate, /p_expected_link_id uuid/);
+  assert.match(rotate, /p_expected_version integer/);
+  assert.match(rotate, /v_head\.registration_link_id <> p_expected_link_id/);
+  assert.match(rotate, /v_head\.version <> p_expected_version/);
+  assert.match(rotate, /v_head_found := found/);
+  assert.match(rotate, /v_previous_found := found/);
+  assert.match(rotate, /not v_head_found or not v_previous_found/);
+  assert.match(rotate, /operation_type <> 'registration_link_rotate_v3'/);
+  assert.match(rotate, /'registration_link_rotate_v3'/);
+  assert.match(rotate, /revoke all on function public\.rotate_registration_link_v2.*from public, anon, authenticated/);
+  assert.match(rotate, /grant execute on function public\.rotate_registration_link_v2.*to service_role/);
+  assert.match(retryRepair, /'registration_link_v2', 'rotate', p_actor_id::text, p_tournament_id::text,[\s\S]*p_expected_link_id::text, p_expected_version, p_expires_at,[\s\S]*p_max_claims, p_max_claims_per_hour, p_operation_id::text/s);
+  assert.doesNotMatch(retryRepair.match(/v_hash :=[\s\S]*?perform pg_catalog\.pg_advisory_xact_lock/)?.[0] ?? '', /p_link_id::text|encode\(p_salt|encode\(p_digest/);
+});
+
 test('director close route is release-gated, strict, and server-only', () => {
   const route = read('src/app/api/v1/tournaments/[id]/registration-links/close/route.ts');
   const contract = read('src/lib/api/registration-link.ts');
@@ -442,6 +460,21 @@ test('director close route is release-gated, strict, and server-only', () => {
   assert.match(route, /isRegistrationLinkCloseResult/);
   assert.match(contract, /status: "closed"; linkId: string; state: "closed"; version: number/);
   assert.doesNotMatch(route, /from\("tournament_registration_link/);
+});
+
+test('director rotation route is release-gated, strict, server-only, and returns a credential only on a new exact receipt', () => {
+  const route = read('src/app/api/v1/tournaments/[id]/registration-links/rotate/route.ts');
+  const contract = read('src/lib/api/registration-link.ts');
+  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /readRegistrationLinkJson/);
+  assert.match(route, /isRegistrationLinkRotateRequest/);
+  assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /rotateRegistrationLink/);
+  assert.match(route, /credential_unavailable/);
+  assert.match(route, /canonicalToken/);
+  assert.doesNotMatch(route, /from\("tournament_registration_link/);
+  assert.match(contract, /status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number/);
 });
 
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {

@@ -48,6 +48,10 @@ export type RegistrationLinkCloseResult =
   | { status: "closed"; linkId: string; state: "closed"; version: number }
   | { status: "rejected"; code: "link_unavailable" | "idempotency_conflict" };
 
+export type RegistrationLinkRotateResult =
+  | { status: "rotated"; linkId: string; state: "open"; expiresAt: string; version: number }
+  | { status: "rejected"; code: "link_unavailable" | "idempotency_conflict" };
+
 function own(value: object, keys: string[]) {
   return Object.keys(value).length === keys.length && keys.every((key) => key in value);
 }
@@ -95,6 +99,19 @@ export function isRegistrationLinkCloseResult(value: unknown): value is Registra
   if (result.status === "closed") {
     return own(result, ["status", "linkId", "state", "version"])
       && isUuid(result.linkId) && result.state === "closed"
+      && Number.isSafeInteger(result.version) && (result.version as number) > 0;
+  }
+  return own(result, ["status", "code"])
+    && result.status === "rejected"
+    && (result.code === "link_unavailable" || result.code === "idempotency_conflict");
+}
+
+export function isRegistrationLinkRotateResult(value: unknown): value is RegistrationLinkRotateResult {
+  if (!value || typeof value !== "object") return false;
+  const result = value as Record<string, unknown>;
+  if (result.status === "rotated") {
+    return own(result, ["status", "linkId", "state", "expiresAt", "version"])
+      && isUuid(result.linkId) && result.state === "open" && isCanonicalInstant(result.expiresAt)
       && Number.isSafeInteger(result.version) && (result.version as number) > 0;
   }
   return own(result, ["status", "code"])

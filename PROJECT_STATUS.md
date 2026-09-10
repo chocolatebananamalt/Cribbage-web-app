@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-10 registration-link rotation compare-and-swap
+
+- Replaced the unsafe rotation function with a server-only, exact
+  link-ID/version compare-and-swap transaction. It retires only the active
+  link an official read, creates one replacement, preserves durable retry and
+  rejection evidence, and returns a raw replacement credential only once.
+  Migration `0080` was applied to disposable synthetic project
+  `donfxulkliuyteiannir` before pilot `fnjkwymxpnsqvxtpronk`; the disposable
+  catalog confirms browser roles cannot execute it. Follow-up migration
+  `0081` ensures an exact retry hashes only stable director intent, not fresh
+  private credential material; the adapter also requires the receipt version
+  to advance exactly once before it releases the credential. An independent
+  high-risk review found no remaining P0/P1 issue after those repairs. The
+  protected rotation route is release-gated and same-origin/session checked.
+  Local lint, **110** tests, a production build, workspace verification, and
+  private-handoff verification pass. See
+  `docs/quality/2026-09-10-registration-link-rotation-compare-and-swap.md`.
+  Public registration remains disabled; real lifecycle-race and browser proof
+  remain release gates.
+
 ## 2026-09-10 registration-link close head-presence repair
 
 - A close-transaction review found that a malformed historical state with a
