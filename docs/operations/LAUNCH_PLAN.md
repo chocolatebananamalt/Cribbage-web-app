@@ -47,3 +47,25 @@ authenticated route has the current Supabase public URL and publishable key.
 Each candidate must have an authenticated `/sign-in` and magic-link callback
 smoke test, followed by a deployment-specific runtime-error review. See
 `docs/quality/2026-09-10-protected-preview-auth-preflight.md`.
+
+## Registration release sequence
+
+The QR workflow has two deliberately independent, default-off environment
+gates. They are not general configuration toggles and must never be enabled
+just to make a preview look more complete.
+
+1. `ACC_REGISTRATION_LINK_MANAGEMENT_V2=enabled` exposes only the protected
+   director/co-director workspace for preparing, rotating, or closing a QR
+   link. It does not allow a visitor to submit a registration.
+2. `ACC_PUBLIC_REGISTRATION_V2=enabled` separately allows the `/register`
+   fragment-link claim route. It must remain absent until the named migration
+   packet, independent-session tests, and director approval cover the
+   particular test or event.
+
+Before either gate is enabled for a shared environment, complete the named
+change-control packet in `PILOT_MIGRATION_CHANGE_CONTROL.md`, confirm the
+server-only Supabase credential and public values are scoped to the intended
+environment, and run a real two-browser test. That test must prove that a
+director can obtain the QR code once, a visitor can claim only while the link
+is active, a closed/replaced/expired link is denied, and a public claim creates
+neither a role nor a payment, check-in, seat, or verification ID.
