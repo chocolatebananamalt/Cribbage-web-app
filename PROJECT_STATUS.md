@@ -13,6 +13,9 @@
   A new synthetic fixture now proves the complete sequential witnessed
   activation lifecycle and its exact approval replay in that isolated project;
   real concurrent and browser-session evidence still remains before release.
+  An isolated two-request redemption/cancellation race now completes with no
+  deadlock and the expected cancelled/no-link final state; reverse-order and
+  decision/cancellation races remain required before release.
 
 ## 2026-09-10 account-activation lock-order repair
 

@@ -70,6 +70,23 @@ sequence through the real stored procedures:
 This is genuine sequential database evidence for the issued → pending →
 approved lifecycle and exact replay. It does **not** prove simultaneous race
 outcomes, browser-session behavior, QR presentation, or release readiness.
+
+## Concurrent redemption/cancellation evidence
+
+A second fresh synthetic roster entry was created through the same real
+registration and roster procedures. A 10-minute activation was issued, then
+redemption and director cancellation were invoked concurrently through two
+independent database requests.
+
+- Both requests completed; neither hung or returned a deadlock error.
+- Redemption reached `pending`; cancellation then reached `cancelled` under
+  the shared advisory lock.
+- Final persisted state was `activation=cancelled`, `request=rejected`, and
+  `link_count=0`, with three lifecycle events. No account link was created.
+
+This is direct evidence that the repaired shared lock ordering handles the
+issue/redeem/cancel family safely in one contention ordering. The reverse
+ordering and decision/cancel contention remain required before release.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
   private-table RLS and service-procedure notices match the reviewed
