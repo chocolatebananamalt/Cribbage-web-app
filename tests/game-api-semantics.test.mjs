@@ -404,7 +404,7 @@ test('rejection audit boundary preserves stable codes and does not swallow audit
 });
 
 test('assigned game context and live score entry stay server-authoritative', () => {
-  const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql');
+  const contextSql = read('database/migrations/0006_assigned_game_context.sql') + read('database/migrations/0007_assigned_game_context_hardening.sql') + read('database/migrations/0087_assigned_game_context_verification_ids.sql');
   const confirmationHardening = read('database/migrations/0008_confirmation_eligibility_hardening.sql');
   const submissionStateHardening = read('database/migrations/0009_submission_state_hardening.sql');
   const submittedInvariant = read('database/migrations/0010_submitted_state_invariant.sql');
@@ -422,6 +422,10 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(contextSql, /'ownSubmission', case when own_submission\.id is null then null else jsonb_build_object\('id', own_submission\.id, 'winnerSide', own_submission\.winner_side, 'margin', own_submission\.margin\)/);
   assert.match(contextSql, /'ownConfirmed', own_confirmation\.id is not null/);
   assert.match(contextSql, /'canConfirm', cg\.state = 'confirmation_pending'/);
+  assert.match(contextSql, /'verificationId', player_seating\.verification_id/);
+  assert.match(contextSql, /'verificationId', opponent_seating\.verification_id/);
+  assert.match(contextSql, /join app\.roster_account_links player_link/);
+  assert.match(contextSql, /join app\.initial_seating_assignments player_seating/);
   assert.match(contextSql, /revoke all on function public\.get_assigned_game_context/);
   assert.match(contextDal, /data\.tournamentId !== tournamentId/);
   assert.match(contextDal, /player\.side === data\.opponent\.side/);
@@ -435,6 +439,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /isDefinitiveScoreMutationFailure/);
   assert.match(liveScore, /server response was incomplete/);
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
+  assert.match(liveScore, /ID#: \{context\.player\.verificationId\}/);
+  assert.match(liveScore, /ID#: \{context\.opponent\.verificationId\}/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];

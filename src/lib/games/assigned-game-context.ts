@@ -14,8 +14,8 @@ export type AssignedGameContext = {
   ownSubmission: { id: string; winnerSide: "a" | "b"; margin: number } | null;
   ownConfirmed: boolean;
   canConfirm: boolean;
-  player: { displayName: string; side: "a" | "b"; tableSeat: string };
-  opponent: { displayName: string; side: "a" | "b"; tableSeat: string };
+  player: { displayName: string; side: "a" | "b"; tableSeat: string; verificationId: string };
+  opponent: { displayName: string; side: "a" | "b"; tableSeat: string; verificationId: string };
 };
 
 function isContext(value: unknown): value is AssignedGameContext {
@@ -24,7 +24,7 @@ function isContext(value: unknown): value is AssignedGameContext {
   const person = (candidate: unknown) => {
     if (!candidate || typeof candidate !== "object") return false;
     const item = candidate as Record<string, unknown>;
-    return typeof item.displayName === "string" && typeof item.tableSeat === "string" && ["a", "b"].includes(item.side as string);
+    return typeof item.displayName === "string" && typeof item.tableSeat === "string" && typeof item.verificationId === "string" && /^[A-Z]-[1-9][0-9]*$/.test(item.verificationId) && ["a", "b"].includes(item.side as string);
   };
   const ownSubmission = item.ownSubmission;
   const validSubmission = ownSubmission === null || (typeof ownSubmission === "object" && ownSubmission !== null && typeof (ownSubmission as Record<string, unknown>).id === "string" && ["a", "b"].includes((ownSubmission as Record<string, unknown>).winnerSide as string) && typeof (ownSubmission as Record<string, unknown>).margin === "number");

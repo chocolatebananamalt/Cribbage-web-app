@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-10 live score-entry permanent verification ID
+
+- Closed a production-screen gap between the approved score-entry layout and
+  the protected live route. Migration `0087` returns the permanent ID already
+  derived from immutable post-closure initial seating for only the two assigned
+  players; it does not expose internal roster/profile identifiers or conflate
+  the ID with the current Table/Seat snapshot. It was applied first to
+  disposable synthetic project `donfxulkliuyteiannir`, then pilot
+  `fnjkwymxpnsqvxtpronk`. Catalog evidence confirms `SECURITY DEFINER`, an
+  empty search path, no anonymous grant, and both exact ID bindings. Local
+  tests, lint, and production build pass. A seeded, independent-session live
+  context and phone/desktop visual check remain required. See
+  `docs/quality/2026-09-10-live-score-entry-verification-id.md`.
+
 ## 2026-09-10 doubles source-boundary review
 
 - Reviewed the 2025 ACC Rulebook Appendix B directly. Traditional and Canadian
