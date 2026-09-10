@@ -5,6 +5,16 @@ import { pathToFileURL } from 'node:url';
 import test from 'node:test';
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
+test('clean-clone verification uses Node-24-compatible action runtimes', () => {
+  const workflow = read('.github/workflows/verify.yml');
+  assert.match(workflow, /actions\/checkout@v7/);
+  assert.match(workflow, /pnpm\/action-setup@v6/);
+  assert.match(workflow, /actions\/setup-node@v6/);
+  assert.match(workflow, /node-version: '24'/);
+  assert.doesNotMatch(workflow, /actions\/checkout@v4|pnpm\/action-setup@v4|actions\/setup-node@v4/);
+});
+
 test('game API handlers validate, authenticate with claims, and call RPCs only', () => {
   const submission = read('src/app/api/v1/games/[id]/submissions/route.ts');
   const confirmation = read('src/app/api/v1/games/[id]/confirmations/route.ts');
