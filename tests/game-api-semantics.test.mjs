@@ -333,7 +333,12 @@ test('correction API handlers validate request shapes and discriminate accepted 
   const correctionPage = read('src/app/tournament/[tournamentId]/corrections/page.tsx');
   const correctionRelease = read('src/lib/api/rule12-correction-release.ts');
   const correctionSuspension = read('database/migrations/0096_suspend_incomplete_rule12_corrections.sql');
+  const correctionPolicySuspension = read('database/migrations/0097_suspend_incomplete_rule12_correction_policy.sql');
+  const correctionReaderSuspension = read('database/migrations/0098_suspend_incomplete_rule12_correction_readers.sql');
   const reconciliation = read('src/app/api/v1/corrections/[id]/reconciliation/route.ts');
+  const policyRoute = read('src/app/api/v1/tournaments/[id]/correction-policy/route.ts');
+  const policyReconciliation = read('src/app/api/v1/tournaments/[id]/correction-policy/reconciliation/route.ts');
+  const policyPage = read('src/app/tournament/[tournamentId]/correction-policy/page.tsx');
   const contract = read('src/lib/api/correction.ts');
   for (const source of [proposal + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts'), review + read('src/lib/api/route-boundary.ts') + read('src/lib/api/verified-subject.ts')]) {
     assert.match(source, /getClaims/);
@@ -346,12 +351,22 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(proposal, /rule12CorrectionEnabled\(\)/);
   assert.match(review, /rule12CorrectionEnabled\(\)/);
   assert.match(reconciliation, /rule12CorrectionEnabled\(\)/);
+  assert.match(policyRoute, /rule12CorrectionEnabled\(\)/);
+  assert.match(policyReconciliation, /rule12CorrectionEnabled\(\)/);
   assert.match(reconciliation, /requireVerifiedSubject/);
   assert.match(correctionPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
+  assert.match(policyPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
   assert.match(correctionRelease, /environment edit alone must never publish it/);
   assert.match(correctionRelease, /return false/);
   assert.match(correctionSuspension, /revoke all on function public\.propose_game_correction[\s\S]*from authenticated/);
   assert.match(correctionSuspension, /revoke all on function public\.review_game_correction[\s\S]*from authenticated/);
+  assert.match(correctionPolicySuspension, /revoke all on function public\.configure_correction_policy[\s\S]*from authenticated/);
+  for (const signature of [
+    'get_correction_workspace(uuid)',
+    'get_correction_operation_reconciliation(uuid, uuid)',
+    'get_correction_policy(uuid)',
+    'get_correction_policy_operation_reconciliation(uuid, uuid)',
+  ]) assert.ok(correctionReaderSuspension.includes(`revoke all on function public.${signature} from authenticated;`));
   assert.match(proposal, /expectedGameVersion/);
   assert.match(proposal, /winnerSide/);
   assert.match(proposal, /maxReasonLength = 500/);

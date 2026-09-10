@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 shared-pilot correction-grant containment gap
+
+- A new read-only grant audit found the shared pilot still grants authenticated
+  execution on seven incomplete Rule 12 correction RPCs because it ends before
+  source migrations `0096`–`0098`. The app already hard-disables every matching
+  page and route, but that does not prevent a direct Supabase RPC call. There
+  are currently no tournament-role records in the pilot, reducing immediate
+  practical reachability; the grants are nevertheless a critical pilot
+  containment gap before any role fixture or live user is added. Added a
+  source regression for all writer/policy/reader revocations. No pilot change
+  was made without a separately authorized maintenance window. Details:
+  `docs/quality/2026-09-10-shared-pilot-correction-grant-gap.md`.
+
 ## 2026-09-10 browser indexing hardening
 
 - Added a site-wide `X-Robots-Tag: noindex, nofollow, noarchive` response
