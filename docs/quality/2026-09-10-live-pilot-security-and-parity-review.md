@@ -19,8 +19,19 @@ A catalog query inspected every `public` `SECURITY DEFINER` function:
 - older administrative functions remain non-executable by `authenticated`.
 
 The advisor’s signed-in-function warning is therefore an expected inventory
-notice, not a permission finding. It must be rechecked after every migration
-or grant change.
+notice for the active, role-scoped operations, not a general permission
+finding. It must be rechecked after every migration or grant change.
+
+### Later scope correction
+
+A second, more specific read-only grant query found seven older Rule 12
+correction functions that are still executable by `authenticated` because the
+pilot has not received source revocations `0096`–`0098`. Their own role checks
+and the pilot's current zero-role fixture reduce immediate reachability, but
+they are not an acceptable feature boundary: the application has intentionally
+disabled that incomplete correction model. This is a critical pilot containment
+gap before any role fixture or live pilot use, not an anonymous-access finding.
+See `2026-09-10-shared-pilot-correction-grant-gap.md`.
 
 ## Migration-parity result
 
