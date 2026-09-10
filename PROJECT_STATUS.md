@@ -32,7 +32,10 @@
   disposable fixtures now prove registration-link rotation and registration
   closure serialize safely in both orders: a closing tournament rejects a
   contending stale rotation, and a later close retires a successfully rotated
-  replacement link. No active signup link remains in either final state.
+  replacement link. No active signup link remains in either final state. A
+  concurrent valid claim/closure fixture also serializes safely: a claim
+  committed before closure is retained, while a fresh post-closure claim is
+  unavailable and cannot create another record.
 
 ## 2026-09-10 account-activation lock-order repair
 
