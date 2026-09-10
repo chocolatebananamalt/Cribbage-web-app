@@ -10,8 +10,10 @@
   disposable synthetic project `donfxulkliuyteiannir`, then pilot
   `fnjkwymxpnsqvxtpronk`. Catalog evidence confirms `SECURITY DEFINER`, an
   empty search path, no anonymous grant, and both exact ID bindings. Local
-  tests, lint, and production build pass. A seeded, independent-session live
-  context and phone/desktop visual check remain required. See
+  tests, lint, and production build pass. Preview deployment
+  `dpl_3aDji61rr3RoRWwSvsxt2PB3REyF` is Ready from the change and has no recent
+  Vercel runtime-error cluster. A seeded, independent-session live context and
+  phone/desktop visual check remain required. See
   `docs/quality/2026-09-10-live-score-entry-verification-id.md`.
 
 ## 2026-09-10 doubles source-boundary review

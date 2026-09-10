@@ -43,6 +43,9 @@ future workflow.
   security-definer RPCs are individually guarded; leaked-password protection
   remains unavailable on the current free plan and is not required while the
   intended UI uses magic links.
+- Vercel Preview deployment `dpl_3aDji61rr3RoRWwSvsxt2PB3REyF` is **READY**
+  from commit `5e76b8c`; Vercel reports no runtime-error clusters in the
+  subsequent one-hour project scan.
 
 ## Remaining limitation
 
@@ -50,3 +53,5 @@ No seeded, two-person, independently authenticated browser session currently
 exists that has both initial seating and a created canonical game. Therefore a
 real rendered game-context response and phone/desktop visual check remain
 release gates; the catalog and static contracts do not substitute for them.
+The protected Vercel Preview fetch correctly stopped at Vercel SSO, so it
+cannot stand in for that signed-in player-session evidence.
