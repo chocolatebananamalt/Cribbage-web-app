@@ -75,6 +75,10 @@ suspensions in addition to the `0103` assigned-game retry-contract update.
 The score screen's current unavailable state is intentional protection until a
 reviewed, explicitly authorized migration packet exists.
 
+The exact proposed ordered range, checksums, validation evidence, and required
+post-apply proof are prepared in `PILOT_MIGRATION_PACKET_0090_0103.md`. It is
+a review aid only and does not grant authority to change the shared pilot.
+
 ## Acceptance criteria for a future pilot update
 
 - The pilot history exactly matches the approved ordered range.

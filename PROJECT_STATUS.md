@@ -24,6 +24,9 @@
   migration `0103` and has zero authenticated grants on those seven functions,
   confirming the reviewed revocation sequence works before any shared-pilot
   change is considered.
+- Prepared the non-authorizing, checksum-pinned maintenance packet at
+  `docs/operations/PILOT_MIGRATION_PACKET_0090_0103.md` so future approved
+  maintenance can be reviewed and reproduced without reconstructing the range.
 
 ## 2026-09-10 director QR-registration workspace
 
