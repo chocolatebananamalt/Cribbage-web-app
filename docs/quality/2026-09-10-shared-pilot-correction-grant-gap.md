@@ -48,6 +48,18 @@ Read-only shared-pilot catalog query on 2026-09-10:
 all seven named functions: anon execute = false; authenticated execute = true
 ```
 
+Read-only recheck later on 2026-09-10:
+
+```text
+pilot migration history still ends at 0089_foreign_key_coverage
+all seven named functions: anon execute = false; authenticated execute = true
+```
+
+The Supabase security advisor reports the corresponding signed-in
+`SECURITY DEFINER` warning. Its `app`-schema RLS-without-policy notices are
+expected for private, directly revoked tables and are not a substitute for the
+function-grant containment repair.
+
 Read-only aggregate scope check on 2026-09-10:
 
 ```text

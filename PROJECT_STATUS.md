@@ -51,7 +51,9 @@
   practical reachability; the grants are nevertheless a critical pilot
   containment gap before any role fixture or live user is added. Added a
   source regression for all writer/policy/reader revocations. No pilot change
-  was made without a separately authorized maintenance window. Details:
+  was made without a separately authorized maintenance window. A second
+  read-only recheck later the same day confirmed that the pilot still ends at
+  `0089` and every named grant remains present. Details:
   `docs/quality/2026-09-10-shared-pilot-correction-grant-gap.md`.
 
 ## 2026-09-10 browser indexing hardening
