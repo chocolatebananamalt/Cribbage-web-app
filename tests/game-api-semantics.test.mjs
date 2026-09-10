@@ -441,6 +441,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
   assert.match(liveScore, /ID#: \{context\.player\.verificationId\}/);
   assert.match(liveScore, /ID#: \{context\.opponent\.verificationId\}/);
+  assert.match(liveScore, /function SkunkAid/);
+  assert.match(liveScore, /\"Skunk\"/);
+  assert.match(liveScore, /\"Double skunk\"/);
+  assert.match(liveScore, /\"Triple skunk\"/);
+  assert.match(liveScore, /<SkunkAid level=\{derived\?\.skunkLevel \?\? 0\} \/>/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];

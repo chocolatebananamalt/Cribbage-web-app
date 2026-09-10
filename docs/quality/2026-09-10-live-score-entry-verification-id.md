@@ -25,6 +25,12 @@ This is not rotation. The Table/Seat shown for the current game remains its
 existing game snapshot; scheduled rotation is still a source-and-fixture-gated
 future workflow.
 
+The same protected screen now displays the approved player aid after a valid
+spread: `Skunk`, `Double skunk`, or `Triple skunk`, with one, two, or three
+skunk icons. It is presentation-only: the shared score derivation remains the
+source of the existing 0/2/3 game-point calculation, and it does not add an
+official ACC record label.
+
 ## Executed evidence
 
 - Local `pnpm test` — **115 passed**, including static contracts proving the

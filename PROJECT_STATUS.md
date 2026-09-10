@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 live score-entry skunk aid parity
+
+- The protected player score-entry route now shows the approved visual aid for
+  a valid skunk result: one, two, or three skunk icons with `Skunk`, `Double
+  skunk`, or `Triple skunk`. It uses the already-tested score derivation and
+  changes no stored record or official scoring terminology. Regression
+  coverage asserts that the live route retains all three labels and passes the
+  derived skunk level directly to the rendering helper. Phone/desktop browser
+  visual evidence remains a release gate.
+
 ## 2026-09-10 live score-entry permanent verification ID
 
 - Closed a production-screen gap between the approved score-entry layout and
