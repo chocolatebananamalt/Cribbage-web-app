@@ -62,6 +62,16 @@ automation could not reach this local address because its browser extension
 reported `ERR_BLOCKED_BY_CLIENT`; that limitation is recorded rather than
 substituted with a false browser claim.
 
+## Hosted Preview evidence
+
+Preview deployment `dpl_2yPe422kFp5wbpxc66AnVc3zWneJ` built commit
+`72dd381` as `READY`. An authenticated Vercel fetch of
+`/activate` returned the intended release-gated `404` page with
+`Referrer-Policy: no-referrer`; Vercel reported no build errors. Because the
+activation flag is deliberately absent, this is correct disabled-route
+evidence only. It does not exercise the enabled credential bootstrap or
+authorize the feature for use.
+
 ## Limits and release decision
 
 The account-activation switch remains off and migrations `0090`–`0095` remain

@@ -21,7 +21,9 @@
   no-third-party boundary. Local lint, 146 tests, production build, and diff
   validation pass. The activation flag stays off; migrations `0090`–`0095` and
   real multi-session/browser evidence are still required. See
-  `docs/quality/2026-09-10-account-activation-fragment-boundary.md`.
+  `docs/quality/2026-09-10-account-activation-fragment-boundary.md`. Preview
+  deployment `dpl_2yPe422kFp5wbpxc66AnVc3zWneJ` is READY; its disabled route
+  correctly returns 404 with no-referrer protection.
 
 ## 2026-09-10 gated account-activation handoff page
 
