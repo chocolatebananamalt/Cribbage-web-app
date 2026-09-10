@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 ACC public flyer-source review
+
+- Recorded a dated, source-backed ACC flyer field inventory from the public
+  Director Resources and Policy Manual. It distinguishes the known required
+  and recommended fields from the still-unconfirmed current regional form,
+  payout/Q-pool vocabulary, and any portal integration. No ACC portal or
+  tournament data was accessed. Details:
+  `docs/quality/2026-09-10-acc-flyer-public-source-review.md`.
+
 ## 2026-09-10 exact Supabase CSP connection source
 
 - Narrowed the site-wide browser connection policy from every Supabase tenant
