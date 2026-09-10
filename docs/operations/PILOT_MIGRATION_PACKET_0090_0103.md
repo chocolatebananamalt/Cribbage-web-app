@@ -3,9 +3,9 @@
 **Status:** prepared for future review; **not approved** and **not applied** to
 the shared pilot.
 
-**Supersession note:** this packet's endpoint is amended by
-`PILOT_MIGRATION_PACKET_0090_0104_AMENDMENT.md`. Any future approval must
-review the complete 0090–0104 range.
+**Supersession note:** replaced by the single consolidated
+`PILOT_MIGRATION_PACKET_0090_0105.md`. Do not approve this historical packet
+or its amendments independently.
 
 This packet implements the procedure in
 `PILOT_MIGRATION_CHANGE_CONTROL.md`. It makes no change by itself. A project

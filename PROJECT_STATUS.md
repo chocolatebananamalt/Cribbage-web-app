@@ -1,5 +1,13 @@
 # Project Status
 
+## 2026-09-10 consolidated shared-pilot containment packet
+
+- Replaced the fragmented 0090–0103 packet plus two amendments with one exact
+  0090–0105 checksum-verified maintenance packet. It makes the urgent Rule 12
+  direct-RPC grant revocations harder to misapply while preserving the required
+  synthetic-validation, compatibility, approval, and post-apply evidence
+  gates. It is not authorization and did not modify the shared pilot.
+
 ## 2026-09-10 offline score-queue contract foundation
 
 - Added a strict, unconnected contract for the future authenticated offline

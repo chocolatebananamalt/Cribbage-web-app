@@ -1,6 +1,8 @@
 # Pilot migration packet amendment — 0090–0104
 
-**Status:** Preparation only; not authority to change the shared pilot.
+**Status:** Historical preparation only; replaced by
+`PILOT_MIGRATION_PACKET_0090_0105.md`, which is also not authority to change
+the shared pilot.
 
 **Supersession note:** this amendment's endpoint is amended by
 `PILOT_MIGRATION_PACKET_0090_0105_AMENDMENT.md`. Any future approval must
