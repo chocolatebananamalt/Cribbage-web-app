@@ -51,6 +51,10 @@ plus `Updated Total Calculations Pending Opponent Entry` when applicable.
   reads or service credentials.
 - Local `pnpm test`, lint, production build, workspace/handoff verification,
   dependency audit, and diff check are recorded with this change.
+- Vercel preview deployment `dpl_CMjUWJohzUr73C2uwmk55tftoNMM` built commit
+  `5f97bf4` successfully. A direct HTTPS fetch of its preview URL returned
+  `200 OK` and the expected ACC Tournament Desk landing markup. This is a
+  hosted availability check only, not a signed-in scorecard interaction test.
 
 ## Remaining limitation
 

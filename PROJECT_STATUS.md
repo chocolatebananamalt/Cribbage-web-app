@@ -15,6 +15,9 @@
   authenticated player receives only their verified card and an unlinked
   signed-in player receives none. Real independent browser sessions and
   phone/desktop rendering remain release gates.
+  The Vercel Preview for code commit `5f97bf4` is Ready and returns `200 OK`
+  for the public landing page; hosted signed-in scorecard interaction is still
+  unverified.
   See `docs/quality/2026-09-10-player-scorecard-reader.md`.
 
 ## 2026-09-10 live score-entry skunk aid parity
