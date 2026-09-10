@@ -98,6 +98,12 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /title="Tournament Results"/);
 });
 
+test("new-tab prototype links cannot retain control of the operational tab", () => {
+  const blankTargets = [...source.matchAll(/target="_blank"([^>]*)/g)];
+  assert.ok(blankTargets.length > 0, "the review prototype intentionally opens reference documents in a new tab");
+  assert.ok(blankTargets.every((match) => /rel="noreferrer"/.test(match[1])), "every new-tab link must sever opener and referrer access");
+});
+
 test("interactive controls meet the baseline touch-target and keyboard-focus contract", () => {
   assert.match(styles, /button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible/);
   assert.match(styles, /outline:3px solid #2058b6/);
