@@ -17,7 +17,11 @@
   deadlock and the expected cancelled/no-link final state; reverse-order and
   decision/cancellation races remain required before release. A concurrent
   decision/cancellation race now also completes with no deadlock and the same
-  safe cancelled/no-link state.
+  safe cancelled/no-link state. A logged-in Chrome smoke test of the protected
+  Preview also verified the visible score-entry winner/keypad/derived-card
+  flow and its `122` rejection path; it made no hosted mutation. Mobile and
+  persisted multi-user browser evidence remain required before release. See
+  `docs/quality/2026-09-10-protected-preview-score-entry-browser-smoke.md`.
 
 ## 2026-09-10 account-activation lock-order repair
 
