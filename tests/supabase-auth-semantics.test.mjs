@@ -367,6 +367,17 @@ test('director registration-link issuance is a strict same-origin server-only bo
   assert.match(contract, /maxClaimsPerHour.*<= 1000/);
 });
 
+test('public registration remains release-gated and sends only a derived digest to Supabase', () => {
+  const route = read('src/app/api/v1/registration/claims/route.ts');
+  const contract = read('src/lib/api/public-registration-v2.ts');
+  assert.match(contract, /ACC_PUBLIC_REGISTRATION_V2 === "enabled"/);
+  assert.match(route, /if \(!publicRegistrationEnabled\(\)\)/);
+  assert.match(route, /parseRegistrationLinkCredential/);
+  assert.match(route, /digestRegistrationLinkCredential/);
+  assert.match(route, /p_digest: bytea\(digest\)/);
+  assert.doesNotMatch(route, /p_credential|canonicalToken.*rpc/);
+});
+
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);

@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 public registration redemption release gate
+
+- Added the server-side claim boundary needed for fragment-only registration,
+  but it is hard-disabled unless the separate exact environment setting
+  `ACC_PUBLIC_REGISTRATION_V2=enabled` is deliberately supplied. It parses the
+  credential only in the application server and sends the database only the
+  derived fixed-length digest. Unknown, malformed, expired, and disabled
+  paths return a generic unavailable result.
+- Lint, **91** tests, and the production build pass. This does not add a
+  public browser page or authorize activation; security headers, fragment
+  handling, hosted secret configuration, and real browser lifecycle evidence
+  are still mandatory.
+
 ## 2026-09-10 protected registration-link issue route
 
 - Added a strict same-origin, claims-checked director issue route. It accepts
