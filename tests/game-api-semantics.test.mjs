@@ -52,6 +52,7 @@ test('game operation responses bind to the requested game and submission before 
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), false);
   assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'duplicate_confirmation', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), false);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: otherGameId }, gameId), false);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
@@ -372,6 +373,25 @@ test('same-player duplicate score submissions become an audited controlled rejec
   const route = read('src/app/api/v1/games/[id]/submissions/route.ts');
   assert.match(operation, /"duplicate_submission"/);
   assert.match(route, /isRejectedSubmissionOperation\(data, id\).*?rejectionStatus\(data\.code\)/s);
+  assert.match(route, /return 409/);
+});
+
+test('same-player duplicate confirmations become an audited controlled rejection', () => {
+  const sql = read('database/migrations/0085_duplicate_confirmation_conflict_repair.sql');
+  assert.match(sql, /create or replace function public\.confirm_game_score/);
+  assert.match(sql, /exception when unique_violation then/);
+  assert.match(sql, /get stacked diagnostics v_constraint = constraint_name/);
+  assert.match(sql, /score_confirmations_canonical_game_id_confirmation_actor_id_key/);
+  assert.match(sql, /raise exception using errcode = 'P0001', message = 'duplicate confirmation'/);
+  assert.match(sql, /when 'duplicate confirmation' then 'duplicate_confirmation'/);
+  assert.match(sql, /insert into app\.operation_conflicts/);
+  assert.match(sql, /insert into app\.operation_receipts/);
+  assert.match(sql, /'confirmation_rejected'/);
+  assert.doesNotMatch(sql, /when unique_violation then[\s\S]*?when others then[\s\S]*?return/);
+  const operation = read('src/lib/api/game-operation.ts');
+  const route = read('src/app/api/v1/games/[id]/confirmations/route.ts');
+  assert.match(operation, /"duplicate_confirmation"/);
+  assert.match(route, /isRejectedConfirmationOperation\(data, id\).*?rejectionStatus\(data\.code\)/s);
   assert.match(route, /return 409/);
 });
 

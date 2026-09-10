@@ -245,6 +245,7 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'duplicate_submission' }, 'game-1', 'confirmation'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'confirmation_rejected' }, 'game-1', 'submission'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'confirmation_rejected' }, 'game-1', 'confirmation'), true);
+  assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'duplicate_confirmation' }, 'game-1', 'confirmation'), true);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'wrong-game', code: 'duplicate_submission' }, 'game-1', 'submission'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'duplicate_submission', internal_detail: 'mixed' }, 'game-1', 'submission'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'unknown_code' }, 'game-1', 'submission'), false);

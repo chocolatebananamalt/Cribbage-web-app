@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-10 duplicate score-confirmation retry repair
+
+- A disposable live database test found that the existing unique database
+  guard prevented a duplicate player confirmation but exposed raw PostgreSQL
+  `23505` rather than a controlled retry response. Migration
+  `0085_duplicate_confirmation_conflict_repair.sql` now converts only the
+  known same-game/same-player confirmation constraint into an immutable,
+  audited `duplicate_confirmation` rejection; unrelated database errors still
+  fail loudly. It was applied first to disposable synthetic project
+  `donfxulkliuyteiannir`, where the exact rejection left one pending
+  confirmation and no scorelines, then a distinct player's confirmation
+  verified the game. The identical migration is applied to pilot
+  `fnjkwymxpnsqvxtpronk`. A focused high-risk review also caught and the
+  working tree fixes the matching API-validator omission, so the client
+  receives the intended controlled `409` rather than a generic `503`. Local
+  tests: **114 passed**. See
+  `docs/quality/2026-09-10-score-confirmation-retry-repair.md`.
+
 ## 2026-09-10 working delivery outline
 
 - Added `docs/operations/WORKING_OUTLINE.md` as the single living delivery

@@ -45,5 +45,5 @@ export function isRejectedConfirmationOperation(value: unknown, gameId: string):
       && Object.keys(value).length === 3
       && value.status === "rejected"
       && value.game_id === gameId
-      && ["submission_not_found", "not_submission_owner", "not_checked_in", "invalid_game_state", "confirmation_rejected"].includes(value.code as string));
+      && ["submission_not_found", "not_submission_owner", "not_checked_in", "invalid_game_state", "duplicate_confirmation", "confirmation_rejected"].includes(value.code as string));
 }
