@@ -1,5 +1,14 @@
 # Project Status
 
+## 2026-09-10 Rule 13.1 playoff-absence fixture boundary
+
+- Added a separate, source-bound playoff absence timing fixture. It keeps the
+  five-minute grace, counts only the first and each 15-minute additional
+  forfeit through a configured match length, and preserves the rule that an
+  absent qualifier remains entitled to the round-loser prize/MRP. It does not
+  generate a bracket result, financial award, or database action. Evidence:
+  `docs/quality/2026-09-10-playoff-absence-fixture.md`.
+
 ## 2026-09-10 Rule 11.4 late-lunch fixture boundary
 
 - Added a narrowly source-bound late-lunch decision fixture: it retains the
