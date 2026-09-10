@@ -1,5 +1,16 @@
 # Project Status
 
+## 2026-09-10 GitHub merge-guardrail audit
+
+- Confirmed that the committed GitHub Verify workflow runs frozen install,
+  dependency audit, lint, full tests, build, and workspace verification.
+  GitHub returned HTTP 403 when checking branch protection on the private
+  repository: the current plan does not provide that enforcement without an
+  upgrade or making the repository public. The repository must remain private;
+  this is documented as a Step 6 release-operation gate, not silently treated
+  as CI protection. See
+  `docs/quality/2026-09-10-github-merge-guardrail-audit.md`.
+
 ## 2026-09-10 production entry-point repair
 
 - Closed a launch usability gap: production root requests no longer become a
