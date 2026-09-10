@@ -33,10 +33,25 @@ On 2026-09-10, in the production-readiness branch:
 - `pnpm build` — pass; `/register` is dynamic (`ƒ`).
 - `git diff --check` — pass.
 
-## Remaining hosted evidence
+## Hosted Preview evidence
+
+Preview deployment `dpl_9yrytFUec294HqwXN3Xoep7yEFoR` built commit
+`22b934f` as `READY`. An authenticated Vercel fetch of `/register` returned
+200 and demonstrated all of the following:
+
+- a unique nonce in the response CSP;
+- the same nonce attached to Next.js framework scripts, the inline bootstrap
+  script, and the page's `registration-bootstrap.js` preload;
+- the expected restrictive production directives, with no `unsafe-inline` or
+  `unsafe-eval` allowance;
+- `cache-control: private, no-cache, no-store, max-age=0, must-revalidate` and
+  `referrer-policy: no-referrer`;
+- no `/register` runtime-error cluster during the post-deploy check.
+
+## Remaining browser evidence
 
 Before public registration may be enabled, the next Preview deployment must
-prove a distinct response nonce, matching nonce-bearing rendered scripts,
-fragment clearing before hydration, browser error-free submission rejection
-paths, and independent-session behavior. This repair does not enable public
-registration or remove any existing lifecycle/identity release gate.
+prove fragment clearing before hydration in a real browser, browser error-free
+submission rejection paths, and independent-session behavior. This repair does
+not enable public registration or remove any existing lifecycle/identity
+release gate.

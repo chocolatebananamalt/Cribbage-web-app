@@ -8,9 +8,13 @@
   the proxy; the registration route is explicitly dynamic so Next.js can
   attach that nonce to its genuine scripts. The Supabase session proxy
   preserves the forwarded nonce headers when it refreshes cookies. Local lint,
-  **92** tests, production build, and diff validation pass; hosted response and
-  browser lifecycle proof remains required before the registration gate can be
-  enabled. See `docs/quality/2026-09-10-registration-fragment-csp-repair.md`.
+  **92** tests, production build, and diff validation pass. Preview deployment
+  `dpl_9yrytFUec294HqwXN3Xoep7yEFoR` is Ready and its live response confirms
+  matching nonce-bearing scripts, restrictive production directives, no-store
+  caching, and no `/register` runtime-error cluster. Real browser lifecycle
+  and independent-session proof remains required before the registration gate
+  can be enabled. See
+  `docs/quality/2026-09-10-registration-fragment-csp-repair.md`.
 
 ## 2026-09-10 fragment-only registration browser handoff
 
