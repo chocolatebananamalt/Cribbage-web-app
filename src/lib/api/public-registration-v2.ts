@@ -11,6 +11,15 @@ export function publicRegistrationEnabled(env: Record<string, string | undefined
   return env.ACC_PUBLIC_REGISTRATION_V2 === "enabled";
 }
 
+/**
+ * Directors can prepare, replace, or close a fragment-only QR link before a
+ * separate public-registration release is approved. It does not make a link
+ * claimable; the public claim route still requires ACC_PUBLIC_REGISTRATION_V2.
+ */
+export function registrationLinkManagementEnabled(env: Record<string, string | undefined> = process.env) {
+  return env.ACC_REGISTRATION_LINK_MANAGEMENT_V2 === "enabled";
+}
+
 export function isPublicRegistrationClaim(value: unknown): value is PublicRegistrationClaim {
   if (!value || typeof value !== "object" || !own(value)) return false;
   const claim = value as Record<string, unknown>;

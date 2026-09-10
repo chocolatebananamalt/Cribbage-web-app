@@ -5,9 +5,9 @@
 - Added the director/co-director source workspace for the existing
   fragment-only QR registration lifecycle. It locally renders a one-time QR
   code, never persists the bearer credential in browser storage, re-reads only
-  non-secret link state, and remains unavailable until the existing public
-  registration release gate is deliberately enabled. It does not enable public
-  registration, change the shared pilot, or complete real-browser validation.
+  non-secret link state, and is guarded by a separate default-off director
+  management gate from public claims. It does not enable public registration,
+  change the shared pilot, or complete real-browser validation.
   Focused lint, 156 application checks, and a production build passed. Details:
   `docs/quality/2026-09-10-director-qr-registration-workspace.md`.
 

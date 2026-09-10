@@ -9,9 +9,12 @@ render a QR code for the single active tournament registration link.
 
 ## Security and product boundaries
 
-- The workspace and its navigation are unavailable unless the existing
-  `ACC_PUBLIC_REGISTRATION_V2=enabled` release gate is deliberately set.
-  It is off in the current shared pilot.
+- The workspace and its navigation are unavailable unless the separate
+  `ACC_REGISTRATION_LINK_MANAGEMENT_V2=enabled` director-management gate is
+  deliberately set. It is off in the current shared pilot.
+- Public claims remain independently unavailable until
+  `ACC_PUBLIC_REGISTRATION_V2=enabled` is deliberately set. Preparing a QR
+  link therefore does not itself open public registration.
 - The page requires the existing server-side tournament role check and then
   uses a server-only client for the already service-only link-state read.
 - A raw registration credential is created only by the existing server-only

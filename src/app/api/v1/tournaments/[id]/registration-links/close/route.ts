@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 import { isRegistrationLinkCloseRequest, isRegistrationLinkCloseResult, readRegistrationLinkJson } from "../../../../../../../lib/api/registration-link";
-import { publicRegistrationEnabled } from "../../../../../../../lib/api/public-registration-v2";
+import { registrationLinkManagementEnabled } from "../../../../../../../lib/api/public-registration-v2";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../../lib/api/validation";
@@ -10,7 +10,7 @@ import { createClient } from "../../../../../../../lib/supabase/server";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
-    if (!publicRegistrationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
+    if (!registrationLinkManagementEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const body = await readRegistrationLinkJson(request);

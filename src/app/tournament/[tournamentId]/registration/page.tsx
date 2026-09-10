@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
-import { publicRegistrationEnabled } from "../../../../lib/api/public-registration-v2";
+import { registrationLinkManagementEnabled } from "../../../../lib/api/public-registration-v2";
 import { isUuid } from "../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { getRegistrationLinkWorkspace } from "../../../../lib/registration-link-workspace";
@@ -9,7 +9,7 @@ import RegistrationLinkClient from "./registration-link-client";
 
 export default async function RegistrationLinkPage({ params }: { params: Promise<{ tournamentId: string }> }) {
   const { tournamentId } = await params;
-  if (!isUuid(tournamentId) || !publicRegistrationEnabled()) notFound();
+  if (!isUuid(tournamentId) || !registrationLinkManagementEnabled()) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
   const state = await getRegistrationLinkWorkspace(access.user.id, tournamentId);

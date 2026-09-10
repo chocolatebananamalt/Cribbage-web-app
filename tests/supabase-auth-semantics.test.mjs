@@ -417,8 +417,8 @@ test('director registration-link issuance is a strict same-origin server-only bo
   const route = read('src/app/api/v1/tournaments/[id]/registration-links/route.ts');
   const contract = read('src/lib/api/registration-link.ts');
   assert.match(route, /isSameOriginRequest/);
-  assert.match(route, /publicRegistrationEnabled/);
-  assert.match(route, /if \(!publicRegistrationEnabled\(\)\)/);
+  assert.match(route, /registrationLinkManagementEnabled/);
+  assert.match(route, /if \(!registrationLinkManagementEnabled\(\)\)/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(route, /issueRegistrationLink/);
@@ -451,7 +451,7 @@ test('director registration-link state read is service-only, strict, and exclude
   assert.match(route, /export async function GET/);
   assert.match(route, /get_registration_link_state_v2/);
   assert.match(route, /isRegistrationLinkState/);
-  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /registrationLinkManagementEnabled/);
   assert.match(contract, /status: "none"/);
   assert.match(contract, /Object\.keys\(value\)\.length === keys\.length/);
   assert.match(migration, /perform app\.registration_v2_service_only\(\)/);
@@ -510,7 +510,7 @@ test('registration-link rotation is a service-only compare-and-swap that cannot 
 test('director close route is release-gated, strict, and server-only', () => {
   const route = read('src/app/api/v1/tournaments/[id]/registration-links/close/route.ts');
   const contract = read('src/lib/api/registration-link.ts');
-  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /registrationLinkManagementEnabled/);
   assert.match(route, /isSameOriginRequest/);
   assert.match(route, /readRegistrationLinkJson/);
   assert.match(route, /isRegistrationLinkCloseRequest/);
@@ -524,7 +524,7 @@ test('director close route is release-gated, strict, and server-only', () => {
 test('director rotation route is release-gated, strict, server-only, and returns a credential only on a new exact receipt', () => {
   const route = read('src/app/api/v1/tournaments/[id]/registration-links/rotate/route.ts');
   const contract = read('src/lib/api/registration-link.ts');
-  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /registrationLinkManagementEnabled/);
   assert.match(route, /isSameOriginRequest/);
   assert.match(route, /readRegistrationLinkJson/);
   assert.match(route, /isRegistrationLinkRotateRequest/);
@@ -541,7 +541,7 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   const client = read('src/app/tournament/[tournamentId]/registration/registration-link-client.tsx');
   const workspace = read('src/lib/registration-link-workspace.ts');
   const tournament = read('src/app/tournament/[tournamentId]/page.tsx');
-  assert.match(page, /publicRegistrationEnabled\(\)/);
+  assert.match(page, /registrationLinkManagementEnabled\(\)/);
   assert.match(page, /requireTournamentAccess/);
   assert.match(page, /\["director", "co_director"\]/);
   assert.match(page, /getRegistrationLinkWorkspace/);
@@ -553,7 +553,15 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   assert.match(client, /isRegistrationLinkState/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
   assert.match(tournament, /Registration link and QR code/);
-  assert.match(tournament, /publicRegistrationEnabled\(\)/);
+  assert.match(tournament, /registrationLinkManagementEnabled\(\)/);
+});
+
+test('director link management and public registration have separate default-off release gates', () => {
+  const gates = read('src/lib/api/public-registration-v2.ts');
+  assert.match(gates, /publicRegistrationEnabled[\s\S]*ACC_PUBLIC_REGISTRATION_V2 === "enabled"/);
+  assert.match(gates, /registrationLinkManagementEnabled[\s\S]*ACC_REGISTRATION_LINK_MANAGEMENT_V2 === "enabled"/);
+  assert.doesNotMatch(gates.match(/function registrationLinkManagementEnabled[\s\S]*?\n\}/)?.[0] ?? '', /ACC_PUBLIC_REGISTRATION_V2/);
+  assert.doesNotMatch(gates.match(/function publicRegistrationEnabled[\s\S]*?\n\}/)?.[0] ?? '', /ACC_REGISTRATION_LINK_MANAGEMENT_V2/);
 });
 
 test('registration closure atomically closes its active link and is exposed only through the protected server boundary', () => {
