@@ -38,6 +38,12 @@ The canonical rule fixtures and financial schedules remain a separate task.
   size. Bracket size and first-round byes are calculated only after that count.
 - Cross-check/tally is a required operational gate for qualifying scorecards;
   it cannot be represented as cosmetic UI status.
+- The judge workflow must start with two judges present; at least one has the
+  rulebook. A third judge is available when a player disagrees with the first
+  two judges' decision, and the three-judge decision is final. The prior
+  requirements wording incorrectly tied the third judge only to disagreement
+  between the first two judges; that conflict was corrected in
+  `production-requirements.md` before the feature is implemented.
 
 ## Still unconfirmed and therefore not encoded as official results
 

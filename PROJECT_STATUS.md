@@ -7,7 +7,10 @@
   the qualifying tie-break order. The source record explicitly separates this
   evidence from the still-unconfirmed event, payout, reporting, and official
   digital-record decisions; no finalization logic is enabled from incomplete
-  sources. See `docs/quality/2026-09-10-acc-public-rule-source-review.md`.
+  sources. The review also corrected the judge-escalation requirement: a third
+  judge may be summoned when a player disagrees with the first two judges'
+  decision, rather than only when those judges disagree. See
+  `docs/quality/2026-09-10-acc-public-rule-source-review.md`.
 
 ## 2026-09-10 hosted registration lifecycle audit
 
