@@ -912,6 +912,10 @@ test('manual roster payments are immutable director-only evidence, never enrollm
   assert.equal(payment.isRejectedPayment({ status: 'rejected', code: 'current_payment_receipt_required', rosterEntryId: paymentRecord.rosterEntryId }, paymentRecord.rosterEntryId, 'void_manual_roster_payment'), true);
   assert.equal(payment.isRejectedPayment({ status: 'rejected', code: 'active_payment_receipt_exists', rosterEntryId: paymentRecord.rosterEntryId }, paymentRecord.rosterEntryId, 'void_manual_roster_payment'), false);
   assert.equal(payment.isRejectedPayment({ status: 'rejected', code: 'stale_payment_history', rosterEntryId: paymentRecord.rosterEntryId, internal_detail: 'must not reach the browser' }, paymentRecord.rosterEntryId, 'record_manual_roster_payment'), false);
+  const retiredPaymentRecovery = read('database/migrations/0086_retire_legacy_payment_reconciliation_execute.sql');
+  assert.match(retiredPaymentRecovery, /revoke all on function public\.get_roster_payment_operation_reconciliation\(uuid, uuid, text, text, uuid\)/);
+  assert.match(retiredPaymentRecovery, /from public, anon, authenticated/);
+  assert.doesNotMatch(paymentRecoveryRoute + paymentClient, /get_roster_payment_operation_reconciliation/);
 });
 
 test('check-in and initial seating are private, immutable, closed-registration operations, not rotation', () => {

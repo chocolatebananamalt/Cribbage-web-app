@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 legacy payment-recovery execution retired
+
+- A permissions review found a safe but unused older payment-reconciliation
+  function still callable by signed-in directors. Migration
+  `0086_retire_legacy_payment_reconciliation_execute.sql` removes that
+  unnecessary browser-facing surface; the current identity-bound recovery
+  reader remains the sole active route contract. No payment, roster, or
+  eligibility data is changed. See
+  `docs/quality/2026-09-10-retire-legacy-payment-recovery.md`.
+
 ## 2026-09-10 duplicate score-confirmation retry repair
 
 - A disposable live database test found that the existing unique database
