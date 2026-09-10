@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 live pilot security and parity review
+
+- Rechecked the shared pilot read-only. Its signed-in `SECURITY DEFINER`
+  advisor warnings are expected: no anonymous execution grant was present,
+  and every signed-in callable function had an empty search path and explicit
+  `auth.uid()` guard. The pilot remains behind source migrations `0090`–`0103`;
+  the deployed game-context safeguard prevents that from enabling a partial
+  scoring screen. No pilot change was made. Details:
+  `docs/quality/2026-09-10-live-pilot-security-and-parity-review.md`.
+
 ## 2026-09-10 API mutation-boundary review
 
 - Reviewed every current API route for direct data access and origin-gate
