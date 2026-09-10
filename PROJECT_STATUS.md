@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-10 source-bound qualification preview
+
+- Added a pure, source-bound ACC qualification preview: ranks by game points,
+  games won, net spread points, then positive spread points; calculates one
+  in four entrants rounded up and allocates byes from the next full bracket.
+  It fails closed for an exact numeric tie and visibly marks a cutoff tie
+  instead of inventing an official qualifier. It has no database, payout,
+  export, or publication path. Local checks pass: **121 tests**, lint,
+  production build, workspace verification, private-handoff verification,
+  and diff check. See the decision and evidence records under
+  `docs/decisions/2026-09-10-qualification-preview-boundary.md` and
+  `docs/quality/2026-09-10-qualification-preview.md`.
+
 ## 2026-09-10 score mutation bounded-body hardening
 
 - Closed an input-boundary gap in the live score-submission and confirmation

@@ -53,7 +53,7 @@ The detailed rule/ACC decision split is maintained in
 | Confirmation | Status | Target |
 | --- | --- | --- |
 | Current Rulebook edition plus game-point, spread, scorecard, and cross-check fixtures | In progress | 2026-09-17 |
-| Qualification order, playoff count, bracket, and bye fixtures | Not started | 2026-09-22 |
+| Qualification order, playoff count, bracket, and bye fixtures | In progress | 2026-09-22 |
 | Event styles, game-count options, sanctioning fields, flyer requirements, and role vocabulary | Not started | 2026-09-24 |
 | MRP, Q-pool, payout, and reporting-source inventory | Not started | 2026-09-30 |
 | Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Not started | 2026-10-02 |
