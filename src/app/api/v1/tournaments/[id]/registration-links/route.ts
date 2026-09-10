@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { isRegistrationLinkIssueRequest } from "../../../../../../lib/api/registration-link";
+import { publicRegistrationEnabled } from "../../../../../../lib/api/public-registration-v2";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../lib/api/validation";
@@ -9,6 +10,7 @@ import { createClient } from "../../../../../../lib/supabase/server";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
+    if (!publicRegistrationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     let body: unknown;
@@ -20,6 +22,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       actorId: subject, tournamentId: id, expiresAt: new Date(body.expiresAt),
       maxClaims: body.maxClaims, maxClaimsPerHour: body.maxClaimsPerHour, operationId: body.operationId,
     });
+    if (issued.status === "rejected") return apiJson({ error: "registration_link_conflict" }, { status: 409 });
+    if (issued.status === "credential_unavailable") return apiJson({ error: "credential_unavailable" }, { status: 409 });
     return apiJson({ status: "issued", credential: issued.credential.canonicalToken, expiresAt: issued.expiresAt });
   });
 }

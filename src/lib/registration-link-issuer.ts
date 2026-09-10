@@ -17,9 +17,21 @@ export type RegistrationLinkIssue = {
 };
 
 export type IssuedRegistrationLink = {
+  status: "issued";
   credential: RegistrationLinkCredential;
   expiresAt: string;
 };
+
+export type RejectedRegistrationLinkIssue = {
+  status: "rejected";
+  code: "active_link_exists" | "idempotency_conflict";
+};
+
+export type AmbiguousRegistrationLinkIssue = {
+  status: "credential_unavailable";
+};
+
+export type RegistrationLinkIssueResult = IssuedRegistrationLink | RejectedRegistrationLinkIssue | AmbiguousRegistrationLinkIssue;
 
 function bytea(value: Uint8Array) {
   return `\\x${Buffer.from(value).toString("hex")}`;
@@ -35,6 +47,24 @@ function isIssuedResponse(value: unknown, linkId: string, expiresAt: string): bo
     && record.expiresAt === expiresAt;
 }
 
+function isPriorIssuedResponse(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Object.keys(record).length === 4
+    && record.status === "issued"
+    && record.state === "open"
+    && typeof record.linkId === "string"
+    && typeof record.expiresAt === "string";
+}
+
+function isRejectedResponse(value: unknown): value is { status: "rejected"; code: "active_link_exists" | "idempotency_conflict" } {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Object.keys(record).length === 2
+    && record.status === "rejected"
+    && (record.code === "active_link_exists" || record.code === "idempotency_conflict");
+}
+
 /**
  * Creates the only director-displayable credential after the server has
  * received an exact private receipt. Raw credentials never enter a database
@@ -43,7 +73,7 @@ function isIssuedResponse(value: unknown, linkId: string, expiresAt: string): bo
 export async function issueRegistrationLink(
   admin: RpcClient,
   input: RegistrationLinkIssue,
-): Promise<IssuedRegistrationLink> {
+): Promise<RegistrationLinkIssueResult> {
   const credential = createRegistrationLinkCredential(randomUUID());
   const salt = randomBytes(32);
   const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
@@ -59,8 +89,14 @@ export async function issueRegistrationLink(
     p_max_claims_per_hour: input.maxClaimsPerHour,
     p_operation_id: input.operationId,
   });
-  if (error || !isIssuedResponse(data, credential.linkId, expiresAt)) {
+  if (error) {
     throw new Error("Registration link issuance is unavailable.");
   }
-  return { credential, expiresAt };
+  if (isIssuedResponse(data, credential.linkId, expiresAt)) return { status: "issued", credential, expiresAt };
+  if (isRejectedResponse(data)) return data;
+  // A prior accepted operation can be replayed by PostgreSQL. Its original
+  // bearer credential cannot be reconstructed safely, so never return or
+  // regenerate one from a later request.
+  if (isPriorIssuedResponse(data)) return { status: "credential_unavailable" };
+  throw new Error("Registration link issuance is unavailable.");
 }

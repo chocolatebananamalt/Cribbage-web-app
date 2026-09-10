@@ -358,6 +358,8 @@ test('director registration-link issuance is a strict same-origin server-only bo
   const route = read('src/app/api/v1/tournaments/[id]/registration-links/route.ts');
   const contract = read('src/lib/api/registration-link.ts');
   assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /publicRegistrationEnabled/);
+  assert.match(route, /if \(!publicRegistrationEnabled\(\)\)/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(route, /issueRegistrationLink/);
@@ -365,6 +367,17 @@ test('director registration-link issuance is a strict same-origin server-only bo
   assert.match(contract, /Object\.keys\(value\)\.length === keys\.length/);
   assert.match(contract, /maxClaims.*<= 2000/);
   assert.match(contract, /maxClaimsPerHour.*<= 1000/);
+  assert.match(route, /credential_unavailable/);
+});
+
+test('registration-link lifecycle conflicts are durable business outcomes, never bearer retries', () => {
+  const repair = read('database/migrations/0074_registration_link_conflict_receipts.sql');
+  assert.match(repair, /prior_receipt_tournament_id/);
+  assert.match(repair, /foreign key \(prior_receipt_id, prior_receipt_tournament_id\)/);
+  assert.match(repair, /return jsonb_build_object\('status', 'rejected', 'code', 'idempotency_conflict'\)/);
+  assert.match(repair, /return jsonb_build_object\('status', 'rejected', 'code', 'active_link_exists'\)/);
+  assert.doesNotMatch(repair, /raise exception using errcode = 'P0001', message = 'idempotency conflict'/);
+  assert.doesNotMatch(repair, /raise exception using errcode = 'P0001', message = 'active registration link exists'/);
 });
 
 test('public registration remains release-gated and sends only a derived digest to Supabase', () => {

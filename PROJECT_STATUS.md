@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-10 registration-link conflict and retry repair
+
+- The release gate now covers director link issuance as well as public
+  redemption. Expected lifecycle conflicts are durable database outcomes
+  rather than rolled-back exceptions, and a lost one-time credential cannot
+  be recreated or returned by a retry. Migration `0074` was applied to the
+  disposable synthetic project before the pilot. Local lint, **95** tests,
+  production build, workspace verification, private-handoff verification, and
+  diff validation pass. Real transaction/concurrency, director lifecycle UI,
+  hosted-secret, and browser proof remain required. See
+  `docs/quality/2026-09-10-registration-link-conflict-repair.md`.
+
 ## 2026-09-10 registration credential lifetime repair
 
 - A lifecycle review found that the fragment credential was removed from the
