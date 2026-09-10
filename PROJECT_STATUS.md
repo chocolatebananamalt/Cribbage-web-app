@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-09-10 rotation exception source review
+
+- Reviewed the public ACC Tournament Director's Manual for the user-described
+  last-table/odd-player problem. It requires every player to complete at least
+  the qualifying-game count, excludes any extra game from scoring, and retains
+  it for cross-checking; it does not authorize a guessed automatic rotation
+  plan. The app therefore remains director-reviewed for this exception until
+  ACC-backed rotation fixtures are available. See
+  `docs/quality/2026-09-10-rotation-exception-source-review.md`.
+
 ## 2026-09-10 public registration page release gate
 
 - Closed a release-gate inconsistency: the public registration claim API was
