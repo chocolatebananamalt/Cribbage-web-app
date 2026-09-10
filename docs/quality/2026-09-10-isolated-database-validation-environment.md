@@ -186,6 +186,17 @@ with the concurrent claim-first run, both ordering outcomes now have direct
 database evidence. Real independent authenticated browser sessions remain
 required before any public-registration release.
 
+## Direct browser-role denial check
+
+The connector also invoked `close_tournament_registration_v2` with the
+request JWT role explicitly set to `anon`, inside a transaction that rolled
+back. The procedure failed immediately with the controlled
+`server-only registration lifecycle` error from
+`app.registration_v2_service_only()`; it did not enter the close transaction
+or change any fixture. This independently confirms the service-only guard is
+live in the disposable database, in addition to the catalog privilege and
+static route checks.
+
 ## Consequence and next safe path
 
 The required real two-connection proof can now be performed against this

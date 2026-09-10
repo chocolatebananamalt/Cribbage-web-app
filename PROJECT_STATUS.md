@@ -45,7 +45,9 @@
   remains required. The complementary close-first fixture is also complete:
   it leaves zero claims when a valid claimant arrives after registration was
   closed. The current Vercel preview has a clean build, no recent runtime
-  errors, and no observed browser-console errors.
+  errors, and no observed browser-console errors. A direct anonymous-role
+  database call to the registration-close procedure is rejected by its
+  server-only guard before it can mutate anything.
 
 ## 2026-09-10 account-activation lock-order repair
 
