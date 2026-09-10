@@ -37,6 +37,11 @@ not used for this work.
 - A post-install catalog query confirmed that `anon` and `authenticated` have
   no EXECUTE privilege on the issue, redemption, decision, or cancellation
   procedures. The `service_role` has the intended narrow EXECUTE privileges.
+- A service-role execution attempt against an already linked synthetic roster
+  entry returned the controlled `activation_unavailable` rejection. It did not
+  create another activation. This is rejection-path evidence only; it does not
+  substitute for the still-required new-fixture issue/redeem/decision race
+  matrix.
 - A post-cleanup table scan found no remaining `validation_probe` table. The
   security advisor has no critical RLS-disabled table finding. Its remaining
   private-table RLS and service-procedure notices match the reviewed
