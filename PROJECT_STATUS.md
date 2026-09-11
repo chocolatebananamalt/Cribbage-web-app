@@ -15,12 +15,16 @@
   tournament-role boundaries.
 - Focused tests (44/44), complete verification (217 application tests plus
   build and repository gates), handoff verification (6/6), anonymous and
-  stale-cookie HTTP checks, and an external Chrome desktop interaction check
-  pass. The first Vercel Preview revealed that the statically generated demo
-  could not hydrate under the per-request nonce policy; it now opts into
-  request-time rendering so Next.js can nonce its scripts. A corrected Preview
-  interaction check, production promotion, anonymous production response, and
-  production error-log evidence remain required before sharing.
+  stale-cookie HTTP checks, and external Chrome interaction checks pass. The
+  first Vercel Preview revealed that the statically generated demo could not
+  hydrate under the per-request nonce policy; it now opts into request-time
+  rendering so Next.js can nonce its scripts.
+- Commit `38d1d6a` was promoted to Vercel Production as deployment
+  `dpl_PWqPwoMtGVqW6vGt8Qg5iXTTsT4h`. The stable public URL is
+  `https://cribbage-web-app.vercel.app/demo`. Anonymous production checks
+  returned HTTP 200 for the demo and both linked PDFs, the live score-entry
+  and review interaction passed, and the post-release scan found no runtime
+  error clusters or production HTTP 5xx logs.
 
 ## 2026-09-10 October pilot offline requirement correction
 

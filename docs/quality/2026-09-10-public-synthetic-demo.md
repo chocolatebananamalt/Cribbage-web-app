@@ -54,8 +54,25 @@ adapter changed.
 - Narrow-phone layout remains covered by the scorecard responsive-layout and
   touch-scrolling regression tests. The available external-browser control
   could not resize the Chrome viewport during this run.
-- Final independent re-review, Vercel Preview, production promotion, anonymous production request, and
-  production log scan: pending.
+- Final independent Sol re-review: PASS with no P0/P1 findings. The review
+  independently confirmed that `/demo` is request-rendered under the strict
+  CSP, does not resolve Supabase or application data, and preserves the
+  protected operational routes.
+- Corrected Vercel Preview interaction: PASS. Selecting the sample winner,
+  entering an 88-point spread, displaying the double-skunk aid, and opening
+  Review Result all worked in external Chrome.
+- Production promotion: PASS. Vercel deployment
+  `dpl_PWqPwoMtGVqW6vGt8Qg5iXTTsT4h` promoted commit `38d1d6a` and reported
+  `READY` with `target: production` and alias
+  `cribbage-web-app.vercel.app`.
+- Anonymous production requests: PASS. `/demo` returned HTTP 200 as HTML;
+  `/sample/qualifiers-summary.pdf` and
+  `/rulebook/acc-rulebook-2025.pdf` returned HTTP 200 as `application/pdf`.
+- Production browser interaction: PASS. The stable `/demo` URL rendered the
+  public-sample banner without sign-in, calculated the 88-point double-skunk
+  result, and navigated to Review Current Game Result.
+- Vercel post-release scan: PASS. No `/demo` runtime-error clusters and no
+  production HTTP 5xx logs were found in the 30-minute release window.
 
 ## Preview-only issue found after the initial checks
 
@@ -65,3 +82,10 @@ build-time scripts had no nonce. The route now uses Next.js `connection()` to
 force per-request rendering, following the installed Next.js CSP guidance.
 The corrected deployment must show `/demo` as dynamic and pass a real button
 interaction before promotion.
+
+## Release result
+
+The public demonstration is available at
+`https://cribbage-web-app.vercel.app/demo`. It is intentionally sample-only,
+does not save changes, and is separated from authenticated registration and
+tournament workspaces.
