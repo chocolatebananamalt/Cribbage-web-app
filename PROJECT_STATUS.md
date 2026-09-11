@@ -12,8 +12,14 @@
   carries a persistent sample-data/no-save notice and an account return link.
 - Focused authentication checks pass 36/36; `pnpm verify` passes audit, lint,
   216/216 application tests, the Next.js production build, and 5/5 workspace
-  checks; `pnpm verify:handoff` passes 6/6. Production promotion and live
-  desktop/phone browser evidence remain required for closure.
+  checks; `pnpm verify:handoff` passes 6/6. Independent Sol review found no
+  P0/P1 issue.
+- Promoted commit `7a1a255` as Production deployment
+  `dpl_5xHc1HTbXxoMf6N6hwm4zD2oM3cx`. The retained real session opened the
+  demonstration and completed its synthetic score-entry interaction; an
+  unauthenticated fetch returned to `/sign-in?next=%2Fdemo`, deployment logs
+  show no API mutation, and the live error scan is clean. Desktop visual proof
+  is complete; a retained-session 375-pixel browser pass remains unavailable.
 - Evidence: `docs/quality/2026-09-10-authenticated-demonstration-access.md`.
 
 ## 2026-09-10 real magic-link sign-in and authenticated-entry repair
