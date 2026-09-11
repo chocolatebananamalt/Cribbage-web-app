@@ -21,6 +21,11 @@
 - Documentation reconciliation passed `pnpm verify` (216/216 application
   tests, production build, 5/5 workspace checks), `pnpm verify:handoff`
   (6/6), and diff validation.
+- Published the matching owner-private Production Readiness Site as version 11
+  at `https://acc-tournament-production-readiness.chocolatebananamalt.chatgpt.site/`.
+  The site now exposes the full integration strategy and 20-row foundation
+  checklist, separating first-pilot blockers from future ACC automation or
+  replacement gates.
 
 ## 2026-09-10 authenticated demonstration access
 

@@ -279,3 +279,13 @@ Director workflow are recorded in
   all-role workflow proof, official data/rule specifications, historical
   migration, governance/support/DR, nationwide parallel validation, and
   cutover/rollback approval exist.
+
+This addendum is also published in the owner-private Production Readiness Site,
+version 11, at
+`https://acc-tournament-production-readiness.chocolatebananamalt.chatgpt.site/`.
+Sites deployment `appgdep_6aa3a5245d5081919befb8b5bb9ef511` succeeded from
+saved version 11 and exact site-source commit
+`032af3e576e776426b240763af564752cd9ad64b`. An unauthenticated fetch correctly
+reached the site's owner sign-in boundary; deployment success and the exact
+packaged source establish publication, while signed-in visual review remains
+an owner-browser check.
