@@ -1,5 +1,24 @@
 # Project Status
 
+## 2026-09-10 latest Preview and blocker-dashboard verification
+
+- Pushed reviewed commit `5276fe3` to
+  `codex/production-readiness-baseline`. Vercel built deployment
+  `dpl_F7Mds8YiBJZydvMJSgJYV7bruHnP` successfully; the deployment returned a
+  200 request in runtime logs, no runtime-error cluster was present, and the
+  ACC Tournament Desk loaded in external Chrome at
+  `https://cribbage-web-mf7um8pxd-cribbage-app.vercel.app/`.
+- This is a protected Preview, not Production. The Vercel dashboard filtered
+  to Production reports no environment variables, the project reports
+  `live: false`, and `https://cribbage-web-app.vercel.app/` returns Vercel 404.
+  Production connection values, Supabase callback URLs, promotion, real
+  magic-link delivery, and independent multi-user smoke proof remain human
+  release gates.
+- Updated and privately published version 4 of the owner readiness dashboard
+  with the applied 0090–0110 pilot state, independent review result, exact
+  Preview URL, exact Production failure, and a distinction between required
+  launch dependencies and optional OCR/API/payment/SMS work.
+
 ## 2026-09-10 shared-pilot 0106–0110 application
 
 - After full local verification, isolated database fixtures, and independent
