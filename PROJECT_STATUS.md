@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-10 public shareable demonstration
+
+- The owner approved a direct, no-sign-up `/demo` URL for sharing the current
+  interface with friends. The route now renders only the existing in-memory
+  synthetic dashboard and persistently states that it is public sample data,
+  nothing is saved, and no real tournament information is available or
+  changed.
+- The public route now bypasses Supabase session refresh, and the dashboard
+  uses clearly fictional people, identifiers, tournament details, and score
+  rows. Real registration and tournament workspaces retain authentication and
+  tournament-role boundaries.
+- Focused tests (43/43), complete verification (216 application tests plus
+  build and repository gates), handoff verification (6/6), anonymous and
+  stale-cookie HTTP checks, and an external Chrome desktop interaction check
+  pass. Independent re-review, Vercel deployment, anonymous production
+  response, and production error-log evidence remain required before sharing.
+
 ## 2026-09-10 October pilot offline requirement correction
 
 - The owner made durable offline score capture and later synchronization a

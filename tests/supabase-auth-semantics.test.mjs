@@ -163,18 +163,23 @@ test('successful magic-link sessions are visible and cannot request another link
   assert.match(form, /wait a few minutes, then request one new link/);
 });
 
-test('the production demonstration is authenticated, explicit, and synthetic-only', () => {
+test('the public production demonstration is explicit, synthetic-only, and disconnected from tournament writes', () => {
   const home = read('src/app/page.tsx');
   const demo = read('src/app/demo/page.tsx');
   const dashboard = read('src/app/tournament-dashboard.tsx');
+  const proxy = read('src/proxy.ts');
   assert.match(home, /href="\/demo"/);
   assert.match(home, /Explore the demonstration/);
-  assert.match(demo, /getCurrentSubject/);
-  assert.match(demo, /if \(!subject\) redirect\("\/sign-in\?next=%2Fdemo"\)/);
-  assert.match(demo, /Demonstration · Sample data only/);
+  assert.doesNotMatch(demo, /getCurrentSubject|redirect\(/);
+  assert.match(demo, /Public Demonstration · Sample Data Only/);
   assert.match(demo, /Nothing here is saved/);
+  assert.match(demo, /href="\/sign-in"/);
   assert.match(demo, /<TournamentDashboard \/>/);
-  assert.doesNotMatch(demo + dashboard, /fetch\(|\.rpc\(|createServerOnlyAdminClient/);
+  assert.doesNotMatch(demo + dashboard, /fetch\(|XMLHttpRequest|sendBeacon|\.rpc\(|createClient|createServerOnlyAdminClient|supabase|\/api\/v1\//i);
+  assert.match(proxy, /request\.nextUrl\.pathname === "\/demo"/);
+  assert.ok(proxy.indexOf('request.nextUrl.pathname === "/demo"') < proxy.indexOf('await updateSession'), 'the public demo must bypass Supabase session refresh');
+  assert.doesNotMatch(dashboard, /Barb Stevens|Steve Hall|HI-296|Grass Roots|Honolulu|Apr\. 25, 2025/);
+  assert.match(dashboard, /Demo Player, DEMO-001/);
 });
 
 test('proxy refreshes claims and protected tournament data requires server membership', () => {

@@ -47,6 +47,15 @@ export async function proxy(request: NextRequest) {
     return response;
   }
   try {
+    // The public demonstration is a static, synthetic-only interface. Keep it
+    // independent from Supabase session refresh so visitors can open it
+    // without authentication infrastructure or an account cookie.
+    if (request.nextUrl.pathname === "/demo") {
+      const response = NextResponse.next({ request: { headers: requestHeaders } });
+      response.headers.set("Content-Security-Policy", policy);
+      return response;
+    }
+
     // A disabled feature must stay absent even when an unconfigured local
     // environment cannot initialize the unrelated authenticated-session proxy.
     // It still receives the same browser isolation policy as every other page.

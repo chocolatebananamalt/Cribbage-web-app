@@ -30,20 +30,20 @@ test("score entry uses the approved result wording and rejects an impossible spr
   assert.match(source, /Enter a possible spread point number\./);
   assert.match(source, /old\.length >= 3 \? old/);
   assert.match(source, /<label htmlFor="margin">Spread Points:<\/label><output id="margin"[\s\S]*?<Skunk/);
-  assert.match(source, /Game 3 · Barb: Table A \/ Seat 7 · Steve: Table A \/ Seat 8/);
+  assert.match(source, /Game 3 · Demo Player: Table A \/ Seat 1 · Sample Opponent: Table A \/ Seat 2/);
   assert.match(source, /won by \{score\.margin\}/);
   assert.match(source, /Main \(\{eventGames\} games\)/);
 });
 
 test("scorecard has grouped paper-card headers and touch scrolling", () => {
-  assert.match(source, /title="Barb Stevens, HI-296"/);
+  assert.match(source, /title="Demo Player, DEMO-001"/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Game<\/th>/);
   assert.match(source, /<th colSpan=\{2\} scope="colgroup">Spread Points<\/th>/);
   assert.match(source, /rowSpan=\{2\} scope="col">Opponent<span>Name<\/span>/);
   assert.match(source, /rowSpan=\{2\} scope="col">Verification<span>ID #<\/span>/);
   assert.match(source, /Net Spread Points/);
   assert.match(source, /2<\/strong> Games Won/);
-  assert.match(source, /ID #<strong>A-7<\/strong>/);
+  assert.match(source, /ID #<strong>D-1<\/strong>/);
   assert.match(source, /Verification Pending Opponent Entry/);
   assert.match(source, /Updated Total Calculations Pending Opponent Entry/);
   assert.match(source, /formatScorecardSpread/);
