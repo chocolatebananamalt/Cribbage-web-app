@@ -1,5 +1,28 @@
 # Project Status
 
+## 2026-09-10 ACC approval video package
+
+- Added a roughly five-minute board/technical presentation script and an
+  exact shot list mapped to the public synthetic demo. The wording distinguishes
+  interactive demonstration behavior from proposed pilot behavior and does
+  not claim that unfinished multi-user, offline, OCR, financial, or ACC
+  integration work is already live.
+- The approval request is deliberately narrow: approve a supervised digital
+  operational-record pilot; identify technical and operational contacts;
+  provide or approve read-only member verification through a scoped service
+  identity; decide how contact changes should be handled; provide a supported
+  sanctioning/results API or import boundary and sandbox; and confirm the
+  authoritative rule, payout, role, and paper-retention inputs.
+- The recommended first integration does not request direct database access or
+  ACC member-record writes. Tournament-specific contact changes remain
+  separate unless the ACC later authorizes a reviewed or narrowly scoped,
+  audited update mechanism. Public ACC resources do not document an API, so
+  the script asks the ACC to identify its supported interface rather than
+  assuming one exists.
+- The narration is approximately 623 words, or 4 minutes 48 seconds at 130
+  words per minute. Video assembly remains pending the owner's approved script
+  and recorded narration.
+
 ## 2026-09-10 public shareable demonstration
 
 - The owner approved a direct, no-sign-up `/demo` URL for sharing the current
