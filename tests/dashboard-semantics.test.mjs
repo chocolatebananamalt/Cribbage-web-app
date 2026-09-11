@@ -59,6 +59,14 @@ test("scorecard has grouped paper-card headers and touch scrolling", () => {
   assert.match(styles, /overflow-x:hidden/);
 });
 
+test("scorecard remains readable and keyboard-scrollable on narrow phones", () => {
+  const scorecardPage = readFileSync("src/app/tournament/[tournamentId]/scorecard/page.tsx", "utf8");
+  assert.match(source, /scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex=\{0\}/);
+  assert.match(scorecardPage, /scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex=\{0\}/);
+  assert.match(styles, /\.scorecard-frame \{ overflow-x:auto; overflow-y:hidden; \}/);
+  assert.match(styles, /\.scorecard-header,\.scorecard-body,\.scorecard-footer \{ min-width:560px; \}/);
+});
+
 test("prototype navigation includes review and all requested operational screens", () => {
   assert.match(source, /setScreen\("review"\)/);
   assert.match(source, /title="Review Current Game Result"/);

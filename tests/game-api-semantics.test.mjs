@@ -1421,3 +1421,20 @@ test('correction reason limit is enforced inside the private schema', () => {
   assert.match(reasonLimit, /before insert on app\.game_corrections/);
   assert.match(reasonLimit, /revoke all on function app\.enforce_correction_reason_limit/);
 });
+
+test('preliminary standings use only verified scorelines and do not claim official results', () => {
+  const sql = read('database/migrations/0107_preliminary_event_standings_reader.sql');
+  const adapter = read('src/lib/results/preliminary-standings.ts');
+  const page = read('src/app/tournament/[tournamentId]/results/page.tsx');
+  assert.match(sql, /create or replace function public\.get_preliminary_event_standings/);
+  assert.match(sql, /cg\.state in \('verified','corrected'\)/);
+  assert.match(sql, /game_points desc, games_won desc/);
+  assert.match(sql, /\(plus_points - minus_points\) desc, plus_points desc/);
+  assert.match(sql, /exists \([\s\S]*app\.tournament_roles[\s\S]*auth\.uid\(\)/);
+  assert.match(sql, /revoke all on function public\.get_preliminary_event_standings\(uuid, uuid\)[\s\S]*from public, anon/);
+  assert.doesNotMatch(sql, /grant execute[\s\S]*\bto anon\b/);
+  assert.match(adapter, /get_preliminary_event_standings/);
+  assert.match(adapter, /data\.tournamentId !== tournamentId \|\| data\.eventId !== eventId/);
+  assert.match(page, /Only verified or corrected games are included/);
+  assert.match(page, /Qualification, MRPs, Q-pools, payouts, and final results are not decided/);
+});

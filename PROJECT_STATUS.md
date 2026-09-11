@@ -1,5 +1,93 @@
 # Project Status
 
+## 2026-09-10 shared-pilot 0106–0110 application
+
+- After full local verification, isolated database fixtures, and independent
+  high-risk review reported no remaining blocking finding, applied exact source
+  migrations 0106 through 0110 to the shared Supabase pilot in order.
+- Postflight checks confirm service-only writers/readers remain unavailable to
+  browser roles, the intentionally member-scoped preliminary standings reader
+  retains its own exact tournament-membership check, and the pilot still has
+  zero independent corrections, setup activations, and paper-card captures.
+  No hosted feature switch was enabled and no sample tournament/user data was
+  added. Evidence:
+  `docs/quality/2026-09-10-shared-pilot-0106-0110-application.md`.
+
+## 2026-09-10 migrations 0106–0110 integrated validation
+
+- Integrated the independent Rule 12.2(b) correction lifecycle, correction-aware
+  preliminary standings, Standard Singles setup activation, independent
+  cross-checker paper-card capture foundation, and blocked-only event
+  finalization-readiness report. All feature surfaces remain exact-value,
+  default-off controls and none grants event finalization authority.
+- The disposable Supabase validation project now holds the reviewed schema and
+  functions. Self-contained rollback fixtures passed for all five slices,
+  including correction application, competition ties, primary-director
+  replacement, cross-checker-only authority, immutable capture/audit evidence,
+  cross-tournament/revoked-role denial, and deliberately unavailable lifecycle,
+  schedule, seating/eligibility, finance, dispute, attachment, result-version,
+  and approval evidence. Relevant foreign-key advisor findings are closed.
+- `pnpm verify` passes 214/214 application checks plus audit, lint, production
+  build, and workspace checks; `pnpm verify:handoff` passes 6/6. Independent
+  review and shared-pilot application are complete. Hosted flags, live
+  multi-session proof, and production promotion remain separate release steps.
+
+## 2026-09-10 restricted paper-card capture foundation
+
+- Added migration 0109 and a default-off server-only API for an independent
+  current cross-checker to create an immutable
+  game-side capture plus a restricted provider-pending upload reference. The
+  database derives the assigned card identity and permanent verification ID,
+  preserves declared original image metadata, blocks self-game and
+  cross-tournament capture, and records receipt/audit/conflict evidence.
+- This source slice creates no image object or URL, requests no OCR, starts no
+  transcription, selects no retention duration, and changes no score or game
+  verification state. Rollback-only synthetic integration covered cross-checker
+  creation and replay plus director/co-director, changed retry, self-game, wrong
+  verification ID, cross-tournament, and viewer rejection. `pnpm verify` passes 214/214
+  application tests plus build/workspace checks; `pnpm verify:handoff` passes
+  6/6. Migration 0109 is applied to the shared pilot but not deployed or enabled. Camera UI,
+  restricted storage/provider policy, OCR/human review, retention governance,
+  access/deletion/restore auditing, and real-paper multi-session testing remain
+  release gates. Evidence:
+  `docs/quality/2026-09-10-paper-card-capture-foundation.md`.
+
+## 2026-09-10 Rule 12.2(b) independent-card correction lifecycle
+
+- Added an unreleased, service-only writer/reviewer/reader lifecycle for the
+  dated Rule 12.2(b) 17/16 discrepancy fixture. It preserves the two original
+  card claims, derives 16/17 independent adjudicated projections, snapshots
+  the configured immediate-or-one-review and optional-or-required-reason
+  policy, blocks self editing/review, and retains immutable receipts,
+  conflicts, actor/timestamp history, and audit evidence without rewriting the
+  canonical reciprocal scorelines.
+- Migration 0106 and its rollback-only synthetic lifecycle fixture passed on
+  the disposable Supabase validation project. `pnpm verify` passes 214/214
+  application tests plus audit/lint/build/workspace checks, and
+  `pnpm verify:handoff` passes 6/6. It is applied to the shared pilot but not
+  deployed, browser-exposed, or enabled. Preliminary standings now consume the
+  latest applied correction projection. Other Rule 12 cases, correction-aware
+  finalized results, qualification notification, and real multi-session proof
+  remain release blockers. Evidence:
+  `docs/quality/2026-09-10-rule12b-correction-lifecycle.md`.
+
+## 2026-09-10 Standard Singles setup activation vertical slice
+
+- Added the default-off, service-only activation transaction that lets a
+  verified current director/co-director explicitly approve and atomically turn
+  the latest one-event Standard Singles setup revision into one sourced
+  scoring-core ruleset and one draft-publication operational event. Immutable
+  provenance, receipt/audit, exact replay, and changed-key conflict evidence
+  are included; unsupported formats, stale setup/officials, unauthorized roles,
+  and already operational tournaments fail closed.
+- Activation deliberately creates no rounds, participants, seating/rotation,
+  finance, results, payouts, qualifiers, or ACC submission. Migration 0108 is
+  applied to the shared pilot but remains undeployed and disabled. `pnpm verify`
+  (214/214 application tests plus build/workspace checks) and
+  `pnpm verify:handoff` (6/6) pass. Hosted enablement and real
+  authorized/unauthorized session proof remain release gates. Evidence:
+  `docs/quality/2026-09-10-standard-singles-setup-activation.md`.
+
 ## 2026-09-10 shared-pilot 0090–0105 application
 
 - With explicit owner approval, applied the exact ordered source migrations

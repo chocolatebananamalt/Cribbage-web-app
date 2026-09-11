@@ -105,7 +105,7 @@ function Scorecard({ score, pending }: { score: ReturnType<typeof deriveScore> |
     return <tr key={number} className={current ? "current" : undefined}><th scope="row">{number}</th><td>{current && score ? score.playerGamePoints : saved?.points ?? "—"}</td><td>{current && score ? spreadCell(score.playerPlus) : saved ? spreadCell(saved.plus) : "—"}</td><td>{current && score ? spreadCell(score.playerMinus) : saved ? spreadCell(saved.minus) : "—"}</td><td>{current ? "Steve Hall" : saved?.opponent ?? "—"}</td><td>{current ? "A-8" : saved?.id ?? "—"}</td></tr>;
   });
   return (
-    <div className="scorecard-frame">
+    <div className="scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex={0}>
       <table className="scorecard-header"><caption className="sr-only">Barb Stevens digital scorecard</caption>{columns}<thead><tr><th colSpan={2} scope="colgroup">Game</th><th colSpan={2} scope="colgroup">Spread Points</th><th rowSpan={2} scope="col">Opponent<span>Name</span></th><th rowSpan={2} scope="col">Verification<span>ID #</span></th></tr><tr><th scope="col">#</th><th scope="col">Points</th><th scope="col">(+)</th><th scope="col">(−)</th></tr></thead></table>
       <div className="table-scroll"><table className="scorecard-body">{columns}<tbody>{rows}</tbody></table></div>
       <table className="scorecard-footer">{columns}<tbody>

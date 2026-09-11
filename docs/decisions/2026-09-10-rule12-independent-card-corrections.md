@@ -85,6 +85,17 @@ Migration `0105` also preserves the apparent-qualifier card side(s) required
 by Rule 12.2(a), (b), and (h); the fact is supplied by a future authorized
 workflow and must never be inferred from names or a correction outcome.
 
+Migration `0106` adds an unreleased service-only lifecycle for the one dated
+Rule 12.2(b) fixture already exercised on PostgreSQL. It snapshots the current
+versioned correction policy, supports default immediate authority or one
+independent review, preserves an optional/required reason, and appends receipts,
+conflicts, actor/timestamp state events, and audit evidence. It deliberately
+does not rewrite canonical scorelines: the two adjudicated card projections are
+the correction authority. Qualification-changing requests fail closed until a
+notification workflow exists. Browser execution remains revoked and the hard
+release stop remains in place because the other Rule 12 cases and downstream
+standing/result consumers are not complete.
+
 The isolated live database check records the Rule 12.2(b) 17/16-to-16/17
 example and malformed-claim rejection in
 `docs/quality/2026-09-10-rule12-independent-card-foundation-live-check.md`.
