@@ -24,7 +24,10 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
       if (result.error) throw result.error;
       setStatus("Check your email for a secure sign-in link.");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Unable to start sign-in.");
+      const message = caught instanceof Error ? caught.message : "";
+      setError(message.toLowerCase().includes("rate limit")
+        ? "Too many sign-in emails were requested. Please wait a few minutes, then request one new link."
+        : message || "Unable to start sign-in.");
     }
   }
 

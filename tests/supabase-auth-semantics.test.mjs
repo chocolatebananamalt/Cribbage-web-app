@@ -142,7 +142,25 @@ test('the synthetic review dashboard is unavailable from a production deployment
   assert.match(page, /return <TournamentDashboard/);
   assert.match(page, /href="\/sign-in"/);
   assert.match(page, /Tournament registration uses the QR code or registration link/);
+  assert.match(page, /getCurrentSubject/);
+  assert.match(page, /You’re signed in/);
+  assert.match(page, /secure email sign-in is complete/);
+  assert.match(page, /SharedDeviceSignOut/);
   assert.doesNotMatch(page, /notFound\(/);
+});
+
+test('successful magic-link sessions are visible and cannot request another link', () => {
+  const subject = read('src/lib/auth/current-subject.ts');
+  const signInPage = read('src/app/sign-in/page.tsx');
+  const form = read('src/app/sign-in/sign-in-form.tsx');
+  assert.match(subject, /server-only/);
+  assert.match(subject, /auth\.getClaims\(\)/);
+  assert.match(subject, /claims\?\.sub/);
+  assert.doesNotMatch(subject, /getSession|getUser/);
+  assert.match(signInPage, /getCurrentSubject/);
+  assert.match(signInPage, /if \(subject\) redirect\("\/"\)/);
+  assert.match(form, /Too many sign-in emails were requested/);
+  assert.match(form, /wait a few minutes, then request one new link/);
 });
 
 test('proxy refreshes claims and protected tournament data requires server membership', () => {
