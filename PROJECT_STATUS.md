@@ -1,5 +1,36 @@
 # Project Status
 
+## 2026-09-11 September 18 October-pilot minimum
+
+- Accepted a focused Standard Singles pilot boundary targeting director
+  onboarding on September 18 and a supervised tournament on October 3. The
+  must-work path is setup/events/Q-pools; registration/import, roster, manual
+  payment status and check-in; closure, initial seating and approved schedule;
+  two submissions/two confirmations, scorecards, offline replay, manual paper
+  evidence, disputes/cross-check/corrections; results/qualifiers; and financial
+  reconciliation.
+- Deferred production Rulebook/quick-reference integration, rich Judge Desk,
+  digital team scoring, flyer creation/import, online payments, SMS, OCR, and
+  automatic ACC portal submission. The demonstration may retain its
+  reference-only Rulebook preview; team events use paper scorecards. Main,
+  Consolation, and
+  Satellites remain separate events under one tournament.
+- Added `Previous Screen` to Qualification Preview and aligned the Operations
+  option/destination as `Tournament Events and Flyer`, with clear event and
+  deferred-feature summaries. Judge Desk is visibly deferred and disabled in
+  the demonstration.
+- Independent high-risk review prevented unsafe scope cuts: the final boundary
+  retains manual hybrid evidence and non-self dispute resolution, rejects
+  automatic scheduling without an approved rotation fixture, defines a
+  validated director-entered/imported schedule fallback, and keeps MRP/Q-pool,
+  payout, and export outputs draft until approved inputs exist.
+- Focused tests pass 78/78; `pnpm verify` passes 223/223 application tests plus
+  audit, lint, production build and workspace gates; `pnpm verify:handoff`
+  passes 6/6. External Chrome desktop navigation passed. Required real
+  320/375-pixel proof remains open because the available controller cannot set
+  a phone viewport.
+- Evidence: `docs/quality/2026-09-11-september-pilot-scope-and-prototype.md`.
+
 ## 2026-09-11 qualification summary placement correction
 
 - Corrected the synthetic Qualification Preview and sample PDF so Event

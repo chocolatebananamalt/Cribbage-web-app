@@ -81,7 +81,7 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /const columnSize = 28/);
   assert.match(source, /Scorecard type/);
   assert.match(source, /title="Table Plan"/);
-  assert.match(source, /title="Tournament Flyer"/);
+  assert.match(source, /title="Tournament Flyer Format Preview"/);
   assert.match(source, /Qualification Preview/);
   assert.match(source, /Open Sample Qualification PDF/);
   assert.doesNotMatch(source, /Topaz Satellite/);
@@ -108,10 +108,10 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /ACC Rulebook Cached/);
   assert.match(source, /ACC Rulebook Online/);
   assert.match(source, /PrintableSeatingList/);
-  assert.match(source, /Events and Flyer/);
+  assert.match(source, /<strong>Tournament Events and Flyer<\/strong>/);
   assert.match(source, /seating-print-title/);
   assert.match(source, /title="Scorecard Review"/);
-  assert.match(source, /title="Tournament Events"/);
+  assert.match(source, /title="Tournament Events and Flyer"/);
   assert.match(source, /title="Tournament Financials"/);
   assert.match(source, /title="Tournament Results"/);
 });
@@ -125,6 +125,27 @@ test("qualification preview separates playoff results and places the high non-qu
   assert.ok(preview.indexOf('["Qualifiers"') < preview.indexOf('["High Non-Qualifier"'));
   assert.match(preview, /Shown immediately after the last qualifier/);
   assert.match(preview, /Not a qualifier/);
+  assert.match(preview, /onClick=\{\(\) => setScreen\("resultDetails"\)\}>Previous Screen<\/button>/);
+});
+
+test("October pilot event summary distinguishes configured events from deferred work", () => {
+  const operationsStart = source.indexOf('screen === "operations"');
+  const setupStart = source.indexOf('screen === "setup"', operationsStart);
+  const operations = source.slice(operationsStart, setupStart);
+  const eventsStart = source.indexOf('screen === "flyer"');
+  const financeStart = source.indexOf('screen === "finance"', eventsStart);
+  const events = source.slice(eventsStart, financeStart);
+  assert.match(operations, /<strong>Tournament Events and Flyer<\/strong>/);
+  assert.match(operations, /<button type="button" disabled><b>⚖<\/b><strong>Judge Desk<\/strong>/);
+  assert.doesNotMatch(operations, /setScreen\("judge"\)/);
+  assert.match(events, /title="Tournament Events and Flyer"/);
+  assert.match(events, /label="TOURNAMENT EVENTS AND FLYER"/);
+  assert.match(events, /\["Main Event", "Standard · 12 games", "Configured"\]/);
+  assert.match(events, /\["Consolation Event", "Standard · 9 games", "Configured"\]/);
+  assert.match(events, /\["Satellite Events", "Each configured event appears here", "View events"\]/);
+  assert.match(events, /Use paper scorecards for the October pilot/);
+  assert.match(events, /Digital scoring deferred/);
+  assert.match(events, /Flyer creation/);
 });
 
 test("player check-in search is accessible and cannot change the full attendance or seating inputs", () => {

@@ -65,6 +65,37 @@ The full product remains the target. The staged delivery sequence is:
 
 The vertical slice and pilot are validation gates, not a reduced definition of the sanctioned product. Online payment processing and automatic ACC portal submission are explicitly out of the first release: payments are manual, and ACC submission remains director-led until ACC provides a supported API/import contract.
 
+### 2.1 September 18 minimum for the October 3 pilot
+
+The director-onboarding target is September 18, 2026, for a supervised
+October 3, 2026 Standard Singles pilot. The release-blocking capabilities are:
+tournament and event/Q-pool setup; player registration or authorized import;
+roster review, manual payment status and check-in; registration closure;
+initial seating and a director-entered/imported game schedule when approved
+automatic-rotation fixtures are unavailable; two independent submissions plus
+two distinct eligible confirmations; verified scorecards; durable offline
+capture and replay; a minimum authorized paper/manual evidence and dispute
+path; cross-checking and corrections; event-scoped standings, qualification,
+high-non-qualifier, playoff results, approved MRP/Q-pool calculations and
+export; and reconciled financials including expenses and payouts.
+
+Production integration of the Rulebook/quick-reference surface, Judge Desk,
+digital team scoring, flyer creation/import, online payments, SMS, OCR, and
+automatic ACC submission are deferred beyond this pilot. The synthetic
+demonstration may retain a reference-only Rulebook preview, but that preview is
+not operational functionality or release evidence. Team events use paper
+scorecards. These deferrals
+do not weaken the two-submission/two-confirmation, offline durability,
+authorization, unresolved-dispute, qualifying, or financial-integrity
+requirements. Automatic schedule generation rejects an event without its
+approved rotation fixture; a director-entered/imported schedule must be
+visibly labeled, uniqueness/capacity validated, and approved. Qualifying,
+MRP, Q-pool, payout, and export outputs remain draft and cannot be official
+until their dated inputs are approved. Main, Consolation, and each
+Satellite are separate event records under one tournament record and remain
+available without a separate tournament login. See
+`docs/decisions/2026-09-11-september-18-october-pilot-minimum.md`.
+
 ### 2.1 ACC authority and integration boundary
 
 The first pilot is **integration-first and replacement-ready**. This app owns pilot live operations, while the existing ACC system remains authoritative for sanctioning, the official schedule, membership/Master Rating Points, approvals, and historical records. The first supported handoff is a validated, versioned, director-reviewed ACC package followed by manual portal entry. Generation of that package MUST NOT be displayed or recorded as ACC submission, acceptance, or publication.
