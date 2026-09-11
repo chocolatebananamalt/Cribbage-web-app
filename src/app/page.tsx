@@ -20,7 +20,8 @@ export default async function HomePage() {
             <p className="eyebrow">ACC TOURNAMENT DESK</p>
             <h1 id="welcome-title">You’re signed in</h1>
             <p className="lede">Your secure email sign-in is complete.</p>
-            <p>Open the registration or tournament link provided by the tournament director to continue.</p>
+            <p>You can explore the current interface with sample tournament data, or open a registration or tournament link provided by a director.</p>
+            <Link className="primary-action" href="/demo">Explore the demonstration</Link>
             <p className="auth-note">Tournament access is granted separately for each tournament.</p>
             <SharedDeviceSignOut />
           </section>

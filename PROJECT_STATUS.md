@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-10 authenticated demonstration access
+
+- Added a signed-in-only `/demo` route so the owner can explore the current
+  interface using clearly labeled sample data without receiving an operational
+  tournament role or changing live tournament records.
+- Anonymous visitors are returned through email sign-in with `/demo` preserved
+  as the safe same-origin destination. The anonymous Production root still
+  cannot serve the synthetic tournament dashboard.
+- The signed-in landing page now offers `Explore the demonstration`; the demo
+  carries a persistent sample-data/no-save notice and an account return link.
+- Focused authentication checks pass 36/36; `pnpm verify` passes audit, lint,
+  216/216 application tests, the Next.js production build, and 5/5 workspace
+  checks; `pnpm verify:handoff` passes 6/6. Production promotion and live
+  desktop/phone browser evidence remain required for closure.
+- Evidence: `docs/quality/2026-09-10-authenticated-demonstration-access.md`.
+
 ## 2026-09-10 real magic-link sign-in and authenticated-entry repair
 
 - The fresh real-address magic-link test succeeded: Supabase created the

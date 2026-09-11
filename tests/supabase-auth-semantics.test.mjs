@@ -163,6 +163,20 @@ test('successful magic-link sessions are visible and cannot request another link
   assert.match(form, /wait a few minutes, then request one new link/);
 });
 
+test('the production demonstration is authenticated, explicit, and synthetic-only', () => {
+  const home = read('src/app/page.tsx');
+  const demo = read('src/app/demo/page.tsx');
+  const dashboard = read('src/app/tournament-dashboard.tsx');
+  assert.match(home, /href="\/demo"/);
+  assert.match(home, /Explore the demonstration/);
+  assert.match(demo, /getCurrentSubject/);
+  assert.match(demo, /if \(!subject\) redirect\("\/sign-in\?next=%2Fdemo"\)/);
+  assert.match(demo, /Demonstration · Sample data only/);
+  assert.match(demo, /Nothing here is saved/);
+  assert.match(demo, /<TournamentDashboard \/>/);
+  assert.doesNotMatch(demo + dashboard, /fetch\(|\.rpc\(|createServerOnlyAdminClient/);
+});
+
 test('proxy refreshes claims and protected tournament data requires server membership', () => {
   const proxy = read('src/proxy.ts') + read('src/lib/api/mutation-origin-gateway.ts') + read('src/lib/supabase/proxy.ts');
   const dal = read('src/lib/auth/require-tournament-access.ts');
