@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-10 ACC integration-first strategy and readiness tracking
+
+- Recorded the cross-task ACC portal findings and accepted
+  **integration-first, replacement-ready** boundary. The app will own pilot
+  live operations; ACC remains authoritative for sanctioning, official
+  schedule, membership/MRPs, approvals, and history.
+- Automatic portal submission and credential-based browser automation remain
+  disabled. The first handoff is a versioned director-reviewed package and
+  manual ACC entry; API automation requires an ACC-authorized contract,
+  sandbox/service identity, idempotency/reconciliation specification, and
+  approval.
+- Added a trackable production-foundation matrix to the meta readiness audit,
+  with status, concrete evidence, first-pilot versus future-replacement effect,
+  owner, and next acceptance check. Documentation-only and unverified controls
+  are not marked implemented.
+- Source limitation: the ACC portal review was read-only and Director-role
+  only. Commissioner, statistician, and administrator behavior remains
+  unverified.
+- Documentation reconciliation passed `pnpm verify` (216/216 application
+  tests, production build, 5/5 workspace checks), `pnpm verify:handoff`
+  (6/6), and diff validation.
+
 ## 2026-09-10 authenticated demonstration access
 
 - Added a signed-in-only `/demo` route so the owner can explore the current

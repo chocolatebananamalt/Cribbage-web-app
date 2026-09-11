@@ -226,3 +226,56 @@ production build, workspace/private-handoff verification, and diff check
 passed; focused Sol review found no P0/P1. A real browser/network test of
 lost-response -> expired-session -> reauthentication -> exact retry remains
 required. This is not an offline queue and does not change the release matrix.
+
+## Current strategy addendum — 2026-09-10
+
+This addendum supersedes the report's older implication that the first pilot
+must replace ACC operational records. The accepted strategy is
+**integration-first and replacement-ready**: the app runs pilot live
+operations, while the ACC system remains authoritative for sanctioning,
+official schedule, membership/Master Rating Points, approvals, and historical
+records. The first integration is a director-reviewed package and manual ACC
+portal entry. Browser automation and automatic submission are not authorized.
+
+Source limitation: the ACC portal was observed read-only using the Tournament
+Director role. Commissioner, statistician, and administrator workflows remain
+unverified; no portal record was changed. The full decision and observed
+Director workflow are recorded in
+`docs/decisions/2026-09-10-acc-integration-first-replacement-ready.md`.
+
+### Trackable production-foundation matrix
+
+| Foundation | Current status | Concrete evidence | First-pilot effect | Owner / next acceptance check |
+| --- | --- | --- | --- | --- |
+| Tournament ownership on every record | **Partial** | Core and later operational tables use scoped `tournament_id`; composite scope constraints begin in `0001_vertical_slice_core.sql`. | **Blocks pilot until the complete catalog is audited.** | Engineering: query every `app` table, justify any exception, and add a schema regression check. |
+| Server/database tenant and role enforcement | **Partial** | Forced private-schema RLS, revoked direct table access, claim-checked routes/RPCs, and cross-scope tests in `game-api-semantics.test.mjs`. | **Blocks pilot until real independent-role sessions pass.** | Engineering/QA: director, co-director, player, outsider, self-action, revoked-role, and cross-tournament proof. |
+| Globally unique IDs and external provenance | **Implemented for the current slice** | UUID primary keys and composite tournament references in `0001`; no ACC identifier is used as an internal key. | Does not block the narrow slice; imported/exported IDs still need provenance fields. | Engineering: retain separate source-system/type/value mapping in the ACC package. |
+| Idempotent registration, check-in, scoring, confirmation, correction, finalization | **Partial** | Operation receipts, request hashes, conflict records, and retry tests cover implemented registration/check-in/score/confirmation paths. Finalization has only the fail-closed `0110` readiness reader. | **Blocks pilot finalization.** | Engineering: catalog every writer and add a receipt-bound finalization transaction plus replay/conflict tests. |
+| Atomic two-submission/two-confirmation verification | **Partial** | `0003_game_submission_confirmation_rpc.sql` and synthetic database evidence enforce two assigned submissions and two distinct confirmations. | **Blocks pilot until two real users prove it.** | QA: independent sessions, mismatch, race, duplicate, reload, lost-response, and audit proof. |
+| Append-only audit and corrections | **Partial** | Immutable operation/audit primitives in `0001`; Rule 12.2(b) correction foundations and audit tests are installed but disabled. | **Blocks corrected-result use in pilot.** | ACC/engineering: approve remaining cases; prove non-self correction and published-result supersession. |
+| Tournament rule-version references | **Partial** | `ruleset_versions`, event foreign keys, and approved-digital gates exist in `0001`/`0003`. Several official rotation, eligibility, MRP, Q-pool, payout, and correction fixtures are absent. | **Blocks affected pilot calculations.** | ACC rules owner + engineering: dated sources and reviewed positive/rejection fixtures. |
+| Configuration/results and environment separation | **Partial** | Setup drafts/activation and result/finalization foundations are distinct; Preview/Production use Vercel scopes and a disposable Supabase project is available for destructive validation. | **Blocks pilot until a named data/environment runbook is proven.** | Engineering: document test -> pilot -> production promotion and prove no sample/cross-environment data leak. |
+| Tournament-scoped indexes and archived-event isolation | **Partial** | Tournament-scoped indexes begin in `0001`/`0005` and later migrations; archive status exists, but representative archived/live query isolation is not proven. | **Blocks pilot archive/reuse claim; active-event pilot needs the query audit.** | Engineering: catalog query plans and prove active reads exclude archived events unless explicitly requested. |
+| Bounded Realtime/connections | **Missing operational contract** | No release evidence proves subscription scope, reconnect/backoff, cleanup, or connection limits. | **Blocks any pilot workflow that depends on live updates.** | Engineering: either implement bounded tournament/event channels and tests or use explicit refresh/polling for pilot. |
+| Offline and reconnect state semantics | **Partial, not launch-required if connected-only is explicit** | `2026-09-09-offline-score-sync-contract.md` defines the safe future model; exact retry envelopes exist for selected online writes. No durable authenticated queue exists. | Does not block an explicitly connected-only pilot; the UI must fail closed and never claim local verification. | Product/engineering: record connected-only scope or implement queue, conflict, replay, and dead-phone tests. |
+| ACC export/sync provenance boundary | **Implemented as a requirement; artifact missing** | `R-EXP-01`, architecture export boundary, and the 2026-09-10 strategy decision forbid implied submission. | Boundary does not block pilot operations; missing package blocks official handoff at pilot completion. | Engineering: encode artifact status `generated/reviewed/exported`; never `submitted` without ACC response evidence. |
+| Director-reviewed ACC submission package | **Missing** | Requirements specify `acc-results-v1`; no generator, approved field map, checksum, validation report, or reconciliation proof exists. | **Blocks completing/reporting the pilot.** | ACC data owner + engineering: approve minimum fields; generate, review, reconcile, and manually enter one synthetic package. |
+| Authorized API/import connection | **Not authorized / unavailable** | No ACC-approved API/import contract, sandbox/service identity, or reconciliation specification is available. | Does **not** block the first pilot. Blocks automatic submission and replacement. | ACC: provide written interface contract and access; engineering then designs an idempotent adapter. |
+| Commissioner/statistician/administrator workflows | **Unverified** | Only the Tournament Director role was observed read-only. | Does not block the narrow pilot if the ACC portal remains authoritative and handoff is manual. Blocks replacement. | ACC: provide non-production role access and acceptance scenarios. |
+| Official rules and reviewed fixtures | **Partial** | Selected 2025 rules are cited in `TR-06`; unresolved rule domains remain listed in `production-requirements.md`. | **Blocks every affected pilot workflow.** | ACC rules owner: approve dated examples; engineering converts them to reviewed tests without invention. |
+| Historical migration | **Missing** | No approved historical ACC data export, mapping, or reconciliation plan. | Does not block first pilot. Blocks replacement. | ACC/data owner: define source, retention, identity matching, reconciliation, and acceptance totals. |
+| Security, privacy, support, and disaster recovery | **Partial** | Basic Auth, role, private-table, audit, and restricted-hold boundaries exist. Support ownership, retention decisions, restore drill, incident handling, and recovery objectives are incomplete. | **Basic restore/rollback/support readiness blocks pilot.** Broader governance blocks replacement. | Owner/engineering: approve minimal runbook; perform backup restore, app rollback, and access/retention checks. |
+| Parallel validation | **Missing** | Synthetic database proofs exist; no complete supervised tournament has run in parallel with established paper/ACC procedures. | **Blocks release beyond demonstration.** | Director/QA: simulated mixed-card event, then supervised pilot with reconciled parallel totals. |
+| Cutover and rollback | **Partial for app; not authorized for ACC replacement** | Vercel promotion works; no witnessed application rollback/restore drill or ACC cutover authority exists. | App rollback proof blocks pilot; ACC cutover is future-only. | Engineering: witnessed rollback and data recovery. ACC sponsorship is required before any replacement plan. |
+
+### Decision by horizon
+
+- **First pilot:** close the rows explicitly marked as pilot blockers, keep the
+  deployment connected-only unless offline is implemented, and finish the
+  director-reviewed ACC package before official reporting.
+- **Later automated integration:** requires an ACC-authorized API/import,
+  sandbox/service identity, and documented idempotency/reconciliation.
+- **Possible full replacement:** remains out of scope until formal sponsorship,
+  all-role workflow proof, official data/rule specifications, historical
+  migration, governance/support/DR, nationwide parallel validation, and
+  cutover/rollback approval exist.

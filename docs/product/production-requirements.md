@@ -30,6 +30,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | TR-07 | ACC read-only sanctioning portal review: Main, Consolation, Satellites, Templates, Side Pool Calculator | reviewed 2026-09-06 | Portal-shaped export validation; manual submission checklist |
 | TR-08 | AGENTS.md and `docs/quality/VERIFICATION.md`: two entries/two confirmations, server roles, pending sync, audit, real backend | current repository guidance | Required integration/e2e/rejection and release-gate evidence |
 | TR-09 | User paper-scorecard capture/OCR decision: scans accelerate cross-checking but do not replace independent verification | 2026-09-10 | Restricted capture/storage, human-review, comparison, and rejection-path evidence |
+| TR-10 | Read-only ACC Director-portal findings and user-approved integration-first/replacement-ready strategy; no ACC records changed and non-Director roles remain unverified | 2026-09-10 | Director-reviewed package/manual portal handoff; automation and replacement gates remain explicitly disabled |
 
 | Requirement ID | Normative requirement | Minimum positive test | Minimum rejection test |
 |---|---|---|---|
@@ -63,6 +64,12 @@ The full product remains the target. The staged delivery sequence is:
 5. **Pilot/release:** simulated 20–30 person tournament, independent sessions against a real test backend, accessibility/browser checks, backup/restore and rollback drills, director approval, then supervised real-event pilot.
 
 The vertical slice and pilot are validation gates, not a reduced definition of the sanctioned product. Online payment processing and automatic ACC portal submission are explicitly out of the first release: payments are manual, and ACC submission remains director-led until ACC provides a supported API/import contract.
+
+### 2.1 ACC authority and integration boundary
+
+The first pilot is **integration-first and replacement-ready**. This app owns pilot live operations, while the existing ACC system remains authoritative for sanctioning, the official schedule, membership/Master Rating Points, approvals, and historical records. The first supported handoff is a validated, versioned, director-reviewed ACC package followed by manual portal entry. Generation of that package MUST NOT be displayed or recorded as ACC submission, acceptance, or publication.
+
+Credential-based portal automation and automatic ACC submission are out of scope and MUST remain disabled. A future automated connection requires an ACC-authorized API/import contract, sandbox or service identity, documented idempotency and reconciliation, and written approval. A full ACC-system replacement additionally requires formal sponsorship, verified commissioner/statistician/administrator workflows, official data specifications, historical migration, security/privacy/support/disaster-recovery governance, nationwide parallel validation, and approved cutover/rollback. See `docs/decisions/2026-09-10-acc-integration-first-replacement-ready.md`.
 
 ## 3. Identity, authentication, and roles
 
