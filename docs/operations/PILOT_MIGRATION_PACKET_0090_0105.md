@@ -26,7 +26,7 @@ or apply the later files out of sequence.
 | 0091 | `0091_roster_account_activation_issue_rpc.sql` | `b351df38fed37a1c6b3f037a07a6eead9dae731e59c7ae84b208ca139c563f7e` | Adds service-only activation issuance. |
 | 0092 | `0092_roster_account_activation_redeem_rpc.sql` | `fcbcb13f7405cf7682fcd9ab14450c2fd5e6164144affe781d8c8c9583ca7cb5` | Adds service-only activation redemption. |
 | 0093 | `0093_roster_account_activation_private_link_writer.sql` | `402ea3d3cd886f64ec82433e3190cf5f52900e9292a2a7c4636dc9b71f99fef2` | Adds the private activation-to-roster-link writer. |
-| 0094 | `0094_roster_account_activation_approval_rpc.sql` | `e663cc0e1f5286efe6c5e412da3f3fa4614ea8f338ae96339f8326a9fcfebc` | Adds witnessed approval. |
+| 0094 | `0094_roster_account_activation_approval_rpc.sql` | `e663cc0e0e1f5286efe6c5e412da3f3fa4614ea8f338ae96339f8326a9fcfebc` | Adds witnessed approval. |
 | 0095 | `0095_roster_account_activation_cancel_rpc.sql` | `e062996ba070fc41ca2bbd417425a83664db4fe0cb8d568e64314508b41ff09a` | Adds safe cancellation. |
 | 0096 | `0096_suspend_incomplete_rule12_corrections.sql` | `e38ecb9c9158d95120ce713a344d0cc244226ccab4a5b8a49b1731db748dd4c7` | Revokes direct correction proposal/review execution. |
 | 0097 | `0097_suspend_incomplete_rule12_correction_policy.sql` | `8b485a5c3fe2b6d22d576fe82894f358da426a511959617680a9b2dbe59dc7d0` | Revokes direct correction-policy execution. |

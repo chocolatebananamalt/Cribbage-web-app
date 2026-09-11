@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   if (!code) {
     destination.pathname = "/sign-in";
     destination.search = "error=missing_code";
-    return NextResponse.redirect(destination);
+    return privateRedirect(destination);
   }
 
   try {
@@ -24,8 +24,14 @@ export async function GET(request: NextRequest) {
   } catch {
     destination.pathname = "/sign-in";
     destination.search = "error=callback_failed";
-    return NextResponse.redirect(destination);
+    return privateRedirect(destination);
   }
+}
+
+function privateRedirect(destination: URL): NextResponse {
+  const response = NextResponse.redirect(destination);
+  response.headers.set("cache-control", "private, no-store");
+  return response;
 }
 
 function withCookies(response: NextResponse, source: NextResponse): NextResponse {
@@ -34,6 +40,10 @@ function withCookies(response: NextResponse, source: NextResponse): NextResponse
   cookies.forEach(({ name, value, ...options }) => response.cookies.set(name, value, options));
   // This route receives a one-time exchange code in its request URL. Even an
   // unsuccessful redirect must never be eligible for a shared cache.
+  return privateRedirectResponse(response);
+}
+
+function privateRedirectResponse(response: NextResponse): NextResponse {
   response.headers.set("cache-control", "private, no-store");
   return response;
 }

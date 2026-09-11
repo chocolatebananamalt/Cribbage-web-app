@@ -99,6 +99,10 @@ test('callback only accepts same-origin relative redirect paths', () => {
   assert.match(route, /exchangeCodeForSession/);
   assert.match(route, /response\.headers\.set\("cache-control", "private, no-store"\)/);
   assert.match(route, /error=missing_code/);
+  assert.doesNotMatch(route, /error=missing_code";\s*return NextResponse\.redirect\(destination\)/);
+  assert.doesNotMatch(route, /error=callback_failed";\s*return NextResponse\.redirect\(destination\)/);
+  assert.match(route, /error=missing_code";\s*return privateRedirect\(destination\)/);
+  assert.match(route, /error=callback_failed";\s*return privateRedirect\(destination\)/);
 });
 
 test('sign-in uses publishable browser auth and keeps the prototype route available', () => {

@@ -108,6 +108,13 @@ Acceptance/rejection gates for these workflows are included in `R-REG-01` and `R
 
 All methods use an append-only event/audit trail. A result is **server-verified** only after two independent submissions and two confirmations from eligible, distinct actors, with authorization, tournament/game identity, and replay/concurrency checks passing. Pending sync, a local success message, or one person’s paper transcription is never server verification.
 
+The initial production release is connected-first. Offline score entry is
+optional and MUST remain unavailable unless the complete `R-OFFLINE-01`
+contract and its reconnect/conflict tests are implemented. Lack of offline
+entry does not block that connected-first release; the interface MUST clearly
+state that a connection is required and MUST fail closed when the service is
+unavailable.
+
 Every offline operation MUST carry an authenticated actor/session binding, tournament/event/card scope, client operation ID, creation time, schema version, and integrity protection. The server MUST reauthorize and validate it on replay, accept an operation at most once, detect stale/conflicting canonical state, and retain rejected/quarantined payload metadata in the audit trail without exposing private data. Local queue state may display `PendingSync` or `Conflict`; it MUST never display `Verified` until the server transaction succeeds. `R-OFFLINE-01` is the direct mapping for queue forgery, cross-tournament replay, duplicate replay, reconnect, and conflict tests.
 
 ### 5.2 Digital/digital workflow

@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-10 production blocker recon and connected-first scope
+
+- A four-agent product, rules, security, and platform recon consolidated the
+  work into nine necessary release blockers and excluded paid password
+  protection, paid database branching, online payments, automatic ACC portal
+  submission, a custom domain, and enterprise security tooling from the
+  connected-first release gate.
+- Published an owner-private, plain-language blocker dashboard at
+  <https://acc-tournament-production-readiness.chocolatebananamalt.chatgpt.site>.
+  Offline scoring is now explicitly optional for the initial connected release;
+  it remains unavailable unless its complete security and replay contract is
+  later implemented.
+
+## 2026-09-10 production recon immediate repairs
+
+- Corrected the consolidated 0090–0105 pilot packet's migration 0094 checksum
+  and removed stale 0090–0103 range wording from active change control.
+- Ensured both authentication-callback error redirects are explicitly private
+  and non-cacheable, with regression coverage. No hosted setting, database,
+  user, or release switch changed. Evidence:
+  `docs/quality/2026-09-10-production-recon-immediate-repairs.md`.
+
 ## 2026-09-10 event-finalization gate foundation
 
 - Added a pure fail-closed finalization checklist for all configured required

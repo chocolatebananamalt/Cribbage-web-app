@@ -14,7 +14,7 @@ possible, and evidence-led.
 ## Current baseline
 
 On 2026-09-10 the shared pilot ended at migration
-`0089_foreign_key_coverage`. Source migrations `0090` through `0103` are not
+`0089_foreign_key_coverage`. Source migrations `0090` through `0105` are not
 yet pilot-approved. The separate synthetic validation project has been used
 for later migration evidence. The application recognizes the missing `0103`
 assigned-game response field and fails closed rather than displaying a partial
@@ -69,7 +69,7 @@ contain all of the following:
 
 ## Current non-authorization
 
-This procedure does **not** authorize applying `0090`–`0103` now. That range
+This procedure does **not** authorize applying `0090`–`0105` now. That range
 contains account-activation foundations and Rule 12 correction safety
 suspensions in addition to the `0103` assigned-game retry-contract update.
 The score screen's current unavailable state is intentional protection until a
