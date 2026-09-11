@@ -1,5 +1,20 @@
 # Project Status
 
+## 2026-09-10 production magic-link callback repair
+
+- A real production email-link attempt reached `/auth/callback` but returned
+  HTTP 500. Vercel runtime logs identified the exact application failure:
+  `NextResponse.next()` was used inside an App Router route handler.
+- Replaced that middleware-only response accumulator with a route-safe neutral
+  response, preserved Supabase refresh cookies/cache headers on the final
+  redirect, and prevented duplicate raw `Set-Cookie` propagation.
+- Added regression coverage that prohibits `NextResponse.next()` on the route
+  client path. `pnpm verify` passes the audit, lint, 214/214 application tests,
+  production build, and workspace checks; `pnpm verify:handoff` passes 6/6.
+- Evidence: `docs/quality/2026-09-10-production-magic-link-callback-repair.md`.
+  Promotion and a fresh human magic-link exchange remain required for live
+  closure; the failed one-time code was not retained or reused.
+
 ## 2026-09-10 Vercel Production connection and live smoke verification
 
 - Added the two required public Supabase connection values to the Vercel

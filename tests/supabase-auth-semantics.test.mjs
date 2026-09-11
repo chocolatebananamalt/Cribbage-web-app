@@ -325,12 +325,16 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
 
 test('route callback propagates refreshed cookies and membership function is narrowly granted', () => {
   const callback = read('src/app/auth/callback/route.ts');
+  const server = read('src/lib/supabase/server.ts');
   const migration = read('database/migrations/0002_pilot_membership_authorization.sql');
   const envExample = read('.env.example');
   assert.match(callback, /createRouteClient/);
   assert.match(callback, /withCookies/);
   assert.match(callback, /source\.headers\.forEach/);
+  assert.match(callback, /name\.toLowerCase\(\) !== "set-cookie"/);
   assert.match(callback, /private, no-store/);
+  assert.match(server, /const response = new NextResponse\(null\)/);
+  assert.doesNotMatch(server, /NextResponse\.next/);
   assert.match(migration, /security definer/);
   assert.match(migration, /set search_path = ''/);
   assert.match(migration, /auth\.uid\(\)/);

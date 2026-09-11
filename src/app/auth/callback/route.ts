@@ -35,7 +35,9 @@ function privateRedirect(destination: URL): NextResponse {
 }
 
 function withCookies(response: NextResponse, source: NextResponse): NextResponse {
-  source.headers.forEach((value, name) => response.headers.set(name, value));
+  source.headers.forEach((value, name) => {
+    if (name.toLowerCase() !== "set-cookie") response.headers.set(name, value);
+  });
   const cookies = source.cookies.getAll();
   cookies.forEach(({ name, value, ...options }) => response.cookies.set(name, value, options));
   // This route receives a one-time exchange code in its request URL. Even an
