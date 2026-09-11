@@ -1,17 +1,20 @@
-# Proposed shared-pilot migration packet: 0090–0105
+# Shared-pilot migration packet: 0090–0105
 
-**Status:** prepared for future review; **not approved** and **not applied**
-to the shared pilot.
+**Status:** explicitly owner-approved and applied to the shared pilot on
+2026-09-10. Retained as the checksum-pinned application record. Post-apply
+evidence is in
+`../quality/2026-09-10-shared-pilot-0090-0105-application.md`.
 
-This is the single consolidated replacement for
+This was the single consolidated replacement for
 `PILOT_MIGRATION_PACKET_0090_0103.md` and its 0104/0105 amendments. It is a
-review aid, not permission to change a database. A project owner must approve
-this exact ordered range, the named shared-pilot project, and a maintenance
-window before any application.
+historical application record, not standing permission for another database
+change. Any later migration still requires its own reviewed scope and owner
+authority.
 
 ## Why this packet exists
 
-The shared pilot currently ends at logical migration `0089_foreign_key_coverage`.
+Before this application, the shared pilot ended at logical migration
+`0089_foreign_key_coverage`.
 The immediate containment objective is 0096–0098: those revoke authenticated
 browser execution of seven incomplete Rule 12 correction functions. The
 preceding activation foundations and following private correction/assigned-game

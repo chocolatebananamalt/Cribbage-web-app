@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-10 shared-pilot 0090–0105 application
+
+- With explicit owner approval, applied the exact ordered source migrations
+  0090 through 0105 to the shared Supabase pilot. Postflight history records
+  all 16 migrations, the assigned-game response retains its caller `actorId`,
+  and all seven suspended Rule 12 functions now have no `authenticated`,
+  `anon`, or `public` execution grant. No feature switch, role, player, score,
+  correction, payment, or tournament fixture was enabled or mutated.
+- The database-access containment blocker is closed. Vercel Production values,
+  live deployment, real-address magic-link delivery, and independent-session
+  workflow proof remain separate release gates. Evidence:
+  `docs/quality/2026-09-10-shared-pilot-0090-0105-application.md`.
+
+## 2026-09-10 integration-access dashboard update
+
+- Updated and privately redeployed the production-readiness site with an
+  easy-to-read integration inventory. GitHub, Vercel Preview, and Supabase are
+  connected; Vercel Production setup and sign-in email delivery are the only
+  required connection checks. Paper-card OCR is conditional. ACC API
+  automation, payments, SMS, paid database branching, a custom domain, and
+  enterprise security tooling are explicitly not launch requirements.
+
 ## 2026-09-10 production blocker recon and connected-first scope
 
 - A four-agent product, rules, security, and platform recon consolidated the

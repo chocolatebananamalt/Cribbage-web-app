@@ -13,12 +13,11 @@ possible, and evidence-led.
 
 ## Current baseline
 
-On 2026-09-10 the shared pilot ended at migration
-`0089_foreign_key_coverage`. Source migrations `0090` through `0105` are not
-yet pilot-approved. The separate synthetic validation project has been used
-for later migration evidence. The application recognizes the missing `0103`
-assigned-game response field and fails closed rather than displaying a partial
-score-entry form.
+On 2026-09-10 the project owner approved and the connected Supabase management
+interface applied source migrations `0090` through `0105` to the shared pilot.
+The pilot now ends at `0105_rule12_apparent_qualifier_contract`. Post-apply
+history, contract, and grant checks passed; see
+`../quality/2026-09-10-shared-pilot-0090-0105-application.md`.
 
 ## Required change packet
 
@@ -67,17 +66,15 @@ contain all of the following:
 8. Record the evidence, limitations, Vercel deployment ID, and final pilot
    migration history in `docs/quality/` and `PROJECT_STATUS.md`.
 
-## Current non-authorization
+## Standing non-authorization
 
-This procedure does **not** authorize applying `0090`–`0105` now. That range
-contains account-activation foundations and Rule 12 correction safety
-suspensions in addition to the `0103` assigned-game retry-contract update.
-The score screen's current unavailable state is intentional protection until a
-reviewed, explicitly authorized migration packet exists.
+The completed approval applied only to the named shared-pilot project and exact
+0090–0105 range. It does **not** authorize later migrations, feature-switch
+changes, user fixtures, or production promotion.
 
-The exact proposed ordered range, checksums, validation evidence, and required
-post-apply proof are prepared in `PILOT_MIGRATION_PACKET_0090_0105.md`. It is
-a review aid only and does not grant authority to change the shared pilot.
+The exact ordered range and checksums remain in
+`PILOT_MIGRATION_PACKET_0090_0105.md`; the completed evidence is retained in
+the linked quality record.
 
 ## Acceptance criteria for a future pilot update
 
