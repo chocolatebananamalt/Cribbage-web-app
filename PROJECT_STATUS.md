@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-10 demo control audit and corrected results model
+
+- Confirmed that several visible demonstration controls are placeholders, not
+  hidden completed production features: repeatable Satellite-event UI, flyer
+  upload/extraction, and expense entry have no complete live workflow. The
+  production setup draft model can store repeatable events, but operational
+  activation remains deliberately narrow; manual payment evidence is not an
+  expense ledger.
+- The protected check-in workspace is real but has no name search. The user
+  requested the same quick name/status lookup available in Seating; this is a
+  production UI requirement, not proof that check-in is complete.
+- Recorded the corrected result model: Event/Playoff Results are separate from
+  Qualification Results; qualifier order remains highest-to-lowest from the
+  qualifying round; playoff finish does not rewrite qualifying rank; and High
+  Non-Qualifier appears immediately after the last qualifier as a separate
+  row. The current demo preview and sample PDF are explicitly outdated pending
+  regeneration.
+- Requirements-only verification passed `pnpm verify` (216/216 application
+  tests, production build, 5/5 workspace checks). The PDF was rendered and
+  visually inspected to confirm the exact outdated relationship being
+  superseded; no PDF or production code was changed in this audit.
+
 ## 2026-09-10 ACC integration-first strategy and readiness tracking
 
 - Recorded the cross-task ACC portal findings and accepted
