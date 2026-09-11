@@ -175,6 +175,7 @@ test('the public production demonstration is explicit, synthetic-only, and disco
   assert.match(demo, /Nothing here is saved/);
   assert.match(demo, /href="\/sign-in"/);
   assert.match(demo, /<TournamentDashboard \/>/);
+  assert.match(demo, /await connection\(\)/);
   assert.doesNotMatch(demo + dashboard, /fetch\(|XMLHttpRequest|sendBeacon|\.rpc\(|createClient|createServerOnlyAdminClient|supabase|\/api\/v1\//i);
   assert.match(proxy, /"\/demo"/);
   assert.ok(proxy.indexOf('"/demo"') < proxy.indexOf('await updateSession'), 'the public demo must bypass Supabase session refresh');

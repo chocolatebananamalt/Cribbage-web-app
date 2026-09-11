@@ -16,8 +16,11 @@
 - Focused tests (44/44), complete verification (217 application tests plus
   build and repository gates), handoff verification (6/6), anonymous and
   stale-cookie HTTP checks, and an external Chrome desktop interaction check
-  pass. Independent re-review, Vercel deployment, anonymous production
-  response, and production error-log evidence remain required before sharing.
+  pass. The first Vercel Preview revealed that the statically generated demo
+  could not hydrate under the per-request nonce policy; it now opts into
+  request-time rendering so Next.js can nonce its scripts. A corrected Preview
+  interaction check, production promotion, anonymous production response, and
+  production error-log evidence remain required before sharing.
 
 ## 2026-09-10 October pilot offline requirement correction
 

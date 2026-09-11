@@ -10,6 +10,9 @@ workspace.
 ## Boundary
 
 - The route renders only the in-memory synthetic `TournamentDashboard`.
+- The route waits for an incoming request so Next.js can apply the proxy's
+  per-request CSP nonce to every framework script. This keeps the public demo
+  interactive under the strict site-wide browser policy.
 - The request proxy passes `/demo` through before Supabase session refresh, so
   the public interface does not depend on authentication infrastructure.
 - The two same-origin PDF resources linked from the demonstration use the same

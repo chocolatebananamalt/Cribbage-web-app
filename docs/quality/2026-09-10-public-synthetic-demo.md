@@ -56,3 +56,12 @@ adapter changed.
   could not resize the Chrome viewport during this run.
 - Final independent re-review, Vercel Preview, production promotion, anonymous production request, and
   production log scan: pending.
+
+## Preview-only issue found after the initial checks
+
+Vercel Preview rendered the interface but did not hydrate its controls. The
+strict CSP used a request nonce while `/demo` was statically generated, so its
+build-time scripts had no nonce. The route now uses Next.js `connection()` to
+force per-request rendering, following the installed Next.js CSP guidance.
+The corrected deployment must show `/demo` as dynamic and pass a real button
+interaction before promotion.
