@@ -1,5 +1,24 @@
 # Project Status
 
+## 2026-09-10 real magic-link sign-in and authenticated-entry repair
+
+- The fresh real-address magic-link test succeeded: Supabase created the
+  session and the repaired callback returned without a runtime error. The
+  apparent failure was a separate interface defect—Production `/` and
+  `/sign-in` ignored the authenticated state and continued to offer sign-in.
+- Added a server-validated signed-in acknowledgement, redirected authenticated
+  `/sign-in` requests to `/`, retained independent tournament-role checks, and
+  translated email rate limiting into a clear wait message.
+- `pnpm verify` passes audit, lint, 215/215 application tests, the production
+  build, and workspace checks; `pnpm verify:handoff` passes 6/6. Independent Sol
+  review found no P0/P1 issue.
+- Promoted commit `faba056` as Production deployment
+  `dpl_3TPeJetjEENeoDUimx4tKGjec46i`. The user's retained real session visibly
+  renders “You’re signed in”; `/sign-in` redirects to that acknowledgement,
+  Vercel reports no runtime error, and the account has zero tournament roles.
+- Evidence: `docs/quality/2026-09-10-authenticated-entry-ux-repair.md` and
+  `docs/decisions/2026-09-10-authenticated-entry-state.md`.
+
 ## 2026-09-10 repaired build promoted to Vercel Production
 
 - With explicit owner approval, promoted reviewed commit `32cd581` from
