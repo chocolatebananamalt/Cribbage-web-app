@@ -24,7 +24,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | TR-01 | Recovered v1.1 specification, sections 3–43; organized source files under `imports/acc-handoff-2026-09-05` | recovered 2026-09-05 | Requirements-to-test review; no private source served |
 | TR-02 | User scorecard and scoring decisions: keypad 1–121, paper-style card, full opponent name, Table/Seat, 0/2/3 game points, friendly skunk icons | 2026-09-06 | Boundary tests, accessibility/browser tests, scorecard render evidence |
 | TR-03 | User correction decision: non-self correction, append-only audit, immediate default authority, configurable reason/second approval | 2026-09-06 | Authorization, audit, correction-state and recalculation tests |
-| TR-04 | User rules/reference decision: searchable quick reference plus dated official ACC link; offline preferred | 2026-09-06 | Source/version display and offline/fallback test |
+| TR-04 | User rules/reference decision: searchable quick reference plus dated official ACC link; offline score capture and later synchronization required for the October 3 pilot | 2026-09-06; superseded for scoring by user decision 2026-09-10 | Source/version display plus offline/reload/reconnect/conflict proof |
 | TR-05 | User events/results/finance decisions: standard/custom events, Q-pools, signed-in results, private finance, internal director-assisted export | 2026-09-06 | Export fixtures, reconciliation tests, publication/permission tests |
 | TR-06 | ACC Official Tournament Rules 2025: Judge Protocols, Rule 10.1(b), Appendix A items 1–3, rules 12.1–12.2 and 13.2, plus Cross-Checking Guidelines item 20 as applicable | source reviewed 2026-09-06 | Dated approved fixtures; rule-source link shown in rule register |
 | TR-07 | ACC read-only sanctioning portal review: Main, Consolation, Satellites, Templates, Side Pool Calculator | reviewed 2026-09-06 | Portal-shaped export validation; manual submission checklist |
@@ -116,14 +116,42 @@ Acceptance/rejection gates for these workflows are included in `R-REG-01` and `R
 
 All methods use an append-only event/audit trail. A result is **server-verified** only after two independent submissions and two confirmations from eligible, distinct actors, with authorization, tournament/game identity, and replay/concurrency checks passing. Pending sync, a local success message, or one person’s paper transcription is never server verification.
 
-The initial production release is connected-first. Offline score entry is
-optional and MUST remain unavailable unless the complete `R-OFFLINE-01`
-contract and its reconnect/conflict tests are implemented. Lack of offline
-entry does not block that connected-first release; the interface MUST clearly
-state that a connection is required and MUST fail closed when the service is
-unavailable.
+The October 3, 2026 pilot release MUST support durable offline score capture
+and later synchronization under the complete `R-OFFLINE-01` contract. An
+assigned player who has already received the required game context and
+offline capability may enter a result without current internet service; the
+queued entry MUST survive refresh, application restart, and ordinary device
+sleep until it is accepted, rejected, or placed in conflict after reconnect,
+except when the user explicitly confirms sign-out or shared-device clearing.
+That action MUST purge every queued record and device/session key before
+another account can use the device.
+The interface MUST distinguish `Saved Offline — Waiting to Sync`, `Syncing`,
+`Conflict`, and `Rejected` from server-verified state. Lack of this tested
+offline/reconnect behavior blocks the October 3 pilot release.
 
-Every offline operation MUST carry an authenticated actor/session binding, tournament/event/card scope, client operation ID, creation time, schema version, and integrity protection. The server MUST reauthorize and validate it on replay, accept an operation at most once, detect stale/conflicting canonical state, and retain rejected/quarantined payload metadata in the audit trail without exposing private data. Local queue state may display `PendingSync` or `Conflict`; it MUST never display `Verified` until the server transaction succeeds. `R-OFFLINE-01` is the direct mapping for queue forgery, cross-tournament replay, duplicate replay, reconnect, and conflict tests.
+Every offline operation MUST carry a non-secret actor identity plus a server-issued capability/session binding, tournament/event/card scope, client operation ID, creation time, schema version, and integrity protection. The queue MUST NOT store access or refresh tokens. The server MUST reauthorize and validate it on replay, accept an operation at most once, detect stale/conflicting canonical state, and retain rejected/quarantined payload metadata in the audit trail without exposing private data. Local queue state may display `PendingSync` or `Conflict`; it MUST never display `Verified` until the server transaction succeeds. `R-OFFLINE-01` is the direct mapping for queue forgery, cross-tournament replay, duplicate replay, reconnect, and conflict tests.
+
+No player scorecard may depend on one phone remaining available. Every accepted
+submission, confirmation, correction, and recovered result is stored as
+tournament/event/game-scoped server history, and a replacement device rebuilds
+the player scorecard from that history. If a device is lost or fails before an
+offline queue reaches the server, the app MUST create an audited
+`DeviceFailureRecovery` case rather than impersonating the missing player or
+silently inventing an entry. The case lists every affected game and permits an
+eligible non-self cross checker to transcribe surviving opponent-device records
+and/or paper-card evidence. A distinct eligible cross checker or director must
+confirm the recovery before it becomes `RecoveredVerified`; insufficient or
+conflicting evidence remains visibly disputed for director/judge resolution.
+The recovery preserves source type, source identity/reference, actor, time,
+original surviving claims, recovered values, approvals, and resulting card
+totals. It never rewrites or hides the ordinary verification history.
+
+Internal tournament identity remains a globally unique UUID and therefore has
+no practical sequential ceiling. Human-facing rehearsal references MUST NOT
+imply a three-digit maximum. Rehearsals use a reference such as
+`PILOT-2026-000001`; sanctioned tournaments display their approved ACC/source
+identifier when available, with a non-authoritative app reference kept
+separate from the internal UUID.
 
 ### 5.2 Digital/digital workflow
 

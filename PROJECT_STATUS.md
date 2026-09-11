@@ -1,5 +1,26 @@
 # Project Status
 
+## 2026-09-10 October pilot offline requirement correction
+
+- The owner made durable offline score capture and later synchronization a
+  mandatory October 3 pilot capability, superseding the earlier
+  connected-first/optional scope. The established authenticated,
+  event-scoped, idempotent replay contract remains unchanged: local entries
+  may show `Saved Offline — Waiting to Sync` but never `Verified` until the
+  server accepts and compares the independent records after reconnection.
+- Human-facing rehearsal references now use a non-limiting form such as
+  `PILOT-2026-000001`; internal tournament identity remains a UUID, separate
+  from any approved ACC/source identifier. Requirements, decision record, and
+  the owner-private readiness report were updated. Implementation and the
+  real two-device offline/reconnect test matrix remain release blockers.
+- The scorecard is now explicitly server-derived rather than phone-owned.
+  Synchronized history must rebuild on a replacement device. An unsynced
+  failed-device queue cannot be falsely recovered from the database; instead,
+  an audited non-self cross-check recovery uses surviving opponent-device
+  and/or paper-card evidence and requires a distinct cross checker/director
+  confirmation before `RecoveredVerified`. Device replacement and destroyed
+  unsynced-queue recovery are part of the October pilot acceptance matrix.
+
 ## 2026-09-10 demo control audit and corrected results model
 
 - Confirmed that several visible demonstration controls are placeholders, not
