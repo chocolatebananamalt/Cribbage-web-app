@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-10 Vercel Production connection and live smoke verification
+
+- Added the two required public Supabase connection values to the Vercel
+  Production environment: `NEXT_PUBLIC_SUPABASE_URL` and
+  `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. No service-role key, database
+  password, or other privileged credential was added.
+- Promoted reviewed commit `a8078fa` from the protected Preview to a new
+  Production build. Vercel deployment `dpl_4XzLuvmw4hPixU3vytbe7cF92KMF`
+  reached `READY`, was assigned to `https://cribbage-web-app.vercel.app/`,
+  and reports no alias error.
+- Live checks returned `200 OK` for `/` and `/sign-in`; `/auth/callback`
+  safely redirected a missing-code request back to sign-in. The production
+  app loaded successfully in external Chrome, Vercel recorded only expected
+  200/307 responses, and no runtime-error cluster was present. The former
+  Vercel 404 and missing-Production-environment blockers are closed.
+- Real magic-link delivery/callback proof with a non-owner address and the
+  required independent multi-user workflow proof remain release gates.
+
 ## 2026-09-10 latest Preview and blocker-dashboard verification
 
 - Pushed reviewed commit `5276fe3` to
@@ -8,12 +26,11 @@
   200 request in runtime logs, no runtime-error cluster was present, and the
   ACC Tournament Desk loaded in external Chrome at
   `https://cribbage-web-mf7um8pxd-cribbage-app.vercel.app/`.
-- This is a protected Preview, not Production. The Vercel dashboard filtered
-  to Production reports no environment variables, the project reports
-  `live: false`, and `https://cribbage-web-app.vercel.app/` returns Vercel 404.
-  Production connection values, Supabase callback URLs, promotion, real
-  magic-link delivery, and independent multi-user smoke proof remain human
-  release gates.
+- That deployment remains the protected Preview evidence for the reviewed
+  code. The same reviewed commit was subsequently promoted with Production
+  Supabase values and the default Production address now returns the app
+  instead of Vercel 404. Real magic-link delivery and independent multi-user
+  smoke proof remain human release gates.
 - Updated and privately published version 4 of the owner readiness dashboard
   with the applied 0090–0110 pilot state, independent review result, exact
   Preview URL, exact Production failure, and a distinction between required
