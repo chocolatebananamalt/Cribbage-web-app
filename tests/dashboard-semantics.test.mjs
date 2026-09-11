@@ -5,6 +5,7 @@ import { join } from "node:path";
 
 const source = readFileSync("src/app/tournament-dashboard.tsx", "utf8");
 const styles = readFileSync("src/app/globals.css", "utf8");
+const protectedSeating = readFileSync("src/app/tournament/[tournamentId]/seating/seating-client.tsx", "utf8");
 
 function collectTsxSources(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -113,6 +114,20 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /title="Tournament Events"/);
   assert.match(source, /title="Tournament Financials"/);
   assert.match(source, /title="Tournament Results"/);
+});
+
+test("player check-in search is accessible and cannot change the full attendance or seating inputs", () => {
+  for (const contents of [source, protectedSeating]) {
+    assert.match(contents, /type="search"/);
+    assert.match(contents, /Search player name/);
+    assert.match(contents, /Showing \{visibleCheckIn\.length\} of/);
+    assert.match(contents, /aria-live="polite"/);
+    assert.match(contents, /No player matches that name\./);
+  }
+  assert.match(protectedSeating, /filterCheckInByName\(checkIn, checkInSearch\)/);
+  assert.match(protectedSeating, /const present = useMemo\(\(\) => checkIn\.filter/);
+  assert.match(protectedSeating, /draft\(checkIn,/);
+  assert.doesNotMatch(protectedSeating, /draft\(visibleCheckIn|visibleCheckIn\.filter\(\(entry\) => entry\.state/);
 });
 
 test("new-tab links cannot retain control of an application tab", () => {

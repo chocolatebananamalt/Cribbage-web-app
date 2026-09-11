@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-11 protected check-in name search
+
+- Added the previously requested player-name search to the real protected
+  director/co-director check-in workspace and mirrored it in the public
+  synthetic demonstration. Matching is case-insensitive, accepts partial
+  names, reports the displayed/total count, and gives an explicit no-match
+  result.
+- Filtering is presentation-only. Attendance, registration closure, checked-in
+  participant calculations, and initial seating still consume the complete
+  server roster; no database, RPC, role, policy, hosted setting, or pilot data
+  changed.
+- Focused behavior, semantics, lint, and TypeScript checks pass. `pnpm verify`
+  passed 221/221 application tests plus dependency, build, and workspace
+  gates, and `pnpm verify:handoff` passed all 6 recovered private-handoff
+  checks. External Chrome desktop proof
+  filtered `paper` from four players to Paper Guest with the correct live
+  count. Required narrow-phone visual proof remains pending because the
+  available external-browser controller cannot set a phone viewport.
+- Evidence: `docs/quality/2026-09-11-check-in-name-search.md`.
+
 ## 2026-09-10 ACC approval video package
 
 - Added a roughly five-minute board/technical presentation script and an
