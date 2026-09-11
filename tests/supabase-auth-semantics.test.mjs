@@ -189,6 +189,21 @@ test('the public qualification sample generator contains only fictional fixtures
   const generator = read('scripts/create-qualifiers-pdf.py');
   assert.match(generator, /Sample Cribbage Classic - Demo City, ST - January 15, 2030/);
   assert.match(generator, /Example Qualifier One/);
+  const resultsBlock = generator.slice(generator.indexOf('results = ['), generator.indexOf('qualifiers = ['));
+  const qualifiersBlock = generator.slice(generator.indexOf('qualifiers = ['), generator.indexOf('def styled_table'));
+  assert.doesNotMatch(resultsBlock, /High Non-Qualifier/);
+  assert.match(qualifiersBlock, /High Non-Qualifier: Example Non-Qualifier/);
+  for (const playoffPlayer of ['Example Qualifier Two', 'Example Qualifier Three']) {
+    assert.match(resultsBlock, new RegExp(playoffPlayer));
+    assert.match(qualifiersBlock, new RegExp(playoffPlayer));
+  }
+  const rankedRows = ['1. Example Qualifier One', '2. Example Qualifier Two', '3. Example Qualifier Three'];
+  let priorIndex = -1;
+  for (const row of [...rankedRows, 'High Non-Qualifier']) {
+    const rowIndex = qualifiersBlock.indexOf(row);
+    assert.ok(rowIndex > priorIndex, `${row} must follow the prior ranked row`);
+    priorIndex = rowIndex;
+  }
   assert.doesNotMatch(generator, /Casey Kim|Jordan Patel|Alex Morgan|Robin Lee|Grass Roots|Honolulu|April 25, 2025/);
 });
 

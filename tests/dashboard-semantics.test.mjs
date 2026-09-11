@@ -116,6 +116,17 @@ assert.match(source, /Seating Assignments and Table Plan/);
   assert.match(source, /title="Tournament Results"/);
 });
 
+test("qualification preview separates playoff results and places the high non-qualifier after qualifiers", () => {
+  const previewStart = source.indexOf('screen === "qualifiers"');
+  const previewEnd = source.indexOf('screen === "rulebook"', previewStart);
+  const preview = source.slice(previewStart, previewEnd);
+  assert.ok(previewStart >= 0 && previewEnd > previewStart);
+  assert.doesNotMatch(preview, /\["Winner"|\["Runner-up"/);
+  assert.ok(preview.indexOf('["Qualifiers"') < preview.indexOf('["High Non-Qualifier"'));
+  assert.match(preview, /Shown immediately after the last qualifier/);
+  assert.match(preview, /Not a qualifier/);
+});
+
 test("player check-in search is accessible and cannot change the full attendance or seating inputs", () => {
   for (const contents of [source, protectedSeating]) {
     assert.match(contents, /type="search"/);

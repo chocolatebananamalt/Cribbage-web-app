@@ -1,5 +1,24 @@
 # Project Status
 
+## 2026-09-11 qualification summary placement correction
+
+- Corrected the synthetic Qualification Preview and sample PDF so Event
+  Results contains only playoff outcomes, while High Non-Qualifier appears as
+  a distinct, unnumbered row immediately after the ranked qualifier list.
+- Removed Winner and Runner-up from the pre-playoff Qualification Preview;
+  those outcomes remain unavailable until event finalization.
+- An independent Sol review caught an impossible first-draft sample in which
+  Winner and Runner-up were not listed qualifiers. The corrected PDF selects
+  players from qualifying ranks 2 and 3 without reordering the qualifier list,
+  and regression coverage now enforces playoff-player membership and exact
+  qualifier/HNQ ordering.
+- Regenerated both tracked PDF copies and visually inspected the final
+  one-page Letter render. Focused checks passed 46/46, and `pnpm verify`
+  passed 222/222 application tests plus dependency, lint, production-build,
+  and workspace/recovery gates. A narrow-phone visual pass remains part of
+  the release accessibility gate.
+- Evidence: `docs/quality/2026-09-11-qualification-summary-placement.md`.
+
 ## 2026-09-11 protected check-in name search
 
 - Added the previously requested player-name search to the real protected

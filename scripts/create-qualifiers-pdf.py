@@ -41,15 +41,15 @@ def build():
     ]
     results = [
         ["Placement", "Player", "Award"],
-        ["Winner", "Example Winner", "Illustrative"],
-        ["Runner-up", "Example Runner-Up", "Illustrative"],
-        ["High Non-Qualifier", "Example Non-Qualifier", "Illustrative"],
+        ["Winner", "Example Qualifier Two", "Illustrative"],
+        ["Runner-up", "Example Qualifier Three", "Illustrative"],
     ]
     qualifiers = [
         ["Qualifier", "Master Rating Points", "Q Pool Award"],
         ["1. Example Qualifier One", "10", "$50.00"],
         ["2. Example Qualifier Two", "8", "$35.00"],
         ["3. Example Qualifier Three", "6", "$25.00"],
+        ["High Non-Qualifier: Example Non-Qualifier", "Not a qualifier", "-"],
     ]
 
     def styled_table(data, widths):
@@ -69,7 +69,13 @@ def build():
         return table
 
     story += [styled_table(results, [1.55 * inch, 3.2 * inch, 1.65 * inch]), Spacer(1, 10)]
-    story += [Paragraph("Qualifiers", section), styled_table(qualifiers, [3.0 * inch, 1.9 * inch, 1.5 * inch]), Spacer(1, 12)]
+    qualifier_table = styled_table(qualifiers, [3.0 * inch, 1.9 * inch, 1.5 * inch])
+    qualifier_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, -1), (-1, -1), colors.HexColor("#fff4d6")),
+        ("FONTNAME", (0, -1), (-1, -1), "Helvetica-Bold"),
+        ("LINEABOVE", (0, -1), (-1, -1), 1.1, colors.HexColor("#bf7b12")),
+    ]))
+    story += [Paragraph("Qualifiers", section), qualifier_table, Spacer(1, 12)]
     story += [Paragraph("Illustrative Q Pool total: $110.00", normal), Spacer(1, 6)]
     story += [Paragraph("Synthetic sample data only. MRP/byes and Q Pool payout/rounding fixtures are not approved in this prototype. A production report may be generated only from reconciled, director-approved published event results and approved award fields.", subtitle)]
     document.build(story)
