@@ -147,11 +147,14 @@ original surviving claims, recovered values, approvals, and resulting card
 totals. It never rewrites or hides the ordinary verification history.
 
 Internal tournament identity remains a globally unique UUID and therefore has
-no practical sequential ceiling. Human-facing rehearsal references MUST NOT
-imply a three-digit maximum. Rehearsals use a reference such as
-`PILOT-2026-000001`; sanctioned tournaments display their approved ACC/source
-identifier when available, with a non-authoritative app reference kept
-separate from the internal UUID.
+no practical sequential ceiling. The ordinary app interface MUST identify a
+tournament by its configured name followed by its local calendar date in
+`MM-DD-YYYY` format—for example, `Topaz 01-27-2026`. City and event may appear
+as separate context, but neither an internal UUID nor an administrative
+rehearsal reference may replace the name-and-date label on player or director
+screens. A non-limiting administrative rehearsal reference such as
+`PILOT-2026-000001` may exist only in audit, testing, or export metadata.
+Approved ACC/source identifiers remain separate with provenance.
 
 ### 5.2 Digital/digital workflow
 

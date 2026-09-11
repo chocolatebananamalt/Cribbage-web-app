@@ -8,9 +8,11 @@ supersedes the earlier connected-first scope decision. The safe protocol in
 `2026-09-09-offline-score-sync-contract.md` remains authoritative; this
 decision changes its delivery priority from future/optional to pilot-blocking.
 
-The first human-facing rehearsal reference will use a non-limiting format such
-as `PILOT-2026-000001`, not `Pilot 001`. Internal tournament IDs remain UUIDs,
-and an ACC/source identifier remains separate with provenance.
+The app's visible tournament label uses the configured tournament name and
+local date, such as `Topaz 01-27-2026`. A non-limiting reference such as
+`PILOT-2026-000001` is administrative testing/audit metadata only and is not
+shown instead of the tournament name and date. Internal tournament IDs remain
+UUIDs, and an ACC/source identifier remains separate with provenance.
 
 ## Required user-visible behavior
 

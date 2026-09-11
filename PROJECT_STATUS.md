@@ -8,11 +8,14 @@
   event-scoped, idempotent replay contract remains unchanged: local entries
   may show `Saved Offline — Waiting to Sync` but never `Verified` until the
   server accepts and compares the independent records after reconnection.
-- Human-facing rehearsal references now use a non-limiting form such as
-  `PILOT-2026-000001`; internal tournament identity remains a UUID, separate
-  from any approved ACC/source identifier. Requirements, decision record, and
-  the owner-private readiness report were updated. Implementation and the
-  real two-device offline/reconnect test matrix remain release blockers.
+- Player and director screens now require a tournament name-and-local-date
+  label such as `Topaz 01-27-2026`. A non-limiting reference such as
+  `PILOT-2026-000001` is restricted to administrative testing/audit metadata;
+  internal tournament identity remains a UUID, separate from any approved
+  ACC/source identifier. The operational tournament model still needs a
+  source-backed local start date before this display is implemented. Offline
+  implementation and the real two-device reconnect matrix remain release
+  blockers.
 - The scorecard is now explicitly server-derived rather than phone-owned.
   Synchronized history must rebuild on a replacement device. An unsynced
   failed-device queue cannot be falsely recovered from the database; instead,
