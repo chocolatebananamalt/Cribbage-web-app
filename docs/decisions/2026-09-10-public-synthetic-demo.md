@@ -12,6 +12,10 @@ workspace.
 - The route renders only the in-memory synthetic `TournamentDashboard`.
 - The request proxy passes `/demo` through before Supabase session refresh, so
   the public interface does not depend on authentication infrastructure.
+- The two same-origin PDF resources linked from the demonstration use the same
+  pre-session pass-through. The qualification PDF contains only fictional
+  fixtures; the cached ACC Rulebook is public with the owner's confirmed
+  permission.
 - Every displayed person, identifier, tournament, place, date, and score row
   uses a clearly fictional demonstration fixture rather than source material.
 - The demonstration contains no Supabase client, fetch request, application

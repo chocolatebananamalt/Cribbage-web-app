@@ -35,21 +35,21 @@ def build():
     story = [
         Paragraph("ACC Tournament Desk", subtitle),
         Paragraph("Sample Qualification Summary", title),
-        Paragraph("Grass Roots Tournament - Honolulu, HI - April 25, 2025 - Main Event", subtitle),
+        Paragraph("Sample Cribbage Classic - Demo City, ST - January 15, 2030 - Main Event", subtitle),
         Paragraph("SAMPLE - NOT OFFICIAL", warning),
         Paragraph("Event Results", section),
     ]
     results = [
         ["Placement", "Player", "Award"],
-        ["Winner", "Casey Kim", "Illustrative"],
-        ["Runner-up", "Jordan Patel", "Illustrative"],
-        ["High Non-Qualifier", "Alex Morgan", "Illustrative"],
+        ["Winner", "Example Winner", "Illustrative"],
+        ["Runner-up", "Example Runner-Up", "Illustrative"],
+        ["High Non-Qualifier", "Example Non-Qualifier", "Illustrative"],
     ]
     qualifiers = [
         ["Qualifier", "Master Rating Points", "Q Pool Award"],
-        ["1. Casey Kim", "10", "$50.00"],
-        ["2. Jordan Patel", "8", "$35.00"],
-        ["3. Robin Lee", "6", "$25.00"],
+        ["1. Example Qualifier One", "10", "$50.00"],
+        ["2. Example Qualifier Two", "8", "$35.00"],
+        ["3. Example Qualifier Three", "6", "$25.00"],
     ]
 
     def styled_table(data, widths):

@@ -50,7 +50,11 @@ export async function proxy(request: NextRequest) {
     // The public demonstration is a static, synthetic-only interface. Keep it
     // independent from Supabase session refresh so visitors can open it
     // without authentication infrastructure or an account cookie.
-    if (request.nextUrl.pathname === "/demo") {
+    if ([
+      "/demo",
+      "/sample/qualifiers-summary.pdf",
+      "/rulebook/acc-rulebook-2025.pdf",
+    ].includes(request.nextUrl.pathname)) {
       const response = NextResponse.next({ request: { headers: requestHeaders } });
       response.headers.set("Content-Security-Policy", policy);
       return response;

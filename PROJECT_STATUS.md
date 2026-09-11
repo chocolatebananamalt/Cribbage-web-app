@@ -9,9 +9,11 @@
   changed.
 - The public route now bypasses Supabase session refresh, and the dashboard
   uses clearly fictional people, identifiers, tournament details, and score
-  rows. Real registration and tournament workspaces retain authentication and
+  rows. Its linked local PDFs use the same public pass-through, and the sample
+  qualification PDF has been regenerated with fictional fixtures. Real
+  registration and tournament workspaces retain authentication and
   tournament-role boundaries.
-- Focused tests (43/43), complete verification (216 application tests plus
+- Focused tests (44/44), complete verification (217 application tests plus
   build and repository gates), handoff verification (6/6), anonymous and
   stale-cookie HTTP checks, and an external Chrome desktop interaction check
   pass. Independent re-review, Vercel deployment, anonymous production

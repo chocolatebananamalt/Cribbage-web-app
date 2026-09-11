@@ -176,10 +176,19 @@ test('the public production demonstration is explicit, synthetic-only, and disco
   assert.match(demo, /href="\/sign-in"/);
   assert.match(demo, /<TournamentDashboard \/>/);
   assert.doesNotMatch(demo + dashboard, /fetch\(|XMLHttpRequest|sendBeacon|\.rpc\(|createClient|createServerOnlyAdminClient|supabase|\/api\/v1\//i);
-  assert.match(proxy, /request\.nextUrl\.pathname === "\/demo"/);
-  assert.ok(proxy.indexOf('request.nextUrl.pathname === "/demo"') < proxy.indexOf('await updateSession'), 'the public demo must bypass Supabase session refresh');
+  assert.match(proxy, /"\/demo"/);
+  assert.ok(proxy.indexOf('"/demo"') < proxy.indexOf('await updateSession'), 'the public demo must bypass Supabase session refresh');
+  assert.match(proxy, /"\/sample\/qualifiers-summary\.pdf"/);
+  assert.match(proxy, /"\/rulebook\/acc-rulebook-2025\.pdf"/);
   assert.doesNotMatch(dashboard, /Barb Stevens|Steve Hall|HI-296|Grass Roots|Honolulu|Apr\. 25, 2025/);
   assert.match(dashboard, /Demo Player, DEMO-001/);
+});
+
+test('the public qualification sample generator contains only fictional fixtures', () => {
+  const generator = read('scripts/create-qualifiers-pdf.py');
+  assert.match(generator, /Sample Cribbage Classic - Demo City, ST - January 15, 2030/);
+  assert.match(generator, /Example Qualifier One/);
+  assert.doesNotMatch(generator, /Casey Kim|Jordan Patel|Alex Morgan|Robin Lee|Grass Roots|Honolulu|April 25, 2025/);
 });
 
 test('proxy refreshes claims and protected tournament data requires server membership', () => {

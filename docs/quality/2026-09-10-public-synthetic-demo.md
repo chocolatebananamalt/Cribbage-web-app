@@ -26,8 +26,8 @@ adapter changed.
 
 ## Evidence
 
-- Focused dashboard and authentication tests: PASS, 43/43.
-- `pnpm verify`: PASS, including dependency audit, lint, 216 application
+- Focused dashboard and authentication tests: PASS, 44/44.
+- `pnpm verify`: PASS, including dependency audit, lint, 217 application
   tests, production build, workspace checks, and clean-clone safety checks.
 - `pnpm verify:handoff`: PASS, 6/6 recovered-source integrity and
   characterization checks.
@@ -41,8 +41,18 @@ adapter changed.
 - External Chrome desktop check: PASS. The public banner, fictional sample
   tournament, score-entry controls, 88-point double-skunk calculation, and
   Review Result navigation rendered without an error overlay.
+- The linked qualification PDF was regenerated from fictional fixtures and
+  rendered to PNG at 144 DPI. Visual inspection found no clipping, overlap,
+  broken table, or unreadable text.
+- The two local PDFs reachable from the demonstration now bypass session
+  refresh alongside `/demo`; focused regression coverage requires this order.
+- Production-mode local requests carrying an expired sample cookie returned
+  HTTP 200 for `/demo`, `/sample/qualifiers-summary.pdf`, and
+  `/rulebook/acc-rulebook-2025.pdf`. Both PDFs returned `application/pdf`.
+- PDF text extraction with `pypdf` confirmed the expected fictional fixture
+  and rejected every prior source-derived name, tournament, place, and date.
 - Narrow-phone layout remains covered by the scorecard responsive-layout and
   touch-scrolling regression tests. The available external-browser control
   could not resize the Chrome viewport during this run.
-- Vercel Preview, production promotion, anonymous production request, and
+- Final independent re-review, Vercel Preview, production promotion, anonymous production request, and
   production log scan: pending.
