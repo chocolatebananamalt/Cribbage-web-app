@@ -15,6 +15,10 @@
   app loaded successfully in external Chrome, Vercel recorded only expected
   200/307 responses, and no runtime-error cluster was present. The former
   Vercel 404 and missing-Production-environment blockers are closed.
+- External Chrome verification confirms Supabase Authentication now uses
+  `https://cribbage-web-app.vercel.app` as its Site URL and permits the exact
+  `https://cribbage-web-app.vercel.app/auth/callback` redirect. The hosted
+  authentication URL-configuration blocker is closed.
 - Real magic-link delivery/callback proof with a non-owner address and the
   required independent multi-user workflow proof remain release gates.
 

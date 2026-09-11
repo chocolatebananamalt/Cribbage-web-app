@@ -29,11 +29,15 @@ default Production hostname returning Vercel 404.
 - External Chrome rendered the Production tournament-access screen.
 - Vercel runtime errors for the verification window: none.
 - Production runtime status groups observed: 200 and expected redirect 307.
+- Supabase Authentication Site URL:
+  `https://cribbage-web-app.vercel.app`
+- Supabase Authentication allowed Redirect URL:
+  `https://cribbage-web-app.vercel.app/auth/callback`
 
 ## Limitations
 
-This proves hosting, routing, runtime startup, and public Supabase connection
-configuration. It does not prove delivery of a real magic-link email, the
-Supabase allow-list for the Production callback, account membership, or the
+This proves hosting, routing, runtime startup, public Supabase connection
+configuration, and the Supabase Production callback allow-list. It does not
+prove delivery and use of a real magic-link email, account membership, or the
 independent multi-user scoring/verification workflow. Those remain separate
 release gates.
