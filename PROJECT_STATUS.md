@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-10 repaired build promoted to Vercel Production
+
+- With explicit owner approval, promoted reviewed commit `32cd581` from
+  Preview to Vercel Production. Deployment
+  `dpl_2TdYsMyRuhXygphi3vTEUfSGVkFy` reached `READY`, targets `production`,
+  has no alias error, and now serves `https://cribbage-web-app.vercel.app/`.
+- Live smoke checks returned `200 OK` for `/` and `/sign-in`. A callback with
+  no code redirected to `sign-in?error=missing_code`, and an intentionally
+  invalid code redirected to `sign-in?error=callback_failed`; neither request
+  returned HTTP 500.
+- Deployment-scoped Vercel logs show the expected 200/307 responses and the
+  `/auth/callback` runtime-error report is empty for the post-promotion window.
+  External Chrome visibly loaded the live Tournament access page.
+- The production callback crash is closed. One fresh, real magic-link exchange
+  remains the final human proof that Supabase can exchange a valid one-time
+  code and establish the browser session on this repaired deployment.
+- Evidence: `docs/quality/2026-09-10-production-magic-link-callback-repair.md`.
+
 ## 2026-09-10 production magic-link callback repair
 
 - A real production email-link attempt reached `/auth/callback` but returned
