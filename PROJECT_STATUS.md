@@ -38,6 +38,10 @@
 - Independent player and official sessions, disconnect/reconnect,
   backup/restore, and the director walkthrough remain acceptance rehearsals
   rather than solvable code gaps.
+- `docs/operations/OCTOBER_PILOT_REHEARSAL.md` now turns those remaining gates
+  into one ordered, observable rehearsal with required people/devices,
+  rejection paths, evidence capture, release-flag discipline, and a strict
+  September 18 go/no-go rule.
 
 ## 2026-09-12 hybrid digital-and-paper completion
 
