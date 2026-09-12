@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-11 director manual roster intake
+
+- Added a protected **Players and Registration** fallback that lets a director
+  or co-director add a player by name with optional email and ACC number. This
+  prevents the October pilot from depending on unfinished public QR intake.
+- The new server transaction is role-checked, audited, replay-safe, duplicate
+  aware, and blocked after initial seating. It creates only a private roster
+  identity—not account access, payment, check-in, seating, enrollment, or
+  scoring authority. Browser retry storage contains no player contact data.
+- Migration 0111 is applied to the shared pilot. A fictional hosted transaction
+  proved one accepted row, an exact non-duplicating replay, a controlled
+  duplicate rejection, and matching immutable receipts/audit events.
+- `pnpm verify` passes 230/230 application tests plus audit, lint, build, and
+  workspace gates; `pnpm verify:handoff` passes 6/6. Vercel deployment and
+  hosted browser proof remain for this slice.
+- Evidence: `docs/quality/2026-09-11-director-manual-roster-intake.md`.
+
 ## 2026-09-11 live director tournament-setup workspace
 
 - Added a protected, functional **Set Up Tournament** workspace backed by the
@@ -10,13 +27,12 @@
 - Exact unresolved saves are retained for safe retry after a connection loss;
   successful drafts remain configuration only and cannot silently create
   operational events, results, charges, or approved rules.
-- Closed a hosted pilot access defect: the database had zero tournament roles.
-  The most recently signed-in non-fixture profile now has an audited
-  co-director role for the existing pilot tournament. No private identity data
-  was copied into the repository.
-- `pnpm verify` passes 226/226 application tests plus audit, lint, build, and
-  workspace gates; `pnpm verify:handoff` passes 6/6. Preview deployment and
-  hosted browser proof are the remaining checks for this slice.
+- Replaced the unusable non-RFC fixture identifier with a generated RFC-valid
+  pilot tournament, then assigned audited director and co-director roles. No
+  private identity data was copied into the repository.
+- Commit `1dcbde0` is live in Vercel Production. The protected tournament and
+  setup pages load in external Chrome, a browser-originated edit created setup
+  version 2, and repeatable Satellite controls were exercised successfully.
 - Evidence: `docs/quality/2026-09-11-live-tournament-setup-workspace.md`.
 
 ## 2026-09-11 solve-first and durable-correction protocol

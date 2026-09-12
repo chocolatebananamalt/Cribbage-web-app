@@ -2,7 +2,7 @@ import "server-only";
 import { notFound } from "next/navigation";
 import { createClient } from "../supabase/server";
 
-export type RosterEntry = { rosterEntryId: string; sourceClaimId: string; approvalDecisionId: string; displayName: string; email: string; accNumber: string | null; createdAt: string };
+export type RosterEntry = { rosterEntryId: string; sourceClaimId: string | null; approvalDecisionId: string | null; source: "registration_claim" | "director_manual"; displayName: string; email: string | null; accNumber: string | null; createdAt: string };
 export type PromotionCandidate = { approvalDecisionId: string; sourceClaimId: string; displayName: string; email: string; accNumber: string | null; intendedPaymentMethod: "cash" | "check" | "other" | "unspecified"; submittedAt: string };
 export type RosterWorkspace = { rosterEntries: RosterEntry[]; promotionCandidates: PromotionCandidate[] };
 
@@ -11,7 +11,7 @@ const text = (value: unknown) => typeof value === "string";
 function entry(value: unknown): value is RosterEntry {
   if (!value || typeof value !== "object") return false;
   const item = value as Record<string, unknown>;
-  return uuid(item.rosterEntryId) && uuid(item.sourceClaimId) && uuid(item.approvalDecisionId) && text(item.displayName) && text(item.email) && (item.accNumber === null || text(item.accNumber)) && text(item.createdAt);
+  return uuid(item.rosterEntryId) && (item.sourceClaimId === null || uuid(item.sourceClaimId)) && (item.approvalDecisionId === null || uuid(item.approvalDecisionId)) && ["registration_claim", "director_manual"].includes(item.source as string) && text(item.displayName) && (item.email === null || text(item.email)) && (item.accNumber === null || text(item.accNumber)) && text(item.createdAt);
 }
 function candidate(value: unknown): value is PromotionCandidate {
   if (!value || typeof value !== "object") return false;
