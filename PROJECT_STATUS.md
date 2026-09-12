@@ -11,9 +11,12 @@
   quarantine, immutable evidence, and grants checks without retaining test
   data. Supabase's four new foreign-key index notices were repaired.
 - `pnpm verify` passes 251/251 application tests plus audit, lint, build, and
-  workspace checks; `pnpm verify:handoff` passes 6/6. Production deployment,
-  real two-session reconnect/reload proof, offline startup, and failed-device
-  recovery remain open before the complete October offline gate can pass.
+  workspace checks; `pnpm verify:handoff` passes 6/6. Commit `fa48d9d` is live
+  in Vercel Production as deployment `dpl_7YxVC8BkXdrQpmidAFV1GceCcwKf`;
+  authenticated external-Chrome smoke testing and the post-release runtime
+  error scan pass. Real two-session reconnect/reload proof, offline startup,
+  and failed-device recovery remain open before the complete October offline
+  gate can pass.
 - Evidence: `docs/quality/2026-09-11-offline-score-replay-foundation.md`.
 
 ## 2026-09-11 player game navigation

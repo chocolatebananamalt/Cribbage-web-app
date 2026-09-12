@@ -31,12 +31,18 @@ and never creates a server-verified result by itself.
 - `pnpm verify:handoff` passed 6/6 recovered private-handoff checks.
 - Independent Sol review found no remaining P0/P1 issue in the migration and
   replay boundary after lost-response issuance and changed-replay repairs.
+- Commit `fa48d9d` was pushed and its tested Preview artifact was promoted to
+  Vercel Production as deployment `dpl_7YxVC8BkXdrQpmidAFV1GceCcwKf`.
+  External Chrome loaded the public demonstration and the authenticated
+  **My Games** workspace from the stable domain with meaningful content, no
+  error overlay, and no horizontal page overflow at the observed 1536-pixel
+  desktop viewport. Vercel reported nine HTTP 200 requests and no runtime
+  error clusters in the post-release window.
 
 ## Remaining release evidence
 
 This is the first offline submission slice, not the complete October offline
-gate. Production browser deployment and visual checks remain for this commit.
-Two independent real sessions must still prove disconnect, reload/restart,
+gate. Two independent real sessions must still prove disconnect, reload/restart,
 reconnect, account switch, concurrent replay, and shared-device clearing. A
 fresh page cannot yet start while entirely offline, offline confirmation is
 not enabled, and failed-device recovery from opponent/paper evidence remains a
