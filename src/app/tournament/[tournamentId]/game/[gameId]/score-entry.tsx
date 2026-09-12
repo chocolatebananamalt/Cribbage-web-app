@@ -99,10 +99,23 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
   useEffect(() => {
     let active = true;
     let queuedForReconnect: OfflineQueueRecord | null = null;
-    const preparePage = (capability: OfflineSubmissionCapability) => {
-      void prepareCurrentScorePageForOffline(context.actorId, context.gameId, capability.capabilityExpiresAtMs)
-        .then((ready) => { if (active) setOfflinePageReady(ready); })
-        .catch(() => { if (active) setOfflinePageReady(false); });
+    const preparePage = async (capabilityExpiresAtMs: number) => {
+      try {
+        const ready = await prepareCurrentScorePageForOffline(context.actorId, context.gameId, capabilityExpiresAtMs);
+        if (active) setOfflinePageReady(ready);
+        return ready;
+      } catch {
+        if (active) setOfflinePageReady(false);
+        return false;
+      }
+    };
+    const prepareOfflineUse = async () => {
+      if (context.ownSubmission || !navigator.onLine) return;
+      const prepared = await readPreparedOfflineSubmissionCapability(context.actorId, context.gameId);
+      const capability = await provisionOfflineSubmission(context.actorId, context.gameId).catch(() => prepared);
+      if (!capability || !active) return;
+      setOfflineCapability(capability);
+      await preparePage(capability.capabilityExpiresAtMs);
     };
     const timer = window.setTimeout(async () => {
       const pending = readPendingScoreSubmission(window.sessionStorage, context.actorId, context.tournamentId, context.gameId, context.player.side);
@@ -123,10 +136,16 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
           setOfflineRecord(queued);
           setWinner(queued.intent.winnerSide === context.player.side ? "player" : "opponent");
           setMarginText(String(queued.intent.margin));
-          setOfflinePageReady(true);
           setHydrated(true);
           setStatus(navigator.onLine ? "A saved offline entry is ready to sync." : "Saved Offline — Waiting to Sync");
-          if (navigator.onLine) void syncOffline(queued);
+          if (navigator.onLine) {
+            await preparePage(queued.intent.capabilityExpiresAtMs);
+            void syncOffline(queued);
+          } else {
+            // An offline reload can only reach this component through the
+            // actor-bound cached game page established before disconnection.
+            setOfflinePageReady(true);
+          }
         } else {
           setHydrated(true);
           if (!context.ownSubmission) {
@@ -137,7 +156,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
             if (!capability) throw new Error("offline_capability_unavailable");
             if (active) {
               setOfflineCapability(capability);
-              if (navigator.onLine) preparePage(capability);
+              if (navigator.onLine) void preparePage(capability.capabilityExpiresAtMs);
               else setOfflinePageReady(true);
             }
           }
@@ -147,7 +166,11 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       }
       if (active) setHydrated(true);
     });
-    const connectionRestored = () => { setOnline(true); if (queuedForReconnect) void syncOffline(queuedForReconnect); };
+    const connectionRestored = () => {
+      setOnline(true);
+      if (queuedForReconnect) void syncOffline(queuedForReconnect);
+      else void prepareOfflineUse();
+    };
     const connectionLost = () => setOnline(false);
     window.addEventListener("online", connectionRestored);
     window.addEventListener("offline", connectionLost);

@@ -144,7 +144,9 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(queue, /await clearOfflineScorePageCache\(\)/);
   assert.ok(queue.indexOf("markOfflineScoreOwner(capability.verifiedActorId)") < queue.indexOf("await writeOne(queueStore, record)"));
   assert.match(entry, /readPreparedOfflineSubmissionCapability\(context\.actorId, context\.gameId\)/);
-  assert.match(entry, /void prepareCurrentScorePageForOffline/);
+  assert.match(entry, /await prepareCurrentScorePageForOffline/);
+  assert.match(entry, /await preparePage\(queued\.intent\.capabilityExpiresAtMs\)/);
+  assert.match(entry, /else void prepareOfflineUse\(\)/);
   assert.match(entry, /Offline Ready/);
   assert.match(gamePage, /data-offline-score-binding/);
   assert.match(gamePage, /throw new Error\("game_workspace_temporarily_unavailable"\)/);
