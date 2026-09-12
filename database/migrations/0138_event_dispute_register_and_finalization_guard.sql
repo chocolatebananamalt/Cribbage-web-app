@@ -133,9 +133,9 @@ declare
   v_code text;
   v_authorized boolean := false;
 begin
-  if coalesce(current_setting('request.jwt.claim.role', true), '') <> 'service_role' then
-    raise exception using errcode = 'P0001', message = 'server-only event dispute';
-  end if;
+  -- Invocation is server-only through the EXECUTE grant below. Supabase secret
+  -- API keys assume the service_role database role without supplying the
+  -- legacy per-claim GUC, so that setting cannot be used as the authority.
   begin
     if p_actor_id is null or p_tournament_id is null or p_event_id is null
        or p_game_id is null or p_dispute_id is null or p_operation_id is null
@@ -301,9 +301,7 @@ declare
   v_code text;
   v_authorized boolean := false;
 begin
-  if coalesce(current_setting('request.jwt.claim.role', true), '') <> 'service_role' then
-    raise exception using errcode = 'P0001', message = 'server-only event dispute';
-  end if;
+  -- Invocation is server-only through the EXECUTE grant below.
   begin
     if p_actor_id is null or p_dispute_id is null or p_operation_id is null
        or p_resolution_note is null or length(trim(p_resolution_note)) not between 1 and 500
@@ -436,7 +434,7 @@ create or replace function public.get_event_dispute_workspace_v1(
 ) returns jsonb language plpgsql stable security definer set search_path = '' as $$
 declare v_role text;
 begin
-  if coalesce(current_setting('request.jwt.claim.role', true), '') <> 'service_role' then return null; end if;
+  -- Invocation is server-only through the EXECUTE grant below.
   select role_row.role into v_role from app.tournament_roles role_row
   where role_row.tournament_id = p_tournament_id and role_row.profile_id = p_actor_id
     and role_row.role in ('director','co_director','cross_checker','judge')
@@ -533,9 +531,7 @@ declare
   v_response jsonb;
   v_receipt_id uuid;
 begin
-  if coalesce(current_setting('request.jwt.claim.role', true), '') <> 'service_role' then
-    raise exception using errcode = 'P0001', message = 'server-only qualification finalization';
-  end if;
+  -- Invocation is server-only through the EXECUTE grant below.
   if p_actor_id is null or p_tournament_id is null or p_event_id is null or p_operation_id is null then
     return jsonb_build_object('status','rejected','code','invalid_request','eventId',p_event_id);
   end if;

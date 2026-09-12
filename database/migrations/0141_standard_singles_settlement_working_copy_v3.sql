@@ -41,9 +41,8 @@ declare
   v_internal_operation_id uuid; v_base jsonb; v_response jsonb; v_code text;
   v_settlement_id uuid; v_receipt_id uuid; v_conflict_id uuid;
 begin
-  if coalesce(current_setting('request.jwt.claim.role',true),'')<>'service_role' then
-    raise exception using errcode='P0001',message='server-only settlement working copy';
-  end if;
+  -- Invocation is server-only through the EXECUTE grant below. Supabase secret
+  -- API keys do not populate the legacy per-claim role GUC.
   begin
     if p_actor_id is null or p_tournament_id is null or p_event_id is null
       or p_qualification_result_version_id is null or p_playoff_result_version_id is null
@@ -245,8 +244,7 @@ end $$;
 create or replace function public.get_standard_singles_settlement_reconciliation_v3(
   p_actor_id uuid,p_tournament_id uuid,p_event_id uuid,p_operation_id uuid
 ) returns jsonb language sql stable security definer set search_path='' as $$
-  select case when coalesce(current_setting('request.jwt.claim.role',true),'')='service_role'
-    and exists(select 1 from app.tournament_roles role_row
+  select case when exists(select 1 from app.tournament_roles role_row
       where role_row.tournament_id=p_tournament_id and role_row.profile_id=p_actor_id
         and role_row.role in('director','co_director'))
   then jsonb_build_object('authorized',true,'result',(

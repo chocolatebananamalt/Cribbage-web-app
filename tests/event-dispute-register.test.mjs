@@ -16,6 +16,7 @@ import {
 import { isRejectedQualificationFinalization } from "../src/lib/api/qualification-finalization.ts";
 
 const migration = fs.readFileSync("database/migrations/0138_event_dispute_register_and_finalization_guard.sql", "utf8");
+const authorityRepair = fs.readFileSync("database/migrations/0142_secret_key_rpc_authority_repair.sql", "utf8");
 const openRoute = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/disputes/route.ts", "utf8");
 const resolutionRoute = fs.readFileSync("src/app/api/v1/disputes/[id]/resolution/route.ts", "utf8");
 const disputesPage = fs.readFileSync("src/app/tournament/[tournamentId]/events/[eventId]/disputes/page.tsx", "utf8");
@@ -114,6 +115,10 @@ test("migration is immutable, private, non-self, retry-safe, and guards qualific
   }
   assert.match(migration, /revoke all on function app\.finalize_standard_singles_qualification_without_event_dispute_guard_v1[\s\S]*from public, anon, authenticated, service_role/);
   assert.doesNotMatch(migration, /grant execute[^;]+to authenticated/i);
+  assert.doesNotMatch(migration, /current_setting\('request\.jwt\.claim\.role'/);
+  assert.match(authorityRepair, /legacy JWT-role guard remains/);
+  assert.match(authorityRepair, /revoke all on function public\.get_event_dispute_workspace_v1[\s\S]*from public, anon, authenticated/);
+  assert.match(authorityRepair, /grant execute on function public\.get_event_dispute_workspace_v1[\s\S]*to service_role/);
 });
 
 test("HTTP routes retain same-origin, verified-subject, bounded-body, server-only boundaries", () => {

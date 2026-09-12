@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-12 scoped-secret RPC compatibility repair
+
+- Production browser proof found that the newly deployed Event Dispute
+  Register returned 404 even though its hosted function and data were present.
+  The obsolete `request.jwt.claim.role` check rejected Supabase's current
+  scoped secret API key, which authorizes through the `service_role` database
+  role without populating that legacy GUC.
+- Applied recorded migration `0142` to remove only that redundant check from
+  the dispute/finalization and settlement-v3 RPCs. Their EXECUTE grants remain
+  revoked from `public`, `anon`, and `authenticated` and granted only to
+  `service_role`; actor, tournament, staff-role, scope, lock, and replay checks
+  remain unchanged.
+- The authenticated production dispute page now loads for the October Main
+  Event and shows the correct empty states. Hosted privilege checks confirm
+  service-role access is true and authenticated/anonymous access is false.
+- Full local verification still passes 365/365 application tests, the Next.js
+  production build, workspace checks, and all 6 handoff-integrity tests.
+
 ## 2026-09-12 post-event and correction database release proof
 
 - Applied reviewed migrations `0138` through `0141` sequentially to the

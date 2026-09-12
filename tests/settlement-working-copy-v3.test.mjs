@@ -4,6 +4,7 @@ import test from "node:test";
 
 const migration = fs.readFileSync("database/migrations/0141_standard_singles_settlement_working_copy_v3.sql", "utf8");
 const playoffMigration = fs.readFileSync("database/migrations/0139_standard_singles_playoff_placements.sql", "utf8");
+const authorityRepair = fs.readFileSync("database/migrations/0142_secret_key_rpc_authority_repair.sql", "utf8");
 const api = fs.readFileSync("src/lib/api/settlement-draft.ts", "utf8");
 const client = fs.readFileSync("src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-client.tsx", "utf8");
 const route = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/settlement-draft/working-copy/route.ts", "utf8");
@@ -46,6 +47,10 @@ test("v3 read and reconciliation RPCs are scoped and service-only", () => {
     assert.match(migration, new RegExp(`grant execute on function public\\.${rpc}[\\s\\S]*to service_role`, "i"));
   }
   assert.doesNotMatch(migration, /grant execute[^;]+to authenticated/i);
+  assert.doesNotMatch(migration, /current_setting\('request\.jwt\.claim\.role'/);
+  assert.match(authorityRepair, /save_standard_singles_settlement_draft_v3/);
+  assert.match(authorityRepair, /get_standard_singles_settlement_reconciliation_v3/);
+  assert.match(authorityRepair, /from public, anon, authenticated[\s\S]*to service_role/);
   assert.match(api, /get_standard_singles_settlement_workspace_v3/);
   assert.match(api, /save_standard_singles_settlement_draft_v3/);
 });
