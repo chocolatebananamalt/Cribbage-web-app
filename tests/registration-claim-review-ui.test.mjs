@@ -20,6 +20,13 @@ test("director roster screen includes an actionable registration review queue", 
   assert.match(client, /router\.refresh\(\)/);
 });
 
+test("registration review renders a deterministic server/client timestamp", () => {
+  const client = read("src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx");
+  assert.match(client, /timeZone: "UTC"/);
+  assert.match(client, /<time dateTime=\{claim\.submittedAt\}>\{submittedLabel\(claim\.submittedAt\)\}<\/time>/);
+  assert.doesNotMatch(client, /new Date\(claim\.submittedAt\)\.toLocaleString\(\)/);
+});
+
 test("registration review route keeps identity and authority on the server", () => {
   const route = read("src/app/api/v1/tournaments/[id]/registration-claim-reviews/route.ts");
   const api = read("src/lib/api/registration-claim-review.ts");

@@ -19,6 +19,9 @@
   authority/replay fixture passed with zero retained synthetic users and zero
   performance-advisor unindexed-foreign-key findings.
 - Independent Sol high-risk re-review is GO with no remaining P0/P1 findings.
+- The first live production browser pass caught and locally repaired a
+  server/client time-zone hydration mismatch in the registration timestamp;
+  focused regression, lint, and production-build checks pass.
 - `pnpm verify` passes 325/325 application checks plus audit, lint, production
   build, and workspace checks; `pnpm verify:handoff` passes 6/6. Live release
   proof of the new director review screen remains to be recorded after the

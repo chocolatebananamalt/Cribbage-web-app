@@ -48,6 +48,10 @@ Executed from the repository root:
   The reviewer separately passed 96 focused claim/game/auth checks, focused
   lint, TypeScript, and diff validation. Its requested hosted rollout checks
   were completed against the pilot as recorded above.
+- The first live browser pass exposed a server/client time-zone rendering
+  mismatch on the submitted timestamp. The timestamp now uses one explicit UTC
+  representation on both sides; the regression test, focused lint, and a fresh
+  production build pass before replacement deployment.
 
 Production deployment and browser evidence are recorded after independent
 review and promotion. The live fictional claim is rejected through this screen
