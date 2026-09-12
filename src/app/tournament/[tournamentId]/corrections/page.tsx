@@ -12,6 +12,6 @@ export default async function CorrectionsPage({ params }: { params: Promise<{ to
   const { tournamentId } = await params;
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
-  const workspace = await getCorrectionWorkspace(tournamentId);
+  const workspace = await getCorrectionWorkspace(access.user.id, tournamentId);
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="corrections-title"><p className="eyebrow">CROSS CHECK</p><h1 id="corrections-title">Score Corrections</h1><p className="auth-note">Only actions the tournament server has authorized are shown here. A pending correction does not change scorecards, standings, or exports.</p>{['director', 'co_director'].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/correction-policy`}>Correction policy settings</Link> : null}<CorrectionsClient actorId={access.user.id} {...workspace} /><SharedDeviceSignOut /></section></main>;
 }

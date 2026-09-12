@@ -63,6 +63,12 @@ test("tournament and my-games pages expose usable navigation without internal id
   const tournament = read("src/app/tournament/[tournamentId]/page.tsx");
   const page = read("src/app/tournament/[tournamentId]/games/page.tsx");
   assert.match(tournament, />My Games</);
+  assert.match(tournament, /Tournament Results/);
+  assert.match(tournament, /\/results`/);
+  const results = read("src/app/tournament/[tournamentId]/results/page.tsx");
+  assert.match(results, /item\.format === "standard_singles" && item\.scoringMethod === "digital"/);
+  assert.match(results, /results\?event=\$\{item\.eventId\}/);
+  assert.match(results, />Previous Screen</);
   assert.match(page, /Current Games/);
   assert.match(page, /Completed Games/);
   assert.match(page, /Open Game/);

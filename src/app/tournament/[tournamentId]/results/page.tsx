@@ -9,6 +9,7 @@ import { getQualificationResult } from "../../../../lib/api/qualification-finali
 import { formatSignedNet } from "../../../../lib/score";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import { QualificationFinalizationClient } from "./qualification-finalization-client";
+import { getEventRosterEnrollmentWorkspace } from "../../../../lib/events/roster-enrollment-workspace";
 
 export default async function PreliminaryResultsPage({ params, searchParams }: {
   params: Promise<{ tournamentId: string }>;
@@ -16,8 +17,23 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
 }) {
   const { tournamentId } = await params;
   const { event } = await searchParams;
-  if (!isUuid(tournamentId) || !event || !isUuid(event)) notFound();
+  if (!isUuid(tournamentId) || (event !== undefined && !isUuid(event))) notFound();
   const access = await requireTournamentAccess(tournamentId);
+  const canManageDisputes = ["director", "co_director", "cross_checker", "judge"].includes(access.role);
+  if (!event) {
+    if (!['director', 'co_director'].includes(access.role)) notFound();
+    const workspace = await getEventRosterEnrollmentWorkspace(access.user.id, tournamentId);
+    const events = workspace.events.filter((item) => item.format === "standard_singles" && item.scoringMethod === "digital");
+    return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="results-events-title">
+      <p className="eyebrow">TOURNAMENT RESULTS</p>
+      <h1 id="results-events-title">Tournament Results</h1>
+      <p className="card-context">{workspace.tournamentName}</p>
+      <p className="registration-note">Choose an event to review its verified standings and qualification status.</p>
+      {events.length ? <ul className="correction-list">{events.map((item) => <li className="correction-item" key={item.eventId}><strong>{item.name}</strong><p>{item.participantCount} enrolled participant{item.participantCount === 1 ? "" : "s"}</p><Link className="guide-link" href={`/tournament/${tournamentId}/results?event=${item.eventId}`}>View Results</Link></li>)}</ul> : <p className="auth-note">No digital Standard Singles events are active yet.</p>}
+      <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
+      <SharedDeviceSignOut />
+    </section></main>;
+  }
   const standings = await getPreliminaryEventStandings(tournamentId, event);
   const qualification = buildPreliminaryQualification(standings.rows);
   const finalized = await getQualificationResult(createServerOnlyAdminClient(), access.user.id, tournamentId, event);
@@ -38,8 +54,10 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       </section>
     </section>
     <p className="auth-note">Finalized by {finalized.finalizedBy}. This record does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export.</p>
+    {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
+    {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
     <SharedDeviceSignOut />
   </section></main>;
@@ -69,6 +87,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       actorId={access.user.id} tournamentId={tournamentId} eventId={event}
       canFinalize={standings.scheduledScorecardsComplete && !standings.rows.some((row) => row.tied)}
     /> : null}
+    {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     <div className="table-scroll"><table className="standings-table">
       <caption className="sr-only">Preliminary standings from verified scorecards</caption>
       <thead><tr><th scope="col">Numeric rank</th><th scope="col">Player</th><th scope="col">Status</th><th scope="col">Games</th><th scope="col">Game Points</th><th scope="col">Won</th><th scope="col">Plus</th><th scope="col">Minus</th><th scope="col">Net</th></tr></thead>
@@ -77,6 +96,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       </tr>)}{standings.rows.length === 0 ? <tr><td colSpan={9}>No event participants are available yet.</td></tr> : null}</tbody>
     </table></div>
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
+    {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
     <SharedDeviceSignOut />
   </section></main>;

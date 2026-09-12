@@ -123,7 +123,7 @@ test("activation route is gated, same-origin, subject-bound, and server-only", (
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(route, /activate_tournament_setup_v2/);
-  assert.match(route, /get_tournament_setup_activation_state_v2/);
+  assert.match(route, /get_tournament_setup_activation_state_v3/);
   assert.match(route, /p_actor_id: subject/);
   assert.match(route, /p_setup_revision_id: body\.setupRevisionId/);
   assert.match(route, /p_expected_version: body\.expectedVersion/);

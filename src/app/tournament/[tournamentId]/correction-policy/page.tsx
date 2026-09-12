@@ -12,6 +12,6 @@ export default async function CorrectionPolicyPage({ params }: { params: Promise
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!['director', 'co_director'].includes(access.role)) notFound();
-  const policy = await getCorrectionPolicy(tournamentId);
+  const policy = await getCorrectionPolicy(access.user.id, tournamentId);
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="policy-title"><p className="eyebrow">DIRECTOR SETTINGS</p><h1 id="policy-title">Correction Policy</h1><p className="auth-note">New tournaments start with immediate correction authority and an optional reason.</p><CorrectionPolicyClient actorId={access.user.id} policy={policy} /><SharedDeviceSignOut /></section></main>;
 }

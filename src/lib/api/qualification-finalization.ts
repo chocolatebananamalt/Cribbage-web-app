@@ -9,7 +9,7 @@ type RpcClient = {
 const rejectedCodes = new Set([
   "tournament_unavailable", "not_director", "event_unavailable", "already_finalized",
   "schedule_incomplete", "scorecards_unresolved", "recovery_pending", "correction_pending",
-  "qualification_notice_pending", "ranking_tie_unresolved", "cutoff_tied", "high_non_qualifier_tied", "idempotency_conflict",
+  "qualification_notice_pending", "ranking_tie_unresolved", "dispute_open", "cutoff_tied", "high_non_qualifier_tied", "idempotency_conflict",
   "invalid_request",
 ]);
 

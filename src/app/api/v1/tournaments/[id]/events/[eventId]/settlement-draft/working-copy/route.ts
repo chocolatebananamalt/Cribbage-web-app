@@ -24,7 +24,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     return new NextResponse(csv, {
       headers: {
         "cache-control": "private, no-store, max-age=0",
-        "content-disposition": `attachment; filename="settlement-working-copy-v${workspace.draft?.version ?? 0}.csv"`,
+        "content-disposition": `attachment; filename="settlement-working-copy-v3-draft-${workspace.draft?.version ?? 0}.csv"`,
         "content-type": "text/csv; charset=utf-8",
         "x-content-type-options": "nosniff",
       },

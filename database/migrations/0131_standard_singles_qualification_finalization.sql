@@ -258,8 +258,11 @@ begin
       raise exception using errcode = 'P0001', message = 'correction pending';
     end if;
     if exists (select 1 from app.independent_card_corrections correction
+      cross join lateral (select state_event.state from app.independent_card_correction_state_events state_event
+        where state_event.correction_id=correction.id order by state_event.transition_sequence desc limit 1) latest
       where correction.tournament_id = p_tournament_id and correction.event_id = p_event_id
-        and correction.qualification_changed) then
+        and correction.qualification_changed and latest.state='applied'
+        and not exists(select 1 from app.rule12_affected_player_notices notice where notice.correction_id=correction.id)) then
       raise exception using errcode = 'P0001', message = 'qualification notice pending';
     end if;
 

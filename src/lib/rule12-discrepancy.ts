@@ -108,6 +108,7 @@ export function adjudicateRule12Fixture(
     const qualifierMargin = requireMargin(qualifier.recordedMargin, "Rule 12.2(a) requires the qualifier's recorded spread.");
     const otherMargin = requireMargin(other.recordedMargin, "Rule 12.2(a) requires the opposing recorded spread.");
     require(qualifierMargin !== otherMargin, "Rule 12.2(a) requires a discrepancy.");
+    require(qualifierMargin > otherMargin, "Rule 12.2(a) applies only when the apparent qualifier's entry is favorable.");
     return final(ruleCase, projection(first, first === qualifier ? "win" : "loss", first === qualifier ? otherMargin : first.recordedMargin as number), projection(second, second === qualifier ? "win" : "loss", second === qualifier ? otherMargin : second.recordedMargin as number), qualificationChanged);
   }
 
@@ -150,7 +151,11 @@ export function adjudicateRule12Fixture(
   }
 
   if (ruleCase === "h") {
-    require(first.apparentQualifier !== second.apparentQualifier, "Rule 12.2(h) requires one apparent qualifier.");
+    const qualifier = first.apparentQualifier ? first : second;
+    const other = qualifier === first ? second : first;
+    require(qualifier.apparentQualifier !== other.apparentQualifier, "Rule 12.2(h) requires one apparent qualifier.");
+    require(qualifier.recordedOutcome === "win" && other.recordedOutcome === "loss", "Rule 12.2(h) requires the documented win/loss pattern.");
+    require(requireMargin(qualifier.recordedMargin, "Rule 12.2(h) requires the qualifier's spread.") < requireMargin(other.recordedMargin, "Rule 12.2(h) requires the opposing spread."), "Rule 12.2(h) applies only when the discrepancy is already adverse to the apparent qualifier.");
     return final(ruleCase, projection(first, first.recordedOutcome, firstMargin), projection(second, second.recordedOutcome, secondMargin), qualificationChanged);
   }
 

@@ -35,13 +35,27 @@ mistaken for a current, production-authoritative financial rule.
 
 ## Safe application consequence
 
+- A fresh check on 2026-09-11 found that the official ACC Point Scoring System
+  page still links and renders the same complete Standard Main and Consolation
+  qualifying schedules and the 7+7 / 4+4 playoff sequences. Recent 2026 ACC
+  player-result pages show values consistent with those schedules. This is
+  sufficient to preserve and executable-test the published formulas as a
+  versioned **reference fixture**.
 - The application may continue to show non-final qualification previews only
   where their ranking and bracket behavior is independently sourced and
   tested.
-- It must not compute, publish, export, or financially reconcile an official
-  MRP, Q-pool, prize, or payout value from these documents alone. In
-  particular, the 2016-effective MRP sheets need an ACC-authorized current
-  effective-date confirmation for every supported event type.
+- It must not persist, publish, export, or financially reconcile an official
+  MRP, Q-pool, prize, or payout value from these documents alone. The reference
+  fixture remains `currentEffectiveApproved: false`. In particular, the
+  2016-effective MRP sheets still need an ACC-authorized current effective-date
+  confirmation for every supported event type.
+- The official 2026 Topaz Summer Bash result supplies the otherwise unstated
+  odd-count boundary: 59 Main entrants produced 15 qualifiers; ranks 1–8 used
+  the score schedule and the remaining seven received the fixed five MRPs.
+  The reference fixture therefore uses `ceil(qualifiers / 2)` for the top half.
+- No saved playoff bracket/exit-round authority exists yet, so the reference
+  calculator accepts an explicit exit round but is not connected to settlement
+  drafts or results.
 - The existing finalization/export gates remain correct. No financial rule,
   MRP table, or payout percentage was added to production code.
 
@@ -53,6 +67,8 @@ mistaken for a current, production-authoritative financial rule.
    each supported event type.
 3. The required result-report fields and the approved director-assisted portal
    workflow or supported import/API contract.
+4. A persisted, verified playoff-bracket result that can supply the credited
+   playoff round (including byes) without inferring it from paid placement.
 
 ## Verification performed
 

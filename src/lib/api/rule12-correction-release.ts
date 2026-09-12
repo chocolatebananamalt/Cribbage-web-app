@@ -5,10 +5,8 @@
  * application boundary; a matching database migration removes its direct RPC
  * grants from the pilot until a reviewed replacement is ready.
  */
-export function rule12CorrectionEnabled(_env: Record<string, string | undefined> = process.env) {
-  // The replacement model is intentionally not a releasable feature yet.
-  // A future release decision must replace this hard stop with its reviewed
-  // evidence gate; an environment edit alone must never publish it.
-  void _env;
-  return false;
+export function rule12CorrectionEnabled(env: Record<string, string | undefined> = process.env) {
+  // Deliberately exact and default-off. Migration 0140 is the first complete
+  // independent-card release contract; a casual truthy value must not expose it.
+  return env.ACC_RULE12_CORRECTION_ENABLED?.trim() === "approved-0140";
 }

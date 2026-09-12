@@ -5,6 +5,8 @@ import { requireTournamentAccess } from "../../../../lib/auth/require-tournament
 import { isUuid } from "../../../../lib/api/validation";
 import { getPlayerScorecard } from "../../../../lib/games/player-scorecard";
 import { getScorecardVerificationStatus } from "../../../../lib/games/scorecard-status";
+import { getRule12PlayerNotices } from "../../../../lib/corrections/player-notices";
+import { rule12CorrectionEnabled } from "../../../../lib/api/rule12-correction-release";
 import { formatScorecardSpread, formatSignedNet } from "../../../../lib/score";
 
 const ScorecardColumns = () => <colgroup><col className="game-number" /><col className="game-points" /><col className="spread-plus" /><col className="spread-minus" /><col className="opponent-name" /><col className="verification-id" /></colgroup>;
@@ -13,14 +15,16 @@ export default async function PlayerScorecardPage({ params, searchParams }: { pa
   const { tournamentId } = await params;
   const { event } = await searchParams;
   if (!isUuid(tournamentId) || !event || !isUuid(event)) notFound();
-  await requireTournamentAccess(tournamentId);
+  const access = await requireTournamentAccess(tournamentId);
   const scorecard = await getPlayerScorecard(tournamentId, event);
+  const notices = rule12CorrectionEnabled() ? await getRule12PlayerNotices(access.user.id, tournamentId) : [];
   const verificationStatus = getScorecardVerificationStatus(scorecard.pendingGames.map((game) => game.state));
 
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="scorecard-title">
     <p className="eyebrow">SCORECARD</p>
     <div className="card-state"><h1 id="scorecard-title">{scorecard.player.displayName}</h1><p className="seat">ID #<strong>{scorecard.player.verificationId}</strong></p><strong className={verificationStatus.tone === "current" ? "verification-current" : "verification-pending"}>{verificationStatus.message}</strong></div>
     <p className="card-context">{scorecard.tournamentName} · {scorecard.eventName}</p>
+    {notices.some((notice) => notice.eventId === event) ? <p className="verification-pending" role="status">A Rule 12 scorecard correction changed your qualifying status or position. Please speak with the tournament director for the card evidence.</p> : null}
     <div className="scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex={0}>
       <table className="scorecard-header"><caption className="sr-only">{scorecard.player.displayName} scorecard</caption><ScorecardColumns /><thead><tr><th colSpan={2} scope="colgroup">Game</th><th colSpan={2} scope="colgroup">Spread Points</th><th rowSpan={2} scope="col">Opponent<span>Name</span></th><th rowSpan={2} scope="col">Verification<span>ID #</span></th></tr><tr><th scope="col">#</th><th scope="col">Points</th><th scope="col">(+)</th><th scope="col">(−)</th></tr></thead></table>
       <div className="table-scroll"><table className="scorecard-body"><ScorecardColumns /><tbody>

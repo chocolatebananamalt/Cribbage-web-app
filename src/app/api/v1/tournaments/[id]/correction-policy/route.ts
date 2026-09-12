@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
+import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { rule12CorrectionEnabled } from "../../../../../../lib/api/rule12-correction-release";
@@ -32,15 +33,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (!isUuid(id) || typeof body.reasonRequired !== "boolean" || ![0, 1].includes(body.requiredApprovals as number) || !Number.isSafeInteger(body.expectedPolicyVersion) || (body.expectedPolicyVersion as number) < 0 || !isUuid(body.idempotencyKey)) {
     return apiJson({ error: "invalid_policy" }, { status: 400 });
   }
-  const supabase = await createClient();
-  if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
+  const actorId = await requireVerifiedSubject(await createClient());
+  if (!actorId) return apiJson({ error: "unauthorized" }, { status: 401 });
   const requiredApprovals = body.requiredApprovals as 0 | 1;
-  const { data, error } = await supabase.rpc("configure_correction_policy", {
+  const { data, error } = await createServerOnlyAdminClient().rpc("configure_rule12_correction_policy_v1", {
+    p_actor_id: actorId,
     p_tournament_id: id,
     p_reason_required: body.reasonRequired,
     p_required_approvals: requiredApprovals,
     p_expected_policy_version: body.expectedPolicyVersion,
-    p_idempotency_key: body.idempotencyKey,
+    p_operation_id: body.idempotencyKey,
   });
   if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
   if (accepted(data, id, body.reasonRequired as boolean, requiredApprovals, body.expectedPolicyVersion as number)) return apiJson(data);

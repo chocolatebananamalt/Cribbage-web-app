@@ -1,42 +1,13 @@
 import "server-only";
 import { notFound } from "next/navigation";
-import { createClient } from "../supabase/server";
-import type { CorrectionProposalCandidate, CorrectionWorkspace, PendingCorrectionReview } from "./types";
+import { createServerOnlyAdminClient } from "../supabase/private-admin";
+import type { CorrectionNoticeTarget, CorrectionProposalCandidate, CorrectionWorkspace, PendingCorrectionReview } from "./types";
+export type { CorrectionNoticeTarget, CorrectionProposalCandidate, CorrectionWorkspace, PendingCorrectionReview } from "./types";
 
-export type { CorrectionProposalCandidate, CorrectionWorkspace, PendingCorrectionReview } from "./types";
-
-function hasBaseItem(value: unknown): value is Record<string, unknown> {
-  if (!value || typeof value !== "object") return false;
-  const item = value as Record<string, unknown>;
-  const side = (x: unknown) => !!x && typeof x === "object" && typeof (x as Record<string, unknown>).displayName === "string" && typeof (x as Record<string, unknown>).tableSeat === "string";
-  return typeof item.gameId === "string" && typeof item.eventName === "string" && Number.isInteger(item.roundNumber) && Number.isInteger(item.matchInstance) && side(item.sideA) && side(item.sideB);
-}
-
-function isProposalCandidate(value: unknown): value is CorrectionProposalCandidate {
-  if (!hasBaseItem(value)) return false;
-  const item = value as Record<string, unknown>;
-  return Number.isSafeInteger(item.gameVersion) && (item.gameVersion as number) > 0
-    && (item.winnerSide === "a" || item.winnerSide === "b")
-    && Number.isInteger(item.margin) && (item.margin as number) >= 1 && (item.margin as number) <= 121;
-}
-
-function isPendingReview(value: unknown): value is PendingCorrectionReview {
-  if (!hasBaseItem(value)) return false;
-  const item = value as Record<string, unknown>;
-  return typeof item.correctionId === "string"
-    && Number.isSafeInteger(item.baseGameVersion) && (item.baseGameVersion as number) > 0
-    && (item.previousWinnerSide === "a" || item.previousWinnerSide === "b")
-    && Number.isInteger(item.previousMargin) && (item.previousMargin as number) >= 1 && (item.previousMargin as number) <= 121
-    && (item.correctedWinnerSide === "a" || item.correctedWinnerSide === "b")
-    && Number.isInteger(item.correctedMargin) && (item.correctedMargin as number) >= 1 && (item.correctedMargin as number) <= 121
-    && (item.reason === null || typeof item.reason === "string");
-}
-
-export async function getCorrectionWorkspace(tournamentId: string): Promise<CorrectionWorkspace> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("get_correction_workspace", { p_tournament_id: tournamentId });
-  if (error || !data || typeof data !== "object") notFound();
-  const result = data as Record<string, unknown>;
-  if (!Array.isArray(result.proposalCandidates) || !Array.isArray(result.pendingReviews) || !result.proposalCandidates.every(isProposalCandidate) || !result.pendingReviews.every(isPendingReview)) notFound();
-  return { proposalCandidates: result.proposalCandidates, pendingReviews: result.pendingReviews };
-}
+function side(v: unknown) { if (!v || typeof v !== "object") return false; const x=v as Record<string,unknown>; return typeof x.displayName==="string"&&typeof x.tableSeat==="string"&&typeof x.isWinner==="boolean"&&Number.isInteger(x.margin); }
+function reviewSide(v:unknown){if(!v||typeof v!=="object")return false;const x=v as Record<string,unknown>,o=x.original as Record<string,unknown>|undefined,a=x.adjudicated as Record<string,unknown>|undefined;return typeof x.displayName==="string"&&typeof x.tableSeat==="string"&&!!o&&["win","loss"].includes(o.outcome as string)&&(o.margin===null||Number.isInteger(o.margin))&&["plus","minus","blank"].includes(o.column as string)&&typeof o.apparentQualifier==="boolean"&&!!a&&typeof a.isWinner==="boolean"&&Number.isInteger(a.margin);}
+function base(v: unknown) { if (!v||typeof v!=="object") return false; const x=v as Record<string,unknown>; return typeof x.gameId==="string"&&typeof x.eventName==="string"&&Number.isInteger(x.roundNumber)&&Number.isInteger(x.matchInstance)&&side(x.sideA)&&side(x.sideB); }
+function candidate(v: unknown): v is CorrectionProposalCandidate { if(!base(v))return false;const x=v as Record<string,unknown>;return typeof x.eventId==="string"&&Number.isSafeInteger(x.gameVersion)&&(x.gameVersion as number)>0&&Number.isSafeInteger(x.correctionSequence)&&(x.correctionSequence as number)>=0; }
+function review(v: unknown): v is PendingCorrectionReview {if(!v||typeof v!=="object")return false;const x=v as Record<string,unknown>,target=x.affectedNoticeTarget as Record<string,unknown>|null;return typeof x.correctionId==="string"&&typeof x.gameId==="string"&&typeof x.eventName==="string"&&Number.isInteger(x.roundNumber)&&Number.isInteger(x.matchInstance)&&typeof x.ruleCase==="string"&&(x.reason===null||typeof x.reason==="string")&&typeof x.qualificationChanged==="boolean"&&(target===null||(typeof target?.participantId==="string"&&typeof target?.displayName==="string"))&&reviewSide(x.sideA)&&reviewSide(x.sideB);}
+function target(v:unknown):v is CorrectionNoticeTarget{if(!v||typeof v!=="object")return false;const x=v as Record<string,unknown>;return typeof x.participantId==="string"&&typeof x.eventId==="string"&&typeof x.displayName==="string";}
+export async function getCorrectionWorkspace(actorId:string,tournamentId:string):Promise<CorrectionWorkspace>{const {data,error}=await createServerOnlyAdminClient().rpc("get_rule12_correction_workspace_v2",{p_actor_id:actorId,p_tournament_id:tournamentId});if(error||!data||typeof data!=="object")notFound();const x=data as Record<string,unknown>;if(!Array.isArray(x.proposalCandidates)||!x.proposalCandidates.every(candidate)||!Array.isArray(x.noticeTargets)||!x.noticeTargets.every(target)||!Array.isArray(x.pendingReviews)||!x.pendingReviews.every(review))notFound();return{proposalCandidates:x.proposalCandidates,noticeTargets:x.noticeTargets,pendingReviews:x.pendingReviews};}

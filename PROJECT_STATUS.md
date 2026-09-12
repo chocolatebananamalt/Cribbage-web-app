@@ -1,5 +1,75 @@
 # Project Status
 
+## 2026-09-12 post-event and correction database release proof
+
+- Applied reviewed migrations `0138` through `0141` sequentially to the
+  approved Supabase pilot: event disputes, supervised playoff placements,
+  complete Rule 12 independent-card corrections, and Settlement Working Copy
+  v3 with provisional MRP transcription.
+- Hosted rollback proofs pass for dispute open/resolve and finalization guard,
+  playoff versioning, both Rule 12 release/lifecycle fixtures, and the combined
+  qualification/playoff/settlement-v3 chain. Every synthetic transaction
+  rolled back; the failed proof attempts also rolled back without retained
+  fixture records.
+- Hosted execution found and closed three integration defects before release:
+  Supabase fixture role simulation, PostgreSQL's truncated legacy constraint
+  name, and the dispute wrapper's preserved internal qualification finalizer.
+- Independent Sol review approves the final settlement export binding. The
+  complete local gate now passes 365/365 application tests, audit, lint,
+  production build, workspace checks, and the private-handoff suite.
+- Supabase migration history now records `0137` through `0141`. The final
+  hosted qualification/playoff/settlement-v3 chain passed again after removal
+  of a redundant unique index; the remaining equivalent `0139` index continues
+  to back both foreign keys. Supabase's performance advisor now reports no
+  warning/error findings.
+- The Rule 12 feature flag remains closed until separate-session browser proof;
+  database capability being installed does not expose the staff correction UI.
+
+## 2026-09-11 activated setup amendment hosted proof
+
+- Applied migration `0137` to the approved Supabase pilot. The hosted
+  rollback-only amendment fixture passes after correcting its Supabase role
+  simulation to set both PostgreSQL and JWT roles; the failed first attempt
+  rolled back and retained no synthetic records.
+- The amendment can append later Consolation/Satellite events without changing
+  the existing activated Main Event, and preserves exact replay, stale-write,
+  duplicate-event, browser-role, audit, and grant boundaries.
+- Full local verification passes 357/357 application tests plus audit, lint,
+  production build, workspace, and private-handoff checks. Independent live
+  two-official concurrency and phone/desktop browser proof remain.
+
+## 2026-09-11 Standard Singles MRP source/reference audit
+
+- Rechecked the official ACC public resources and encoded the published
+  Standard Main/Consolation qualifying and playoff schedules as an executable,
+  versioned reference fixture.
+- The fixture is deliberately disconnected from settlement/results authority
+  and always reports `currentEffectiveApproved: false`. A current 15-qualifier
+  ACC result supplies the odd-count top-half fixture; unsupported formats/game
+  counts, incomplete playoff input, and scores outside the published boundary
+  still fail closed.
+- Official saved MRP awards remain blocked by current-effective ACC approval,
+  and verified playoff-round data. Q-pool and event prize calculations remain
+  blocked by missing allocation/rounding and authoritative payout fixtures.
+
+## 2026-09-11 consolidated production release
+
+- Promoted verified commit `33b8300` to Vercel Production as deployment
+  `dpl_GgPSHW6jar6MzmARoDLWgs4bzdhu`; the stable domain is
+  `https://cribbage-web-app.vercel.app` and Vercel reports READY with no alias
+  error.
+- Authenticated external-Chrome checks passed for the active October
+  registration-link workspace and the Players and Registration workspace.
+  The pending public-claim queue remained empty, the two existing pilot roster
+  identities remained unchanged, and browser error logs were empty.
+- Production root and `/register` return HTTP 200, and the Production runtime
+  error scan is empty. A transient registration-page 404 observed during the
+  alias handoff cleared after READY.
+- Roster-account activation remains intentionally closed by its independent
+  release gate pending real independent-session proof; setup activation is a
+  separate enabled capability.
+- Evidence: `docs/quality/2026-09-11-consolidated-production-release.md`.
+
 ## 2026-09-11 deterministic client timestamps
 
 - Generalized the live registration-review hydration repair across the

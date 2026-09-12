@@ -1,4 +1,4 @@
-import { isUuid } from "./validation";
+import { isUuid } from "./validation.ts";
 
 export type SetupPool = { poolTypeCode: string; entryFeeCents: number; note: string };
 export type SetupEvent = {
@@ -34,7 +34,7 @@ const own = (v: object, keys: string[]) => Object.keys(v).length === keys.length
 const text = (v: unknown, max: number, required = false) => typeof v === "string" && v.length <= max && (!required || v.trim().length > 0);
 const money = (v: unknown, nullable = false) => (nullable && v === null) || (Number.isSafeInteger(v) && (v as number) >= 0 && (v as number) <= 100000000);
 const localTime = (v: unknown) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?$/.test(v);
-function event(value: unknown): value is SetupEvent {
+export function isSetupEvent(value: unknown): value is SetupEvent {
   if (!value || typeof value !== "object" || !own(value, eventKeys)) return false;
   const e = value as Record<string, unknown>; const pools = e.qPools;
   return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
@@ -53,7 +53,7 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   const x = p as Record<string, unknown>; const officials = x.officials; const events = x.events;
   return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && text(x.contactDetails, 1000) && money(x.sanctioningFeeCents, true)
     && Array.isArray(officials) && officials.length >= 1 && officials.length <= 3 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
-    && Array.isArray(events) && events.length <= 32 && events.every(event);
+    && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
 }
 export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRequest { return !!value && typeof value === "object" && own(value, ["idempotencyKey"]) && isUuid((value as Record<string, unknown>).idempotencyKey); }
 export function isSavedSetup(value: unknown, request: SetupSaveRequest): value is { status: "setup_draft_saved"; revisionId: string; version: number; eventCount: number } { if (!value || typeof value !== "object") return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }

@@ -1,4 +1,5 @@
--- Rollback-only integration fixture for migration 0106. Run against the
+-- Rollback-only integration fixture for the migration 0106 foundation plus
+-- the migration 0140 Rule 12 release. Run against the
 -- isolated synthetic validation database. All identities and tournament data
 -- are anonymous fixtures and the final rollback retains none of them.
 
@@ -151,42 +152,57 @@ select set_config('request.jwt.claim.role', 'service_role', true);
 set local role service_role;
 
 insert into rule12b_test_results(label, result)
-select 'immediate', public.create_rule12b_correction_v1(
+select 'immediate', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000001',
   '50000000-0000-4000-8000-000000000001', 1, 0,
-  true, 17, false, 16, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  true, 'f0000000-0000-4000-8000-000000000002', null,
   '60000000-0000-4000-8000-000000000001'
 );
 
 insert into rule12b_test_results(label, result)
-select 'immediate_replay', public.create_rule12b_correction_v1(
+select 'immediate_replay', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000001',
   '50000000-0000-4000-8000-000000000001', 1, 0,
-  true, 17, false, 16, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  true, 'f0000000-0000-4000-8000-000000000002', null,
   '60000000-0000-4000-8000-000000000001'
 );
 
 insert into rule12b_test_results(label, result)
-select 'changed_retry', public.create_rule12b_correction_v1(
+select 'changed_retry', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000001',
   '50000000-0000-4000-8000-000000000001', 1, 0,
-  true, 17, false, 15, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":15,"column":"minus","apparentQualifier":true}'::jsonb,
+  true, 'f0000000-0000-4000-8000-000000000002', null,
   '60000000-0000-4000-8000-000000000001'
 );
 
 insert into rule12b_test_results(label, result)
-select 'qualification_blocked', public.create_rule12b_correction_v1(
+select 'qualification_blocked', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000005', '10000000-0000-4000-8000-000000000002',
   '50000000-0000-4000-8000-000000000002', 1, 0,
-  true, 17, false, 16, true, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  true, null, null,
   '60000000-0000-4000-8000-000000000002'
 );
 
 insert into rule12b_test_results(label, result)
-select 'self_blocked', public.create_rule12b_correction_v1(
+select 'self_blocked', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000002', '10000000-0000-4000-8000-000000000002',
   '50000000-0000-4000-8000-000000000003', 1, 0,
-  true, 17, false, 16, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  false, null, null,
   '60000000-0000-4000-8000-000000000003'
 );
 
@@ -203,30 +219,36 @@ insert into app.correction_policy_versions(
 set local role service_role;
 
 insert into rule12b_test_results(label, result)
-select 'reason_blocked', public.create_rule12b_correction_v1(
+select 'reason_blocked', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000005', '10000000-0000-4000-8000-000000000002',
   '50000000-0000-4000-8000-000000000004', 1, 0,
-  true, 17, false, 16, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  false, null, null,
   '60000000-0000-4000-8000-000000000004'
 );
 
 insert into rule12b_test_results(label, result)
-select 'pending', public.create_rule12b_correction_v1(
+select 'pending', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000005', '10000000-0000-4000-8000-000000000002',
   '50000000-0000-4000-8000-000000000005', 1, 0,
-  true, 17, false, 16, false, 'Cards disagreed by one point',
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  false, null, 'Cards disagreed by one point',
   '60000000-0000-4000-8000-000000000005'
 );
 
 insert into rule12b_test_results(label, result)
-select 'editor_review_blocked', public.review_rule12_correction_v1(
+select 'editor_review_blocked', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000005',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000006'
 );
 
 insert into rule12b_test_results(label, result)
-select 'participant_review_blocked', public.review_rule12_correction_v1(
+select 'participant_review_blocked', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000002',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000007'
@@ -240,7 +262,7 @@ where tournament_id = 'b0000000-0000-4000-8000-000000000001'
 set local role service_role;
 
 insert into rule12b_test_results(label, result)
-select 'stale_primary_review_blocked', public.review_rule12_correction_v1(
+select 'stale_primary_review_blocked', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000001',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000011'
@@ -253,29 +275,39 @@ select 'stale_primary_reader', public.get_rule12_correction_v1(
 );
 
 insert into rule12b_test_results(label, result)
-select 'approved', public.review_rule12_correction_v1(
+select 'approved', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000006',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000008'
 );
 
 insert into rule12b_test_results(label, result)
-select 'approved_replay', public.review_rule12_correction_v1(
+select 'approved_replay', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000006',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000008'
 );
 
 insert into rule12b_test_results(label, result)
-select 'pending_rejection', public.create_rule12b_correction_v1(
+select 'changed_review_retry', public.review_rule12_correction_v2(
+  'a0000000-0000-4000-8000-000000000006',
+  '50000000-0000-4000-8000-000000000005', 'reject',
+  '60000000-0000-4000-8000-000000000008'
+);
+
+insert into rule12b_test_results(label, result)
+select 'pending_rejection', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000003',
   '50000000-0000-4000-8000-000000000006', 1, 0,
-  true, 17, false, 16, false, 'Independent review fixture',
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  false, null, 'Independent review fixture',
   '60000000-0000-4000-8000-000000000009'
 );
 
 insert into rule12b_test_results(label, result)
-select 'review_rejected', public.review_rule12_correction_v1(
+select 'review_rejected', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000006',
   '50000000-0000-4000-8000-000000000006', 'reject',
   '60000000-0000-4000-8000-000000000010'
@@ -314,15 +346,18 @@ where id = 'b0000000-0000-4000-8000-000000000001';
 set local role service_role;
 
 insert into rule12b_test_results(label, result)
-select 'closed_create_replay', public.create_rule12b_correction_v1(
+select 'closed_create_replay', public.create_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000001',
   '50000000-0000-4000-8000-000000000001', 1, 0,
-  true, 17, false, 16, false, null,
+  '12.2b',
+  '{"outcome":"win","margin":17,"column":"plus","apparentQualifier":true}'::jsonb,
+  '{"outcome":"loss","margin":16,"column":"minus","apparentQualifier":true}'::jsonb,
+  true, 'f0000000-0000-4000-8000-000000000002', null,
   '60000000-0000-4000-8000-000000000001'
 );
 
 insert into rule12b_test_results(label, result)
-select 'closed_review_replay', public.review_rule12_correction_v1(
+select 'closed_review_replay', public.review_rule12_correction_v2(
   'a0000000-0000-4000-8000-000000000006',
   '50000000-0000-4000-8000-000000000005', 'approve',
   '60000000-0000-4000-8000-000000000008'
@@ -348,7 +383,7 @@ begin
          where attempted_operation_id = '60000000-0000-4000-8000-000000000001') <> 1 then
     raise exception 'changed retry did not fail closed with retained conflict evidence';
   end if;
-  if (select result->>'code' from rule12b_test_results where label = 'qualification_blocked') <> 'qualification_notice_unavailable'
+  if (select result->>'code' from rule12b_test_results where label = 'qualification_blocked') <> 'invalid_request'
      or (select result->>'code' from rule12b_test_results where label = 'self_blocked') <> 'self_correction_denied'
      or (select result->>'code' from rule12b_test_results where label = 'reason_blocked') <> 'reason_required' then
     raise exception 'qualification, self-edit, or required-reason rejection failed';
@@ -360,7 +395,8 @@ begin
      or (select result from rule12b_test_results where label = 'stale_primary_reader') is not null
      or (select result->>'status' from rule12b_test_results where label = 'approved') <> 'applied'
      or (select result from rule12b_test_results where label = 'approved_replay')
-        <> (select result from rule12b_test_results where label = 'approved')
+         <> (select result from rule12b_test_results where label = 'approved')
+     or (select result->>'code' from rule12b_test_results where label = 'changed_review_retry') <> 'idempotency_conflict'
      or (select result from rule12b_test_results where label = 'closed_review_replay')
         <> (select result from rule12b_test_results where label = 'approved') then
     raise exception 'review policy, independence, approval, or replay failed';
@@ -385,6 +421,8 @@ begin
   end if;
   if (select count(*) from app.independent_card_corrections) <> 3
      or (select count(*) from app.independent_card_correction_state_events where state = 'applied') <> 2
+     or (select count(*) from app.rule12_affected_player_notices where correction_id='50000000-0000-4000-8000-000000000001' and participant_id='f0000000-0000-4000-8000-000000000002') <> 1
+     or (select count(*) from app.independent_card_correction_operation_conflicts) <> 2
      or (select count(*) from app.audit_events where action like 'rule12_correction_%') < 5 then
     raise exception 'correction history or audit evidence is incomplete or duplicated';
   end if;
@@ -413,10 +451,12 @@ begin
      ) then
     raise exception 'scorecard did not apply accepted corrections or preserve rejected originals';
   end if;
-  if has_function_privilege('anon', 'public.create_rule12b_correction_v1(uuid,uuid,uuid,integer,integer,boolean,integer,boolean,integer,boolean,text,uuid)', 'EXECUTE')
-     or has_function_privilege('authenticated', 'public.create_rule12b_correction_v1(uuid,uuid,uuid,integer,integer,boolean,integer,boolean,integer,boolean,text,uuid)', 'EXECUTE')
-     or has_function_privilege('anon', 'public.review_rule12_correction_v1(uuid,uuid,text,uuid)', 'EXECUTE')
+  if has_function_privilege('anon', 'public.create_rule12_correction_v2(uuid,uuid,uuid,integer,integer,text,jsonb,jsonb,boolean,uuid,text,uuid)', 'EXECUTE')
+     or has_function_privilege('authenticated', 'public.create_rule12_correction_v2(uuid,uuid,uuid,integer,integer,text,jsonb,jsonb,boolean,uuid,text,uuid)', 'EXECUTE')
+     or has_function_privilege('anon', 'public.review_rule12_correction_v2(uuid,uuid,text,uuid)', 'EXECUTE')
+     or has_function_privilege('service_role', 'public.review_rule12_correction_v1(uuid,uuid,text,uuid)', 'EXECUTE')
      or has_function_privilege('authenticated', 'public.get_rule12_correction_v1(uuid,uuid)', 'EXECUTE')
+     or not has_function_privilege('service_role', 'public.review_rule12_correction_v2(uuid,uuid,text,uuid)', 'EXECUTE')
      or not has_function_privilege('service_role', 'public.get_rule12_correction_v1(uuid,uuid)', 'EXECUTE') then
     raise exception 'server-only correction function grants are invalid';
   end if;

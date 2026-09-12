@@ -1,7 +1,7 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
-import { createClient } from "../supabase/server";
+import { createServerOnlyAdminClient } from "../supabase/private-admin";
 
 export type CorrectionPolicy = {
   tournamentId: string;
@@ -23,9 +23,8 @@ function isPolicy(value: unknown): value is CorrectionPolicy {
     && typeof item.canConfigure === "boolean";
 }
 
-export async function getCorrectionPolicy(tournamentId: string): Promise<CorrectionPolicy> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("get_correction_policy", { p_tournament_id: tournamentId });
+export async function getCorrectionPolicy(actorId: string, tournamentId: string): Promise<CorrectionPolicy> {
+  const { data, error } = await createServerOnlyAdminClient().rpc("get_rule12_correction_policy_v1", { p_actor_id: actorId, p_tournament_id: tournamentId });
   if (error || !isPolicy(data) || data.tournamentId !== tournamentId) notFound();
   return data;
 }

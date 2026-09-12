@@ -55,6 +55,8 @@ test("Rule 12.2(h) preserves an already adverse apparent qualifier", () => {
     { id: "b", outcome: "loss", margin: 20, plusPoints: 0, minusPoints: 20, gamePoints: 0 },
   ]);
   assert.equal(h.totalsMustRecalculate, false);
+  assert.throws(() => adjudicateRule12Fixture("h", [card("a", true, "win", 21, "plus"), card("b", false, "loss", 16, "minus")]), /already adverse/);
+  assert.throws(() => adjudicateRule12Fixture("a", [card("a", true, "win", 15, "plus"), card("b", false, "loss", 20, "minus")]), /favorable/);
 });
 
 test("Rule 12.2(i) adds the affected-player notice to the underlying correction", () => {

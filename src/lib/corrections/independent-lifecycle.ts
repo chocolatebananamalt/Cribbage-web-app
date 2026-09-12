@@ -26,6 +26,28 @@ export type Rule12CorrectionReview = {
   operationId: string;
 };
 
+export type Rule12Claim = {
+  outcome: "win" | "loss";
+  margin: number | null;
+  column: "plus" | "minus" | "blank";
+  apparentQualifier: boolean;
+};
+
+export type Rule12CorrectionCreate = {
+  actorId: string;
+  gameId: string;
+  correctionId: string;
+  expectedGameVersion: number;
+  expectedCorrectionSequence: number;
+  ruleCase: "12.2a" | "12.2b" | "12.2c" | "12.2d" | "12.2e" | "12.2f" | "12.2h";
+  claimA: Rule12Claim;
+  claimB: Rule12Claim;
+  qualificationChanged: boolean;
+  affectedParticipantId: string | null;
+  reason?: string;
+  operationId: string;
+};
+
 const createRejectionCodes = new Set([
   "invalid_request", "fixture_not_applicable", "qualification_notice_unavailable",
   "game_not_found", "not_cross_checker", "self_correction_denied", "tournament_closed",
@@ -78,7 +100,7 @@ function isCreateResult(value: unknown, input: Rule12bCorrectionCreate) {
     && nonnegativeInteger(value.policyVersion)
     && typeof value.reasonRequired === "boolean"
     && (value.requiredApprovals === 0 || value.requiredApprovals === 1)
-    && value.qualificationChanged === false
+    && value.qualificationChanged === input.qualificationChanged
     && ((value.status === "applied" && value.requiredApprovals === 0)
       || (value.status === "pending" && value.requiredApprovals === 1));
 }
@@ -196,8 +218,34 @@ export async function createRule12bCorrection(admin: RpcClient, input: Rule12bCo
   return data;
 }
 
+export async function createRule12Correction(admin: RpcClient, input: Rule12CorrectionCreate) {
+  const { data, error } = await admin.rpc("create_rule12_correction_v2", {
+    p_actor_id: input.actorId,
+    p_game_id: input.gameId,
+    p_correction_id: input.correctionId,
+    p_expected_game_version: input.expectedGameVersion,
+    p_expected_correction_sequence: input.expectedCorrectionSequence,
+    p_rule_case: input.ruleCase,
+    p_claim_a: input.claimA,
+    p_claim_b: input.claimB,
+    p_qualification_changed: input.qualificationChanged,
+    p_affected_participant_id: input.affectedParticipantId,
+    p_reason: input.reason ?? null,
+    p_operation_id: input.operationId,
+  });
+  if (error || !isCreateResult(data, {
+    actorId: input.actorId, gameId: input.gameId, correctionId: input.correctionId,
+    expectedGameVersion: input.expectedGameVersion,
+    expectedCorrectionSequence: input.expectedCorrectionSequence,
+    originalA: { isWinner: input.claimA.outcome === "win", margin: input.claimA.margin ?? 1 },
+    originalB: { isWinner: input.claimB.outcome === "win", margin: input.claimB.margin ?? 1 },
+    qualificationChanged: input.qualificationChanged, operationId: input.operationId,
+  })) throw new Error("Rule 12 correction is unavailable.");
+  return data as { status: "applied" | "pending" | "rejected"; code?: string };
+}
+
 export async function reviewRule12Correction(admin: RpcClient, input: Rule12CorrectionReview) {
-  const { data, error } = await admin.rpc("review_rule12_correction_v1", {
+  const { data, error } = await admin.rpc("review_rule12_correction_v2", {
     p_actor_id: input.actorId,
     p_correction_id: input.correctionId,
     p_decision: input.decision,

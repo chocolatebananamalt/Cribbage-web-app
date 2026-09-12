@@ -1,16 +1,6 @@
-export type CorrectionSide = { displayName: string; tableSeat: string };
-
-export type CorrectionProposalCandidate = {
-  gameId: string; eventName: string; roundNumber: number; matchInstance: number;
-  gameVersion: number; winnerSide: "a" | "b"; margin: number;
-  sideA: CorrectionSide; sideB: CorrectionSide;
-};
-
-export type PendingCorrectionReview = {
-  correctionId: string; gameId: string; eventName: string; roundNumber: number; matchInstance: number;
-  baseGameVersion: number; previousWinnerSide: "a" | "b"; previousMargin: number;
-  correctedWinnerSide: "a" | "b"; correctedMargin: number; reason: string | null;
-  sideA: CorrectionSide; sideB: CorrectionSide;
-};
-
-export type CorrectionWorkspace = { proposalCandidates: CorrectionProposalCandidate[]; pendingReviews: PendingCorrectionReview[] };
+export type CorrectionSide = { displayName: string; tableSeat: string; isWinner: boolean; margin: number };
+export type CorrectionProposalCandidate = { gameId: string; eventId: string; eventName: string; roundNumber: number; matchInstance: number; gameVersion: number; correctionSequence: number; sideA: CorrectionSide; sideB: CorrectionSide };
+export type CorrectionNoticeTarget = { participantId: string; eventId: string; displayName: string };
+export type CorrectionReviewSide = { displayName: string; tableSeat: string; original: { outcome: "win" | "loss"; margin: number | null; column: "plus" | "minus" | "blank"; apparentQualifier: boolean }; adjudicated: { isWinner: boolean; margin: number } };
+export type PendingCorrectionReview = { correctionId: string; gameId: string; eventName: string; roundNumber: number; matchInstance: number; ruleCase: string; reason: string | null; qualificationChanged: boolean; affectedNoticeTarget: null | { participantId: string; displayName: string }; sideA: CorrectionReviewSide; sideB: CorrectionReviewSide };
+export type CorrectionWorkspace = { proposalCandidates: CorrectionProposalCandidate[]; noticeTargets: CorrectionNoticeTarget[]; pendingReviews: PendingCorrectionReview[] };

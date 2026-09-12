@@ -3,29 +3,42 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { isRejectedSettlementDraft, isSettlementDraftOutcome, isSettlementDraftRequest, type SettlementAward, type SettlementDraftRequest, type SettlementPlacement, type SettlementWorkspace } from "../../../../../../lib/api/settlement-draft";
+import { isRejectedSettlementDraft, isSettlementDraftOutcome, isSettlementDraftRequest, type SettlementAward, type SettlementDraftRequest, type SettlementMrpClaim, type SettlementPlacement, type SettlementWorkspace } from "../../../../../../lib/api/settlement-draft";
 import { formatUsdInput, parseUsdMinor } from "../../../../../../lib/money";
 
 type Envelope = SettlementDraftRequest & { kind: "settlement-draft" };
 
 function key(actorId: string, eventId: string) { return `settlement-draft:${actorId}:${eventId}`; }
 
+function requestFromEnvelope({ kind: _kind, ...request }: Envelope): SettlementDraftRequest {
+  void _kind;
+  return request;
+}
+
 function readEnvelope(storageKey: string): Envelope | null {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(storageKey) ?? "null");
     if (!value || typeof value !== "object" || Array.isArray(value) || (value as Record<string, unknown>).kind !== "settlement-draft") return null;
-    const request = Object.fromEntries(Object.entries(value).filter(([entryKey]) => entryKey !== "kind"));
-    return isSettlementDraftRequest(request) ? value as Envelope : null;
+    const envelope = value as Envelope;
+    return isSettlementDraftRequest(requestFromEnvelope(envelope)) ? envelope : null;
   } catch { return null; }
 }
 
 function dollars(minor: number) { return `$${(minor / 100).toFixed(2)}`; }
 function placementRows(workspace: SettlementWorkspace) {
-  return (workspace.draft?.placements ?? workspace.qualifierChoices.slice(0, 2).map((_, index) => ({ participantId: "", placement: index + 1, prizeAmountMinor: 0 })))
+  return (workspace.draft?.placements ?? workspace.playoffResult?.placements.map(({ participantId, placement }) => ({ participantId, placement, prizeAmountMinor: 0 })) ?? [])
     .map((entry) => ({ ...entry, prize: formatUsdInput(entry.prizeAmountMinor) }));
 }
 function awardRows(workspace: SettlementWorkspace) {
   return (workspace.draft?.awards ?? []).map((entry) => ({ ...entry, amount: formatUsdInput(entry.amountMinor) }));
+}
+function mrpRows(workspace: SettlementWorkspace) {
+  const saved = new Map((workspace.draft?.mrpClaims ?? []).map((claim) => [claim.participantId, claim]));
+  return workspace.qualifierChoices.map((choice) => {
+    const claim = saved.get(choice.participantId);
+    return { participantId: choice.participantId, displayName: choice.displayName,
+      mrpPoints: claim === undefined ? "" : String(claim.mrpPoints), evidenceNote: claim?.evidenceNote ?? "" };
+  });
 }
 
 export default function SettlementClient({ actorId, tournamentId, eventId, workspace }: {
@@ -37,6 +50,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
   const router = useRouter();
   const [placements, setPlacements] = useState(() => placementRows(workspace));
   const [awards, setAwards] = useState<(SettlementAward & { amount: string })[]>(() => awardRows(workspace));
+  const [mrpClaims, setMrpClaims] = useState(() => mrpRows(workspace));
   const [busy, setBusy] = useState(true);
   const [locked, setLocked] = useState<Envelope | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -65,7 +79,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         sessionStorage.removeItem(storageKey); setBusy(false); router.refresh(); return;
       }
       if (isRejectedSettlementDraft(result, eventId)) {
-        sessionStorage.removeItem(storageKey); setLocked(null); setPlacements(placementRows(workspace)); setAwards(awardRows(workspace));
+        sessionStorage.removeItem(storageKey); setLocked(null); setPlacements(placementRows(workspace)); setAwards(awardRows(workspace)); setMrpClaims(mrpRows(workspace));
         setMessage("The prior save was rejected. The latest server version has been reloaded."); setBusy(false); router.refresh(); return;
       }
       setLocked(saved); setMessage("The prior save is unresolved and remains locked for safe recovery."); setBusy(false);
@@ -73,6 +87,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
   }, [eventId, reconcile, router, storageKey, tournamentId, workspace]);
 
   async function save() {
+    if (!workspace.playoffResult) { setMessage("Record the supervised playoff winner and runner-up before saving financial claims."); return; }
     const parsedPlacements: SettlementPlacement[] = [];
     for (const entry of placements) {
       const prizeAmountMinor = parseUsdMinor(entry.prize, { allowZero: true, maxMinor: 2147483647 });
@@ -88,27 +103,42 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
     if (new Set(parsedPlacements.map((entry) => entry.participantId)).size !== parsedPlacements.length) {
       setMessage("Each qualifier can appear only once in the playoff placement list."); return;
     }
+    const parsedMrpClaims: SettlementMrpClaim[] = [];
+    for (const entry of mrpClaims) {
+      const points = entry.mrpPoints.trim();
+      const evidenceNote = entry.evidenceNote.trim();
+      if (points === "" && evidenceNote === "") continue;
+      if (!/^(0|[1-9][0-9]*)$/.test(points) || Number(points) > 2147483647 || evidenceNote.length < 1
+        || evidenceNote.length > 500 || new TextEncoder().encode(evidenceNote).length > 2000 || /[\u0000-\u001f\u007f]/.test(evidenceNote)) {
+        setMessage("Each entered MRP claim needs whole points, including zero when applicable, and a short source or evidence note."); return;
+      }
+      parsedMrpClaims.push({ participantId: entry.participantId, mrpPoints: Number(points), evidenceNote });
+    }
     const candidate: Envelope = {
       kind: "settlement-draft", qualificationResultVersionId: workspace.qualificationResultVersionId,
-      expectedVersion: workspace.currentVersion, placements: parsedPlacements, awards: parsedAwards,
+      playoffResultVersionId: workspace.playoffResult.playoffResultVersionId,
+      expectedVersion: workspace.currentVersion, placements: parsedPlacements, awards: parsedAwards, mrpClaims: parsedMrpClaims,
       idempotencyKey: locked?.idempotencyKey ?? crypto.randomUUID(),
     };
     if (locked && JSON.stringify({ ...locked, kind: undefined, idempotencyKey: undefined }) !== JSON.stringify({ ...candidate, kind: undefined, idempotencyKey: undefined })) {
       setMessage("The unresolved save is locked. Restore its original entries before retrying."); return;
     }
-    if (!isSettlementDraftRequest(candidate)) { setMessage("Choose a different qualifier for every paid placement before saving."); return; }
-    const request = locked ?? candidate;
+    const envelope = locked ?? candidate;
+    const request = requestFromEnvelope(envelope);
+    if (!isSettlementDraftRequest(request)) { setMessage("Choose a different qualifier for every paid placement before saving."); return; }
     try {
-      sessionStorage.setItem(storageKey, JSON.stringify(request)); setLocked(request); setBusy(true); setMessage(null);
+      sessionStorage.setItem(storageKey, JSON.stringify(envelope)); setLocked(envelope); setBusy(true); setMessage(null);
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft`, {
-        method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify({ ...request, kind: undefined }),
+        method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify(request),
       });
       const result: unknown = await response.json().catch(() => null);
       if (response.ok && isSettlementDraftOutcome(result, tournamentId, eventId)) {
         sessionStorage.removeItem(storageKey); setLocked(null); router.refresh(); return;
       }
       if (response.status === 409) {
-        sessionStorage.removeItem(storageKey); setLocked(null); setMessage("The server rejected this draft. Refresh and review the latest saved version."); return;
+        sessionStorage.removeItem(storageKey); setLocked(null); setPlacements(placementRows(workspace));
+        setAwards(awardRows(workspace)); setMrpClaims(mrpRows(workspace));
+        setMessage("The server rejected this draft. The authoritative saved version has been restored."); router.refresh(); return;
       }
       setMessage("This save is unresolved and remains locked until the server can confirm it.");
     } catch { setMessage("This save is unresolved and remains locked until the server can confirm it."); }
@@ -119,7 +149,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
     <h2 id="settlement-editor-title">Playoff placements and award claims</h2>
     <p className="registration-note"><strong>Draft only.</strong> These claims are not reconciled, approved, published, or an official ACC submission.</p>
     <form onSubmit={(event) => { event.preventDefault(); void save(); }}>
-      <fieldset disabled={busy}>
+      <fieldset disabled={busy || !!locked}>
         <legend>Playoff placement claims</legend>
         {placements.map((entry, index) => <div className="correction-actions" key={entry.placement}>
           <label>Place {entry.placement}
@@ -135,7 +165,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         </div>)}
         <button className="secondary" type="button" disabled={placements.length >= workspace.qualifierChoices.length} onClick={() => setPlacements((current) => [...current, { participantId: "", placement: current.length + 1, prizeAmountMinor: 0, prize: "0.00" }])}>Add Paid Placement</button>
       </fieldset>
-      <fieldset disabled={busy}>
+      <fieldset disabled={busy || !!locked}>
         <legend>Q-pool and other award claims</legend>
         {awards.map((entry, index) => <div className="correction-item" key={`${entry.participantId}-${entry.awardType}-${entry.qPoolSlot ?? "other"}-${index}`}>
           <label>Qualifier<select value={entry.participantId} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, participantId: event.target.value } : item))}>{workspace.qualifierChoices.map((choice) => <option key={choice.participantId} value={choice.participantId}>{choice.displayName}</option>)}</select></label>
@@ -146,9 +176,19 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         </div>)}
         <button className="secondary" type="button" onClick={() => setAwards((current) => [...current, { participantId: workspace.qualifierChoices[0].participantId, awardType: "other", qPoolSlot: null, amountMinor: 0, amount: "", note: "" }])}>Add Award</button>
       </fieldset>
-      <button className="primary" type="submit" disabled={busy}>{busy ? "Checking…" : `Save Draft Version ${workspace.currentVersion + 1}`}</button>
+      <fieldset disabled={busy || !!locked}>
+        <legend>Director-transcribed MRP claims</legend>
+        <p className="auth-note">Optional and provisional. A blank value means missing; enter 0 only when the source expressly awards zero. Every entered value requires its source or evidence.</p>
+        {mrpClaims.map((entry, index) => <div className="correction-item" key={entry.participantId}>
+          <strong>{entry.displayName}</strong>
+          <label>MRP claim (whole points)<input inputMode="numeric" min="0" step="1" value={entry.mrpPoints} onChange={(event) => setMrpClaims((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, mrpPoints: event.target.value } : item))} /></label>
+          <label>Required source or evidence note<input maxLength={500} value={entry.evidenceNote} onChange={(event) => setMrpClaims((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, evidenceNote: event.target.value } : item))} /></label>
+        </div>)}
+        <p className="error-text">Transcribed MRP claims are not calculated or ACC-approved.</p>
+      </fieldset>
+      <button className="primary" type="submit" disabled={busy || !workspace.playoffResult}>{busy ? "Checking…" : `Save Draft Version ${workspace.currentVersion + 1}`}</button>
     </form>
     {message ? <p className="error-text" role="alert">{message}</p> : null}
-    {workspace.draft ? <section className="correction-item"><h3>Latest saved draft</h3><p>Version {workspace.draft.version} by {workspace.draft.createdBy}</p><p>{workspace.draft.serverTotals.activePaymentReceiptCount} active receipts · {dollars(workspace.draft.serverTotals.activePaymentReceiptTotalMinor)} received</p><p>{workspace.draft.serverTotals.activeExpenseCount} active expenses · {dollars(workspace.draft.serverTotals.activeExpenseTotalMinor)} recorded</p><p>Unallocated tournament cash position: <strong>{dollars(workspace.draft.serverTotals.netCashPositionMinor)}</strong></p><a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft/working-copy`}>Download Private Working Copy (.CSV)</a><p className="auth-note">The working copy is for director review only. MRPs, Q-pool payout rules, event allocation, final reconciliation, publication, and official ACC export remain unavailable until approved rules and workflows are implemented.</p></section> : null}
+    {workspace.draft ? <section className="correction-item"><h3>Latest saved draft</h3><p>Version {workspace.draft.version} by {workspace.draft.createdBy}</p><p>Bound playoff result: {workspace.draft.playoffResultVersionId ? "recorded" : "legacy draft — not bound"}</p><p>{workspace.draft.serverTotals.activePaymentReceiptCount} active receipts · {dollars(workspace.draft.serverTotals.activePaymentReceiptTotalMinor)} received</p><p>{workspace.draft.serverTotals.activeExpenseCount} active expenses · {dollars(workspace.draft.serverTotals.activeExpenseTotalMinor)} recorded</p><p>Unallocated tournament cash position: <strong>{dollars(workspace.draft.serverTotals.netCashPositionMinor)}</strong></p><p>{workspace.draft.mrpClaims.length} provisional MRP claim{workspace.draft.mrpClaims.length === 1 ? "" : "s"} transcribed.</p><a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft/working-copy`}>Download Private Working Copy (.CSV)</a><p className="auth-note">This private working copy is unreconciled and not an ACC submission. MRP claims are director transcriptions, not calculations or ACC-approved awards.</p></section> : null}
   </section>;
 }

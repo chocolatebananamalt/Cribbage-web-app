@@ -29,7 +29,7 @@ export async function GET(
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
     const { data, error } = await createServerOnlyAdminClient().rpc(
-      "get_tournament_setup_activation_state_v2",
+      "get_tournament_setup_activation_state_v3",
       { p_actor_id: subject, p_tournament_id: id },
     );
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
