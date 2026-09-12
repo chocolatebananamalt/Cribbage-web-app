@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-11 player game navigation
+
+- Added a protected **My Games** entry point so a signed-in linked participant
+  can find assigned games without receiving an internal game URL. Unresolved
+  games appear first with current Table/Seat and permanent Verification IDs;
+  completed games and per-event scorecard links remain available below.
+- Migrations 0118-0120 are applied to the shared pilot. The actor-scoped reader takes
+  no caller-supplied actor ID, exposes only games containing `auth.uid()`, and
+  exposes only immutable games tied to a director-reviewed schedule publication.
+  The hosted rollback fixture passes assigned, role-only, cross-tournament,
+  unpublished-game rejection, two-entry, and two-confirmation cases without
+  retaining synthetic data.
+- `pnpm verify` passes 247/247 application tests plus audit, lint, build, and
+  workspace checks; `pnpm verify:handoff` passes 6/6. Production deployment
+  and desktop/phone browser proof are still pending for this slice.
+- Evidence: `docs/quality/2026-09-11-player-game-navigation.md`.
+
 ## 2026-09-11 director-reviewed schedule publication
 
 - Added a protected one-time schedule workspace for activated digital Standard

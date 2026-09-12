@@ -57,6 +57,9 @@ test("migration publishes atomically through service-only RPC and protects sched
   const repair = read("database/migrations/0115_schedule_publication_integrity_repairs.sql");
   const scopeRepair = read("database/migrations/0116_schedule_participant_scope_guard.sql");
   const workspaceRepair = read("database/migrations/0117_schedule_workspace_table_plan.sql");
+  const playerGames = read("database/migrations/0118_player_assigned_games_reader.sql");
+  const playerGamesRepair = read("database/migrations/0119_player_games_action_and_access_repair.sql");
+  const publishedGamesOnly = read("database/migrations/0120_published_player_games_only.sql");
   const fixture = read("tests/event-schedule-publication.sql");
   assert.match(sql, /create table app\.event_schedule_publications/);
   assert.match(sql, /create table app\.event_schedule_games/);
@@ -83,10 +86,23 @@ test("migration publishes atomically through service-only RPC and protects sched
   assert.match(scopeRepair, /where p\.event_id in \(old\.event_id, new\.event_id\)/);
   assert.match(workspaceRepair, /'tableCount'/);
   assert.match(workspaceRepair, /'seatsPerTable'/);
+  assert.match(playerGames, /get_my_assigned_games_v1/);
+  assert.match(playerGames, /select auth\.uid\(\)/);
+  assert.match(playerGames, /player\.profile_id = a\.profile_id/);
+  assert.match(playerGames, /grant execute[\s\S]*to authenticated/);
+  assert.match(playerGamesRepair, /create or replace function public\.get_tournament_role/);
+  assert.match(playerGamesRepair, /ownSubmitted/);
+  assert.match(playerGamesRepair, /wait_opponent_confirmation/);
+  assert.match(publishedGamesOnly, /app\.event_schedule_games/);
+  assert.match(publishedGamesOnly, /get_my_assigned_games_unfiltered_core_v1/);
+  assert.match(publishedGamesOnly, /from public, anon, authenticated, service_role/);
   assert.match(fixture, /^begin;/m);
   assert.match(fixture, /^rollback;/m);
   assert.match(fixture, /published game assignment remained mutable/);
   assert.match(fixture, /move into published participant set remained possible/);
+  assert.match(fixture, /actor-scoped player game reader failed/);
+  assert.match(fixture, /actor-specific game action failed/);
+  assert.match(fixture, /a2140000-0000-4000-8000-000000000001/);
 });
 
 test("route and UI retain the server-only authority and reviewed import boundary", () => {

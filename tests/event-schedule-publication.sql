@@ -1,13 +1,18 @@
--- Rollback-only integration fixture for migrations 0114-0116. Run on the
+-- Rollback-only integration fixture for migrations 0114-0118. Run on the
 -- isolated/shared pilot database. Every synthetic row is rolled back.
 
 begin;
 
 create temporary table schedule_test_results (
   label text primary key,
-  result jsonb not null
+  result jsonb
 ) on commit drop;
-grant select, insert on schedule_test_results to service_role;
+grant select, insert on schedule_test_results to service_role, authenticated;
+create temporary table schedule_selected_game (
+  game_id uuid primary key,
+  player_a_slot smallint not null
+) on commit drop;
+grant select, insert on schedule_selected_game to service_role, authenticated;
 
 insert into auth.users(id, email) values
   ('a1140000-0000-4000-8000-000000000001', 'schedule-director@test.invalid'),
@@ -95,6 +100,15 @@ insert into app.tournament_setup_activations(
   'a1140000-0000-4000-8000-000000000001', 'c1140000-0000-4000-8000-000000000001'
 );
 
+insert into app.tournament_roster_entries(
+  id,tournament_id,claimed_display_name,claimed_normalized_name,claimed_acc_number,
+  claimed_normalized_acc_number,creator_profile_id,operation_receipt_id,source_kind
+) values (
+  '81140000-0000-4000-8000-000000000001','b1140000-0000-4000-8000-000000000001',
+  'Paper Opponent','paper opponent','PAPER-4','paper-4',
+  'a1140000-0000-4000-8000-000000000001','c1140000-0000-4000-8000-000000000001','director_manual'
+);
+
 insert into app.initial_seating_publications(
   id, tournament_id, table_count, seats_per_table, actor_profile_id, operation_receipt_id
 ) values (
@@ -102,12 +116,29 @@ insert into app.initial_seating_publications(
   1, 4, 'a1140000-0000-4000-8000-000000000001', 'c1140000-0000-4000-8000-000000000002'
 );
 
+insert into app.event_participants(id, tournament_id, event_id, profile_id, roster_entry_id, table_seat, status) values
+  ('41140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000002', null, 'A-1', 'checked_in'),
+  ('41140000-0000-4000-8000-000000000002', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000003', null, 'A-2', 'checked_in'),
+  ('41140000-0000-4000-8000-000000000003', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000005', null, 'A-1', 'checked_in'),
+  ('41140000-0000-4000-8000-000000000004', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000006', null, 'A-3', 'checked_in'),
+  ('41140000-0000-4000-8000-000000000005', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', null, '81140000-0000-4000-8000-000000000001', 'A-4', 'checked_in');
+
+-- A canonical game without an event_schedule_games row must never be exposed
+-- through the player reader, even when both participants otherwise match.
 insert into app.event_participants(id, tournament_id, event_id, profile_id, table_seat, status) values
-  ('41140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000002', 'A-1', 'checked_in'),
-  ('41140000-0000-4000-8000-000000000002', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000003', 'A-2', 'checked_in'),
-  ('41140000-0000-4000-8000-000000000003', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000005', 'A-1', 'checked_in'),
-  ('41140000-0000-4000-8000-000000000004', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000006', 'A-3', 'checked_in'),
-  ('41140000-0000-4000-8000-000000000005', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000007', 'A-4', 'checked_in');
+  ('41140000-0000-4000-8000-000000000006', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000002', 'B-1', 'checked_in'),
+  ('41140000-0000-4000-8000-000000000007', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000003', 'B-2', 'checked_in');
+insert into app.rounds(id, tournament_id, event_id, round_number) values
+  ('91140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 1);
+insert into app.canonical_games(
+  id, tournament_id, event_id, round_id, side_a_participant_id, side_b_participant_id,
+  side_a_table_seat_snapshot, side_b_table_seat_snapshot
+) values (
+  'a2140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001',
+  '11140000-0000-4000-8000-000000000002', '91140000-0000-4000-8000-000000000001',
+  '41140000-0000-4000-8000-000000000006', '41140000-0000-4000-8000-000000000007',
+  'B-1', 'B-2'
+);
 
 set local role service_role;
 
@@ -191,6 +222,78 @@ select 'exact_replay', public.publish_director_reviewed_event_schedule_v1(
   ), true, '51140000-0000-4000-8000-000000000005');
 
 reset role;
+insert into schedule_selected_game(game_id, player_a_slot)
+select cg.id, case when cg.side_a_participant_id='41140000-0000-4000-8000-000000000001' then 1 else 2 end
+from app.canonical_games cg join app.rounds r on r.id=cg.round_id
+where cg.event_id='11140000-0000-4000-8000-000000000001' and r.round_number=1
+  and '41140000-0000-4000-8000-000000000001' in (cg.side_a_participant_id,cg.side_b_participant_id)
+order by cg.id limit 1;
+
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000002', true);
+insert into schedule_test_results(label, result)
+select 'linked_player_role', to_jsonb(public.get_tournament_role(
+  'b1140000-0000-4000-8000-000000000001'));
+insert into schedule_test_results(label, result)
+select 'player_games', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+insert into schedule_test_results(label, result)
+select 'player_a_submit', public.submit_game_score(
+  selected.game_id, '61140000-0000-4000-8000-000000000001', selected.player_a_slot::smallint,
+  'a', 10, '71140000-0000-4000-8000-000000000001')
+from schedule_selected_game selected;
+insert into schedule_test_results(label, result)
+select 'player_a_after_submit', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000003', true);
+insert into schedule_test_results(label, result)
+select 'player_b_after_a_submit', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+insert into schedule_test_results(label, result)
+select 'player_b_submit', public.submit_game_score(
+  selected.game_id, '61140000-0000-4000-8000-000000000002',
+  (case when selected.player_a_slot=1 then 2 else 1 end)::smallint,
+  'a', 10, '71140000-0000-4000-8000-000000000002')
+from schedule_selected_game selected;
+insert into schedule_test_results(label, result)
+select 'player_b_confirmation_ready', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000002', true);
+insert into schedule_test_results(label, result)
+select 'player_a_confirmation_ready', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+insert into schedule_test_results(label, result)
+select 'player_a_confirm', public.confirm_game_score(
+  selected.game_id, '61140000-0000-4000-8000-000000000001',
+  '71140000-0000-4000-8000-000000000003')
+from schedule_selected_game selected;
+insert into schedule_test_results(label, result)
+select 'player_a_after_confirm', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000003', true);
+insert into schedule_test_results(label, result)
+select 'player_b_after_a_confirm', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000004', true);
+insert into schedule_test_results(label, result)
+select 'role_without_games', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000001');
+insert into schedule_test_results(label, result)
+select 'cross_tournament_games', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000002');
+reset role;
+set local role anon;
+do $$
+begin
+  begin
+    perform public.get_my_assigned_games_v1('b1140000-0000-4000-8000-000000000001');
+    raise exception 'anonymous player game reader remained executable';
+  exception when insufficient_privilege then
+    null;
+  end;
+end;
+$$;
+reset role;
 delete from app.tournament_roles
 where tournament_id='b1140000-0000-4000-8000-000000000001'
   and profile_id='a1140000-0000-4000-8000-000000000001' and role='director';
@@ -259,6 +362,49 @@ begin
      or (select count(*) from app.event_schedule_games where event_id='11140000-0000-4000-8000-000000000001') <> 4 then
     raise exception 'published schedule rows are incomplete or duplicated';
   end if;
+  if jsonb_array_length((select result->'games' from schedule_test_results where label='player_games')) <> 2
+     or (select result #>> '{}' from schedule_test_results where label='linked_player_role') <> 'player'
+     or (select result->>'tournamentDate' from schedule_test_results where label='player_games') <> '10-03-2026'
+     or exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
+       where game->>'playerVerificationId' <> 'A-1'
+     )
+     or not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
+       where game->>'opponentName' = 'Paper Opponent'
+     )
+     or exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
+       where game->>'gameId' = 'a2140000-0000-4000-8000-000000000001'
+     )
+     or jsonb_array_length((select result->'games' from schedule_test_results where label='role_without_games')) <> 0
+     or (select result from schedule_test_results where label='cross_tournament_games') is not null then
+    raise exception 'actor-scoped player game reader failed';
+  end if;
+  if not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_a_after_submit')) game
+       where game->>'ownSubmitted'='true' and game->>'nextAction'='wait_opponent_entry'
+     ) or not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_b_after_a_submit')) game
+       where game->>'ownSubmitted'='false' and game->>'nextAction'='enter_result'
+     ) then
+    raise exception 'actor-specific game action failed';
+  end if;
+  if not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_a_confirmation_ready')) game
+       where game->>'canConfirm'='true' and game->>'nextAction'='review_confirm'
+     ) or not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_b_confirmation_ready')) game
+       where game->>'canConfirm'='true' and game->>'nextAction'='review_confirm'
+     ) or not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_a_after_confirm')) game
+       where game->>'ownConfirmed'='true' and game->>'nextAction'='wait_opponent_confirmation'
+     ) or not exists (
+       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_b_after_a_confirm')) game
+       where game->>'ownConfirmed'='false' and game->>'nextAction'='review_confirm'
+     ) then
+    raise exception 'actor-specific confirmation action failed';
+  end if;
 
   select id, round_id into v_game, v_round from app.canonical_games
   where event_id='11140000-0000-4000-8000-000000000001' order by id limit 1;
@@ -284,6 +430,13 @@ begin
      or not has_function_privilege('service_role', 'public.publish_director_reviewed_event_schedule_v1(uuid,uuid,uuid,jsonb,boolean,uuid)', 'EXECUTE')
      or has_function_privilege('service_role', 'app.publish_director_reviewed_event_schedule_core_v1(uuid,uuid,uuid,jsonb,uuid)', 'EXECUTE') then
     raise exception 'schedule writer grants are invalid';
+  end if;
+  if has_function_privilege('anon', 'public.get_my_assigned_games_v1(uuid)', 'EXECUTE')
+     or not has_function_privilege('authenticated', 'public.get_my_assigned_games_v1(uuid)', 'EXECUTE')
+     or has_function_privilege('anon', 'app.get_my_assigned_games_unfiltered_core_v1(uuid)', 'EXECUTE')
+     or has_function_privilege('authenticated', 'app.get_my_assigned_games_unfiltered_core_v1(uuid)', 'EXECUTE')
+     or has_function_privilege('service_role', 'app.get_my_assigned_games_unfiltered_core_v1(uuid)', 'EXECUTE') then
+    raise exception 'player game reader grants are invalid';
   end if;
 end;
 $$;
