@@ -34,10 +34,13 @@
 - Post-DDL advisors report the existing intentional private-schema RLS/no-policy
   notices and public RPC security-definer notices. Direct tables remain
   inaccessible; the reviewed RPC grants are intentional application boundaries.
+- Commit `9e2917d` was promoted to Vercel Production as deployment
+  `dpl_D6axn8Nzs6wTtiZYeNi9GHJ3Fdba`. The stable root, public demonstration,
+  and offline worker returned HTTP 200; external Chrome rendered the stable
+  demonstration, and the post-smoke error/fatal runtime-log query was empty.
 
 ## Remaining release proof
 
 Real independent-user sessions, physical phone disconnect/reconnect, and a
 director-led full tournament rehearsal remain required. Official MRP, Q-pool,
 payout, and final export authority is not claimed by this slice.
-

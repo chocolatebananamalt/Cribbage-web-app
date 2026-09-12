@@ -15,6 +15,10 @@
   correction-aware scorecard, capture, and preliminary-results paths with no
   retained synthetic data. `pnpm verify` passes 266/266 application tests plus
   audit, lint, build, and workspace checks; `pnpm verify:handoff` passes 6/6.
+- Commit `9e2917d` is live in Vercel Production as deployment
+  `dpl_D6axn8Nzs6wTtiZYeNi9GHJ3Fdba`. Stable root/demo/offline-worker smoke
+  checks pass, external Chrome renders the app, and the post-smoke Production
+  error log is empty.
 - Evidence: `docs/quality/2026-09-11-pilot-reliability-repairs.md`.
 
 ## 2026-09-11 offline readiness production correction
