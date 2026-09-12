@@ -12,9 +12,9 @@
   only through server-held service credentials.
 - Migrations 0114-0117 are applied to the shared pilot. The permanent hosted
   rollback fixture passes rejection, replay, immutability, scope, and grants
-  checks with no retained synthetic data. Local schedule checks pass 5/5;
-  full verification and Production browser evidence follow the reviewed
-  deployment.
+  checks with no retained synthetic data. Local schedule checks pass 5/5.
+  A Production smoke check found and repaired the normal no-table-plan state;
+  final browser evidence follows the repaired deployment.
 - Evidence: `docs/quality/2026-09-11-director-reviewed-schedule-publication.md`.
 
 ## 2026-09-11 roster-based event participation

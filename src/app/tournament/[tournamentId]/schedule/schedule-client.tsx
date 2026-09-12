@@ -43,8 +43,8 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
     parsed.matches,
     activeEvent.gameCount,
     participants.map((participant) => participant.verificationId),
-    workspace.tableCount,
-    workspace.seatsPerTable,
+    workspace.tableCount ?? undefined,
+    workspace.seatsPerTable ?? undefined,
   ) : parsed.errors;
 
   useEffect(() => {

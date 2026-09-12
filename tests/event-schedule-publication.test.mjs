@@ -47,6 +47,8 @@ test("request, result, and workspace validators bind exact shapes", () => {
     matches: [{ ...matches[0], eventId, canonicalGameId: "50000000-0000-4000-8000-000000000005", sideADisplayName: "Sample One", sideBDisplayName: "Sample Two", state: "pending" }],
   };
   assert.equal(isEventScheduleWorkspace(workspace), true);
+  assert.equal(isEventScheduleWorkspace({ ...workspace, tableCount: null, seatsPerTable: null }), true);
+  assert.equal(isEventScheduleWorkspace({ ...workspace, tableCount: 1, seatsPerTable: null }), false);
   assert.equal(isEventScheduleWorkspace({ ...workspace, matches: [{ ...workspace.matches[0], state: "invented" }] }), false);
 });
 

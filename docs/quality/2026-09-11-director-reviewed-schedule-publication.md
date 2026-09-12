@@ -74,3 +74,12 @@ new/low-traffic pilot and are not correctness failures.
   irreversible.
 - This slice creates canonical paper/paper and hybrid games; authoritative
   paper evidence entry/reconstruction remains the separate cross-check gate.
+
+## Production smoke repair
+
+The first stable-URL check returned the application 404 because the real pilot
+has no initial table-plan publication yet and the response validator rejected
+the expected paired `null` plan fields. The contract now accepts only either
+two bounded plan values or two `null` values. Mixed/partial plans remain
+invalid. This lets the normal pre-activation guidance render without weakening
+publication validation.

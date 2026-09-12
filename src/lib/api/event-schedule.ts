@@ -26,8 +26,8 @@ export type EventScheduleResult = {
 
 export type EventScheduleWorkspace = {
   tournamentName: string;
-  tableCount: number;
-  seatsPerTable: number;
+  tableCount: number | null;
+  seatsPerTable: number | null;
   events: Array<{
     eventId: string;
     name: string;
@@ -106,7 +106,8 @@ export function isRejectedEventSchedule(value: unknown): value is { status: "rej
 export function isEventScheduleWorkspace(value: unknown): value is EventScheduleWorkspace {
   if (!record(value) || !exact(value, ["tournamentName", "tableCount", "seatsPerTable", "events", "participants", "matches"])
     || typeof value.tournamentName !== "string" || !value.tournamentName.trim()
-    || !positiveInt(value.tableCount, 26) || !positiveInt(value.seatsPerTable, 20)
+    || !((value.tableCount === null && value.seatsPerTable === null)
+      || (positiveInt(value.tableCount, 26) && positiveInt(value.seatsPerTable, 20)))
     || !Array.isArray(value.events) || !Array.isArray(value.participants) || !Array.isArray(value.matches)) return false;
   if (!value.events.every((item) => record(item)
     && exact(item, ["eventId", "name", "format", "scoringMethod", "gameCount", "participantCount", "schedulePublished", "publishedMatchCount"])
