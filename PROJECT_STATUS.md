@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-11 offline score page reload foundation
+
+- Added an expiring, actor/game-bound offline copy of an assigned score page.
+  Network failures and transient 5xx responses can reopen only that prepared
+  game; authentication failures, redirects, expired copies, API writes, and
+  unrelated routes never use it.
+- Cache preparation is bounded and does not block ordinary score entry.
+  Shared-device clearing removes all offline score storage, while magic-link
+  account replacement is blocked until the current device is synced or
+  explicitly cleared.
+- Focused executable service-worker/auth tests pass 63/63. Independent Sol
+  review found no remaining P0/P1 issue. `pnpm verify` passes 254/254 tests,
+  audit, lint, build, and workspace checks; `pnpm verify:handoff` passes 6/6.
+  Local external-Chrome rendering and response-header checks pass.
+  Independent real-session hard-reload/restart proof remains open before the
+  full October offline gate can pass.
+- Evidence: `docs/quality/2026-09-11-offline-score-page-reload.md`.
+
 ## 2026-09-11 offline score replay foundation
 
 - Added a device-bound offline Standard Singles submission path. Connected

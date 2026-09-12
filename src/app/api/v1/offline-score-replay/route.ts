@@ -48,14 +48,18 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     const identity = await requireVerifiedIdentity(supabase);
     if (!identity) return apiJson({ error: "unauthorized" }, { status: 401 });
-    if (raw.verifiedActorId !== identity.subject || raw.sessionBindingId !== identity.sessionId) return apiJson({ error: "session_mismatch" }, { status: 401 });
+    if (raw.verifiedActorId !== identity.subject) return apiJson({ error: "actor_mismatch" }, { status: 401 });
+    // A fresh magic-link session for the same actor may replay the immutable
+    // device-signed queue. The original session remains part of the signed
+    // payload and capability lookup; a different actor is always rejected.
+    const replaySessionId = raw.sessionBindingId;
     const admin = createServerOnlyAdminClient();
     const capabilityRead = await admin.rpc("get_offline_submission_capability_v1", {
-      p_actor_id: identity.subject, p_session_binding_id: identity.sessionId, p_capability_id: raw.capabilityId, p_queue_id: raw.queueId,
+      p_actor_id: identity.subject, p_session_binding_id: replaySessionId, p_capability_id: raw.capabilityId, p_queue_id: raw.queueId,
     });
     const recordRejection = async (reasonCode: "capability_unavailable" | "scope_mismatch" | "invalid_signature") => {
       const recorded = await admin.rpc("record_offline_submission_rejection_v1", {
-        p_actor_id: identity.subject, p_session_binding_id: identity.sessionId,
+        p_actor_id: identity.subject, p_session_binding_id: replaySessionId,
         p_queue_id: raw.queueId, p_client_operation_id: raw.clientOperationId,
         p_device_key_id: raw.deviceKeyId, p_tournament_id: raw.tournamentId,
         p_event_id: raw.eventId, p_game_id: raw.gameId, p_submission_id: raw.submissionId,
@@ -91,7 +95,7 @@ export async function POST(request: NextRequest) {
       }
     }
     const { data, error } = await admin.rpc("replay_offline_submission_v1", {
-      p_actor_id: identity.subject, p_session_binding_id: identity.sessionId,
+      p_actor_id: identity.subject, p_session_binding_id: replaySessionId,
       p_queue_id: raw.queueId, p_client_operation_id: raw.clientOperationId,
       p_capability_id: raw.capabilityId, p_device_key_id: raw.deviceKeyId,
       p_tournament_id: raw.tournamentId, p_event_id: raw.eventId, p_game_id: raw.gameId,

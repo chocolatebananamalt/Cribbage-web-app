@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRouteClient } from "../../../lib/supabase/server";
+import { canAcceptOfflineOwnerSession } from "../../../lib/auth/offline-account-switch";
 
 function safeRedirectPath(value: string | null): string {
   if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return "/";
@@ -18,8 +19,15 @@ export async function GET(request: NextRequest) {
 
   try {
     const { supabase, getResponse } = createRouteClient(request);
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) throw error;
+    const offlineOwner = request.cookies.get("acc_offline_score_owner")?.value;
+    if (!canAcceptOfflineOwnerSession(offlineOwner, data.user?.id)) {
+      // Discard the new session cookies, preserving the previous browser
+      // identity if it is still valid. The one-time code is consumed, but no
+      // different account can inherit the prior player's private offline page.
+      return privateRedirect(new URL("/auth/offline-data-blocked", request.url));
+    }
     return withCookies(NextResponse.redirect(destination), getResponse());
   } catch {
     destination.pathname = "/sign-in";

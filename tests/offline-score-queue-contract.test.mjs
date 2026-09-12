@@ -90,5 +90,124 @@ test("offline routes are same-origin, claim-bound, signed, bounded, and keep the
   assert.match(replay, /requireVerifiedIdentity/);
   assert.match(replay, /crypto\.subtle\.verify/);
   assert.match(replay, /createServerOnlyAdminClient/);
-  assert.match(replay, /session_mismatch/);
+  assert.match(replay, /raw\.verifiedActorId !== identity\.subject/);
+  assert.match(replay, /const replaySessionId = raw\.sessionBindingId/);
+  assert.doesNotMatch(replay, /raw\.sessionBindingId !== identity\.sessionId/);
+});
+
+test("offline score pages are explicitly prepared, narrowly cached, reusable after reload, and cleared on shared-device signout", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const [worker, pageCache, queue, entry, gamePage, gameError, callback, blockedPage, config, proxy] = await Promise.all([
+    readFile(new URL("../public/offline-score-sw.js", import.meta.url), "utf8"),
+    readFile(new URL("../src/lib/offline-score-page-cache.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/lib/offline-score-queue.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/tournament/[tournamentId]/game/[gameId]/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/tournament/[tournamentId]/game/[gameId]/error.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/auth/callback/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/auth/offline-data-blocked/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/proxy.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(worker, /request\.method !== "GET"/);
+  assert.match(worker, /url\.origin !== self\.location\.origin/);
+  assert.match(worker, /request\.mode === "navigate" \? url\.pathname\.match\(GAME_PATH\)/);
+  assert.match(worker, /network\.status >= 500/);
+  assert.match(worker, /!network\.redirected/);
+  assert.match(worker, /validCachedGame/);
+  assert.match(worker, /x-acc-offline-expires-at/);
+  assert.match(worker, /cache\.match\(request\)/);
+  assert.match(worker, /status: 503/);
+  assert.doesNotMatch(worker, /\/api\/v1/);
+
+  assert.match(pageCache, /register\("\/offline-score-sw\.js"/);
+  assert.match(pageCache, /updateViaCache: "none"/);
+  assert.match(pageCache, /withTimeout/);
+  assert.match(pageCache, /credentials: "same-origin"/);
+  assert.match(pageCache, /cache: "no-store"/);
+  assert.match(pageCache, /redirect: "error"/);
+  assert.match(pageCache, /pageResponse\.url !== pageRequest\.url/);
+  assert.match(pageCache, /data-offline-score-binding/);
+  assert.match(pageCache, /url\.origin === window\.location\.origin/);
+  assert.match(pageCache, /url\.pathname\.startsWith\("\/_next\/static\/"\)/);
+  assert.match(pageCache, /cache\.put\(pageRequest/);
+  assert.match(pageCache, /offlineScoreCachePrefix/);
+  assert.match(pageCache, /caches\.delete\(cacheName\)/);
+  assert.match(pageCache, /acc_offline_score_owner/);
+  assert.match(pageCache, /SameSite=Lax/);
+  assert.match(pageCache, /markOfflineScoreOwner\(actorId\)/);
+
+  assert.match(queue, /readPreparedOfflineSubmissionCapability/);
+  assert.match(queue, /capabilityExpiresAtMs <= now/);
+  assert.match(queue, /device\.serverDeviceKeyId !== stored\.value\.deviceKeyId/);
+  assert.match(queue, /await clearOfflineScorePageCache\(\)/);
+  assert.ok(queue.indexOf("markOfflineScoreOwner(capability.verifiedActorId)") < queue.indexOf("await writeOne(queueStore, record)"));
+  assert.match(entry, /readPreparedOfflineSubmissionCapability\(context\.actorId, context\.gameId\)/);
+  assert.match(entry, /void prepareCurrentScorePageForOffline/);
+  assert.match(entry, /Offline Ready/);
+  assert.match(gamePage, /data-offline-score-binding/);
+  assert.match(gamePage, /throw new Error\("game_workspace_temporarily_unavailable"\)/);
+  assert.match(gameError, /Game workspace temporarily unavailable/);
+  assert.match(gameError, /onClick=\{reset\}/);
+  assert.match(callback, /request\.cookies\.get\("acc_offline_score_owner"\)/);
+  assert.match(callback, /canAcceptOfflineOwnerSession\(offlineOwner, data\.user\?\.id\)/);
+  assert.ok(callback.indexOf("exchangeCodeForSession") < callback.indexOf("canAcceptOfflineOwnerSession(offlineOwner"));
+  assert.match(blockedPage, /different-account sign-in was not completed/);
+  assert.match(blockedPage, /SharedDeviceSignOut/);
+  assert.match(config, /source: "\/offline-score-sw\.js"/);
+  assert.match(config, /Service-Worker-Allowed/);
+  assert.match(proxy, /"\/offline-score-sw\.js"/);
+});
+
+test("offline navigation falls back only for network and transient server failures", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const { runInNewContext } = await import("node:vm");
+  const source = await readFile(new URL("../public/offline-score-sw.js", import.meta.url), "utf8");
+  const handlers = {};
+  const stored = new Map();
+  let networkResult = new Response("server", { status: 500 });
+  const cache = { match: async (request) => stored.get(request.url)?.clone() ?? null };
+  const context = {
+    URL, Response, Date,
+    caches: { open: async () => cache, keys: async () => [], delete: async () => true },
+    fetch: async () => {
+      if (networkResult instanceof Error) throw networkResult;
+      return networkResult;
+    },
+    self: {
+      location: { origin: "https://example.test" }, clients: { claim: async () => undefined }, skipWaiting: async () => undefined,
+      addEventListener: (name, handler) => { handlers[name] = handler; },
+    },
+  };
+  runInNewContext(source, context);
+  const url = "https://example.test/tournament/11111111-1111-4111-8111-111111111111/game/22222222-2222-4222-8222-222222222222";
+  const request = { method: "GET", mode: "navigate", url };
+  stored.set(url, new Response("cached", { headers: { "x-acc-offline-expires-at": String(Date.now() + 60_000) } }));
+  const respond = async () => {
+    let responsePromise;
+    handlers.fetch({ request, respondWith: (value) => { responsePromise = value; } });
+    return await responsePromise;
+  };
+  assert.equal(await (await respond()).text(), "cached", "5xx must use an unexpired prepared page");
+  networkResult = new Response("unauthorized", { status: 401 });
+  assert.equal((await respond()).status, 401, "authorization failures must never use cached private HTML");
+  networkResult = new Error("offline");
+  assert.equal(await (await respond()).text(), "cached", "network failure must use an unexpired prepared page");
+  stored.set(url, new Response("expired", { headers: { "x-acc-offline-expires-at": String(Date.now() - 1) } }));
+  assert.equal((await respond()).status, 503, "expired private pages must fail closed");
+  let apiResponse;
+  handlers.fetch({ request: { method: "POST", mode: "cors", url: "https://example.test/api/v1/offline-score-replay" }, respondWith: (value) => { apiResponse = value; } });
+  assert.equal(apiResponse, undefined, "the worker must never intercept score mutations");
+});
+
+test("offline owner marker allows same-player reauthentication but blocks account replacement", async () => {
+  const { canAcceptOfflineOwnerSession } = await import("../src/lib/auth/offline-account-switch.ts");
+  const first = "11111111-1111-4111-8111-111111111111";
+  const second = "22222222-2222-4222-8222-222222222222";
+  assert.equal(canAcceptOfflineOwnerSession(undefined, second), true);
+  assert.equal(canAcceptOfflineOwnerSession(first, first), true);
+  assert.equal(canAcceptOfflineOwnerSession(first, second), false);
+  assert.equal(canAcceptOfflineOwnerSession("malformed", first), false);
+  assert.equal(canAcceptOfflineOwnerSession(first, undefined), false);
 });

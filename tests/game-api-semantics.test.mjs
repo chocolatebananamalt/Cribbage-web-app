@@ -555,9 +555,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(contextDal, /decideAssignedGameContextRead\(\{ data, error, tournamentId \}\)/);
   assert.match(contextDal, /if \(decision === "unavailable"\) return \{ status: "unavailable" \}/);
   const gamePage = read('src/app/tournament/[tournamentId]/game/[gameId]/page.tsx');
+  const gameError = read('src/app/tournament/[tournamentId]/game/[gameId]/error.tsx');
   assert.match(gamePage, /result\.status === "unavailable"/);
-  assert.match(gamePage, /Game workspace temporarily unavailable/);
-  assert.match(gamePage, /No result can be recorded/);
+  assert.match(gamePage, /throw new Error\("game_workspace_temporarily_unavailable"\)/);
+  assert.match(gameError, /Game workspace temporarily unavailable/);
+  assert.match(gameError, /No result can be recorded/);
   assert.doesNotMatch(contextSql, /profileId|participantId/);
   assert.match(liveScore, /Submit My Independent Entry/);
   assert.match(liveScore, /Confirm My Entry/);

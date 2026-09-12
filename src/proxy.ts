@@ -52,6 +52,8 @@ export async function proxy(request: NextRequest) {
     // without authentication infrastructure or an account cookie.
     if ([
       "/demo",
+      "/auth/offline-data-blocked",
+      "/offline-score-sw.js",
       "/sample/qualifiers-summary.pdf",
       "/rulebook/acc-rulebook-2025.pdf",
     ].includes(request.nextUrl.pathname)) {

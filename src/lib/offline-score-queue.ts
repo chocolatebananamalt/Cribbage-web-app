@@ -8,13 +8,14 @@ import {
   type OfflineSubmissionCapability,
   type UnsignedOfflineSubmission,
 } from "./offline-score-queue-contract";
+import { clearOfflineScorePageCache, markOfflineScoreOwner } from "./offline-score-page-cache";
 
 const databaseName = "acc-offline-score-v1";
 const queueStore = "queue";
 const keyStore = "keys";
 const capabilityStore = "capabilities";
 
-type StoredDeviceKey = { id: string; actorId: string; gameId: string; privateKey: CryptoKey; publicJwk: JsonWebKey };
+type StoredDeviceKey = { id: string; actorId: string; gameId: string; privateKey: CryptoKey; publicJwk: JsonWebKey; serverDeviceKeyId?: string };
 type StoredCapability = { id: string; actorId: string; gameId: string; value: OfflineSubmissionCapability };
 
 function openDatabase() {
@@ -84,6 +85,21 @@ async function getDeviceKey(actorId: string, gameId: string) {
   return await readOne<StoredDeviceKey>(keyStore, keyId(actorId, gameId)) ?? createDeviceKey(actorId, gameId);
 }
 
+export async function readPreparedOfflineSubmissionCapability(actorId: string, gameId: string, now = Date.now()) {
+  const id = keyId(actorId, gameId);
+  const [stored, device] = await Promise.all([
+    readOne<StoredCapability>(capabilityStore, id),
+    readOne<StoredDeviceKey>(keyStore, id),
+  ]);
+  if (!stored || !device || !isOfflineSubmissionCapability(stored.value)) return null;
+  if (stored.actorId !== actorId || stored.gameId !== gameId
+    || stored.value.verifiedActorId !== actorId || stored.value.gameId !== gameId
+    || stored.value.capabilityExpiresAtMs <= now
+    || device.actorId !== actorId || device.gameId !== gameId
+    || device.serverDeviceKeyId !== stored.value.deviceKeyId) return null;
+  return stored.value;
+}
+
 export async function provisionOfflineSubmission(actorId: string, gameId: string) {
   const id = keyId(actorId, gameId);
   const existing = await readOne<StoredCapability>(capabilityStore, id);
@@ -119,6 +135,10 @@ export async function queueOfflineSubmission(capability: OfflineSubmissionCapabi
   const payloadDigest = hex(new Uint8Array(await crypto.subtle.digest("SHA-256", encoded)));
   const signature = bytesToBase64Url(new Uint8Array(await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, device.privateKey, encoded)));
   const record: OfflineQueueRecord = { intent: { ...unsigned, payloadDigest, signature }, state: "Queued" };
+  // Establish the account-switch barrier before the durable queue write. If
+  // the browser rejects this first-party marker, do not create local-only
+  // score data that a later magic-link exchange could orphan or expose.
+  markOfflineScoreOwner(capability.verifiedActorId);
   await writeOne(queueStore, record);
   return record;
 }
@@ -152,4 +172,5 @@ export async function clearOfflineScoreStorage() {
     request.onsuccess = () => resolve(); request.onblocked = () => reject(new Error("offline_storage_blocked"));
     request.onerror = () => reject(request.error ?? new Error("offline_storage_unavailable"));
   });
+  await clearOfflineScorePageCache();
 }

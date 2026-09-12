@@ -30,6 +30,11 @@ UUIDs, and an ACC/source identifier remains separate with provenance.
   for review and is never silently overwritten.
 - Sign-out or shared-device clearing removes local queue data and device keys;
   unresolved entries require a deliberate warning before clearing.
+- A magic-link refresh for the same authenticated player may replay that
+  player's unchanged, device-signed queue under its original capability. A
+  different-account callback is refused while any private offline score state
+  remains, preserving the prior session when possible; changing players
+  requires explicit shared-device clearing.
 
 ## Device failure and scorecard reconstruction
 
