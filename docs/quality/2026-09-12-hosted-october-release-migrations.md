@@ -36,10 +36,30 @@ players, games, receipts, or financial rows were retained.
 - `pnpm verify:handoff`: PASS — 6/6.
 - `git diff --check`: PASS; only Windows line-ending notices were emitted.
 
-## Remaining proof
+## Production deployment and smoke proof
 
-The database and application artifacts are ready for deployment verification.
+- Git commit: `684588888d16d9e30f1fedfa51abc2ebfebcdcd2`
+- READY preview: `dpl_5P8RDqXTRaXaXzBnixfsiHqauWeq`
+- Vercel Production promotion: `dpl_CafWiJMAzHKKM5tCX6TP27PRLaqY`
+- Stable URL: `https://cribbage-web-app.vercel.app`
+- Public root, demo, sign-in, and registration responses: HTTP 200.
+- Authenticated external-Chrome checks: tournament dashboard, setup, seating,
+  event participants, finances, and event results rendered without a framework
+  error page.
+- Live finance mutation: a $1 synthetic release-verification expense was
+  recorded and then voided; the active total returned to $0 and the append-only
+  audit history retained both actions.
+- Responsive production demo: 320x780, 375x812, 640x900, and 1280x900 all
+  rendered meaningful content, all five primary navigation labels, no Next.js
+  error overlay, and document/body width equal to the viewport.
+- Vercel grouped runtime error check after release: no errors found.
+
+## Remaining acceptance rehearsals
+
 Pilot acceptance still requires separate signed-in player/official browser
 sessions, an actual disconnect/reconnect rehearsal, a backup/restore rehearsal,
 and the tournament director's operational walkthrough. Those checks cannot be
-replaced by a single privileged SQL session.
+replaced by a single privileged SQL session. Account-activation and Rule 12
+release flags remain closed until their required independent-session evidence
+exists; this is intentional fail-closed release control, not an undiscovered
+implementation gap.

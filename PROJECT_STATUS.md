@@ -20,8 +20,18 @@
   intentional fail-closed design.
 - The post-repair local gate passes all 407 application tests, dependency audit,
   lint, the Next.js production build, workspace checks, all 6 handoff checks,
-  and `git diff --check`. Production deployment and independent-session live
-  rehearsal remain before this candidate can be called pilot-ready.
+  and `git diff --check`.
+- Commit `6845888` was promoted from its READY preview to Vercel Production as
+  deployment `dpl_CafWiJMAzHKKM5tCX6TP27PRLaqY`. The stable production URL is
+  `https://cribbage-web-app.vercel.app`. Root, demo, sign-in, registration,
+  authenticated setup, finance, seating, participants, and results routes
+  rendered successfully. A live $1 synthetic expense was recorded and then
+  voided, returning the active total to $0 while preserving its audit history.
+- Fresh production responsive checks pass at 320px, 375px, 640px reflow, and
+  1280px with no horizontal overflow or framework error overlay. Vercel reports
+  no runtime errors in the post-release observation window. Independent player
+  and official sessions, disconnect/reconnect, backup/restore, and the director
+  walkthrough remain acceptance rehearsals rather than solvable code gaps.
 
 ## 2026-09-12 hybrid digital-and-paper completion
 
