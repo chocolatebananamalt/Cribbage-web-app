@@ -35,11 +35,14 @@ Singles qualification finalization, and supporting database indexes.
 | Independent Sol review of recovery and qualification | Pass; no remaining P0/P1 finding |
 | `pnpm verify` | Pass; audit, lint, 298/298 application tests, production build, workspace checks |
 | `pnpm verify:handoff` | Pass, 6/6 |
+| Vercel Production | Commit `02439a8`, deployment `dpl_4BDA3NtjjDmFPqV4Ng2Lj9iczCUc`, READY |
+| Stable HTTP smoke | `/`, `/demo`, and `/offline-score-sw.js` return 200; worker is JavaScript with `no-store`/`no-cache` |
+| External Chrome desktop | Pass at 1536x639; meaningful content, no document overflow, no framework overlay, no browser error log |
+| External Chrome phone | Pass at 375x812; public demo renders readable phone layout |
+| Post-smoke Vercel runtime-error scan | Pass; no runtime errors in the selected release window |
 
 ## Known limitations and next release evidence
 
-- Deploy this integrated commit and repeat stable root/demo/offline-worker smoke
-  checks plus desktop and phone rendering.
 - Use independent real sessions to prove account activation, digital scoring,
   confirmation, recovery review, and qualification finalization.
 - Run one complete director rehearsal with actual pilot configuration and

@@ -38,11 +38,11 @@ not consume pilot time.
 
 ## Current highest-priority work
 
-1. Deploy and browser-verify the integrated activation, CSV, expense, recovery,
-   and qualification slice.
-2. Close Q-pool/MRP/payout, playoff results, and financial reconciliation from
+1. Close Q-pool/MRP/payout, playoff results, and financial reconciliation from
    current authoritative sources with fail-closed fixtures.
-3. Run the complete director, two-player, offline/reconnect, recovery, and
+2. Run the actual setup → roster/check-in → registration-close → seating →
+   enrollment → schedule rehearsal against the shared pilot.
+3. Run the complete two-player, offline/reconnect, recovery, and
    release rehearsal by September 18.
 
 The owner-private, plain-language blocker dashboard is published at

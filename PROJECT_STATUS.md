@@ -25,8 +25,12 @@
   or qualification finalization. `pnpm verify` passes 298/298 application tests
   plus audit, lint, production build, and workspace checks;
   `pnpm verify:handoff` passes 6/6.
-- Release deployment and independent-session browser rehearsal remain open for
-  this slice. Evidence: `docs/quality/2026-09-11-pilot-operations-completion.md`.
+- Commit `02439a8` is live in Vercel Production as deployment
+  `dpl_4BDA3NtjjDmFPqV4Ng2Lj9iczCUc`. Stable root, demo, and offline-worker
+  requests return HTTP 200; external Chrome desktop and 375px phone rendering
+  pass; and the post-smoke Vercel runtime-error scan is empty. Independent
+  multi-session and physical rehearsal remain open. Evidence:
+  `docs/quality/2026-09-11-pilot-operations-completion.md`.
 
 ## 2026-09-11 roster freeze, hybrid reconstruction, and preliminary qualification
 
