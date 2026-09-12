@@ -34,12 +34,19 @@
 - Focused tests pass 7/7. `pnpm verify` passes with no known production
   dependency vulnerabilities, lint, 239/239 application tests, the Next.js
   production build, and 6/6 workspace gates.
+- Commit `7170f8d` was promoted to Vercel Production as deployment
+  `dpl_FSgY8KjdS5fTG6dZEY6Lye79HsAP`; the stable domain is
+  `https://cribbage-web-app.vercel.app`.
+- Authenticated external Chrome loaded the protected **Event Participants**
+  page from the stable Production domain. Because the real pilot setup is not
+  yet activated, it correctly displayed **Activate tournament events first**
+  instead of exposing an unusable enrollment control.
 
 ## Remaining proof
 
-- Deploy the commit and verify the protected page at desktop and narrow-phone
-  widths. The real pilot cannot exercise enrollment until its complete event
-  setup is saved and deliberately activated.
+- A real narrow-phone visual check and a live accepted enrollment remain. The
+  real pilot cannot exercise enrollment until its complete event setup is
+  saved and deliberately activated.
 - Participant enrollment does not generate rounds, pairings, or games. The
   approved/director-entered schedule boundary remains the next operational
   dependency.

@@ -15,8 +15,11 @@
 - Migration 0113 is applied to the shared pilot. A hosted rollback transaction
   proved linked and paper-only enrollment together, exact idempotent replay,
   and no disposable residue. `pnpm verify` passes 239/239 application tests,
-  the build, audit, lint, and workspace gates. Production deployment and live
-  protected-browser proof remain.
+  the build, audit, lint, and workspace gates. Commit `7170f8d` is live in
+  Vercel Production as deployment `dpl_FSgY8KjdS5fTG6dZEY6Lye79HsAP`.
+  Authenticated external Chrome loaded the protected participant workspace;
+  the unactivated real pilot correctly directed the director to activate its
+  complete event setup first.
 - Evidence: `docs/quality/2026-09-11-roster-based-event-enrollment.md`.
 
 ## 2026-09-11 atomic multi-event setup activation
