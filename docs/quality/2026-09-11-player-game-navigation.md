@@ -11,7 +11,7 @@ event to the verified-only scorecard.
 ## Evidence
 
 - Migrations `0118_player_assigned_games_reader.sql` through
-  `0120_published_player_games_only.sql` are applied to Supabase project
+  `0121_draft_official_player_games_empty_state.sql` are applied to Supabase project
   `fnjkwymxpnsqvxtpronk`.
 - Hosted rollback fixture `tests/event-schedule-publication.sql` passed after
   creating a disposable published schedule. It proved two assigned rows for
@@ -19,7 +19,8 @@ event to the verified-only scorecard.
   cross-tournament result, permanent Verification ID binding, tournament-date
   formatting, and the intended anon/authenticated grants. A deliberately
   inserted canonical game without director-reviewed publication provenance
-  was excluded. The transaction retained no synthetic data.
+  was excluded, while an assigned official received an explicit empty workspace
+  for a draft tournament. The transaction retained no synthetic data.
 - `pnpm verify` passed: dependency audit, lint, 247/247 application tests,
   production build, and 6/6 workspace checks.
 - `pnpm verify:handoff` passed 6/6 recovered private-handoff checks.

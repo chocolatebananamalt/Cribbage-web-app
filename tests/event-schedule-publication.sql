@@ -27,12 +27,15 @@ insert into app.tournaments(id, director_profile_id, name, status, registration_
 values ('b1140000-0000-4000-8000-000000000001',
   'a1140000-0000-4000-8000-000000000001', 'Synthetic Schedule', 'open', 'closed'),
   ('b1140000-0000-4000-8000-000000000002',
-  'a1140000-0000-4000-8000-000000000001', 'Synthetic Other Tournament', 'open', 'closed');
+  'a1140000-0000-4000-8000-000000000001', 'Synthetic Other Tournament', 'open', 'closed'),
+  ('b1140000-0000-4000-8000-000000000003',
+  'a1140000-0000-4000-8000-000000000001', 'Synthetic Draft Tournament', 'draft', 'open');
 
 insert into app.tournament_roles(tournament_id, profile_id, role) values
   ('b1140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000001', 'director'),
   ('b1140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000004', 'viewer'),
-  ('b1140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000001', 'director');
+  ('b1140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000001', 'director'),
+  ('b1140000-0000-4000-8000-000000000003', 'a1140000-0000-4000-8000-000000000001', 'director');
 
 insert into app.operation_receipts(
   id, tournament_id, actor_profile_id, operation_type, target_id,
@@ -281,6 +284,10 @@ select 'role_without_games', public.get_my_assigned_games_v1(
 insert into schedule_test_results(label, result)
 select 'cross_tournament_games', public.get_my_assigned_games_v1(
   'b1140000-0000-4000-8000-000000000002');
+select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000001', true);
+insert into schedule_test_results(label, result)
+select 'draft_official_games', public.get_my_assigned_games_v1(
+  'b1140000-0000-4000-8000-000000000003');
 reset role;
 set local role anon;
 do $$
@@ -378,7 +385,9 @@ begin
        where game->>'gameId' = 'a2140000-0000-4000-8000-000000000001'
      )
      or jsonb_array_length((select result->'games' from schedule_test_results where label='role_without_games')) <> 0
-     or (select result from schedule_test_results where label='cross_tournament_games') is not null then
+     or (select result from schedule_test_results where label='cross_tournament_games') is not null
+     or jsonb_array_length((select result->'games' from schedule_test_results where label='draft_official_games')) <> 0
+     or (select result->>'tournamentName' from schedule_test_results where label='draft_official_games') <> 'Synthetic Draft Tournament' then
     raise exception 'actor-scoped player game reader failed';
   end if;
   if not exists (

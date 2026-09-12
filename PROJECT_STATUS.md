@@ -6,7 +6,7 @@
   can find assigned games without receiving an internal game URL. Unresolved
   games appear first with current Table/Seat and permanent Verification IDs;
   completed games and per-event scorecard links remain available below.
-- Migrations 0118-0120 are applied to the shared pilot. The actor-scoped reader takes
+- Migrations 0118-0121 are applied to the shared pilot. The actor-scoped reader takes
   no caller-supplied actor ID, exposes only games containing `auth.uid()`, and
   exposes only immutable games tied to a director-reviewed schedule publication.
   The hosted rollback fixture passes assigned, role-only, cross-tournament,

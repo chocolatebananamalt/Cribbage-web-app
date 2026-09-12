@@ -60,6 +60,7 @@ test("migration publishes atomically through service-only RPC and protects sched
   const playerGames = read("database/migrations/0118_player_assigned_games_reader.sql");
   const playerGamesRepair = read("database/migrations/0119_player_games_action_and_access_repair.sql");
   const publishedGamesOnly = read("database/migrations/0120_published_player_games_only.sql");
+  const draftOfficialEmptyState = read("database/migrations/0121_draft_official_player_games_empty_state.sql");
   const fixture = read("tests/event-schedule-publication.sql");
   assert.match(sql, /create table app\.event_schedule_publications/);
   assert.match(sql, /create table app\.event_schedule_games/);
@@ -96,6 +97,8 @@ test("migration publishes atomically through service-only RPC and protects sched
   assert.match(publishedGamesOnly, /app\.event_schedule_games/);
   assert.match(publishedGamesOnly, /get_my_assigned_games_unfiltered_core_v1/);
   assert.match(publishedGamesOnly, /from public, anon, authenticated, service_role/);
+  assert.match(draftOfficialEmptyState, /t\.status = 'draft'/);
+  assert.match(draftOfficialEmptyState, /'games', '\[\]'::jsonb/);
   assert.match(fixture, /^begin;/m);
   assert.match(fixture, /^rollback;/m);
   assert.match(fixture, /published game assignment remained mutable/);

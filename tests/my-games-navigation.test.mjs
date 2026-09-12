@@ -43,7 +43,8 @@ test("my-games response validator is exact and tournament bound", () => {
 test("database reader binds identity to auth.uid and returns only published assigned games", () => {
   const sql = read("database/migrations/0118_player_assigned_games_reader.sql")
     + read("database/migrations/0119_player_games_action_and_access_repair.sql")
-    + read("database/migrations/0120_published_player_games_only.sql");
+    + read("database/migrations/0120_published_player_games_only.sql")
+    + read("database/migrations/0121_draft_official_player_games_empty_state.sql");
   assert.match(sql, /select auth\.uid\(\)/);
   assert.doesNotMatch(sql, /p_actor_id/);
   assert.match(sql, /player\.profile_id = a\.profile_id/);
