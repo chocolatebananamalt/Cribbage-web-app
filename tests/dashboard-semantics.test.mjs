@@ -175,4 +175,6 @@ test("interactive controls meet the baseline touch-target and keyboard-focus con
   assert.match(styles, /\.event-tabs button \{ min-height:44px/);
   assert.match(styles, /\.keypad button \{ min-height:56px/);
   assert.match(styles, /\.pick \{ min-height:56px/);
+  assert.match(styles, /@media \(max-width:700px\) \{ \.nav \{ display:grid; grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+  assert.match(styles, /\.nav button \{ min-height:52px/);
 });

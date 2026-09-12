@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-11 graduated pool calculator
+
+- Added a protected graduated pool calculator matching the live ACC MRP Program
+  Side Pool Calculator examples and nearest-$5 estimate algorithm. The screen
+  shows the exact prize fund, suggested places, suggested total, and any amount
+  that must be manually adjusted before approval.
+- The calculator is intentionally non-persistent and cannot claim that an
+  estimate is an approved payout. Persistent participant awards, Q-pool/MRP
+  attribution, playoff placements, and ledger reconciliation remain open.
+- Corrected the public demo's 375px navigation so all five tabs fit with
+  52-pixel touch targets instead of clipping the final tabs.
+- Evidence: `docs/quality/2026-09-11-graduated-pool-calculator.md`.
+
 ## 2026-09-11 pilot operations completion slice
 
 - Added protected director workspaces for roster-to-account activation, bounded

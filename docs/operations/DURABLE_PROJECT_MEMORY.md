@@ -69,6 +69,7 @@ When the owner corrects or clarifies the project:
 | A Standard Singles qualification snapshot cannot be finalized while any two cards remain tied on all approved numeric ranking fields. | ACC-source implementation decision, 2026-09-11 | UUID or insertion order is never an official tie-breaker; require the approved remaining tie process before finalization. |
 | Ambiguous browser mutations retain and reuse the exact actor-scoped idempotency envelope until the server result is reconciled. | Engineering reliability decision, 2026-09-11 | Do not create a new logical mutation merely because a response was lost. Shared-device clearing removes every such envelope. |
 | Every foreign key introduced by recent pilot tables has a supporting index. | Hosted advisor result, 2026-09-11 | Migration 0132 is part of the controlled pilot schema and future migrations must preserve advisor coverage. |
+| The live ACC Side Pool Calculator is a non-persistent estimator: winner count is rounded up from the one-in-X ratio, suggested prizes use graduated nearest-$5 rounding, and any fund difference requires manual adjustment. | ACC portal/help observation, 2026-09-11 | The app may reproduce the estimate with an explicit review warning; it must not call the suggestion an approved or saved payout. |
 
 ## Source-versus-work ledger
 
