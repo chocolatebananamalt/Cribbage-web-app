@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-11 director-reviewed schedule publication
+
+- Added a protected one-time schedule workspace for activated digital Standard
+  Singles events. Directors can import the exact reviewed CSV, validate every
+  player and Table/Seat against the immutable table plan, approve it, publish
+  canonical rounds/games atomically, and inspect matchups by game.
+- The database freezes the published participant identity/set and schedule
+  assignments, rejects capacity and cross-table errors, supports linked
+  digital players facing paper-only opponents, and exposes schedule authority
+  only through server-held service credentials.
+- Migrations 0114-0117 are applied to the shared pilot. The permanent hosted
+  rollback fixture passes rejection, replay, immutability, scope, and grants
+  checks with no retained synthetic data. Local schedule checks pass 5/5;
+  full verification and Production browser evidence follow the reviewed
+  deployment.
+- Evidence: `docs/quality/2026-09-11-director-reviewed-schedule-publication.md`.
+
 ## 2026-09-11 roster-based event participation
 
 - Removed the account-only event-participation assumption. A checked-in roster
