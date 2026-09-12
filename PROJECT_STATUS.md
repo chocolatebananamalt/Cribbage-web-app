@@ -1,5 +1,24 @@
 # Project Status
 
+## 2026-09-11 roster-based event participation
+
+- Removed the account-only event-participation assumption. A checked-in roster
+  identity can now be enrolled in an activated Standard Singles event even
+  when the player uses only a paper scorecard and has no Auth profile.
+- Added a protected **Event Participants** workspace for director/co-director
+  bulk enrollment. Main, Consy, and each Standard Singles Satellite retain
+  separate participant lists under the same tournament, so Consy enrollment
+  can occur later without a second tournament login.
+- Digital score submission remains account-bound through the existing
+  participant/profile foreign key. Paper-only participation creates no login,
+  role, score authority, result, charge, or game by itself.
+- Migration 0113 is applied to the shared pilot. A hosted rollback transaction
+  proved linked and paper-only enrollment together, exact idempotent replay,
+  and no disposable residue. `pnpm verify` passes 239/239 application tests,
+  the build, audit, lint, and workspace gates. Production deployment and live
+  protected-browser proof remain.
+- Evidence: `docs/quality/2026-09-11-roster-based-event-enrollment.md`.
+
 ## 2026-09-11 atomic multi-event setup activation
 
 - Replaced the one-event activation boundary with an additive, server-only
@@ -18,8 +37,13 @@
   correct 2-digital/1-manual routing, atomic tournament opening, and an exact
   non-duplicating replay. No disposable records remained.
 - `pnpm verify` passes 232/232 application tests plus audit, lint, build, and
-  workspace gates; `pnpm verify:handoff` passes 6/6. Production deployment and
-  authenticated browser proof remain before the release switch is enabled.
+  workspace gates; `pnpm verify:handoff` passes 6/6. Commit `6af8996` was
+  promoted to Vercel Production as deployment
+  `dpl_HZEENQbwGBfZcisbogXcPHoWarKt`; the activation switch and dedicated
+  server-only Supabase Production key are configured. An authenticated
+  external-Chrome check showed the saved setup and enabled activation control.
+  The real pilot remains deliberately unactivated until its complete actual
+  event list is entered because activation locks the revision.
 - Evidence: `docs/quality/2026-09-11-multi-event-setup-activation.md`.
 
 ## 2026-09-11 director manual roster intake

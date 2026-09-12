@@ -18,6 +18,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
         {["director", "co_director"].includes(access.role) && registrationLinkManagementEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/registration`}>Registration link and QR code</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating</Link> : null}
+        {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
         <SharedDeviceSignOut />
       </section>

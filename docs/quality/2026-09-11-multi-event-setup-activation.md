@@ -26,10 +26,16 @@
 - `pnpm verify`: pass — no known production dependency vulnerabilities, lint,
   232/232 application tests, Next.js production build, and 6/6 workspace gates.
 - `pnpm verify:handoff`: pass — 6/6 private handoff integrity checks.
+- Commit `6af8996` was promoted to Vercel Production as deployment
+  `dpl_HZEENQbwGBfZcisbogXcPHoWarKt`. Production now has the activation switch
+  and a dedicated server-only Supabase secret key; no secret value entered the
+  repository or verification output.
+- Authenticated external-Chrome proof loaded setup version 2 and showed the
+  enabled **Activate Tournament Events** control without an availability
+  error. The real pilot was not activated because its saved setup currently
+  contains only Main and activation intentionally locks the revision.
 
 ## Remaining proof
 
-- Deploy the commit, verify the protected setup screen in external Chrome,
-  enable the Production activation gate, redeploy, and exercise the read path.
-- Do not activate the real October pilot setup until its actual complete event
-  list is saved; activation intentionally locks that setup revision.
+- Save the actual complete October event list, then activate it once. Do not
+  activate the current Main-only pilot draft merely to exercise the button.
