@@ -228,6 +228,7 @@ begin
     raise exception 'operational activation rows are incomplete or duplicated';
   end if;
   if (select status from app.tournaments where id = 'b8000000-0000-4000-8000-000000000001') <> 'open'
+     or (select registration_status from app.tournaments where id = 'b8000000-0000-4000-8000-000000000001') <> 'open'
      or (select name from app.tournaments where id = 'b8000000-0000-4000-8000-000000000001') <> 'Synthetic Standard Singles' then
     raise exception 'tournament was not activated from the setup revision';
   end if;

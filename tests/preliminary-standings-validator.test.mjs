@@ -34,10 +34,16 @@ function validStandings() {
     tournamentName: "Synthetic tournament",
     eventName: "Main",
     status: "preliminary",
+    configuredGameCount: 2,
+    schedulePublished: true,
+    scheduledMatchCount: 4,
+    persistedMatchCount: 4,
+    resolvedMatchCount: 4,
+    scheduledScorecardsComplete: true,
     rows: [
       row(0, { verifiedGames: 2, gamePoints: 4, gamesWon: 2, plusPoints: 29, netSpreadPoints: 29, numericRank: 1 }),
-      row(1, { numericRank: 2, tied: true }),
-      row(2, { numericRank: 2, tied: true }),
+      row(1, { verifiedGames: 2, numericRank: 2, tied: true }),
+      row(2, { verifiedGames: 2, numericRank: 2, tied: true }),
       row(3, { verifiedGames: 2, minusPoints: 30, netSpreadPoints: -30, numericRank: 4 }),
     ],
   };
@@ -59,6 +65,37 @@ test("preliminary standings validator rejects extra fields and inconsistent arit
   const impossiblePoints = structuredClone(validStandings());
   impossiblePoints.rows[0].gamePoints = 7;
   assert.equal(isPreliminaryEventStandings(impossiblePoints), false);
+});
+
+test("preliminary standings validator requires internally consistent completion evidence", () => {
+  const incomplete = structuredClone(validStandings());
+  incomplete.resolvedMatchCount = 3;
+  incomplete.scheduledScorecardsComplete = false;
+  assert.equal(isPreliminaryEventStandings(incomplete), true);
+
+  const falseComplete = structuredClone(incomplete);
+  falseComplete.scheduledScorecardsComplete = true;
+  assert.equal(isPreliminaryEventStandings(falseComplete), false);
+
+  const tooManyResolved = structuredClone(validStandings());
+  tooManyResolved.resolvedMatchCount = 5;
+  assert.equal(isPreliminaryEventStandings(tooManyResolved), false);
+
+  const emptyPublishedSchedule = structuredClone(validStandings());
+  emptyPublishedSchedule.scheduledMatchCount = 0;
+  emptyPublishedSchedule.persistedMatchCount = 0;
+  emptyPublishedSchedule.resolvedMatchCount = 0;
+  emptyPublishedSchedule.scheduledScorecardsComplete = false;
+  assert.equal(isPreliminaryEventStandings(emptyPublishedSchedule), false);
+
+  const noConfiguration = structuredClone(validStandings());
+  noConfiguration.configuredGameCount = null;
+  noConfiguration.schedulePublished = false;
+  noConfiguration.scheduledMatchCount = 0;
+  noConfiguration.persistedMatchCount = 0;
+  noConfiguration.resolvedMatchCount = 0;
+  noConfiguration.scheduledScorecardsComplete = false;
+  assert.equal(isPreliminaryEventStandings(noConfiguration), true);
 });
 
 test("preliminary standings validator rejects false order, rank, tie, and duplicate identity", () => {

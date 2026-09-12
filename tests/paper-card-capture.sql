@@ -20,7 +20,7 @@ values
 
 insert into app.tournaments(id, director_profile_id, name, status, registration_status)
 values
-  ('b2000000-0000-4000-8000-000000000001', 'a2000000-0000-4000-8000-000000000001', 'Synthetic Paper Capture', 'open', 'closed'),
+  ('b2000000-0000-4000-8000-000000000001', 'a2000000-0000-4000-8000-000000000001', 'Synthetic Paper Capture', 'open', 'open'),
   ('b2000000-0000-4000-8000-000000000002', 'a2000000-0000-4000-8000-000000000003', 'Synthetic Other Tournament', 'open', 'closed');
 
 insert into app.tournament_roles(tournament_id, profile_id, role)
@@ -80,6 +80,9 @@ insert into app.tournament_roster_entries(
 ) values
   ('f2100000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000001', 'e2000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'Synthetic Player A', 'synthetic player a', 'paper-player-a@test.invalid', 'paper-player-a@test.invalid', 'a2000000-0000-4000-8000-000000000001', 'c2000000-0000-4000-8000-000000000001'),
   ('f2100000-0000-4000-8000-000000000002', 'b2000000-0000-4000-8000-000000000001', 'e2000000-0000-4000-8000-000000000002', 'f2000000-0000-4000-8000-000000000002', 'Synthetic Player B', 'synthetic player b', 'paper-player-b@test.invalid', 'paper-player-b@test.invalid', 'a2000000-0000-4000-8000-000000000001', 'c2000000-0000-4000-8000-000000000001');
+
+update app.tournaments set registration_status = 'closed'
+where id = 'b2000000-0000-4000-8000-000000000001';
 
 insert into app.roster_account_links(
   id, tournament_id, roster_entry_id, profile_id, actor_profile_id, operation_receipt_id

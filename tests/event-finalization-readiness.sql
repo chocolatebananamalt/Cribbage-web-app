@@ -10,10 +10,10 @@ insert into auth.users(id, email) values
   ('aa000000-0000-4000-8000-000000000004', 'readiness-player-b@test.invalid'),
   ('aa000000-0000-4000-8000-000000000005', 'readiness-viewer@test.invalid');
 
-insert into app.tournaments(id, director_profile_id, name, status)
+insert into app.tournaments(id, director_profile_id, name, status, registration_status)
 values
-  ('ab000000-0000-4000-8000-000000000001', 'aa000000-0000-4000-8000-000000000001', 'Synthetic Readiness', 'open'),
-  ('ab000000-0000-4000-8000-000000000002', 'aa000000-0000-4000-8000-000000000005', 'Other Synthetic Tournament', 'draft');
+  ('ab000000-0000-4000-8000-000000000001', 'aa000000-0000-4000-8000-000000000001', 'Synthetic Readiness', 'open', 'open'),
+  ('ab000000-0000-4000-8000-000000000002', 'aa000000-0000-4000-8000-000000000005', 'Other Synthetic Tournament', 'draft', 'open');
 
 insert into app.tournament_roles(tournament_id, profile_id, role) values
   ('ab000000-0000-4000-8000-000000000001', 'aa000000-0000-4000-8000-000000000001', 'director'),

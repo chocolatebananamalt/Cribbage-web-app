@@ -1,6 +1,10 @@
 const uuid = (value: unknown) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 const whole = (value: unknown) => typeof value === "number" && Number.isInteger(value) && value >= 0;
-const envelopeKeys = ["tournamentId", "eventId", "tournamentName", "eventName", "status", "rows"];
+const envelopeKeys = [
+  "tournamentId", "eventId", "tournamentName", "eventName", "status", "configuredGameCount",
+  "schedulePublished", "scheduledMatchCount", "persistedMatchCount", "resolvedMatchCount",
+  "scheduledScorecardsComplete", "rows",
+];
 const rowKeys = ["participantId", "displayName", "participantStatus", "verifiedGames", "gamePoints", "gamesWon", "plusPoints", "minusPoints", "netSpreadPoints", "numericRank", "tied"];
 
 function hasExactKeys(value: object, keys: string[]) {
@@ -28,6 +32,12 @@ export type PreliminaryEventStandings = {
   tournamentName: string;
   eventName: string;
   status: "preliminary";
+  configuredGameCount: number | null;
+  schedulePublished: boolean;
+  scheduledMatchCount: number;
+  persistedMatchCount: number;
+  resolvedMatchCount: number;
+  scheduledScorecardsComplete: boolean;
   rows: PreliminaryStanding[];
 };
 
@@ -65,6 +75,22 @@ export function isPreliminaryEventStandings(value: unknown): value is Preliminar
   if (typeof data.tournamentName !== "string" || typeof data.eventName !== "string"
       || data.status !== "preliminary" || !Array.isArray(data.rows) || !data.rows.every(isRow)) return false;
   const rows = data.rows as PreliminaryStanding[];
+  const configuredGameCount = data.configuredGameCount;
+  if (!(configuredGameCount === null || (whole(configuredGameCount) && (configuredGameCount as number) > 0 && (configuredGameCount as number) <= 99))
+      || typeof data.schedulePublished !== "boolean" || !whole(data.scheduledMatchCount)
+      || !whole(data.persistedMatchCount) || !whole(data.resolvedMatchCount)
+      || (data.resolvedMatchCount as number) > (data.persistedMatchCount as number)
+      || (data.schedulePublished === true && (configuredGameCount === null || data.scheduledMatchCount === 0))
+      || (data.schedulePublished === false && data.scheduledMatchCount !== 0)
+      || typeof data.scheduledScorecardsComplete !== "boolean") return false;
+  const complete = data.schedulePublished === true
+    && configuredGameCount !== null
+    && (data.scheduledMatchCount as number) > 0
+    && data.persistedMatchCount === data.scheduledMatchCount
+    && data.resolvedMatchCount === data.scheduledMatchCount
+    && rows.length > 0
+    && rows.every((row) => row.verifiedGames === configuredGameCount);
+  if (data.scheduledScorecardsComplete !== complete) return false;
   if (new Set(rows.map((row) => row.participantId)).size !== rows.length) return false;
   const groupSizes = new Map<string, number>();
   for (const row of rows) groupSizes.set(scoreKey(row), (groupSizes.get(scoreKey(row)) ?? 0) + 1);

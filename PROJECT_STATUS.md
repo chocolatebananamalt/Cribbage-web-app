@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-11 roster freeze, hybrid reconstruction, and preliminary qualification
+
+- Applied migrations 0124-0126 to the shared pilot. Tournament activation now
+  opens registration, registration closure freezes new roster identities while
+  preserving exact retries, paper-only opponents remain visible on verified
+  scorecards, and scorecards use the same latest applied corrections as standings.
+- Preliminary standings now include paper-only participants and expose
+  schedule/completion evidence plus a provisional qualification and High
+  Non-Qualifier view. Winner, MRP, Q-pool, payout, and final-result authority
+  remains deliberately withheld.
+- Independent high-risk review found no remaining P0/P1 code defect. Hosted
+  rollback fixtures passed activation, roster freeze/replay, hybrid identity,
+  correction-aware scorecard, capture, and preliminary-results paths with no
+  retained synthetic data. `pnpm verify` passes 266/266 application tests plus
+  audit, lint, build, and workspace checks; `pnpm verify:handoff` passes 6/6.
+- Evidence: `docs/quality/2026-09-11-pilot-reliability-repairs.md`.
+
 ## 2026-09-11 offline readiness production correction
 
 - Corrected a reconnect/reload edge case so a restored queued score no longer

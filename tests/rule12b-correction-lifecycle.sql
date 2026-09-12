@@ -9,7 +9,7 @@ create temporary table rule12b_test_results (
   result jsonb
 ) on commit drop;
 
-grant select, insert on rule12b_test_results to service_role;
+grant select, insert on rule12b_test_results to service_role, authenticated;
 
 insert into auth.users(id, email)
 values
@@ -22,7 +22,7 @@ values
 
 insert into app.tournaments(id, director_profile_id, name, status, registration_status)
 values ('b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
-  'Rule 12 synthetic fixture', 'open', 'closed');
+  'Rule 12 synthetic fixture', 'open', 'open');
 
 insert into app.tournament_roles(tournament_id, profile_id, role)
 values
@@ -31,6 +31,57 @@ values
   ('b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000004', 'cross_checker'),
   ('b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000005', 'cross_checker'),
   ('b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000006', 'co_director');
+
+insert into app.operation_receipts(
+  id, tournament_id, actor_profile_id, operation_type, target_id,
+  request_hash, client_operation_id, outcome, response_payload, applied_at
+) values (
+  'aa000000-0000-4000-8000-000000000001',
+  'b0000000-0000-4000-8000-000000000001',
+  'a0000000-0000-4000-8000-000000000001',
+  'synthetic_rule12_scorecard_fixture',
+  'b0000000-0000-4000-8000-000000000001', repeat('a', 64),
+  'aa000000-0000-4000-8000-000000000002', 'accepted', '{}'::jsonb, now()
+);
+
+insert into app.tournament_roster_entries(
+  id, tournament_id, claimed_display_name, claimed_normalized_name,
+  creator_profile_id, operation_receipt_id, source_kind
+) values
+  ('ab000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001',
+   'Rule 12 Player A', 'rule 12 player a', 'a0000000-0000-4000-8000-000000000001',
+   'aa000000-0000-4000-8000-000000000001', 'director_manual'),
+  ('ab000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001',
+   'Rule 12 Player B', 'rule 12 player b', 'a0000000-0000-4000-8000-000000000001',
+   'aa000000-0000-4000-8000-000000000001', 'director_manual');
+
+insert into app.roster_account_links(
+  id, tournament_id, roster_entry_id, profile_id, actor_profile_id, operation_receipt_id
+) values
+  ('ac000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001',
+   'ab000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002',
+   'a0000000-0000-4000-8000-000000000001', 'aa000000-0000-4000-8000-000000000001'),
+  ('ac000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001',
+   'ab000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000003',
+   'a0000000-0000-4000-8000-000000000001', 'aa000000-0000-4000-8000-000000000001');
+
+insert into app.initial_seating_publications(
+  id, tournament_id, table_count, seats_per_table, actor_profile_id, operation_receipt_id
+) values (
+  'ad000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001',
+  1, 2, 'a0000000-0000-4000-8000-000000000001',
+  'aa000000-0000-4000-8000-000000000001'
+);
+insert into app.initial_seating_assignments(
+  id, publication_id, tournament_id, roster_entry_id, initial_table_seat
+) values
+  ('ae000000-0000-4000-8000-000000000001', 'ad000000-0000-4000-8000-000000000001',
+   'b0000000-0000-4000-8000-000000000001', 'ab000000-0000-4000-8000-000000000001', 'A-1'),
+  ('ae000000-0000-4000-8000-000000000002', 'ad000000-0000-4000-8000-000000000001',
+   'b0000000-0000-4000-8000-000000000001', 'ab000000-0000-4000-8000-000000000002', 'A-2');
+
+update app.tournaments set registration_status = 'closed'
+where id = 'b0000000-0000-4000-8000-000000000001';
 
 insert into app.ruleset_versions(id, tournament_id, name, format, source_reference, effective_on, approved_at)
 values ('c0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001',
@@ -47,10 +98,10 @@ values
   ('e0000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 2),
   ('e0000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 3);
 
-insert into app.event_participants(id, tournament_id, event_id, profile_id, table_seat, status)
+insert into app.event_participants(id, tournament_id, event_id, profile_id, roster_entry_id, table_seat, status)
 values
-  ('f0000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002', 'A-1', 'checked_in'),
-  ('f0000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000003', 'A-2', 'checked_in');
+  ('f0000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002', 'ab000000-0000-4000-8000-000000000001', 'A-1', 'checked_in'),
+  ('f0000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000003', 'ab000000-0000-4000-8000-000000000002', 'A-2', 'checked_in');
 
 insert into app.canonical_games(
   id, tournament_id, event_id, round_id, side_a_participant_id, side_b_participant_id,
@@ -249,6 +300,15 @@ select 'participant_reader', public.get_rule12_correction_v1(
 );
 
 reset role;
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-000000000002', true);
+set local role authenticated;
+insert into rule12b_test_results(label, result)
+select 'corrected_scorecard', public.get_player_scorecard(
+  'b0000000-0000-4000-8000-000000000001',
+  'd0000000-0000-4000-8000-000000000001'
+);
+
+reset role;
 update app.tournaments set status = 'pending_finalization'
 where id = 'b0000000-0000-4000-8000-000000000001';
 set local role service_role;
@@ -274,6 +334,7 @@ do $$
 declare
   v_immediate jsonb;
   v_reader jsonb;
+  v_scorecard jsonb;
 begin
   select result into v_immediate from rule12b_test_results where label = 'immediate';
   if v_immediate->>'status' <> 'applied'
@@ -334,6 +395,23 @@ begin
         or (side = 'b' and (is_winner or margin <> 17 or plus_points <> 0 or minus_points <> 17 or game_points <> 0)))
   ) then
     raise exception 'independent correction mutated the canonical reciprocal scorelines';
+  end if;
+  select result into v_scorecard from rule12b_test_results where label = 'corrected_scorecard';
+  if v_scorecard is null
+     or (v_scorecard#>>'{totals,gamePoints}')::integer <> 6
+     or (v_scorecard#>>'{totals,plusPoints}')::integer <> 49
+     or (v_scorecard#>>'{totals,gamesWon}')::integer <> 3
+     or not exists (
+       select 1 from jsonb_array_elements(v_scorecard->'lines') line
+       where (line->>'roundNumber')::integer = 1
+         and (line->>'plusPoints')::integer = 16
+     )
+     or not exists (
+       select 1 from jsonb_array_elements(v_scorecard->'lines') line
+       where (line->>'roundNumber')::integer = 3
+         and (line->>'plusPoints')::integer = 17
+     ) then
+    raise exception 'scorecard did not apply accepted corrections or preserve rejected originals';
   end if;
   if has_function_privilege('anon', 'public.create_rule12b_correction_v1(uuid,uuid,uuid,integer,integer,boolean,integer,boolean,integer,boolean,text,uuid)', 'EXECUTE')
      or has_function_privilege('authenticated', 'public.create_rule12b_correction_v1(uuid,uuid,uuid,integer,integer,boolean,integer,boolean,integer,boolean,text,uuid)', 'EXECUTE')

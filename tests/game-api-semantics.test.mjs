@@ -1441,5 +1441,6 @@ test('preliminary standings use only verified scorelines and do not claim offici
   assert.match(adapter, /get_preliminary_event_standings/);
   assert.match(adapter, /data\.tournamentId !== tournamentId \|\| data\.eventId !== eventId/);
   assert.match(page, /Only verified or corrected games are included/);
-  assert.match(page, /Qualification, MRPs, Q-pools, payouts, and final results are not decided/);
+  assert.match(page, /Everything below is provisional/);
+  assert.match(page, /does not calculate MRPs, Q-pools, or payouts/);
 });

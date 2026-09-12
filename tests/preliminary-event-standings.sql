@@ -21,22 +21,39 @@ update app.profiles set display_name = case id
   else display_name end
 where id in ('f1000000-0000-4000-8000-000000000002','f1000000-0000-4000-8000-000000000003','f1000000-0000-4000-8000-000000000004','f1000000-0000-4000-8000-000000000005');
 
-insert into app.tournaments(id, director_profile_id, name, status)
-values ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'Synthetic Standings', 'open');
+insert into app.tournaments(id, director_profile_id, name, status, registration_status)
+values ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'Synthetic Standings', 'open', 'open');
 insert into app.tournament_roles(tournament_id, profile_id, role) values
   ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'director'),
   ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000002', 'player'),
   ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000006', 'cross_checker'),
   ('f2000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000007', 'co_director');
+insert into app.operation_receipts(
+  id, tournament_id, actor_profile_id, operation_type, target_id,
+  request_hash, client_operation_id, outcome, response_payload, applied_at
+) values (
+  'fd000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001',
+  'f1000000-0000-4000-8000-000000000001', 'standings_fixture_roster',
+  'f2000000-0000-4000-8000-000000000001', repeat('d', 64),
+  'fe000000-0000-4000-8000-000000000001', 'accepted', '{}'::jsonb, now()
+);
+insert into app.tournament_roster_entries(
+  id, tournament_id, claimed_display_name, claimed_normalized_name,
+  creator_profile_id, operation_receipt_id, source_kind
+) values (
+  'ff000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001',
+  'Dana Paper Card', 'dana paper card', 'f1000000-0000-4000-8000-000000000001',
+  'fd000000-0000-4000-8000-000000000001', 'director_manual'
+);
 insert into app.ruleset_versions(id, tournament_id, name, format, source_reference, effective_on, approved_at)
 values ('f3000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'Synthetic Standard Singles', 'standard_singles', 'synthetic test only', current_date, now());
 insert into app.events(id, tournament_id, ruleset_version_id, name, event_type, format, scoring_method)
 values ('f4000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'f3000000-0000-4000-8000-000000000001', 'Main', 'main', 'standard_singles', 'digital');
-insert into app.event_participants(id, tournament_id, event_id, profile_id, table_seat, status) values
-  ('f5000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000002', 'A-1', 'checked_in'),
-  ('f5000000-0000-4000-8000-000000000002', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000003', 'A-2', 'checked_in'),
-  ('f5000000-0000-4000-8000-000000000003', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000004', 'A-3', 'checked_in'),
-  ('f5000000-0000-4000-8000-000000000004', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000005', 'A-4', 'checked_in');
+insert into app.event_participants(id, tournament_id, event_id, profile_id, roster_entry_id, table_seat, status) values
+  ('f5000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000002', null, 'A-1', 'checked_in'),
+  ('f5000000-0000-4000-8000-000000000002', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000003', null, 'A-2', 'checked_in'),
+  ('f5000000-0000-4000-8000-000000000003', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000004', null, 'A-3', 'checked_in'),
+  ('f5000000-0000-4000-8000-000000000004', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', null, 'ff000000-0000-4000-8000-000000000001', 'A-4', 'checked_in');
 insert into app.rounds(id, tournament_id, event_id, round_number) values
   ('f6000000-0000-4000-8000-000000000001', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 1),
   ('f6000000-0000-4000-8000-000000000002', 'f2000000-0000-4000-8000-000000000001', 'f4000000-0000-4000-8000-000000000001', 2);
@@ -78,7 +95,14 @@ declare v_result jsonb;
 begin
   select public.get_preliminary_event_standings('f2000000-0000-4000-8000-000000000001','f4000000-0000-4000-8000-000000000001') into v_result;
   if v_result->>'status' <> 'preliminary' or jsonb_array_length(v_result->'rows') <> 4
+     or v_result->'configuredGameCount' <> 'null'::jsonb
+     or (v_result->>'schedulePublished')::boolean
+     or (v_result->>'scheduledMatchCount')::integer <> 0
+     or (v_result->>'persistedMatchCount')::integer <> 2
+     or (v_result->>'resolvedMatchCount')::integer <> 2
+     or (v_result->>'scheduledScorecardsComplete')::boolean
      or not exists (select 1 from jsonb_array_elements(v_result->'rows') row_data where row_data->>'participantId' = 'f5000000-0000-4000-8000-000000000001' and (row_data->>'gamePoints')::integer = 4 and (row_data->>'plusPoints')::integer = 29 and (row_data->>'verifiedGames')::integer = 2)
+     or not exists (select 1 from jsonb_array_elements(v_result->'rows') row_data where row_data->>'participantId' = 'f5000000-0000-4000-8000-000000000004' and row_data->>'displayName' = 'Dana Paper Card')
      or not exists (select 1 from jsonb_array_elements(v_result->'rows') row_data where row_data->>'participantId' = 'f5000000-0000-4000-8000-000000000002' and (row_data->>'minusPoints')::integer = 30 and (row_data->>'verifiedGames')::integer = 2)
      or (select count(*) from jsonb_array_elements(v_result->'rows') row_data where (row_data->>'numericRank')::integer = 2 and (row_data->>'tied')::boolean) <> 2
      or not exists (select 1 from jsonb_array_elements(v_result->'rows') row_data where row_data->>'participantId' = 'f5000000-0000-4000-8000-000000000002' and (row_data->>'numericRank')::integer = 4) then

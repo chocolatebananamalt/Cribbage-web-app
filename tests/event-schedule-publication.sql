@@ -31,7 +31,7 @@ insert into auth.users(id, email) values
 
 insert into app.tournaments(id, director_profile_id, name, status, registration_status)
 values ('b1140000-0000-4000-8000-000000000001',
-  'a1140000-0000-4000-8000-000000000001', 'Synthetic Schedule', 'open', 'closed'),
+  'a1140000-0000-4000-8000-000000000001', 'Synthetic Schedule', 'open', 'open'),
   ('b1140000-0000-4000-8000-000000000002',
   'a1140000-0000-4000-8000-000000000001', 'Synthetic Other Tournament', 'open', 'closed'),
   ('b1140000-0000-4000-8000-000000000003',
@@ -117,6 +117,9 @@ insert into app.tournament_roster_entries(
   'Paper Opponent','paper opponent','PAPER-4','paper-4',
   'a1140000-0000-4000-8000-000000000001','c1140000-0000-4000-8000-000000000001','director_manual'
 );
+
+update app.tournaments set registration_status = 'closed'
+where id = 'b1140000-0000-4000-8000-000000000001';
 
 insert into app.initial_seating_publications(
   id, tournament_id, table_count, seats_per_table, actor_profile_id, operation_receipt_id
