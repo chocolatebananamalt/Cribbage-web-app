@@ -1,7 +1,30 @@
 import { isUuid } from "./validation";
 
-type SetupEvent = Record<string, unknown>;
-export type SetupSaveRequest = { expectedVersion: number; payload: Record<string, unknown>; idempotencyKey: string };
+export type SetupPool = { poolTypeCode: string; entryFeeCents: number; note: string };
+export type SetupEvent = {
+  clientRowId: string;
+  eventKind: "main" | "consolation" | "satellite" | "custom";
+  displayName: string;
+  startsAt: string;
+  timezone: string;
+  styleCode: string;
+  formatCode: "standard_singles" | "team" | "doubles" | "canadian_doubles" | "custom";
+  gameCount: number;
+  entryFeeCents: number;
+  feeIncludesNote: string;
+  payoutNote: string;
+  qualificationNote: string;
+  eligibilityNote: string;
+  mugginsStatus: "unset" | "in_effect" | "not_in_effect";
+  qPools: SetupPool[];
+};
+export type SetupOfficial = { profileId: string; role: "director" | "co_director" };
+export type SetupPayload = { tournamentName: string; city: string; venue: string; startsAt: string; endsAt: string; timezone: string; contactDetails: string; sanctioningFeeCents: number | null; officials: SetupOfficial[]; events: SetupEvent[] };
+export type SetupCurrentEvent = SetupEvent & { sourceStatus: "director_configured_unverified"; qPools: Array<SetupPool & { slot: 1 | 2; sourceStatus: "director_configured_unverified" }> };
+export type SetupCurrent = Omit<SetupPayload, "events"> & { revisionId: string; version: number; createdAt: string; events: SetupCurrentEvent[] };
+export type SetupWorkspace = { current: SetupCurrent | null; history: Array<{ version: number; createdAt: string; eventCount: number }> };
+export type SetupOfficialChoices = { directorProfileId: string; coDirectorProfileIds: string[] };
+export type SetupSaveRequest = { expectedVersion: number; payload: SetupPayload; idempotencyKey: string };
 export type SetupRecoveryRequest = { idempotencyKey: string };
 const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "officials", "events"];
 const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools"];
@@ -33,7 +56,7 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
     && Array.isArray(events) && events.length <= 32 && events.every(event);
 }
 export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRequest { return !!value && typeof value === "object" && own(value, ["idempotencyKey"]) && isUuid((value as Record<string, unknown>).idempotencyKey); }
-export function isSavedSetup(value: unknown, request: SetupSaveRequest) { if (!value || typeof value !== "object") return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
+export function isSavedSetup(value: unknown, request: SetupSaveRequest): value is { status: "setup_draft_saved"; revisionId: string; version: number; eventCount: number } { if (!value || typeof value !== "object") return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
 export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string"; }
 export function isRecoveredSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "setup_draft_saved" && isUuid((value as Record<string, unknown>).revisionId) && Number.isSafeInteger((value as Record<string, unknown>).version); }
 const workspaceKeys = ["current", "history"];
@@ -58,7 +81,7 @@ function workspaceEvent(value: unknown) {
       && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents)
       && text((pool as Record<string, unknown>).note, 1000) && status((pool as Record<string, unknown>).sourceStatus));
 }
-export function isSetupWorkspace(value: unknown) {
+export function isSetupWorkspace(value: unknown): value is SetupWorkspace {
   if (!value || typeof value !== "object" || !own(value, workspaceKeys)) return false;
   const workspace = value as Record<string, unknown>;
   if (!Array.isArray(workspace.history) || !workspace.history.every((item) => !!item && typeof item === "object" && own(item, historyKeys)
@@ -79,7 +102,7 @@ export function isSetupWorkspace(value: unknown) {
     && currentOfficials.filter((official) => official.role === "director").length === 1 && new Set(currentOfficials.map((official) => official.profileId)).size === currentOfficials.length
     && Array.isArray(current.events) && current.events.length <= 32 && current.events.every(workspaceEvent) && history[0].eventCount === current.events.length;
 }
-export function isSetupOfficialChoices(value: unknown) {
+export function isSetupOfficialChoices(value: unknown): value is SetupOfficialChoices {
   if (!value || typeof value !== "object" || !own(value, ["directorProfileId", "coDirectorProfileIds"])) return false;
   const choices = value as Record<string, unknown>;
   return isUuid(choices.directorProfileId) && Array.isArray(choices.coDirectorProfileIds)

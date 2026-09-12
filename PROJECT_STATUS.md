@@ -1,5 +1,24 @@
 # Project Status
 
+## 2026-09-11 live director tournament-setup workspace
+
+- Added a protected, functional **Set Up Tournament** workspace backed by the
+  existing private versioned setup RPC. Directors/co-directors can now enter
+  tournament details, one Main, one Consolation, repeatable Satellites, the
+  observed ACC style/game-count menus, fees, up to two Q Pools, and satellite
+  payout selection.
+- Exact unresolved saves are retained for safe retry after a connection loss;
+  successful drafts remain configuration only and cannot silently create
+  operational events, results, charges, or approved rules.
+- Closed a hosted pilot access defect: the database had zero tournament roles.
+  The most recently signed-in non-fixture profile now has an audited
+  co-director role for the existing pilot tournament. No private identity data
+  was copied into the repository.
+- `pnpm verify` passes 226/226 application tests plus audit, lint, build, and
+  workspace gates; `pnpm verify:handoff` passes 6/6. Preview deployment and
+  hosted browser proof are the remaining checks for this slice.
+- Evidence: `docs/quality/2026-09-11-live-tournament-setup-workspace.md`.
+
 ## 2026-09-11 solve-first and durable-correction protocol
 
 - Added a repository-wide solve-first rule: future workers must inspect
