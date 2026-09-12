@@ -53,6 +53,12 @@ players, games, receipts, or financial rows were retained.
   rendered meaningful content, all five primary navigation labels, no Next.js
   error overlay, and document/body width equal to the viewport.
 - Vercel grouped runtime error check after release: no errors found.
+- Application rollback rehearsal: production aliases moved to prior known-good
+  commit `83cfd7d` as READY deployment
+  `dpl_XN9ZEBoivkMmWCDzgvGLroh4qhe5`; the stable demo returned HTTP 200. The
+  verified October commit `6845888` was then restored as READY deployment
+  `dpl_8edunFUXR1etP6P4FxaJ4mHqtDVv`; demo, protected finance, and protected
+  results returned HTTP 200 and the runtime-error scan remained empty.
 
 ## Remaining acceptance rehearsals
 

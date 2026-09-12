@@ -29,9 +29,15 @@
   voided, returning the active total to $0 while preserving its audit history.
 - Fresh production responsive checks pass at 320px, 375px, 640px reflow, and
   1280px with no horizontal overflow or framework error overlay. Vercel reports
-  no runtime errors in the post-release observation window. Independent player
-  and official sessions, disconnect/reconnect, backup/restore, and the director
-  walkthrough remain acceptance rehearsals rather than solvable code gaps.
+  no runtime errors in the post-release observation window.
+- The application rollback drill passed: the stable production aliases were
+  moved to the previous known-good commit `83cfd7d`, its demo returned HTTP 200,
+  and the aliases were then restored to commit `6845888` as READY deployment
+  `dpl_8edunFUXR1etP6P4FxaJ4mHqtDVv`. The restored demo and protected finance
+  and results routes returned HTTP 200, with no runtime-error cluster.
+- Independent player and official sessions, disconnect/reconnect,
+  backup/restore, and the director walkthrough remain acceptance rehearsals
+  rather than solvable code gaps.
 
 ## 2026-09-12 hybrid digital-and-paper completion
 
