@@ -8,7 +8,7 @@ import { isRegistrationLinkState, type RegistrationLinkState } from "../../../..
 type OneTimeLink = { url: string; expiresAt: string };
 type LinkResponse = { status: "issued" | "rotated"; credential: string; expiresAt: string; linkId?: string; version?: number };
 
-function defaultExpiry() { const value = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); value.setSeconds(0, 0); return value.toISOString().slice(0, 16); }
+function defaultExpiry() { const value = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); value.setSeconds(0, 0); return value.toISOString().slice(0, 16); }
 function toInstant(value: string) { const date = new Date(value); return Number.isFinite(date.valueOf()) ? date.toISOString() : null; }
 function stateMessage(state: RegistrationLinkState) {
   if (state.status === "none") return "No registration link has been created.";

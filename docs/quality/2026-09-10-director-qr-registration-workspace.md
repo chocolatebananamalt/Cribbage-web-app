@@ -53,6 +53,9 @@ contract mismatch: the database accepted the link but the create route returned
 HTTP 200 while the one-time-credential UI required HTTP 201. The route now
 returns 201, matching the already-correct rotation route, and a regression
 assertion prevents the credential display from silently failing again.
+The replacement form now defaults to a 30-day expiry so a link prepared for
+the October 3 pilot does not expire during the September 18 onboarding window;
+closing registration still closes the active link atomically.
 
 ## Still required before it can be enabled
 
