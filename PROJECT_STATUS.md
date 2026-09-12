@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-11 atomic multi-event setup activation
+
+- Replaced the one-event activation boundary with an additive, server-only
+  transaction that activates the saved Main, Consy, and all Satellite events
+  under one tournament. Exactly one Main event is required.
+- Standard Singles events become digitally scoreable with the dated ACC 2025
+  scoring-core source. Team, doubles, Canadian Doubles, and custom formats are
+  created as manual/paper-scored events and cannot enter the digital scoring
+  path for the October pilot.
+- The protected setup page now exposes activation only for a saved, unchanged
+  revision, retains one opaque retry operation, and locks the setup after
+  activation. The resulting event list states which events are digital versus
+  paper-scored.
+- Migration 0112 is applied to the shared pilot. A hosted rolled-back database
+  transaction proved one Main, one Consy, and one Canadian Doubles event,
+  correct 2-digital/1-manual routing, atomic tournament opening, and an exact
+  non-duplicating replay. No disposable records remained.
+- `pnpm verify` passes 232/232 application tests plus audit, lint, build, and
+  workspace gates; `pnpm verify:handoff` passes 6/6. Production deployment and
+  authenticated browser proof remain before the release switch is enabled.
+- Evidence: `docs/quality/2026-09-11-multi-event-setup-activation.md`.
+
 ## 2026-09-11 director manual roster intake
 
 - Added a protected **Players and Registration** fallback that lets a director
@@ -13,8 +35,9 @@
   proved one accepted row, an exact non-duplicating replay, a controlled
   duplicate rejection, and matching immutable receipts/audit events.
 - `pnpm verify` passes 230/230 application tests plus audit, lint, build, and
-  workspace gates; `pnpm verify:handoff` passes 6/6. Vercel deployment and
-  hosted browser proof remain for this slice.
+  workspace gates; `pnpm verify:handoff` passes 6/6. Commit `b40d57b` is live
+  in Vercel Production, and an authenticated external-Chrome submission added
+  the fictional `Browser Pilot Player` exactly once through the live form.
 - Evidence: `docs/quality/2026-09-11-director-manual-roster-intake.md`.
 
 ## 2026-09-11 live director tournament-setup workspace

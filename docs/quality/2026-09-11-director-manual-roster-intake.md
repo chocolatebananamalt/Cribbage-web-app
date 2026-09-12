@@ -25,11 +25,16 @@
 - Post-migration advisors report the existing intentional private-schema/RPC
   pattern. The new table access remains RLS-forced with no direct client table
   grants; the authenticated security-definer RPC is intentionally role-checked.
+- Commit `b40d57b` is live as Vercel Production deployment
+  `dpl_6CgMz5js69yokcbau3T37nqyhY8M` at the stable production alias.
+- Authenticated external-Chrome proof loaded the protected roster, submitted
+  fictional `Browser Pilot Player` / `TEST-0002` without an email, displayed
+  the new Manual roster row, and reported `Player added to the roster.`
 
 ## Remaining proof
 
-- Vercel Production deployment and external-browser desktop/phone interaction
-  are recorded after this commit reaches the hosted application.
+- A controller-capable 320/375-pixel phone viewport remains unavailable; the
+  desktop production interaction is complete.
 - Spreadsheet batch import is not part of this slice. Directors can enter a
   spreadsheet roster one player at a time; a bounded batch import may be added
   after the core pilot path is complete.

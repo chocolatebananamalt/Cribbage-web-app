@@ -31,15 +31,31 @@ test("setup activation accepts only a revision-bound exact request", () => {
 
 test("setup activation validates the exact server-derived result and safe exclusions", () => {
   const result = {
-    status: "standard_singles_activated",
-    activationId: "30000000-0000-4000-8000-000000000003",
+    status: "tournament_setup_activated",
     setupRevisionId: revisionId,
     setupVersion: 3,
-    rulesetVersionId: "40000000-0000-4000-8000-000000000004",
-    eventId: "50000000-0000-4000-8000-000000000005",
-    eventType: "main",
-    format: "standard_singles",
-    scoringMethod: "digital",
+    eventCount: 2,
+    events: [{
+      activationId: "30000000-0000-4000-8000-000000000003",
+      setupEventVersionId: "40000000-0000-4000-8000-000000000004",
+      rulesetVersionId: "50000000-0000-4000-8000-000000000005",
+      eventId: "60000000-0000-4000-8000-000000000006",
+      eventType: "main",
+      name: "Main Event",
+      format: "standard_singles",
+      scoringMethod: "digital",
+      gameCount: 22,
+    }, {
+      activationId: "70000000-0000-4000-8000-000000000007",
+      setupEventVersionId: "80000000-0000-4000-8000-000000000008",
+      rulesetVersionId: "90000000-0000-4000-8000-000000000009",
+      eventId: "a0000000-0000-4000-8000-00000000000a",
+      eventType: "satellite",
+      name: "Canadian Doubles",
+      format: "canadian_doubles",
+      scoringMethod: "manual",
+      gameCount: 7,
+    }],
     roundsCreated: false,
     participantsEnrolled: false,
     seatingUpdated: false,
@@ -52,6 +68,8 @@ test("setup activation validates the exact server-derived result and safe exclus
   assert.equal(isSetupActivationResult(result, request), true);
   assert.equal(isSetupActivationResult({ ...result, setupRevisionId: operationId }, request), false);
   assert.equal(isSetupActivationResult({ ...result, payoutsCalculated: true }, request), false);
+  assert.equal(isSetupActivationResult({ ...result, eventCount: 1 }, request), false);
+  assert.equal(isSetupActivationResult({ ...result, events: [{ ...result.events[0], scoringMethod: "manual" }, result.events[1]] }, request), false);
   assert.equal(isSetupActivationResult({ ...result, extra: false }, request), false);
 });
 
@@ -104,7 +122,8 @@ test("activation route is gated, same-origin, subject-bound, and server-only", (
   assert.match(route, /readSmallJson/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
-  assert.match(route, /activate_standard_singles_setup_v1/);
+  assert.match(route, /activate_tournament_setup_v2/);
+  assert.match(route, /get_tournament_setup_activation_state_v2/);
   assert.match(route, /p_actor_id: subject/);
   assert.match(route, /p_setup_revision_id: body\.setupRevisionId/);
   assert.match(route, /p_expected_version: body\.expectedVersion/);
@@ -114,4 +133,34 @@ test("activation route is gated, same-origin, subject-bound, and server-only", (
   assert.match(route, /\["tournament_unavailable", "not_director"\][\s\S]*error: "not_found"[\s\S]*status: 404/);
   assert.match(route, /withApiFailureBoundary/);
   assert.doesNotMatch(route, /\.from\(|\.insert\(|\.update\(/);
+});
+
+test("multi-event activation is atomic, same-tournament, format-safe, and server-only", () => {
+  const sql = read("database/migrations/0112_multi_event_setup_activation.sql");
+  assert.match(sql, /drop constraint if exists tournament_setup_activations_tournament_id_key/);
+  assert.match(sql, /create or replace function public\.activate_tournament_setup_v2/);
+  assert.match(sql, /security definer\s+set search_path = ''/);
+  assert.match(sql, /role in \('director', 'co_director'\)/);
+  assert.match(sql, /v_setup_event_count < 1 or v_setup_event_count > 32 or v_main_count <> 1/);
+  assert.match(sql, /case when v_setup_event\.format_code = 'standard_singles' then 'digital' else 'manual' end/);
+  assert.match(sql, /insert into app\.ruleset_versions/);
+  assert.match(sql, /insert into app\.events/);
+  assert.match(sql, /insert into app\.tournament_setup_activations/);
+  assert.match(sql, /'tournament_setup_activated'/);
+  assert.match(sql, /'participantsEnrolled', false/);
+  assert.match(sql, /create or replace function public\.get_tournament_setup_activation_state_v2/);
+  assert.match(sql, /from public, anon, authenticated;\s+grant execute[\s\S]*to service_role;/);
+  assert.doesNotMatch(sql, /grant execute[\s\S]*to authenticated/);
+  assert.doesNotMatch(sql, /insert into app\.(rounds|event_participants|canonical_games|score_submissions|score_confirmations|roster_payment_events)/);
+});
+
+test("setup UI activates only a saved unchanged revision and locks activated setup", () => {
+  const client = read("src/app/tournament/[tournamentId]/setup/setup-client.tsx");
+  const page = read("src/app/tournament/[tournamentId]/setup/page.tsx");
+  assert.match(page, /activationEnabled=\{tournamentSetupActivationEnabled\(\)\}/);
+  assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
+  assert.match(client, /disabled=\{busy \|\| dirty\}/);
+  assert.match(client, /Activate Tournament Events/);
+  assert.match(client, /Tournament events are active/);
+  assert.match(client, /Team and doubles events remain paper-scored/);
 });

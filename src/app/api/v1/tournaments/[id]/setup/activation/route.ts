@@ -4,6 +4,7 @@ import {
   isRejectedSetupActivation,
   isSetupActivationRequest,
   isSetupActivationResult,
+  isSetupActivationState,
   tournamentSetupActivationEnabled,
 } from "../../../../../../../lib/api/setup-activation";
 import {
@@ -16,6 +17,27 @@ import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { createServerOnlyAdminClient } from "../../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../../lib/supabase/server";
+
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  return withApiFailureBoundary(async () => {
+    if (!tournamentSetupActivationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
+    const { id } = await params;
+    if (!isUuid(id)) return apiJson({ error: "invalid_tournament" }, { status: 400 });
+    const subject = await requireVerifiedSubject(await createClient());
+    if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const { data, error } = await createServerOnlyAdminClient().rpc(
+      "get_tournament_setup_activation_state_v2",
+      { p_actor_id: subject, p_tournament_id: id },
+    );
+    if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (data === null) return apiJson({ error: "not_found" }, { status: 404 });
+    if (!isSetupActivationState(data)) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    return apiJson(data);
+  });
+}
 
 export async function POST(
   request: NextRequest,
@@ -33,7 +55,7 @@ export async function POST(
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
 
     const { data, error } = await createServerOnlyAdminClient().rpc(
-      "activate_standard_singles_setup_v1",
+      "activate_tournament_setup_v2",
       {
         p_actor_id: subject,
         p_tournament_id: id,
