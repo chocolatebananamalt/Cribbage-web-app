@@ -28,10 +28,10 @@ const seatingAssignments = [
   { first: "Digital", last: "Guest", card: "Paper", table: "B", seat: 2, id: "D-4" },
 ];
 const demoCheckIn = [
-  { rosterEntryId: "00000000-0000-4000-8000-000000000001", displayName: "Demo Player", state: "checked_in" as const, scorecard: "Digital" },
-  { rosterEntryId: "00000000-0000-4000-8000-000000000002", displayName: "Sample Opponent", state: "checked_in" as const, scorecard: "Digital" },
-  { rosterEntryId: "00000000-0000-4000-8000-000000000003", displayName: "Paper Guest", state: "checked_in" as const, scorecard: "Paper" },
-  { rosterEntryId: "00000000-0000-4000-8000-000000000004", displayName: "Digital Guest", state: "checked_in" as const, scorecard: "Paper" },
+  { rosterEntryId: "00000000-0000-4000-8000-000000000001", displayName: "Demo Player", state: "checked_in" as const, scorecardType: "digital" as const, scorecard: "Digital" },
+  { rosterEntryId: "00000000-0000-4000-8000-000000000002", displayName: "Sample Opponent", state: "checked_in" as const, scorecardType: "digital" as const, scorecard: "Digital" },
+  { rosterEntryId: "00000000-0000-4000-8000-000000000003", displayName: "Paper Guest", state: "checked_in" as const, scorecardType: "paper" as const, scorecard: "Paper" },
+  { rosterEntryId: "00000000-0000-4000-8000-000000000004", displayName: "Digital Guest", state: "checked_in" as const, scorecardType: "paper" as const, scorecard: "Paper" },
 ];
 
 function Context() { return <p className="context">Sample Cribbage Classic · Demo City, ST<br />Jan. 15, 2030 · Main ({eventGames} games)</p>; }

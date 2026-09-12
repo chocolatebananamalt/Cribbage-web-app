@@ -1,8 +1,8 @@
 const isUuid = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
 export type CheckInState = "checked_in" | "withdrawn" | "late" | "absent" | "not_checked_in";
-export type SeatingCheckIn = { rosterEntryId: string; displayName: string; state: CheckInState };
-export type SeatingAssignment = { rosterEntryId: string; displayName: string; initialTableSeat: string; verificationId: string };
+export type SeatingCheckIn = { rosterEntryId: string; displayName: string; scorecardType: "digital" | "paper"; state: CheckInState };
+export type SeatingAssignment = { rosterEntryId: string; displayName: string; scorecardType: "digital" | "paper"; initialTableSeat: string; verificationId: string };
 export type SeatingPublication = { publicationId: string; tableCount: number; seatsPerTable: number; publishedAt: string; assignments: SeatingAssignment[] };
 export type SeatingWorkspace = { registrationClosed: boolean; publication: SeatingPublication | null; checkIn: SeatingCheckIn[] };
 
@@ -13,13 +13,13 @@ const state = (value: unknown): value is CheckInState => ["checked_in", "withdra
 function checkIn(value: unknown): value is SeatingCheckIn {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  return Object.keys(item).length === 3 && isUuid(item.rosterEntryId) && text(item.displayName) && state(item.state);
+  return Object.keys(item).length === 4 && isUuid(item.rosterEntryId) && text(item.displayName) && (item.scorecardType === "digital" || item.scorecardType === "paper") && state(item.state);
 }
 
 function assignment(value: unknown): value is SeatingAssignment {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  return Object.keys(item).length === 4 && isUuid(item.rosterEntryId) && text(item.displayName) && tableSeat(item.initialTableSeat) && tableSeat(item.verificationId) && item.initialTableSeat === item.verificationId;
+  return Object.keys(item).length === 5 && isUuid(item.rosterEntryId) && text(item.displayName) && (item.scorecardType === "digital" || item.scorecardType === "paper") && tableSeat(item.initialTableSeat) && tableSeat(item.verificationId) && item.initialTableSeat === item.verificationId;
 }
 
 function publication(value: unknown): value is SeatingPublication {

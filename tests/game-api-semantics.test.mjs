@@ -124,9 +124,11 @@ test('game operation responses bind to the requested game and submission before 
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'not_assigned', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedGameOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), false);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'future_game_locked', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), false);
   assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'confirmation_rejected', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'duplicate_confirmation', game_id: gameId }, gameId), true);
+  assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'game_progression_locked', game_id: gameId }, gameId), true);
   assert.equal(game.isRejectedConfirmationOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId }, gameId), false);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: otherGameId }, gameId), false);
   assert.equal(game.isRejectedSubmissionOperation({ status: 'rejected', code: 'duplicate_submission', game_id: gameId, internal_detail: 'must not reach the browser' }, gameId), false);
@@ -211,8 +213,8 @@ test('protected seating workspace validates the narrow director-only read and pr
   const publicationId = '00000000-0000-4000-8000-000000000002';
   const valid = {
     registrationClosed: true,
-    checkIn: [{ rosterEntryId, displayName: 'Sample Player', state: 'checked_in' }],
-    publication: { publicationId, tableCount: 1, seatsPerTable: 2, publishedAt: '2026-09-09T12:00:00.000Z', assignments: [{ rosterEntryId, displayName: 'Sample Player', initialTableSeat: 'A-1', verificationId: 'A-1' }] },
+    checkIn: [{ rosterEntryId, displayName: 'Sample Player', scorecardType: 'paper', state: 'checked_in' }],
+    publication: { publicationId, tableCount: 1, seatsPerTable: 2, publishedAt: '2026-09-09T12:00:00.000Z', assignments: [{ rosterEntryId, displayName: 'Sample Player', scorecardType: 'paper', initialTableSeat: 'A-1', verificationId: 'A-1' }] },
   };
   assert.equal(workspace.isSeatingWorkspace(valid), true);
   assert.equal(workspace.isSeatingWorkspace({ ...valid, unexpected: 'private' }), false);
@@ -511,7 +513,7 @@ test('assigned game-context contract rejects unavailable and cross-context respo
   const valid = {
     actorId: '00000000-0000-4000-8000-000000000002', gameId: '00000000-0000-4000-8000-000000000003', tournamentId,
     eventId: '00000000-0000-4000-8000-000000000004', roundNumber: 1, matchInstance: 1, state: 'pending', eventName: 'Main',
-    ownSubmission: null, ownConfirmed: false, canConfirm: false,
+    ownSubmission: null, ownConfirmed: false, canConfirm: false, progressionStatus: 'current', canEnter: true,
     player: { displayName: 'Player One', side: 'a', tableSeat: 'A-1', verificationId: 'A-1' },
     opponent: { displayName: 'Player Two', side: 'b', tableSeat: 'A-2', verificationId: 'A-2' },
   };

@@ -49,7 +49,7 @@ test("event roster workspace permits paper identities but only validated event s
     registrationClosed: true,
     seatingPublished: true,
     events: [{ eventId, name: "Main Event", eventType: "main", format: "standard_singles", scoringMethod: "digital", participantCount: 1 }],
-    roster: [{ rosterEntryId: rosterA, displayName: "Sample Player", checkInState: "checked_in", profileLinked: false, verificationId: "A-1", enrolledEventIds: [eventId] }],
+    roster: [{ rosterEntryId: rosterA, displayName: "Sample Player", checkInState: "checked_in", profileLinked: false, scorecardType: "paper", verificationId: "A-1", enrolledEventIds: [eventId] }],
   };
   assert.equal(isEventRosterEnrollmentWorkspace(workspace), true);
   assert.equal(isEventRosterEnrollmentWorkspace({ ...workspace, roster: [{ ...workspace.roster[0], checkInState: "unknown" }] }), false);
@@ -98,7 +98,7 @@ test("event roster UI supports bulk selection and exact unresolved replay", () =
   const client = read("src/app/tournament/[tournamentId]/participants/participants-client.tsx");
   const page = read("src/app/tournament/[tournamentId]/participants/page.tsx");
   assert.match(client, /Select all not enrolled/);
-  assert.match(client, /Paper-only participant/);
+  assert.match(client, /Paper scorecard/);
   assert.match(client, /App account linked/);
   assert.match(client, /Retry exact saved enrollment/);
   assert.match(client, /sessionStorage/);

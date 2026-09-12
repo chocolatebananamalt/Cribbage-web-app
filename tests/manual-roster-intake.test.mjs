@@ -7,11 +7,11 @@ const root = process.cwd(), read = (relative) => readFile(path.join(root, relati
 const api = await import(pathToFileURL(path.join(root, "src/lib/api/roster.ts")).href);
 const operationId = "00000000-0000-4000-8000-000000000001";
 test("manual roster request accepts bounded exact input with optional contact identifiers", () => {
-  assert.equal(api.isManualRosterEntryRequest({ displayName: "Paper Player", email: "", accNumber: "", idempotencyKey: operationId }), true);
-  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "player@example.com", accNumber: "HI-296", idempotencyKey: operationId }), true);
-  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "bad", accNumber: "", idempotencyKey: operationId }), false);
-  assert.equal(api.isManualRosterEntryRequest({ displayName: "", email: "", accNumber: "", idempotencyKey: operationId }), false);
-  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "", accNumber: "", idempotencyKey: operationId, role: "director" }), false);
+  assert.equal(api.isManualRosterEntryRequest({ displayName: "Paper Player", email: "", accNumber: "", scorecardType: "paper", idempotencyKey: operationId }), true);
+  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "player@example.com", accNumber: "HI-296", scorecardType: "digital", idempotencyKey: operationId }), true);
+  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "bad", accNumber: "", scorecardType: "digital", idempotencyKey: operationId }), false);
+  assert.equal(api.isManualRosterEntryRequest({ displayName: "", email: "", accNumber: "", scorecardType: "digital", idempotencyKey: operationId }), false);
+  assert.equal(api.isManualRosterEntryRequest({ displayName: "Player", email: "", accNumber: "", scorecardType: "digital", idempotencyKey: operationId, role: "director" }), false);
 });
 test("manual roster response contracts reject mixed or authority-expanding receipts", () => {
   const accepted = { status: "manual_roster_entry_created", rosterEntryId: operationId, source: "director_manual", profileLinked: false, roleGranted: false, eventEnrolled: false, paymentRecorded: false, checkedIn: false, seatAssigned: false };

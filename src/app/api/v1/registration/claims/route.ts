@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const salt = current ? Buffer.from(current.salt, "base64") : null;
     if (redemption.error || !salt || salt.byteLength !== 32) return apiJson({ error: "unavailable" }, { status: 404 });
     const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
-    const result = await admin.rpc("submit_registration_claim_v2", { p_link_id: credential.linkId, p_digest: bytea(digest), p_display_name: body.displayName, p_email: body.email, p_acc_number: body.accNumber, p_intended_payment_method: body.intendedPaymentMethod, p_client_operation_id: body.operationId });
+    const result = await admin.rpc("submit_registration_claim_v3", { p_link_id: credential.linkId, p_digest: bytea(digest), p_display_name: body.displayName, p_email: body.email, p_acc_number: body.accNumber, p_intended_payment_method: body.intendedPaymentMethod, p_scorecard_type: body.scorecardType, p_client_operation_id: body.operationId });
     if (result.error || !result.data || typeof result.data !== "object") return apiJson({ error: "unavailable" }, { status: 404 });
     const response = result.data as Record<string, unknown>;
     if (response.status === "received" && Object.keys(response).length === 1) return apiJson({ status: "received" });

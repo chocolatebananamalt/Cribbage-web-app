@@ -22,6 +22,7 @@ const game = {
   ownSubmitted: false,
   ownConfirmed: false,
   canConfirm: false,
+  progressionStatus: "current",
   nextAction: "enter_result",
 };
 
@@ -38,6 +39,8 @@ test("my-games response validator is exact and tournament bound", () => {
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, nextAction: "view_scorecard" }] }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, state: "submitted", ownSubmitted: false, nextAction: "wait_opponent_entry" }] }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, state: "confirmation_pending", ownSubmitted: true, canConfirm: true, nextAction: "review_confirm" }] }, tournamentId), true);
+  assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, progressionStatus: "upcoming", nextAction: "upcoming_locked" }] }, tournamentId), true);
+  assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, progressionStatus: "upcoming", nextAction: "enter_result" }] }, tournamentId), false);
 });
 
 test("database reader binds identity to auth.uid and returns only published assigned games", () => {
@@ -66,11 +69,15 @@ test("tournament and my-games pages expose usable navigation without internal id
   assert.match(tournament, /Tournament Results/);
   assert.match(tournament, /\/results`/);
   const results = read("src/app/tournament/[tournamentId]/results/page.tsx");
-  assert.match(results, /item\.format === "standard_singles" && item\.scoringMethod === "digital"/);
+  assert.match(results, /getTournamentResultEventSummary/);
+  const migration = read("database/migrations/0146_scorecard_preference_and_results_discovery.sql");
+  assert.match(migration, /e\.format='standard_singles' and e\.scoring_method='digital'/);
   assert.match(results, /results\?event=\$\{item\.eventId\}/);
   assert.match(results, />Previous Screen</);
   assert.match(page, /Current Games/);
   assert.match(page, /Completed Games/);
+  assert.match(page, /Upcoming Games/);
+  assert.match(page, /Upcoming — opens after the prior game is verified/);
   assert.match(page, /Open Game/);
   assert.match(page, /Waiting for opponent entry/);
   assert.match(page, /Waiting for opponent confirmation/);

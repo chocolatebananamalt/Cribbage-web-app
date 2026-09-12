@@ -8,10 +8,10 @@ const operationId = "10000000-0000-4000-8000-000000000001";
 
 test("CSV parser supports quoted names and optional identity columns", () => {
   assert.deepEqual(parseRosterCsv('Player Name,Email,ACC #\r\n"Stevens, Barb",barb@example.test,HI-296\r\nSteve Hall,,\r\n'), [
-    { displayName: "Stevens, Barb", email: "barb@example.test", accNumber: "HI-296" },
-    { displayName: "Steve Hall", email: "", accNumber: "" },
+    { displayName: "Stevens, Barb", email: "barb@example.test", accNumber: "HI-296", scorecardType: "digital" },
+    { displayName: "Steve Hall", email: "", accNumber: "", scorecardType: "digital" },
   ]);
-  assert.deepEqual(parseRosterCsv("Name\nPaper Player\n"), [{ displayName: "Paper Player", email: "", accNumber: "" }]);
+  assert.deepEqual(parseRosterCsv("Name,Scorecard Type\nPaper Player,Paper\n"), [{ displayName: "Paper Player", email: "", accNumber: "", scorecardType: "paper" }]);
 });
 
 test("CSV parser rejects malformed files before upload", () => {
@@ -24,7 +24,7 @@ test("CSV parser rejects malformed files before upload", () => {
 });
 
 test("CSV import request and response envelopes are exact and bounded", () => {
-  const request = { rows: [{ displayName: "Player One", email: "", accNumber: "" }], idempotencyKey: operationId };
+  const request = { rows: [{ displayName: "Player One", email: "", accNumber: "", scorecardType: "digital" }], idempotencyKey: operationId };
   assert.equal(isRosterCsvImportRequest(request), true);
   assert.equal(isRosterCsvImportRequest({ ...request, extra: true }), false);
   assert.equal(isRosterCsvImportRequest({ ...request, rows: [] }), false);

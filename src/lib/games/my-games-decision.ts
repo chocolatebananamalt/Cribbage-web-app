@@ -19,7 +19,8 @@ export type AssignedGameSummary = {
   ownSubmitted: boolean;
   ownConfirmed: boolean;
   canConfirm: boolean;
-  nextAction: "enter_result" | "wait_opponent_entry" | "review_confirm" | "wait_opponent_confirmation" | "mismatch_review" | "view_scorecard";
+  progressionStatus: "current" | "upcoming" | "completed";
+  nextAction: "enter_result" | "wait_opponent_entry" | "review_confirm" | "wait_opponent_confirmation" | "mismatch_review" | "view_scorecard" | "upcoming_locked";
 };
 
 export type MyGamesWorkspace = {
@@ -30,6 +31,9 @@ export type MyGamesWorkspace = {
 };
 
 function expectedNextAction(game: Record<string, unknown>) {
+  if (game.progressionStatus === "upcoming" && game.canConfirm === false) return "upcoming_locked";
+  if (game.progressionStatus === "completed" && game.canConfirm === false) return "view_scorecard";
+  if (game.progressionStatus !== "current") return null;
   const state = game.state;
   const submitted = game.ownSubmitted;
   const confirmed = game.ownConfirmed;
@@ -50,7 +54,7 @@ export function isMyGamesWorkspace(value: unknown, tournamentId: string): value 
   return item.games.every((candidate) => {
     if (!candidate || typeof candidate !== "object") return false;
     const game = candidate as Record<string, unknown>;
-    return Object.keys(game).length === 16
+    return Object.keys(game).length === 17
       && uuid(game.gameId) && uuid(game.eventId) && text(game.eventName)
       && Number.isInteger(game.gameNumber) && (game.gameNumber as number) > 0
       && Number.isInteger(game.matchInstance) && (game.matchInstance as number) > 0
@@ -58,7 +62,8 @@ export function isMyGamesWorkspace(value: unknown, tournamentId: string): value 
       && seat(game.playerTableSeat) && seat(game.playerVerificationId)
       && text(game.opponentName) && seat(game.opponentTableSeat) && seat(game.opponentVerificationId)
       && typeof game.ownSubmitted === "boolean" && typeof game.ownConfirmed === "boolean" && typeof game.canConfirm === "boolean"
-      && ["enter_result", "wait_opponent_entry", "review_confirm", "wait_opponent_confirmation", "mismatch_review", "view_scorecard"].includes(game.nextAction as string)
+      && ["current", "upcoming", "completed"].includes(game.progressionStatus as string)
+      && ["enter_result", "wait_opponent_entry", "review_confirm", "wait_opponent_confirmation", "mismatch_review", "view_scorecard", "upcoming_locked"].includes(game.nextAction as string)
       && game.nextAction === expectedNextAction(game);
   });
 }

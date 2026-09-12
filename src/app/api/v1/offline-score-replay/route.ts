@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
       const recorded = await admin.rpc("record_offline_submission_rejection_v1", {
         p_actor_id: identity.subject, p_session_binding_id: replaySessionId,
         p_queue_id: raw.queueId, p_client_operation_id: raw.clientOperationId,
+        p_capability_id: raw.capabilityId,
         p_device_key_id: raw.deviceKeyId, p_tournament_id: raw.tournamentId,
         p_event_id: raw.eventId, p_game_id: raw.gameId, p_submission_id: raw.submissionId,
         p_payload_digest: raw.payloadDigest, p_signature: raw.signature, p_reason_code: reasonCode,

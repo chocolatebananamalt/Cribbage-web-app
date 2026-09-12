@@ -708,11 +708,12 @@ test('registration page clears its fragment before hydration and uses no browser
 test('protected hybrid guidance preserves the independent-entry verification boundary', () => {
   const guide = read('src/app/tournament/[tournamentId]/how-to/page.tsx');
   assert.match(guide, /One paper card and one digital card/);
-  assert.match(guide, /Both assigned players still need to sign in as themselves/);
-  assert.match(guide, /first player must sign out before the second player signs in/);
-  assert.match(guide, /do not treat a single digital entry as verified/);
-  assert.match(guide, /authorized cross-check or judge process/);
-  assert.match(guide, /both players independently submit matching results/);
+  assert.match(guide, /digital player submits the result/);
+  assert.match(guide, /original paper card/);
+  assert.match(guide, /One independent cross checker/);
+  assert.match(guide, /second distinct authorized official independently re-enters and confirms both sources/);
+  assert.match(guide, /does not count until that exact second confirmation/);
+  assert.match(guide, /mismatch stays unresolved/);
   assert.match(guide, /requireTournamentAccess/);
 });
 

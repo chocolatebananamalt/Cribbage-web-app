@@ -37,6 +37,7 @@ export type EventRosterEnrollmentWorkspace = {
     displayName: string;
     checkInState: "checked_in" | "withdrawn" | "late" | "absent" | "not_checked_in";
     profileLinked: boolean;
+    scorecardType: "digital" | "paper";
     verificationId: string | null;
     enrolledEventIds: string[];
   }>;
@@ -117,9 +118,10 @@ export function isEventRosterEnrollmentWorkspace(value: unknown): value is Event
     && eventTypes.has(item.eventType as string) && formats.has(item.format as string)
     && methods.has(item.scoringMethod as string) && boundedCount(item.participantCount, 10000))) return false;
   return value.roster.every((item) => record(item)
-    && exact(item, ["rosterEntryId", "displayName", "checkInState", "profileLinked", "verificationId", "enrolledEventIds"])
+    && exact(item, ["rosterEntryId", "displayName", "checkInState", "profileLinked", "scorecardType", "verificationId", "enrolledEventIds"])
     && isUuid(item.rosterEntryId) && typeof item.displayName === "string" && item.displayName.trim().length > 0
     && checkInStates.has(item.checkInState as string) && typeof item.profileLinked === "boolean"
+    && (item.scorecardType === "digital" || item.scorecardType === "paper")
     && (item.verificationId === null || (typeof item.verificationId === "string" && /^[A-Z]-[1-9][0-9]*$/.test(item.verificationId)))
     && Array.isArray(item.enrolledEventIds) && item.enrolledEventIds.every(isUuid)
     && new Set(item.enrolledEventIds).size === item.enrolledEventIds.length);

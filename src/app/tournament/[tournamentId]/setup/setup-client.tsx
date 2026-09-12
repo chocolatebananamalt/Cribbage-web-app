@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  isSavedSetup, isSetupOfficialChoices, isSetupSaveRequest, isSetupWorkspace,
+  isRejectedSetup, isSavedSetup, isSetupOfficialChoices, isSetupSaveRequest, isSetupWorkspace,
   type SetupEvent, type SetupOfficialChoices, type SetupPayload, type SetupPool, type SetupSaveRequest,
 } from "../../../../lib/api/setup";
 import {
@@ -129,7 +129,7 @@ export default function SetupClient({ actorId, tournamentId, activationEnabled }
     if (inFlight.current) return; inFlight.current = true; setBusy(true); setPending(envelope); setMessage("Saving the tournament setup…");
     try { const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup`, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "content-type": "application/json" }, body: JSON.stringify(envelope.request) }); const data: unknown = await response.json().catch(() => null);
       if (response.ok && isSavedSetup(data, envelope.request)) { clearPending(storageKey); setPending(null); await load(); setMessage(`Tournament setup version ${data.version} was saved.`); return; }
-      if (response.status === 409) { clearPending(storageKey); setPending(null); await load(); setMessage("The setup was not changed. The latest saved version is shown."); return; }
+      if (response.status === 409 && isRejectedSetup(data)) { clearPending(storageKey); setPending(null); await load(); setMessage("The setup was not changed. The latest saved version is shown."); return; }
       setMessage("The save is unresolved. Retry the exact saved version when the connection is available.");
     } catch { setMessage("The save is unresolved. Retry the exact saved version when the connection is available."); } finally { inFlight.current = false; setBusy(false); }
   }

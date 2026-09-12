@@ -52,7 +52,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.startsWith("/_next/static/immutable/") || url.pathname.startsWith("/_next/static/chunks/")) {
+  if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith((async () => {
       const names = await caches.keys();
       for (const name of names.filter((value) => value.startsWith(OFFLINE_SCORE_CACHE_PREFIX))) {

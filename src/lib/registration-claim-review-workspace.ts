@@ -9,6 +9,7 @@ export type RegistrationClaimReviewItem = {
   email: string;
   accNumber: string | null;
   intendedPaymentMethod: "cash" | "check" | "other" | "unspecified";
+  scorecardType: "digital" | "paper";
   submittedAt: string;
   decision: "approved_for_roster" | "rejected" | null;
   collisionClaimIds: string[];
@@ -20,12 +21,13 @@ const exact = (value: object, keys: string[]) => Object.keys(value).length === k
 function claim(value: unknown): value is RegistrationClaimReviewItem {
   if (!value || typeof value !== "object") return false;
   const item = value as Record<string, unknown>;
-  return exact(item, ["claimId", "displayName", "email", "accNumber", "intendedPaymentMethod", "submittedAt", "decision", "collisionClaimIds"])
+  return exact(item, ["claimId", "displayName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "submittedAt", "decision", "collisionClaimIds"])
     && uuid(item.claimId)
     && typeof item.displayName === "string" && item.displayName.length > 0
     && typeof item.email === "string" && item.email.length > 0
     && (item.accNumber === null || typeof item.accNumber === "string")
     && ["cash", "check", "other", "unspecified"].includes(item.intendedPaymentMethod as string)
+    && (item.scorecardType === "digital" || item.scorecardType === "paper")
     && typeof item.submittedAt === "string"
     && (item.decision === null || item.decision === "approved_for_roster" || item.decision === "rejected")
     && Array.isArray(item.collisionClaimIds) && item.collisionClaimIds.every(uuid);

@@ -78,7 +78,7 @@ export default function PlayoffPlacementClient({ actorId, tournamentId, eventId,
       });
       const result: unknown = await response.json().catch(() => null);
       if (response.ok && isPlayoffPlacementOutcome(result, tournamentId, eventId)) { sessionStorage.removeItem(key); setLocked(null); router.refresh(); return; }
-      if (response.status === 409) { sessionStorage.removeItem(key); setLocked(null); setMessage("The server rejected these placements. Refresh and review the latest recorded version."); return; }
+      if (response.status === 409 && isRejectedPlayoffPlacement(result, eventId)) { sessionStorage.removeItem(key); setLocked(null); setPlacements(initialRows(workspace)); setMessage("The server rejected these placements. The latest recorded version has been restored."); router.refresh(); return; }
       setMessage("This save is unresolved and remains locked until the server can confirm it.");
     } catch { setMessage("This save is unresolved and remains locked until the server can confirm it."); }
     finally { setBusy(false); }

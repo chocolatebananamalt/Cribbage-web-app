@@ -1,5 +1,95 @@
 # Project Status
 
+## 2026-09-12 hosted October workflow release candidate
+
+- Applied migrations `0144` through `0151` to the approved Supabase pilot.
+  Hosted rollback proofs pass for paper-versus-paper authority, explicit
+  scorecard preference/results discovery, current-game progression and offline
+  rejection replay, hybrid digital-versus-paper authority, and manual
+  settlement finalization. Fictional proof data was rolled back.
+- Live PostgreSQL execution found and repaired two defects before web release:
+  the immutable roster trigger initially blocked the audited scorecard-choice
+  projection (`0149`), and the canonical-game invariant checker initially did
+  not recognize the independently approved hybrid path (`0150`). Migration
+  `0151` adds every advisor-requested foreign-key index for the new tables.
+- Supabase's performance advisor now reports no unindexed foreign keys and no
+  warning/error finding. Its remaining findings are unused-index information.
+  Security still reports the previously accepted free-plan leaked-password
+  notice plus signed-in security-definer RPC notices; private `app` tables are
+  forced-RLS with direct grants revoked, so their no-policy notices are an
+  intentional fail-closed design.
+- The post-repair local gate passes all 407 application tests, dependency audit,
+  lint, the Next.js production build, workspace checks, all 6 handoff checks,
+  and `git diff --check`. Production deployment and independent-session live
+  rehearsal remain before this candidate can be called pilot-ready.
+
+## 2026-09-12 hybrid digital-and-paper completion
+
+- Added migration `0148` for one immutable digital player submission plus one
+  independently transcribed paper-card claim. The first identity-bound cross
+  checker creates only a pending case; a second distinct independent official
+  must re-enter and confirm both sources before reciprocal scorelines count.
+- Added explicit preference/version revalidation, current-game enforcement,
+  mutual exclusion from ordinary confirmation, paper-paper completion, and
+  device recovery, append-only audit history, exact retry receipts, and
+  actor-scoped lost-response reconciliation.
+- Added protected API routes, a staff workspace and UI, a tournament link, and
+  corrected mixed-card starter guidance.
+- Normalized official identity, paper-completion, hybrid-completion, roster-
+  link, and event-enrollment concurrency around the compatible actor/operation
+  -> tournament -> official-identity hierarchy; static coverage now includes
+  every writer that reaches the nonparticipant-identity guard.
+- Local focused hybrid tests pass 11/11; the combined focused
+  auth/paper/hybrid run passes 57/57. Full `pnpm verify` passes 404/404 application
+  tests and the production build; `pnpm verify:handoff` passes 6/6.
+  Fresh independent Sol review reports no P0/P1/P2 on the final 0144/0148 bytes.
+  The rollback fixture is executable and passed against the hosted pilot;
+  two-session browser proof remains.
+
+## 2026-09-12 explicit scorecard preference, results discovery, and progression hardening
+
+- Added tournament-scoped, versioned `digital`/`paper` scorecard preference
+  across public registration, director manual/CSV intake, pre-close correction,
+  roster/check-in/seating/enrollment readers, and append-only audit history.
+  The application never infers this choice from account linkage.
+- Added server-only tournament event discovery so signed-in viewers, players,
+  cross-checkers, directors, and co-directors can reach results; all settlement
+  mutations remain restricted to directors and co-directors.
+- Hardened online confirmation and offline issuance/replay to enforce the exact
+  current scheduled game, fail closed on missing or ambiguous progression,
+  retain capability-bound rejection receipts, and use a consistent lock order.
+- Rejection receipts now attach an offline capability only after exact
+  actor/session/device/tournament/event/game validation. A foreign or unavailable
+  identifier is recorded without consuming it, preserving the rightful owner's
+  subsequent replay.
+- Full `pnpm verify` and `pnpm verify:handoff` pass. Migrations `0146` and `0147`
+  are applied and their hosted rollback proofs pass; independent-session
+  browser proof remains before final pilot acceptance.
+
+## 2026-09-12 October reliability gap pass
+
+- Repaired durable offline replay so exact authoritative 409 receipts close
+  the local queue, while transient, malformed, contradictory, or unauthorized
+  responses retain it. Actor/game writes now serialize in one IndexedDB
+  transaction and competing values fail closed; explicitly prepared Next.js
+  static assets, including CSS, are available from the offline cache.
+- Tightened tournament setup, registration close, seating, qualification,
+  playoff, and settlement clients so only exact allowlisted server outcomes
+  clear their persisted idempotent retries. Unknown 409 responses remain
+  locked for safe reconciliation.
+- Applied recorded migration `0143` to the approved Supabase pilot. All 11
+  advisor-reported foreign-key paths now have covering indexes; the hosted
+  performance advisor reports no remaining unindexed-foreign-key finding.
+- Full local verification passes 369/369 application tests, the Next.js
+  production build, workspace checks, and all 6 private-handoff tests.
+  Independent Sol review found no P0/P1 in this slice.
+- Fresh isolated-browser checks pass at 320px, 375px, 640px reflow, and 1280px:
+  meaningful content and all five navigation labels render, no framework error
+  overlay appears, and document/body width equals the viewport at each size.
+- Paper-only authoritative game completion and financial reconciliation remain
+  active implementation work. Real independent-device/offline rehearsal,
+  backup/restore, and director acceptance remain physical release evidence.
+
 ## 2026-09-12 scoped-secret RPC compatibility repair
 
 - Production browser proof found that the newly deployed Event Dispute

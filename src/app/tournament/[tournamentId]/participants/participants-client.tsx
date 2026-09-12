@@ -117,7 +117,7 @@ export default function ParticipantsClient({ actorId, tournamentId, workspace }:
       <ul className="participant-selection-list">
         {eligible.map((entry) => {
           const enrolled = entry.enrolledEventIds.includes(eventId);
-          return <li key={entry.rosterEntryId}><label><input type="checkbox" checked={enrolled || selected.includes(entry.rosterEntryId)} disabled={enrolled || !ready || busy || !!pending} onChange={(event) => setSelected((current) => event.target.checked ? [...current, entry.rosterEntryId] : current.filter((id) => id !== entry.rosterEntryId))} /><span><strong>{entry.displayName}</strong><small>{entry.profileLinked ? "App account linked" : "Paper-only participant"}{entry.verificationId ? ` · ID # ${entry.verificationId}` : " · ID assigned with seating"}</small></span><b>{enrolled ? "Enrolled" : "Available"}</b></label></li>;
+          return <li key={entry.rosterEntryId}><label><input type="checkbox" checked={enrolled || selected.includes(entry.rosterEntryId)} disabled={enrolled || !ready || busy || !!pending} onChange={(event) => setSelected((current) => event.target.checked ? [...current, entry.rosterEntryId] : current.filter((id) => id !== entry.rosterEntryId))} /><span><strong>{entry.displayName}</strong><small>{entry.scorecardType === "digital" ? "Digital scorecard" : "Paper scorecard"} · {entry.profileLinked ? "App account linked" : "No app account linked"}{entry.verificationId ? ` · ID # ${entry.verificationId}` : " · ID assigned with seating"}</small></span><b>{enrolled ? "Enrolled" : "Available"}</b></label></li>;
         })}
         {eligible.length === 0 ? <li>No checked-in players are available yet.</li> : null}
       </ul>

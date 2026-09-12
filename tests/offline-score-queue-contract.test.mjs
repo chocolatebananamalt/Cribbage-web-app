@@ -142,11 +142,21 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(queue, /capabilityExpiresAtMs <= now/);
   assert.match(queue, /device\.serverDeviceKeyId !== stored\.value\.deviceKeyId/);
   assert.match(queue, /await clearOfflineScorePageCache\(\)/);
-  assert.ok(queue.indexOf("markOfflineScoreOwner(capability.verifiedActorId)") < queue.indexOf("await writeOne(queueStore, record)"));
+  assert.match(queue, /writeOfflineQueueRecordOnce/);
+  assert.match(queue, /offline_submission_already_queued/);
+  assert.match(queue, /matches\.length > 1/);
+  assert.ok(queue.indexOf("markOfflineScoreOwner(capability.verifiedActorId)") < queue.indexOf("return writeOfflineQueueRecordOnce(record)"));
   assert.match(entry, /readPreparedOfflineSubmissionCapability\(context\.actorId, context\.gameId\)/);
   assert.match(entry, /await prepareCurrentScorePageForOffline/);
   assert.match(entry, /await preparePage\(queued\.intent\.capabilityExpiresAtMs\)/);
   assert.match(entry, /else void prepareOfflineUse\(\)/);
+  assert.match(entry, /offlineSyncInFlight\.current/);
+  assert.match(entry, /response\.ok \|\| response\.status === 409/);
+  assert.ok(entry.indexOf("canDeleteOfflineQueueRecord(record, payload)") < entry.indexOf("if (!response.ok)"));
+  assert.match(entry, /response\.ok && disposition !== "accepted"/);
+  assert.match(entry, /response\.status === 409 && disposition === "accepted"/);
+  assert.match(entry, /server recorded a conflict/);
+  assert.match(entry, /setOfflineReplayClosed\(true\)/);
   assert.match(entry, /Offline Ready/);
   assert.match(gamePage, /data-offline-score-binding/);
   assert.match(gamePage, /throw new Error\("game_workspace_temporarily_unavailable"\)/);
@@ -160,6 +170,7 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(config, /source: "\/offline-score-sw\.js"/);
   assert.match(config, /Service-Worker-Allowed/);
   assert.match(proxy, /"\/offline-score-sw\.js"/);
+  assert.match(worker, /url\.pathname\.startsWith\("\/_next\/static\/"\)/);
 });
 
 test("offline navigation falls back only for network and transient server failures", async () => {
@@ -201,6 +212,13 @@ test("offline navigation falls back only for network and transient server failur
   let apiResponse;
   handlers.fetch({ request: { method: "POST", mode: "cors", url: "https://example.test/api/v1/offline-score-replay" }, respondWith: (value) => { apiResponse = value; } });
   assert.equal(apiResponse, undefined, "the worker must never intercept score mutations");
+
+  const staticUrl = "https://example.test/_next/static/css/app.css";
+  stored.set(staticUrl, new Response("cached css"));
+  context.caches.keys = async () => ["acc-offline-score-pages-v2:22222222-2222-4222-8222-222222222222"];
+  let staticResponse;
+  handlers.fetch({ request: { method: "GET", mode: "cors", url: staticUrl }, respondWith: (value) => { staticResponse = value; } });
+  assert.equal(await (await staticResponse).text(), "cached css", "prepared Next static assets must remain available offline");
 });
 
 test("offline owner marker allows same-player reauthentication but blocks account replacement", async () => {

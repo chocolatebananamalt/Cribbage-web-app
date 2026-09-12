@@ -135,7 +135,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
       if (response.ok && isSettlementDraftOutcome(result, tournamentId, eventId)) {
         sessionStorage.removeItem(storageKey); setLocked(null); router.refresh(); return;
       }
-      if (response.status === 409) {
+      if (response.status === 409 && isRejectedSettlementDraft(result, eventId)) {
         sessionStorage.removeItem(storageKey); setLocked(null); setPlacements(placementRows(workspace));
         setAwards(awardRows(workspace)); setMrpClaims(mrpRows(workspace));
         setMessage("The server rejected this draft. The authoritative saved version has been restored."); router.refresh(); return;

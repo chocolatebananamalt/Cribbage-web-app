@@ -26,6 +26,11 @@ export type SetupWorkspace = { current: SetupCurrent | null; history: Array<{ ve
 export type SetupOfficialChoices = { directorProfileId: string; coDirectorProfileIds: string[] };
 export type SetupSaveRequest = { expectedVersion: number; payload: SetupPayload; idempotencyKey: string };
 export type SetupRecoveryRequest = { idempotencyKey: string };
+const setupRejectionCodes = new Set([
+  "authentication_required", "not_director", "idempotency_conflict", "setup_lifecycle_closed",
+  "stale_version", "invalid_officials", "invalid_event", "invalid_q_pool", "invalid_request",
+  "invalid_setup_payload",
+]);
 const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "officials", "events"];
 const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools"];
 const officialKeys = ["profileId", "role"];
@@ -56,8 +61,8 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
     && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
 }
 export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRequest { return !!value && typeof value === "object" && own(value, ["idempotencyKey"]) && isUuid((value as Record<string, unknown>).idempotencyKey); }
-export function isSavedSetup(value: unknown, request: SetupSaveRequest): value is { status: "setup_draft_saved"; revisionId: string; version: number; eventCount: number } { if (!value || typeof value !== "object") return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
-export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string"; }
+export function isSavedSetup(value: unknown, request: SetupSaveRequest): value is { status: "setup_draft_saved"; revisionId: string; version: number; eventCount: number } { if (!value || typeof value !== "object" || !own(value, ["status", "revisionId", "version", "eventCount", "operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"])) return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
+export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && !Array.isArray(value) && own(value, ["status", "code"]) && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string" && setupRejectionCodes.has((value as Record<string, unknown>).code as string); }
 export function isRecoveredSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "setup_draft_saved" && isUuid((value as Record<string, unknown>).revisionId) && Number.isSafeInteger((value as Record<string, unknown>).version); }
 const workspaceKeys = ["current", "history"];
 const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "createdAt", "officials", "events"];

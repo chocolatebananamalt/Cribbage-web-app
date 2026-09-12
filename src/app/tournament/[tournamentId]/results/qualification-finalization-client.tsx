@@ -14,6 +14,12 @@ const messages: Record<string, string> = {
   ranking_tie_unresolved: "A ranking tie must be resolved under the approved tournament rules before finalization.",
   already_finalized: "Qualification has already been finalized.",
 };
+const rejectionCodes = new Set([
+  "tournament_unavailable", "not_director", "event_unavailable", "already_finalized",
+  "schedule_incomplete", "scorecards_unresolved", "recovery_pending", "correction_pending",
+  "qualification_notice_pending", "ranking_tie_unresolved", "dispute_open", "cutoff_tied",
+  "high_non_qualifier_tied", "idempotency_conflict", "invalid_request",
+]);
 
 type Envelope = { kind: "qualification-finalization"; idempotencyKey: string };
 
@@ -34,6 +40,13 @@ function writeEnvelope(key: string, value: Envelope) {
 
 function clearEnvelope(key: string) {
   try { window.sessionStorage.removeItem(key); } catch { /* The server result remains authoritative. */ }
+}
+
+function isRejectedFinalization(value: unknown, eventId: string): value is { status: "rejected"; code: string; eventId: string } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const item = value as Record<string, unknown>;
+  return Object.keys(item).sort().join(",") === "code,eventId,status" && item.status === "rejected"
+    && item.eventId === eventId && typeof item.code === "string" && rejectionCodes.has(item.code);
 }
 
 async function isFinalized(tournamentId: string, eventId: string) {
@@ -95,8 +108,8 @@ export function QualificationFinalizationClient({ actorId, tournamentId, eventId
           && (body as Record<string, unknown>).status === "qualification_finalized") {
         clearEnvelope(storageKey); setLocked(null); router.refresh(); return;
       }
-      if (response.status === 409 && body && typeof body === "object" && !Array.isArray(body)) {
-        const code = typeof (body as Record<string, unknown>).code === "string" ? (body as Record<string, unknown>).code as string : "";
+      if (response.status === 409 && isRejectedFinalization(body, eventId)) {
+        const code = body.code;
         if (code === "already_finalized" && await isFinalized(tournamentId, eventId)) {
           clearEnvelope(storageKey); setLocked(null); router.refresh(); return;
         }

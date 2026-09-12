@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       p_operation_id: body.operationId,
     });
     if (error || !isRegistrationCloseResult(data)) return apiJson({ error: "operation_unavailable" }, { status: 503 });
-    if (data.status === "rejected") return apiJson({ error: "registration_close_conflict" }, { status: 409 });
+    if (data.status === "rejected") return apiJson(data, { status: 409 });
     return apiJson(data);
   });
 }

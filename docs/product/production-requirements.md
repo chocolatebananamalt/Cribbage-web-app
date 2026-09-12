@@ -122,6 +122,7 @@ The full suite MUST include these bounded workflows; they are not deferred by th
 - **Manual payment status:** initial release has no online payment processing. A registrant may state an intended method such as cash or check, but that is never proof of payment. Only an authorized director or co-director may record a private, audited payment status, amount, method, received time, and responsible actor. A player cannot mark themselves paid. A later payment provider must create a separately reconciled ledger record and cannot bypass roster review or registration.
 - **Check-in:** an authorized director marks a roster entry checked-in, withdrawn, late, or absent. A player cannot self-assign a role, tournament, or seat. Check-in changes are audited.
 - **Check-in lookup:** an authorized director/co-director workspace MUST provide a tournament-scoped player-name search that returns current attendance state and scorecard type, gives an explicit no-match result, and grants no additional roster visibility or mutation authority.
+- **Scorecard preference:** every tournament roster identity MUST carry an explicit `digital` or `paper` scorecard preference selected at public registration, director manual entry, or CSV import. The value is tournament-scoped, versioned, and audited; directors/co-directors may correct it before registration closes and initial seating is published. Roster, check-in/search, seating print, and event-enrollment read models MUST expose it. Account/profile linkage is a separate fact and MUST NOT be used to infer scorecard type.
 - **Shared-device clearing:** a shared tablet/phone session MUST have an explicit “clear player/context” action. Clearing removes local identity, draft score, and cached private data; the next player must authenticate or use the context-only PIN flow. A stale or uncleared context MUST block check-in and score confirmation.
 - **Seating/rotation:** the server assigns a unique current Table/Seat value per round and records effective time and source. Each player also has one permanent, tournament-scoped verification ID assigned when registration closes; it does not change as Table/Seat rotates and is the value entered in the scorecard Verification ID # field. Manual seating overrides require a director reason. Rotation, anchors, sit-outs, family restrictions, lateness/forfeits, and any seating eligibility rule MUST be backed by an approved dated ACC fixture before an official schedule or export is produced.
 - **Known absence/forfeit fixtures:** for the narrow Rule 11.4 post-lunch case, a player absent at the scheduled return receives a five-minute grace period before the opponent receives a 2-game-point, +10-spread win and the late player a 0-game-point, -10-spread loss; the late player resumes the next opponent in rotation. The fixture MUST also preserve the Rule 11.4 limits (only one 2/+10 award and later absence may trigger disqualification/substitution or a floating sit-out). Playoff absence is separate: Rule 13.1 starts forfeiting the first game after five minutes and subsequent games every fifteen minutes, without removing the nonappearing qualifier's round-loser prize/MRP entitlement. These are not a substitute for the still-unconfirmed general rotation, anchor, sit-out, replacement, and event-specific timing rules.
@@ -162,6 +163,8 @@ offline/reconnect behavior blocks the October 3 pilot release.
 
 Every offline operation MUST carry a non-secret actor identity plus a server-issued capability/session binding, tournament/event/card scope, client operation ID, creation time, schema version, and integrity protection. The queue MUST NOT store access or refresh tokens. The server MUST reauthorize and validate it on replay, accept an operation at most once, detect stale/conflicting canonical state, and retain rejected/quarantined payload metadata in the audit trail without exposing private data. Local queue state may display `PendingSync` or `Conflict`; it MUST never display `Verified` until the server transaction succeeds. `R-OFFLINE-01` is the direct mapping for queue forgery, cross-tournament replay, duplicate replay, reconnect, and conflict tests.
 
+Within each published event, a participant may enter or prepare offline entry only for their earliest unresolved scheduled game. Later scheduled games remain visible as Upcoming and locked. Progression advances only after authoritative verified/corrected scorecards, approved failed-device recovery, or approved paper-game completion; pending submissions, confirmations, mismatches, and unsynchronized local data do not advance it. Exact stored receipts remain replayable before this state gate.
+
 No player scorecard may depend on one phone remaining available. Every accepted
 submission, confirmation, correction, and recovered result is stored as
 tournament/event/game-scoped server history, and a replacement device rebuilds
@@ -195,9 +198,50 @@ The two entries MUST be independently captured by the two distinct assigned play
 
 ### 5.3 Hybrid/paper workflow
 
-`PaperOrHybridDraft → PlayerAEntryPending + PlayerBEntryPending → BothEntriesSubmitted → ConfirmationAPending/ConfirmationBPending → Verified`.
+`DigitalPlayerSubmitted → FirstOfficialPaperMatchPending → SecondOfficialIndependentReview → VerifiedOrRejected`.
 
-The paper card is the source artifact and MUST retain its event/card identity. The primary path is: each assigned player independently enters the paper result on a shared or personal device using their context-only PIN, cannot see the other player's entry before comparison, and confirms their own entry. Each entry and confirmation is bound to that assigned player and canonical card/match. A player who is unavailable leaves the result `PendingCrossCheck`; staff may capture paper evidence and record a pending transcription, but staff cannot substitute for that player's entry or confirmation unless a future, separately approved exception is enabled. A dead-phone/shared-device PIN confirms context only; it never grants account access or bypasses these safeguards. Offline entries remain pending until each player's authenticated action reaches the server. If either entry is missing, the result cannot become server-verified. If entries disagree, the result enters `MismatchNeedsCrossCheck` and requires an eligible cross-check/judge workflow; it cannot be resolved by a single staff transcription or local success message.
+The digital player's immutable submission and the original paper card are the
+two source records. The participants MUST have exactly one explicit
+`digital` and one explicit `paper` roster preference. An independently
+identity-bound cross checker MAY transcribe the paper card and bind it to the
+one existing digital-player submission only when winner and 1–121 spread match
+exactly. That first operation remains pending and creates no scorelines. A
+second distinct cross checker, co-director, or director who is not either
+player MUST independently re-enter the paper claim and confirm the immutable
+digital submission identifier and result. Only an exact second confirmation
+creates reciprocal authoritative scorelines. A mismatch remains unresolved
+and rejectable; it never affects scorecards or standings.
+
+The case MUST snapshot both scorecard-preference versions, the game version,
+digital submission, first official identity binding, and paper evidence
+reference. Approval revalidates those snapshots and the exact current
+scheduled-game policy. It is mutually exclusive with ordinary player
+confirmation, paper-versus-paper completion, and failed-device recovery.
+Records are append-only, audited, idempotent, and actor-scoped reconciliation
+must recover an exact saved response even after the item leaves the workspace.
+
+For a scheduled paper-versus-paper game, an eligible cross checker who is not
+either player MAY compare and manually transcribe both original paper cards.
+That first transcription remains pending and creates no scoreline. A second,
+distinct current cross checker, co-director, or director who is not either
+player MUST independently re-enter the two card claims and references. Only an
+exact match of the two separately identified, reciprocal 1–121 claims may be
+approved. The server then derives the two 0/2/3 game-point and plus/minus
+scorelines and preserves both officials' evidence, actors, times, game version,
+and operation receipts immutably. This path does not require either paper
+player to create an account and does not create fabricated player submissions
+or confirmations. A missing card, mismatched claim, same-official review,
+prior digital submission, self-check, stale game, or unresolved retry MUST fail
+closed and remain outside qualification totals.
+
+Every paper-game official MUST have a current tournament-scoped identity
+binding. A profile already linked through the roster or any event participation
+cannot be represented as a nonparticipant, and later linking/enrollment MUST
+fail until that nonparticipant binding is corrected. Approval MUST revalidate
+both officials, including that the first official's stored binding remains the
+latest independent binding. Exact saved outcomes remain recoverable after the
+tournament lifecycle closes through an actor-, tournament-, operation-, and
+target-scoped receipt reader so a lost response cannot cause duplicate entry.
 
 ### 5.3.1 Paper-scorecard capture and OCR assistance
 
@@ -214,9 +258,10 @@ digital player’s independently submitted result. For a paper/paper game, each
 card is captured independently and the app compares the two approved drafts.
 Only missing, unreadable, unlinked, low-confidence, or mismatched results may
 enter the cross-check queue. A matching OCR draft, one scanned card, a paper
-image, or a staff transcription alone MUST NOT create `Verified`, satisfy a
-player entry or confirmation, or silently modify a scorecard, standings,
-export, or payment record.
+image, or a single-card staff transcription MUST NOT create `Verified`, satisfy
+a player entry or confirmation, or silently modify a scorecard, standings,
+export, or payment record. The separately authorized two-original-card manual
+completion above does not depend on OCR and remains fully audited.
 
 Card images and OCR drafts are restricted evidence, not public attachments.
 They require role/tournament authorization, encrypted restricted storage,
@@ -268,10 +313,13 @@ Cached rulebook text/PDF is permitted only after separate ACC/copyright permissi
 - Finance MUST use manual payment/status entry and the label **ACC Sanctioning Fee** (renamed from Reserve Fee). No online payment processing is in scope.
 - Finance is private to authorized tournament roles. It MUST NOT be included in public result pages or public exports except for explicitly approved prize/payout fields.
 - A financial ledger MUST reconcile event fees, manual payments, expenses, Q-pools, payouts, sanctioning fee, and adjustments with immutable/audited entries. Unreconciled values block release readiness and official export.
+- For the October pilot, a director or co-director MAY manually finalize one Standard Singles event allocation only after saving a complete settlement working copy and explicitly attesting that the identified official source, placement payouts, Q-pool claims, MRP claims, and expense ledger were reviewed. The final record MUST bind the exact current qualification, playoff, settlement-draft, payment-snapshot, and expense-snapshot versions; conserve event income across event expense, placement payouts, Q-pool payouts, other awards, and retained balance; prevent allocations across finalized events from exceeding the tournament ledger; remain immutable, versioned, audited, and retry-safe; and state that it was not submitted to ACC. Open disputes, incomplete qualifier MRP claims, stale inputs, changed ledger snapshots, or non-conservation MUST block finalization. The server MUST NOT infer an ACC payout, Q-pool, or MRP formula.
 
 ## 8. Public Results lifecycle and audience
 
 Results are a separate post-event publication, not the promotional flyer. A result set has lifecycle states `Draft → Reconciled → DirectorApproved → Published → Superseded/Withdrawn`. Only `Published` results are public. By default, “public” means signed-in app users with the results-view permission; anonymous internet access is a separate product decision and MUST remain disabled until explicitly approved. The audience may view event identity, event type, paid placements, each paid player's placement and prize amount, winner, runner-up, high non-qualifier, and Master Point qualifiers.
+
+Viewer, player, cross-checker, director, and co-director tournament roles MUST be able to discover the active Standard Singles digital events and navigate between the tournament workspace, results index, and event result. This read access grants no settlement, finalization, payout, MRP, correction, or publication authority; those actions retain their existing role gates.
 
 Event/Playoff Results and Qualification Results MUST remain distinct. Event/Playoff Results show winner, runner-up, and other paid playoff placements. Qualification Results preserve the completed qualifying-card order from highest to lowest; later playoff outcomes MUST NOT reorder it. The playoff winner and runner-up are members of the qualifying field but may have entered the playoffs at any qualifying rank. The High Non-Qualifier is the first ranked player outside the qualification cutoff and MUST appear as a separately labeled row immediately after the last qualifier in the application report. It is not a playoff placement. A pre-playoff Qualification Preview MUST NOT invent or display an event winner or runner-up. The high non-qualifier MUST be computed from a source-backed approved fixture and must identify the final qualifier tie-playoff loser where that case applies. An ACC export MAY place the same High Non-Qualifier value in a separately required portal field without changing this semantic separation. See `docs/decisions/2026-09-10-qualification-and-playoff-result-separation.md`.
 

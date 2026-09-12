@@ -17,13 +17,14 @@ export type ManualRosterEntryRequest = {
   displayName: string;
   email: string;
   accNumber: string;
+  scorecardType: "digital" | "paper";
   idempotencyKey: string;
 };
 
 export function isManualRosterEntryRequest(value: unknown): value is ManualRosterEntryRequest {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  if (!exactKeys(item, ["displayName", "email", "accNumber", "idempotencyKey"])) return false;
+  if (!exactKeys(item, ["displayName", "email", "accNumber", "scorecardType", "idempotencyKey"])) return false;
   if (!isUuid(item.idempotencyKey) || typeof item.displayName !== "string" || typeof item.email !== "string" || typeof item.accNumber !== "string") return false;
   const name = item.displayName.trim();
   const email = item.email.trim();
@@ -31,7 +32,8 @@ export function isManualRosterEntryRequest(value: unknown): value is ManualRoste
   return name.length >= 1 && name.length <= 160
     && email.length <= 320
     && (email.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    && accNumber.length <= 64;
+    && accNumber.length <= 64
+    && (item.scorecardType === "digital" || item.scorecardType === "paper");
 }
 
 export function isAcceptedManualRosterEntry(value: unknown) {
@@ -54,10 +56,10 @@ export function isRejectedManualRosterEntry(value: unknown) {
   const item = value as Record<string, unknown>;
   return exactKeys(item, ["status", "code"])
     && item.status === "rejected"
-    && ["authentication_required", "not_director", "invalid_manual_entry", "duplicate_roster_entry", "initial_seating_already_published", "idempotency_conflict", "manual_roster_entry_rejected"].includes(item.code as string);
+    && ["authentication_required", "not_director", "invalid_manual_entry", "duplicate_roster_entry", "registration_closed", "initial_seating_already_published", "idempotency_conflict", "manual_roster_entry_rejected"].includes(item.code as string);
 }
 
-export type RosterCsvRow = { displayName: string; email: string; accNumber: string };
+export type RosterCsvRow = { displayName: string; email: string; accNumber: string; scorecardType: "digital" | "paper" };
 export type RosterCsvImportRequest = { rows: RosterCsvRow[]; idempotencyKey: string };
 
 export function isRosterCsvImportRequest(value: unknown): value is RosterCsvImportRequest {
@@ -68,11 +70,12 @@ export function isRosterCsvImportRequest(value: unknown): value is RosterCsvImpo
   return item.rows.every((row) => {
     if (!row || typeof row !== "object" || Array.isArray(row)) return false;
     const entry = row as Record<string, unknown>;
-    return exactKeys(entry, ["displayName", "email", "accNumber"])
+    return exactKeys(entry, ["displayName", "email", "accNumber", "scorecardType"])
       && typeof entry.displayName === "string" && entry.displayName.trim().length >= 1 && entry.displayName.trim().length <= 160
       && typeof entry.email === "string" && entry.email.trim().length <= 320
       && (entry.email.trim().length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(entry.email.trim()))
-      && typeof entry.accNumber === "string" && entry.accNumber.trim().length <= 64;
+      && typeof entry.accNumber === "string" && entry.accNumber.trim().length <= 64
+      && (entry.scorecardType === "digital" || entry.scorecardType === "paper");
   });
 }
 

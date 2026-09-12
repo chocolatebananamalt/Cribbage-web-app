@@ -3,6 +3,7 @@ import type { RosterCsvRow } from "../api/roster";
 const nameHeaders = new Set(["player", "player name", "name", "display name"]);
 const emailHeaders = new Set(["email", "email address"]);
 const accHeaders = new Set(["acc #", "acc#", "acc number", "acc no", "acc no."]);
+const scorecardHeaders = new Set(["scorecard", "scorecard type", "card", "card type"]);
 
 function rowsFromCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -30,16 +31,19 @@ export function parseRosterCsv(text: string): RosterCsvRow[] {
   const nameIndex = headers.findIndex((header) => nameHeaders.has(header));
   const emailIndex = headers.findIndex((header) => emailHeaders.has(header));
   const accIndex = headers.findIndex((header) => accHeaders.has(header));
+  const scorecardIndex = headers.findIndex((header) => scorecardHeaders.has(header));
   if (nameIndex < 0) throw new Error("Add a Player Name or Name column.");
   if (records.length - 1 > 500) throw new Error("Import no more than 500 players at a time.");
   const rows = records.slice(1).map((fields, offset) => {
     const displayName = (fields[nameIndex] ?? "").trim();
     const email = emailIndex < 0 ? "" : (fields[emailIndex] ?? "").trim();
     const accNumber = accIndex < 0 ? "" : (fields[accIndex] ?? "").trim();
+    const scorecardRaw = scorecardIndex < 0 ? "digital" : (fields[scorecardIndex] ?? "").trim().toLowerCase();
     if (!displayName || displayName.length > 160) throw new Error(`Row ${offset + 2} needs a valid player name.`);
     if (email.length > 320 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) throw new Error(`Row ${offset + 2} has an invalid email address.`);
     if (accNumber.length > 64) throw new Error(`Row ${offset + 2} has an invalid ACC number.`);
-    return { displayName, email, accNumber };
+    if (scorecardRaw !== "digital" && scorecardRaw !== "paper") throw new Error(`Row ${offset + 2} needs Digital or Paper in the Scorecard Type column.`);
+    return { displayName, email, accNumber, scorecardType: scorecardRaw as "digital" | "paper" };
   });
   const anonymousNames = new Set<string>(), emails = new Set<string>(), accNumbers = new Set<string>();
   for (const row of rows) {

@@ -54,6 +54,54 @@ async function writeOne(store: string, value: unknown) {
   } finally { db.close(); }
 }
 
+async function writeOfflineQueueRecordOnce(record: OfflineQueueRecord) {
+  if (record.intent.kind !== "submission") throw new Error("invalid_offline_queue_kind");
+  const intended = record.intent;
+  const db = await openDatabase();
+  try {
+    const tx = db.transaction(queueStore, "readwrite");
+    const store = tx.objectStore(queueStore);
+    let result: OfflineQueueRecord | undefined;
+    let failure: Error | undefined;
+    const all = store.getAll();
+    all.onsuccess = () => {
+      const matches = (all.result as unknown[]).filter((value): value is OfflineQueueRecord => isOfflineQueueRecord(value)
+        && value.intent.kind === "submission"
+        && value.intent.verifiedActorId === intended.verifiedActorId
+        && value.intent.gameId === intended.gameId);
+      if (matches.length > 1) {
+        failure = new Error("offline_queue_conflict");
+        tx.abort();
+        return;
+      }
+      const existing = matches[0];
+      if (existing) {
+        if (existing.intent.kind !== "submission") {
+          failure = new Error("offline_queue_conflict");
+          tx.abort();
+          return;
+        }
+        if (existing.intent.winnerSide !== intended.winnerSide || existing.intent.margin !== intended.margin) {
+          failure = new Error("offline_submission_already_queued");
+          tx.abort();
+          return;
+        }
+        result = existing;
+        return;
+      }
+      result = record;
+      store.add(record);
+    };
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error ?? failure ?? new Error("offline_storage_unavailable"));
+      tx.onabort = () => reject(failure ?? tx.error ?? new Error("offline_storage_unavailable"));
+    });
+    if (!result) throw new Error("offline_storage_unavailable");
+    return result;
+  } finally { db.close(); }
+}
+
 async function removeOne(store: string, id: string) {
   const db = await openDatabase();
   try {
@@ -139,16 +187,17 @@ export async function queueOfflineSubmission(capability: OfflineSubmissionCapabi
   // the browser rejects this first-party marker, do not create local-only
   // score data that a later magic-link exchange could orphan or expose.
   markOfflineScoreOwner(capability.verifiedActorId);
-  await writeOne(queueStore, record);
-  return record;
+  return writeOfflineQueueRecordOnce(record);
 }
 
 export async function readOfflineSubmission(actorId: string, gameId: string) {
   const db = await openDatabase();
   try {
     const values = await requestValue(db.transaction(queueStore, "readonly").objectStore(queueStore).getAll());
-    return (values as unknown[]).find((value): value is OfflineQueueRecord => isOfflineQueueRecord(value)
+    const matches = (values as unknown[]).filter((value): value is OfflineQueueRecord => isOfflineQueueRecord(value)
       && value.intent.kind === "submission" && value.intent.verifiedActorId === actorId && value.intent.gameId === gameId);
+    if (matches.length > 1) throw new Error("offline_queue_conflict");
+    return matches[0];
   } finally { db.close(); }
 }
 

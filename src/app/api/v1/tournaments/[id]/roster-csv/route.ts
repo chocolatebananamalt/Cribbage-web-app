@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
+import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import { isAcceptedRosterCsvImport, isRejectedRosterCsvImport, isRosterCsvImportRequest, isUuid } from "../../../../../../lib/api/roster";
 import { apiJson, readLargeJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
@@ -11,8 +12,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const body = await readLargeJson(request);
     if (!isUuid(id) || !isRosterCsvImportRequest(body)) return apiJson({ error: "invalid_roster_csv" }, { status: 400 });
     const supabase = await createClient();
-    if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await supabase.rpc("import_roster_csv_v1", { p_tournament_id: id, p_rows: body.rows, p_idempotency_key: body.idempotencyKey });
+    const actor = await requireVerifiedSubject(supabase);
+    if (!actor) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const { data, error } = await createServerOnlyAdminClient().rpc("import_roster_csv_v2", { p_actor_id: actor, p_tournament_id: id, p_rows: body.rows, p_idempotency_key: body.idempotencyKey });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
     if (isAcceptedRosterCsvImport(data)) return apiJson(data);
     if (isRejectedRosterCsvImport(data)) return apiJson(data, { status: 409 });
