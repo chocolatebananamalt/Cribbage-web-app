@@ -1,5 +1,20 @@
 # Project Status
 
+## 2026-09-11 offline readiness production correction
+
+- Corrected a reconnect/reload edge case so a restored queued score no longer
+  makes the interface claim **Offline Ready** without rechecking the actual
+  actor/game-bound cached page. Reconnection now also retries offline-page
+  preparation automatically when no score is queued.
+- `pnpm verify` passes 254/254 application tests plus audit, lint, production
+  build, and workspace checks; `pnpm verify:handoff` passes 6/6. Commit
+  `58b5d05` is live in Vercel Production as deployment
+  `dpl_8CqBBnpR3C2nMxhHxEkivdk44Cug`.
+- The stable `/demo` and `/offline-score-sw.js` endpoints return HTTP 200. The
+  worker has JavaScript MIME type, root scope, and `no-store`/`no-cache`
+  headers. External Chrome rendered the stable live demonstration.
+- Evidence: `docs/quality/2026-09-11-offline-score-page-reload.md`.
+
 ## 2026-09-11 offline score page reload foundation
 
 - Added an expiring, actor/game-bound offline copy of an assigned score page.

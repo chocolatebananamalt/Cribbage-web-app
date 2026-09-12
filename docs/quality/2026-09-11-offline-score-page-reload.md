@@ -41,6 +41,15 @@ closed. Ordinary connected scoring never waits for cache preparation.
   no framework overlay or console error. The service-worker JavaScript returned
   HTTP 200 with the required JavaScript MIME type, no-cache policy, and root
   scope header.
+- A final reconnect edge case was repaired before release: restored queued data
+  now revalidates the actual cached page before showing **Offline Ready**, and
+  reconnect retries preparation when no queue exists. The complete release gate
+  then passed again: 254/254 application tests and 6/6 handoff tests.
+- Commit `58b5d05` was promoted to Vercel Production as deployment
+  `dpl_8CqBBnpR3C2nMxhHxEkivdk44Cug`. The stable production `/demo` and worker
+  returned HTTP 200, and the worker returned `application/javascript`, root
+  service-worker scope, and `no-store`/`no-cache` headers. External Chrome
+  rendered the stable live demonstration.
 
 ## Remaining release evidence
 
