@@ -2,6 +2,7 @@ import { requireTournamentAccess } from "../../../lib/auth/require-tournament-ac
 import { SharedDeviceSignOut } from "../../../components/shared-device-sign-out";
 import Link from "next/link";
 import { registrationLinkManagementEnabled } from "../../../lib/api/public-registration-v2";
+import { accountActivationEnabled } from "../../../lib/api/account-activation-release";
 
 export default async function ProtectedTournamentPage({ params }: { params: Promise<{ tournamentId: string }> }) {
   const { tournamentId } = await params;
@@ -16,8 +17,10 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <Link className="guide-link" href={`/tournament/${tournamentId}/games`}>My Games</Link>
         <Link className="guide-link" href={`/tournament/${tournamentId}/rulebook`}>ACC Rulebook</Link>
         {(["director", "co_director"] as string[]).includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/setup`}>Set Up Tournament</Link> : null}
+        {(["director", "co_director", "cross_checker"] as string[]).includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/recoveries`}>Failed-device score recovery</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
         {["director", "co_director"].includes(access.role) && registrationLinkManagementEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/registration`}>Registration link and QR code</Link> : null}
+        {["director", "co_director"].includes(access.role) && accountActivationEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/account-activations`}>Player account activation</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link> : null}
         {["director", "co_director"].includes(access.role) ? <Link className="guide-link" href={`/tournament/${tournamentId}/schedule`}>Game schedule</Link> : null}

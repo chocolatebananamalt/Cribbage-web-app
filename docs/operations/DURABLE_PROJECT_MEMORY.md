@@ -65,17 +65,21 @@ When the owner corrects or clarifies the project:
 | Every skunk level shown to players awards 3 game points; double/triple labels are informal player aids, not official scoring labels. | Owner clarification, 2026-09-06 | Store official 3-point result; keep informal labels out of official records. |
 | Offline score entry and failed-device reconstruction are mandatory for October 3. Unsynced data is never called server-verified; recovery uses surviving server/opponent/paper evidence plus audited non-self confirmation. | Owner decision, 2026-09-10 | This is an engineering requirement not supplied by the ACC rulebook; implementation and real reconnect/recovery proof remain. |
 | Results and financials are not waiting for the owner to explain general ACC rules. The cached Rulebook and reviewed ACC resources are the starting sources. | Owner correction, 2026-09-11 | Proceed autonomously with source extraction, fixtures, implementation, and tests before escalating. Only a demonstrably absent/current-effective schedule, approval, or portal access may be escalated. |
+| Failed-device recovery must fail closed unless both participant identities are resolved and the recovery actor/reviewer is independent of both players. | Engineering safety decision, 2026-09-11 | Never infer non-self authority from a missing account link; unresolved identity blocks recovery authority. |
+| A Standard Singles qualification snapshot cannot be finalized while any two cards remain tied on all approved numeric ranking fields. | ACC-source implementation decision, 2026-09-11 | UUID or insertion order is never an official tie-breaker; require the approved remaining tie process before finalization. |
+| Ambiguous browser mutations retain and reuse the exact actor-scoped idempotency envelope until the server result is reconciled. | Engineering reliability decision, 2026-09-11 | Do not create a new logical mutation merely because a response was lost. Shared-device clearing removes every such envelope. |
+| Every foreign key introduced by recent pilot tables has a supporting index. | Hosted advisor result, 2026-09-11 | Migration 0132 is part of the controlled pilot schema and future migrations must preserve advisor coverage. |
 
 ## Source-versus-work ledger
 
 | Area | Source state | Work state |
 | --- | --- | --- |
 | Standard Singles score entry and scorecard arithmetic | Available and already translated into core tests. | Finish production UI/API wiring and real independent-session proof. |
-| Cross-check discrepancies and corrected totals | Rule 12.2 source and fixture oracle available. | Finish released lifecycle, projections, permissions, and multi-user proof. |
-| Qualification count, ordering, brackets, and byes | Rulebook/public bracket sources available; core preview fixtures exist. | Finish event-scoped finalization and end-to-end proof. |
+| Cross-check discrepancies and corrected totals | Rule 12.2 source and fixture oracle available. | Released lifecycle, projections, and permissions are implemented; independent multi-user and physical recovery proof remain. |
+| Qualification count, ordering, brackets, and byes | Rulebook/public bracket sources available; core preview fixtures exist. | Immutable qualifying-round finalization is implemented; real-session proof and playoff-result recording remain. |
 | MRP, Q-pool, payout, and official reporting | Public resource inventory exists. | Codex must first extract and test all usable current schedules. Escalate only a missing effective-date decision or unavailable authoritative schedule. |
-| Financial ledger and reconciliation | Owner requirements and protected payment foundations exist. | Finish expenses, pools, payouts, reconciliation, and conservation tests. |
-| Offline queue/recovery | Owner-approved behavioral requirements exist. | Implement durable authenticated queue/replay and failed-device recovery; prove reconnect, replay, conflicts, session changes, and reconstruction. |
+| Financial ledger and reconciliation | Owner requirements and protected payment foundations exist. | Audited expenses are implemented; finish pools, payouts, reconciliation, and conservation tests. |
+| Offline queue/recovery | Owner-approved behavioral requirements exist. | Authenticated queue/replay and audited failed-device recovery are implemented; real reconnect, independent-session, and physical reconstruction proof remain. |
 
 ## Genuine external dependencies
 

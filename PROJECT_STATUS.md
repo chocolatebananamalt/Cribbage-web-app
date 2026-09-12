@@ -1,5 +1,33 @@
 # Project Status
 
+## 2026-09-11 pilot operations completion slice
+
+- Added protected director workspaces for roster-to-account activation, bounded
+  CSV roster import, and an audited tournament expense ledger. Browser retry
+  envelopes are actor/tournament scoped and are cleared when a shared device is
+  cleared.
+- Added failed-device scorecard recovery using immutable opponent-device or
+  paper evidence, independent non-self review, correction-aware projections,
+  and authoritative recovery receipts. Recovery now fails closed when either
+  participant identity cannot be resolved and never represents a pending sync
+  as verified.
+- Added immutable Standard Singles qualification finalization. Finalization
+  locks the complete event score set, rejects unresolved workflow states and
+  every unresolved numeric ranking tie, freezes canonical score inserts and
+  mutations, and safely reconciles an ambiguous browser retry with the same
+  idempotency key.
+- Applied migrations 0127-0132 to the shared pilot. Hosted rollback fixtures
+  passed CSV intake, expenses, failed-device recovery, and qualification
+  finalization without retaining synthetic data. All 29 foreign-key indexes
+  required by the new pilot tables were added; the Supabase performance advisor
+  now reports zero unindexed foreign keys.
+- Independent Sol high-risk review found no remaining P0/P1 defect in recovery
+  or qualification finalization. `pnpm verify` passes 298/298 application tests
+  plus audit, lint, production build, and workspace checks;
+  `pnpm verify:handoff` passes 6/6.
+- Release deployment and independent-session browser rehearsal remain open for
+  this slice. Evidence: `docs/quality/2026-09-11-pilot-operations-completion.md`.
+
 ## 2026-09-11 roster freeze, hybrid reconstruction, and preliminary qualification
 
 - Applied migrations 0124-0126 to the shared pilot. Tournament activation now

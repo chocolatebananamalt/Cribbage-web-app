@@ -1,4 +1,4 @@
-const states = new Set(["pending", "submitted", "confirmation_pending", "mismatch", "verified", "corrected"]);
+const states = new Set(["pending", "submitted", "confirmation_pending", "mismatch", "verified", "corrected", "recovered"]);
 const seat = (value: unknown) => typeof value === "string" && /^[A-Z]-[1-9][0-9]*$/.test(value);
 const text = (value: unknown) => typeof value === "string" && value.trim().length > 0;
 const uuid = (value: unknown) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
@@ -9,7 +9,7 @@ export type AssignedGameSummary = {
   eventName: string;
   gameNumber: number;
   matchInstance: number;
-  state: "pending" | "submitted" | "confirmation_pending" | "mismatch" | "verified" | "corrected";
+  state: "pending" | "submitted" | "confirmation_pending" | "mismatch" | "verified" | "corrected" | "recovered";
   playerSide: "a" | "b";
   playerTableSeat: string;
   playerVerificationId: string;
@@ -39,6 +39,7 @@ function expectedNextAction(game: Record<string, unknown>) {
   if (state === "confirmation_pending" && submitted === true && canConfirm === !confirmed) return canConfirm ? "review_confirm" : "wait_opponent_confirmation";
   if (state === "mismatch" && submitted === true && confirmed === false && canConfirm === false) return "mismatch_review";
   if ((state === "verified" || state === "corrected") && submitted === true && confirmed === true && canConfirm === false) return "view_scorecard";
+  if (state === "recovered" && canConfirm === false) return "view_scorecard";
   return null;
 }
 

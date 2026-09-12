@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { isActivationRedemptionResult, type ActivationRedemptionResult } from "../../lib/api/roster-account-activation";
 
 declare global { interface Window { __accActivationCredential?: string } }
 
@@ -10,6 +11,7 @@ export default function ActivationForm() {
   const mounted = useRef(false);
   const [message, setMessage] = useState("Checking activation link…");
   const [ready, setReady] = useState(false);
+  const [pending, setPending] = useState<ActivationRedemptionResult | null>(null);
 
   function dropCredential() {
     credential.current = null;
@@ -62,7 +64,9 @@ export default function ActivationForm() {
       });
       dropCredential();
       const body: unknown = await response.json().catch(() => null);
-      if (response.ok && body && typeof body === "object" && (body as Record<string, unknown>).status === "pending") {
+      if (response.ok && isActivationRedemptionResult(body)) {
+        setReady(false);
+        setPending(body);
         setMessage("Activation is awaiting the director’s in-person confirmation.");
         return;
       }
@@ -74,5 +78,5 @@ export default function ActivationForm() {
     if (mounted.current) setMessage("This activation link is unavailable. Please contact the tournament director.");
   }
 
-  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}<p className="auth-note" role="status">{message}</p></section>;
+  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}{pending ? <section className="correction-item" aria-labelledby="witness-title"><h2 id="witness-title">Confirm with the tournament director</h2><p>Show the director both values in person. The director must be signed in separately and cannot approve their own request.</p><p><strong>Request ID</strong><br /><code>{pending.requestId}</code></p><p><strong>Witness phrase</strong><br /><code>{pending.confirmationPhrase}</code></p></section> : null}<p className="auth-note" role="status">{message}</p></section>;
 }

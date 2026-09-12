@@ -1,0 +1,21 @@
+import { NextRequest } from "next/server";
+import { createClient } from "../../../../../../lib/supabase/server";
+import { isAcceptedRosterCsvImport, isRejectedRosterCsvImport, isRosterCsvImportRequest, isUuid } from "../../../../../../lib/api/roster";
+import { apiJson, readLargeJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
+
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return withApiFailureBoundary(async () => {
+    if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
+    const { id } = await params;
+    const body = await readLargeJson(request);
+    if (!isUuid(id) || !isRosterCsvImportRequest(body)) return apiJson({ error: "invalid_roster_csv" }, { status: 400 });
+    const supabase = await createClient();
+    if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const { data, error } = await supabase.rpc("import_roster_csv_v1", { p_tournament_id: id, p_rows: body.rows, p_idempotency_key: body.idempotencyKey });
+    if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (isAcceptedRosterCsvImport(data)) return apiJson(data);
+    if (isRejectedRosterCsvImport(data)) return apiJson(data, { status: 409 });
+    return apiJson({ error: "operation_unavailable" }, { status: 503 });
+  });
+}

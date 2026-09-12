@@ -5,8 +5,22 @@ import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary 
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { issueRosterAccountActivation } from "../../../../../../lib/roster-account-activation-issuer";
+import { getRosterAccountActivationWorkspace } from "../../../../../../lib/roster-account-activation-workspace";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../lib/supabase/server";
+
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return withApiFailureBoundary(async () => {
+    if (!accountActivationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
+    const { id } = await params;
+    if (!isUuid(id)) return apiJson({ error: "invalid_request" }, { status: 400 });
+    const subject = await requireVerifiedSubject(await createClient());
+    if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const workspace = await getRosterAccountActivationWorkspace(createServerOnlyAdminClient(), subject, id);
+    if (!workspace) return apiJson({ error: "not_found" }, { status: 404 });
+    return apiJson(workspace);
+  });
+}
 
 /**
  * Creates a single-use, fragment-delivered activation credential. This route

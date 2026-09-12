@@ -17,3 +17,25 @@ test("activation API contracts accept only bounded exact decision envelopes", ()
   assert.equal(api.isActivationDecisionRequest({ requestId: id, decision: "reject", confirmationPhrase: "ABCD-EFGH", operationId: op }), false);
   assert.equal(api.isActivationCancelRequest({ activationId: id, operationId: op, extra: true }), false);
 });
+
+test("activation response contracts reject partial or broadened identity receipts", () => {
+  const secret = "A".repeat(43);
+  assert.equal(api.isActivationIssueResult({ status: "issued", credential: `${id}.${secret}`, expiresAt: "2030-01-01T00:30:00.000Z" }), true);
+  assert.equal(api.isActivationIssueResult({ status: "issued", credential: `${id}.${secret}`, expiresAt: "2030-01-01T00:30:00.000Z", activationId: id }), false);
+  assert.equal(api.isActivationRedemptionResult({ status: "pending", activationId: id, requestId: op, confirmationPhrase: "ABCD-EFGH" }), true);
+  assert.equal(api.isActivationRedemptionResult({ status: "pending", activationId: id, requestId: op }), false);
+  assert.equal(api.isActivationDecisionResult({ status: "approved", requestId: id, rosterEntryId: op, linkId: id }, id), true);
+  assert.equal(api.isActivationCancellationResult({ status: "cancelled", activationId: id }, id), true);
+});
+
+test("director workspace requires exact safe fields and a matching pending activation", () => {
+  const activationId = "00000000-0000-4000-8000-000000000003";
+  const workspace = {
+    tournamentName: "Sample event",
+    rosterEntries: [{ rosterEntryId: id, displayName: "Sample Player", activation: { activationId, state: "pending", expiresAt: "2030-01-01T00:30:00.000Z" } }],
+    pendingRequests: [{ requestId: op, activationId, rosterEntryId: id, rosterDisplayName: "Sample Player", requestedAt: "2030-01-01T00:10:00.000Z", expiresAt: "2030-01-01T00:30:00.000Z", canApprove: true }],
+  };
+  assert.equal(api.isActivationWorkspace(workspace), true);
+  assert.equal(api.isActivationWorkspace({ ...workspace, confirmationPhrase: "ABCD-EFGH" }), false);
+  assert.equal(api.isActivationWorkspace({ ...workspace, pendingRequests: [{ ...workspace.pendingRequests[0], activationId: op }] }), false);
+});

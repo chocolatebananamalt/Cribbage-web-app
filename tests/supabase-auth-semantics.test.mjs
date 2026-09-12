@@ -313,6 +313,12 @@ test('protected screens offer a shared-device clear and local sign-out boundary'
   assert.match(storage, /"acc-score:"/);
   assert.match(storage, /"acc-correction:"/);
   assert.match(storage, /"registration-operation:"/);
+  assert.match(storage, /"manual-roster-operation:"/);
+  assert.match(storage, /"roster-csv-operation:"/);
+  assert.match(storage, /"qualification-finalization:"/);
+  assert.match(storage, /"tournament-setup:"/);
+  assert.match(storage, /"tournament-activation:"/);
+  assert.match(storage, /"device-recovery:"/);
   assert.match(storage, /storage\.removeItem\(key\)/);
   // The score-entry component has distinct entry and review render paths; both
   // must preserve the clear-and-sign-out control for a shared device.
@@ -329,6 +335,26 @@ test('shared-device cleanup recognizes the actual registration key and propagate
   };
   assert.throws(() => storage.clearAppSessionStorage(fixture), /storage unavailable/);
   assert.deepEqual(removed, ['acc-score:opaque-operation']);
+});
+
+test('shared-device cleanup removes manual and CSV roster retry envelopes', async () => {
+  const storage = await import(pathToFileURL(path.join(root, 'src/lib/client-session-storage.ts')).href);
+  const values = [
+    'manual-roster-operation:actor:tournament',
+    'roster-csv-operation:actor:tournament',
+    'unrelated',
+  ];
+  const removed = [];
+  const fixture = {
+    get length() { return values.length; },
+    key(index) { return values[index] ?? null; },
+    removeItem(key) { removed.push(key); values.splice(values.indexOf(key), 1); },
+  };
+  storage.clearAppSessionStorage(fixture);
+  assert.deepEqual(removed.sort(), [
+    'manual-roster-operation:actor:tournament',
+    'roster-csv-operation:actor:tournament',
+  ]);
 });
 
 test('shared-device sign-out continues when local storage cleanup fails', async () => {

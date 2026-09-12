@@ -5,6 +5,7 @@ import test from "node:test";
 
 const decision = await import(pathToFileURL(path.join(process.cwd(), "src/lib/roster-account-activation-decision.ts")).href);
 const cancellation = await import(pathToFileURL(path.join(process.cwd(), "src/lib/roster-account-activation-canceller.ts")).href);
+const workspaceReader = await import(pathToFileURL(path.join(process.cwd(), "src/lib/roster-account-activation-workspace.ts")).href);
 
 const actorId = "00000000-0000-4000-8000-000000000001";
 const tournamentId = "00000000-0000-4000-8000-000000000002";
@@ -49,4 +50,19 @@ test("activation cancellation accepts only the exact requested cancellation", as
 test("activation cancellation refuses a mismatched database response", async () => {
   const admin = { async rpc() { return { data: { status: "cancelled", activationId: rosterEntryId }, error: null }; } };
   await assert.rejects(() => cancellation.cancelRosterAccountActivation(admin, { actorId, tournamentId, activationId, operationId }), /unavailable/);
+});
+
+test("activation workspace reader accepts only an exact protected read model", async () => {
+  const data = { tournamentName: "Sample event", rosterEntries: [{ rosterEntryId, displayName: "Sample Player", activation: null }], pendingRequests: [] };
+  const admin = { async rpc(name, args) {
+    assert.equal(name, "get_roster_account_activation_workspace_v1");
+    assert.deepEqual(args, { p_actor_id: actorId, p_tournament_id: tournamentId });
+    return { data, error: null };
+  } };
+  assert.deepEqual(await workspaceReader.getRosterAccountActivationWorkspace(admin, actorId, tournamentId), data);
+});
+
+test("activation workspace reader rejects secret-bearing or malformed results", async () => {
+  const admin = { async rpc() { return { data: { tournamentName: "Sample event", rosterEntries: [], pendingRequests: [], confirmationPhrase: "ABCD-EFGH" }, error: null }; } };
+  await assert.rejects(() => workspaceReader.getRosterAccountActivationWorkspace(admin, actorId, tournamentId), /unavailable/);
 });
