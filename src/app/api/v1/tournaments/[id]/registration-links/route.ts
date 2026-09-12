@@ -38,6 +38,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
     if (issued.status === "rejected") return apiJson({ error: "registration_link_conflict" }, { status: 409 });
     if (issued.status === "credential_unavailable") return apiJson({ error: "credential_unavailable" }, { status: 409 });
-    return apiJson({ status: "issued", credential: issued.credential.canonicalToken, expiresAt: issued.expiresAt });
+    return apiJson(
+      { status: "issued", credential: issued.credential.canonicalToken, expiresAt: issued.expiresAt },
+      { status: 201 },
+    );
   });
 }

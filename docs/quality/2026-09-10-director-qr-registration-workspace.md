@@ -48,6 +48,12 @@ render a QR code for the single active tournament registration link.
    workspace checks, and dependency audit) and `pnpm verify:handoff` passed
    locally on 2026-09-10. `git diff --check` also passed.
 
+On 2026-09-11, live production use exposed and repaired a create-response
+contract mismatch: the database accepted the link but the create route returned
+HTTP 200 while the one-time-credential UI required HTTP 201. The route now
+returns 201, matching the already-correct rotation route, and a regression
+assertion prevents the credential display from silently failing again.
+
 ## Still required before it can be enabled
 
 - Apply the reviewed migration sequence to a separate validation environment,
