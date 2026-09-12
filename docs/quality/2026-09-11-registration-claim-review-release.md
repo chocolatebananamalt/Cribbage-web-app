@@ -36,7 +36,7 @@
 
 Executed from the repository root:
 
-- `pnpm verify`: pass — dependency audit, lint, 325/325 application checks,
+- `pnpm verify`: pass — dependency audit, lint, 326/326 application checks,
   production build, and workspace checks.
 - `pnpm verify:handoff`: pass — 6/6 private handoff checks.
 - `git diff --check`: pass.
@@ -53,6 +53,16 @@ Executed from the repository root:
   representation on both sides; the regression test, focused lint, and a fresh
   production build pass before replacement deployment.
 
-Production deployment and browser evidence are recorded after independent
-review and promotion. The live fictional claim is rejected through this screen
-rather than promoted, so the October roster is not expanded by this test.
+## Production proof
+
+- Commit `8becc6a` is live in Vercel Production as deployment
+  `dpl_7RDg8BsZNeHuoidVqmFLwf8W6BJv` on the stable production domain.
+- A fresh authenticated external-Chrome session rendered the pending fictional
+  registration with active controls and no React console error. The director
+  rejected it, the request left the queue after refresh, and the two existing
+  roster identities remained unchanged.
+- At the 375-pixel phone viewport, the protected page heading and empty review
+  state remained visible and the document had no horizontal overflow
+  (`scrollWidth` equaled `clientWidth`). The temporary viewport was reset.
+- Browser-extension message-channel noise was observed, but no application
+  hydration/runtime error remained in the fresh verification tab.

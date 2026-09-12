@@ -22,10 +22,13 @@
 - The first live production browser pass caught and locally repaired a
   server/client time-zone hydration mismatch in the registration timestamp;
   focused regression, lint, and production-build checks pass.
-- `pnpm verify` passes 325/325 application checks plus audit, lint, production
-  build, and workspace checks; `pnpm verify:handoff` passes 6/6. Live release
-  proof of the new director review screen remains to be recorded after the
-  reviewed source deployment.
+- `pnpm verify` passes 326/326 application checks plus audit, lint, production
+  build, and workspace checks; `pnpm verify:handoff` passes 6/6.
+- Corrected commit `8becc6a` is live in Vercel Production as deployment
+  `dpl_7RDg8BsZNeHuoidVqmFLwf8W6BJv`. A fresh external-Chrome director session
+  rejected the fictional public claim, saw it leave the queue, retained the
+  two original roster identities, and showed no React console error. The page
+  also passed a 375-pixel no-horizontal-overflow check.
 
 ## 2026-09-11 settlement draft, exact money, and private workspace completion
 
