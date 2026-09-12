@@ -11,6 +11,10 @@
   attribution, playoff placements, and ledger reconciliation remain open.
 - Corrected the public demo's 375px navigation so all five tabs fit with
   52-pixel touch targets instead of clipping the final tabs.
+- Commit `83f03c5` is live in Vercel Production as deployment
+  `dpl_ADW6mV8QjXouobbhSA4eexsbufmc`. Public endpoints, desktop and phone demo
+  layout, the authenticated calculator, and the zero-runtime-error window were
+  verified after promotion.
 - Evidence: `docs/quality/2026-09-11-graduated-pool-calculator.md`.
 
 ## 2026-09-11 pilot operations completion slice
