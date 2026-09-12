@@ -1,5 +1,47 @@
 # Project Status
 
+## 2026-09-11 deterministic client timestamps
+
+- Generalized the live registration-review hydration repair across the
+  October-critical registration-link and account-activation workspaces. All
+  initial timestamps now use one deterministic UTC representation rather than
+  the server/device locale.
+- Regression coverage rejects environment-local formatting in those three
+  server-rendered client screens. Authenticated browser proof for the two
+  newly covered screens remains part of the consolidated release check.
+- Independent Sol high-risk review found no P0/P1 issue in this fix or the
+  private settlement working-copy release.
+
+## 2026-09-11 October-critical hosted regression
+
+- Re-ran ten rollback-only integration fixtures against the approved Supabase
+  pilot after migrations through `0136`: CSV roster import, registration
+  closure/roster freeze, schedule publication, preliminary standings,
+  qualification finalization, settlement draft, expense ledger, failed-device
+  recovery, Rule 12 corrections, and paper-card evidence capture.
+- All ten passed and a targeted cleanup check found zero retained fictional
+  fixture users. This closes a solvable shared-database regression gap without
+  closing or polluting the real October tournament.
+- Physical independent-phone/offline and backup/restore rehearsals remain
+  separate release evidence; dated ACC MRP/Q-pool/payout fixtures remain an
+  external rule-confirmation dependency.
+
+## 2026-09-11 private settlement working-copy slice
+
+- Added a director/co-director-only CSV download of the latest immutable
+  Standard Singles settlement draft, bound to the exact locked qualification
+  result. It separates playoff placement claims from qualifying-round ranks
+  and places the High Non-Qualifier after the qualifier list.
+- The artifact is explicitly provisional, unreconciled, and not an ACC
+  submission. It carries server cash snapshots and blocker codes, neutralizes
+  spreadsheet-formula text, and performs no MRP, Q-pool payout,
+  reconciliation, publication, or official-export calculation.
+- `pnpm verify` passes 331/331 application tests plus audit, lint, production
+  build, workspace, and private-handoff checks; the separate
+  `pnpm verify:handoff` passes 6/6. Authenticated desktop/phone download proof
+  remains for the release owner after integration; no hosted migration or
+  deployment is part of this slice.
+
 ## 2026-09-11 live QR registration and director review completion
 
 - Promoted commit `235585a` to Vercel Production, enabled the separate public

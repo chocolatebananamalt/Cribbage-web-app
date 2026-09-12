@@ -22,8 +22,8 @@ test("director roster screen includes an actionable registration review queue", 
 
 test("registration review renders a deterministic server/client timestamp", () => {
   const client = read("src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx");
-  assert.match(client, /timeZone: "UTC"/);
-  assert.match(client, /<time dateTime=\{claim\.submittedAt\}>\{submittedLabel\(claim\.submittedAt\)\}<\/time>/);
+  assert.match(client, /formatUtcDateTime/);
+  assert.match(client, /<time dateTime=\{claim\.submittedAt\}>\{formatUtcDateTime\(claim\.submittedAt\)\}<\/time>/);
   assert.doesNotMatch(client, /new Date\(claim\.submittedAt\)\.toLocaleString\(\)/);
 });
 

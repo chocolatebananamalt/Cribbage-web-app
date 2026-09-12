@@ -3,17 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isAcceptedRegistrationClaimReview, isRegistrationClaimReviewRequest, isRejectedRegistrationClaimReview, type RegistrationClaimReviewRequest } from "../../../../lib/api/registration-claim-review";
+import { formatUtcDateTime } from "../../../../lib/date-time";
 import type { RegistrationClaimReviewItem } from "../../../../lib/registration-claim-review-workspace";
 
 type Draft = { reason: string; confirmedDistinct: boolean };
 function read(key: string) { try { const raw = window.sessionStorage.getItem(key); return raw ? JSON.parse(raw) as unknown : null; } catch { return null; } }
 function write(key: string, value: RegistrationClaimReviewRequest) { try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
 function clear(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* The immutable server receipt remains authoritative. */ } }
-function submittedLabel(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.valueOf())) return value;
-  return `${new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(date)} UTC`;
-}
 
 export default function RegistrationClaimReviewClient({ actorId, tournamentId, claims }: { actorId: string; tournamentId: string; claims: RegistrationClaimReviewItem[] }) {
   const router = useRouter();
@@ -69,7 +65,7 @@ export default function RegistrationClaimReviewClient({ actorId, tournamentId, c
     <p>Approve a request before it can become a roster identity. Approval does not record payment, check the player in, enroll an event, or assign a seat.</p>
     {pending.length ? <ul className="correction-list">{pending.map((claim) => { const draft = draftFor(claim.claimId); const claimLocked = locked?.claimId === claim.claimId; const collision = claim.collisionClaimIds.length > 0; return <li className="correction-item" key={claim.claimId}>
       <p><strong>{claim.displayName}</strong> · {claim.email}{claim.accNumber ? ` · ACC # ${claim.accNumber}` : ""}</p>
-      <p className="auth-note">Planned payment: {claim.intendedPaymentMethod} · Submitted <time dateTime={claim.submittedAt}>{submittedLabel(claim.submittedAt)}</time></p>
+      <p className="auth-note">Planned payment: {claim.intendedPaymentMethod} · Submitted <time dateTime={claim.submittedAt}>{formatUtcDateTime(claim.submittedAt)}</time></p>
       {collision ? <label className="publication-confirmation"><input type="checkbox" checked={draft.confirmedDistinct} disabled={busy || !!locked} onChange={(event) => updateDraft(claim.claimId, { confirmedDistinct: event.target.checked })} /> I reviewed the matching registration and confirmed this is a different person.</label> : null}
       <label>Reason (optional)<input maxLength={500} value={draft.reason} disabled={busy || !!locked} onChange={(event) => updateDraft(claim.claimId, { reason: event.target.value })} /></label>
       <div className="correction-actions"><button className="primary" type="button" disabled={!ready || busy || !!locked || (collision && !draft.confirmedDistinct)} onClick={() => decide(claim, "approved_for_roster")}>{claimLocked && locked?.decision === "approved_for_roster" ? "Retry approval" : "Approve for roster"}</button><button className="secondary" type="button" disabled={!ready || busy || !!locked} onClick={() => decide(claim, "rejected")}>{claimLocked && locked?.decision === "rejected" ? "Retry rejection" : "Reject request"}</button></div>

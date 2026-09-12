@@ -282,6 +282,15 @@ Each publication MUST have a stable event/result-set ID, version number, publica
 
 The system MUST generate a director-downloadable, versioned **internal director-assisted export** (initial internal identifier `acc-results-v1`) rather than silently submitting to ACC. `acc-results-v1` is not an ACC portal import format or golden contract; its schema and field mapping remain pending ACC confirmation. Only export-specific unknowns may block generation; unrelated unresolved portal/API questions must not be misrepresented as export support.
 
+Before that official-reporting gate is satisfied, a director/co-director MAY
+download a private settlement **working copy** from an immutable saved draft.
+That file MUST bind to the same exact locked qualification-result version,
+keep playoff placement claims visibly separate from qualifying-round ranks,
+place the High Non-Qualifier after the qualifier list, preserve the draft's
+server cash snapshot and blocker codes, and state that it is provisional,
+unreconciled, and not an ACC submission. It MUST NOT calculate MRPs or Q-pool
+payouts, claim approval/publication, or substitute for `acc-results-v1`.
+
 The artifact MUST include:
 
 - tournament/event identity, dates, venue, director/co-directors, sanctioned event types, and contract/schema version;
