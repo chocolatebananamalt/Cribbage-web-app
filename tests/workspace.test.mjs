@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 test('standard verification runs the complete clean-clone safety suite', () => {
   const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;
@@ -17,9 +17,13 @@ test('standard verification runs the complete clean-clone safety suite', () => {
 });
 test('the normal application test command cannot silently omit a test file', () => {
   const testCommand = JSON.parse(readFileSync('package.json', 'utf8')).scripts.test;
-  const expected = readdirSync('tests')
-    .filter((name) => name.endsWith('.test.mjs') && !['workspace.test.mjs', 'handoff.test.mjs'].includes(name));
-  for (const name of expected) assert.match(testCommand, new RegExp(`tests/${name.replaceAll('.', '\\.')}`), name);
+  assert.equal(testCommand, 'node tests/run-application-tests.mjs');
+  const runner = readFileSync('tests/run-application-tests.mjs', 'utf8');
+  assert.match(runner, /endsWith\("\.test\.mjs"\)/);
+  assert.match(runner, /"workspace\.test\.mjs", "handoff\.test\.mjs"/);
+  assert.match(runner, /--conditions=react-server/);
+  assert.match(runner, /--experimental-strip-types/);
+  assert.match(runner, /--test/);
 });
 test('entry documents require verification and real guidance', () => {
   for (const f of ['START_HERE.md','AGENTS.md']) {

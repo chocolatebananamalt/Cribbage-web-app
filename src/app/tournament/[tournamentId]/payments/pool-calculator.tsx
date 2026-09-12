@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { estimateGraduatedPool } from "../../../../lib/finance/graduated-pool";
+import { parseUsdMinor } from "../../../../lib/money";
 
 const money = (minor: number) => new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -13,12 +14,6 @@ function positiveWhole(value: string) {
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 }
 
-function moneyMinor(value: string) {
-  if (!/^\d{1,7}(?:\.\d{1,2})?$/.test(value)) return null;
-  const [dollars, cents = ""] = value.split(".");
-  return Number(dollars) * 100 + Number(cents.padEnd(2, "0"));
-}
-
 export default function PoolCalculator() {
   const [players, setPlayers] = useState("20");
   const [ratio, setRatio] = useState("6");
@@ -26,7 +21,7 @@ export default function PoolCalculator() {
   const estimate = useMemo(() => {
     const playerCount = positiveWhole(players);
     const payoutRatio = positiveWhole(ratio);
-    const entryFeeMinor = moneyMinor(fee);
+    const entryFeeMinor = parseUsdMinor(fee, { maxMinor: 100_000_000 });
     if (!playerCount || !payoutRatio || !entryFeeMinor) return null;
     try {
       return estimateGraduatedPool({ playerCount, payoutRatio, entryFeeMinor });

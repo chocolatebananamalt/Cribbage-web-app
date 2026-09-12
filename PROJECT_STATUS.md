@@ -1,5 +1,40 @@
 # Project Status
 
+## 2026-09-11 settlement draft, exact money, and private workspace completion
+
+- Added an immutable director-only post-event settlement draft tied to the
+  locked Standard Singles qualification result. Directors deliberately choose
+  playoff winner, runner-up, and any additional paid placements; qualifying
+  order is never prefilled as playoff order.
+- Added optional Q-pool/other award claims and server snapshots of active
+  payment receipts and expenses. Drafts are permanently marked unreconciled
+  and cannot publish, assign MRPs, approve payouts, or export official results
+  until approved ACC fixtures and allocation rules exist.
+- Replaced floating-point fee conversion with exact USD-cent parsing and made
+  setup money fields remount from authoritative values after a server reload.
+- The signed-in production root now lists named, dated tournament workspaces
+  for explicit roles and checked-in linked players without exposing roster data.
+- Applied migrations 0133-0135 to the approved Supabase pilot. Both hosted
+  rollback fixtures pass without retained synthetic data, and the performance
+  advisor reports zero unindexed foreign keys.
+- Independent Sol review is GO with no P0/P1. `pnpm verify` passes 319/319
+  application tests plus audit, lint, build, and workspace checks;
+  `pnpm verify:handoff` passes 6/6. Production deployment/browser proof remains.
+
+## 2026-09-11 signed-in tournament chooser
+
+- Replaced the production root’s generic signed-in acknowledgement with a
+  private tournament chooser. Users receive named, date-friendly links only
+  for non-archived tournaments where their current profile has an explicit
+  tournament role or a checked-in participant identity; multiple assignments
+  resolve to one deterministic role.
+- The projection is server-only and contains no roster, contact, or other
+  member data. Empty membership and temporary reader failures remain distinct,
+  and the public demonstration stays available without granting access.
+- Migration `0134` is applied to the approved pilot and its rollback-only
+  hosted fixture passes. Remaining browser proof is recorded in
+  `docs/quality/2026-09-11-signed-in-tournament-chooser.md`.
+
 ## 2026-09-11 graduated pool calculator
 
 - Added a protected graduated pool calculator matching the live ACC MRP Program

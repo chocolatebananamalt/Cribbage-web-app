@@ -10,6 +10,7 @@ const appStoragePrefixes = [
   "event-roster-enrollment:",
   "event-schedule:",
   "qualification-finalization:",
+  "settlement-draft:",
   "tournament-setup:",
   "tournament-activation:",
   "device-recovery:",

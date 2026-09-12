@@ -12,6 +12,7 @@ import {
   type SetupActivationRequest,
   type SetupActivationState,
 } from "../../../../lib/api/setup-activation";
+import { formatUsdInput, parseUsdMinor } from "../../../../lib/money";
 
 type PendingSave = { kind: "tournament-setup"; request: SetupSaveRequest };
 type PendingActivation = { kind: "tournament-activation"; request: SetupActivationRequest };
@@ -27,8 +28,6 @@ function formatForStyle(style: string) {
   return "standard_singles";
 }
 
-function cents(value: string) { const amount = Number(value); return Number.isFinite(amount) && amount >= 0 ? Math.round(amount * 100) : 0; }
-function dollars(value: number | null) { return value === null ? "" : (value / 100).toFixed(2); }
 function defaultEvent(kind: SetupEvent["eventKind"], startsAt = "", timezone = "UTC"): SetupEvent {
   return { clientRowId: crypto.randomUUID(), eventKind: kind, displayName: eventLabels[kind], startsAt, timezone, styleCode: styleOptions[kind][0], formatCode: "standard_singles", gameCount: gameOptions[kind][0], entryFeeCents: 0, feeIncludesNote: "", payoutNote: "", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [] };
 }
@@ -46,12 +45,22 @@ function editableEvent(event: SetupEvent & { sourceStatus?: string; qPools: Arra
 }
 
 function MoneyInput({ label, value, onChange }: { label: string; value: number | null; onChange: (value: number | null) => void }) {
-  return <label>{label}<span className="money-input"><span aria-hidden="true">$</span><input inputMode="decimal" min="0" step="0.01" value={dollars(value)} onChange={(event) => onChange(event.target.value === "" ? null : cents(event.target.value))} /></span></label>;
+  const [draft, setDraft] = useState(() => formatUsdInput(value));
+  const parsed = draft === "" ? null : parseUsdMinor(draft, { allowZero: true, maxMinor: 100_000_000 });
+  const invalid = draft !== "" && parsed === null;
+  return <label>{label}<span className="money-input"><span aria-hidden="true">$</span><input
+    aria-invalid={invalid} inputMode="decimal" placeholder="0.00" value={draft}
+    onChange={(event) => setDraft(event.target.value)}
+    onBlur={() => {
+      if (invalid) { setDraft(formatUsdInput(value)); return; }
+      onChange(parsed);
+    }}
+  /></span></label>;
 }
 function PoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: number; update: (value: SetupPool) => void; remove: () => void }) {
   return <fieldset className="setup-subsection"><legend>Q Pool {index + 1}</legend>
     <label>Pool type<select required value={pool.poolTypeCode} onChange={(event) => update({ ...pool, poolTypeCode: event.target.value })}><option value="">Select a Q Pool type</option>{qPoolOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
-    <MoneyInput label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? 0 })} />
+    <MoneyInput key={`pool-fee-${pool.entryFeeCents}`} label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? 0 })} />
     <label>Optional note<input maxLength={1000} value={pool.note} onChange={(event) => update({ ...pool, note: event.target.value })} /></label>
     <button type="button" className="secondary" onClick={remove}>Remove Q Pool</button>
   </fieldset>;
@@ -63,7 +72,7 @@ function EventEditor({ event, number, update, remove }: { event: SetupEvent; num
       <label>Event name<input required maxLength={200} value={event.displayName} onChange={(e) => update({ ...event, displayName: e.target.value })} /></label>
       <label>Style<select value={event.styleCode} onChange={(e) => update({ ...event, styleCode: e.target.value, formatCode: formatForStyle(e.target.value) })}>{styleOptions[event.eventKind].map((option) => <option key={option}>{option}</option>)}</select></label>
       <label>Games<select value={event.gameCount} onChange={(e) => update({ ...event, gameCount: Number(e.target.value) })}>{gameOptions[event.eventKind].map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
-      <MoneyInput label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? 0 })} />
+      <MoneyInput key={`event-fee-${event.entryFeeCents}`} label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? 0 })} />
       <label>Start date and time<input required type="datetime-local" value={event.startsAt} onChange={(e) => update({ ...event, startsAt: e.target.value })} /></label>
       <label>Fee includes<input maxLength={1000} value={event.feeIncludesNote} onChange={(e) => update({ ...event, feeIncludesNote: e.target.value })} placeholder="Coffee, lunch, etc." /></label>
       {event.eventKind === "satellite" ? <label>Payout<select value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })}><option value="">Select a payout</option>{satellitePayoutOptions.map((option) => <option key={option}>{option}</option>)}</select></label> : <label className="setup-wide">Payout information<textarea maxLength={2000} value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })} /></label>}
@@ -128,7 +137,7 @@ export default function SetupClient({ actorId, tournamentId, activationEnabled }
   if (!payload) return <p className="auth-note" role="status">{message}</p>;
   return <section className="policy-settings setup-workspace"><h2>Tournament details</h2>
     <fieldset disabled={busy || !!pending || activated}><div className="setup-grid">
-      <label>Tournament name<input required maxLength={200} value={payload.tournamentName} onChange={(e) => setPayload({ ...payload, tournamentName: e.target.value })} /></label><label>City<input required maxLength={160} value={payload.city} onChange={(e) => setPayload({ ...payload, city: e.target.value })} /></label><label>Venue<input required maxLength={240} value={payload.venue} onChange={(e) => setPayload({ ...payload, venue: e.target.value })} /></label><label>Time zone<input required maxLength={128} value={payload.timezone} onChange={(e) => setPayload({ ...payload, timezone: e.target.value })} /></label><label>Starts<input required type="datetime-local" value={payload.startsAt} onChange={(e) => setPayload({ ...payload, startsAt: e.target.value })} /></label><label>Ends<input required type="datetime-local" value={payload.endsAt} onChange={(e) => setPayload({ ...payload, endsAt: e.target.value })} /></label><MoneyInput label="ACC Sanctioning Fee" value={payload.sanctioningFeeCents} onChange={(sanctioningFeeCents) => setPayload({ ...payload, sanctioningFeeCents })} /><label className="setup-wide">Director contact details<textarea maxLength={1000} value={payload.contactDetails} onChange={(e) => setPayload({ ...payload, contactDetails: e.target.value })} /></label>
+      <label>Tournament name<input required maxLength={200} value={payload.tournamentName} onChange={(e) => setPayload({ ...payload, tournamentName: e.target.value })} /></label><label>City<input required maxLength={160} value={payload.city} onChange={(e) => setPayload({ ...payload, city: e.target.value })} /></label><label>Venue<input required maxLength={240} value={payload.venue} onChange={(e) => setPayload({ ...payload, venue: e.target.value })} /></label><label>Time zone<input required maxLength={128} value={payload.timezone} onChange={(e) => setPayload({ ...payload, timezone: e.target.value })} /></label><label>Starts<input required type="datetime-local" value={payload.startsAt} onChange={(e) => setPayload({ ...payload, startsAt: e.target.value })} /></label><label>Ends<input required type="datetime-local" value={payload.endsAt} onChange={(e) => setPayload({ ...payload, endsAt: e.target.value })} /></label><MoneyInput key={`sanctioning-fee-${payload.sanctioningFeeCents ?? "blank"}`} label="ACC Sanctioning Fee" value={payload.sanctioningFeeCents} onChange={(sanctioningFeeCents) => setPayload({ ...payload, sanctioningFeeCents })} /><label className="setup-wide">Director contact details<textarea maxLength={1000} value={payload.contactDetails} onChange={(e) => setPayload({ ...payload, contactDetails: e.target.value })} /></label>
     </div></fieldset>
     <div className="setup-heading"><div><h2>Tournament events</h2><p>Add every event belonging to this tournament. Team formats remain paper-scored for the October pilot.</p></div><div className="setup-actions"><button type="button" className="secondary" disabled={busy || !!pending || activated || !!counts.main} onClick={() => add("main")}>Add Main Event</button><button type="button" className="secondary" disabled={busy || !!pending || activated || !!counts.consolation} onClick={() => add("consolation")}>Add Consolation Event</button><button type="button" className="secondary" disabled={busy || !!pending || activated || payload.events.length >= 32} onClick={() => add("satellite")}>Add Satellite Event</button></div></div>
     <fieldset disabled={busy || !!pending || activated}><legend className="sr-only">Configured tournament events</legend>{payload.events.map((event, index) => <EventEditor key={event.clientRowId} event={event} number={index + 1} update={(value) => updateEvent(event.clientRowId, value)} remove={() => !pending && !activated && setPayload({ ...payload, events: payload.events.filter((candidate) => candidate.clientRowId !== event.clientRowId) })} />)}</fieldset>

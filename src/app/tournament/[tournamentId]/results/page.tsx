@@ -38,6 +38,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       </section>
     </section>
     <p className="auth-note">Finalized by {finalized.finalizedBy}. This record does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export.</p>
+    {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
     <SharedDeviceSignOut />
