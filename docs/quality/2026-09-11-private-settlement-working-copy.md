@@ -1,6 +1,6 @@
 # Private settlement working-copy verification
 
-**Date:** 2026-09-11  
+**Date:** 2026-09-11
 **Environment:** local worktree; no hosted mutation or deployment
 
 ## Acceptance criteria

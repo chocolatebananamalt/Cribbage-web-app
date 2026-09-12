@@ -1,6 +1,6 @@
 # Private settlement working copy
 
-**Date:** 2026-09-11  
+**Date:** 2026-09-11
 **Status:** Implemented locally; hosted verification pending
 
 ## Decision
