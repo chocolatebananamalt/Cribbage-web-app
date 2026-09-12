@@ -30,8 +30,8 @@ not consume pilot time.
 | 1 | **Requirements and design baseline.** Approved score entry, paper-style scorecard, roles, corrections, seating, event/flyer, results, finance, how-to, and paper-capture requirements are traceable and conflicts are recorded. | Complete | **2026-09-10** | `docs/product/production-requirements.md`, decisions, reviewed prototype. Official rules remain versioned inputs, not assumptions. |
 | 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, and safe registration links operate. | In progress | **Target 2026-09-12** | Hosting and sign-in are live and migrations through 0110 are applied. Production tournament roles, independent sessions, and a real pilot dataset still need proof. |
 | 3 | **Tournament setup, players, check-in, and initial seating.** Main/Consolation/Satellites, game counts, fees, Q-pools, roster/import, payment status, check-in, closure, table capacity, assignments, and game schedule operate under one tournament. | In progress | **Target 2026-09-14** | Protected foundations exist, but the full director workflow is incomplete. Without an approved automatic-rotation fixture, the pilot uses a visibly labeled director-entered/imported schedule that passes uniqueness, capacity, and approval checks. Flyer import is not part of this target. |
-| 4 | **Scoring, scorecards, cross-checking, disputes, and offline durability.** Standard Singles two independent submissions plus two distinct eligible confirmations, verified-only scorecards, manual paper evidence, non-self dispute/correction handling, durable offline replay, and failed-device recovery all pass. | In progress | **Target 2026-09-16** | Server scoring and correction foundations exist. Complete operational wiring, manual hybrid/dispute resolution, durable device queue/reconnect, and real two-device evidence remain release blockers. |
-| 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, approved MRP/Q-pool calculations, expenses, fees, payouts, reconciliation, and director exports operate per event. | In progress | **Target 2026-09-17** | Preliminary standings/finalization foundations and manual-payment evidence exist. Authoritative workflows remain incomplete. ACC/approved MRP, Q-pool, payout, and export inputs are needed by **2026-09-16**; without them, affected outputs remain draft and October 3 live use stays blocked. |
+| 4 | **Scoring, scorecards, cross-checking, disputes, and offline durability.** Standard Singles two independent submissions plus two distinct eligible confirmations, verified-only scorecards, manual paper evidence, non-self dispute/correction handling, durable offline replay, and failed-device recovery all pass. | In progress | **Target 2026-09-16** | The cached 2025 Rulebook supplies the scoring/scorecard/cross-check rules. This is not waiting on owner explanation: complete operational wiring, manual hybrid/dispute resolution, durable device queue/reconnect, and real two-device evidence are implementation/proof blockers. |
+| 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, approved MRP/Q-pool calculations, expenses, fees, payouts, reconciliation, and director exports operate per event. | In progress | **Target 2026-09-17** | The cached Rulebook and ACC resource inventory supply the starting rules. Codex must extract, fixture-test, and implement available inputs before escalating. Only a demonstrably missing current-effective MRP/Q-pool/payout/export schedule or external approval remains an information dependency; affected outputs fail closed until then. |
 | 6 | **Pilot release proof.** Phone/desktop/zoom, independent sessions, offline/reconnect, backup/restore, rollback, monitoring, and director rehearsal pass against the release candidate. | Not started | **Target 2026-09-18** | Required before the director relies on the app. A green build alone is insufficient. |
 | 7 | **Supervised October 3 event.** Monitor the first tournament, preserve rollback/recovery paths, and capture issues without losing scorecards. | Not started | **2026-10-03** | Requires Step 6 and director approval. |
 | 8 | **Deferred full suite.** Production Rulebook/quick-reference integration, Judge Desk, digital team scoring, flyer creation/import, online payments, SMS, OCR, and automatic ACC submission. | Deferred | **After 2026-10-03** | These do not block the Standard Singles pilot. The demo Rulebook preview is reference-only; team events use paper scorecards. |
@@ -50,6 +50,8 @@ The owner-private, plain-language blocker dashboard is published at
 
 The detailed rule/ACC decision split is maintained in
 `docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`.
+Owner corrections and the mandatory solve-first protocol are maintained in
+`docs/operations/DURABLE_PROJECT_MEMORY.md`.
 
 ## ACC confirmation checklist
 
@@ -57,10 +59,11 @@ The detailed rule/ACC decision split is maintained in
 
 | Confirmation | Status | Target |
 | --- | --- | --- |
-| Current Rulebook edition plus game-point, spread, scorecard, and cross-check fixtures | In progress | 2026-09-13 |
+| Current Rulebook edition plus game-point, spread, scorecard, and cross-check source extraction | Complete — cached 2025 edition reviewed 2026-09-10 | 2026-09-10 |
+| Complete released score/cross-check rule-to-code fixtures and real workflow proof | In progress | 2026-09-16 |
 | Qualification order, playoff count, bracket, and bye fixtures | In progress | 2026-09-15 |
 | Event styles, game-count options, sanctioning fields, role vocabulary, and rotation-exception sources | In progress — no general automatic rotation fixture is available, so director-entered/imported scheduling is the pilot fallback | 2026-09-15 |
-| MRP, Q-pool, payout, and reporting-source inventory | In progress — current-effective confirmation and calculation fixtures remain | 2026-09-16 |
+| MRP, Q-pool, payout, and reporting-source inventory | In progress — Codex must exhaust cached/public schedules and build fixtures before requesting any missing current-effective confirmation | 2026-09-16 |
 | Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Not started | 2026-09-17 |
 
 ### Part B — ACC/director confirmations needed

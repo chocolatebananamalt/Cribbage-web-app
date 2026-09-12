@@ -1,6 +1,8 @@
 # Start here: ACC Digital Tournament System
 
-Read AGENTS.md, PROJECT_STATUS.md, docs/recovery/REVIEW.md, docs/quality/VERIFICATION.md and docs/operations/MODEL_ROUTING.md before work.
+Read AGENTS.md, PROJECT_STATUS.md, docs/operations/DURABLE_PROJECT_MEMORY.md,
+docs/recovery/REVIEW.md, docs/quality/VERIFICATION.md and
+docs/operations/MODEL_ROUTING.md before work.
 
 Baseline: recovered specification v1.1 (43 sections). Latest demo: pilot v1.3. Originals live in imports/acc-handoff-2026-09-05; docs/recovery/inventory.json maps every file to its organized copy.
 

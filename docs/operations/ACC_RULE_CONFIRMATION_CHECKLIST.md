@@ -1,6 +1,6 @@
 # ACC Rule and Operations Confirmation Checklist
 
-**Last updated:** 2026-09-10
+**Last updated:** 2026-09-11
 **Purpose:** Turn published ACC requirements into dated, testable application
 rules without treating a prototype or a remembered practice as an official
 rule.
@@ -17,6 +17,14 @@ rule.
 | MRP, qualifying, payout, and Q-pool inputs | Public Main, Consolation, Double-Elimination, and sample-payout materials are indexed under Tournament Director Resources. The Main and Consolation MRP sheets explicitly say **effective August 1, 2016**; see `docs/quality/2026-09-10-acc-mrp-payout-source-inventory.md`. | Build exact, versioned fixtures only after ACC confirms the current effective schedule; prevent result finalization/export if an applicable schedule is absent. | Source inventory reviewed; current-schedule confirmation and fixtures remain |
 | Flyer/sanctioning required fields | Current regional sanctioning request forms and Director Resources. | Map setup fields to a flyer and ACC-ready export; avoid duplicating director entry. | In progress — public Director Resources and Policy Manual field inventory recorded; current regional form confirmation remains open. |
 | Director portal behavior | Publicly documented portal guidance and observed field options, without relying on stored personal credentials. | Confirm whether export is director-assisted only or whether an ACC-approved integration is possible. | Not started |
+
+Scoring, scorecard, cross-check, qualification, results, and financial work
+must not be reported as waiting for the owner to restate rules already present
+in the cached Rulebook or reviewed ACC resources. Codex first extracts the
+source, creates positive and rejection fixtures, implements the narrow
+workflow, and records proof. Escalation is limited to a demonstrably absent
+current-effective schedule, conflicting authoritative sources, external
+approval, or inaccessible ACC integration boundary.
 
 ## Items that require ACC or director confirmation
 

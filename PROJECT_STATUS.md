@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-11 solve-first and durable-correction protocol
+
+- Added a repository-wide solve-first rule: future workers must inspect
+  existing sources, code, tests, connected services, and safe alternatives,
+  and make at least one concrete attempt before asking the owner for help.
+  Genuine owner questions must state what was tried and the smallest remaining
+  decision/action; unrelated work continues instead of stopping silently.
+- Added `docs/operations/DURABLE_PROJECT_MEMORY.md` as the persistent ledger
+  for owner corrections and verified source facts. Entry instructions now
+  require reading it, and material corrections must reconcile requirements,
+  decisions, the working outline, tests, quality evidence, and this status.
+- Recorded that cached ACC Rulebook 2025 and reviewed ACC resources already
+  supply the Standard Singles scoring, scorecard, Rule 12.2 cross-check, and
+  qualification starting rules. Scoring/results/financial items are therefore
+  classified as implementation/proof work unless a specific current-effective
+  schedule or approval is demonstrably unavailable. Offline/recovery remains
+  an owner-approved engineering requirement rather than an ACC rule.
+- Added a workspace regression check so the solve-first and durable-memory
+  entry requirements cannot disappear silently.
+
 ## 2026-09-11 September 18 October-pilot minimum
 
 - Accepted a focused Standard Singles pilot boundary targeting director

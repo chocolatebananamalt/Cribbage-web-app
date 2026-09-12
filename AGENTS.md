@@ -5,6 +5,20 @@ This repository contains the cribbage tournament web application.
 ## Working rules
 
 - Read `PROJECT_STATUS.md` before making changes.
+- Read `docs/operations/DURABLE_PROJECT_MEMORY.md` before planning, reporting
+  blockers, or asking the owner a project question.
+- Follow the solve-first protocol in that file: inspect existing sources,
+  code, tests, connected services, and safe in-scope alternatives; make at
+  least one concrete attempt when an action is available; ask the owner only
+  for a decision, credential, physical-world action, or information that
+  cannot be recovered safely. Never stop silently.
+- Classify an open item precisely as missing information, implementation,
+  verification, external approval, or access. A rule already present in the
+  cached ACC sources is not an owner-information blocker.
+- When the owner corrects a fact, requirement, priority, or terminology,
+  update `docs/operations/DURABLE_PROJECT_MEMORY.md` in the same material
+  change, then reconcile the affected requirement, decision, outline, test,
+  and status records. Do not rely on conversation memory alone.
 - Treat files in `imports/` as source material; do not overwrite them.
 - Convert recovered requirements into `docs/product/requirements.md` with source references.
 - Record important technical choices in `docs/decisions/`.

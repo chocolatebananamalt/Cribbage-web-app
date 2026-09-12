@@ -34,6 +34,20 @@ test('entry documents require verification and real guidance', () => {
   assert.match(routing, /`gpt-5\.6-sol` with `high` reasoning/);
   assert.match(routing, /Model strength never substitutes for evidence/i);
 });
+test('project instructions preserve solve-first corrections across tasks', () => {
+  const agents = readFileSync('AGENTS.md', 'utf8');
+  const start = readFileSync('START_HERE.md', 'utf8');
+  const memoryPath = 'docs/operations/DURABLE_PROJECT_MEMORY.md';
+  const memory = readFileSync(memoryPath, 'utf8');
+  assert.match(agents, /solve-first protocol/i);
+  assert.match(agents, /at\s+least one concrete attempt/i);
+  assert.match(agents, /When the owner corrects/i);
+  assert.match(agents, /DURABLE_PROJECT_MEMORY\.md/);
+  assert.match(start, /DURABLE_PROJECT_MEMORY\.md/);
+  assert.match(memory, /Source-versus-work ledger/);
+  assert.match(memory, /cached Rulebook and reviewed ACC resources are the starting sources/i);
+  assert.match(memory, /Offline score entry and failed-device reconstruction are mandatory/i);
+});
 test('private handoff is ignored by Git', () => {
   for (const p of ['imports/acc-handoff-2026-09-05/test.txt','docs/private/test.txt','docs/design/references/test.jpg','prototypes/pilot-v1.3/test.html']) {
     assert.equal(spawnSync('git', ['check-ignore','--no-index','-q',p]).status,0,p);
