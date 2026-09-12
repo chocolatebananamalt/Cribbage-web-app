@@ -28,8 +28,8 @@ not consume pilot time.
 | # | Step and definition of done | Status | Completed / estimated date | Current evidence or dependency |
 | --- | --- | --- | --- | --- |
 | 1 | **Requirements and design baseline.** Approved score entry, paper-style scorecard, roles, corrections, seating, event/flyer, results, finance, how-to, and paper-capture requirements are traceable and conflicts are recorded. | Complete | **2026-09-10** | `docs/product/production-requirements.md`, decisions, reviewed prototype. Official rules remain versioned inputs, not assumptions. |
-| 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, and safe registration links operate. | In progress | **Target 2026-09-12** | Hosting, sign-in, the RFC-valid pilot tournament, audited director/co-director access, and migrations through 0132 are live. Production has the dedicated server-only database credential. All recent foreign keys are indexed. Independent sessions and complete real pilot proof remain. |
-| 3 | **Tournament setup, players, check-in, and initial seating.** Main/Consolation/Satellites, game counts, fees, Q-pools, roster/import, payment status, check-in, closure, table capacity, assignments, event participants, and game schedule operate under one tournament. | In progress | **Target 2026-09-14** | Versioned setup, audited manual and CSV roster intake, roster account activation, multi-event activation, paper/digital enrollment, registration freeze, table plan, and director-reviewed schedule publication are implemented with hosted rollback proof. One actual registration-close → seating → enrollment → schedule rehearsal remains. Flyer import is deferred. |
+| 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, and safe registration links operate. | In progress | **Target 2026-09-12** | Hosting, passwordless sign-in, named tournament chooser, audited director/co-director access, migrations through 0135, and indexed foreign keys are live. The October public fragment-only QR link accepted a fictional claim without granting access. A genuinely independent browser/account release session and complete pilot proof remain. |
+| 3 | **Tournament setup, players, check-in, and initial seating.** Main/Consolation/Satellites, game counts, fees, Q-pools, roster/import, payment status, check-in, closure, table capacity, assignments, event participants, and game schedule operate under one tournament. | In progress | **Target 2026-09-14** | The October Main Event is activated. Manual/CSV/public claim intake, protected claim review, separate roster promotion, account activation, payment evidence, check-in, registration freeze, table plan, paper/digital enrollment, and reviewed schedule publication are implemented. One actual registration-close → seating → enrollment → schedule rehearsal remains. Flyer import is deferred. |
 | 4 | **Scoring, scorecards, cross-checking, disputes, and offline durability.** Standard Singles two independent submissions plus two distinct eligible confirmations, verified-only scorecards, manual paper evidence, non-self dispute/correction handling, durable offline replay, and failed-device recovery all pass. | In progress | **Target 2026-09-16** | Assigned games, device-bound offline replay, expiring offline page reload, hybrid scorecard reconstruction, correction-aware totals, and audited failed-device recovery are implemented with hosted proof. Real two-session disconnect/reload/reconnect and physical failed-device reconstruction remain. OCR is deferred, so paper evidence is entered manually. |
 | 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, approved MRP/Q-pool calculations, expenses, fees, payouts, reconciliation, and director exports operate per event. | In progress | **Target 2026-09-17** | Paper-inclusive correction-aware standings, completion evidence, immutable qualifying-round finalization, provisional qualifiers, cutoff-tie rejection, High Non-Qualifier, audited expenses, and the ACC-compatible non-persistent graduated-pool estimate are implemented. Persistent playoff placements, participant Q-pool/MRP/payout awards, reconciliation, and exports remain; affected outputs fail closed. |
 | 6 | **Pilot release proof.** Phone/desktop/zoom, independent sessions, offline/reconnect, backup/restore, rollback, monitoring, and director rehearsal pass against the release candidate. | Not started | **Target 2026-09-18** | Required before the director relies on the app. A green build alone is insufficient. |
@@ -38,11 +38,13 @@ not consume pilot time.
 
 ## Current highest-priority work
 
-1. Close Q-pool/MRP/payout, playoff results, and financial reconciliation from
+1. Release and live-test the new director registration-review queue, then close
+   the public claim with a non-authoritative review decision.
+2. Close Q-pool/MRP/payout, playoff results, and financial reconciliation from
    current authoritative sources with fail-closed fixtures.
-2. Run the actual setup → roster/check-in → registration-close → seating →
+3. Run the actual setup → roster/check-in → registration-close → seating →
    enrollment → schedule rehearsal against the shared pilot.
-3. Run the complete two-player, offline/reconnect, recovery, and
+4. Run the complete two-player, offline/reconnect, recovery, and
    release rehearsal by September 18.
 
 The owner-private, plain-language blocker dashboard is published at

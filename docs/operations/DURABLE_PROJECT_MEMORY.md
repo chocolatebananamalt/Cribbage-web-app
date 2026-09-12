@@ -70,6 +70,7 @@ When the owner corrects or clarifies the project:
 | Ambiguous browser mutations retain and reuse the exact actor-scoped idempotency envelope until the server result is reconciled. | Engineering reliability decision, 2026-09-11 | Do not create a new logical mutation merely because a response was lost. Shared-device clearing removes every such envelope. |
 | Every foreign key introduced by recent pilot tables has a supporting index. | Hosted advisor result, 2026-09-11 | Migration 0132 is part of the controlled pilot schema and future migrations must preserve advisor coverage. |
 | The live ACC Side Pool Calculator is a non-persistent estimator: winner count is rounded up from the one-in-X ratio, suggested prizes use graduated nearest-$5 rounding, and any fund difference requires manual adjustment. | ACC portal/help observation, 2026-09-11 | The app may reproduce the estimate with an explicit review warning; it must not call the suggestion an approved or saved payout. |
+| The October pilot public QR link is live only as a registration-claim queue. A director/co-director must approve or reject each claim, and approval still requires a separate roster-promotion action. | Owner-approved production release plus verified live behavior, 2026-09-11 | Never let public registration grant a role, roster identity, payment, check-in, event enrollment, Table/Seat, or Verification ID directly. Preserve collision review and exact retry behavior. |
 
 ## Source-versus-work ledger
 

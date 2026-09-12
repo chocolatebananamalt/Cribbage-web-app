@@ -35,8 +35,13 @@ without RFC version/variant bits, matching an existing pilot record. The
 permanent hosted fixture is `tests/tournament-chooser.sql`; it is
 transaction-wrapped and retains no fictional rows when run successfully.
 
-## Remaining release proof
+## Production evidence
 
 Migration `0134` is applied to the approved pilot and its rollback-only fixture
-passes, including implicit checked-in player discovery. Signed-in production
-desktop and 375-pixel phone browser evidence remains pending deployment.
+passes, including implicit checked-in player discovery. Production commit
+`042eac1` repaired a discovered compatibility defect for an existing canonical
+PostgreSQL UUID that does not carry RFC version/variant bits. External Chrome
+then showed both authorized tournament workspaces by name and date, including
+the October 3 pilot as an open co-director workspace. Direct navigation into
+the protected October workspace passed. Phone-specific signed-in chooser proof
+remains part of the final multi-device rehearsal.

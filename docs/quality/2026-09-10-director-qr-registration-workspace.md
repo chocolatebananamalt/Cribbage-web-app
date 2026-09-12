@@ -11,10 +11,12 @@ render a QR code for the single active tournament registration link.
 
 - The workspace and its navigation are unavailable unless the separate
   `ACC_REGISTRATION_LINK_MANAGEMENT_V2=enabled` director-management gate is
-  deliberately set. It is off in the current shared pilot.
+  deliberately set. It is enabled for the October pilot Production deployment.
 - Public claims remain independently unavailable until
   `ACC_PUBLIC_REGISTRATION_V2=enabled` is deliberately set. Preparing a QR
-  link therefore does not itself open public registration.
+  link therefore does not itself open public registration. The public gate was
+  enabled only after the live issuer/rotation path and anonymous claim boundary
+  passed their release checks.
 - The page requires the existing server-side tournament role check and then
   uses a server-only client for the already service-only link-state read.
 - A raw registration credential is created only by the existing server-only
@@ -57,13 +59,20 @@ The replacement form now defaults to a 30-day expiry so a link prepared for
 the October 3 pilot does not expire during the September 18 onboarding window;
 closing registration still closes the active link atomically.
 
-## Still required before it can be enabled
+## Production release evidence
 
-- Apply the reviewed migration sequence to a separate validation environment,
-  then the shared pilot only with the named change approval required by
-  `docs/operations/PILOT_MIGRATION_CHANGE_CONTROL.md`.
-- Test creation, scanning, claim, replacement, close, concurrent director
-  actions, and the unavailable/retry paths in independent signed-in browser
-  sessions against a real test backend.
-- Perform phone and desktop accessibility/print review. Browser automation on
-  this host cannot reach the local app, so no visual claim is made here.
+- Vercel Production deployment `dpl_46qi5VowQ9NcTexHfHEP63U6TPTn` served
+  commit `235585a` on the stable domain. External Chrome showed the protected
+  director workspace and replaced the active credential with the new 30-day
+  default; the displayed expiry is October 12, after the October 3 event.
+- After enabling the separate public gate and redeploying as
+  `dpl_HetSrY61e896zANvD2DFAZRU1LEP`, a fresh external Chrome tab opened the
+  fragment link, displayed the visitor form, accepted a fictional registration,
+  and returned `Your registration was received for review.`
+- The claim created no role, roster row, payment, check-in, event enrollment,
+  Table/Seat, or Verification ID. The absence of a director claim-review screen
+  was then treated as an implementation defect, not as successful completion;
+  that protected review queue is covered by the subsequent release evidence.
+
+Still required for the complete pilot gate: an independent physical phone scan,
+expired/replaced/closed-link ceremony, and the full multi-person rehearsal.

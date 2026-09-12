@@ -2,6 +2,7 @@ const appStoragePrefixes = [
   "acc-score:",
   "acc-correction:",
   "registration-operation:",
+  "registration-review-operation:",
   "manual-roster-operation:",
   "roster-csv-operation:",
   "payment-operation:",

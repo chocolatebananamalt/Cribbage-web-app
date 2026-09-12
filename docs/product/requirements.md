@@ -8,7 +8,7 @@ Precedence: current user decisions and verified current ACC rules; v1.1 specific
 
 | ID | Requirement group | Source sections | Current status |
 |---|---|---|---|
-| ACC-01 / R-REG-01 | ACC identity/profile, private PIN/reset, registration/check-in and shared-tablet clearing | 3-6 | Partial: guarded registration/roster/check-in/seating foundations; real player delivery and independent sessions remain |
+| ACC-01 / R-REG-01 | ACC identity/profile, private PIN/reset, registration/check-in and shared-tablet clearing | 3-6 | Partial: live QR claims, protected director review, manual/CSV intake, roster promotion, check-in/seating foundations, and shared-device clearing exist; ACC identity lookup and independent physical-session proof remain |
 | ACC-02 / R-ROLE-01 | Per-tournament server-enforced roles, judge isolation, no self cross-check, hidden standings | 7,9,17,23-25 | Partial: scoped server roles and private boundaries exist; judge workflow and independent-session proof remain |
 | ACC-03 / R-OPS-01 | Physical table geometry, anchors, approved family restrictions, rotation/sit-outs, disputes, and Consolation eligibility | 8,10 | Rules unresolved; official schedule/eligibility gated |
 | ACC-04 / R-VERIFY-01 | Two reciprocal independent entries AND two distinct eligible confirmations before atomic verification | 12-13 | Partial: server transaction and isolated real-identity evidence exist; independent browser/hybrid proof remains |

@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-09-11 live QR registration and director review completion
+
+- Promoted commit `235585a` to Vercel Production, enabled the separate public
+  registration gate, and replaced the October pilot link with a 30-day
+  credential expiring after the October 3 tournament. The stable production
+  `/register` route accepted a fictional visitor claim and displayed the
+  expected review acknowledgement.
+- Closed the discovered operational gap between public intake and roster
+  creation. The protected Players and Registration workspace now shows pending
+  claims, supports audited approve/reject decisions with an optional reason,
+  requires an explicit distinct-person confirmation for collision cases, and
+  preserves an ambiguous decision for an exact idempotent retry.
+- Approval remains deliberately non-authoritative: it creates no roster row,
+  role, payment, check-in, event enrollment, or seat. A separate existing
+  director action promotes an approved claim to a roster identity.
+- Migration `0136` is applied to the approved Supabase pilot. Its hosted
+  authority/replay fixture passed with zero retained synthetic users and zero
+  performance-advisor unindexed-foreign-key findings.
+- Independent Sol high-risk re-review is GO with no remaining P0/P1 findings.
+- `pnpm verify` passes 325/325 application checks plus audit, lint, production
+  build, and workspace checks; `pnpm verify:handoff` passes 6/6. Live release
+  proof of the new director review screen remains to be recorded after the
+  reviewed source deployment.
+
 ## 2026-09-11 settlement draft, exact money, and private workspace completion
 
 - Added an immutable director-only post-event settlement draft tied to the
