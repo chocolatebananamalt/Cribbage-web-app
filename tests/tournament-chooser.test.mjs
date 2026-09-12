@@ -16,6 +16,7 @@ const tournament = {
 
 test("tournament chooser validates a bounded exact private projection", () => {
   assert.equal(isAccessibleTournamentList([tournament]), true);
+  assert.equal(isAccessibleTournamentList([{ ...tournament, tournamentId: "10000000-0000-0000-0000-000000000001" }]), true);
   assert.equal(isAccessibleTournamentList([]), true);
   assert.equal(isAccessibleTournamentList([{ ...tournament, tournamentId: "not-a-uuid" }]), false);
   assert.equal(isAccessibleTournamentList([{ ...tournament, tournamentDate: "January 27" }]), false);

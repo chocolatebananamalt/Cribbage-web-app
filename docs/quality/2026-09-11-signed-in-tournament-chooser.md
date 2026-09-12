@@ -30,7 +30,9 @@ and workspace gate. `pnpm verify:handoff` also passes 6/6.
 The regression covers exact response validation, malformed fields, unknown
 status/role, duplicate tournament rejection, archived/cross-profile SQL scope,
 service-only grants, subject binding, workspace links, empty state, and demo
-access. The permanent hosted fixture is `tests/tournament-chooser.sql`; it is
+access. It also covers PostgreSQL UUIDs that use the correct hexadecimal shape
+without RFC version/variant bits, matching an existing pilot record. The
+permanent hosted fixture is `tests/tournament-chooser.sql`; it is
 transaction-wrapped and retains no fictional rows when run successfully.
 
 ## Remaining release proof

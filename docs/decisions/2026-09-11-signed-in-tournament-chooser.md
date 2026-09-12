@@ -19,6 +19,10 @@ in subject, validates an exact bounded response, and fails closed. Archived
 tournaments do not appear. The demonstration remains available separately and
 never grants tournament access.
 
+Identifier validation follows PostgreSQL's accepted 8-4-4-4-12 hexadecimal
+UUID representation. It does not impose RFC version or variant bits because
+existing imported tournament records can legitimately omit those bits.
+
 ## Why
 
 Users should not need an opaque tournament UUID or an old direct link after

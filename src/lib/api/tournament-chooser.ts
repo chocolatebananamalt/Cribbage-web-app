@@ -1,4 +1,7 @@
-const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// PostgreSQL accepts the standard 8-4-4-4-12 hexadecimal UUID shape without
+// requiring RFC version/variant bits. Existing imported tournament IDs may use
+// that broader, still strongly typed representation.
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const datePattern = /^(?:|\d{2}-\d{2}-\d{4})$/;
 
 const statuses = new Set(["draft", "open", "pending_finalization", "finalized"]);
