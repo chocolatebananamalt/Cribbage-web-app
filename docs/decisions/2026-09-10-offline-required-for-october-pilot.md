@@ -55,6 +55,30 @@ ordinary score history.
 
 ## Acceptance gate
 
+### First connected vertical slice acceptance
+
+Before broader recovery work, the first release slice must prove all of the
+following observable behavior:
+
+- an authenticated, assigned player can obtain a short-lived capability only
+  for their exact published game, side, current session, and registered
+  non-exportable P-256 device key;
+- submitting without a connection writes one immutable IndexedDB record and
+  visibly says `Saved Offline — Waiting to Sync`, never `Verified`;
+- that record survives a page reload, and reconnect attempts the same signed
+  payload without generating a second score submission;
+- only an exact terminal receipt removes the local record; network failures,
+  malformed responses, `401`, `429`, and `5xx` retain it;
+- an expired capability, changed payload, other session, other actor, other
+  game/tournament, stale game, or copied queue is rejected or quarantined
+  without changing the score; and
+- shared-device sign-out warns when an unresolved record exists, then clears
+  IndexedDB, cached authenticated pages, session storage, and device keys.
+
+The slice deliberately does not grant offline confirmation, paper-card
+authority, correction authority, finalization, or `Verified` state. Those
+remain on their existing server-controlled paths.
+
 Before the October pilot, two independent real browser/device sessions must
 prove offline entry, refresh/restart survival, reconnect replay, exact retry,
 duplicate and changed replay, stale/conflicting game state, account switch,

@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-11 offline score replay foundation
+
+- Added a device-bound offline Standard Singles submission path. Connected
+  score entry provisions a short-lived capability, browser IndexedDB retains
+  one immutable signed entry, reconnect replays the exact payload through the
+  existing score writer, and only an exact accepted receipt clears the queue.
+- Migrations 0122-0123 are applied to the shared pilot. A hosted rollback
+  fixture passed two-player same-version replay, exact retry, changed-replay
+  quarantine, immutable evidence, and grants checks without retaining test
+  data. Supabase's four new foreign-key index notices were repaired.
+- `pnpm verify` passes 251/251 application tests plus audit, lint, build, and
+  workspace checks; `pnpm verify:handoff` passes 6/6. Production deployment,
+  real two-session reconnect/reload proof, offline startup, and failed-device
+  recovery remain open before the complete October offline gate can pass.
+- Evidence: `docs/quality/2026-09-11-offline-score-replay-foundation.md`.
+
 ## 2026-09-11 player game navigation
 
 - Added a protected **My Games** entry point so a signed-in linked participant

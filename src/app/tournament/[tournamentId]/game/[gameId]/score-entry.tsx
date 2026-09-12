@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../../components/shared-device-sign-out";
 import { deriveScore, isScoreEntryReady, type ScoreResult } from "../../../../../lib/score";
 import type { AssignedGameContext } from "../../../../../lib/games/assigned-game-context";
-import { clearPendingScoreSubmission, isDefinitiveScoreMutationFailure, pendingSubmissionRecovery, readPendingScoreSubmission, type PendingScoreSubmission, writePendingScoreSubmission } from "../../../../../lib/score-retry-envelope";
+import { clearPendingScoreSubmission, isDefinitiveScoreMutationFailure, pendingSubmissionRecovery, readPendingScoreSubmission, type PendingScoreSubmission } from "../../../../../lib/score-retry-envelope";
+import { canDeleteOfflineQueueRecord, type OfflineQueueRecord, type OfflineSubmissionCapability } from "../../../../../lib/offline-score-queue-contract";
+import { deleteOfflineSubmission, provisionOfflineSubmission, queueOfflineSubmission, readOfflineSubmission, replayOfflineSubmission } from "../../../../../lib/offline-score-queue";
 
 const keypad = [1, 2, 3, 4, 5, 6, 7, 8, 9, "clear", 0, "backspace"] as const;
 type Winner = "player" | "opponent" | null;
@@ -38,10 +41,13 @@ function PaperDigitalGuide() {
 }
 
 export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
+  const router = useRouter();
   const [winner, setWinner] = useState<Winner>(() => context.ownSubmission ? context.ownSubmission.winnerSide === context.player.side ? "player" : "opponent" : null);
   const [marginText, setMarginText] = useState(() => context.ownSubmission ? String(context.ownSubmission.margin) : "");
   const [submissionId, setSubmissionId] = useState<string | null>(context.ownSubmission?.id ?? null);
   const [pendingSubmission, setPendingSubmission] = useState<PendingScoreSubmission | null>(null);
+  const [offlineCapability, setOfflineCapability] = useState<OfflineSubmissionCapability | null>(null);
+  const [offlineRecord, setOfflineRecord] = useState<OfflineQueueRecord | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [canConfirm, setCanConfirm] = useState(context.canConfirm);
   const [reviewing, setReviewing] = useState(false);
@@ -57,12 +63,41 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
         : "Your entry is saved and waiting for your opponent’s independent entry."
       : "Enter your independent result. It is not verified until both players submit and confirm.");
   const [busy, setBusy] = useState(false);
+  const [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const margin = Number(marginText);
   const derived = isScoreEntryReady(margin, winner) ? deriveScore(margin, winner) : null;
   const winnerSide = winner === "player" ? context.player.side : context.opponent.side;
-  const slot = context.player.side === "a" ? 1 : 2;
+
+  const syncOffline = async (record: OfflineQueueRecord) => {
+    if (busy || !navigator.onLine) return;
+    setBusy(true);
+    setStatus("Connection restored. Syncing your saved offline entry…");
+    try {
+      const { response, payload } = await replayOfflineSubmission(record);
+      if (!response.ok) {
+        if (response.status === 401) setStatus("Your saved offline entry is still on this device. Sign in as the same player to sync it.");
+        else if (response.status === 409) setStatus("Your saved offline entry needs review and was not applied to the scorecard.");
+        else setStatus("Your saved offline entry is still on this device. Sync will retry when service returns.");
+        return;
+      }
+      if (!canDeleteOfflineQueueRecord(record, payload)) {
+        setStatus("The sync response was incomplete. Your saved offline entry remains on this device.");
+        return;
+      }
+      await deleteOfflineSubmission(record.intent.queueId);
+      setOfflineRecord(null);
+      setSubmissionId(record.intent.submissionId);
+      setStatus("Offline entry synchronized. Refreshing the server scorecard status…");
+      router.refresh();
+    } catch {
+      setStatus("Your saved offline entry is still on this device. Sync will retry when service returns.");
+    } finally { setBusy(false); }
+  };
+
   useEffect(() => {
-    const timer = window.setTimeout(() => {
+    let active = true;
+    let queuedForReconnect: OfflineQueueRecord | null = null;
+    const timer = window.setTimeout(async () => {
       const pending = readPendingScoreSubmission(window.sessionStorage, context.actorId, context.tournamentId, context.gameId, context.player.side);
       const recovery = pendingSubmissionRecovery(pending, context.ownSubmission?.id ?? null);
       if (recovery.action === "clear" && pending) {
@@ -73,10 +108,51 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
         setMarginText(String(recovery.envelope.margin));
         setStatus("A previous entry is awaiting a safe retry. Only that exact result can be sent until the tournament server responds.");
       }
-      setHydrated(true);
+      try {
+        const queued = await readOfflineSubmission(context.actorId, context.gameId);
+        if (!active) return;
+        if (queued?.intent.kind === "submission") {
+          queuedForReconnect = queued;
+          setOfflineRecord(queued);
+          setWinner(queued.intent.winnerSide === context.player.side ? "player" : "opponent");
+          setMarginText(String(queued.intent.margin));
+          setStatus(navigator.onLine ? "A saved offline entry is ready to sync." : "Saved Offline — Waiting to Sync");
+          if (navigator.onLine) void syncOffline(queued);
+        } else if (!context.ownSubmission) {
+          const capability = await provisionOfflineSubmission(context.actorId, context.gameId);
+          if (active) setOfflineCapability(capability);
+        }
+      } catch {
+        if (active && !navigator.onLine) setStatus("Offline entry is not ready on this device. Reconnect before leaving this page.");
+      }
+      if (active) setHydrated(true);
     });
-    return () => window.clearTimeout(timer);
+    const connectionRestored = () => { setOnline(true); if (queuedForReconnect) void syncOffline(queuedForReconnect); };
+    const connectionLost = () => setOnline(false);
+    window.addEventListener("online", connectionRestored);
+    window.addEventListener("offline", connectionLost);
+    return () => { active = false; window.clearTimeout(timer); window.removeEventListener("online", connectionRestored); window.removeEventListener("offline", connectionLost); };
+    // The active queue is intentionally rebound when its identity changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.actorId, context.gameId, context.ownSubmission?.id, context.player.side, context.tournamentId]);
+
+  const saveOffline = async () => {
+    if (!derived || !winner) return null;
+    try {
+      const capability = offlineCapability ?? await provisionOfflineSubmission(context.actorId, context.gameId);
+      const record = await queueOfflineSubmission(capability, winnerSide, derived.margin);
+      if (pendingSubmission) clearPendingScoreSubmission(window.sessionStorage, pendingSubmission);
+      setPendingSubmission(null);
+      setOfflineCapability(capability);
+      setOfflineRecord(record);
+      setReviewing(false);
+      setStatus("Saved Offline — Waiting to Sync");
+      return record;
+    } catch {
+      setStatus("This device could not safely save the offline entry. Keep this page open and reconnect before submitting.");
+      return null;
+    }
+  };
   const operationId = (kind: "confirmation", fingerprint: string) => {
     const storageKey = `acc-score:${context.actorId}:${context.gameId}:${kind}:${fingerprint}`;
     try {
@@ -95,20 +171,12 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
   };
   const submit = async () => {
     if (busy || submissionId || !hydrated) return;
-    if (!navigator.onLine) {
-      setStatus("You are offline. This result has not been saved. Reconnect before submitting.");
+    if (!pendingSubmission) {
+      const record = await saveOffline();
+      if (record && navigator.onLine) await syncOffline(record);
       return;
     }
-    const envelope = pendingSubmission ?? (() => {
-      if (!derived || !winner) return null;
-      const next: PendingScoreSubmission = { version: 1, kind: "submission", actorId: context.actorId, tournamentId: context.tournamentId, gameId: context.gameId, playerSide: context.player.side, submissionId: crypto.randomUUID(), idempotencyKey: crypto.randomUUID(), submissionSlot: slot, winnerSide, margin: derived.margin };
-      if (!writePendingScoreSubmission(window.sessionStorage, next)) {
-        setStatus("This browser cannot safely preserve your entry for recovery. Enable session storage before submitting.");
-        return null;
-      }
-      setPendingSubmission(next);
-      return next;
-    })();
+    const envelope = pendingSubmission;
     if (!envelope) return;
     setBusy(true);
     try {
@@ -159,6 +227,6 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       setStatus("Network issue. Please try again; this confirmation will safely retry with the same request ID.");
     } finally { setBusy(false); }
   };
-  if (!submissionId && reviewing && derived) return <main className="auth-shell"><section className="auth-card live-score" aria-labelledby="live-score-title"><p className="eyebrow">SCORE ENTRY</p><h1 id="live-score-title">Review Current Game Result</h1><p className="auth-note">{context.eventName} · Game {context.roundNumber}</p><p className="game-line">Game {context.roundNumber} · {context.player.displayName}: Table/Seat {context.player.tableSeat} · {context.opponent.displayName}: Table/Seat {context.opponent.tableSeat}</p><ResultPreview context={context} score={derived} /><SkunkAid level={derived.skunkLevel} /><div className="actions"><button type="button" className="secondary" disabled={busy || !!pendingSubmission} onClick={() => setReviewing(false)}>Edit Result</button><button type="button" className="primary" disabled={busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : "Submit My Independent Entry"}</button></div><SharedDeviceSignOut /></section></main>;
-  return <main className="auth-shell"><section className="auth-card live-score" aria-labelledby="live-score-title"><p className="eyebrow">SCORE ENTRY</p><h1 id="live-score-title">Current Game Results</h1><p className="auth-note">{context.eventName} · Game {context.roundNumber}</p><div className="live-matchup"><strong>{context.player.displayName} <em>(ID#: {context.player.verificationId})</em></strong><span>Table/Seat {context.player.tableSeat}</span><b>VS</b><strong>{context.opponent.displayName} <em>(ID#: {context.opponent.verificationId})</em></strong><span>Table/Seat {context.opponent.tableSeat}</span></div><fieldset><legend>Game Winner:</legend><button type="button" className={winner === "player" ? "pick selected" : "pick"} disabled={busy || !!submissionId || !!pendingSubmission} aria-pressed={winner === "player"} onClick={() => setWinner("player")}>{context.player.displayName} won</button><button type="button" className={winner === "opponent" ? "pick selected" : "pick"} disabled={busy || !!submissionId || !!pendingSubmission} aria-pressed={winner === "opponent"} onClick={() => setWinner("opponent")}>{context.opponent.displayName} won</button></fieldset><div className="entry"><span>Spread Points:</span><output className={derived ? "number" : "number invalid"}>{marginText || "—"}</output><SkunkAid level={derived?.skunkLevel ?? 0} /></div><div className="keypad" aria-label="Spread points keypad">{keypad.map((value) => <button type="button" key={value} onClick={() => key(value)} disabled={busy || !!submissionId || !!pendingSubmission}>{value === "clear" ? "Clear" : value === "backspace" ? "⌫" : value}</button>)}</div>{derived ? <ResultPreview context={context} score={derived} /> : null}<p className="live-status" role="status">{status}</p>{!submissionId ? pendingSubmission ? <button type="button" className="primary full" disabled={busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : "Retry This Same Entry"}</button> : <button type="button" className="primary full" disabled={!derived || busy || !hydrated} onClick={() => setReviewing(true)}>Review Result</button> : canConfirm ? <button type="button" className="primary full" disabled={busy} onClick={confirm}>{busy ? "Confirming…" : "Confirm My Entry"}</button> : null}<PaperDigitalGuide /><Link className="guide-link" href={`/tournament/${context.tournamentId}/scorecard?event=${context.eventId}`}>View Scorecard</Link><Link className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</Link><SharedDeviceSignOut /></section></main>;
+  if (!submissionId && reviewing && derived) return <main className="auth-shell"><section className="auth-card live-score" aria-labelledby="live-score-title"><p className="eyebrow">SCORE ENTRY</p><h1 id="live-score-title">Review Current Game Result</h1><p className="auth-note">{context.eventName} · Game {context.roundNumber}</p><p className="game-line">Game {context.roundNumber} · {context.player.displayName}: Table/Seat {context.player.tableSeat} · {context.opponent.displayName}: Table/Seat {context.opponent.tableSeat}</p><ResultPreview context={context} score={derived} /><SkunkAid level={derived.skunkLevel} /><div className="actions"><button type="button" className="secondary" disabled={busy || !!pendingSubmission || !!offlineRecord} onClick={() => setReviewing(false)}>Edit Result</button><button type="button" className="primary" disabled={busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : "Submit My Independent Entry"}</button></div><SharedDeviceSignOut /></section></main>;
+  return <main className="auth-shell"><section className="auth-card live-score" aria-labelledby="live-score-title"><p className="eyebrow">SCORE ENTRY</p><h1 id="live-score-title">Current Game Results</h1><p className="auth-note">{context.eventName} · Game {context.roundNumber}</p><div className="live-matchup"><strong>{context.player.displayName} <em>(ID#: {context.player.verificationId})</em></strong><span>Table/Seat {context.player.tableSeat}</span><b>VS</b><strong>{context.opponent.displayName} <em>(ID#: {context.opponent.verificationId})</em></strong><span>Table/Seat {context.opponent.tableSeat}</span></div><fieldset><legend>Game Winner:</legend><button type="button" className={winner === "player" ? "pick selected" : "pick"} disabled={busy || !!submissionId || !!pendingSubmission || !!offlineRecord} aria-pressed={winner === "player"} onClick={() => setWinner("player")}>{context.player.displayName} won</button><button type="button" className={winner === "opponent" ? "pick selected" : "pick"} disabled={busy || !!submissionId || !!pendingSubmission || !!offlineRecord} aria-pressed={winner === "opponent"} onClick={() => setWinner("opponent")}>{context.opponent.displayName} won</button></fieldset><div className="entry"><span>Spread Points:</span><output className={derived ? "number" : "number invalid"}>{marginText || "—"}</output><SkunkAid level={derived?.skunkLevel ?? 0} /></div><div className="keypad" aria-label="Spread points keypad">{keypad.map((value) => <button type="button" key={value} onClick={() => key(value)} disabled={busy || !!submissionId || !!pendingSubmission || !!offlineRecord}>{value === "clear" ? "Clear" : value === "backspace" ? "⌫" : value}</button>)}</div>{derived ? <ResultPreview context={context} score={derived} /> : null}<p className="live-status" role="status">{status}</p>{offlineRecord ? <button type="button" className="primary full" disabled={busy || !online} onClick={() => syncOffline(offlineRecord)}>{busy ? "Syncing…" : online ? "Sync Saved Entry" : "Waiting for Connection"}</button> : !submissionId ? pendingSubmission ? <button type="button" className="primary full" disabled={busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : "Retry This Same Entry"}</button> : <button type="button" className="primary full" disabled={!derived || busy || !hydrated} onClick={() => setReviewing(true)}>Review Result</button> : canConfirm ? <button type="button" className="primary full" disabled={busy} onClick={confirm}>{busy ? "Confirming…" : "Confirm My Entry"}</button> : null}<PaperDigitalGuide /><Link className="guide-link" href={`/tournament/${context.tournamentId}/scorecard?event=${context.eventId}`}>View Scorecard</Link><Link className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</Link><SharedDeviceSignOut /></section></main>;
 }

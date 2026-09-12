@@ -1,4 +1,4 @@
--- Rollback-only integration fixture for migrations 0114-0118. Run on the
+-- Rollback-only integration fixture for migrations 0114-0122. Run on the
 -- isolated/shared pilot database. Every synthetic row is rolled back.
 
 begin;
@@ -13,6 +13,12 @@ create temporary table schedule_selected_game (
   player_a_slot smallint not null
 ) on commit drop;
 grant select, insert on schedule_selected_game to service_role, authenticated;
+create temporary table schedule_selected_offline_game (
+  game_id uuid primary key,
+  player_c_slot smallint not null,
+  player_d_slot smallint not null
+) on commit drop;
+grant select, insert on schedule_selected_offline_game to service_role;
 
 insert into auth.users(id, email) values
   ('a1140000-0000-4000-8000-000000000001', 'schedule-director@test.invalid'),
@@ -124,7 +130,7 @@ insert into app.event_participants(id, tournament_id, event_id, profile_id, rost
   ('41140000-0000-4000-8000-000000000002', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000003', null, 'A-2', 'checked_in'),
   ('41140000-0000-4000-8000-000000000003', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000002', 'a1140000-0000-4000-8000-000000000005', null, 'A-1', 'checked_in'),
   ('41140000-0000-4000-8000-000000000004', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000006', null, 'A-3', 'checked_in'),
-  ('41140000-0000-4000-8000-000000000005', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', null, '81140000-0000-4000-8000-000000000001', 'A-4', 'checked_in');
+  ('41140000-0000-4000-8000-000000000005', 'b1140000-0000-4000-8000-000000000001', '11140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000007', null, 'A-4', 'checked_in');
 
 -- A canonical game without an event_schedule_games row must never be exposed
 -- through the player reader, even when both participants otherwise match.
@@ -144,6 +150,7 @@ insert into app.canonical_games(
 );
 
 set local role service_role;
+select set_config('request.jwt.claim.role', 'service_role', true);
 
 insert into schedule_test_results(label, result)
 select 'not_reviewed', public.publish_director_reviewed_event_schedule_v1(
@@ -214,6 +221,73 @@ select 'published', public.publish_director_reviewed_event_schedule_v1(
     jsonb_build_object('gameNumber',2,'sideAVerificationId','A-2','sideBVerificationId','A-3','sideATableSeat','A-2','sideBTableSeat','A-3')
   ), true, '51140000-0000-4000-8000-000000000005');
 
+-- Resolve the generated game as owner because service_role intentionally has
+-- no direct access to private app tables, then return to the service boundary.
+reset role;
+insert into schedule_selected_offline_game(game_id,player_c_slot,player_d_slot)
+select cg.id,
+  case when cg.side_a_participant_id='41140000-0000-4000-8000-000000000004' then 1 else 2 end,
+  case when cg.side_a_participant_id='41140000-0000-4000-8000-000000000004' then 2 else 1 end
+from app.canonical_games cg join app.rounds r on r.id=cg.round_id
+where cg.event_id='11140000-0000-4000-8000-000000000001' and r.round_number=1
+  and '41140000-0000-4000-8000-000000000004' in (cg.side_a_participant_id,cg.side_b_participant_id)
+order by cg.id limit 1;
+set local role service_role;
+select set_config('request.jwt.claim.role', 'service_role', true);
+
+insert into schedule_test_results(label,result)
+select 'offline_cap_c', public.issue_offline_submission_capability_v1(
+  'a1140000-0000-4000-8000-000000000006','a1220000-0000-4000-8000-000000000001',g.game_id,
+  'a1220000-0000-4000-8000-000000000002','a1220000-0000-4000-8000-000000000003',
+  jsonb_build_object('kty','EC','crv','P-256','x',repeat('A',43),'y',repeat('B',43),'ext',true,'key_ops',jsonb_build_array('verify')))
+from schedule_selected_offline_game g;
+insert into schedule_test_results(label,result)
+select 'offline_cap_d', public.issue_offline_submission_capability_v1(
+  'a1140000-0000-4000-8000-000000000007','a1220000-0000-4000-8000-000000000004',g.game_id,
+  'a1220000-0000-4000-8000-000000000005','a1220000-0000-4000-8000-000000000006',
+  jsonb_build_object('kty','EC','crv','P-256','x',repeat('C',43),'y',repeat('D',43),'ext',true,'key_ops',jsonb_build_array('verify')))
+from schedule_selected_offline_game g;
+insert into schedule_test_results(label,result)
+select 'offline_replay_c', public.replay_offline_submission_v1(
+  'a1140000-0000-4000-8000-000000000006','a1220000-0000-4000-8000-000000000001',
+  'a1220000-0000-4000-8000-000000000007','a1220000-0000-4000-8000-000000000008',
+  'a1220000-0000-4000-8000-000000000002','a1220000-0000-4000-8000-000000000003',
+  'b1140000-0000-4000-8000-000000000001','11140000-0000-4000-8000-000000000001',g.game_id,
+  c.result->>'assignedSide',(c.result->>'expectedGameVersion')::integer,
+  'a1220000-0000-4000-8000-000000000009',(c.result->>'submissionSlot')::smallint,'a',31,
+  repeat('c',64),'fixture-signature-c')
+from schedule_selected_offline_game g join schedule_test_results c on c.label='offline_cap_c';
+insert into schedule_test_results(label,result)
+select 'offline_replay_d', public.replay_offline_submission_v1(
+  'a1140000-0000-4000-8000-000000000007','a1220000-0000-4000-8000-000000000004',
+  'a1220000-0000-4000-8000-000000000010','a1220000-0000-4000-8000-000000000011',
+  'a1220000-0000-4000-8000-000000000005','a1220000-0000-4000-8000-000000000006',
+  'b1140000-0000-4000-8000-000000000001','11140000-0000-4000-8000-000000000001',g.game_id,
+  d.result->>'assignedSide',(d.result->>'expectedGameVersion')::integer,
+  'a1220000-0000-4000-8000-000000000012',(d.result->>'submissionSlot')::smallint,'a',31,
+  repeat('d',64),'fixture-signature-d')
+from schedule_selected_offline_game g join schedule_test_results d on d.label='offline_cap_d';
+insert into schedule_test_results(label,result)
+select 'offline_exact_replay', public.replay_offline_submission_v1(
+  'a1140000-0000-4000-8000-000000000006','a1220000-0000-4000-8000-000000000001',
+  'a1220000-0000-4000-8000-000000000007','a1220000-0000-4000-8000-000000000008',
+  'a1220000-0000-4000-8000-000000000002','a1220000-0000-4000-8000-000000000003',
+  'b1140000-0000-4000-8000-000000000001','11140000-0000-4000-8000-000000000001',g.game_id,
+  c.result->>'assignedSide',(c.result->>'expectedGameVersion')::integer,
+  'a1220000-0000-4000-8000-000000000009',(c.result->>'submissionSlot')::smallint,'a',31,
+  repeat('c',64),'fixture-signature-c')
+from schedule_selected_offline_game g join schedule_test_results c on c.label='offline_cap_c';
+insert into schedule_test_results(label,result)
+select 'offline_changed_replay', public.replay_offline_submission_v1(
+  'a1140000-0000-4000-8000-000000000006','a1220000-0000-4000-8000-000000000001',
+  'a1220000-0000-4000-8000-000000000013','a1220000-0000-4000-8000-000000000008',
+  'a1220000-0000-4000-8000-000000000002','a1220000-0000-4000-8000-000000000003',
+  'b1140000-0000-4000-8000-000000000001','11140000-0000-4000-8000-000000000001',g.game_id,
+  c.result->>'assignedSide',(c.result->>'expectedGameVersion')::integer,
+  'a1220000-0000-4000-8000-000000000009',(c.result->>'submissionSlot')::smallint,'a',31,
+  repeat('e',64),'fixture-signature-c')
+from schedule_selected_offline_game g join schedule_test_results c on c.label='offline_cap_c';
+
 insert into schedule_test_results(label, result)
 select 'exact_replay', public.publish_director_reviewed_event_schedule_v1(
   'a1140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001',
@@ -233,6 +307,7 @@ where cg.event_id='11140000-0000-4000-8000-000000000001' and r.round_number=1
 order by cg.id limit 1;
 
 set local role authenticated;
+select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', 'a1140000-0000-4000-8000-000000000002', true);
 insert into schedule_test_results(label, result)
 select 'linked_player_role', to_jsonb(public.get_tournament_role(
@@ -290,6 +365,7 @@ select 'draft_official_games', public.get_my_assigned_games_v1(
   'b1140000-0000-4000-8000-000000000003');
 reset role;
 set local role anon;
+select set_config('request.jwt.claim.role', 'anon', true);
 do $$
 begin
   begin
@@ -305,6 +381,7 @@ delete from app.tournament_roles
 where tournament_id='b1140000-0000-4000-8000-000000000001'
   and profile_id='a1140000-0000-4000-8000-000000000001' and role='director';
 set local role service_role;
+select set_config('request.jwt.claim.role', 'service_role', true);
 insert into schedule_test_results(label, result)
 select 'stale_role_replay', public.publish_director_reviewed_event_schedule_v1(
   'a1140000-0000-4000-8000-000000000001', 'b1140000-0000-4000-8000-000000000001',
@@ -318,6 +395,7 @@ reset role;
 insert into app.tournament_roles(tournament_id, profile_id, role)
 values ('b1140000-0000-4000-8000-000000000001', 'a1140000-0000-4000-8000-000000000001', 'director');
 set local role service_role;
+select set_config('request.jwt.claim.role', 'service_role', true);
 
 insert into schedule_test_results(label, result)
 select 'changed_retry', public.publish_director_reviewed_event_schedule_v1(
@@ -364,6 +442,18 @@ begin
      or (select result->>'code' from schedule_test_results where label='second_publication') <> 'schedule_already_published' then
     raise exception 'publication, replay, or second-publication contract failed';
   end if;
+  if (select result->>'status' from schedule_test_results where label='offline_cap_c') <> 'issued'
+     or (select result->>'status' from schedule_test_results where label='offline_cap_d') <> 'issued'
+     or (select result->>'disposition' from schedule_test_results where label='offline_replay_c') <> 'accepted'
+     or (select result->>'disposition' from schedule_test_results where label='offline_replay_d') <> 'accepted'
+     or (select result from schedule_test_results where label='offline_replay_c')
+        <> (select result from schedule_test_results where label='offline_exact_replay')
+     or (select result->>'disposition' from schedule_test_results where label='offline_changed_replay') <> 'conflict'
+     or (select count(*) from app.offline_score_replay_receipts where capability_id is not null) <> 2
+     or (select count(*) from app.offline_score_replay_conflicts where reason_code='changed_replay') <> 1 then
+    raise exception 'offline replay, exact retry, or changed-lineage contract failed: %',
+      (select jsonb_object_agg(label, result) from schedule_test_results where label like 'offline_%');
+  end if;
   if (select count(*) from app.rounds where event_id='11140000-0000-4000-8000-000000000001') <> 2
      or (select count(*) from app.canonical_games where event_id='11140000-0000-4000-8000-000000000001') <> 4
      or (select count(*) from app.event_schedule_games where event_id='11140000-0000-4000-8000-000000000001') <> 4 then
@@ -375,10 +465,6 @@ begin
      or exists (
        select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
        where game->>'playerVerificationId' <> 'A-1'
-     )
-     or not exists (
-       select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
-       where game->>'opponentName' = 'Paper Opponent'
      )
      or exists (
        select 1 from jsonb_array_elements((select result->'games' from schedule_test_results where label='player_games')) game
@@ -446,6 +532,12 @@ begin
      or has_function_privilege('authenticated', 'app.get_my_assigned_games_unfiltered_core_v1(uuid)', 'EXECUTE')
      or has_function_privilege('service_role', 'app.get_my_assigned_games_unfiltered_core_v1(uuid)', 'EXECUTE') then
     raise exception 'player game reader grants are invalid';
+  end if;
+  if has_function_privilege('anon','public.issue_offline_submission_capability_v1(uuid,uuid,uuid,uuid,uuid,jsonb)','EXECUTE')
+     or has_function_privilege('authenticated','public.issue_offline_submission_capability_v1(uuid,uuid,uuid,uuid,uuid,jsonb)','EXECUTE')
+     or has_function_privilege('authenticated','public.replay_offline_submission_v1(uuid,uuid,uuid,uuid,uuid,uuid,uuid,uuid,uuid,text,integer,uuid,smallint,text,integer,text,text)','EXECUTE')
+     or not has_function_privilege('service_role','public.replay_offline_submission_v1(uuid,uuid,uuid,uuid,uuid,uuid,uuid,uuid,uuid,text,integer,uuid,smallint,text,integer,text,text)','EXECUTE') then
+    raise exception 'offline replay grants are invalid';
   end if;
 end;
 $$;

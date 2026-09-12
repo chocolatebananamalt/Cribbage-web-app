@@ -382,7 +382,7 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
   assert.equal(retry.isDefinitiveScoreMutationFailure(429, { error: 'rate_limited' }, 'game-1', 'submission'), false);
   assert.equal(retry.isDefinitiveScoreMutationFailure(404, { error: 'not_found' }, 'game-1', 'submission'), false);
   assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /Retry This Same Entry/);
-  assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /cannot safely preserve your entry for recovery/);
+  assert.match(read('src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx'), /could not safely save the offline entry/);
 });
 
 test('route callback propagates refreshed cookies and membership function is narrowly granted', () => {

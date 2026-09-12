@@ -563,7 +563,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /Confirm My Entry/);
   assert.match(liveScore, /crypto\.randomUUID\(\)/);
   assert.match(liveScore, /window\.sessionStorage/);
-  assert.match(liveScore, /writePendingScoreSubmission/);
+  assert.match(liveScore, /readPendingScoreSubmission/);
+  assert.match(liveScore, /queueOfflineSubmission/);
   assert.match(liveScore, /context\.actorId/);
   assert.match(liveScore, /Retry This Same Entry/);
   assert.match(liveScore, /isDefinitiveScoreMutationFailure/);
@@ -601,7 +602,9 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /Playing with one paper card and one digital card/);
   assert.match(liveScore, /Both assigned players must sign in as themselves/);
   assert.match(liveScore, /navigator\.onLine/);
-  assert.match(liveScore, /This result has not been saved\. Reconnect before submitting\./);
+  assert.match(liveScore, /Saved Offline — Waiting to Sync/);
+  assert.match(liveScore, /queueOfflineSubmission/);
+  assert.match(liveScore, /replayOfflineSubmission/);
   assert.match(liveScore, /This confirmation has not been saved\. Reconnect before confirming\./);
   assert.match(liveScore, /Open Start Here \/ How To/);
   assert.match(howTo, /requireTournamentAccess/);

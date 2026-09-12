@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 export { readSmallJson, readMediumJson, readLargeJson, smallJsonRequestBodyLimit, mediumJsonRequestBodyLimit, largeJsonRequestBodyLimit } from "./bounded-json";
-export { requireVerifiedSubject } from "./verified-subject";
+export { requireVerifiedIdentity, requireVerifiedSubject } from "./verified-subject";
 
 export const privateNoStore = { "cache-control": "private, no-store" };
 
