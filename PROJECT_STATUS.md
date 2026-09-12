@@ -13,8 +13,11 @@
 - Migrations 0114-0117 are applied to the shared pilot. The permanent hosted
   rollback fixture passes rejection, replay, immutability, scope, and grants
   checks with no retained synthetic data. Local schedule checks pass 5/5.
-  A Production smoke check found and repaired the normal no-table-plan state;
-  final browser evidence follows the repaired deployment.
+  A Production smoke check found and repaired the normal no-table-plan state.
+  Commit `b588885` is live as deployment
+  `dpl_CbdzwpuakBHzKkGYCWZq64MTJA5o`; authenticated desktop and 375px-phone
+  checks pass with no horizontal overflow, all observed requests were HTTP
+  200, and Vercel reports no runtime errors in the smoke window.
 - Evidence: `docs/quality/2026-09-11-director-reviewed-schedule-publication.md`.
 
 ## 2026-09-11 roster-based event participation

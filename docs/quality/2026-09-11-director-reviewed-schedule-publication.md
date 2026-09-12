@@ -61,6 +61,19 @@ No schedule publication function was newly exposed to anonymous or
 authenticated callers. Performance notices are unused-index observations on a
 new/low-traffic pilot and are not correctness failures.
 
+## Production proof
+
+- Commit `b588885` was promoted as Vercel Production deployment
+  `dpl_CbdzwpuakBHzKkGYCWZq64MTJA5o` and aliased to
+  `https://cribbage-web-app.vercel.app`.
+- Authenticated external Chrome loaded the protected schedule route with HTTP
+  200 and the correct pre-activation instruction for the real pilot.
+- Desktop and 375-by-812 phone checks rendered the same protected state. The
+  phone document width equaled its viewport width (`375`), with no horizontal
+  clipping or scroll.
+- Vercel reported nine HTTP 200 requests and no runtime error clusters for the
+  Production deployment during the smoke-test window.
+
 ## Remaining release proof
 
 - A genuinely simultaneous two-connection publication race was not executable
@@ -68,10 +81,8 @@ new/low-traffic pilot and are not correctness failures.
   tournament row lock, uses an actor/operation advisory lock, and has a unique
   event publication constraint, but a two-connection rehearsal remains part of
   the release simulation.
-- Production browser proof at desktop and phone sizes is recorded after the
-  reviewed commit is deployed. The real pilot is intentionally not activated
-  until its complete actual event list is entered because activation is
-  irreversible.
+- The real pilot is intentionally not activated until its complete actual
+  event list is entered because activation is irreversible.
 - This slice creates canonical paper/paper and hybrid games; authoritative
   paper evidence entry/reconstruction remains the separate cross-check gate.
 
