@@ -76,8 +76,8 @@ fictional. Do not use live October entrants until the rehearsal passes.
 
 ### E. Correction and dispute
 
-- In Preview, enable `ACC_RULE12_CORRECTION_ENABLED=approved-0140` only for the
-  controlled rehearsal deployment.
+- Use the already released protected Rule 12 correction workspace; no hosting
+  environment change is required.
 - Submit one valid correction, preserve the original value/editor/timestamp,
   and exercise both immediate authority and second-review policy.
 - Exercise rejection, stale-policy, duplicate, lost-response, and affected-

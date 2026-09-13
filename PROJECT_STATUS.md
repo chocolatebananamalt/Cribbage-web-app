@@ -1,5 +1,28 @@
 # Project Status
 
+## 2026-09-12 required identity and correction activation candidate
+
+- Removed two obsolete deployment-toggle dependencies from the October pilot:
+  witnessed roster-account activation and the reviewed migration `0140`
+  Rule 12 correction workspace are now available whenever their protected
+  routes are deployed.
+- This changes availability only. Account activation remains same-origin,
+  authenticated, director/co-director witnessed, intended-player-bound,
+  non-self, lifecycle-bound, idempotent, and service-RPC-only. Rule 12 remains
+  role-scoped, non-self, policy- and lifecycle-checked, exact-replay safe,
+  immutable-original, and service-RPC-only.
+- Removed the retired environment-variable examples so a missing or stale
+  Vercel value cannot silently hide either required workflow.
+- The complete local release gate passes: dependency audit, lint, all 446
+  application tests, optional-provider preflight, production build, workspace
+  verification, and all 6 private-handoff checks. Optional online payments,
+  SMS, and OCR remain disabled; October cash/check and human paper-card paths
+  remain available.
+- Production deployment and anonymous boundary smoke tests remain to be
+  recorded after the reviewed change is merged. Independent real-account and
+  cross-checker rehearsal remains physical acceptance evidence, not an
+  application-code defect.
+
 ## 2026-09-12 October payment and private-capture production release
 
 - Merged cash/check configuration and payment obligations, private paper-card

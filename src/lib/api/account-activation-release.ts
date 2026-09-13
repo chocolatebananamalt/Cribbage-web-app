@@ -1,9 +1,8 @@
 /**
- * The witnessed activation ceremony is unavailable unless it has been
- * deliberately enabled after the private migrations and live-session evidence
- * are complete. Defaulting off prevents a deployed route from becoming a
- * partial identity path.
+ * The reviewed witnessed activation ceremony is part of the October pilot.
+ * Authorization remains enforced by the server routes and service-only RPCs;
+ * deployment configuration must not silently hide this required workflow.
  */
-export function accountActivationEnabled(env: Record<string, string | undefined> = process.env) {
-  return env.ACC_ACCOUNT_ACTIVATION_ENABLED === "true";
+export function accountActivationEnabled() {
+  return true;
 }

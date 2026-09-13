@@ -1,5 +1,9 @@
 # Rule 12 hard release stop — 2026-09-10
 
+**Historical status:** Superseded for release gating by migration 0140's
+reviewed workflow and the owner-approved October activation decision dated
+2026-09-12. The historical evidence below explains the earlier stop.
+
 ## Purpose
 
 The independent-card correction workflow is incomplete and is therefore not a

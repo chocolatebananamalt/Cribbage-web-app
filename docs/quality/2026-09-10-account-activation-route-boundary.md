@@ -1,5 +1,9 @@
 # Account activation route boundary — 2026-09-10
 
+**Historical status:** The default-off release conclusion is superseded by the
+owner-approved October activation decision dated 2026-09-12. The authorization
+and witnessed-ceremony requirements below remain in force.
+
 ## Acceptance criteria
 
 - A director or co-director can reach issuance, witnessed decision, and
