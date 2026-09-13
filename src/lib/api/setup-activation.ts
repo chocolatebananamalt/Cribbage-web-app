@@ -57,12 +57,6 @@ function hasExactKeys(value: object, keys: string[]) {
   return actual.length === keys.length && keys.every((key) => key in value);
 }
 
-export function tournamentSetupActivationEnabled(
-  env: Record<string, string | undefined> = process.env,
-) {
-  return env.ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED === "enabled";
-}
-
 export function isSetupActivationRequest(value: unknown): value is SetupActivationRequest {
   if (!value || typeof value !== "object" || !hasExactKeys(value, requestKeys)) return false;
   const request = value as Record<string, unknown>;

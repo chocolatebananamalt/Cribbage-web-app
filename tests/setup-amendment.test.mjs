@@ -57,7 +57,7 @@ test("migration is append-only, serialized, audited, source-bounded, and server-
 
 test("amendment route is same-origin, session-bound, strict, and server-only", () => {
   const route = read("src/app/api/v1/tournaments/[id]/setup/amendments/route.ts");
-  assert.match(route, /tournamentSetupActivationEnabled\(\)/);
+  assert.doesNotMatch(route, /tournamentSetupActivationEnabled|ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED/);
   assert.match(route, /isSameOriginRequest\(request\)/);
   assert.match(route, /readLargeJson\(request\)/);
   assert.match(route, /isSetupAmendmentRequest\(body\)/);
