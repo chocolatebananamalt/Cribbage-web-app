@@ -41,6 +41,13 @@ non-authoritative OCR adapter, and dynamic demonstration table plan.
 | Axe WCAG A/AA | 320×800 `/demo` | PASS — 0 violations, 0 incomplete |
 | Browser page errors | `/demo` | PASS — none |
 | Focused Sol high-risk review | Current diff | GO — no residual P0/P1/P2 |
+| GitHub pull requests 8 and 9 | `main` | PASS — required verification checks green and both merged |
+| Vercel production deployment | `dpl_DcC8Agw565Zyx2NRiHCpd9LvLmXt`, commit `6176e7811e73d7bcbd0406b1dc14b8c3bd34fecc` | PASS — `READY`, production target, stable aliases attached, no alias error |
+| Live HTTP smoke | `https://cribbage-web-app.vercel.app/` and `/demo` | PASS — HTTP 200 |
+| Live private-capture boundary | same-origin valid upload envelope without session | PASS — HTTP 401 `unauthorized`; feature is deployed and authentication remains enforced |
+| Live responsive browser | 1280×900 and 320×800 `/demo` | PASS — interactive UI present, no page errors, 320 px document width, no horizontal overflow |
+| Live Axe WCAG A/AA | 1280×900 `/demo` | PASS with manual review — 0 violations; 2 incomplete checks (keypad ARIA applicability and delete-key contrast) |
+| Vercel runtime scan | first 15 minutes after final deployment | PASS — no runtime error clusters and no production 5xx logs |
 
 ## Default-off and remaining evidence
 
