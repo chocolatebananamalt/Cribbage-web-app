@@ -84,6 +84,10 @@ test("authentication cards cannot expand the page beyond a narrow phone", () => 
   assert.match(styles, /@media \(max-width:380px\) \{ \.auth-shell \{ padding:16px; \}\.auth-card \{ padding:24px; \}\.auth-card h1 \{ font-size:32px; \} \}/);
 });
 
+test("the app provides a browser icon without a missing favicon request", () => {
+  assert.match(readFileSync("src/app/icon.svg", "utf8"), /ACC Tournament Desk/);
+});
+
 test("prototype navigation includes review and all requested operational screens", () => {
   assert.match(source, /setScreen\("review"\)/);
   assert.match(source, /title="Review Current Game Result"/);
