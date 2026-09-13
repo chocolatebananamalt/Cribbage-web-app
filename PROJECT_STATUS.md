@@ -24,6 +24,10 @@
 - Added a workspace regression check that requires the stable Production URL,
   migration-0162 launch baseline, and rehearsal handoff while rejecting the
   obsolete “no application deployed” and “workflow not implemented” claims.
+- Refreshed the October integration-plan evidence document from its early
+  453-test/upload-only snapshot to the 459-test migration-0162 production
+  baseline, including protected independent-official image readback and the
+  exact remaining physical evidence.
 
 ## 2026-09-13 authorized private paper-card review
 
