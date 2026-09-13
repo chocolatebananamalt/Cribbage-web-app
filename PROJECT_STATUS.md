@@ -3457,3 +3457,10 @@ The earlier scaffold notes are historical and superseded. The handoff is
 recovered, the production application is implemented and deployed, and the
 remaining October-pilot work is the physical acceptance rehearsal and the
 explicit external confirmations tracked in `docs/operations/WORKING_OUTLINE.md`.
+
+## 2026-09-12 finalized event-results PDF
+
+- Added migration 0153 with a read-only, actor-scoped finalized-event report that joins only the exact latest qualification, playoff, settlement-draft, and manual-finalization versions. Browser database roles cannot execute it; authorized tournament roles are evaluated inside the server-only function.
+- Added signed-in display plus a genuine downloadable PDF for finalized Standard Singles results. Both keep playoff winners/prizes separate from qualifying rank, list qualifiers highest-to-lowest with reviewed MRP/Q-pool/other awards, and place the High Non-Qualifier immediately after the qualifier list.
+- Applied and catalog-checked migration 0153 on disposable `donfxulkliuyteiannir` and pilot `fnjkwymxpnsqvxtpronk`. A combined rollback-only synthetic lifecycle passed in both databases and retained no fixture data.
+- Targeted validator/PDF tests and the Next.js production build pass. Full gate, browser verification, independent review, merge, and Production smoke remain in this change cycle.

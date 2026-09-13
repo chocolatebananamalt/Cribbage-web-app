@@ -11,7 +11,7 @@ declare
   seed_roster uuid; seed_payment_version integer;
   source_payment app.roster_payment_events%rowtype;
   source_expense app.tournament_expense_events%rowtype;
-  playoff jsonb; draft jsonb; workspace jsonb; accepted jsonb; replay jsonb; rejected jsonb;
+  playoff jsonb; draft jsonb; workspace jsonb; accepted jsonb; replay jsonb; rejected jsonb; report jsonb;
   placements jsonb; claims jsonb; partial_claims jsonb; playoff_version integer; draft_version integer;
   payment_count integer; payment_total bigint; expense_count integer; expense_total bigint;
   original_tournament_status text; director_role text;
@@ -115,6 +115,21 @@ begin
     accepted_op);
   if accepted->>'status'<>'settlement_finalized_manual' or accepted->>'accSubmitted'<>'false'
     or accepted->>'reconciled'<>'true' then raise exception 'manual settlement finalization failed: %',accepted; end if;
+  report:=public.get_finalized_standard_singles_event_report_v1(director,tournament,event);
+  if report->>'status'<>'finalized_event_report'
+    or report->>'qualificationResultVersionId'<>q::text
+    or (report->>'playoffResultVersionId')<>(playoff->>'playoffResultVersionId')
+    or (report->>'settlementDraftId')<>(draft->>'settlementDraftId')
+    or (report->>'finalizationId')<>(accepted->>'finalizationId')
+    or jsonb_array_length(report->'playoffPlacements')<2
+    or jsonb_array_length(report->'qualifiers')<>(report->>'qualifierCount')::integer
+    or report->'highNonQualifier' is null
+    or exists(select 1 from jsonb_array_elements(report->'qualifiers') with ordinality row_data(value,ordinality)
+      where (value->>'qualificationRank')::integer<>ordinality)
+    then raise exception 'finalized event report is not version-bound and complete: %',report; end if;
+  if public.get_finalized_standard_singles_event_report_v1(
+      'ffffffff-ffff-4fff-8fff-ffffffffffff',tournament,event) is not null
+    then raise exception 'unauthorized finalized event report was exposed'; end if;
   replay:=public.finalize_standard_singles_settlement_manual_v1(director,tournament,event,
     (draft->>'settlementDraftId')::uuid,(draft->>'version')::integer,q,(playoff->>'playoffResultVersionId')::uuid,
     0,0,0,0,0,0,0,payment_count,payment_total,expense_count,expense_total,
@@ -265,6 +280,8 @@ begin
     (playoff->>'playoffResultVersionId')::uuid,(draft->>'version')::integer,placements,'[]'::jsonb,partial_claims,
     'a1450000-0000-4000-8000-000000000022');
   if draft->>'status'<>'settlement_draft_saved' then raise exception 'incomplete MRP draft prerequisite failed: %',draft; end if;
+  if public.get_finalized_standard_singles_event_report_v1(director,tournament,event) is not null
+    then raise exception 'stale finalized event report remained visible after a newer settlement draft'; end if;
   rejected:=public.finalize_standard_singles_settlement_manual_v1(director,tournament,event,
     (draft->>'settlementDraftId')::uuid,(draft->>'version')::integer,q,(playoff->>'playoffResultVersionId')::uuid,
     1,0,0,0,0,0,0,payment_count,payment_total,expense_count,expense_total,'Incomplete MRP fixture',

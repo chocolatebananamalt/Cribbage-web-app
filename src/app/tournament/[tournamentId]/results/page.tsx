@@ -6,10 +6,13 @@ import { isUuid } from "../../../../lib/api/validation";
 import { buildPreliminaryQualification } from "../../../../lib/results/qualification-preview";
 import { getPreliminaryEventStandings } from "../../../../lib/results/preliminary-standings";
 import { getQualificationResult } from "../../../../lib/api/qualification-finalization";
+import { getFinalizedEventReport } from "../../../../lib/api/finalized-event-report";
 import { formatSignedNet } from "../../../../lib/score";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import { QualificationFinalizationClient } from "./qualification-finalization-client";
 import { getTournamentResultEventSummary } from "../../../../lib/results/event-summary";
+
+const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
 export default async function PreliminaryResultsPage({ params, searchParams }: {
   params: Promise<{ tournamentId: string }>;
@@ -37,24 +40,48 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   }
   const standings = await getPreliminaryEventStandings(tournamentId, event);
   const qualification = buildPreliminaryQualification(standings.rows);
-  const finalized = await getQualificationResult(createServerOnlyAdminClient(), access.user.id, tournamentId, event);
+  const admin = createServerOnlyAdminClient();
+  const finalized = await getQualificationResult(admin, access.user.id, tournamentId, event);
+  const finalReport = finalized ? await getFinalizedEventReport(admin, access.user.id, tournamentId, event) : null;
 
   if (finalized) return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
     <p className="eyebrow">TOURNAMENT RESULTS</p>
-    <h1 id="standings-title">Finalized Qualification</h1>
+    <h1 id="standings-title">{finalReport ? "Final Event Results" : "Finalized Qualification"}</h1>
     <p className="card-context">{finalized.tournamentName} · {finalized.eventName}</p>
-    <p className="registration-note">This is the locked qualifying-round ranking. Playoff winner and runner-up are separate results and are not available on this screen.</p>
-    <section className="correction-item" aria-labelledby="qualifier-list-title">
-      <h2 id="qualifier-list-title">Qualifiers</h2>
-      <ol>{finalized.qualifiers.map((row) => <li key={row.participantId}>
-        <strong>{row.displayName}</strong> · {row.gamePoints} game points · {row.gamesWon} won · {formatSignedNet(row.netSpreadPoints)} net · +{row.plusPoints} plus
-      </li>)}</ol>
-      <section className="registration-note" aria-labelledby="high-non-qualifier-title">
-        <h3 id="high-non-qualifier-title">High Non-Qualifier</h3>
-        <p><strong>{finalized.highNonQualifier.displayName}</strong> · {finalized.highNonQualifier.gamePoints} game points · {finalized.highNonQualifier.gamesWon} won · {formatSignedNet(finalized.highNonQualifier.netSpreadPoints)} net · +{finalized.highNonQualifier.plusPoints} plus</p>
+    {finalReport ? <>
+      <p className="registration-note">Director-reviewed event results and awards from the finalized tournament record.</p>
+      <section className="correction-item" aria-labelledby="playoff-results-title">
+        <h2 id="playoff-results-title">Event Results</h2>
+        <ol>{finalReport.playoffPlacements.map((row) => <li key={row.participantId}>
+          <strong>{row.placement === 1 ? "Winner" : row.placement === 2 ? "Runner-up" : `Place ${row.placement}`}: {row.displayName}</strong> · Prize {formatUsd(row.prizeAmountMinor)}
+        </li>)}</ol>
       </section>
-    </section>
-    <p className="auth-note">Finalized by {finalized.finalizedBy}. This record does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export.</p>
+      <section className="correction-item" aria-labelledby="qualifier-list-title">
+        <h2 id="qualifier-list-title">Qualifiers</h2>
+        <ol>{finalReport.qualifiers.map((row) => <li key={row.participantId}>
+          <strong>{row.displayName}</strong> · {row.gamePoints} game points · {row.gamesWon} won · +{row.plusPoints} / -{row.minusPoints} spread · {formatSignedNet(row.netSpreadPoints)} net · {row.mrpPoints} MRPs · Q Pool {formatUsd(row.qPoolAwardMinor)}{row.otherAwardMinor ? ` · Other ${formatUsd(row.otherAwardMinor)}` : ""}
+        </li>)}</ol>
+        <section className="registration-note" aria-labelledby="high-non-qualifier-title">
+          <h3 id="high-non-qualifier-title">High Non-Qualifier</h3>
+          <p><strong>{finalReport.highNonQualifier.displayName}</strong> · {finalReport.highNonQualifier.gamePoints} game points · {finalReport.highNonQualifier.gamesWon} won · +{finalReport.highNonQualifier.plusPoints} / -{finalReport.highNonQualifier.minusPoints} spread · {formatSignedNet(finalReport.highNonQualifier.netSpreadPoints)} net</p>
+        </section>
+      </section>
+      <p className="auth-note">Finalized by {finalReport.finalizedBy}. MRP and award values were entered and reviewed by the director; this is not an automatic ACC submission.</p>
+    </> : <>
+      <p className="registration-note">This is the locked qualifying-round ranking. Playoff winner, runner-up, MRPs, and awards appear after the director completes final event reconciliation.</p>
+      <section className="correction-item" aria-labelledby="qualifier-list-title">
+        <h2 id="qualifier-list-title">Qualifiers</h2>
+        <ol>{finalized.qualifiers.map((row) => <li key={row.participantId}>
+          <strong>{row.displayName}</strong> · {row.gamePoints} game points · {row.gamesWon} won · +{row.plusPoints} / -{row.minusPoints} spread · {formatSignedNet(row.netSpreadPoints)} net
+        </li>)}</ol>
+        <section className="registration-note" aria-labelledby="high-non-qualifier-title">
+          <h3 id="high-non-qualifier-title">High Non-Qualifier</h3>
+          <p><strong>{finalized.highNonQualifier.displayName}</strong> · {finalized.highNonQualifier.gamePoints} game points · {finalized.highNonQualifier.gamesWon} won · +{finalized.highNonQualifier.plusPoints} / -{finalized.highNonQualifier.minusPoints} spread · {formatSignedNet(finalized.highNonQualifier.netSpreadPoints)} net</p>
+        </section>
+      </section>
+      <p className="auth-note">Finalized by {finalized.finalizedBy}. This record does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export.</p>
+    </>}
+    {finalReport ? <a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${event}/final-results.pdf`}>Download Final Event Results PDF</a> : null}
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
