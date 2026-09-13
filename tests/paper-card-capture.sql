@@ -308,4 +308,59 @@ end;
 $$;
 
 set constraints all immediate;
+
+do $$
+declare v_capture_id uuid; intent app.paper_card_upload_intents%rowtype; v_auth jsonb; stored jsonb; replay jsonb;
+begin
+  if not exists(select 1 from storage.buckets where id='paper-scorecards-private' and public=false and file_size_limit=10485760 and allowed_mime_types @> array['image/jpeg','image/png','image/webp']::text[]) then raise exception 'private bucket configuration invalid'; end if;
+  select c.id into v_capture_id from app.paper_card_captures c where c.tournament_id='b2000000-0000-4000-8000-000000000001';
+  select i.* into intent from app.paper_card_upload_intents i where i.capture_id=v_capture_id;
+  v_auth:=public.authorize_paper_card_upload_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id);
+  if v_auth is null or v_auth->>'retentionState'<>'restricted_hold' or v_auth->>'mediaType'<>'image/jpeg' or v_auth->>'objectPath' like '%card-a-7.jpg%' then raise exception 'opaque upload authorization invalid'; end if;
+  if public.authorize_paper_card_upload_v1('a2000000-0000-4000-8000-000000000006','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is not null then raise exception 'outsider received upload authorization'; end if;
+  stored:=public.record_paper_card_storage_receipt_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id,v_auth->>'objectPath','image/jpeg',123456,repeat('a',64));
+  replay:=public.record_paper_card_storage_receipt_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id,v_auth->>'objectPath','image/jpeg',123456,repeat('a',64));
+  if stored->>'status'<>'image_stored' or stored<>replay or stored->>'gameVerified'<>'false' or stored->>'scoreChanged'<>'false' then raise exception 'storage receipt contract invalid'; end if;
+  if public.authorize_paper_card_upload_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is not null then raise exception 'stored capture received a second upload authorization'; end if;
+  if public.authorize_paper_card_upload_completion_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is null then raise exception 'stored capture completion replay authorization missing'; end if;
+  delete from app.tournament_roles where tournament_id='b2000000-0000-4000-8000-000000000001' and profile_id='a2000000-0000-4000-8000-000000000003';
+  if public.authorize_paper_card_upload_completion_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is not null then raise exception 'revoked cross checker retained completion authority'; end if;
+  insert into app.tournament_roles(tournament_id,profile_id,role) values('b2000000-0000-4000-8000-000000000001','a2000000-0000-4000-8000-000000000003','cross_checker');
+end $$;
+
+reset role;
+select set_config('request.jwt.claim.role','authenticated',true);
+select set_config('request.jwt.claim.sub','a2000000-0000-4000-8000-000000000001',true);
+set local role authenticated;
+do $$
+declare config jsonb; obligation jsonb; payment jsonb; voided jsonb; workspace jsonb; disabled_result jsonb;
+begin
+  config:=public.set_tournament_payment_method_configuration('b2000000-0000-4000-8000-000000000001',0,true,false,'a1570000-0000-4000-8000-000000000001');
+  if config->>'status'<>'payment_methods_configured' or config->>'checkEnabled'<>'false' then raise exception 'payment config save invalid'; end if;
+  obligation:=public.set_roster_payment_obligation_v1('b2000000-0000-4000-8000-000000000001','f2100000-0000-4000-8000-000000000001',0,2500,'entry and pools','a1580000-0000-4000-8000-000000000001');
+  if obligation->>'status'<>'payment_obligation_saved' then raise exception 'obligation save invalid'; end if;
+  payment:=public.record_manual_roster_payment('b2000000-0000-4000-8000-000000000001','f2100000-0000-4000-8000-000000000001',0,1000,'USD','cash',now()-interval '1 minute','partial cash','a1580000-0000-4000-8000-000000000002');
+  if payment->>'status'<>'payment_recorded' then raise exception 'partial receipt invalid'; end if;
+  workspace:=public.get_roster_payment_obligation_workspace('b2000000-0000-4000-8000-000000000001');
+  if not exists(select 1 from jsonb_array_elements(workspace->'entries') item where item->>'rosterEntryId'='f2100000-0000-4000-8000-000000000001' and item->>'paymentStatus'='partial' and item->>'amountRemainingMinor'='1500') then raise exception 'partial balance projection invalid'; end if;
+  voided:=public.void_manual_roster_payment('b2000000-0000-4000-8000-000000000001','f2100000-0000-4000-8000-000000000001',1,(payment->>'paymentEventId')::uuid,'full refund correction','a1580000-0000-4000-8000-000000000004');
+  if voided->>'status'<>'payment_voided' then raise exception 'full refund void invalid'; end if;
+  workspace:=public.get_roster_payment_obligation_workspace('b2000000-0000-4000-8000-000000000001');
+  if not exists(select 1 from jsonb_array_elements(workspace->'entries') item where item->>'rosterEntryId'='f2100000-0000-4000-8000-000000000001' and item->>'paymentStatus'='unpaid' and item->>'amountReceivedMinor'='0' and item->>'amountRemainingMinor'='2500') then raise exception 'full refund balance projection invalid'; end if;
+  disabled_result:=public.record_manual_roster_payment('b2000000-0000-4000-8000-000000000001','f2100000-0000-4000-8000-000000000002',0,1000,'USD','check',now()-interval '1 minute','disabled method','a1580000-0000-4000-8000-000000000003');
+  if disabled_result->>'status'<>'rejected' then raise exception 'disabled method was not rejected'; end if;
+end $$;
+reset role;
+update app.tournaments set status='finalized' where id='b2000000-0000-4000-8000-000000000001';
+select set_config('request.jwt.claim.role','authenticated',true);
+select set_config('request.jwt.claim.sub','a2000000-0000-4000-8000-000000000001',true);
+set local role authenticated;
+do $$
+declare obligation_replay jsonb;
+begin
+  obligation_replay:=public.set_roster_payment_obligation_v1('b2000000-0000-4000-8000-000000000001','f2100000-0000-4000-8000-000000000001',0,2500,'entry and pools','a1580000-0000-4000-8000-000000000001');
+  if obligation_replay->>'status'<>'payment_obligation_saved' or obligation_replay->>'obligationVersion'<>'1' or obligation_replay->>'amountOwedMinor'<>'2500' then raise exception 'closed lifecycle obligation replay changed'; end if;
+end $$;
+reset role;
+do $$begin if exists(select 1 from app.roster_payment_events where roster_entry_id='f2100000-0000-4000-8000-000000000002')then raise exception 'disabled payment event survived';end if;end $$;
 rollback;

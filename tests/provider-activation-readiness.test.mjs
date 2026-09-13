@@ -44,7 +44,7 @@ test("Stripe configuration names every missing external input and never claims a
 test("OCR cannot be configured before the capture gate and governance inputs", () => {
   const report = inspectProviderReadiness({
     ACC_PAPER_CARD_OCR_ENABLED: "enabled",
-    ACC_OCR_PROVIDER: "approved-ocr",
+    ACC_OCR_PROVIDER: "openai",
     ACC_OCR_EXECUTION_MODE: "external",
     OCR_PROVIDER_API_KEY: "server-only",
     SUPABASE_PAPER_CARD_BUCKET: "paper-scorecards-private",
@@ -63,7 +63,7 @@ test("complete configuration still requires a real provider probe before activat
   const report = inspectProviderReadiness({
     ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled",
     ACC_PAPER_CARD_OCR_ENABLED: "disabled",
-    ACC_OCR_PROVIDER: "approved-ocr",
+    ACC_OCR_PROVIDER: "openai",
     ACC_OCR_EXECUTION_MODE: "external",
     OCR_PROVIDER_API_KEY: "server-only",
     SUPABASE_PAPER_CARD_BUCKET: "paper-scorecards-private",
@@ -80,7 +80,7 @@ test("a prepared on-device OCR model does not require an external API key", () =
   const report = inspectProviderReadiness({
     ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled",
     ACC_PAPER_CARD_OCR_ENABLED: "disabled",
-    ACC_OCR_PROVIDER: "approved-on-device-model",
+    ACC_OCR_PROVIDER: "openai",
     ACC_OCR_EXECUTION_MODE: "on_device",
     SUPABASE_PAPER_CARD_BUCKET: "paper-scorecards-private",
     ACC_PAPER_CARD_RETENTION_POLICY_REF: "policy-2026-01",
@@ -94,7 +94,7 @@ test("a prepared on-device OCR model does not require an external API key", () =
 test("external OCR requires a server-only API key and rejects an invalid execution mode", () => {
   const external = inspectProviderReadiness({
     ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled",
-    ACC_OCR_PROVIDER: "approved-external-provider",
+    ACC_OCR_PROVIDER: "openai",
     ACC_OCR_EXECUTION_MODE: "external",
     SUPABASE_PAPER_CARD_BUCKET: "paper-scorecards-private",
     ACC_PAPER_CARD_RETENTION_POLICY_REF: "policy-2026-01",
@@ -105,7 +105,7 @@ test("external OCR requires a server-only API key and rejects an invalid executi
   assert.deepEqual(external.providers[2].missing, ["OCR_PROVIDER_API_KEY"]);
 
   const invalid = inspectProviderReadiness({
-    ACC_OCR_PROVIDER: "unapproved-mode",
+    ACC_OCR_PROVIDER: "openai",
     ACC_OCR_EXECUTION_MODE: "hybrid",
   });
   assert.deepEqual(invalid.providers[2].errors, [
