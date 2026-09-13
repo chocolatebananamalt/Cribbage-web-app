@@ -40,14 +40,24 @@ The initial high-risk review found no functional authorization or security
 regression. It identified only obsolete test assertions that still expected
 the retired Rule 12 environment token and two misleading test descriptions.
 Those assertions and descriptions were repaired, after which all 446
-application tests passed. Final review is required before merge.
+application tests passed. The final focused review passed 101/101 tests and
+returned GO with no P0, P1, or P2 finding.
+
+## Production evidence
+
+| Check | Result |
+| --- | --- |
+| GitHub release | Pull request 11 merged as verified `main` commit `5b40faf8b6bbdc1efbdf6b19898f6922f410c1ed` |
+| Vercel deployment | `dpl_DN7qTUWvFGRHd5khWsxbrEQY1to3` — `READY`, Production, stable alias attached, no alias error |
+| Root and public demo | HTTP 200 |
+| Account-activation workspace | Anonymous GET returns 401, replacing the former feature-hidden 404 |
+| Rule 12 policy and correction writers | Empty same-origin requests return strict 400 request-shape rejections, replacing the former feature-hidden 404 |
+| Private paper capture writer | Empty same-origin request returns strict 400 request-shape rejection; route remains deployed and protected |
+| Responsive Chrome | 320 px: client/scroll width 320/320; 1280 px: 1265/1265; no error overlay |
+| Vercel runtime errors | No error clusters in the 30-minute release window |
+| Release request codes | 13 HTTP 200, 3 expected HTTP 400, 2 expected HTTP 405, and 1 expected HTTP 401; no 5xx observed |
 
 ## Remaining acceptance evidence
 
-- Deploy the reviewed commit from `main` to Vercel Production.
-- Confirm anonymous requests reach authentication—not `404`—for account
-  activation and Rule 12 correction routes.
-- Confirm the stable root and demonstration routes remain HTTP 200.
-- Run responsive browser and runtime-error checks.
 - Complete the documented real director/player/cross-checker rehearsal. This
   last item cannot be fabricated with synthetic identities in the live pilot.

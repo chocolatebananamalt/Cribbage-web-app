@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-12 required identity and correction activation candidate
+## 2026-09-12 required identity and correction production activation
 
 - Removed two obsolete deployment-toggle dependencies from the October pilot:
   witnessed roster-account activation and the reviewed migration `0140`
@@ -18,8 +18,18 @@
   verification, and all 6 private-handoff checks. Optional online payments,
   SMS, and OCR remain disabled; October cash/check and human paper-card paths
   remain available.
-- Production deployment and anonymous boundary smoke tests remain to be
-  recorded after the reviewed change is merged. Independent real-account and
+- Pull request 11 merged as verified `main` commit
+  `5b40faf8b6bbdc1efbdf6b19898f6922f410c1ed`. Vercel Production deployment
+  `dpl_DN7qTUWvFGRHd5khWsxbrEQY1to3` is `READY`, owns the stable production
+  alias, and reports no alias error.
+- Live root and demonstration requests return HTTP 200. The account-activation
+  workspace now reaches its authenticated boundary (401 rather than 404), and
+  empty same-origin Rule 12/capture mutations reach strict request validation
+  (400 rather than 404), proving those routes are deployed without granting
+  anonymous authority.
+- Chrome verification at 320 px and 1280 px reports meaningful content, no
+  horizontal overflow, and no framework error overlay. Vercel reports no
+  runtime-error clusters in the release window. Independent real-account and
   cross-checker rehearsal remains physical acceptance evidence, not an
   application-code defect.
 
