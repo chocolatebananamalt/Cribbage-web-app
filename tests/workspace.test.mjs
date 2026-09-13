@@ -38,6 +38,19 @@ test('entry documents require verification and real guidance', () => {
   assert.match(routing, /`gpt-5\.6-sol` with `high` reasoning/);
   assert.match(routing, /Model strength never substitutes for evidence/i);
 });
+test('entry and launch guidance cannot regress to a pre-production status', () => {
+  const readme = readFileSync('README.md', 'utf8');
+  const start = readFileSync('START_HERE.md', 'utf8');
+  const launch = readFileSync('docs/operations/LAUNCH_PLAN.md', 'utf8');
+  for (const text of [readme, start, launch]) {
+    assert.match(text, /https:\/\/cribbage-web-app\.vercel\.app\//);
+    assert.doesNotMatch(text, /No application is currently deployed/i);
+    assert.doesNotMatch(text, /complete tournament workflow has not yet been implemented/i);
+  }
+  assert.match(start, /OCTOBER_PILOT_REHEARSAL\.md/);
+  assert.match(launch, /migrations through 0162/i);
+  assert.match(launch, /No missing API, database, hosting connection/i);
+});
 test('project instructions preserve solve-first corrections across tasks', () => {
   const agents = readFileSync('AGENTS.md', 'utf8');
   const start = readFileSync('START_HERE.md', 'utf8');

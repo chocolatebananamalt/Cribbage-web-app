@@ -21,6 +21,9 @@
   or absent. `START_HERE.md`, `README.md`, and `LAUNCH_PLAN.md` now direct work
   to the current release and physical rehearsal evidence instead of restarting
   already completed implementation.
+- Added a workspace regression check that requires the stable Production URL,
+  migration-0162 launch baseline, and rehearsal handoff while rejecting the
+  obsolete “no application deployed” and “workflow not implemented” claims.
 
 ## 2026-09-13 authorized private paper-card review
 
