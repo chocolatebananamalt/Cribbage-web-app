@@ -1,6 +1,6 @@
 # Durable Project Memory
 
-**Last updated:** 2026-09-11
+**Last updated:** 2026-09-12
 **Purpose:** Preserve owner corrections and verified source facts across tasks
 so a future worker does not depend on chat recall or ask the owner to repeat
 recoverable information.
@@ -76,6 +76,8 @@ When the owner corrects or clarifies the project:
 | The live ACC Side Pool Calculator is a non-persistent estimator: winner count is rounded up from the one-in-X ratio, suggested prizes use graduated nearest-$5 rounding, and any fund difference requires manual adjustment. | ACC portal/help observation, 2026-09-11 | The app may reproduce the estimate with an explicit review warning; it must not call the suggestion an approved or saved payout. |
 | The official ACC Point Scoring System page observed 2026-09-11 still publishes the Standard Main/Consolation qualifying formulas and 7+7 / 4+4 playoff sequences linked to the 2016-effective sheets. A current official 2026 result demonstrates that an odd qualifier count puts the extra player in the score-based top half. | ACC public source observation, 2026-09-11 | Preserve these as a versioned reference fixture using `ceil(qualifiers / 2)` for the top half. Official saved MRPs remain blocked pending current-effective ACC confirmation and verified playoff-round inputs. |
 | The October pilot public QR link is live only as a registration-claim queue. A director/co-director must approve or reject each claim, and approval still requires a separate roster-promotion action. | Owner-approved production release plus verified live behavior, 2026-09-11 | Never let public registration grant a role, roster identity, payment, check-in, event enrollment, Table/Seat, or Verification ID directly. Preserve collision review and exact retry behavior. |
+| The September/October release must not depend on an online payment processor, SMS provider, or OCR provider. Manual payment evidence, printable seating lists, and human-reviewed paper-card transcription are the required operational paths. | Owner priority consolidated 2026-09-12 | Treat online payments, SMS delivery, and machine OCR as optional later capabilities. Their absent accounts or credentials are not pilot blockers and their feature gates stay closed. |
+| Paper-card camera/OCR assistance remains a desired capability after the core release: a cross checker should photograph a card, receive an editable extracted draft, and use it to accelerate comparison. | Owner clarification, 2026-09-12 | Preserve the existing capture foundation and plan a restricted-storage, human-review workflow. OCR output never verifies a game or changes standings by itself, and no card is sent to an external OCR service before provider/privacy approval. |
 
 ## Source-versus-work ledger
 

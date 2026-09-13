@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-12 optional-provider launch boundary
+
+- Reconciled the owner’s latest priority: the October Standard Singles release
+  must operate through audited manual payment evidence, printable seating, and
+  human paper-card transcription without waiting for payment, SMS, or OCR
+  vendors. Their absent accounts and credentials are not launch blockers.
+- Recorded one provider activation plan with exact external needs, enablement
+  gates, failure tests, and authority boundaries. Stripe is the future online
+  payment choice; the current Vercel Marketplace has no native SMS transport;
+  and OCR remains default-off until restricted storage, processor/privacy
+  approval, editable review, comparison, and real-card false-read proof exist.
+- The approved hosted Supabase pilot currently has no Storage bucket. The
+  existing paper-card capture foundation creates restricted metadata and an
+  opaque upload intent only; it does not upload an image or claim OCR is ready.
+- This pass changes documentation and release classification only. It does not
+  enable a provider, send a message, charge money, upload a card, or change
+  scoring authority.
+
 ## 2026-09-12 hosted October workflow release candidate
 
 - Applied migrations `0144` through `0151` to the approved Supabase pilot.
