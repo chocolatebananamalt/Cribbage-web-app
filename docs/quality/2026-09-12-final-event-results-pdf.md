@@ -20,6 +20,8 @@
 | Local production build | Pass after correcting the initial route import depth and TypeScript definite-assignment error. |
 | PDF visual render | Pass: a 24-player synthetic final report with a 160-character unbroken name and 500-character unbroken source rendered through Poppler as two clean US Letter pages. Title hierarchy, playoff/qualification separation, explicit plus and minus columns, currency, HNQ placement, version details, repeated continuation header, and footer were readable with no clipping or overlap. `pypdf` extraction preserved every section and value. |
 | Browser visual check | Pass at 1280×720 and 375×812 on `/demo`: meaningful content, no framework error overlay, and the existing responsive navigation/layout remained intact. The finalized-results link is intentionally absent without a finalized server report. |
+| Independent high-risk review | Pass after closing all three P2 findings: separate Plus/Minus display, hard wrapping, and participant-identity consistency. No P0/P1/P2 finding remains. |
+| GitHub and Production release | Pass: pull request 5 checks passed and merge commit `4ffdb380935ba6d2030d24bcab62015804586d74` deployed as Vercel Production deployment `dpl_7nw2xXqEftSYuVSFPkwmCo8YbnmC`. Root and `/demo` returned 200; an anonymous PDF request returned private 401; the post-release runtime-error query was empty. |
 
 ## Remaining limitation
 
