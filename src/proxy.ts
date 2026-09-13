@@ -13,7 +13,11 @@ function registrationContentSecurityPolicy(nonce: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${development ? " 'unsafe-eval'" : ""}`,
-    `style-src 'self'${development ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
+    `style-src-elem 'self'${development ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
+    // React and Next.js use bounded style attributes for optimized images and
+    // the route announcer. Scripts remain nonce-only, so allowing attributes
+    // does not make executable or stylesheet content globally inline-capable.
+    "style-src-attr 'unsafe-inline'",
     "img-src 'self' blob: data:",
     "font-src 'self'",
     // Browser authentication is the only current cross-origin connection.
