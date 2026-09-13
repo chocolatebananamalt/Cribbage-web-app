@@ -20,6 +20,47 @@ These paths are release-critical. Online checkout, text-message delivery, and
 machine OCR are enhancements and cannot be reported as blockers for the first
 tournament.
 
+## Executable preflight
+
+Run `pnpm providers:check` in every release environment. With the optional
+providers disabled, the command must report each manual fallback as declared
+and exit successfully. This is a configuration-contract check; the dated
+workflow evidence in `docs/quality/` remains the proof that a fallback works.
+
+While preparing one enhancement, require its complete configuration explicitly:
+
+```text
+pnpm providers:check --require=online_payments
+pnpm providers:check --require=sms_seating
+pnpm providers:check --require=paper_card_ocr
+```
+
+The `--require=` check validates preparation while the feature remains
+disabled. Missing values, invalid providers, browser-exposed secrets, and
+missing prerequisites exit unsuccessfully and name the exact problem. A
+successful required-provider check reports `CONFIGURED; FEATURE DISABLED`.
+This release rejects any attempt to set one of these optional gates to
+`enabled`, even if all configuration is present, because no released adapter
+has completed its live activation proof. A future implementation must replace
+that closed gate with a versioned, tested adapter release—not merely flip an
+environment value. Activation still requires the failure-matrix, independent
+Preview test, policy approval, Production deployment, and post-deployment
+smoke test below.
+
+The public/non-secret portion of the variable contract is in `.env.example`.
+This repository deliberately excludes even blank server-credential names from
+that public template. The server-only provider values are:
+
+| Capability | Server-only values |
+| --- | --- |
+| Online payments | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` |
+| SMS | `SMS_PROVIDER_API_KEY` |
+| Paper-card OCR | `OCR_PROVIDER_API_KEY` only when `ACC_OCR_EXECUTION_MODE=external`; none for a proven `on_device` model |
+
+Store those only in the deployment platform's encrypted server environment.
+Provider credentials, webhook secrets, and API keys must never use a
+`NEXT_PUBLIC_` name, appear in a public template, or be committed.
+
 ## Activation gates
 
 ### Online payments — later, Stripe
