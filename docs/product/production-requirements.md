@@ -107,6 +107,7 @@ Credential-based portal automation and automatic ACC submission are out of scope
 - Account authentication MUST use email magic links.
 - A permanent 4-digit PIN MAY be used only for check-in, shared-device confirmation, or the in-game/hybrid confirmation context. It MUST NOT be an account-login credential, password substitute, or role grant.
 - Tournament roles MUST be server-enforced and scoped to the tournament: director, co-director, player, cross checker, judge, and read-only/public viewer as applicable.
+- For the October pilot, a director or co-director MUST be able to assign an already-linked account in the same tournament as a cross checker. Assignment MUST be server-authorized, receipt-bound, immutable-audited, non-self, and unavailable for director/co-director/judge targets or accounts linked only to another tournament. Duplicate names MUST be distinguishable with a safe identity hint. The pilot screen is assignment-only; role revocation is not silently inferred from a missing checkbox and requires a later explicit evidence-preserving lifecycle.
 - A user MUST NOT cross-check or correct their own card.
 - Hidden standings, private finance, roster identity, and draft scores MUST be protected by server authorization and database policy, not UI hiding.
 - ACC membership/API integration is an adapter boundary and remains disabled until ACC access and contract are approved. Director-managed roster import is the baseline.

@@ -25,16 +25,15 @@ fictional. Do not use live October entrants until the rehearsal passes.
 
 ## Preflight
 
-1. Confirm Vercel Production reports READY for commit `6845888` or a reviewed
-   descendant containing the same application code.
-2. Confirm the Supabase migration history includes `0151`.
+1. Confirm Vercel Production reports READY for the reviewed release candidate.
+2. Confirm the Supabase migration history includes `0161`.
 3. Confirm the Vercel runtime-error view is empty before the exercise.
 4. Create a clearly labeled rehearsal tournament and Standard Singles event.
 5. Add the required fictional roster entries with explicit digital/paper
    scorecard choices; do not reuse the real October roster.
-6. Keep the account-activation and Rule 12 release flags closed in Production.
-   Exercise those paths in Preview first, using the same reviewed code and the
-   controlled rehearsal tournament.
+6. Confirm the protected account-activation, cross-checker-assignment, and Rule
+   12 workspaces load only for their intended tournament roles. These required
+   October workflows are released and no longer depend on deployment toggles.
 
 ## Rehearsal sequence
 
@@ -44,6 +43,9 @@ fictional. Do not use live October entrants until the rehearsal passes.
 - Add one player manually and one through CSV intake.
 - Review a duplicate-looking claim and prove approve/reject behavior.
 - Complete one witnessed roster-account activation with two distinct officials.
+- Assign at least two linked accounts as cross-checkers from the protected
+  director workspace, then confirm each account receives only that tournament's
+  cross-check tools.
 - Prove outsider, revoked-role, expired-link, replay, and self-review rejection.
 
 ### B. Check-in, seating, enrollment, and schedule
@@ -128,6 +130,5 @@ fictional. Do not use live October entrants until the rehearsal passes.
 
 Go only when every section above passes, the restored database integrity check
 matches, the director accepts the workflow, and no unresolved P0/P1 issue or
-Vercel runtime-error cluster remains. Only then enable the reviewed Production
-account-activation and Rule 12 flags. Any failure leaves the affected feature
-closed and the established paper process authoritative.
+Vercel runtime-error cluster remains. Any failure leaves the affected workflow
+unaccepted and the established paper process authoritative.
