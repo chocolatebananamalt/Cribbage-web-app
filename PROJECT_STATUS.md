@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-12 isolated schema restore and index-parity repair
+
+- Brought the owner-approved disposable Supabase validation project from its
+  older baseline through migrations `0111`–`0151` without copying pilot or
+  private player data.
+- The restore rehearsal exposed 24 relationship indexes that could be omitted
+  when the older validation chain already existed. Added idempotent migration
+  `0152_restore_parity_foreign_key_indexes.sql` and applied it to both the
+  disposable project and pilot; it was a no-op where an index already existed.
+- Both databases now report the same catalog counts: 105 `app` tables, 1,091
+  columns, 959 constraints, 599 indexes, and 212 `app`/`public` functions.
+  Both Supabase performance advisors report zero unindexed foreign keys.
+- This closes schema reconstruction/parity. A dated backup of actual pilot
+  records and its isolated content/checksum restore remain a supervised
+  release rehearsal because private records must not be copied casually.
+
 ## 2026-09-12 local paper-card photo production release
 
 - Merged the fully verified release branch into `main` through GitHub pull
