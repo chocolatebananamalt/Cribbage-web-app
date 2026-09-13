@@ -1,7 +1,7 @@
 # Paper-card capture foundation boundary
 
 Date: 2026-09-10
-Status: approved source foundation; release remains default-off
+Status: superseded for release gating by the owner-approved 2026-09-12 private-storage decision
 
 ## Decision
 
@@ -35,10 +35,12 @@ The capture state remains `upload_provider_pending`; human review remains
 explicitly states that upload is not authorized and that no image, public URL,
 OCR draft, transcription, score change, or game verification exists.
 
-The browser-facing route is hidden unless
-`ACC_PAPER_CARD_CAPTURE_ENABLED=enabled`. It uses same-origin and verified
-session checks before a server-secret call to a service-role-only database
-function. Direct `anon` and `authenticated` function/table access is revoked.
+This original increment hid the browser-facing route unless
+`ACC_PAPER_CARD_CAPTURE_ENABLED=enabled`. The owner later approved live private
+storage, and the 2026-09-12 decision makes capture available without that
+deployment toggle. Same-origin, verified-session, current-role, non-self,
+lifecycle, and service-only database boundaries remain required. Direct `anon`
+and `authenticated` function/table access remains revoked.
 
 ## Deferred work
 

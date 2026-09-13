@@ -8,8 +8,7 @@ export const PAPER_CARD_MAX_BYTES = 10 * 1024 * 1024;
 export const PAPER_CARD_MEDIA_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 export function paperCardStorageEnabled(env: Record<string, string | undefined> = process.env) {
-  return env.ACC_PAPER_CARD_CAPTURE_ENABLED === "enabled"
-    && (env.SUPABASE_PAPER_CARD_BUCKET?.trim() ?? PAPER_CARD_BUCKET) === PAPER_CARD_BUCKET;
+  return (env.SUPABASE_PAPER_CARD_BUCKET?.trim() || PAPER_CARD_BUCKET) === PAPER_CARD_BUCKET;
 }
 
 export async function createSignedPaperCardUpload(objectPath: string) {

@@ -29,6 +29,9 @@ Paper scorecard originals may be retained in the private Supabase bucket
 Browser roles have no direct storage policy. Upload authorization and receipt
 recording are service-only, paths contain opaque identifiers, and saved bytes
 are checked against the declared size and SHA-256 digest.
+The approved private capture workflow is available by default and no longer
+depends on a Vercel feature flag. Authorization, self-check restrictions,
+private storage, and lifecycle checks remain enforced on every request.
 
 OpenAI-assisted OCR produces only an editable, versioned transcription draft.
 It uses a server-only key, disables provider-side response storage, rejects
