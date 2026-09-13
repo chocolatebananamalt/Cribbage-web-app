@@ -6,7 +6,6 @@ import {
   getEventFinalizationReadiness,
   isEventFinalizationReadiness,
 } from "../src/lib/results/finalization-readiness.ts";
-import { eventFinalizationReadinessEnabled } from "../src/lib/api/finalization-readiness-release.ts";
 
 const tournamentId = "fa000000-0000-4000-8000-000000000001";
 const eventId = "fa000000-0000-4000-8000-000000000002";
@@ -145,13 +144,10 @@ test("migration is read-only, service-only, role-checked, and explicitly incompl
   assert.doesNotMatch(sql, /'qualifiers?'|'mrp'|'qPool'|'payouts?'|'eligibility'|'exportArtifact'/i);
 });
 
-test("API remains default-off and requires verified director scope before the private RPC", () => {
+test("released API requires verified director scope before the private RPC", () => {
   const route = readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/finalization-readiness/route.ts", "utf8");
-  assert.equal(eventFinalizationReadinessEnabled({}), false);
-  assert.equal(eventFinalizationReadinessEnabled({ ACC_EVENT_FINALIZATION_READINESS_ENABLED: "true" }), false);
-  assert.equal(eventFinalizationReadinessEnabled({ ACC_EVENT_FINALIZATION_READINESS_ENABLED: "enabled" }), true);
-  assert.match(readFileSync(".env.example", "utf8"), /^ACC_EVENT_FINALIZATION_READINESS_ENABLED=disabled$/m);
-  assert.match(route, /eventFinalizationReadinessEnabled\(\)/);
+  assert.doesNotMatch(readFileSync(".env.example", "utf8"), /ACC_EVENT_FINALIZATION_READINESS_ENABLED/);
+  assert.doesNotMatch(route, /process\.env|FinalizationReadinessEnabled/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient\(\)/);
   assert.match(route, /getEventFinalizationReadiness/);

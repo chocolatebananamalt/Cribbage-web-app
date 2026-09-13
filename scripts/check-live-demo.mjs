@@ -52,6 +52,21 @@ async function verifyQualificationPdf() {
   if (document.getPageCount() < 1) throw new Error("Qualification PDF has no pages.");
 }
 
+async function verifyPilotReleaseGates() {
+  const probes = [
+    ["public tournament registration", "/register", 200],
+    ["director registration-link management", "/api/v1/tournaments/not-a-uuid/registration-links", 400],
+    ["tournament setup activation", "/api/v1/tournaments/not-a-uuid/setup/activation", 400],
+    ["event finalization readiness", "/api/v1/tournaments/not-a-uuid/events/not-a-uuid/finalization-readiness", 400],
+  ];
+  for (const [name, path, expectedStatus] of probes) {
+    const response = await fetch(`${baseUrl}${path}`, { redirect: "manual" });
+    if (response.status !== expectedStatus) {
+      throw new Error(`${name} release gate returned HTTP ${response.status}; expected ${expectedStatus}.`);
+    }
+  }
+}
+
 async function verifyViewport(browser, width) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   page.setDefaultTimeout(8_000);
@@ -124,9 +139,10 @@ async function verifyViewport(browser, width) {
 
 const browser = await chromium.launch({ headless: true, executablePath });
 try {
+  await verifyPilotReleaseGates();
   const results = [];
   for (const width of [320, 640, 1280]) results.push(await verifyViewport(browser, width));
-  console.log(`Live demo verification passed for ${baseUrl}.`);
+  console.log(`Live pilot release gates and demo verification passed for ${baseUrl}.`);
   for (const result of results) console.log(`${result.width}px: ${result.screenVisits} visits across ${result.distinctScreens} distinct screens; no overflow, CSP, HTTP, console, or page errors.`);
 } finally {
   await browser.close();

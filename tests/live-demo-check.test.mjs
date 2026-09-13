@@ -18,6 +18,10 @@ test("live demo release check is explicit, responsive, read-only, and failure-se
   assert.match(source, /page\.pdf\(\{ format: "Letter"/);
   assert.match(source, /PDFDocument\.load/);
   assert.match(source, /sample\/qualifiers-summary\.pdf/);
+  assert.match(source, /public tournament registration/);
+  assert.match(source, /director registration-link management/);
+  assert.match(source, /tournament setup activation/);
+  assert.match(source, /event finalization readiness/);
   assert.match(source, /Qualification Rules Pending/);
   assert.doesNotMatch(source, /request\.(post|put|patch|delete)|page\.(request|evaluate)\([^)]*fetch/i);
 });
