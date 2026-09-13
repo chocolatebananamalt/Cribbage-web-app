@@ -79,7 +79,9 @@ test("finalization browser preserves one retry identity across ambiguous outcome
 
 test("results UI labels final qualification separately and places HNQ after qualifiers", () => {
   assert.match(page, /Finalized Qualification/);
+  assert.match(page, /Final Event Results/);
   assert.ok(page.indexOf("Qualifiers") < page.indexOf("High Non-Qualifier"));
-  assert.match(page, /Playoff winner and runner-up are separate results/);
+  assert.match(page, /Winner[\s\S]*Runner-up/);
+  assert.match(page, /Director-reviewed event results and awards/);
   assert.match(page, /does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export/);
 });
