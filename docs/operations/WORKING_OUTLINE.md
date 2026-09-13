@@ -18,10 +18,11 @@ shows that dependency explicitly.
 | Deferred full-suite capabilities | **After 2026-10-03** | Production Rulebook/quick-reference integration, Judge Desk, digital team scoring, flyer creation/import, online payments, SMS, OCR, and automatic ACC submission are delivered separately. The demonstration may retain a reference-only Rulebook preview. |
 
 September 18 is the requested operating target, not a promise that an unsafe
-or unverified build will be called ready. It is at risk because seven calendar
-days remain and durable offline operation, complete results/finance wiring,
-and real multi-person release evidence are still open. Deferred features do
-not consume pilot time.
+or unverified build will be called ready. The release candidate now contains
+the required offline, results, finance, and recovery workflows. The remaining
+acceptance risk is physical multi-person rehearsal evidence and the external
+ACC/director confirmations listed below. Deferred features do not consume
+pilot time.
 
 ## Working steps
 
@@ -61,11 +62,11 @@ Owner corrections and the mandatory solve-first protocol are maintained in
 | Confirmation | Status | Target |
 | --- | --- | --- |
 | Current Rulebook edition plus game-point, spread, scorecard, and cross-check source extraction | Complete — cached 2025 edition reviewed 2026-09-10 | 2026-09-10 |
-| Complete released score/cross-check rule-to-code fixtures and real workflow proof | In progress | 2026-09-16 |
-| Qualification order, playoff count, bracket, and bye fixtures | In progress | 2026-09-15 |
+| Complete released score/cross-check rule-to-code fixtures and real workflow proof | Automated fixtures complete; physical workflow proof remains | 2026-09-17 |
+| Qualification order, playoff count, bracket, and bye fixtures | Automated fixtures complete; current-effective ACC acceptance remains | 2026-09-17 |
 | Event styles, game-count options, sanctioning fields, role vocabulary, and rotation-exception sources | In progress — no general automatic rotation fixture is available, so director-entered/imported scheduling is the pilot fallback | 2026-09-15 |
 | MRP, Q-pool, payout, and reporting-source inventory | In progress — Codex must exhaust cached/public schedules and build fixtures before requesting any missing current-effective confirmation | 2026-09-16 |
-| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Not started | 2026-09-17 |
+| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Implemented for the Standard Singles pilot; final dated evidence reconciliation remains | 2026-09-17 |
 
 ### Part B — ACC/director confirmations needed
 

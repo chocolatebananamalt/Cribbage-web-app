@@ -3394,20 +3394,7 @@ Specification v1.1 is the baseline; v1.3 is the latest review prototype. No prod
 
 Read docs/recovery/REVIEW.md, docs/quality/VERIFICATION.md and docs/operations/LAUNCH_PLAN.md. Next milestone: validate rules and build one tested, authenticated two-player game with atomic verification and audit.
 
-The earlier scaffold notes below are historical and superseded by this recovery update.
-
-## Current state
-
-- Repository scaffold created.
-- GitHub CLI connected.
-- Previous ChatGPT system conversation still needs to be recovered.
-- No earlier application source code has been found locally.
-
-## Next task
-
-Recover and import the ChatGPT conversation export, then reconstruct the product requirements and identify any embedded code or downloadable artifacts.
-
-## Open questions
-
-- Which ChatGPT account or workspace contains the original system conversation?
-- Did the original conversation generate downloadable ZIP, HTML, JavaScript, or repository files?
+The earlier scaffold notes are historical and superseded. The handoff is
+recovered, the production application is implemented and deployed, and the
+remaining October-pilot work is the physical acceptance rehearsal and the
+explicit external confirmations tracked in `docs/operations/WORKING_OUTLINE.md`.
