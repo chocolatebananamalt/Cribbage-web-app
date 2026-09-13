@@ -19,6 +19,11 @@
   53/53 API/seating checks. A real authorized-phone upload/readback and
   independent-official review remain for the witnessed rehearsal. Evidence is
   in `docs/quality/2026-09-13-private-paper-card-ui.md`.
+- Merged [PR #26](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/26)
+  as `8a693aefc99a870b392f142b59d99d1484d8966b` and deployed it to production as
+  `dpl_ESxr7B5BE3g5K4zxRu6KYfp716Gh`. The stable live-demo check passes at
+  320/640/1280 pixels across all 20 distinct screens, and Vercel reports no
+  runtime errors in the post-release window.
 
 ## 2026-09-13 setup activation release hardening
 
