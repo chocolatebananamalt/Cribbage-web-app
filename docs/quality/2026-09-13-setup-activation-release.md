@@ -28,7 +28,7 @@
 
 | Check | Result |
 | --- | --- |
-| Focused setup activation and amendment tests | PASS — 15/15 |
+| Focused setup activation and amendment tests | PASS — 14/14 |
 | `pnpm verify` | PASS — 454/454 application checks plus audit, lint, provider preflight, production build, and workspace checks |
 | `pnpm verify:handoff` | PASS — 6/6 private-handoff checks |
 | Pull request | PASS — [#23](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/23) |
