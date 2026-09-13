@@ -1,5 +1,32 @@
 # Project Status
 
+## 2026-09-12 cross-checker assignment pilot activation
+
+- Added a protected director/co-director workspace that assigns an
+  already-linked roster account as an independent cross-checker for the same
+  tournament. Self-assignment and director, co-director, judge, foreign,
+  unlinked, and duplicate assignments are rejected by the database.
+- Assignment is additive for the October pilot and writes an operation receipt,
+  immutable assignment event, immutable changed-request conflict evidence, and
+  an audit event. Exact retries preserve their original result.
+- Duplicate names are distinguishable by an ACC-or-masked-email hint and the
+  full database-unique roster UUID; no full email, phone number, activation
+  credential, or private contact record is exposed by the workspace.
+- Migration `0161_cross_checker_assignment` is applied to the approved pilot.
+  The rollback-only assignment/replay/rejection/audit/grant fixture passes on
+  both the disposable and pilot databases. Both RPCs are executable only by
+  `service_role`; the browser route still requires a verified same-origin
+  director/co-director request.
+- The Supabase advisor reports only the expected no-policy informational result
+  for the new locked service-only history tables and unused-index information
+  on the fresh structures. It reports no new executable-function warning for
+  either assignment RPC. The existing free-plan leaked-password warning remains
+  accepted for the passwordless pilot.
+- The October tournament still intentionally has zero cross-checkers: no real
+  person's authority was fabricated. A director must link the intended
+  officials' accounts and use the new screen before the independent-session
+  rehearsal.
+
 ## 2026-09-12 required identity and correction production activation
 
 - Removed two obsolete deployment-toggle dependencies from the October pilot:
