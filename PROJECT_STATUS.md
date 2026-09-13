@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-09-12 October payment and private-capture production release
+
+- Merged cash/check configuration and payment obligations, private paper-card
+  storage, default-off OCR, future disabled payment-provider catalog, and
+  dynamic table-plan corrections through pull requests 8 and 9.
+- Applied migrations `0154`–`0160` to both the disposable validation project
+  and the approved pilot. The complete paper-card rollback fixture passes on
+  both, and the pilot advisor reports no unindexed foreign keys.
+- Vercel production deployment `dpl_DcC8Agw565Zyx2NRiHCpd9LvLmXt` is `READY`
+  from verified `main` commit `6176e7811e73d7bcbd0406b1dc14b8c3bd34fecc`
+  with the stable `cribbage-web-app.vercel.app` alias and no alias error.
+- Live root and demonstration routes return HTTP 200. The same-origin private
+  paper-card upload route now reaches its authentication boundary and returns
+  HTTP 401 to an anonymous caller, proving capture is deployed rather than
+  hidden while remaining protected. The prior disabled state returned 404.
+- Production desktop and 320 px browser checks pass with no page errors or
+  horizontal overflow. Axe reports zero violations and two items requiring
+  manual review; neither is an automated failure. Vercel reports no runtime
+  error clusters or production 5xx logs in the release window.
+- Cash/check is the only October payment workflow. Cash App Pay, Apple Pay,
+  Google Pay, Venmo, and Venmo Tap to Pay remain catalogued but disabled. OCR
+  remains separately disabled until live provider and false-read evidence
+  passes.
+
 ## 2026-09-12 exact October pilot preparation boundary
 
 - Read-only inspection of the approved Supabase pilot confirms the October 3
