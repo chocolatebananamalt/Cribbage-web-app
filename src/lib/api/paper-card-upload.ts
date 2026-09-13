@@ -24,6 +24,35 @@ export function isPaperCardUploadMetadata(value: unknown) {
     && item.retentionState === "restricted_hold";
 }
 
+export function isPaperCardUploadAuthorization(
+  value: unknown,
+  captureId: string,
+  request: PaperCardUploadRequest,
+): value is PaperCardUploadAuthorization {
+  if (!value || typeof value !== "object" || !exact(value, [
+    "status", "captureId", "uploadIntentId", "objectReferenceId", "objectPath",
+    "mediaType", "byteSize", "sha256", "retentionState", "token",
+  ])) return false;
+  const item = value as Record<string, unknown>;
+  return item.status === "upload_authorized"
+    && item.captureId === captureId
+    && item.uploadIntentId === request.uploadIntentId
+    && item.objectReferenceId === request.objectReferenceId
+    && isPaperCardUploadMetadata({
+      captureId: item.captureId,
+      uploadIntentId: item.uploadIntentId,
+      objectReferenceId: item.objectReferenceId,
+      objectPath: item.objectPath,
+      mediaType: item.mediaType,
+      byteSize: item.byteSize,
+      sha256: item.sha256,
+      retentionState: item.retentionState,
+    })
+    && typeof item.token === "string"
+    && item.token.length >= 1
+    && item.token.length <= 4096;
+}
+
 export function isPaperCardUploadCompletion(value: unknown, captureId: string): value is PaperCardUploadCompletion {
   if (!value || typeof value !== "object" || !exact(value, ["status", "captureId", "storageReceiptId", "retentionState", "ocrRequested", "scoreChanged", "gameVerified"])) return false;
   const item = value as Record<string, unknown>;

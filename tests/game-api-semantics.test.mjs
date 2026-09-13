@@ -174,6 +174,18 @@ test('check-in and initial-seating routes accept only strict, bounded, migration
   assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'a-1' }] }), false);
   assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId, tableSeat: 'A-2' }] }), false);
   assert.equal(seating.isInitialSeatingRequest({ ...initial, assignments: [{ rosterEntryId, tableSeat: 'A-1' }, { rosterEntryId: otherRosterEntryId, tableSeat: 'A-3' }] }), false);
+  const fullSixByTwenty = {
+    tableCount: 6,
+    seatsPerTable: 20,
+    assignments: Array.from({ length: 120 }, (_, index) => ({
+      rosterEntryId: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+      tableSeat: `${String.fromCharCode(65 + Math.floor(index / 20))}-${(index % 20) + 1}`,
+    })),
+    idempotencyKey: operationId,
+  };
+  assert.equal(seating.isInitialSeatingRequest(fullSixByTwenty), true);
+  assert.equal(fullSixByTwenty.assignments.at(-1).tableSeat, 'F-20');
+  assert.equal(seating.isInitialSeatingRequest({ ...fullSixByTwenty, tableCount: 5 }), false);
   const acceptedInitial = { status: 'initial_seating_published', publicationId, assignmentCount: 2, registrationClosed: true, roundRotationGenerated: false, tournamentId, operationId };
   assert.equal(seating.isAcceptedInitialSeating(acceptedInitial, tournamentId, initial), true);
   assert.equal(seating.isAcceptedInitialSeating({ ...acceptedInitial, operationId: otherOperationId }, tournamentId, initial), false);
