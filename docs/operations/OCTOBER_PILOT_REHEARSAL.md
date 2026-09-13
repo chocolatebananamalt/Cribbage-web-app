@@ -26,7 +26,7 @@ fictional. Do not use live October entrants until the rehearsal passes.
 ## Preflight
 
 1. Confirm Vercel Production reports READY for the reviewed release candidate.
-2. Confirm the Supabase migration history includes `0161`.
+2. Confirm the Supabase migration history includes `0162`.
 3. Confirm the Vercel runtime-error view is empty before the exercise.
 4. Create a clearly labeled rehearsal tournament and Standard Singles event.
 5. Add the required fictional roster entries with explicit digital/paper

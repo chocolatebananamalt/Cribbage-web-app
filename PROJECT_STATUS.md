@@ -9,8 +9,8 @@
 - The server returns integrity-verified image bytes with private/no-store and
   no-sniff headers. It exposes no public or signed Storage URL. The database
   requires a current independent official identity, denies the original
-  uploader and game participants, and appends each successful view to the
-  immutable restricted-access ledger.
+  uploader and game participants, and appends each accepted access
+  authorization to the immutable restricted-access ledger.
 - Migration 0162 and the rollback-only lifecycle fixture pass on both the
   disposable and approved pilot Supabase projects. Direct `anon` and
   `authenticated` database execution is denied, `service_role` alone can call
@@ -18,6 +18,12 @@
 - Local application tests pass 459/459, lint passes, and the production build
   includes the protected paper-card review-image route. OCR remains default-off
   and non-authoritative; the October human-review path does not depend on it.
+- Merged [PR #28](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/28)
+  as `f6442851e3797658d168b657bee81e2e84d86804` and deployed it to Production as
+  `dpl_HCGNoHJwfdEVYwe75fgSLdxLRH8z`. The stable root and demo return 200, the
+  review-image route rejects anonymous access with 401, the 320/640/1280 live
+  demo gate passes all 20 screens, and Vercel reports no runtime errors in the
+  post-release window.
 - Evidence: `docs/quality/2026-09-13-authorized-paper-card-review.md`.
 
 ## 2026-09-13 private paper-card production upload wiring
