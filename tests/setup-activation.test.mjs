@@ -6,7 +6,6 @@ import {
   isRejectedSetupActivation,
   isSetupActivationRequest,
   isSetupActivationResult,
-  tournamentSetupActivationEnabled,
 } from "../src/lib/api/setup-activation.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -14,11 +13,9 @@ const revisionId = "10000000-0000-4000-8000-000000000001";
 const operationId = "20000000-0000-4000-8000-000000000002";
 const request = { setupRevisionId: revisionId, expectedVersion: 3, idempotencyKey: operationId };
 
-test("setup activation is default-off and requires the exact enabled value", () => {
-  assert.equal(tournamentSetupActivationEnabled({}), false);
-  assert.equal(tournamentSetupActivationEnabled({ ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED: "true" }), false);
-  assert.equal(tournamentSetupActivationEnabled({ ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED: "enabled" }), true);
-  assert.match(read(".env.example"), /^ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED=disabled$/m);
+test("setup activation is a released October operation without a deployment toggle", () => {
+  assert.doesNotMatch(read("src/lib/api/setup-activation.ts"), /ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED|tournamentSetupActivationEnabled/);
+  assert.doesNotMatch(read(".env.example"), /^ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED=/m);
 });
 
 test("setup activation accepts only a revision-bound exact request", () => {
@@ -114,10 +111,9 @@ test("activation migration is private, atomic, source-bound, and deliberately na
   assert.doesNotMatch(sql, /update app\.(tournament_setup_revisions|tournament_setup_event_versions)/);
 });
 
-test("activation route is gated, same-origin, subject-bound, and server-only", () => {
+test("activation route is released, same-origin, subject-bound, and server-only", () => {
   const route = read("src/app/api/v1/tournaments/[id]/setup/activation/route.ts");
-  assert.match(route, /tournamentSetupActivationEnabled\(\)/);
-  assert.match(route, /error: "not_found"[\s\S]*status: 404/);
+  assert.doesNotMatch(route, /tournamentSetupActivationEnabled|ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED/);
   assert.match(route, /isSameOriginRequest/);
   assert.match(route, /readSmallJson/);
   assert.match(route, /requireVerifiedSubject/);
@@ -157,7 +153,9 @@ test("multi-event activation is atomic, same-tournament, format-safe, and server
 test("setup UI activates only a saved unchanged revision and locks activated setup", () => {
   const client = read("src/app/tournament/[tournamentId]/setup/setup-client.tsx");
   const page = read("src/app/tournament/[tournamentId]/setup/page.tsx");
-  assert.match(page, /activationEnabled=\{tournamentSetupActivationEnabled\(\)\}/);
+  assert.doesNotMatch(page, /activationEnabled|tournamentSetupActivationEnabled/);
+  assert.doesNotMatch(client, /activationEnabled/);
+  assert.match(client, /fetch\(`\/api\/v1\/tournaments\/\$\{tournamentId\}\/setup\/activation`/);
   assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
   assert.match(client, /disabled=\{busy \|\| dirty\}/);
   assert.match(client, /Activate Tournament Events/);

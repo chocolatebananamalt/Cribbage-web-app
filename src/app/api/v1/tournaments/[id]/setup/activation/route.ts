@@ -5,7 +5,6 @@ import {
   isSetupActivationRequest,
   isSetupActivationResult,
   isSetupActivationState,
-  tournamentSetupActivationEnabled,
 } from "../../../../../../../lib/api/setup-activation";
 import {
   apiJson,
@@ -23,7 +22,6 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   return withApiFailureBoundary(async () => {
-    if (!tournamentSetupActivationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     const { id } = await params;
     if (!isUuid(id)) return apiJson({ error: "invalid_tournament" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
@@ -44,7 +42,6 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   return withApiFailureBoundary(async () => {
-    if (!tournamentSetupActivationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const body = await readSmallJson(request);

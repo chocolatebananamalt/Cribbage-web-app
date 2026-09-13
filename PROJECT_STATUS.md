@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-13 setup activation release hardening
+
+- Removed the remaining Vercel environment-toggle dependency from the
+  October-critical tournament setup activation and append-only event-amendment
+  routes. The protected setup screen now always reads activation state and
+  exposes activation for a valid saved Main-event revision.
+- Session, same-origin, strict request/response, director/co-director,
+  idempotency, audit, and server-only database boundaries are unchanged.
+- Removed the obsolete setting from `.env.example` and added regression checks
+  so required tournament setup cannot silently disappear after an otherwise
+  successful deployment.
+
 ## 2026-09-13 hosted pilot regression refresh
 
 - Re-ran twelve October-critical lifecycle proofs against the approved pilot

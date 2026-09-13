@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 
 import { isRejectedSetupAmendment, isSetupAmendmentRequest, isSetupAmendmentResult } from "../../../../../../../lib/api/setup-amendment";
-import { tournamentSetupActivationEnabled } from "../../../../../../../lib/api/setup-activation";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 import { readLargeJson } from "../../../../../../../lib/api/bounded-json";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
@@ -11,7 +10,6 @@ import { createClient } from "../../../../../../../lib/supabase/server";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
-    if (!tournamentSetupActivationEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const body = await readLargeJson(request);
