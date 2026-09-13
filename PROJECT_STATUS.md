@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-13 finalization-readiness production release
+
+- A live release-gate probe found public registration, registration-link
+  management, and tournament setup activation available, but the protected
+  event-finalization readiness reader still hidden by a production environment
+  toggle.
+- Removed that October-critical toggle at its narrow route boundary. The reader
+  remains verified-session, director/co-director, service-only, and fail-closed;
+  optional payment, SMS, and OCR providers remain default-off.
+- Added the release state to `pnpm verify:live-demo`, so future production
+  checks fail if registration, link management, setup activation, or
+  finalization readiness becomes unavailable.
+
 ## 2026-09-13 printable-artifact and accessibility release proof
 
 - Extended `pnpm verify:live-demo` to exercise the stable production demo at

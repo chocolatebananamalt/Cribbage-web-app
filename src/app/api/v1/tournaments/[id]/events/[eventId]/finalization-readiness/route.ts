@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 
-import { eventFinalizationReadinessEnabled } from "../../../../../../../../lib/api/finalization-readiness-release";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../../lib/api/route-boundary";
 import { isUuid } from "../../../../../../../../lib/api/validation";
 import { getEventFinalizationReadiness } from "../../../../../../../../lib/results/finalization-readiness";
@@ -12,7 +11,6 @@ export async function GET(
   { params }: { params: Promise<{ id: string; eventId: string }> },
 ) {
   return withApiFailureBoundary(async () => {
-    if (!eventFinalizationReadinessEnabled()) return apiJson({ error: "not_found" }, { status: 404 });
     const { id, eventId } = await params;
     if (!isUuid(id) || !isUuid(eventId)) return apiJson({ error: "invalid_request" }, { status: 400 });
     const supabase = await createClient();
