@@ -1,0 +1,7 @@
+import {NextRequest}from"next/server";
+import{isPaymentConfigurationRequest,isSavedPaymentConfiguration}from"../../../../../../lib/api/payment-configuration";
+import{apiJson,readSmallJson,requireVerifiedSubject,withApiFailureBoundary}from"../../../../../../lib/api/route-boundary";
+import{isSameOriginRequest}from"../../../../../../lib/api/same-origin";
+import{isUuid}from"../../../../../../lib/api/validation";
+import{createClient}from"../../../../../../lib/supabase/server";
+export async function POST(request:NextRequest,{params}:{params:Promise<{id:string}>}){return withApiFailureBoundary(async()=>{if(!isSameOriginRequest(request))return apiJson({error:"invalid_origin"},{status:403});const{id}=await params;const body=await readSmallJson(request);if(!isUuid(id)||!isPaymentConfigurationRequest(body))return apiJson({error:"invalid_payment_configuration"},{status:400});const client=await createClient();if(!await requireVerifiedSubject(client))return apiJson({error:"unauthorized"},{status:401});const{data,error}=await client.rpc("set_tournament_payment_method_configuration",{p_tournament_id:id,p_expected_version:body.expectedVersion,p_cash_enabled:body.cashEnabled,p_check_enabled:body.checkEnabled,p_idempotency_key:body.idempotencyKey});if(error)return apiJson({error:"operation_unavailable"},{status:503});if(isSavedPaymentConfiguration(data,id,body))return apiJson(data);return apiJson(data&&typeof data==="object"?data:{error:"operation_unavailable"},{status:409});});}

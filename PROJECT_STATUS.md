@@ -3485,3 +3485,40 @@ explicit external confirmations tracked in `docs/operations/WORKING_OUTLINE.md`.
 - Focused high-risk review has no remaining P0/P1/P2 findings after separate Plus/Minus display, hard-wrap, identity-consistency, and stale-version fixes.
 - Pull request 5 merged as `4ffdb380935ba6d2030d24bcab62015804586d74`. Vercel Production deployment `dpl_7nw2xXqEftSYuVSFPkwmCo8YbnmC` is READY; root and `/demo` return HTTP 200, the anonymous PDF route returns private HTTP 401, and the post-release runtime-error scan is empty.
 - The owner-private readiness dashboard was published as version 25 with this evidence and the four remaining physical acceptance rehearsals. Optional payments, SMS, OCR, Rulebook, flyer, and team-scoring work remains outside the October Standard Singles pilot gate.
+
+## 2026-09-12 October cash/check, private storage, OCR adapter, and dynamic seating
+
+- Added per-tournament cash/check configuration and restricted new public
+  registration/payment inputs to enabled pilot methods. Registration records
+  the intended method; private finance now records amount owed and derives
+  current received, remaining, and `not configured`/`unpaid`/`partial`/`paid`/
+  `overpaid` status without granting any operational authority.
+- Preserved full and partial refund/correction history through reasoned receipt
+  voids plus an optional replacement cumulative receipt. Fixed the hosted
+  projection so a latest void counts as zero received, and preserved exact
+  accepted obligation replay after tournament closure for a current director.
+- Created and normalized private Supabase paper-card storage with opaque paths,
+  signed-upload authorization, current cross-checker revalidation, byte/digest
+  verification, append-only receipts, serialized completion, and exact
+  lost-response replay. Added scoped storage/OCR foreign keys and all five
+  advisor-required covering indexes.
+- Added a default-off OpenAI Responses API OCR adapter that sends image input
+  with `store: false`, strict structured output, bounded bytes/time/tokens/
+  response size, and fail-closed scorecard validation. OCR remains a human-
+  reviewed draft only and cannot change a score or verify a game.
+- Added a provider-neutral future catalog for Cash App Pay, Apple Pay, Google
+  Pay, Venmo, and Venmo Tap to Pay. Every digital method remains default-off.
+- Corrected the demonstration table plan to render the director-entered table
+  count and seat capacity; 6 × 20 now shows Tables A–F and 120 seats.
+- Applied migrations 0154–0160 to disposable and pilot Supabase projects.
+  Updated rollback-only storage/payment/refund/role/lifecycle fixtures pass on
+  both. The pilot advisor reports no unindexed foreign keys.
+- Full gate passes: dependency audit, lint, 446/446 application tests, provider
+  preflight, Next.js production build, workspace checks, and 6/6 handoff checks.
+  Desktop and 320px browser review pass with no horizontal overflow, no page
+  errors, and zero Axe WCAG A/AA violations. Focused Sol review reports GO with
+  no remaining P0/P1/P2.
+- Release limitation: OCR and all online payment providers remain off pending
+  their live provider evidence. The cash/check and manual paper workflows do
+  not depend on them. Physical multi-user/offline/recovery/director rehearsal
+  evidence remains the pilot acceptance task.

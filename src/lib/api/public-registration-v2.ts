@@ -1,11 +1,11 @@
 import { parseRegistrationLinkCredential } from "../registration-link-token.ts";
 import { isUuid } from "./validation";
 
-const methods = ["cash", "check", "other", "unspecified"];
+const methods = ["cash", "check"];
 const keys = ["credential", "displayName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "operationId"];
 const own = (value: object) => Object.keys(value).length === keys.length && keys.every((key) => key in value);
 
-export type PublicRegistrationClaim = { credential: string; displayName: string; email: string; accNumber: string; intendedPaymentMethod: "cash" | "check" | "other" | "unspecified"; scorecardType: "digital" | "paper"; operationId: string };
+export type PublicRegistrationClaim = { credential: string; displayName: string; email: string; accNumber: string; intendedPaymentMethod: "cash" | "check"; scorecardType: "digital" | "paper"; operationId: string };
 
 export function publicRegistrationEnabled(env: Record<string, string | undefined> = process.env) {
   return env.ACC_PUBLIC_REGISTRATION_V2 === "enabled";

@@ -35,7 +35,7 @@ const definitions: readonly ProviderDefinition[] = [
       "ACC_STRIPE_ADAPTER_VERSION",
       "ACC_STRIPE_TEST_EVIDENCE_REF",
     ],
-    manualFallback: "Audited cash/check/other payment evidence and immutable void history",
+    manualFallback: "Audited cash/check payment evidence and immutable void history",
   },
   {
     capability: "sms_seating",
@@ -55,7 +55,7 @@ const definitions: readonly ProviderDefinition[] = [
   {
     capability: "paper_card_ocr",
     flag: "ACC_PAPER_CARD_OCR_ENABLED",
-    expectedProvider: null,
+    expectedProvider: "openai",
     providerKey: "ACC_OCR_PROVIDER",
     required: [
       "ACC_OCR_PROVIDER",

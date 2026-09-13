@@ -6,7 +6,7 @@ export type PaperCardCaptureRequest = {
   verificationId: string;
   sourceKind: "camera" | "file_upload";
   originalFileName: string;
-  declaredMediaType: string;
+  declaredMediaType: "image/jpeg" | "image/png" | "image/webp";
   declaredByteSize: number;
   declaredSha256: string;
   clientCapturedAt: string | null;
@@ -66,7 +66,7 @@ const rejectionCodes = new Set([
   "verification_id_mismatch",
   "invalid_request",
 ]);
-const mediaTypePattern = /^[a-z0-9][a-z0-9!#$&^_.+-]{0,126}\/[a-z0-9][a-z0-9!#$&^_.+-]{0,126}$/;
+const allowedMediaTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const capturedAtPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
 
 function hasExactKeys(value: object, keys: string[]) {
@@ -103,10 +103,10 @@ export function isPaperCardCaptureRequest(value: unknown): value is PaperCardCap
     && new TextEncoder().encode(request.originalFileName).length <= 1020
     && !/[\\/\u0000-\u001f\u007f]/.test(request.originalFileName)
     && typeof request.declaredMediaType === "string"
-    && request.declaredMediaType.length <= 255
-    && mediaTypePattern.test(request.declaredMediaType)
+    && allowedMediaTypes.has(request.declaredMediaType)
     && Number.isSafeInteger(request.declaredByteSize)
     && (request.declaredByteSize as number) >= 1
+    && (request.declaredByteSize as number) <= 10 * 1024 * 1024
     && typeof request.declaredSha256 === "string"
     && /^[0-9a-f]{64}$/.test(request.declaredSha256)
     && isClientCapturedAt(request.clientCapturedAt)

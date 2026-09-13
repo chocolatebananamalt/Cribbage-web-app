@@ -29,7 +29,7 @@ insert into app.registration_claims(
 ) values (
   'd1360000-0000-4000-8000-000000000001', 'b1360000-0000-4000-8000-000000000001',
   'c1360000-0000-4000-8000-000000000001', 'Review Test Player', 'review test player',
-  'review-player@test.invalid', 'review-player@test.invalid', 'unspecified', 'pending_review',
+  'review-player@test.invalid', 'review-player@test.invalid', 'cash', 'pending_review',
   'e1360000-0000-4000-8000-000000000001', repeat('a', 64)
 );
 

@@ -4,6 +4,14 @@
 
 Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-11. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
 
+2026-09-12 pilot amendment: cash/check are the only incoming payment methods,
+configured per tournament, with planned method, owed/received/remaining/status,
+and immutable correction/refund history. Cash App Pay, Apple Pay, Google Pay,
+Venmo, and Venmo Tap to Pay are future default-off options. Private retained
+paper-card originals and a non-authoritative OpenAI OCR draft adapter are
+approved; OCR remains default-off until live provider and false-read evidence
+pass. See `docs/decisions/2026-09-12-october-payments-paper-storage-and-future-providers.md`.
+
 Precedence: current user decisions and verified current ACC rules; v1.1 specification; v1.3 prototype as illustration; older mockups as history. Flag contradictions.
 
 | ID | Requirement group | Source sections | Current status |

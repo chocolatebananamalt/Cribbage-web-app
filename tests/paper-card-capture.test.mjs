@@ -40,7 +40,9 @@ test("paper-card capture accepts only exact bounded original metadata", () => {
   assert.equal(isPaperCardCaptureRequest({ ...request, verificationId: "a-7" }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, originalFileName: "../card.jpg" }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, declaredMediaType: "IMAGE/JPEG" }), false);
+  assert.equal(isPaperCardCaptureRequest({ ...request, declaredMediaType: "application/pdf" }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, declaredByteSize: 0 }), false);
+  assert.equal(isPaperCardCaptureRequest({ ...request, declaredByteSize: 10 * 1024 * 1024 + 1 }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, declaredSha256: digest.toUpperCase() }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, clientCapturedAt: "2026-09-10" }), false);
   assert.equal(isPaperCardCaptureRequest({ ...request, score: 121 }), false);
