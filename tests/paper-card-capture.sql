@@ -48,6 +48,34 @@ insert into app.operation_receipts(
   now()
 );
 
+insert into app.operation_receipts(
+  id, tournament_id, actor_profile_id, operation_type, target_id,
+  request_hash, client_operation_id, outcome, response_payload, applied_at
+) values (
+  'c2000000-0000-4000-8000-000000000003',
+  'b2000000-0000-4000-8000-000000000001',
+  'a2000000-0000-4000-8000-000000000001',
+  'synthetic_paper_reviewer_binding',
+  'a2000000-0000-4000-8000-000000000002',
+  repeat('5', 64),
+  'c2000000-0000-4000-8000-000000000004',
+  'accepted',
+  '{}'::jsonb,
+  now()
+);
+
+insert into app.paper_official_identity_bindings(
+  id,tournament_id,official_profile_id,binding_version,supersedes_binding_id,
+  binding_kind,roster_entry_id,confirming_profile_id,operation_receipt_id
+) values (
+  'c2000000-0000-4000-8000-000000000005',
+  'b2000000-0000-4000-8000-000000000001',
+  'a2000000-0000-4000-8000-000000000002',1,null,
+  'nonparticipant',null,
+  'a2000000-0000-4000-8000-000000000001',
+  'c2000000-0000-4000-8000-000000000003'
+);
+
 insert into app.tournament_registration_links(
   id, tournament_id, token_hash, created_by_profile_id, enabled, lifecycle_state
 ) values (
@@ -310,7 +338,7 @@ $$;
 set constraints all immediate;
 
 do $$
-declare v_capture_id uuid; intent app.paper_card_upload_intents%rowtype; v_auth jsonb; stored jsonb; replay jsonb;
+declare v_capture_id uuid; intent app.paper_card_upload_intents%rowtype; v_auth jsonb; stored jsonb; replay jsonb; review_image jsonb;
 begin
   if not exists(select 1 from storage.buckets where id='paper-scorecards-private' and public=false and file_size_limit=10485760 and allowed_mime_types @> array['image/jpeg','image/png','image/webp']::text[]) then raise exception 'private bucket configuration invalid'; end if;
   select c.id into v_capture_id from app.paper_card_captures c where c.tournament_id='b2000000-0000-4000-8000-000000000001';
@@ -323,6 +351,11 @@ begin
   if stored->>'status'<>'image_stored' or stored<>replay or stored->>'gameVerified'<>'false' or stored->>'scoreChanged'<>'false' then raise exception 'storage receipt contract invalid'; end if;
   if public.authorize_paper_card_upload_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is not null then raise exception 'stored capture received a second upload authorization'; end if;
   if public.authorize_paper_card_upload_completion_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is null then raise exception 'stored capture completion replay authorization missing'; end if;
+  review_image:=public.authorize_paper_card_human_review_v1('a2000000-0000-4000-8000-000000000002','b2000000-0000-4000-8000-000000000001','f2900000-0000-4000-8000-000000000001','a');
+  if review_image is null or review_image->>'captureId'<>v_capture_id::text or review_image->>'objectPath'<>v_auth->>'objectPath' then raise exception 'independent reviewer image authorization invalid'; end if;
+  if public.authorize_paper_card_human_review_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001','f2900000-0000-4000-8000-000000000001','a') is not null then raise exception 'capture uploader reopened own evidence'; end if;
+  if public.authorize_paper_card_human_review_v1('a2000000-0000-4000-8000-000000000006','b2000000-0000-4000-8000-000000000001','f2900000-0000-4000-8000-000000000001','a') is not null then raise exception 'outsider received image review authorization'; end if;
+  if (select count(*) from app.paper_card_storage_access_events where storage_receipt_id=(stored->>'storageReceiptId')::uuid and actor_profile_id='a2000000-0000-4000-8000-000000000002' and access_kind='human_review')<>1 then raise exception 'human review access was not recorded'; end if;
   delete from app.tournament_roles where tournament_id='b2000000-0000-4000-8000-000000000001' and profile_id='a2000000-0000-4000-8000-000000000003';
   if public.authorize_paper_card_upload_completion_v1('a2000000-0000-4000-8000-000000000003','b2000000-0000-4000-8000-000000000001',v_capture_id,intent.id,intent.object_reference_id) is not null then raise exception 'revoked cross checker retained completion authority'; end if;
   insert into app.tournament_roles(tournament_id,profile_id,role) values('b2000000-0000-4000-8000-000000000001','a2000000-0000-4000-8000-000000000003','cross_checker');

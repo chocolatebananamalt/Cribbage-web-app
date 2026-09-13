@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PrivatePaperCardPhoto } from "../../../../components/private-paper-card-photo";
+import { PaperCardReviewLinks } from "../../../../components/paper-card-review-links";
 import { isAcceptedHybridCreate, isAcceptedHybridReview, isCreateHybridCaseRequest, isRejectedHybrid, isReviewHybridCaseRequest, type CreateHybridCaseRequest, type ReviewHybridCaseRequest } from "../../../../lib/api/hybrid-game";
 import type { HybridGameItem } from "../../../../lib/hybrid-games/workspace";
 
@@ -127,6 +128,7 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
   }
   return <li className="correction-item"><p><strong>{item.eventName}</strong> · Game {item.gameNumber}</p>
     <p>Independently read the immutable digital record, enter its identifier and result, then re-enter the original paper card.</p>
+    <PaperCardReviewLinks tournamentId={tournamentId} gameId={item.gameId} sides={[{ cardSide: item.digitalSide === "a" ? "b" : "a", label: item.paperPlayerName }]} />
     <details><summary>Open immutable digital evidence</summary><p>Submission ID: <code>{item.digitalSubmissionId}</code><br />Recorded result: side {item.digitalWinnerSide.toUpperCase()} won by {item.digitalMargin}.</p></details>
     <fieldset disabled={!ready || busy || !!locked}><legend>Digital submission confirmation</legend><label>Submission ID<input value={digitalId} onChange={(event) => setDigitalId(event.target.value.trim())} /></label><label><input type="radio" checked={digitalWinner === "a"} onChange={() => setDigitalWinner("a")} />Side A won</label><label><input type="radio" checked={digitalWinner === "b"} onChange={() => setDigitalWinner("b")} />Side B won</label><label>Spread Points<input inputMode="numeric" maxLength={3} value={digitalMargin} onChange={(event) => setDigitalMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} /></label></fieldset>
     <ClaimFields item={item} tournamentId={tournamentId} winner={winner} setWinner={setWinner} margin={margin} setMargin={setMargin} reference={reference} setReference={setReference} disabled={!ready || busy || !!locked} photoInputId={`${item.caseId}-hybrid-review-photo`} />
