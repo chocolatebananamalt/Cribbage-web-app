@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-13 printable-artifact and accessibility release proof
+
+- Extended `pnpm verify:live-demo` to exercise the stable production demo at
+  320 px, 640 px, and 1280 px. The 640-pixel pass provides a repeatable
+  accessibility-sized/zoom layout gate between the smallest phone and desktop.
+- Added print-specific evidence: the check renders the seating assignment with
+  print CSS, confirms the two headed print columns and hidden application
+  navigation, creates and parses its Letter-size PDF, and downloads/parses the
+  sample qualification summary PDF.
+- The focused regression contract and live production run pass with all 20
+  distinct demo screens at every viewport and no overflow, CSP, HTTP, console,
+  or page failures. Full repository and private-handoff results are recorded in
+  `docs/quality/2026-09-13-repeatable-live-demo-check.md`.
+
 ## 2026-09-13 repeatable live demonstration release check
 
 - Converted the final one-off production walkthrough into the repository-owned
