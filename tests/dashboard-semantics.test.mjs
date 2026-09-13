@@ -78,6 +78,11 @@ test("scorecard remains readable and keyboard-scrollable on narrow phones", () =
   assert.match(styles, /\.scorecard-header,\.scorecard-body,\.scorecard-footer \{ min-width:560px; \}/);
 });
 
+test("authentication cards cannot expand the page beyond a narrow phone", () => {
+  assert.match(styles, /\.auth-shell \{[^}]*grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(styles, /\.auth-card \{[^}]*min-width:0;[^}]*max-width:100%;[^}]*overflow-wrap:anywhere/);
+});
+
 test("prototype navigation includes review and all requested operational screens", () => {
   assert.match(source, /setScreen\("review"\)/);
   assert.match(source, /title="Review Current Game Result"/);
