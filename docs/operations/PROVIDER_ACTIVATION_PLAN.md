@@ -26,6 +26,9 @@ Run `pnpm providers:check` in every release environment. With the optional
 providers disabled, the command must report each manual fallback as declared
 and exit successfully. This is a configuration-contract check; the dated
 workflow evidence in `docs/quality/` remains the proof that a fallback works.
+The repository's standard `pnpm verify` command runs this preflight between
+the application tests and production build, so the existing GitHub release
+checks cannot omit it.
 
 While preparing one enhancement, require its complete configuration explicitly:
 

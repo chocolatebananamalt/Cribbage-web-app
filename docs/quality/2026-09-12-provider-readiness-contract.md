@@ -18,6 +18,8 @@ Date: 2026-09-12
 - `src/lib/providers/activation-readiness.ts` is the typed release contract.
 - `scripts/check-provider-readiness.mjs` exposes it as `pnpm providers:check`
   and supports an exact `--require=` capability gate.
+- The standard `pnpm verify` release command runs the provider preflight before
+  the production build; existing GitHub verification therefore enforces it.
 - `.env.example` lists default-off flags and non-secret inputs; the operations
   plan separately names server-only credentials so the public template remains
   credential-name-free.
@@ -39,8 +41,8 @@ Environment: Windows PowerShell, repository Node/pnpm toolchain.
 - The same synthetic configuration with the unreleased flag enabled — expected
   rejection; exit 1 and an explicit unreleased-activation error.
 - `node --conditions=react-server --experimental-strip-types --test
-  tests/provider-activation-readiness.test.mjs` — 12/12 pass.
-- `pnpm verify` — pass: dependency audit, lint, 422/422 application tests,
+  tests/provider-activation-readiness.test.mjs` — 13/13 pass.
+- `pnpm verify` — pass: dependency audit, lint, 423/423 application tests,
   production build, and workspace checks.
 - `pnpm verify:handoff` — 6/6 pass.
 

@@ -4,6 +4,8 @@
 
 - Added a typed, default-off readiness contract and `pnpm providers:check` for
   future Stripe payments, SMS seating notices, and paper-card OCR.
+- Made that preflight part of the standard `pnpm verify` release gate, which is
+  already enforced by the GitHub verification workflow.
 - The check identifies incomplete configuration, invalid gates, missing OCR
   prerequisites, and accidental browser-exposed provider secrets. Even a
   complete configuration is reported only as requiring a live provider probe;

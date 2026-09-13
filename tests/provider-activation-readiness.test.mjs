@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import test from "node:test";
 import {
   inspectProviderReadiness,
@@ -173,4 +174,10 @@ test("provider requirement arguments reject empty and malformed forms", () => {
     requested: ["online_payments", "sms_seating"],
     errors: [],
   });
+});
+
+test("the standard release gate cannot bypass provider readiness", () => {
+  const packageJson = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  assert.match(packageJson.scripts.verify, /pnpm providers:check/);
+  assert.match(packageJson.scripts.verify, /pnpm test.*pnpm providers:check.*pnpm build/);
 });
