@@ -1,5 +1,17 @@
 # Project Status
 
+## 2026-09-13 traceability-summary reconciliation
+
+- Reconciled the historical `docs/product/requirements.md` status column with
+  the deployed October baseline so it no longer mislabels offline recovery,
+  hybrid/paper scoring, Rule 12 correction, results, finance, or finalization as
+  missing or prototype-only.
+- Kept the boundaries explicit: ACC member lookup, automatic ACC submission,
+  online payments, SMS, flyer creation/import, live OCR, team scoring, rich
+  Judge Desk, and unapproved automatic rotation remain post-pilot work. The
+  remaining October release conditions are physical rehearsal evidence, not
+  silently open implementation scope.
+
 ## 2026-09-13 authorized private paper-card review
 
 - Closed the gap between private paper-card upload and actual cross-check use.
