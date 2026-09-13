@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-13 repeatable live demonstration release check
+
+- Converted the final one-off production walkthrough into the repository-owned
+  `pnpm verify:live-demo` check. It opens the stable production demonstration
+  in installed Chrome/Chromium at 320 px and 1280 px and operates the complete
+  scoring, scorecard, setup, check-in search, dynamic seating, cross-check,
+  flyer, finance, results/qualifiers, satellite fail-closed, and Rulebook-search
+  path.
+- The check fails on a non-200 demo response, disabled or missing required
+  control, incorrect state/result, horizontal page overflow, CSP violation,
+  HTTP failure, console error, or page error. It uses the synthetic `/demo`
+  surface and makes no tournament API mutation.
+- The new live check passes against `https://cribbage-web-app.vercel.app` at
+  both sizes with 21 screen visits across 20 distinct screens. The full local
+  gate passes 454/454 application checks, provider preflight, production build,
+  workspace checks, and 6/6 private-handoff checks.
+
 ## 2026-09-13 October integration-plan release audit
 
 - Confirmed the requested October payment boundary is implemented end to end:

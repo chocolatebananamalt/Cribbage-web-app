@@ -14,10 +14,13 @@
     "verify:handoff": "node --test tests/handoff.test.mjs",
     "test:score": "node --conditions=react-server --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs",
     "providers:check": "node --experimental-strip-types scripts/check-provider-readiness.mjs",
+    "verify:live-demo": "node scripts/check-live-demo.mjs",
     "verify:local": "pnpm verify && pnpm verify:handoff",
     "verify:all": "pnpm verify"
   },
-  "engines": { "node": "24.x" },
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "@supabase/ssr": "0.12.6",
     "@supabase/supabase-js": "2.115.0",
@@ -35,6 +38,7 @@
     "@types/react-dom": "^19.2.7",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.4",
+    "playwright-core": "1.62.1",
     "typescript": "^6.0.3"
   }
 }
