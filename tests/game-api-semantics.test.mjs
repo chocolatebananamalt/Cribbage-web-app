@@ -377,8 +377,9 @@ test('correction API handlers validate request shapes and discriminate accepted 
   assert.match(reconciliation, /requireVerifiedSubject/);
   assert.match(correctionPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
   assert.match(policyPage, /rule12CorrectionEnabled\(\).*notFound\(\)/s);
-  assert.match(correctionRelease, /approved-0140/);
-  assert.match(correctionRelease, /approved-0140/);
+  assert.match(correctionRelease, /export function rule12CorrectionEnabled\(\)/);
+  assert.match(correctionRelease, /return true/);
+  assert.doesNotMatch(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED/);
   assert.match(correctionSuspension, /revoke all on function public\.propose_game_correction[\s\S]*from authenticated/);
   assert.match(correctionSuspension, /revoke all on function public\.review_game_correction[\s\S]*from authenticated/);
   assert.match(correctionPolicySuspension, /revoke all on function public\.configure_correction_policy[\s\S]*from authenticated/);
@@ -873,8 +874,9 @@ test('director correction policy workspace is scoped, append-only, and retry-saf
   assert.match(client, /crypto\.randomUUID\(\)/);
   assert.match(client, /expectedPolicyVersion: policy\.policyVersion/);
   assert.match(client, /router\.refresh\(\)/);
-  assert.match(correctionRelease, /approved-0140/);
-  assert.match(correctionRelease, /approved-0140/);
+  assert.match(correctionRelease, /export function rule12CorrectionEnabled\(\)/);
+  assert.match(correctionRelease, /return true/);
+  assert.doesNotMatch(correctionRelease, /ACC_RULE12_CORRECTION_ENABLED/);
   assert.match(suspension, /revoke all on function public\.configure_correction_policy\(uuid, boolean, smallint, integer, uuid\) from authenticated/);
   assert.match(readerSuspension, /revoke all on function public\.get_correction_workspace\(uuid\) from authenticated/);
   assert.match(readerSuspension, /revoke all on function public\.get_correction_operation_reconciliation\(uuid, uuid\) from authenticated/);

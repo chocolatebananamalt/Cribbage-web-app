@@ -9,6 +9,11 @@ The active versioned tournament policy still controls optional/required reason a
 
 Rule 12.2(g) is represented by those derived scorecard totals and standings, not a selectable disposition. When an applied correction is marked as changing qualification fact or position, the cross checker selects the affected participant from the event roster; that participant may be someone displaced by the correction rather than one of the two card holders. Rule 12.2(i) then creates an immutable notice attached to the correction and game evidence. The player's scorecard displays that notice without exposing the private correction reason.
 
-The release gate remains default-off and recognizes only `ACC_RULE12_CORRECTION_ENABLED=approved-0140`. It must not be enabled before migration application, rollback-fixture proof, independent review, and real cross-checker/reviewer/player browser verification.
+The original release gate recognized only
+`ACC_RULE12_CORRECTION_ENABLED=approved-0140`. That gate is superseded by the
+owner-approved October activation decision dated 2026-09-12 after migration
+application, hosted rollback proof, and independent review. Real
+cross-checker/reviewer/player rehearsal remains acceptance evidence, but a
+missing Vercel value no longer hides the required protected workflow.
 
 Legacy `propose_game_correction` and `review_game_correction` grants stay revoked and must never be restored.

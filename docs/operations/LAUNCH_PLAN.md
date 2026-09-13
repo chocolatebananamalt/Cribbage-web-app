@@ -76,9 +76,9 @@ neither a role nor a payment, check-in, seat, or verification ID.
 
 - `ACC_REGISTRATION_LINK_MANAGEMENT_V2=disabled`
 - `ACC_PUBLIC_REGISTRATION_V2=disabled`
-- `ACC_ACCOUNT_ACTIVATION_ENABLED=false`
 
-The template contains only public Supabase client placeholders and these safe
-switches. It must never receive the server-only Supabase credential. An
-environment is not eligible to change any switch merely because a deployment
-builds successfully; it must satisfy the documented release evidence first.
+The reviewed October roster-account activation and Rule 12 correction
+workflows no longer depend on deployment switches. Their server role, non-self,
+lifecycle, and service-only RPC checks remain mandatory. The template contains
+only public Supabase client placeholders and remaining safe switches. It must
+never receive the server-only Supabase credential.

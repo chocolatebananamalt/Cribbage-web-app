@@ -29,14 +29,14 @@ read-only request after the deployment reached READY loaded the expected
 workspace. This was an alias-transition observation, not an application route
 failure.
 
-## Deliberately closed capability
+## Historical deliberately closed capability
 
-Roster-account activation remains release-gated by
-`ACC_ACCOUNT_ACTIVATION_ENABLED=false`. Its production URL therefore returns
-404 by design. The separate setup-activation switch is enabled and is not a
-substitute for the roster-account activation switch. Account activation must
-not be described as live until its independent-session ceremony is proven or
-the release gate is explicitly changed after that proof.
+At the time of this release, roster-account activation was release-gated and
+its production URL returned 404. The owner-approved October activation
+decision dated 2026-09-12 supersedes that availability boundary after the
+private migrations, hosted fixtures, and independent review were completed.
+The witnessed independent-session ceremony remains operational acceptance
+evidence; the protected workflow is now available so that rehearsal can occur.
 
 ## Remaining proof
 

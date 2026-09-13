@@ -11,7 +11,7 @@ const routePaths = [
   "src/app/api/v1/tournaments/[id]/account-activations/[activationId]/cancellation/route.ts",
 ];
 
-test("every activation mutation route defaults off and enforces origin, bounded input, and verified session", async () => {
+test("every activation mutation route is protected by origin, bounded input, and verified session checks", async () => {
   for (const relativePath of routePaths) {
     const source = await readFile(path.join(root, relativePath), "utf8");
     assert.match(source, /accountActivationEnabled\(\)/, relativePath);
@@ -23,7 +23,7 @@ test("every activation mutation route defaults off and enforces origin, bounded 
   }
 });
 
-test("activation page is release-gated and clears the credential fragment before hydration", async () => {
+test("activation page preserves the availability boundary and clears the credential fragment before hydration", async () => {
   const page = await readFile(path.join(root, "src/app/activate/page.tsx"), "utf8");
   const client = await readFile(path.join(root, "src/app/activate/activation-form.tsx"), "utf8");
   const bootstrap = await readFile(path.join(root, "public/activation-bootstrap.js"), "utf8");
