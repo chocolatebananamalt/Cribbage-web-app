@@ -84,6 +84,12 @@ test("authentication cards cannot expand the page beyond a narrow phone", () => 
   assert.match(styles, /@media \(max-width:380px\) \{ \.auth-shell \{ padding:16px; \}\.auth-card \{ padding:24px; \}\.auth-card h1 \{ font-size:32px; \} \}/);
 });
 
+test("flyer preview collapses after its desktop grid rule on narrow phones", () => {
+  const desktopRule = styles.indexOf(".flyer-events { display:grid; grid-template-columns:1fr 1fr;");
+  const mobileRule = styles.indexOf("@media (max-width:700px) { .flyer-events { grid-template-columns:minmax(0,1fr); } }");
+  assert.ok(desktopRule >= 0 && mobileRule > desktopRule);
+});
+
 test("the app provides a browser icon without a missing favicon request", () => {
   assert.match(readFileSync("src/app/icon.svg", "utf8"), /ACC Tournament Desk/);
 });
