@@ -39,8 +39,13 @@ pilot time.
 
 ## Current highest-priority work
 
-1. Run the actual setup → roster/check-in → registration-close → seating →
-   enrollment → schedule rehearsal against the shared pilot.
+1. Complete the actual October pilot roster and link at least two independent
+   player accounts. As of 2026-09-12 the shared pilot has an activated setup,
+   two roster entries, two assigned official accounts (director and
+   co-director), and no assigned player accounts, check-ins, event enrollments,
+   seating publication, or game schedule. Then run setup → roster/check-in →
+   registration-close → seating → enrollment → schedule against that real
+   pilot data.
 2. Run the complete two-player, offline/reconnect, paper/hybrid, failed-device,
    results/financial-finalization, backup/restore, and director rehearsal by
    September 18.
@@ -54,6 +59,29 @@ The detailed rule/ACC decision split is maintained in
 `docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`.
 Owner corrections and the mandatory solve-first protocol are maintained in
 `docs/operations/DURABLE_PROJECT_MEMORY.md`.
+
+## Exact shared-pilot preparation state
+
+Read-only inspection on 2026-09-12 found the following in the approved pilot
+database for **October 3 Pilot Tournament**. These are operational preparation
+facts, not missing integrations or hidden engineering work.
+
+| Item | Current count/state | What closes it |
+| --- | --- | --- |
+| Tournament setup | Activated | No engineering action remains for the setup shell. |
+| Private roster identities | 2 | Director completes the real roster by manual entry, CSV import, or approved public registration claims. |
+| Assigned official accounts | 2 — director and co-director | Sufficient to begin official-role rehearsal; assign any additional cross-checkers required by the table plan. |
+| Assigned player accounts | 0 | At least two real test players sign in and are linked before independent-session proof can begin. |
+| Check-ins | 0 | Director records arrival during the rehearsal. |
+| Event enrollments | 0 | Director enrolls the final roster after registration closes. |
+| Seating publications | 0 | Director reviews table capacity and publishes the initial assignments once registration closes. |
+| Scheduled games | 0 | Director imports/reviews and publishes the event schedule after enrollment. |
+
+Do not fill these rows with invented production identities or prematurely
+close registration merely to turn the tracker green. The product supplies the
+required manual, CSV, QR/link, account-link, check-in, seating, enrollment, and
+schedule workflows; the remaining values must represent the real rehearsal or
+tournament participants.
 
 ## ACC confirmation checklist
 
