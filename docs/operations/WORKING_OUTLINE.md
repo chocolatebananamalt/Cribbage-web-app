@@ -41,7 +41,7 @@ pilot time.
 
 1. Complete the actual October pilot roster, link the intended officials and
    at least two independent
-   player accounts. As of 2026-09-12 the shared pilot has an activated setup,
+   player accounts. A fresh read-only check on 2026-09-13 confirms the shared pilot has an activated setup,
    two roster entries, two assigned official accounts (director and
    co-director), and no cross-checkers, assigned player accounts, check-ins,
    event enrollments, seating publication, or game schedule. Use the now-live
@@ -65,7 +65,7 @@ Owner corrections and the mandatory solve-first protocol are maintained in
 
 ## Exact shared-pilot preparation state
 
-Read-only inspection on 2026-09-12 found the following in the approved pilot
+Read-only inspection on 2026-09-13 found the following in the approved pilot
 database for **October 3 Pilot Tournament**. These are operational preparation
 facts, not missing integrations or hidden engineering work.
 
