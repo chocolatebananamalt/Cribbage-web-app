@@ -47,6 +47,17 @@ build, approved pilot schema already at migration 0161.
   workspace checks passed.
 - `pnpm verify:handoff`: **6/6 passed**.
 - `git diff --check`: passed.
+- GitHub pull request
+  [#26](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/26)
+  passed both clean CI runs and the Vercel preview check, then merged as
+  `8a693aefc99a870b392f142b59d99d1484d8966b`.
+- Vercel production deployment
+  `dpl_ESxr7B5BE3g5K4zxRu6KYfp716Gh` is READY on the stable project domains.
+- `pnpm verify:live-demo` passed against
+  `https://cribbage-web-app.vercel.app` at 320, 640, and 1280 pixels: 21 visits
+  across 20 distinct screens per viewport, with no overflow, CSP, HTTP,
+  console, or page errors.
+- Vercel runtime-error query after release: no errors in the preceding hour.
 
 ## Remaining physical evidence
 
