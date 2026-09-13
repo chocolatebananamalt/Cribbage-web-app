@@ -1,5 +1,37 @@
 # Project Status
 
+## 2026-09-13 October integration-plan release audit
+
+- Confirmed the requested October payment boundary is implemented end to end:
+  directors can enable cash, check, or both; public registration records the
+  selected method; and the protected finance workspace records amount owed,
+  received, remaining, status, and optional check details without treating a
+  stated preference as payment evidence.
+- Confirmed Cash App Pay, Apple Pay, Google Pay, Venmo, and Venmo Tap to Pay are
+  retained in the provider-neutral catalog but remain default-off. The provider
+  preflight passes with cash/check and human paper-card fallbacks declared.
+- Confirmed private paper-card storage/upload integrity, the default-off
+  OpenAI structured-draft adapter, human-review/non-authority constraints,
+  dynamic table capacity, offline replay, and failed-device recovery remain in
+  the release. Live OCR activation still correctly requires provider credentials
+  and deliberate false-read evidence; it does not block the October workflow.
+- The production audit found and closed two browser-only defects: React/Next
+  framework style attributes no longer generate CSP violations while script and
+  stylesheet-element execution remain nonce-bound, and the flyer preview no
+  longer extends beyond a 320 px phone. Pull requests 16 and 17 merged as
+  verified commits `8a084df62634ea8d0a34078246e30c8583ba5761` and
+  `e9480b7521dc37871825731434b15aeca3c23d81`.
+- Vercel Production deployment `dpl_FyYMjjuoEJfE3x2mPwGJ2qnJnwHP` is `READY`,
+  owns the stable production alias, and reports no alias error. A live scripted
+  walk-through operated 20 distinct demo screens at 320 px and 1280 px,
+  including scoring/review/submission, scorecard pending state, setup/import,
+  check-in search, dynamic six-table/120-seat planning, cross-check/photo aid,
+  flyer, finance, results/qualifiers, and Rulebook search. Both runs had zero
+  page overflow, CSP violations, failed requests, console errors, or page errors.
+- The full local gate passes 453/453 application tests, provider preflight,
+  production build, workspace checks, and 6/6 private-handoff checks. Vercel
+  reports no runtime-error clusters in the final release window.
+
 ## 2026-09-12 cross-checker and small-phone production proof
 
 - Released the protected Cross-checker Assignments workspace and API on
