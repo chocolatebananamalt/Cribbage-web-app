@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-13 authorized private paper-card review
+
+- Closed the gap between private paper-card upload and actual cross-check use.
+  A distinct eligible director, co-director, or cross checker can now open the
+  latest stored photo for either game side from the independent paper/paper or
+  mixed digital/paper review screen.
+- The server returns integrity-verified image bytes with private/no-store and
+  no-sniff headers. It exposes no public or signed Storage URL. The database
+  requires a current independent official identity, denies the original
+  uploader and game participants, and appends each successful view to the
+  immutable restricted-access ledger.
+- Migration 0162 and the rollback-only lifecycle fixture pass on both the
+  disposable and approved pilot Supabase projects. Direct `anon` and
+  `authenticated` database execution is denied, `service_role` alone can call
+  the narrow authorization function, and both fixtures retained zero rows.
+- Local application tests pass 459/459, lint passes, and the production build
+  includes the protected paper-card review-image route. OCR remains default-off
+  and non-authoritative; the October human-review path does not depend on it.
+- Evidence: `docs/quality/2026-09-13-authorized-paper-card-review.md`.
+
 ## 2026-09-13 private paper-card production upload wiring
 
 - Replaced the protected paper/paper and mixed digital/paper screens' local-only

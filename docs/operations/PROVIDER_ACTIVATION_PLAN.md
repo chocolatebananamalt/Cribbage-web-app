@@ -117,17 +117,21 @@ policy, and funded message balance. None is required for October.
 
 ### Paper-card OCR — desired after the core release
 
-The repository already contains the default-off, role-restricted immutable
-capture/upload-intent foundation. It intentionally stores no image bytes and
-creates no OCR or scoring authority. The October path remains human entry.
+The repository contains the released, role-restricted immutable capture and
+private Storage path. It stores only bounded JPEG/PNG/WebP originals, verifies
+their byte count and SHA-256 digest, and lets a distinct eligible official
+reopen the verified bytes through an audited server stream. It creates no OCR
+or scoring authority. The October path remains human entry.
 
 Before enablement:
 
-1. Approve card-image access/retention and an OCR processor (or an on-device
-   implementation). No real card image is sent to a third party before this.
-2. Add a private Supabase Storage bucket, exact JPEG/PNG limits, server-issued
-   upload authorization, byte-size/type/digest verification, short-lived
-   authorized viewing, and immutable access events. No public URL is allowed.
+1. Card-image access/retention is approved for restricted hold with no
+   automatic deletion. Approve an OCR processor (or an on-device
+   implementation) before sending any real card image to a third party.
+2. The private Supabase Storage bucket, exact JPEG/PNG/WebP limits,
+   server-issued upload authorization, byte-size/type/digest verification,
+   authorized no-store viewing, and immutable access events are released. No
+   public URL is allowed.
 3. Add OCR processing that creates a confidence-labelled draft containing
    only candidate card rows. The draft is versioned and cannot write scores.
 4. Require an eligible non-self cross checker to compare the image and every
@@ -141,9 +145,9 @@ Before enablement:
    mismatch routing. Run the full repository and real-device gates before
    enabling the production flag.
 
-External need: ACC/data-governance approval for image handling and either an
-approved OCR account or a proven on-device model. The hosted Supabase pilot
-currently has no Storage bucket, so OCR is not ready to switch on.
+External need: an approved OCR account or a proven on-device model plus live
+false-read evidence. The hosted pilot already has the approved private Storage
+bucket; OCR is not ready to switch on and remains default-off.
 
 ## Press-go rule
 
