@@ -1,5 +1,34 @@
 # Project Status
 
+## 2026-09-12 cross-checker and small-phone production proof
+
+- Released the protected Cross-checker Assignments workspace and API on
+  verified `main` commit `b2ea2c514cb2fbe9bb563991451ab7f195561b72`.
+  Vercel Production deployment `dpl_9Ad9gqKer6iR6cYmFmijCfqFH9gp` became
+  `READY`, owned the stable alias, and reported no alias error.
+- Corrected the signed-out access card for true 320 px phones. Pull request 15
+  merged as `9562e51c606b5de3d25c9a69d49e37687fb828c5`; Production deployment
+  `dpl_4PWfNKXoQSyycxhEtk8xzZKr8gV5` became `READY` with the stable alias.
+- Closed the resulting browser-only `/favicon.ico` 404 with an ACC-branded
+  Next.js app icon on `main` commit
+  `0e72fe75251c9fcf324f42dcf8cf2382126573df`. GitHub's pull-request API was
+  unavailable after repeated 502/GraphQL failures, so the verified one-commit
+  fast-forward was pushed directly to `main`. Production deployment
+  `dpl_7SH1ANC2ooQahRfUodNGsapQNrFm` is `READY`, owns
+  `cribbage-web-app.vercel.app`, and has no alias error.
+- The final local gate passes with 452/452 application tests, provider
+  fallback checks, production build, workspace checks, and 6/6 private-handoff
+  checks. Live Playwright checks at 320×900 and 1280×900 return HTTP 200 with
+  meaningful content, no horizontal overflow, no failed resources, no console
+  or page errors, and no framework overlay.
+- The live Cross-checker Assignments API rejects an anonymous read with HTTP
+  401 and rejects an invalid same-origin write with HTTP 400. Vercel reports no
+  runtime-error clusters or production 5xx logs in the release window.
+- No application, database, or deployment defect remains in this slice. A real
+  director must still link the intended officials, assign at least two
+  independent cross-checkers, and complete the multi-session rehearsal; the
+  app will not fabricate those production identities or approvals.
+
 ## 2026-09-12 cross-checker assignment pilot activation
 
 - Added a protected director/co-director workspace that assigns an
