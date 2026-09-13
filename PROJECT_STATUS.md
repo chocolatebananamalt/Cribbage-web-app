@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-12 executable optional-provider preflight
+
+- Added a typed, default-off readiness contract and `pnpm providers:check` for
+  future Stripe payments, SMS seating notices, and paper-card OCR.
+- The check identifies incomplete configuration, invalid gates, missing OCR
+  prerequisites, and accidental browser-exposed provider secrets. Even a
+  complete configuration is reported only as requiring a live provider probe;
+  it is never called activated based on environment values alone.
+- Preserved the repository's public-only `.env.example` rule: it contains
+  default-off flags and non-secret references, while the operations plan names
+  server-only credential variables separately.
+- All three optional integrations remain disabled and do not block the October
+  manual workflows. No charge, message, image upload, or OCR request occurred.
+
 ## 2026-09-12 isolated schema restore and index-parity repair
 
 - Brought the owner-approved disposable Supabase validation project from its

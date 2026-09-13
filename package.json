@@ -13,6 +13,7 @@
     "verify": "pnpm audit --prod --audit-level=high && pnpm lint && pnpm test && pnpm build && node --test tests/workspace.test.mjs",
     "verify:handoff": "node --test tests/handoff.test.mjs",
     "test:score": "node --conditions=react-server --experimental-strip-types --test tests/score.test.mjs tests/dashboard-semantics.test.mjs tests/schema-contract.test.mjs tests/supabase-auth-semantics.test.mjs",
+    "providers:check": "node --experimental-strip-types scripts/check-provider-readiness.mjs",
     "verify:local": "pnpm verify && pnpm verify:handoff",
     "verify:all": "pnpm verify"
   },
