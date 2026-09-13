@@ -7,16 +7,18 @@ Use Vercel for the production frontend and Supabase for PostgreSQL, Auth, privat
 Vercel GitHub preview deployment documentation: https://vercel.com/docs/git/vercel-for-github
 Supabase services and Vercel integration: https://vercel.com/marketplace/supabase/supabase
 Supabase security/availability production checklist: https://supabase.com/docs/guides/deployment/going-into-prod
-As of 2026-09-09, the GitHub-connected Vercel project and Supabase pilot are
-reachable and healthy. The reviewed branch has a protected Vercel Preview and
-private, forced-RLS Supabase pilot boundaries for registration claims, roster
-review, manual payment evidence, check-in/initial seating, event enrollment,
-corrections, and versioned tournament setup. They are deliberately partial
-foundations, not a production release: the production domain remains separate
-from this review branch, and the complete tournament workflow has not yet been
-implemented or proven. Confirm current plan eligibility, limits, backup
-retention, costs, and the staging/production separation before provisioning
-production data.
+As of 2026-09-13, GitHub, Vercel Production/Preview, Supabase Auth, the approved
+pilot database, and the disposable verification database are connected and
+healthy. The Standard Singles October release candidate is live at
+`https://cribbage-web-app.vercel.app/` with database migrations through 0162.
+The required setup, registration/manual/CSV roster, cash/check, check-in,
+initial seating, event enrollment, reviewed schedule, digital/paper/hybrid
+scoring, correction, offline/recovery, results, settlement, expense, final PDF,
+and private paper-card capture/readback boundaries are implemented. Production
+readiness is still conditional on the independent-person, physical-device,
+backup/content-restore, and director rehearsals in
+`OCTOBER_PILOT_REHEARSAL.md`; a live deployment is not evidence that those
+exercises passed.
 
 GitHub stores code/history. GitHub Pages can serve a demo but cannot itself provide a shared authenticated tournament database. A managed server is an alternative if venue-local hosting becomes essential, with more operational work. Cloud hosting does not solve offline synchronization by itself.
 
@@ -31,16 +33,23 @@ GitHub stores code/history. GitHub Pages can serve a demo but cannot itself prov
 
 ## Current blockers
 
-The app has a guarded pilot backend, but not a completed production system.
-The remaining blockers are the full server-authoritative setup/check-in/seating
-workflow; real authenticated dual-player verification; offline/hybrid and
-paper/dead-phone operation; results, export, finalization and finance;
-approved ACC rule fixtures; backup/restore, monitoring and rollback proof; and
-accessibility plus a supervised simulated tournament. The Vercel and Supabase
-projects exist, but separate staging/production configuration, domain,
-environment contract, monitoring, backup/restore, and rollback readiness must
-still be proven. See the current release matrix in
-`docs/quality/2026-09-09-meta-release-readiness-audit.md`.
+No missing API, database, hosting connection, or known October-critical
+implementation blocks the focused Standard Singles pilot. Remaining go/no-go
+conditions require evidence from the real operating context:
+
+- independent player and official accounts on separate sessions/devices;
+- disconnect, reload/restart, reconnect, conflict, and failed-device recovery;
+- a real anonymized paper-card upload reopened by a different eligible official;
+- approved-pilot backup/content restore into an isolated environment; and
+- the director's complete simulated tournament and acceptance.
+
+ACC authorization for official digital operational records and the
+current-effective values used for official MRP/Q-pool/payout reporting remain
+external approval inputs. ACC portal automation, online payments, SMS, flyer
+creation/import, live OCR, team scoring, the rich Judge Desk, and automatic
+rotation are post-pilot capabilities with manual October fallbacks; they are not
+launch blockers. The current tracker is `WORKING_OUTLINE.md`, and the evidence
+checklist is `OCTOBER_PILOT_REHEARSAL.md`.
 
 A successful protected-preview root response is not evidence that an
 authenticated route has the current Supabase public URL and publishable key.
