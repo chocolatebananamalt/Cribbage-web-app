@@ -136,6 +136,7 @@ test("controlled-error reconciliation revalidates current authority before recei
   assert.match(fixture, /revoked_review_replay[\s\S]*not_eligible_reviewer/);
   assert.match(fixture, /orphan_game[\s\S]*game_not_scheduled/);
   assert.match(fixture, /recovery_blocks_paper[\s\S]*device_recovery_case_exists/);
+  assert.match(fixture, /another manual evidence case already open/);
   assert.match(fixture, /paper_case_rejected[\s\S]*paper_case_two[\s\S]*max\(case_sequence\)/);
   assert.match(fixture, /binding_correction_replay[\s\S]*binding_stale_replay/);
   assert.match(fixture, /nonparticipant roster-link race unexpectedly succeeded/);

@@ -139,7 +139,7 @@ do $$ begin
   raise exception 'recovery unexpectedly coexisted with paper case';
  exception when others then
   if sqlerrm='recovery unexpectedly coexisted with paper case' then raise; end if;
-  if sqlerrm<>'paper completion case already open' then raise; end if;
+  if sqlerrm<>'another manual evidence case already open' then raise; end if;
  end;
 end $$;
 insert into paper_completion_results values('binding_correction',public.bind_paper_official_identity_v1('a9440000-0000-4000-8000-000000000004','b9440000-0000-4000-8000-000000000001','c9440000-0000-4000-8000-000000000105','a9440000-0000-4000-8000-000000000002','roster_entry','d9440000-0000-4000-8000-000000000003',1,'c9440000-0000-4000-8000-000000000205'));

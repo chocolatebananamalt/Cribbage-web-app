@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-13 hosted pilot regression refresh
+
+- Re-ran twelve October-critical lifecycle proofs against the approved pilot
+  Supabase project at migration `0161`: roster import/freeze, schedule and
+  progression, paper and hybrid scoring, failed-device recovery, Rule 12,
+  qualification and settlement finalization, expenses, and cross-checker
+  assignment all pass in rollback-only transactions.
+- Corrected two stale/non-isolated fixtures: paper completion now expects the
+  shared manual-evidence mutual-exclusion message, and expense assertions are
+  scoped to their synthetic tournament and idempotency operation instead of
+  counting legitimate hosted records.
+- Post-run inspection found zero retained fixture tournaments and zero fixture
+  users. Supabase advisor output contains only the documented RPC-only,
+  passwordless-Free-plan, and pre-pilot unused-index notices; no new DDL
+  regression was introduced.
+
 ## 2026-09-13 finalization-readiness production release
 
 - A live release-gate probe found public registration, registration-link

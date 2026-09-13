@@ -61,7 +61,8 @@ do $$
 begin
   if (select result from expense_test_results where label = 'record')
        <> (select result from expense_test_results where label = 'exact-replay')
-     or (select count(*) from app.tournament_expense_events) <> 1 then
+     or (select count(*) from app.tournament_expense_events
+         where tournament_id = 'b1280000-0000-4000-8000-000000000001') <> 1 then
     raise exception 'exact replay created a duplicate expense';
   end if;
 end;
@@ -79,8 +80,11 @@ do $$
 begin
   if (select result->>'code' from expense_test_results where label = 'changed-replay')
        <> 'idempotency_conflict'
-     or (select count(*) from app.tournament_expense_operation_conflicts) <> 1
-     or (select count(*) from app.tournament_expense_events) <> 1 then
+     or (select count(*) from app.tournament_expense_operation_conflicts
+         where tournament_id = 'b1280000-0000-4000-8000-000000000001'
+           and attempted_idempotency_key = 'd1280000-0000-4000-8000-000000000001') <> 1
+     or (select count(*) from app.tournament_expense_events
+         where tournament_id = 'b1280000-0000-4000-8000-000000000001') <> 1 then
     raise exception 'changed replay was not rejected';
   end if;
 end;
@@ -98,7 +102,8 @@ reset role;
 do $$
 begin
   if (select result->>'code' from expense_test_results where label = 'viewer-denied') <> 'not_director'
-     or (select count(*) from app.tournament_expense_events) <> 1 then
+     or (select count(*) from app.tournament_expense_events
+         where tournament_id = 'b1280000-0000-4000-8000-000000000001') <> 1 then
     raise exception 'viewer recorded an expense';
   end if;
 end;
@@ -227,7 +232,8 @@ $$;
 do $$
 begin
   if (select count(*) from app.audit_events
-      where entity_type = 'tournament_expense'
+      where tournament_id = 'b1280000-0000-4000-8000-000000000001'
+        and entity_type = 'tournament_expense'
         and action in ('tournament_expense_recorded', 'tournament_expense_voided')) <> 4 then
     raise exception 'expense audit history was incomplete';
   end if;

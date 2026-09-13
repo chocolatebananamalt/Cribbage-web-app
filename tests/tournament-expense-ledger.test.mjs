@@ -105,6 +105,8 @@ test("rollback fixture covers authorization, replay, reversal, and immutability"
   assert.match(fixture, /rollback;/);
   assert.match(fixture, /exact replay created a duplicate expense/);
   assert.match(fixture, /changed replay was not rejected/);
+  assert.match(fixture, /tournament_expense_operation_conflicts[\s\S]*attempted_idempotency_key/);
+  assert.match(fixture, /audit_events[\s\S]*tournament_id = 'b1280000-0000-4000-8000-000000000001'/);
   assert.match(fixture, /viewer recorded an expense/);
   assert.match(fixture, /expense void did not preserve the original/);
   assert.match(fixture, /void-after-recorder-role-removed/);
