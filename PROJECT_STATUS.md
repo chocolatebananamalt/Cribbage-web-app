@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-12 exact October pilot preparation boundary
+
+- Read-only inspection of the approved Supabase pilot confirms the October 3
+  tournament setup is activated and two official accounts are assigned: one
+  director and one co-director.
+- The real operational dataset is not ready for a multi-user rehearsal yet:
+  it has two roster identities, zero linked player accounts, zero check-ins,
+  zero event enrollments, zero seating publications, and zero scheduled games.
+- This is not a database, API, hosting, or missing-code failure. Manual entry,
+  CSV import, QR/link registration, account linking, check-in, seating,
+  enrollment, and schedule publication are implemented. Those production rows
+  must be supplied through the real director/player workflow; synthetic names
+  will not be inserted into the October tournament to manufacture a pass.
+- Therefore the remaining live-scoring gate is stated precisely: link at least
+  two independent player accounts, retain two independent eligible officials,
+  and run the documented physical/session rehearsal before enabling the gated
+  account-activation and Rule 12 release switches.
+
 ## 2026-09-12 executable optional-provider preflight
 
 - Added a typed, default-off readiness contract and `pnpm providers:check` for
