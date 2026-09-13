@@ -3,10 +3,10 @@ import fs from "node:fs";
 import test from "node:test";
 import { PAPER_CARD_BUCKET, PAPER_CARD_MAX_BYTES, paperCardStorageEnabled } from "../src/lib/paper-games/private-card-storage.ts";
 
-test("private paper-card storage is gated and uses the approved fixed bucket", () => {
+test("private paper-card storage is available only through the approved fixed bucket", () => {
   assert.equal(PAPER_CARD_BUCKET, "paper-scorecards-private");
   assert.equal(PAPER_CARD_MAX_BYTES, 10 * 1024 * 1024);
-  assert.equal(paperCardStorageEnabled({}), false);
+  assert.equal(paperCardStorageEnabled({}), true);
   assert.equal(paperCardStorageEnabled({ ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled" }), true);
   assert.equal(paperCardStorageEnabled({ ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled", SUPABASE_PAPER_CARD_BUCKET: "wrong" }), false);
 });

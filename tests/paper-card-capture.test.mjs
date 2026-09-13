@@ -26,11 +26,11 @@ const request = {
   idempotencyKey: operationId,
 };
 
-test("paper-card capture remains default-off behind one exact value", () => {
-  assert.equal(paperCardCaptureEnabled({}), false);
-  assert.equal(paperCardCaptureEnabled({ ACC_PAPER_CARD_CAPTURE_ENABLED: "true" }), false);
+test("approved paper-card capture is available without a deployment toggle", () => {
+  assert.equal(paperCardCaptureEnabled({}), true);
+  assert.equal(paperCardCaptureEnabled({ ACC_PAPER_CARD_CAPTURE_ENABLED: "true" }), true);
   assert.equal(paperCardCaptureEnabled({ ACC_PAPER_CARD_CAPTURE_ENABLED: "enabled" }), true);
-  assert.match(read(".env.example"), /^ACC_PAPER_CARD_CAPTURE_ENABLED=disabled$/m);
+  assert.doesNotMatch(read(".env.example"), /^ACC_PAPER_CARD_CAPTURE_ENABLED=/m);
 });
 
 test("paper-card capture accepts only exact bounded original metadata", () => {

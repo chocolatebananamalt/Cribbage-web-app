@@ -83,10 +83,8 @@ function isClientCapturedAt(value: unknown): value is string | null {
   );
 }
 
-export function paperCardCaptureEnabled(
-  env: Record<string, string | undefined> = process.env,
-) {
-  return env.ACC_PAPER_CARD_CAPTURE_ENABLED === "enabled";
+export function paperCardCaptureEnabled() {
+  return true;
 }
 
 export function isPaperCardCaptureRequest(value: unknown): value is PaperCardCaptureRequest {

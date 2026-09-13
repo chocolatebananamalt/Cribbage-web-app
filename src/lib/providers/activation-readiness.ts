@@ -137,9 +137,6 @@ export function inspectProviderReadiness(
     if (provider && definition.expectedProvider && provider !== definition.expectedProvider) {
       errors.push(`${definition.providerKey} must be ${definition.expectedProvider}`);
     }
-    if (definition.capability === "paper_card_ocr" && provider && env.ACC_PAPER_CARD_CAPTURE_ENABLED !== "enabled") {
-      errors.push("ACC_PAPER_CARD_CAPTURE_ENABLED must be enabled before OCR");
-    }
     if (definition.capability === "paper_card_ocr") {
       const executionMode = value(env, "ACC_OCR_EXECUTION_MODE");
       if (executionMode && executionMode !== "external" && executionMode !== "on_device") {

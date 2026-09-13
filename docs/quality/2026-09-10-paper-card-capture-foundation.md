@@ -21,9 +21,11 @@ Environment: Windows, Node `v24.19.0`, pnpm `11.19.0`, Next.js `16.3.4`
   upload is not authorized, no image/public URL/OCR/transcription exists, the
   capture requires future human review, retention is restricted hold, and no
   score or game-verification state changed.
-- The route remains hidden unless `ACC_PAPER_CARD_CAPTURE_ENABLED=enabled`,
-  verifies same origin and a server-verified session, and calls only the
-  service-role-only database function through the server secret boundary.
+- At the time of this foundation check, the route was hidden unless
+  `ACC_PAPER_CARD_CAPTURE_ENABLED=enabled`. This historical release-gate result
+  is superseded by the owner-approved 2026-09-12 private-storage decision and
+  its verification record. Same-origin, server-verified session, current-role,
+  non-self, lifecycle, and service-only database checks remain required.
 
 ## Observable rejection criteria
 

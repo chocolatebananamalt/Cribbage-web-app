@@ -41,7 +41,7 @@ test("Stripe configuration names every missing external input and never claims a
   assert.match(report.providers[0].errors[0], /cannot be enabled until/);
 });
 
-test("OCR cannot be configured before the capture gate and governance inputs", () => {
+test("OCR remains unreleased even when its configuration inputs are complete", () => {
   const report = inspectProviderReadiness({
     ACC_PAPER_CARD_OCR_ENABLED: "enabled",
     ACC_OCR_PROVIDER: "openai",
@@ -52,9 +52,8 @@ test("OCR cannot be configured before the capture gate and governance inputs", (
     ACC_OCR_ADAPTER_VERSION: "v1",
     ACC_OCR_TEST_EVIDENCE_REF: "evidence-2026-01",
   });
-  assert.equal(report.providers[2].configurationReady, false);
+  assert.equal(report.providers[2].configurationReady, true);
   assert.deepEqual(report.providers[2].errors, [
-    "ACC_PAPER_CARD_CAPTURE_ENABLED must be enabled before OCR",
     "ACC_PAPER_CARD_OCR_ENABLED cannot be enabled until its adapter and live activation probe are released",
   ]);
 });
@@ -109,7 +108,6 @@ test("external OCR requires a server-only API key and rejects an invalid executi
     ACC_OCR_EXECUTION_MODE: "hybrid",
   });
   assert.deepEqual(invalid.providers[2].errors, [
-    "ACC_PAPER_CARD_CAPTURE_ENABLED must be enabled before OCR",
     "ACC_OCR_EXECUTION_MODE must be external or on_device",
   ]);
 });
