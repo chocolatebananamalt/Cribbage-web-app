@@ -1,5 +1,34 @@
 # Project Status
 
+## 2026-09-12 isolated schema restore and index-parity repair
+
+- Brought the owner-approved disposable Supabase validation project from its
+  older baseline through migrations `0111`–`0151` without copying pilot or
+  private player data.
+- The restore rehearsal exposed 24 relationship indexes that could be omitted
+  when the older validation chain already existed. Added idempotent migration
+  `0152_restore_parity_foreign_key_indexes.sql` and applied it to both the
+  disposable project and pilot; it was a no-op where an index already existed.
+- Both databases now report the same catalog counts: 105 `app` tables, 1,091
+  columns, 959 constraints, 599 indexes, and 212 `app`/`public` functions.
+  Both Supabase performance advisors report zero unindexed foreign keys.
+- This closes schema reconstruction/parity. A dated backup of actual pilot
+  records and its isolated content/checksum restore remain a supervised
+  release rehearsal because private records must not be copied casually.
+
+## 2026-09-12 local paper-card photo production release
+
+- Merged the fully verified release branch into `main` through GitHub pull
+  request 1. Vercel built merge commit `e92c863` as Production deployment
+  `dpl_GuqEyjRt16VPpMvrj7W9imK2i6bi`, reported `READY`, and attached the
+  stable production aliases with no alias error.
+- Production root, sign-in, registration, and the public cross-check demo
+  returned HTTP 200. The live cross-check demo contains the local paper-card
+  photo control and explicitly states that the image is not uploaded.
+- The first post-release Vercel grouped runtime-error scan reported no errors.
+- The photo remains a transient on-device comparison aid; retained upload and
+  OCR remain default-off and are not October pilot launch dependencies.
+
 ## 2026-09-12 pilot-safe paper-card camera aid
 
 - Added an optional camera/file image preview directly beside paper/paper and

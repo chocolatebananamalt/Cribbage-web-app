@@ -5,6 +5,7 @@ import test from "node:test";
 const preferenceRepair = fs.readFileSync("database/migrations/0149_scorecard_preference_mutation_repair.sql", "utf8");
 const hybridRepair = fs.readFileSync("database/migrations/0150_hybrid_revalidation_repair.sql", "utf8");
 const indexRepair = fs.readFileSync("database/migrations/0151_release_foreign_key_indexes.sql", "utf8");
+const restoreParityIndexes = fs.readFileSync("database/migrations/0152_restore_parity_foreign_key_indexes.sql", "utf8");
 
 test("scorecard preference is the only permitted roster projection update", () => {
   assert.match(preferenceRepair, /drop trigger tournament_roster_entries_immutable/);
@@ -29,4 +30,15 @@ test("October release foreign keys have explicit lookup indexes", () => {
   assert.match(indexRepair, /paper_game_completion_evidence\(completion_id,tournament_id,event_id\)/);
   assert.match(indexRepair, /paper_game_completion_state_events\(operation_receipt_id,tournament_id\)/);
   assert.match(indexRepair, /hybrid_game_cases\(canonical_game_id,tournament_id,event_id\)/);
+});
+
+test("an older disposable restore receives every pilot relationship index", () => {
+  const indexes = restoreParityIndexes.match(/create index if not exists/g) ?? [];
+  assert.equal(indexes.length, 24);
+  for (const required of [
+    /initial_seating_assignments\(publication_id,tournament_id\)/,
+    /registration_link_lifecycle_events\(operation_receipt_id,tournament_id\)/,
+    /roster_account_links\(roster_entry_id,tournament_id\)/,
+    /tournament_setup_q_pool_versions\(setup_event_version_id,tournament_id,setup_revision_id\)/,
+  ]) assert.match(restoreParityIndexes, required);
 });
