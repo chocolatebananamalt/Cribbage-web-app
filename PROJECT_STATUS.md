@@ -11,6 +11,16 @@
   Judge Desk, and unapproved automatic rotation remain post-pilot work. The
   remaining October release conditions are physical rehearsal evidence, not
   silently open implementation scope.
+- Refreshed the approved pilot state read-only on 2026-09-13: the tournament is
+  still open with two roster entries, one director, one co-director, and zero
+  linked player accounts, cross-checkers, check-ins, event participants,
+  seating/schedule publications, paper captures, or paper-image access events.
+  No production data was fabricated to make the readiness tracker appear green.
+- Repaired stale launch and entry documentation that still described the
+  deployed application, database migrations, and October workflows as future
+  or absent. `START_HERE.md`, `README.md`, and `LAUNCH_PLAN.md` now direct work
+  to the current release and physical rehearsal evidence instead of restarting
+  already completed implementation.
 
 ## 2026-09-13 authorized private paper-card review
 

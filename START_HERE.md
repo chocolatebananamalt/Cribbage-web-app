@@ -4,7 +4,12 @@ Read AGENTS.md, PROJECT_STATUS.md, docs/operations/DURABLE_PROJECT_MEMORY.md,
 docs/recovery/REVIEW.md, docs/quality/VERIFICATION.md and
 docs/operations/MODEL_ROUTING.md before work.
 
-Baseline: recovered specification v1.1 (43 sections). Latest demo: pilot v1.3. Originals live in imports/acc-handoff-2026-09-05; docs/recovery/inventory.json maps every file to its organized copy.
+Baseline: recovered specification v1.1 (43 sections), reconciled with the
+normative production requirements and owner decisions through 2026-09-13.
+The public demo is sample-only; the Standard Singles release candidate is live
+at <https://cribbage-web-app.vercel.app/>. Originals live in
+`imports/acc-handoff-2026-09-05`; `docs/recovery/inventory.json` maps every file
+to its organized copy.
 
 ## Mandatory checks and balances
 
@@ -26,8 +31,12 @@ On this computer the bundled Node executable must be invoked by absolute path; s
 - docs/architecture/: module and data design.
 - docs/quality/: acceptance criteria and test evidence.
 - docs/operations/: hosting, pilot, deployment and recovery plans.
-- database/: future schema migrations and permissions.
-- src/: future production code; tests/: executable verification.
+- database/: ordered production schema migrations and permission boundaries.
+- src/: production application code; tests/: executable verification.
 - imports/ and docs/private/: preserved source material and correspondence, never served publicly.
 
-Next: agree pilot scope, validate ACC rule fixtures, then build a two-player server-backed score submission and dual-confirmation flow with its rejection and concurrency tests.
+Next: execute `docs/operations/OCTOBER_PILOT_REHEARSAL.md` with distinct
+players, officials, devices, and an isolated backup/content restore. The
+server-backed two-player submission/confirmation, paper/hybrid, offline
+recovery, results, and finance workflows are already implemented; do not rebuild
+them merely because this entry document was previously stale.
