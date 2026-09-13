@@ -39,3 +39,17 @@ This is not retained-image evidence and not OCR. Restricted upload, retention,
 OCR extraction, confidence display, and reviewed draft comparison remain gated
 by the provider and data-governance requirements in
 `docs/operations/PROVIDER_ACTIVATION_PLAN.md`.
+
+## Production release evidence
+
+- The verified release branch was merged through GitHub pull request 1 as
+  merge commit `e92c863135da818632a147a7d9c8f75f5ab8b3c1`.
+- Vercel Production deployment `dpl_GuqEyjRt16VPpMvrj7W9imK2i6bi` reached
+  `READY`; `https://cribbage-web-app.vercel.app` is attached with no alias
+  error.
+- Production `/`, `/sign-in`, `/register`, and
+  `/demo?screen=corrections` returned HTTP 200.
+- The production demo response contains `Paper-card photo aid` and the
+  explicit statement that the selected photo is not uploaded.
+- Vercel's grouped runtime-error scan for the first post-release hour returned
+  no errors.

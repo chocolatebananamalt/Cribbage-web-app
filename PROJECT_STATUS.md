@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-12 local paper-card photo production release
+
+- Merged the fully verified release branch into `main` through GitHub pull
+  request 1. Vercel built merge commit `e92c863` as Production deployment
+  `dpl_GuqEyjRt16VPpMvrj7W9imK2i6bi`, reported `READY`, and attached the
+  stable production aliases with no alias error.
+- Production root, sign-in, registration, and the public cross-check demo
+  returned HTTP 200. The live cross-check demo contains the local paper-card
+  photo control and explicitly states that the image is not uploaded.
+- The first post-release Vercel grouped runtime-error scan reported no errors.
+- The photo remains a transient on-device comparison aid; retained upload and
+  OCR remain default-off and are not October pilot launch dependencies.
+
 ## 2026-09-12 pilot-safe paper-card camera aid
 
 - Added an optional camera/file image preview directly beside paper/paper and
