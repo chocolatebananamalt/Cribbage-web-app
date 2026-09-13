@@ -81,6 +81,7 @@ test("scorecard remains readable and keyboard-scrollable on narrow phones", () =
 test("authentication cards cannot expand the page beyond a narrow phone", () => {
   assert.match(styles, /\.auth-shell \{[^}]*grid-template-columns:minmax\(0,1fr\)/);
   assert.match(styles, /\.auth-card \{[^}]*min-width:0;[^}]*max-width:100%;[^}]*overflow-wrap:anywhere/);
+  assert.match(styles, /@media \(max-width:380px\) \{ \.auth-shell \{ padding:16px; \}\.auth-card \{ padding:24px; \}\.auth-card h1 \{ font-size:32px; \} \}/);
 });
 
 test("prototype navigation includes review and all requested operational screens", () => {
