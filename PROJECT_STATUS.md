@@ -11,6 +11,14 @@
 - Removed the obsolete setting from `.env.example` and added regression checks
   so required tournament setup cannot silently disappear after an otherwise
   successful deployment.
+- Merged [PR #23](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/23)
+  as `545dcc07d4fb0e3f77732bbe496573e529beb7cc` and deployed it to production as
+  `dpl_28aRC6U79xEQxvshVE4UKkeftPig`. The deployment is READY on all stable
+  aliases with no alias or runtime errors.
+- Post-release verification passes 454/454 repository checks, 6/6 private
+  handoff checks, and the live 320/640/1280 browser gate with 21 visits across
+  20 screens and no overflow, CSP, HTTP, console, or page errors. Full evidence
+  is in `docs/quality/2026-09-13-setup-activation-release.md`.
 
 ## 2026-09-13 hosted pilot regression refresh
 
