@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-13 private paper-card production upload wiring
+
+- Replaced the protected paper/paper and mixed digital/paper screens' local-only
+  photo aid with the approved private Storage workflow. Authorized officials can
+  now select a bounded image, hash it in the browser, obtain an actor-scoped
+  signed upload, and receive a server-side digest/size-confirmed immutable
+  storage receipt.
+- Upload authorization and completion responses are strict and capture-bound.
+  Ambiguous capture requests reuse one idempotency envelope, and an uncertain
+  Storage response is reconciled through the authoritative server completion
+  check. Stored images cannot request OCR, change scores, or verify games.
+- Added the explicit six tables × twenty seats boundary fixture: 120 unique
+  assignments through F-20 are accepted, while the same set with insufficient
+  table capacity is rejected.
+- Verification passes 456/456 application checks, 6/6 private handoff checks,
+  production build, provider preflight, and focused 18/18 paper-storage plus
+  53/53 API/seating checks. A real authorized-phone upload/readback and
+  independent-official review remain for the witnessed rehearsal. Evidence is
+  in `docs/quality/2026-09-13-private-paper-card-ui.md`.
+
 ## 2026-09-13 setup activation release hardening
 
 - Removed the remaining Vercel environment-toggle dependency from the

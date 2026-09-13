@@ -167,7 +167,7 @@ test("paper completion route and page enforce protected cross-check access", () 
   assert.match(client, /paper-game-operations\/reconciliation/);
   assert.match(client, /saved paper-card operation/);
   assert.match(client, /Retry the same locked request/);
-  assert.match(client, /LocalPaperCardPhoto/);
+  assert.match(client, /PrivatePaperCardPhoto/);
   const photo = readFileSync(new URL("../src/components/local-paper-card-photo.tsx", import.meta.url), "utf8");
   assert.match(photo, /capture="environment"/);
   assert.match(photo, /image\/jpeg,image\/png,image\/webp/);

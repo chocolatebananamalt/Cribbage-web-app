@@ -13,6 +13,35 @@ export type PaperCardCaptureRequest = {
   idempotencyKey: string;
 };
 
+export type PaperCardCaptureResult = {
+  status: "paper_card_capture_created";
+  captureId: string;
+  uploadIntentId: string;
+  objectReferenceId: string;
+  gameId: string;
+  cardSide: "a" | "b";
+  verificationId: string;
+  captureState: "upload_provider_pending";
+  humanReviewState: "not_started";
+  retentionState: "restricted_hold";
+  originalMetadata: {
+    sourceKind: "camera" | "file_upload";
+    fileName: string;
+    mediaType: "image/jpeg" | "image/png" | "image/webp";
+    byteSize: number;
+    sha256: string;
+    clientCapturedAt: string | null;
+  };
+  uploadProviderConfigured: false;
+  uploadAuthorized: false;
+  imageStored: false;
+  publicUrlCreated: false;
+  ocrRequested: false;
+  transcriptionCreated: false;
+  scoreChanged: false;
+  gameVerified: false;
+};
+
 const requestKeys = [
   "gameId",
   "cardSide",
@@ -114,7 +143,7 @@ export function isPaperCardCaptureRequest(value: unknown): value is PaperCardCap
 export function isPaperCardCaptureResult(
   value: unknown,
   request: PaperCardCaptureRequest,
-) {
+): value is PaperCardCaptureResult {
   if (!value || typeof value !== "object" || !hasExactKeys(value, resultKeys)) return false;
   const result = value as Record<string, unknown>;
   const metadata = result.originalMetadata;
