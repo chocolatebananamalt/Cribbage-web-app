@@ -1,0 +1,8 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
+import { isUuid } from "../../../../lib/api/validation";
+import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
+import { getHybridWorkspace } from "../../../../lib/hybrid-games/workspace";
+import HybridGameClient from "./hybrid-game-client";
+export default async function HybridGamePage({params}:{params:Promise<{tournamentId:string}>}){const{tournamentId}=await params;if(!isUuid(tournamentId))notFound();const access=await requireTournamentAccess(tournamentId);if(!["director","co_director","cross_checker"].includes(access.role))notFound();const workspace=await getHybridWorkspace(access.user.id,tournamentId);return <main className="auth-shell"><section className="auth-card corrections-card"><p className="eyebrow">CROSS CHECK</p><h1>Complete digital-versus-paper games</h1><p className="card-context">{workspace.tournamentName}</p><p className="registration-note">One official matches the player&apos;s saved digital submission to the original paper card. A second distinct official independently re-enters and confirms both sources. Nothing affects scorecards or standings before that exact second confirmation.</p><HybridGameClient actorId={access.user.id} tournamentId={tournamentId} actorRole={workspace.actorRole} actorIdentityConfirmed={workspace.actorIdentityConfirmed} candidates={workspace.candidates} reviewCases={workspace.reviewCases}/><Link className="guide-link" href={"/tournament/"+tournamentId}>Back to Tournament</Link><SharedDeviceSignOut/></section></main>}
