@@ -22,6 +22,16 @@ test("dashboard keeps initial winner controls unpressed and review gated", () =>
   assert.match(source, /disabled=\{!score\}/);
 });
 
+test("demo exposes the on-device paper-card photo aid", () => {
+  assert.match(source, /Paper-card photo aid/);
+  assert.match(source, /LocalPaperCardPhoto/);
+  assert.match(source, /photo stays on this device/i);
+  assert.match(source, /initialScreen/);
+  const demoPage = readFileSync("src/app/demo/page.tsx", "utf8");
+  assert.match(demoPage, /requestedScreen === "corrections"/);
+  assert.match(demoPage, /<TournamentDashboard initialScreen=\{initialScreen\}/);
+});
+
 test("score entry uses the approved result wording and rejects an impossible spread", () => {
   assert.doesNotMatch(source, /FAST ENTRY/);
   assert.doesNotMatch(source, /Derived result/);

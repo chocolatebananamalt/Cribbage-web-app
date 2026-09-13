@@ -2,10 +2,16 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { TournamentDashboard } from "../tournament-dashboard";
 
-export default async function DemonstrationPage() {
+export default async function DemonstrationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ screen?: string | string[] }>;
+}) {
   // The site uses a per-request CSP nonce. Dynamic rendering lets Next.js
   // apply that nonce to its scripts so every demonstration control hydrates.
   await connection();
+  const requestedScreen = (await searchParams).screen;
+  const initialScreen = requestedScreen === "corrections" ? "corrections" : "score";
 
   return (
     <>
@@ -16,7 +22,7 @@ export default async function DemonstrationPage() {
         </div>
         <Link href="/sign-in">Tournament sign-in</Link>
       </aside>
-      <TournamentDashboard />
+      <TournamentDashboard initialScreen={initialScreen} />
     </>
   );
 }

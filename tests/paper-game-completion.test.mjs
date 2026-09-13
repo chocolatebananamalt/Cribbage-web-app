@@ -10,6 +10,10 @@ import {
   isRejectedPaperGameCompletion,
   isReviewPaperGameRequest,
 } from "../src/lib/api/paper-game-completion.ts";
+import {
+  LOCAL_CARD_PHOTO_MAX_BYTES,
+  validateLocalCardPhoto,
+} from "../src/lib/paper-games/local-card-photo.ts";
 
 const completionId = "10000000-0000-4000-8000-000000000001";
 const eventId = "20000000-0000-4000-8000-000000000002";
@@ -29,6 +33,14 @@ test("paper completion request requires exact bounded card claims", () => {
   assert.equal(isCompletePaperGameRequest({ ...request, sideAClaim: { ...request.sideAClaim, evidenceReference: "" } }), false);
   assert.equal(isCompletePaperGameRequest({ ...request, sideAClaim: { ...request.sideAClaim, gamePoints: 3 } }), false);
   assert.equal(isCompletePaperGameRequest({ ...request, extra: true }), false);
+});
+
+test("local paper-card photo aid accepts only bounded browser images", () => {
+  assert.deepEqual(validateLocalCardPhoto({ type: "image/jpeg", size: 1 }), { accepted: true });
+  assert.deepEqual(validateLocalCardPhoto({ type: "image/png", size: LOCAL_CARD_PHOTO_MAX_BYTES }), { accepted: true });
+  assert.equal(validateLocalCardPhoto({ type: "image/heic", size: 100 }).accepted, false);
+  assert.equal(validateLocalCardPhoto({ type: "image/jpeg", size: 0 }).accepted, false);
+  assert.equal(validateLocalCardPhoto({ type: "image/webp", size: LOCAL_CARD_PHOTO_MAX_BYTES + 1 }).accepted, false);
 });
 
 test("paper operation reconciliation requests are exact and actor-routable", () => {
@@ -154,6 +166,12 @@ test("paper completion route and page enforce protected cross-check access", () 
   assert.match(client, /paper-game-operations\/reconciliation/);
   assert.match(client, /saved paper-card operation/);
   assert.match(client, /Retry the same locked request/);
+  assert.match(client, /LocalPaperCardPhoto/);
+  const photo = readFileSync(new URL("../src/components/local-paper-card-photo.tsx", import.meta.url), "utf8");
+  assert.match(photo, /capture="environment"/);
+  assert.match(photo, /image\/jpeg,image\/png,image\/webp/);
+  assert.match(photo, /stays on this device and is not uploaded/i);
+  assert.doesNotMatch(photo, /fetch\(|supabase|uploadToSignedUrl/);
   const reviewRoute = readFileSync(new URL("../src/app/api/v1/paper-game-completions/[id]/reviews/route.ts", import.meta.url), "utf8");
   assert.match(reviewRoute, /rpc\("review_paper_vs_paper_game_v1"/);
   assert.match(reviewRoute, /isSameOriginRequest/);

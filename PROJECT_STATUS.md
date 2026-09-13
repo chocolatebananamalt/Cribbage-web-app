@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-12 pilot-safe paper-card camera aid
+
+- Added an optional camera/file image preview directly beside paper/paper and
+  digital/paper cross-check transcription. Mobile browsers may open the rear
+  camera; desktop browsers may choose an existing image.
+- The aid accepts only JPEG, PNG, or WebP through 10 MB and uses a revocable
+  browser object URL. It has no upload, Supabase, OCR, score, or verification
+  authority and therefore does not require an invented retention policy.
+- Added the same working control to the synthetic public demo at
+  `/demo?screen=corrections`, with server-resolved safe navigation for direct
+  review.
+- Focused tests, lint, production build, and desktop/390px Chrome rendering
+  pass. Retained-image OCR remains separately gated after the October pilot.
+
 ## 2026-09-12 optional-provider launch boundary
 
 - Reconciled the owner’s latest priority: the October Standard Singles release

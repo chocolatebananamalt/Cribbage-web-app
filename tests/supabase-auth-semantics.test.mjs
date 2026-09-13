@@ -174,7 +174,8 @@ test('the public production demonstration is explicit, synthetic-only, and disco
   assert.match(demo, /Public Demonstration · Sample Data Only/);
   assert.match(demo, /Nothing here is saved/);
   assert.match(demo, /href="\/sign-in"/);
-  assert.match(demo, /<TournamentDashboard \/>/);
+  assert.match(demo, /<TournamentDashboard initialScreen=\{initialScreen\} \/>/);
+  assert.match(demo, /requestedScreen === "corrections" \? "corrections" : "score"/);
   assert.match(demo, /await connection\(\)/);
   assert.doesNotMatch(demo + dashboard, /fetch\(|XMLHttpRequest|sendBeacon|\.rpc\(|createClient|createServerOnlyAdminClient|supabase|\/api\/v1\//i);
   assert.match(proxy, /"\/demo"/);

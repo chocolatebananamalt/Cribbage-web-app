@@ -274,6 +274,12 @@ layouts, image size/type limits, deletion/restore behavior, and false-read
 fixtures require separate technical and data-governance approval before this
 capability is enabled.
 
+Before restricted upload/OCR is approved, the pilot MAY offer a transient
+on-device photo as a visual aid beside the human paper-card entry form. That
+photo MUST remain in browser memory only, MUST NOT be uploaded or persisted,
+MUST be removed when the page is closed or the user removes it, and MUST NOT
+change the existing human-entry or two-official authority requirements.
+
 ### 5.3.2 Start Here / How To guidance
 
 The app MUST provide concise, accessible, in-app guidance for players and directors. The player score-entry screen MUST make the hybrid paper/digital sequence available in plain language: each assigned player independently enters the paper result, each confirms their own entry, and the score is official only after both entries match and both confirmations are accepted by the server. It MUST direct an unavailable player or a mismatch to the pending cross-check workflow; it MUST NOT suggest that a director, one player, or a paper card alone can verify a result. The director guide MUST cover the essential operational actions—check-in, closing registration, publishing seating, handling paper cards, and resolving exceptions—and link to the fuller rule/reference material. Guidance is contextual and brief; it does not replace enforcement, audit, or role controls.
