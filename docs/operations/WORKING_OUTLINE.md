@@ -29,7 +29,7 @@ pilot time.
 | # | Step and definition of done | Status | Completed / estimated date | Current evidence or dependency |
 | --- | --- | --- | --- | --- |
 | 1 | **Requirements and design baseline.** Approved score entry, paper-style scorecard, roles, corrections, seating, event/flyer, results, finance, how-to, and paper-capture requirements are traceable and conflicts are recorded. | Complete | **2026-09-10** | `docs/product/production-requirements.md`, decisions, reviewed prototype. Official rules remain versioned inputs, not assumptions. |
-| 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, and safe registration links operate. | Implementation and deployment complete; physical acceptance remains | **Implemented and deployed 2026-09-13; acceptance target 2026-09-16** | Production hosting, passwordless sign-in, named tournament chooser, registration link/claim/review, witnessed roster-account activation, and protected role boundaries operate. Migrations through 0162, the audited Cross-checker Assignments screen, and independent-official private paper-card readback are live; disposable/pilot fixtures, service-role grants, final 320/640/1280 browser checks, anonymous route boundaries, and runtime checks pass. A genuinely independent account/session rehearsal remains. |
+| 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, director approval, self-service tournament creation, and safe registration links operate. | Implementation complete; deployment and physical acceptance remain | **Implemented 2026-09-13; acceptance target 2026-09-16** | Migration 0163 adds audited app-owner/ACC-administrator director governance and approved-director draft creation. The distinct `Full Rehearsal — 09-16-2026` draft exists exactly once with the creator as primary director. Earlier production hosting, passwordless sign-in, registration, role, and paper-card boundaries remain intact. Production promotion and independent-session rehearsal remain. |
 | 3 | **Tournament setup, players, check-in, and initial seating.** Main/Consolation/Satellites, game counts, fees, Q-pools, roster/import, payment status, check-in, closure, table capacity, assignments, event participants, and game schedule operate under one tournament. | Implementation complete; rehearsal remains | **Implemented 2026-09-12; rehearsal target 2026-09-16** | Manual/CSV/public intake, claim review/promotion, explicit paper/digital choice, per-tournament cash/check configuration, amount owed/received/remaining/status, check-in, registration freeze, dynamic table plan, printable seating, event enrollment, setup amendment, and reviewed schedule publication are live. One actual registration-close → seating → enrollment → schedule rehearsal remains. Flyer import is deferred. |
 | 4 | **Scoring, scorecards, cross-checking, disputes, and offline durability.** Standard Singles two independent submissions plus two distinct eligible confirmations, verified-only scorecards, manual paper evidence, non-self dispute/correction handling, durable offline replay, and failed-device recovery all pass. | Implementation complete; physical proof remains | **Implemented 2026-09-13; physical proof target 2026-09-17** | Digital/digital, paper/paper, and hybrid digital/paper authority; scorecards; disputes; the reviewed migration 0140 Rule 12 corrections; progression; offline queue/page replay; audited failed-device recovery; and private digest-verified paper-card upload plus independent-official readback are implemented. OCR stays optional and disabled. Hosted fixtures and the automated gate pass. Real independent-session disconnect/reload/reconnect, authorized phone upload/readback, and physical reconstruction remain. |
 | 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, approved MRP/Q-pool calculations, expenses, fees, payouts, reconciliation, and director exports operate per event. | Manual pilot workflow implemented and deployed; ACC confirmation/rehearsal remains | **Implemented and deployed 2026-09-12; acceptance target 2026-09-17** | Correction-aware standings, immutable qualification, cutoff-tie rejection, HNQ ordering, playoff placement, manual MRP/Q-pool/award entry, payment/expense snapshots, cent-conserving finalization, private working-copy export, and an authorized-role final event-results PDF bound to exact finalized versions are live in Production. Hosted rollback fixtures pass on both databases; the production root/demo return 200, the private PDF route rejects an anonymous request, and the post-release runtime scan is clean. The server deliberately does not invent ACC formulas; current-effective ACC values and the director's completed rehearsal remain acceptance inputs. |
@@ -39,19 +39,12 @@ pilot time.
 
 ## Current highest-priority work
 
-1. Complete the actual October pilot roster, link the intended officials and
-   at least two independent
-   player accounts. A fresh read-only check on 2026-09-13 confirms the shared pilot has an activated setup,
-   two roster entries, two assigned official accounts (director and
-   co-director), and no cross-checkers, assigned player accounts, check-ins,
-   event enrollments, seating publication, or game schedule. Use the now-live
-   Cross-checker Assignments screen to assign at least two independent linked
-   officials. Then run setup → roster/check-in →
-   registration-close → seating → enrollment → schedule against that real
-   pilot data.
-2. Run the complete two-player, offline/reconnect, paper/hybrid, failed-device,
-   results/financial-finalization, backup/restore, and director rehearsal by
-   September 18.
+1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
+   identities. Complete setup → roster/check-in → registration-close → seating
+   → enrollment → schedule without altering the real October tournament.
+2. Run the complete independent-session, single-device outage, whole-venue
+   outage, paper/hybrid, failed-device, results/financial-finalization,
+   backup/restore, and director rehearsal by September 18.
 3. Record the current-effective ACC values used for MRP/Q-pool/payout entry and
    retain the manual reviewed finalization path; do not invent a formula.
 

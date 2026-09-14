@@ -1,7 +1,9 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 import { SharedDeviceSignOut } from "../components/shared-device-sign-out";
+import { DirectorAccessActions } from "../components/director-access-actions";
 import { getCurrentSubject } from "../lib/auth/current-subject";
+import { getDirectorAccessWorkspace } from "../lib/director-administration";
 import { allowsReviewPrototype } from "../lib/review-prototype-boundary";
 import { getAccessibleTournaments } from "../lib/tournaments/accessible-tournaments";
 import { TournamentDashboard } from "./tournament-dashboard";
@@ -31,7 +33,10 @@ export default async function HomePage() {
   })) {
     const subject = await getCurrentSubject();
     if (subject) {
-      const access = await getAccessibleTournaments(subject);
+      const [access, directorAccess] = await Promise.all([
+        getAccessibleTournaments(subject),
+        getDirectorAccessWorkspace(subject),
+      ]);
       return (
         <main className="auth-shell">
           <section className="auth-card tournament-chooser" aria-labelledby="welcome-title">
@@ -65,6 +70,7 @@ export default async function HomePage() {
                 <p>Please try this page again. Your account remains signed in.</p>
               </div>
             )}
+            {directorAccess ? <DirectorAccessActions access={directorAccess} /> : null}
             <Link className="secondary demo-choice" href="/demo">Explore the demonstration</Link>
             <SharedDeviceSignOut />
           </section>

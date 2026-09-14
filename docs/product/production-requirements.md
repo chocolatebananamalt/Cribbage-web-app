@@ -47,6 +47,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | R-EXP-01 | `acc-results-v1` is an internal director-assisted export pending an ACC golden contract | valid artifact downloads with schema/version and checksum | only export-specific unknowns block export; portal import/API is never claimed |
 | R-FIN-01 | Finance/reporting compliance gates reconcile fees, sanctioning fee, Q-pools, payouts, expenses, attachments, and required results | reconciled ledger matches approved result version and report | unreconciled money, missing required report field, or private-data leak blocks release/export |
 | R-FINAL-01 | Event finalization requires configured verification, dispute, finance, results, and director approval gates | complete event transitions through reconciliation to approved/final | unresolved dispute, unverified score, unreconciled ledger, or missing approval blocks finalization |
+| R-DIRECTOR-ADMIN-01 | App-owner/ACC-administrator approval governs self-service tournament creation; app approval is distinct from ACC verification | approved director creates a named/dated draft, becomes its primary director, and sees it under Your tournaments | player, unapproved, suspended, cross-account, duplicate, stale, or direct-browser-database creation is rejected and audited where applicable |
 | R-FLYER-01 | Flyer builder captures event formats, disclosures, payouts/qualifiers, and satellite details | approved flyer renders configured event information and Muggins disclosure | missing required disclosure or unsupported format claim blocks publication |
 | R-ATTACH-01 | Attachments are classified, access-controlled, retained, and linked to event/ledger/result records | allowed attachment is classified and auditable | unsupported type, oversize/private-source upload, wrong role, or unclassified financial evidence is rejected |
 | R-UX-01 | Friendly skunk bands, signed-in audience, cache permission, and measurable accessibility targets are explicit | icons and accessible scorecard pass phone/desktop checks | unofficial labels presented as ACC rules, anonymous access, stale/unpermitted cache, or accessibility failure is rejected |
@@ -107,6 +108,18 @@ Credential-based portal automation and automatic ACC submission are out of scope
 - Account authentication MUST use email magic links.
 - A permanent 4-digit PIN MAY be used only for check-in, shared-device confirmation, or the in-game/hybrid confirmation context. It MUST NOT be an account-login credential, password substitute, or role grant.
 - Tournament roles MUST be server-enforced and scoped to the tournament: director, co-director, player, cross checker, judge, and read-only/public viewer as applicable.
+- Platform administration MUST remain separate from tournament roles. An app
+  owner or designated ACC administrator may approve, reject, suspend, or
+  restore permission to create tournaments in this app. Only a designated ACC
+  administrator may label an approved account ACC-verified. Every accepted
+  application decision and authorization change is immutable-audited and does
+  not grant Supabase dashboard access.
+- An approved director MUST be able to create a tournament draft without owner
+  intervention. The server transaction records the creator, assigns that
+  creator as primary director, opens Set Up Tournament, and exposes the name
+  and local date in Your tournaments. It MUST be idempotent and prevent an
+  active same-creator/name/date duplicate. Players, unapproved directors, and
+  suspended directors MUST NOT create tournaments.
 - For the October pilot, a director or co-director MUST be able to assign an already-linked account in the same tournament as a cross checker. Assignment MUST be server-authorized, receipt-bound, immutable-audited, non-self, and unavailable for director/co-director/judge targets or accounts linked only to another tournament. Duplicate names MUST be distinguishable with a safe identity hint. The pilot screen is assignment-only; role revocation is not silently inferred from a missing checkbox and requires a later explicit evidence-preserving lifecycle.
 - A user MUST NOT cross-check or correct their own card.
 - Hidden standings, private finance, roster identity, and draft scores MUST be protected by server authorization and database policy, not UI hiding.
