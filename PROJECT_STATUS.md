@@ -1,5 +1,28 @@
 # Project Status
 
+## 2026-09-13 Full Rehearsal ownership correction
+
+- Corrected the existing `Full Rehearsal — 09-16-2026` draft in one
+  idempotent hosted transaction; no duplicate tournament was created. The app
+  owner is now its creator and sole primary director, and the previously
+  assigned approved director is now its co-director.
+- Preserved both global authorization boundaries: the app owner remains the
+  sole platform administrator and can approve directors/create tournaments;
+  the co-director remains separately approved to create her own tournaments
+  but has no Director Administration access.
+- The transaction retained the same rehearsal ID, confirmed the rehearsal was
+  unused and draft/open before mutation, and wrote operation receipt
+  `c1f5e650-187a-4a62-a360-54dcff8c0b52` plus three audit events describing
+  the ownership correction and both role changes.
+- Post-correction inspection confirms exactly one rehearsal, one primary
+  director, one co-director, and the correct Your tournaments role for both
+  accounts. The before/after checksum of every unrelated tournament and role
+  is unchanged:
+  `bc27ad8afb7783dbfdfcddfb52da14e93fe3982601b8d5ed3598fdd20542afed`.
+- This is an operational data correction only; product requirements and public
+  screens are unchanged. Repository, deployment, and runtime verification are
+  recorded in the corresponding quality evidence.
+
 ## 2026-09-13 director administration and Full Rehearsal release
 
 - Added private, server-enforced director applications and app-owner/ACC-admin

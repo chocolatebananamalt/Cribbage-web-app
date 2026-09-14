@@ -24,9 +24,13 @@ Browser database roles cannot call the underlying mutation functions directly.
 
 The approved pilot database contains one distinct draft named **Full Rehearsal
 — 09-16-2026**. It is separate from Pilot Tournament and October 3 Pilot
-Tournament and has the existing signed-in director account as its creator and
-primary director. Only fictional rehearsal identities and payment data may be
-added.
+Tournament. The app owner is its creator and sole primary director. The
+approved director mistakenly assigned during the original bootstrap is its
+co-director; she retains independent authorization to create her own
+tournaments but has no platform-administrator authority. The correction was
+made against the existing unused draft with an idempotent receipt and audit
+events, not by creating another rehearsal. Only fictional rehearsal identities
+and payment data may be added.
 
 ## Deferred extension
 
