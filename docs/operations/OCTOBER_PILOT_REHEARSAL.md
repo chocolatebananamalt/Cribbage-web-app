@@ -26,9 +26,11 @@ fictional. Do not use live October entrants until the rehearsal passes.
 ## Preflight
 
 1. Confirm Vercel Production reports READY for the reviewed release candidate.
-2. Confirm the Supabase migration history includes `0162`.
+2. Confirm the Supabase migration history includes `0163`.
 3. Confirm the Vercel runtime-error view is empty before the exercise.
-4. Create a clearly labeled rehearsal tournament and Standard Singles event.
+4. Open the distinct draft **Full Rehearsal — 09-16-2026** from **Your
+   tournaments** and configure its Standard Singles event. Do not reuse Pilot
+   Tournament or October 3 Pilot Tournament.
 5. Add the required fictional roster entries with explicit digital/paper
    scorecard choices; do not reuse the real October roster.
 6. Confirm the protected account-activation, cross-checker-assignment, and Rule
@@ -36,6 +38,20 @@ fictional. Do not use live October entrants until the rehearsal passes.
    October workflows are released and no longer depend on deployment toggles.
 
 ## Rehearsal sequence
+
+Use these six fictional identities in six independent sessions:
+
+1. primary director/player with a digital scorecard;
+2. co-director who does not play;
+3. cross-checker/player with a paper scorecard;
+4. cross-checker who does not play;
+5. player with a digital scorecard; and
+6. player with a paper scorecard.
+
+Prepare two paper scorecards, one camera-capable device, one sample roster CSV,
+cash/check test transactions, and predetermined results containing one mismatch
+and one correction. Every email, name, ACC number, and payment reference must
+be fictional.
 
 ### A. Identity, registration, and access
 
@@ -88,13 +104,23 @@ fictional. Do not use live October entrants until the rehearsal passes.
 
 ### F. Offline and failed-device recovery
 
-- Load the assigned game while online, then disconnect the phone.
-- Enter a score offline, reload/restart, and prove the pending entry remains.
-- Reconnect and verify exact-once replay and server reconciliation.
+- **Single-device outage:** load the assigned game while online, disconnect
+  only that device, enter a score, reload/restart, and prove the pending entry
+  remains. Reconnect and verify exact-once replay and server reconciliation.
 - Create a conflicting surviving entry and prove the conflict remains visible.
 - Simulate a lost phone. Rebuild synchronized games on a replacement device,
   then recover one unsynchronized result from opponent/paper evidence using two
   independent officials.
+- **Whole-venue outage:** sign in and open the rehearsal on every device while
+  internet is available. Put all devices on the same Wi-Fi/router or hotspot,
+  disable cellular data, and then disconnect that router's internet, switch off
+  the router, or turn off the hotspot. Record different results on the digital
+  devices while paper players continue on paper. Each digital device must say
+  its entry is stored locally and awaiting synchronization.
+- Restore the venue connection. Confirm every queued entry synchronizes with
+  no missing or duplicate score, compare reconstructed cards with the opposing
+  devices and paper cards, and confirm no game becomes Verified until the
+  required independent entries and confirmations arrive.
 
 ### G. Results and finances
 

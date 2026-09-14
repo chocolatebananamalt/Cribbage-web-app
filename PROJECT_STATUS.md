@@ -1,5 +1,31 @@
 # Project Status
 
+## 2026-09-13 director administration and Full Rehearsal candidate
+
+- Added private, server-enforced director applications and app-owner/ACC-admin
+  approve, reject, suspend, and restore operations. App authorization is
+  explicitly distinct from ACC verification, and only an ACC administrator can
+  set the latter.
+- Approved directors can now create an idempotent named/dated draft in the
+  existing app. One transaction records the creator, assigns the creator as
+  primary director, writes receipt/audit evidence, and exposes the draft under
+  Your tournaments. Players, unapproved accounts, suspended directors, and
+  browser database roles cannot use the mutations.
+- Applied migration 0163 and its rollback-only fixture to both the disposable
+  and approved pilot Supabase projects. The hosted pilot contains exactly one
+  distinct `Full Rehearsal — 09-16-2026` draft with open registration, matching
+  creator/primary-director IDs, one creation receipt, and one creation audit;
+  the prior Pilot and October 3 tournaments remain separate.
+- Expanded the physical runbook to the agreed six fictional identities and to
+  both single-device and whole-venue outages, including pre-authentication,
+  disabled cellular fallback, locally pending status, exact-once reconnect,
+  paper/opponent reconstruction, and independent verification.
+- `pnpm verify` passes 464/464 application tests, the production dependency
+  audit, lint, provider fallback preflight, Next.js production build, and 7/7
+  workspace checks. `pnpm verify:handoff` passes 6/6. Production deployment and
+  post-release browser/runtime proof remain for this candidate.
+- Evidence: `docs/quality/2026-09-13-director-administration-and-full-rehearsal.md`.
+
 ## 2026-09-13 traceability-summary reconciliation
 
 - Reconciled the historical `docs/product/requirements.md` status column with
