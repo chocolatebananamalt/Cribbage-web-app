@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-13 director administration and Full Rehearsal candidate
+## 2026-09-13 director administration and Full Rehearsal release
 
 - Added private, server-enforced director applications and app-owner/ACC-admin
   approve, reject, suspend, and restore operations. App authorization is
@@ -22,8 +22,12 @@
   paper/opponent reconstruction, and independent verification.
 - `pnpm verify` passes 464/464 application tests, the production dependency
   audit, lint, provider fallback preflight, Next.js production build, and 7/7
-  workspace checks. `pnpm verify:handoff` passes 6/6. Production deployment and
-  post-release browser/runtime proof remain for this candidate.
+  workspace checks. `pnpm verify:handoff` passes 6/6.
+- Merged PR #34 as `883331951cf5e0c7202113ea0603154085a96fbb` after both PR
+  verification jobs and Vercel preview passed. Production deployment
+  `dpl_9eTGgEts1soS1xAS7uv16ob4Gzuh` is READY on the stable aliases, the
+  post-merge `main` verification passes, the live 320/640/1280 demo gate passes
+  all 20 screens, and the post-release runtime-error scan is empty.
 - Evidence: `docs/quality/2026-09-13-director-administration-and-full-rehearsal.md`.
 
 ## 2026-09-13 traceability-summary reconciliation

@@ -58,4 +58,17 @@ complete.
 
 ## Deployment evidence
 
-Pending merge and Production promotion for this release candidate.
+- Merged [PR #34](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/34)
+  as commit `883331951cf5e0c7202113ea0603154085a96fbb` after both pull-request
+  verification jobs and the Vercel preview passed.
+- Vercel Production deployment `dpl_9eTGgEts1soS1xAS7uv16ob4Gzuh` is READY
+  with no alias error at `https://cribbage-web-app.vercel.app/`.
+- The post-merge `main` verification job passed.
+- `pnpm verify:live-demo` passed at 320, 640, and 1280 pixels across 20
+  distinct screens with no overflow, CSP violation, failed request, console
+  error, or page error.
+- Vercel reported no runtime-error clusters in the post-release interval.
+- A service-bound chooser check returns the rehearsal by its exact name/date
+  with the intended account's `director` role. The owner workspace reports
+  platform-admin and tournament-creation authority; the rehearsal director
+  reports creation authority without being mislabeled ACC-verified.
