@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-13 tournament setup input repair in verification
+
+- Repaired a presentation-layer regression that let the generic correction-
+  policy checkbox rule override every tournament setup text, date, and money
+  input to approximately 20×20 pixels. Setup-specific controls now retain
+  full-width, 46-pixel-minimum input dimensions and normal stacked labels at
+  phone and desktop widths.
+- Added persistent fee-includes helper text (`Coffee, donuts, lunch, etc.`),
+  concise Add Main Event/Add Q Pool instructions, and an explicit explanation
+  that shared-device clearing removes only this app’s local browser state—not
+  hosted tournament records, personal files, browser history, or other sites’
+  data. Existing unsynchronized-score protection and activation locking are
+  unchanged.
+- No database, API, tournament record, role, setup revision, event activation,
+  or release-gate behavior changed. Focused setup regressions pass; full build,
+  responsive browser, handoff, preview, and Production verification are in
+  progress.
+
 ## 2026-09-13 Full Rehearsal ownership correction
 
 - Corrected the existing `Full Rehearsal — 09-16-2026` draft in one

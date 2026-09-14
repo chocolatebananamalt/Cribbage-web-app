@@ -1,7 +1,7 @@
 # Canonical tournament setup contract
 
 Date: 2026-09-09
-Status: approved implementation boundary; no writer or UI exists yet.
+Status: implemented; UI usability clarified 2026-09-13.
 
 ## Decision
 
@@ -19,6 +19,15 @@ Finance features. Saving configuration will **not** publish a flyer, create an
 event, enroll a player, open registration, assign a seat, calculate a
 payout/qualification, create a result, create a financial obligation, or
 submit anything to ACC.
+
+The implemented setup editor keeps every tournament/event text, local
+date/time, and money control full-width and editable until activation. Button
+guidance makes the progressive disclosure explicit: **Add Main Event** reveals
+event fields, and **Add Q Pool** within Main or Consolation reveals pool type,
+fee, and optional note. Fee-includes examples are persistent helper text rather
+than a placeholder that disappears after typing. These are presentation and
+accessibility requirements only; they do not change the stored contract,
+activation boundary, roles, or operational records.
 
 ## Required configuration scope
 

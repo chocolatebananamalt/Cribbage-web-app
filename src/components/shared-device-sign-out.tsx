@@ -37,5 +37,5 @@ export function SharedDeviceSignOut() {
     }
   }
 
-  return <div className="shared-device-sign-out"><button type="button" className="secondary" onClick={signOut} disabled={busy}>{busy ? "Signing out…" : "Sign out and clear this device"}</button>{error ? <p className="error-text" role="alert">{error}</p> : null}</div>;
+  return <div className="shared-device-sign-out"><p className="auth-note">Use this when another person will use this phone, tablet, or browser. It signs you out and removes only this app&apos;s local browser session, unsent retry records, offline score entries, cached score pages, and device keys. It does not delete saved tournament records, personal files, browser history, or data from other websites.</p><button type="button" className="secondary" onClick={signOut} disabled={busy}>{busy ? "Signing out…" : "Sign out and clear this device"}</button>{error ? <p className="error-text" role="alert">{error}</p> : null}</div>;
 }
