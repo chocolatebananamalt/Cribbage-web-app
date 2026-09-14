@@ -307,6 +307,9 @@ test('protected screens offer a shared-device clear and local sign-out boundary'
   assert.match(control, /clearThenSignOut\(window\.sessionStorage/);
   assert.match(control, /fetch\("\/auth\/sign-out"/);
   assert.match(control, /window\.location\.replace\(destination\.toString\(\)\)/);
+  assert.match(control, /removes only this app&apos;s local browser session, unsent retry records, offline score entries, cached score pages, and device keys/);
+  assert.match(control, /does not delete saved tournament records, personal files, browser history, or data from other websites/);
+  assert.match(control, /Sign out and clear this device/);
   assert.match(signOut, /isSameOriginRequest\(request\)/);
   assert.match(signOut, /private, no-store/);
   assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
