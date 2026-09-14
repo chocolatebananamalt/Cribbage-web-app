@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-13 tournament setup input repair in verification
+## 2026-09-13 tournament setup input repair released
 
 - Repaired a presentation-layer regression that let the generic correction-
   policy checkbox rule override every tournament setup text, date, and money
@@ -14,9 +14,12 @@
   data. Existing unsynchronized-score protection and activation locking are
   unchanged.
 - No database, API, tournament record, role, setup revision, event activation,
-  or release-gate behavior changed. Focused setup regressions pass; full build,
-  responsive browser, handoff, preview, and Production verification are in
-  progress.
+  or release-gate behavior changed. Merged PR #38 as
+  `327d26901d24674ec360a7163b97bb405a9924e5` after both pull-request
+  verification jobs and the Vercel preview passed. Production deployment
+  `dpl_CVAvFXEhpmwFpPnKYWnWzuk7gzbZ` is READY, the post-merge main verification
+  passed, the live 320/640/1280 demo gate passed all 20 screens, and the
+  post-release Vercel runtime-error scan is empty.
 
 ## 2026-09-13 Full Rehearsal ownership correction
 

@@ -2,8 +2,7 @@
 
 Date: 2026-09-13
 Environment: Windows development worktree, Node 24, Chrome via
-`playwright-core`; Vercel preview/Production evidence is appended during
-release.
+`playwright-core`, GitHub Actions, and Vercel Production.
 
 ## Acceptance criteria
 
@@ -41,4 +40,16 @@ and are excluded from the release.
 
 ## Release evidence
 
-Pending preview and Production deployment verification.
+- PR #38 independently passed both GitHub `verify` jobs and the Vercel preview
+  deployment `dpl_27S2XWAMCJiHzzhzGKYvhrH8kkuJ`; the preview `/demo` returned
+  HTTP 200.
+- PR #38 merged as `327d26901d24674ec360a7163b97bb405a9924e5`.
+- Production deployment `dpl_CVAvFXEhpmwFpPnKYWnWzuk7gzbZ` reached READY and
+  is the exact merged commit.
+- The post-merge `main` GitHub verification passed in run `34830296578`.
+- `pnpm verify:live-demo` passed the release-gate/API probes and 21 visits over
+  20 distinct screens at each of 320px, 640px, and 1280px with no overflow,
+  CSP violation, HTTP failure, console error, or page error; both required PDFs
+  parsed successfully.
+- Vercel reported no grouped runtime errors in the 30-minute post-release
+  window after the smoke test.
