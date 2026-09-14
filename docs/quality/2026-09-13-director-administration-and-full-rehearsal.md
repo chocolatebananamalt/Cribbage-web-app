@@ -36,6 +36,30 @@ and rehearsal runbook
 - Existing Pilot Tournament and October 3 Pilot Tournament were not renamed,
   replaced, or reused.
 
+## Ownership-correction proof
+
+- Before mutation, a locked preflight confirmed the exact rehearsal was still
+  the single unused `draft` with open registration and zero setup revisions,
+  events, roster entries, participants, games, payments, or expenses.
+- One hosted transaction retained the rehearsal ID, changed its creator and
+  sole primary director to the app owner, changed the previously assigned
+  approved director to co-director, and preserved both accounts' separate
+  approved-director status.
+- Operation receipt `c1f5e650-187a-4a62-a360-54dcff8c0b52` exists exactly
+  once. Three associated audit events record the ownership correction, role
+  change, and primary-director assignment.
+- A post-transaction service-bound chooser check returns the exact rehearsal
+  to the app owner as `director` and to the friend as `co_director`. The owner
+  remains the platform administrator and both remain approved to create their
+  own tournaments; the friend has no Director Administration authority.
+- Exactly one rehearsal, one primary director, and one co-director remain.
+  The before/after checksum of all unrelated tournaments and their roles is
+  unchanged:
+  `bc27ad8afb7783dbfdfcddfb52da14e93fe3982601b8d5ed3598fdd20542afed`.
+- No product requirement or public screen changed; this correction reconciles
+  hosted operational data and the affected decision, memory, outline, status,
+  and evidence records.
+
 ## Repository proof
 
 - `pnpm verify`: pass — dependency audit has no known high production
@@ -69,6 +93,7 @@ complete.
   error, or page error.
 - Vercel reported no runtime-error clusters in the post-release interval.
 - A service-bound chooser check returns the rehearsal by its exact name/date
-  with the intended account's `director` role. The owner workspace reports
-  platform-admin and tournament-creation authority; the rehearsal director
-  reports creation authority without being mislabeled ACC-verified.
+  to the app owner with the `director` role and to the approved friend with the
+  `co_director` role. The owner workspace reports platform-admin and
+  tournament-creation authority; the friend reports creation authority without
+  Director Administration access or being mislabeled ACC-verified.
