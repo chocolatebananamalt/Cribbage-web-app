@@ -82,6 +82,14 @@ complete.
 
 ## Deployment evidence
 
+- The ownership correction merged in
+  [PR #36](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/36)
+  as commit `a818440958eef35aa931202a38a8d00be459cbc7` after both
+  pull-request verification jobs and the Vercel preview passed.
+- Vercel Production deployment `dpl_Aa9EuafSrDkHAuqYj4MLXJVNdqLB` is READY
+  for that exact commit. The post-merge `main` verification passed, both the
+  stable root and `/demo` returned HTTP 200, and the post-release Vercel
+  runtime-error scan found no clusters.
 - Merged [PR #34](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/34)
   as commit `883331951cf5e0c7202113ea0603154085a96fbb` after both pull-request
   verification jobs and the Vercel preview passed.

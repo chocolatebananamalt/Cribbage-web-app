@@ -22,6 +22,11 @@
 - This is an operational data correction only; product requirements and public
   screens are unchanged. Repository, deployment, and runtime verification are
   recorded in the corresponding quality evidence.
+- Merged PR #36 as `a818440958eef35aa931202a38a8d00be459cbc7`
+  after both pull-request verification jobs and the Vercel preview passed.
+  Production deployment `dpl_Aa9EuafSrDkHAuqYj4MLXJVNdqLB` is READY, the
+  post-merge main verification passed, the stable root and demo return HTTP
+  200, and the post-release Vercel runtime-error scan is empty.
 
 ## 2026-09-13 director administration and Full Rehearsal release
 
