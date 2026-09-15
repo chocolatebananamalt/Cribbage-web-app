@@ -3,6 +3,9 @@ import { isUuid } from "./validation.ts";
 export type ResultEventSummary = {
   eventId: string;
   name: string;
+  eventType: "main" | "consolation" | "satellite" | "custom";
+  format: "standard_singles" | "team" | "doubles" | "canadian_doubles" | "custom";
+  scoringMethod: "digital" | "manual" | "imported";
   participantCount: number;
 };
 
@@ -24,9 +27,12 @@ export function isTournamentResultEventSummary(value: unknown): value is Tournam
     && item.events.every((event) => {
       if (!event || typeof event !== "object" || Array.isArray(event)) return false;
       const candidate = event as Record<string, unknown>;
-      return exact(candidate, ["eventId", "name", "participantCount"])
+      return exact(candidate, ["eventId", "name", "eventType", "format", "scoringMethod", "participantCount"])
         && isUuid(candidate.eventId)
         && typeof candidate.name === "string" && candidate.name.length > 0
+        && ["main", "consolation", "satellite", "custom"].includes(candidate.eventType as string)
+        && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(candidate.format as string)
+        && ["digital", "manual", "imported"].includes(candidate.scoringMethod as string)
         && Number.isSafeInteger(candidate.participantCount) && (candidate.participantCount as number) >= 0;
     });
 }

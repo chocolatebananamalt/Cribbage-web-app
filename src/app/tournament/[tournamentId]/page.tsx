@@ -31,6 +31,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/schedule`}>Game schedule</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
+        {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link> : null}
         {canViewResults ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Tournament Results</Link> : null}
         <SharedDeviceSignOut />
       </section>

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { isEventScheduleRequest, isEventScheduleResult, isEventScheduleWorkspace, parseScheduleCsv, validateScheduleForEvent } from "../src/lib/api/event-schedule.ts";
+import { isEventScheduleRequest, isEventScheduleResult, isEventScheduleWorkspace, isEventStartRequest, isEventStartResult, parseScheduleCsv, validateScheduleForEvent } from "../src/lib/api/event-schedule.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const eventId = "10000000-0000-4000-8000-000000000001";
@@ -40,9 +40,10 @@ test("request, result, and workspace validators bind exact shapes", () => {
   assert.equal(isEventScheduleResult({ ...result, matchCount: 1 }, request), false);
   const workspace = {
     tournamentName: "October Pilot",
+    registrationClosed: true,
     tableCount: 1,
     seatsPerTable: 2,
-    events: [{ eventId, name: "Main", format: "standard_singles", scoringMethod: "digital", gameCount: 2, participantCount: 2, schedulePublished: true, publishedMatchCount: 2 }],
+    events: [{ eventId, name: "Main", format: "standard_singles", scoringMethod: "digital", gameCount: 2, participantCount: 2, schedulePublished: true, schedulePublicationId: result.publicationId, participantSnapshotDigest: "a".repeat(64), publishedMatchCount: 2, playState: "ready_to_start", startedAt: null, startedBy: null }],
     participants: [{ eventId, participantId: "40000000-0000-4000-8000-000000000004", displayName: "Sample One", verificationId: "A-1", profileLinked: true }],
     matches: [{ ...matches[0], eventId, canonicalGameId: "50000000-0000-4000-8000-000000000005", sideADisplayName: "Sample One", sideBDisplayName: "Sample Two", state: "pending" }],
   };
@@ -50,6 +51,36 @@ test("request, result, and workspace validators bind exact shapes", () => {
   assert.equal(isEventScheduleWorkspace({ ...workspace, tableCount: null, seatsPerTable: null }), true);
   assert.equal(isEventScheduleWorkspace({ ...workspace, tableCount: 1, seatsPerTable: null }), false);
   assert.equal(isEventScheduleWorkspace({ ...workspace, matches: [{ ...workspace.matches[0], state: "invented" }] }), false);
+  const startRequest = { eventId, schedulePublicationId: result.publicationId, participantSnapshotDigest: "a".repeat(64), expectedParticipantCount: 2, expectedGameCount: 2, confirmed: true, idempotencyKey: operationId };
+  assert.equal(isEventStartRequest(startRequest), true);
+  assert.equal(isEventStartRequest({ ...startRequest, confirmed: false }), false);
+  assert.equal(isEventStartRequest({ ...startRequest, participantSnapshotDigest: "short" }), false);
+  assert.equal(isEventStartResult({ status: "event_started", eventId, startId: "60000000-0000-4000-8000-000000000006", participantCount: 2, gameCount: 2, scheduleMatchCount: 2, playState: "in_progress" }, startRequest), true);
+});
+
+test("event start is append-only, exact-snapshot bound, role protected, and gates every score evidence table", () => {
+  const sql = read("database/migrations/0164_event_play_start_lifecycle.sql");
+  const route = read("src/app/api/v1/tournaments/[id]/event-start/route.ts");
+  const client = read("src/app/tournament/[tournamentId]/schedule/schedule-client.tsx");
+  assert.match(sql, /create table app\.event_play_starts/);
+  assert.match(sql, /event_play_starts_immutable/);
+  assert.match(sql, /registration_status='closed'/);
+  assert.match(sql, /role_row\.role in\('director','co_director'\)/);
+  assert.match(sql, /stale_roster_or_schedule/);
+  assert.match(sql, /participant_snapshot_digest/);
+  assert.match(sql, /score_submissions_require_event_start/);
+  assert.match(sql, /score_confirmations_require_event_start/);
+  assert.match(sql, /paper_game_completions_require_event_start/);
+  assert.match(sql, /device_failure_recoveries_require_event_start/);
+  assert.match(sql, /then 'not_started'/);
+  assert.match(sql, /grant execute on function public\.start_event_play_v1[\s\S]*to service_role/);
+  assert.doesNotMatch(sql, /grant execute on function public\.start_event_play_v1\(uuid,uuid,uuid,uuid,text,integer,integer,boolean,uuid\)\s+to authenticated/);
+  assert.match(route, /isSameOriginRequest/);
+  assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /createServerOnlyAdminClient/);
+  assert.match(client, /Final Start Confirmation/);
+  assert.match(client, /Start \$\{activeEvent\.name\}/);
+  assert.match(client, /registration is closed/);
 });
 
 test("migration publishes atomically through service-only RPC and protects schedule assignments", () => {

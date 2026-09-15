@@ -21,6 +21,7 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ t
     <p className="auth-note">Enroll checked-in players in each Standard Singles event. A player without app access remains a paper participant; the event and scorecard record still exist for cross-checking.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
     <ParticipantsClient actorId={access.user.id} tournamentId={tournamentId} workspace={workspace} />
+    <Link className="guide-link" href={`/tournament/${tournamentId}/participant-status`}>Attendance, Disqualification, and Reinstatement</Link>
     <SharedDeviceSignOut />
   </section></main>;
 }
