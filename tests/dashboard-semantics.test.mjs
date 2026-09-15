@@ -169,8 +169,9 @@ test("October pilot event summary distinguishes configured events from deferred 
   assert.match(events, /\["Main Event", "Standard · 12 games", "Configured"\]/);
   assert.match(events, /\["Consolation Event", "Standard · 9 games", "Configured"\]/);
   assert.match(events, /\["Satellite Events", "Each configured event appears here", "View events"\]/);
-  assert.match(events, /Use paper scorecards for the October pilot/);
-  assert.match(events, /Digital scoring deferred/);
+  assert.match(events, /Traditional\/Canadian Doubles · shared Digital or Paper card/);
+  assert.match(events, /October ready/);
+  assert.doesNotMatch(events, /Digital scoring deferred/);
   assert.match(events, /Flyer creation/);
 });
 

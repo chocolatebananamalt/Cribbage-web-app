@@ -32,7 +32,7 @@ test("operations UI exposes explicit start, live preliminary state, side pools, 
     assert.match(statuses, new RegExp(action));
 });
 
-test("side pools remain distinct from Q pools and future teams cannot activate digital scoring", () => {
+test("the historical four-pool and paper-team foundation remains separate from Q pools", () => {
   const sql = read("database/migrations/0165_side_pools_and_team_foundation.sql");
   assert.match(sql, /event_side_pool_definition_versions/);
   assert.match(sql, /event_side_pool_election_versions/);

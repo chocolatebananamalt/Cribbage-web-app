@@ -96,7 +96,7 @@ tournament participants.
 | Qualification order, playoff count, bracket, and bye fixtures | Automated fixtures complete; current-effective ACC acceptance remains | 2026-09-17 |
 | Event styles, game-count options, sanctioning fields, role vocabulary, and rotation-exception sources | Complete for the defined operations — the 2019 Manual/2025 Rulebook drive fixed outcomes; mixed rotations use a validated, audited director-entered correction because no automatic pairing is prescribed | 2026-09-14 |
 | MRP, Q-pool, payout, and reporting-source inventory | In progress — Codex must exhaust cached/public schedules and build fixtures before requesting any missing current-effective confirmation | 2026-09-16 |
-| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Implemented for the Standard Singles pilot; final dated evidence reconciliation remains | 2026-09-17 |
+| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Implemented for Standard Singles and supported two-person Traditional/Canadian Doubles; final dated evidence reconciliation remains | 2026-09-17 |
 
 ### Part B — ACC/director confirmations needed
 
