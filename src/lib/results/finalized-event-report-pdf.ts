@@ -1,6 +1,7 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 
 import type { FinalizedEventReport } from "../api/finalized-event-report.ts";
+import type { SidePool } from "../api/side-pools.ts";
 
 const PAGE_WIDTH = 612;
 const PAGE_HEIGHT = 792;
@@ -39,7 +40,7 @@ function wrap(text: string, font: PDFFont, size: number, width: number) {
   return lines.length ? lines : [""];
 }
 
-export async function buildFinalizedEventReportPdf(report: FinalizedEventReport) {
+export async function buildFinalizedEventReportPdf(report: FinalizedEventReport, sidePools: SidePool[] = []) {
   const document = await PDFDocument.create();
   document.setTitle(`${report.tournamentName} - ${report.eventName} Results`);
   document.setSubject("Finalized tournament event results");
@@ -111,6 +112,14 @@ export async function buildFinalizedEventReportPdf(report: FinalizedEventReport)
   columns([{ text: "High Non-Qualifier", x: 0, width: 120, bold: true },
     { text: report.highNonQualifier.displayName, x: 125, width: 210, bold: true },
     { text: `${report.highNonQualifier.gamePoints} GP / ${report.highNonQualifier.gamesWon} won / +${report.highNonQualifier.plusPoints} / -${report.highNonQualifier.minusPoints} / ${signed(report.highNonQualifier.netSpreadPoints)} net`, x: 345, width: 195 }]);
+
+  if (sidePools.length) {
+    section("Side Pools");
+    for (const pool of sidePools) {
+      line(`${pool.displayName}: collected ${usd(pool.collectedMinor)}; paid ${usd(pool.paidMinor)}; ${pool.finalized ? "finalized" : "open"}.`, { font: bold, size: 9 });
+      for (const payout of pool.payouts) line(`${payout.placement}. ${payout.displayName} - ${usd(payout.amountMinor)}`, { size: 8, gap: 0 });
+    }
+  }
 
   section("Record Details");
   line(`Participants: ${report.participantCount} | Qualifiers: ${report.qualifierCount} | Currency: ${report.currencyCode}`, { size: 8, gap: 0 });
