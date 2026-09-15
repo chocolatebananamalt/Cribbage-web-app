@@ -28,6 +28,15 @@ Date: 2026-09-14
 - `pnpm verify:handoff` passes 6/6 local handoff checks. Focused team,
   Side-Pool, privacy, correction, qualification-tie, and offline-retry checks
   also pass.
+- PR #43 passed both GitHub `verify` runs and Vercel Preview, then merged as
+  `19a225a48a75bf72080de7e640ee5ae406edfe22`. Production deployment
+  `dpl_FJVBdc5yiiCEs6dTrn5S9p2EScGV` is READY at
+  `https://cribbage-web-app.vercel.app`.
+- Production public-demo smoke: the Score Entry flow rendered and advanced to
+  **Review Current Game Result** at desktop and 375px phone widths; no page or
+  browser-console errors occurred, and the phone width had no horizontal
+  overflow. Vercel runtime errors and error/fatal logs for the one-hour
+  post-release window were empty.
 
 ## Deliberate remaining gates
 

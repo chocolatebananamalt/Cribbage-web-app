@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-14 approved October standard correction — hosted implementation complete; deployment and physical acceptance pending
+## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 
 - The October 3 release is no longer Standard-Singles-only. Two-person
   Traditional Doubles and Canadian Doubles must support captain-selected shared
@@ -16,9 +16,17 @@
   digital team paths, passed without retaining test data. Local verification
   passes 509 tests, lint, dependency audit, provider checks, a production
   build, workspace checks, and private-handoff verification.
-- Production deployment, runtime/browser smoke evidence, and the physical
-  independent-session rehearsal remain release gates. They are not being
-  represented as complete by this entry.
+- PR #43 merged as `19a225a48a75bf72080de7e640ee5ae406edfe22`; Production
+  deployment `dpl_FJVBdc5yiiCEs6dTrn5S9p2EScGV` is READY on
+  `cribbage-web-app.vercel.app`. The public demo passed desktop and 375px
+  phone rendering, interaction through result review, zero browser console or
+  page errors, and no horizontal overflow. Vercel's post-release one-hour
+  runtime-error scan is empty.
+- The physical independent-session rehearsal remains the release gate. It is
+  not represented as complete: six separate accounts/devices must prove
+  Digital/Digital, Digital/Paper, Paper/Paper, team scoring, device-level and
+  venue-wide offline recovery, then human review of standings and financial
+  reconciliation.
 
 ## 2026-09-14 tournament operations lifecycle implementation
 
