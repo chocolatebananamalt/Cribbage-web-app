@@ -2,7 +2,7 @@ import { isUuid } from "./validation.ts";
 
 type RpcClient = { rpc(name: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }> };
 type Choice = { participantId: string; displayName: string; qualificationRank: number };
-export type PlayoffPlacement = { participantId: string; placement: number };
+export type PlayoffPlacement = { participantId: string; placement: number; mrpPlayoffExitRound: number };
 export type PlayoffPlacementRequest = {
   qualificationResultVersionId: string;
   expectedVersion: number;
@@ -33,7 +33,7 @@ export type PlayoffPlacementWorkspace = {
     recordedBy: string;
     placements: Array<PlayoffPlacement & { displayName: string }>;
   };
-  capabilities: { mrpCalculation: false; qPoolCalculation: false; payoutCalculation: false; publication: false };
+  capabilities: { mrpCalculation: true; qPoolCalculation: false; payoutCalculation: false; publication: false };
 };
 
 const rejectionCodes = new Set(["tournament_unavailable", "not_director", "qualification_result_unavailable", "stale_version", "invalid_placements", "invalid_request", "idempotency_conflict"]);
@@ -45,7 +45,8 @@ const text = (value: unknown) => typeof value === "string" && value.trim().lengt
 const nullableUuid = (value: unknown) => value === null || isUuid(value);
 
 function placement(value: unknown): value is PlayoffPlacement {
-  return record(value) && exact(value, ["participantId", "placement"]) && isUuid(value.participantId) && whole(value.placement, 1);
+  return record(value) && exact(value, ["participantId", "placement", "mrpPlayoffExitRound"])
+    && isUuid(value.participantId) && whole(value.placement, 1) && whole(value.mrpPlayoffExitRound, 1) && (value.mrpPlayoffExitRound as number) <= 9;
 }
 function choice(value: unknown): value is Choice {
   return record(value) && exact(value, ["participantId", "displayName", "qualificationRank"])
@@ -78,24 +79,25 @@ export function isPlayoffPlacementWorkspace(value: unknown, tournamentId: string
     || value.tournamentId !== tournamentId || value.eventId !== eventId || !isUuid(value.qualificationResultVersionId)
     || !whole(value.currentVersion) || !Array.isArray(value.qualifierChoices) || !value.qualifierChoices.every(choice)
     || !record(value.capabilities) || !exact(value.capabilities, ["mrpCalculation", "qPoolCalculation", "payoutCalculation", "publication"])
-    || Object.values(value.capabilities).some((item) => item !== false)) return false;
+    || value.capabilities.mrpCalculation !== true || value.capabilities.qPoolCalculation !== false
+    || value.capabilities.payoutCalculation !== false || value.capabilities.publication !== false) return false;
   if (value.playoffResult === null) return value.currentVersion === 0;
   const result = value.playoffResult;
   return record(result) && exact(result, ["playoffResultVersionId", "version", "recordedAt", "recordedBy", "placements"])
     && isUuid(result.playoffResultVersionId) && result.version === value.currentVersion && timestamp(result.recordedAt)
     && text(result.recordedBy) && Array.isArray(result.placements) && result.placements.every((item, index) =>
-      record(item) && exact(item, ["participantId", "displayName", "placement"]) && isUuid(item.participantId)
-      && text(item.displayName) && item.placement === index + 1);
+      record(item) && exact(item, ["participantId", "displayName", "placement", "mrpPlayoffExitRound"]) && isUuid(item.participantId)
+        && text(item.displayName) && item.placement === index + 1 && whole(item.mrpPlayoffExitRound, 1) && (item.mrpPlayoffExitRound as number) <= 9);
 }
 
 export async function getPlayoffPlacementWorkspace(admin: RpcClient, actorId: string, tournamentId: string, eventId: string) {
   if (![actorId, tournamentId, eventId].every(isUuid)) throw new Error("Playoff placement workspace is unavailable.");
-  const { data, error } = await admin.rpc("get_standard_singles_playoff_placement_workspace_v1", { p_actor_id: actorId, p_tournament_id: tournamentId, p_event_id: eventId });
+  const { data, error } = await admin.rpc("get_standard_singles_playoff_placement_workspace_v2", { p_actor_id: actorId, p_tournament_id: tournamentId, p_event_id: eventId });
   return error || !isPlayoffPlacementWorkspace(data, tournamentId, eventId) ? null : data;
 }
 
 export function recordPlayoffPlacements(admin: RpcClient, actorId: string, tournamentId: string, eventId: string, request: PlayoffPlacementRequest) {
-  return admin.rpc("record_standard_singles_playoff_placements_v1", {
+  return admin.rpc("record_standard_singles_playoff_placements_v2", {
     p_actor_id: actorId, p_tournament_id: tournamentId, p_event_id: eventId,
     p_qualification_result_version_id: request.qualificationResultVersionId,
     p_expected_version: request.expectedVersion, p_placements: request.placements, p_operation_id: request.idempotencyKey,

@@ -14,7 +14,7 @@ const REJECTIONS = new Set([
   "tournament_unavailable", "not_director", "qualification_result_unavailable",
   "activated_setup_unavailable", "stale_version", "invalid_claims", "invalid_request",
   "playoff_result_unavailable", "playoff_placement_mismatch", "idempotency_conflict",
-  "mrp_claim_scope_unavailable", "invalid_mrp_claims",
+  "mrp_claim_scope_unavailable", "invalid_mrp_claims", "automatic_mrp_unavailable", "automatic_mrp_mismatch",
 ]);
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -101,7 +101,11 @@ export type SettlementWorkspace = {
     reconciled: false;
     blockers: string[];
   };
-  capabilities: { publication: false; approval: false; officialExport: false; mrpTranscription: true; mrpCalculation: false };
+  capabilities: { publication: false; approval: false; officialExport: false; mrpTranscription: false; mrpCalculation: true };
+  automaticMrp: { status: "available"; sourceVersion: string; effectiveDate: "2016-08-01"; rows: Array<{
+    participantId: string; displayName: string; qualificationRank: number; gamePoints: number;
+    qualifyingMrp: number; playoffMrp: number; totalMrp: number; evidenceNote: string;
+  }> } | { status: "blocked"; sourceVersion: string; effectiveDate: "2016-08-01"; code: string };
 };
 
 function placement(value: unknown): value is SettlementPlacement {
@@ -161,7 +165,7 @@ export function isRejectedSettlementDraft(value: unknown, eventId: string) {
 }
 
 export function isSettlementWorkspace(value: unknown, tournamentId: string, eventId: string): value is SettlementWorkspace {
-  if (!record(value) || !exact(value, ["tournamentId", "eventId", "qualificationResultVersionId", "currencyCode", "currentVersion", "qualifierChoices", "configuredQPools", "playoffResult", "draft", "capabilities"])
+  if (!record(value) || !exact(value, ["tournamentId", "eventId", "qualificationResultVersionId", "currencyCode", "currentVersion", "qualifierChoices", "configuredQPools", "playoffResult", "draft", "capabilities", "automaticMrp"])
     || value.tournamentId !== tournamentId || value.eventId !== eventId || !isUuid(value.qualificationResultVersionId)
     || value.currencyCode !== "USD" || !whole(value.currentVersion) || !Array.isArray(value.qualifierChoices)
     || !value.qualifierChoices.every((item) => record(item) && exact(item, ["participantId", "displayName", "qualificationRank"])
@@ -178,8 +182,15 @@ export function isSettlementWorkspace(value: unknown, tournamentId: string, even
         && text(item.displayName) && item.placement === index + 1)))
     || !record(value.capabilities) || !exact(value.capabilities, ["publication", "approval", "officialExport", "mrpTranscription", "mrpCalculation"])
     || value.capabilities.publication !== false || value.capabilities.approval !== false
-    || value.capabilities.officialExport !== false || value.capabilities.mrpTranscription !== true
-    || value.capabilities.mrpCalculation !== false) return false;
+    || value.capabilities.officialExport !== false || value.capabilities.mrpTranscription !== false
+    || value.capabilities.mrpCalculation !== true || !record(value.automaticMrp)
+    || typeof value.automaticMrp.sourceVersion !== "string" || value.automaticMrp.effectiveDate !== "2016-08-01"
+    || !["available", "blocked"].includes(String(value.automaticMrp.status))) return false;
+  if (value.automaticMrp.status === "available" && (!Array.isArray(value.automaticMrp.rows)
+    || !value.automaticMrp.rows.every((item) => record(item) && exact(item, ["participantId", "displayName", "qualificationRank", "gamePoints", "qualifyingMrp", "playoffMrp", "totalMrp", "evidenceNote"])
+      && isUuid(item.participantId) && text(item.displayName) && whole(item.qualificationRank, 1) && whole(item.gamePoints)
+      && whole(item.qualifyingMrp) && whole(item.playoffMrp) && whole(item.totalMrp) && text(item.evidenceNote)))) return false;
+  if (value.automaticMrp.status === "blocked" && typeof value.automaticMrp.code !== "string") return false;
   if (value.draft === null) return true;
   const qualifierChoices = value.qualifierChoices as SettlementWorkspace["qualifierChoices"];
   const draft = value.draft;
@@ -201,7 +212,7 @@ export function isSettlementWorkspace(value: unknown, tournamentId: string, even
 
 export async function getSettlementWorkspace(admin: RpcClient, actorId: string, tournamentId: string, eventId: string) {
   if (![actorId, tournamentId, eventId].every(isUuid)) throw new Error("Settlement workspace is unavailable.");
-  const { data, error } = await admin.rpc("get_standard_singles_settlement_workspace_v3", {
+  const { data, error } = await admin.rpc("get_standard_singles_settlement_workspace_v4", {
     p_actor_id: actorId, p_tournament_id: tournamentId, p_event_id: eventId,
   });
   if (error || !isSettlementWorkspace(data, tournamentId, eventId)) return null;
@@ -209,7 +220,7 @@ export async function getSettlementWorkspace(admin: RpcClient, actorId: string, 
 }
 
 export async function saveSettlementDraft(admin: RpcClient, actorId: string, tournamentId: string, eventId: string, request: SettlementDraftRequest) {
-  return admin.rpc("save_standard_singles_settlement_draft_v3", {
+  return admin.rpc("save_standard_singles_settlement_draft_v4", {
     p_actor_id: actorId, p_tournament_id: tournamentId, p_event_id: eventId,
     p_qualification_result_version_id: request.qualificationResultVersionId,
     p_playoff_result_version_id: request.playoffResultVersionId,

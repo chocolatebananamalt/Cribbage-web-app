@@ -14,8 +14,8 @@ function requestFromEnvelope({ kind: _kind, ...request }: Envelope): PlayoffPlac
 }
 
 function initialRows(workspace: PlayoffPlacementWorkspace) {
-  return workspace.playoffResult?.placements.map(({ participantId, placement }) => ({ participantId, placement }))
-    ?? [{ participantId: "", placement: 1 }, { participantId: "", placement: 2 }];
+  return workspace.playoffResult?.placements.map(({ participantId, placement, mrpPlayoffExitRound }) => ({ participantId, placement, mrpPlayoffExitRound }))
+    ?? workspace.qualifierChoices.map((choice, index) => ({ participantId: choice.participantId, placement: index + 1, mrpPlayoffExitRound: 1 }));
 }
 
 function readEnvelope(key: string): Envelope | null {
@@ -86,7 +86,7 @@ export default function PlayoffPlacementClient({ actorId, tournamentId, eventId,
 
   return <section className="policy-settings" aria-labelledby="playoff-placement-title">
     <h2 id="playoff-placement-title">Supervised playoff placements</h2>
-    <p className="registration-note"><strong>Separate result record.</strong> Record the observed playoff finish here. Qualifying-round rank remains unchanged, and this does not calculate MRPs, Q-pools, prizes, or payouts.</p>
+    <p className="registration-note"><strong>Separate result record.</strong> Record every qualifier&apos;s playoff finish and exit round here. The server uses the ACC published MRP schedule effective August 1, 2016; Qualifying-round rank remains unchanged. An exit round is the round in which the player lost or won; a bye counts as a round.</p>
     <form onSubmit={(event) => { event.preventDefault(); void save(); }}>
       <fieldset disabled={busy}>
         <legend>Winner, runner-up, and recorded places</legend>
@@ -97,13 +97,14 @@ export default function PlayoffPlacementClient({ actorId, tournamentId, eventId,
               {workspace.qualifierChoices.map((choice) => <option key={choice.participantId} value={choice.participantId}>{choice.displayName} · qualifying rank {choice.qualificationRank}</option>)}
             </select>
           </label>
-          {placements.length > 2 && index === placements.length - 1 ? <button className="secondary" type="button" onClick={() => setPlacements((current) => current.slice(0, -1))}>Remove Place</button> : null}
+          <label>MRP playoff exit round
+            <input type="number" min="1" max="9" value={entry.mrpPlayoffExitRound} onChange={(event) => setPlacements((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, mrpPlayoffExitRound: Number(event.target.value) } : item))} />
+          </label>
         </div>)}
-        <button className="secondary" type="button" disabled={placements.length >= workspace.qualifierChoices.length} onClick={() => setPlacements((current) => [...current, { participantId: "", placement: current.length + 1 }])}>Add Placement</button>
       </fieldset>
       <button className="primary" type="submit" disabled={busy}>{busy ? "Checking…" : `Record Playoff Result Version ${workspace.currentVersion + 1}`}</button>
     </form>
     {message ? <p className="error-text" role="alert">{message}</p> : null}
-    {workspace.playoffResult ? <section className="correction-item"><h3>Current recorded playoff result</h3><p>Version {workspace.playoffResult.version} by {workspace.playoffResult.recordedBy}</p><ol>{workspace.playoffResult.placements.map((entry) => <li key={entry.participantId}>{entry.displayName} — {entry.placement === 1 ? "Winner" : entry.placement === 2 ? "Runner-up" : `Place ${entry.placement}`}</li>)}</ol></section> : null}
+    {workspace.playoffResult ? <section className="correction-item"><h3>Current recorded playoff result</h3><p>Version {workspace.playoffResult.version} by {workspace.playoffResult.recordedBy}</p><ol>{workspace.playoffResult.placements.map((entry) => <li key={entry.participantId}>{entry.displayName} — {entry.placement === 1 ? "Winner" : entry.placement === 2 ? "Runner-up" : `Place ${entry.placement}`} · MRP exit round {entry.mrpPlayoffExitRound}</li>)}</ol></section> : null}
   </section>;
 }

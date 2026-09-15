@@ -18,7 +18,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
     const actorId = await requireVerifiedSubject(await createClient());
     if (!actorId) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await createServerOnlyAdminClient().rpc("get_standard_singles_settlement_reconciliation_v3", {
+    const { data, error } = await createServerOnlyAdminClient().rpc("get_standard_singles_settlement_reconciliation_v4", {
       p_actor_id: actorId, p_tournament_id: id, p_event_id: eventId, p_operation_id: body.idempotencyKey,
     });
     if (error || !data || typeof data !== "object" || Array.isArray(data)

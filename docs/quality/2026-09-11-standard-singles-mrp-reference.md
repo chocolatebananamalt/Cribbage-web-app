@@ -1,7 +1,14 @@
 # Standard Singles MRP reference fixture
 
 **Date:** 2026-09-11  
-**Status:** Reference-only implementation; official award activation blocked
+**Status:** Historical reference fixture; superseded for supported production calculation on 2026-09-14
+
+> **Superseding update — 2026-09-14:** The owner approved server-only automatic
+> calculation for supported Standard Main/Consolation events using the published
+> source named below. Migration `0190_automatic_standard_singles_mrp_results`
+> persists source version `acc-published-mrp-2016-08-01` and effective date
+> `2016-08-01`, rejects incomplete playoff-exit-round data, and never calculates
+> Satellite MRPs. This document retains the original discovery evidence.
 
 ## Source findings
 
@@ -19,16 +26,17 @@
   the published five-point schedule and playoffs use the 7+7 sequence;
   Consolation uses the three-point schedule and 4+4 sequence. Both state that
   byes count as a playoff win and no later MRP is earned after a loss.
-- The live official page and recent 2026 results corroborate continued use,
-  but do not constitute the repository-required ACC authorization that the
-  2016 effective date remains approved for this release.
+- The live official page and recent 2026 results corroborate continued use. The
+  owner chose the source-versioned published schedule as the calculation basis
+  for the rehearsal and supported October scope; automatic ACC submission
+  remains outside this decision.
 
 ## Implemented boundary
 
-`calculateStandardSinglesMrpReference` reproduces the published schedule for
-supported Standard Main/Consolation inputs. Every successful result carries a
-version and `currentEffectiveApproved: false`. It is deliberately not wired to
-the settlement database, results UI, export, or reconciliation.
+`calculateStandardSinglesMrpReference` remains a deterministic fixture for the
+published schedule. The production settlement path now independently uses the
+equivalent server-only calculation, bound to an exact qualification/playoff
+result and automatic source/effective-date evidence.
 
 The calculator rejects unsupported event/game types, invalid scores or ranks,
 top-half scores below the published table, and invalid playoff rounds. The
@@ -39,16 +47,14 @@ remaining seven received the fixed five, so the fixture uses
 
 ## Remaining blockers ranked by evidence
 
-1. **Current-effective approval:** required before any calculated MRP becomes
-   an official saved award.
-2. **Playoff authority:** verified exit-round/byes data must be persisted; paid
+1. **Playoff authority:** verified exit-round/byes data must be persisted; paid
    placement alone is not a safe substitute.
-3. **Q-pools:** equal and graduated concepts are published, but allocation,
+2. **Q-pools:** equal and graduated concepts are published, but allocation,
    rounding/remainder, eligibility, and approval fixtures are incomplete.
-4. **Event prize payouts:** the only public percentage sheet is explicitly a
+3. **Event prize payouts:** the only public percentage sheet is explicitly a
    sample and remains non-machine-reviewable; no official automatic schedule
    is available.
-5. **Double elimination/Consy Lite:** outside the October digital-scoring
+4. **Double elimination/Consy Lite:** outside the October digital-scoring
    boundary and lacking the same effective-date confidence.
 
 ## Verification

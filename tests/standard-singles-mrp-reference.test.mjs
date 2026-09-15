@@ -8,8 +8,8 @@ function calculate(overrides = {}) {
 }
 
 test("matches the published Standard Main and Consolation qualifying schedules", () => {
-  assert.deepEqual(calculate(), { status: "reference_only", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: false, qualifyingMrp: 35, playoffMrp: 70, totalMrp: 105 });
-  assert.deepEqual(calculate({ eventType: "consolation", gameCount: 9, qualificationRank: 2, gamePoints: 17 }), { status: "reference_only", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: false, qualifyingMrp: 18, playoffMrp: 40, totalMrp: 58 });
+  assert.deepEqual(calculate(), { status: "published_schedule", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: true, qualifyingMrp: 35, playoffMrp: 70, totalMrp: 105 });
+  assert.deepEqual(calculate({ eventType: "consolation", gameCount: 9, qualificationRank: 2, gamePoints: 17 }), { status: "published_schedule", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: true, qualifyingMrp: 18, playoffMrp: 40, totalMrp: 58 });
   assert.equal(calculate({ qualificationRank: 8, gamePoints: 0, playoffExitRound: 1 }).qualifyingMrp, 5);
   assert.equal(calculate({ eventType: "consolation", gameCount: 7, qualificationRank: 8, gamePoints: 0, playoffExitRound: 1 }).qualifyingMrp, 3);
   assert.equal(calculate({ gameCount: 22, qualifierCount: 15, qualificationRank: 8, gamePoints: 30 }).qualifyingMrp, 20);
@@ -17,7 +17,7 @@ test("matches the published Standard Main and Consolation qualifying schedules",
 });
 
 test("keeps incomplete playoff results incomplete instead of inventing a round", () => {
-  assert.deepEqual(calculate({ playoffExitRound: null }), { status: "reference_only", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: false, qualifyingMrp: 35, playoffMrp: null, totalMrp: null });
+  assert.deepEqual(calculate({ playoffExitRound: null }), { status: "published_schedule", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: true, qualifyingMrp: 35, playoffMrp: null, totalMrp: null });
 });
 
 test("fails closed where the published schedule does not resolve the input", () => {

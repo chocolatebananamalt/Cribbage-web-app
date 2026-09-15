@@ -63,5 +63,5 @@ test("working-copy route is authenticated, server-derived, private, and fail-clo
   assert.doesNotMatch(route, /service_role|SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(client, /Download Private Working Copy/);
   assert.match(client, /unreconciled and not an ACC submission/);
-  assert.match(client, /not calculations or ACC-approved awards/);
+  assert.match(client, /calculated and verified by the server/i);
 });
