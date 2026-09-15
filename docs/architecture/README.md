@@ -6,7 +6,7 @@ Status: proposed, not implemented. This is the structural guardrail for the full
 
 - `src/features/registration/`: roster identity, registration, check-in, shared-device clearing, roles, and seating (`R-REG-01`, `R-ROLE-01`).
 - `src/features/events/`: tournament/event lifecycle, templates, rotation configuration, finalization, and format/scoring-method declarations (`R-OPS-01`, `R-FINAL-01`, `R-BOUND-01`).
-- `src/features/scoring/`: Standard Singles score entry and paper-card presentation only; no single-margin-only model (`R-SCORE-01`).
+- `src/features/scoring/`: Standard Singles plus supported two-person Traditional/Canadian Doubles score entry, verification, scorecards, and paper-card presentation; generic/custom team formats remain paper-only until separately specified (`R-SCORE-01`).
 - `src/features/verification/`: independent submissions, confirmations, hybrid/paper pending states, mismatch handling, offline replay, and concurrency (`R-VERIFY-01`, `R-OFFLINE-01`).
 - `src/features/officials/`: judge/cross-check assignment, rulebook reference/cache permission, disputes, corrections, and audit (`R-RULE-01`, `R-CORR-01`).
 - `src/features/flyers/`: Main, Consolation/Consy, Satellites, custom events, Muggins disclosure, and manual/imported format labels (`R-FLYER-01`).
