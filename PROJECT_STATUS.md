@@ -25,7 +25,12 @@
   the hosted chain and targeted new-table foreign-key coverage is complete.
   `pnpm verify` passes the production audit, lint, 481/481 application tests,
   provider checks, build, and 7/7 workspace checks; `pnpm verify:handoff`
-  passes 6/6. Physical multi-device/paper/offline rehearsal evidence remains
+  passes 6/6. PR #41 merged as
+  `bb1d6a89d7dc7a138dab94466bc42f947ddded8b`; Production deployment
+  `dpl_CNrJGfri1iUgtnZcveTgLj9r1Mpz` is READY on the stable aliases. The live
+  320/640/1280 browser gate passed 20 distinct screens without overflow, CSP,
+  HTTP, console, or page errors, and the post-release runtime-error scan was
+  empty. Physical multi-device/paper/offline rehearsal evidence remains
   separate from implementation completeness.
 
 - Added an explicit event-specific Start Play boundary. Main, Consolation, and
