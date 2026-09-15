@@ -1,5 +1,19 @@
 # Project Status
 
+## 2026-09-15 four-co-director tournament roles — applied; role acceptance rehearsal pending
+
+- Applied migrations `0191` and `0192` to the approved pilot Supabase project.
+  A tournament now supports one singular primary director plus up to four
+  co-directors; existing co-directors, including the rehearsal observer, were
+  backfilled into an auditable lifecycle record without creating a duplicate
+  role.
+- Added the primary-director Officials workspace, exact-email seven-day
+  invitation/explicit acceptance path, server-enforced active-plus-pending
+  capacity, immediate revocation, reasoned platform-administrator emergency
+  override, setup snapshots through five officials, and server-only function
+  grants. Physical independent-account acceptance/revocation remains a
+  rehearsal assertion and is not claimed as automated proof.
+
 ## 2026-09-15 automatic Main/Consolation MRP calculation and rehearsal runbook — applied; physical proof pending
 
 - Applied migration `0190_automatic_standard_singles_mrp_results` to the
@@ -26,10 +40,10 @@
   notices; this change introduced no new browser-executable function.
 - The physical six-device rehearsal is still the release gate. It has not been
   represented as passed by the migration, runbook, or automated tests.
-- The private runbook also lists Alice Souza as a seventh, non-playing
-  co-director observer. Her app role is intentionally a manual primary-director
-  assignment after she signs in; no email address or account identity is stored
-  in the runbook or source tree.
+- The private runbook lists Alice Souza as the existing seventh, non-playing
+  co-director observer. She already holds the rehearsal co-director role; no
+  duplicate invitation or assignment is required, and no account identity is
+  stored in the runbook or source tree.
 
 ## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 

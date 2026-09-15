@@ -28,6 +28,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration roster review</Link> : null}
         {isDirector && registrationLinkManagementEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/registration`}>Registration link and QR code</Link> : null}
         {isDirector && accountActivationEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/account-activations`}>Player account activation</Link> : null}
+        {access.role === "director" ? <Link className="guide-link" href={`/tournament/${tournamentId}/officials`}>Officials</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/cross-checkers`}>Cross-checker assignments</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link> : null}

@@ -57,7 +57,7 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   if (!Number.isSafeInteger(b.expectedVersion) || (b.expectedVersion as number) < 0 || !isUuid(b.idempotencyKey) || !p || typeof p !== "object" || !own(p, rootKeys)) return false;
   const x = p as Record<string, unknown>; const officials = x.officials; const events = x.events;
   return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && text(x.contactDetails, 1000) && money(x.sanctioningFeeCents, true)
-    && Array.isArray(officials) && officials.length >= 1 && officials.length <= 3 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
+    && Array.isArray(officials) && officials.length >= 1 && officials.length <= 5 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
     && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
 }
 export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRequest { return !!value && typeof value === "object" && own(value, ["idempotencyKey"]) && isUuid((value as Record<string, unknown>).idempotencyKey); }
@@ -102,7 +102,7 @@ export function isSetupWorkspace(value: unknown): value is SetupWorkspace {
     && text(current.tournamentName, 200, true) && text(current.city, 160, true) && text(current.venue, 240, true)
     && typeof current.startsAt === "string" && typeof current.endsAt === "string" && text(current.timezone, 128, true)
     && text(current.contactDetails, 1000) && money(current.sanctioningFeeCents, true) && typeof current.createdAt === "string"
-    && currentOfficials.length >= 1 && currentOfficials.length <= 3
+    && currentOfficials.length >= 1 && currentOfficials.length <= 5
     && currentOfficials.every((official) => !!official && typeof official === "object" && own(official, officialKeys) && isUuid(official.profileId) && ["director", "co_director"].includes(official.role as string))
     && currentOfficials.filter((official) => official.role === "director").length === 1 && new Set(currentOfficials.map((official) => official.profileId)).size === currentOfficials.length
     && Array.isArray(current.events) && current.events.length <= 32 && current.events.every(workspaceEvent) && history[0].eventCount === current.events.length;
@@ -111,6 +111,6 @@ export function isSetupOfficialChoices(value: unknown): value is SetupOfficialCh
   if (!value || typeof value !== "object" || !own(value, ["directorProfileId", "coDirectorProfileIds"])) return false;
   const choices = value as Record<string, unknown>;
   return isUuid(choices.directorProfileId) && Array.isArray(choices.coDirectorProfileIds)
-    && choices.coDirectorProfileIds.length <= 2 && choices.coDirectorProfileIds.every(isUuid)
+    && choices.coDirectorProfileIds.length <= 4 && choices.coDirectorProfileIds.every(isUuid)
     && !choices.coDirectorProfileIds.includes(choices.directorProfileId) && new Set(choices.coDirectorProfileIds).size === choices.coDirectorProfileIds.length;
 }

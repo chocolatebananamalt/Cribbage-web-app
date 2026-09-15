@@ -96,10 +96,10 @@ story.append(table([
     ["Ian", "Player", "Wi-Fi Samsung phone", "Paper", "Paper Team Charlie with Shonni"],
     ["Shonni", "Cross-checker · player", "Wi-Fi MacBook", "Paper", "Paper Team Charlie with Ian"],
     ["Luke", "Player", "Wi-Fi MacBook", "Paper", "Digital Team Alpha partner with Daron"],
-    ["Alice", "Co-director observer · non-player", "Director choice", "N/A", "Full rehearsal access; observe every workflow without active test duties"],
+    ["Alice", "Existing co-director observer · non-player", "Director choice", "N/A", "Full rehearsal access; observe every workflow without active test duties"],
 ], [0.78*inch, 1.4*inch, 1.22*inch, 0.56*inch, 3.15*inch], small=True))
 story.append(Spacer(1, 6))
-story.append(p("Alice is a seventh, non-playing co-director observer and is not one of the six fictional test identities. Add her as co-director after she signs in; she may inspect the rehearsal but should not replace an assigned test actor. Team scorecard choice is separate from a person’s Singles choice. Luke is Paper for Singles and Digital with Team Alpha. For the Paper Team Practice Satellite, Daron/Luke and Maryn/Gabe re-form as Paper teams.", "RunBody"))
+story.append(p("Alice is the existing seventh, non-playing co-director observer and is not one of the six fictional test identities. No rehearsal invitation or role change is needed; she may inspect the rehearsal but should not replace an assigned test actor. Team scorecard choice is separate from a person’s Singles choice. Luke is Paper for Singles and Digital with Team Alpha. For the Paper Team Practice Satellite, Daron/Luke and Maryn/Gabe re-form as Paper teams.", "RunBody"))
 
 story += section("Four rehearsal events")
 story.append(table([
