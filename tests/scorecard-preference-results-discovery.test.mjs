@@ -19,7 +19,7 @@ test("scorecard preference request and outcomes use exact request-bound codecs",
 });
 
 test("results event summary is exact, bounded, and tournament-bound", () => {
-  const summary = { tournamentId: rosterEntryId, tournamentName: "October Pilot", events: [{ eventId, name: "Main", participantCount: 20 }] };
+  const summary = { tournamentId: rosterEntryId, tournamentName: "October Pilot", events: [{ eventId, name: "Main", eventType: "main", format: "standard_singles", scoringMethod: "digital", participantCount: 20 }] };
   assert.equal(isTournamentResultEventSummary(summary), true);
   assert.equal(isTournamentResultEventSummary({ ...summary, extra: true }), false);
   assert.equal(isTournamentResultEventSummary({ ...summary, events: [{ ...summary.events[0], participantCount: -1 }] }), false);

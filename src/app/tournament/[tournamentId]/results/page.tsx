@@ -11,6 +11,7 @@ import { formatSignedNet } from "../../../../lib/score";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import { QualificationFinalizationClient } from "./qualification-finalization-client";
 import { getTournamentResultEventSummary } from "../../../../lib/results/event-summary";
+import { LiveStandingsRefresh } from "./live-standings-refresh";
 
 const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
@@ -33,11 +34,15 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       <h1 id="results-events-title">Tournament Results</h1>
       <p className="card-context">{workspace.tournamentName}</p>
       <p className="registration-note">Choose an event to review its verified standings and qualification status.</p>
-      {events.length ? <ul className="correction-list">{events.map((item) => <li className="correction-item" key={item.eventId}><strong>{item.name}</strong><p>{item.participantCount} enrolled participant{item.participantCount === 1 ? "" : "s"}</p><Link className="guide-link" href={`/tournament/${tournamentId}/results?event=${item.eventId}`}>View Results</Link></li>)}</ul> : <p className="auth-note">No digital Standard Singles events are active yet.</p>}
+      {events.length ? <ul className="correction-list">{events.map((item) => <li className="correction-item" key={item.eventId}><strong>{item.name}</strong><p>{item.eventType.replace("_", " ")} · {item.format.replaceAll("_", " ")} · {item.participantCount} enrolled participant{item.participantCount === 1 ? "" : "s"}</p><Link className="guide-link" href={`/tournament/${tournamentId}/results?event=${item.eventId}`}>View Results</Link></li>)}</ul> : <p className="auth-note">No tournament events are active yet.</p>}
       <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
       <SharedDeviceSignOut />
     </section></main>;
   }
+  const eventWorkspace = await getTournamentResultEventSummary(access.user.id, tournamentId);
+  const selectedEvent = eventWorkspace.events.find((item) => item.eventId === event);
+  if (!selectedEvent) notFound();
+  if (selectedEvent.eventType === "satellite" && (selectedEvent.format !== "standard_singles" || selectedEvent.scoringMethod !== "digital")) return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>{selectedEvent.name} Results</h1><p className="card-context">{eventWorkspace.tournamentName}</p><p className="registration-note">This paper-scored Satellite uses director-reviewed placements, payouts, Q-Pool and Side-Pool results, and special-hand records. Every cashing scorecard must be cross-checked before publication.</p><section className="correction-item"><h2>ACC reporting</h2><p><strong>MRPs: Not applicable—Satellite event</strong></p><p>Satellite results never qualify a player for Main or Consolation.</p><p>The director-reviewed winners and payouts report is retained with the scorecards for at least twelve months. Automatic ACC submission remains disabled until an interface is approved.</p></section><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
   const standings = await getPreliminaryEventStandings(tournamentId, event);
   const qualification = buildPreliminaryQualification(standings.rows);
   const admin = createServerOnlyAdminClient();
@@ -92,8 +97,9 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
 
   return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
     <p className="eyebrow">TOURNAMENT RESULTS</p>
-    <h1 id="standings-title">Preliminary Standings</h1>
+    <h1 id="standings-title">Live Preliminary Standings</h1>
     <p className="card-context">{standings.tournamentName} · {standings.eventName}</p>
+    <LiveStandingsRefresh resolvedGameCount={standings.resolvedMatchCount} unresolvedTieCount={qualification?.preview.unresolvedTies.length ?? 0} generatedAt={new Date().toISOString()} />
     <p className="registration-note">Only verified or corrected games are included. Everything below is provisional; this screen does not decide final results or any money award.</p>
     <section className="correction-item" aria-labelledby="completion-title">
       <h2 id="completion-title">Scorecard completion</h2>
@@ -117,7 +123,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     /> : null}
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     <div className="table-scroll"><table className="standings-table">
-      <caption className="sr-only">Preliminary standings from verified scorecards</caption>
+      <caption className="sr-only">Live preliminary standings from verified scorecards</caption>
       <thead><tr><th scope="col">Numeric rank</th><th scope="col">Player</th><th scope="col">Status</th><th scope="col">Games</th><th scope="col">Game Points</th><th scope="col">Won</th><th scope="col">Plus</th><th scope="col">Minus</th><th scope="col">Net</th></tr></thead>
       <tbody>{standings.rows.map((row) => <tr key={row.participantId}>
         <td>{row.numericRank}{row.tied ? " (tie)" : ""}</td><th scope="row">{row.displayName}</th><td>{row.participantStatus.replace("_", " ")}</td><td>{row.verifiedGames}</td><td>{row.gamePoints}</td><td>{row.gamesWon}</td><td>+{row.plusPoints}</td><td>−{row.minusPoints}</td><td>{formatSignedNet(row.netSpreadPoints)}</td>

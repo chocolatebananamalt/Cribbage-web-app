@@ -40,6 +40,7 @@ test("my-games response validator is exact and tournament bound", () => {
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, state: "submitted", ownSubmitted: false, nextAction: "wait_opponent_entry" }] }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, state: "confirmation_pending", ownSubmitted: true, canConfirm: true, nextAction: "review_confirm" }] }, tournamentId), true);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, progressionStatus: "upcoming", nextAction: "upcoming_locked" }] }, tournamentId), true);
+  assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, progressionStatus: "not_started", nextAction: "event_not_started" }] }, tournamentId), true);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, progressionStatus: "upcoming", nextAction: "enter_result" }] }, tournamentId), false);
 });
 

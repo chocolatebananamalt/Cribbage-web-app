@@ -1,5 +1,39 @@
 # Project Status
 
+## 2026-09-14 tournament operations lifecycle implementation
+
+- Added an explicit event-specific Start Play boundary. Main, Consolation, and
+  Satellite events now derive Preparing, Ready to Start, In Progress,
+  Completed, and Finalized independently. An accepted start is append-only,
+  director/co-director-only, idempotent, and bound to the exact participant
+  digest and schedule publication.
+- Publishing a schedule no longer authorizes scoring. Online submissions,
+  confirmations, paper completions, failed-device recovery, and offline
+  capability/replay paths reject score evidence before that event starts.
+  Existing events with prior score activity were conservatively backfilled;
+  scoreless published schedules remain Ready to Start.
+- Renamed and hardened the active view as **Live Preliminary Standings**. It
+  uses authoritative verified/corrected results only, refreshes every ten
+  seconds and after an accepted local result, and exposes freshness,
+  offline/stale state, resolved games, and unresolved ties.
+- Added director Event Side Pools for the four customary categories while
+  preserving the separate two-Q-Pool configuration. Added append-only Side
+  Pool definition/election/payout storage and a normalized, paper-only team
+  foundation that cannot enable digital team scoring.
+- Added event-scoped, audited absent, withdrawn, disqualified, substituted,
+  and reinstated states. No participant status operation manufactures a win
+  or rewrites an authoritative game. General late-entry/rotation/sit-out
+  schedule transformations remain gated because the current cached ACC
+  sources do not provide a complete safe algorithm.
+- Results discovery now includes every configured event. Paper/team Satellite
+  pages explicitly preserve no-MRP/no-Main-or-Consolation-qualification,
+  cross-check, twelve-month retention, and director-reviewed reporting
+  boundaries.
+- Applied migrations 0164-0168 to the approved pilot Supabase project. The
+  hosted state inspection showed no existing tournament was accidentally
+  started. Full repository, handoff, responsive-browser, deployment, and
+  runtime verification evidence is recorded separately as it completes.
+
 ## 2026-09-13 tournament setup input repair released
 
 - Repaired a presentation-layer regression that let the generic correction-

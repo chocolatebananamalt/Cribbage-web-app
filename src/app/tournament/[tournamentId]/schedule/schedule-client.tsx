@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { isEventScheduleRequest, isEventScheduleResult, isRejectedEventSchedule, parseScheduleCsv, validateScheduleForEvent, type EventScheduleRequest, type EventScheduleWorkspace } from "../../../../lib/api/event-schedule";
+import { isEventScheduleRequest, isEventScheduleResult, isEventStartRequest, isEventStartResult, isRejectedEventSchedule, isRejectedEventStart, parseScheduleCsv, validateScheduleForEvent, type EventScheduleRequest, type EventScheduleWorkspace, type EventStartRequest } from "../../../../lib/api/event-schedule";
 
 type SavedRequest = { kind: "event-schedule-publication"; request: EventScheduleRequest };
 const header = "Game,Player A ID,Player B ID,Player A Table/Seat,Player B Table/Seat";
@@ -33,6 +33,8 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [selectedGame, setSelectedGame] = useState(1);
+  const [startConfirmed, setStartConfirmed] = useState(false);
+  const [starting, setStarting] = useState(false);
   const flight = useRef(false);
   const storageKey = `event-schedule:${actorId}:${tournamentId}`;
   const activeEvent = digitalEvents.find((event) => event.eventId === eventId);
@@ -87,15 +89,49 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
     link.href = url; link.download = `${activeEvent?.name ?? "event"}-schedule-template.csv`; link.click(); URL.revokeObjectURL(url);
   }
 
+  async function startEvent() {
+    if (!activeEvent || activeEvent.playState !== "ready_to_start" || !activeEvent.schedulePublicationId
+      || !activeEvent.participantSnapshotDigest || !startConfirmed || starting) return;
+    const request: EventStartRequest = { eventId: activeEvent.eventId, schedulePublicationId: activeEvent.schedulePublicationId,
+      participantSnapshotDigest: activeEvent.participantSnapshotDigest, expectedParticipantCount: activeEvent.participantCount,
+      expectedGameCount: activeEvent.gameCount, confirmed: true, idempotencyKey: crypto.randomUUID() };
+    if (!isEventStartRequest(request)) { setMessage("The event start request could not be prepared safely."); return; }
+    setStarting(true); setMessage(null);
+    try {
+      const response = await fetch(`/api/v1/tournaments/${tournamentId}/event-start`, { method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify(request) });
+      const data: unknown = await response.json().catch(() => null);
+      if (response.ok && isEventStartResult(data, request)) {
+        setStartConfirmed(false); setMessage(`${activeEvent.name} is now In Progress. Score entry is unlocked.`); router.refresh();
+      } else if (response.status === 409 && isRejectedEventStart(data)) {
+        const explanation: Record<string, string> = {
+          registration_open: "Close registration before starting this event.",
+          attendance_or_seating_incomplete: "Attendance and every Verification ID/seat must be complete before starting.",
+          stale_roster_or_schedule: "The roster or schedule changed. Review the current event details and confirm again.",
+          event_already_started: "This event has already started.",
+          unexpected_scoring_activity: "Unexpected scoring activity needs official review before this event can start.",
+        };
+        setMessage(explanation[data.code] ?? "The event did not start. Recheck registration, attendance, seating, and the schedule.");
+        router.refresh();
+      } else setMessage("The event start request is unresolved. Refresh the event before trying again.");
+    } catch { setMessage("The event start request is unresolved. Refresh the event before trying again."); }
+    finally { setStarting(false); }
+  }
+
   if (digitalEvents.length === 0) return <section className="correction-item"><h2>Activate a Standard Singles event first</h2><p>Only activated digital Standard Singles events can publish a game schedule for this pilot.</p></section>;
   return <section className="policy-settings">
     <section className="correction-item"><h2>Choose Event</h2><label>Event<select className="check-in-control" value={eventId} disabled={!ready || busy || !!pending} onChange={(event) => { setEventId(event.target.value); setReviewed(false); setSelectedGame(1); }}>
       {digitalEvents.map((event) => <option key={event.eventId} value={event.eventId}>{event.name} · {event.gameCount} games · {event.participantCount} players</option>)}</select></label>
-      {activeEvent?.schedulePublished ? <p className="success-text">Published · {activeEvent.publishedMatchCount} matchups</p> : <p>Not published. Publishing is one-time and creates the scoreable games.</p>}
+      {activeEvent?.schedulePublished ? <p className="success-text">Published · {activeEvent.publishedMatchCount} matchups · {activeEvent.playState.replaceAll("_", " ")}</p> : <p>Not published. Publishing creates the games, but an official must separately start this event before anyone can score.</p>}
     </section>
     {activeEvent?.schedulePublished ? <section className="correction-item"><h2>Published Schedule</h2><label>Game<select className="check-in-control" value={selectedGame} onChange={(event) => setSelectedGame(Number(event.target.value))}>
       {Array.from({ length: activeEvent.gameCount }, (_, index) => <option key={index + 1} value={index + 1}>Game {index + 1}</option>)}</select></label>
       <ul className="schedule-match-list">{publishedMatches.map((match) => <li key={match.canonicalGameId}><span><strong>{match.sideADisplayName}</strong><small>ID # {match.sideAVerificationId} · {match.sideATableSeat}</small></span><b>vs.</b><span><strong>{match.sideBDisplayName}</strong><small>ID # {match.sideBVerificationId} · {match.sideBTableSeat}</small></span></li>)}</ul>
+      {activeEvent.playState === "ready_to_start" ? <section className="event-start-confirmation" aria-labelledby="event-start-title"><h3 id="event-start-title">Final Start Confirmation</h3>
+        <p><strong>{activeEvent.name}</strong> · {activeEvent.participantCount} players · {activeEvent.gameCount} games</p>
+        <label className="publication-confirmation"><input type="checkbox" checked={startConfirmed} disabled={starting} onChange={(event) => setStartConfirmed(event.target.checked)} />I confirm registration is closed and this event roster, attendance, seating, and schedule are ready for play.</label>
+        <button className="primary" type="button" disabled={!startConfirmed || starting} onClick={() => void startEvent()}>{starting ? "Starting…" : `Start ${activeEvent.name}`}</button>
+      </section> : activeEvent.playState === "preparing" ? <p className="auth-note">Start Play will become available after registration is closed and the event roster, attendance, seating, and schedule are complete.</p>
+        : <p className="success-text">{activeEvent.playState === "in_progress" ? "Play is in progress." : activeEvent.playState === "completed" ? "All scheduled games are complete." : "This event is finalized."}{activeEvent.startedAt ? ` Started by ${activeEvent.startedBy ?? "an official"}.` : ""}</p>}
     </section> : <>
       <section className="correction-item"><div className="participant-selection-heading"><div><h2>Enrolled Players</h2><p>Use these permanent IDs in the schedule file.</p></div><button className="secondary" type="button" onClick={downloadTemplate}>Download CSV template</button></div>
         <ul className="schedule-roster-list">{participants.map((participant) => <li key={participant.participantId}><strong>{participant.verificationId}</strong><span>{participant.displayName}</span><small>{participant.profileLinked ? "Digital" : "Paper"}</small></li>)}</ul></section>

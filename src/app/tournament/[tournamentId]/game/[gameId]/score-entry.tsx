@@ -259,6 +259,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       clearPendingScoreSubmission(window.sessionStorage, envelope);
       setPendingSubmission(null);
       setSubmissionId(id);
+      try { window.localStorage.setItem("acc-score-result-accepted", new Date().toISOString()); } catch { /* ten-second refresh remains available */ }
       setCanConfirm(result.status === "confirmation_pending");
       setStatus(result.status === "confirmation_pending" ? "Both entries match. Confirm your own entry to continue." : result.status === "mismatch" ? "The entries do not match. This game needs cross-checking." : "Your entry is saved and waiting for your opponent’s independent entry.");
     } catch {
@@ -287,6 +288,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       if (!["verified", "confirmation_pending"].includes(result.status ?? "")) { setStatus("The server response was incomplete. Please try again; this confirmation will safely retry."); return; }
       window.sessionStorage.removeItem(request.storageKey);
       setCanConfirm(false);
+      try { window.localStorage.setItem("acc-score-result-accepted", new Date().toISOString()); } catch { /* ten-second refresh remains available */ }
       setStatus(result.status === "verified" ? "Game verified. The authoritative scorecard is updated." : "Your confirmation is saved. The game will verify after the other player confirms their own entry.");
     } catch {
       setStatus("Network issue. Please try again; this confirmation will safely retry with the same request ID.");
