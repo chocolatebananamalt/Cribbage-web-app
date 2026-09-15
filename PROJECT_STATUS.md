@@ -2,12 +2,13 @@
 
 ## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 
-- Removed the last user-visible paper-only team-scoring contradiction from the
-  public demonstration and retired its matching stale test expectation. The
+- Removed the remaining user-visible team-scoring contradictions from the
+  public demonstration and retired their matching stale test expectations. The
   Tournament Events and Flyer summary now identifies Traditional/Canadian
   Doubles as a shared Digital or Paper scorecard path that is ready for the
-  October rehearsal; current architecture and outline language match that
-  release boundary.
+  October rehearsal, and Satellite Results now correctly describes completed
+  placements/payouts without claiming team results are unavailable. Current
+  architecture and outline language match that release boundary.
 - The October 3 release is no longer Standard-Singles-only. Two-person
   Traditional Doubles and Canadian Doubles must support captain-selected shared
   Digital or Paper team scoring, designated scorer/linkage resolution, team
