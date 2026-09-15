@@ -1,0 +1,43 @@
+-- Cover every foreign-key access path added by migrations 0169-0171.
+
+create index event_schedule_amendments_tournament_idx on app.event_schedule_amendment_versions(tournament_id);
+create index event_schedule_amendments_event_scope_idx on app.event_schedule_amendment_versions(event_id,tournament_id);
+create index event_schedule_amendments_receipt_scope_idx on app.event_schedule_amendment_versions(operation_receipt_id,tournament_id);
+create index event_game_eligibility_game_scope_idx on app.event_game_standings_eligibility_versions(canonical_game_id,tournament_id,event_id);
+create index event_game_eligibility_amendment_scope_idx on app.event_game_standings_eligibility_versions(amendment_version_id,tournament_id,event_id);
+
+create index operational_forfeits_game_scope_idx on app.operational_game_forfeits(canonical_game_id,tournament_id,event_id);
+create index operational_forfeits_winner_scope_idx on app.operational_game_forfeits(winner_participant_id,event_id,tournament_id);
+create index operational_forfeits_departing_scope_idx on app.operational_game_forfeits(departing_participant_id,event_id,tournament_id);
+create index operational_forfeits_actor_idx on app.operational_game_forfeits(actor_profile_id);
+create index operational_forfeits_receipt_scope_idx on app.operational_game_forfeits(operation_receipt_id,tournament_id);
+
+create index playoff_absence_participant_scope_idx on app.playoff_absence_decisions(participant_id,event_id,tournament_id);
+create index playoff_absence_actor_idx on app.playoff_absence_decisions(actor_profile_id);
+create index playoff_absence_receipt_scope_idx on app.playoff_absence_decisions(operation_receipt_id,tournament_id);
+
+create index late_refund_participant_scope_idx on app.late_player_refund_decisions(participant_id,event_id,tournament_id);
+create index late_refund_roster_scope_idx on app.late_player_refund_decisions(roster_entry_id,tournament_id);
+create index late_refund_actor_idx on app.late_player_refund_decisions(actor_profile_id);
+create index late_refund_receipt_scope_idx on app.late_player_refund_decisions(operation_receipt_id,tournament_id);
+
+create index excluded_extra_game_a_scope_idx on app.event_excluded_extra_game_records(participant_a_id,event_id,tournament_id);
+create index excluded_extra_game_b_scope_idx on app.event_excluded_extra_game_records(participant_b_id,event_id,tournament_id);
+create index excluded_extra_game_actor_idx on app.event_excluded_extra_game_records(actor_profile_id);
+create index excluded_extra_game_receipt_scope_idx on app.event_excluded_extra_game_records(operation_receipt_id,tournament_id);
+
+create index side_pool_policy_scope_idx on app.event_side_pool_policy_versions(pool_id,tournament_id,event_id);
+create index side_pool_policy_actor_idx on app.event_side_pool_policy_versions(actor_profile_id);
+create index side_pool_policy_receipt_scope_idx on app.event_side_pool_policy_versions(operation_receipt_id,tournament_id);
+create index side_pool_reconciliation_scope_idx on app.event_side_pool_reconciliations(pool_id,tournament_id,event_id);
+create index side_pool_reconciliation_actor_idx on app.event_side_pool_reconciliations(actor_profile_id);
+create index side_pool_reconciliation_receipt_scope_idx on app.event_side_pool_reconciliations(operation_receipt_id,tournament_id);
+
+create index satellite_result_packages_tournament_idx on app.satellite_result_packages(tournament_id);
+create index satellite_result_packages_event_scope_idx on app.satellite_result_packages(event_id,tournament_id);
+create index satellite_result_versions_package_scope_idx on app.satellite_result_versions(package_id,tournament_id,event_id);
+create index satellite_result_versions_supersedes_idx on app.satellite_result_versions(supersedes_version_id);
+create index satellite_result_versions_approver_idx on app.satellite_result_versions(approved_by_profile_id);
+create index satellite_result_versions_receipt_scope_idx on app.satellite_result_versions(operation_receipt_id,tournament_id);
+
+notify pgrst,'reload schema';

@@ -12,6 +12,7 @@ import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-ad
 import { QualificationFinalizationClient } from "./qualification-finalization-client";
 import { getTournamentResultEventSummary } from "../../../../lib/results/event-summary";
 import { LiveStandingsRefresh } from "./live-standings-refresh";
+import { isSidePoolWorkspace } from "../../../../lib/api/side-pools";
 
 const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
@@ -42,10 +43,13 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   const eventWorkspace = await getTournamentResultEventSummary(access.user.id, tournamentId);
   const selectedEvent = eventWorkspace.events.find((item) => item.eventId === event);
   if (!selectedEvent) notFound();
-  if (selectedEvent.eventType === "satellite" && (selectedEvent.format !== "standard_singles" || selectedEvent.scoringMethod !== "digital")) return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>{selectedEvent.name} Results</h1><p className="card-context">{eventWorkspace.tournamentName}</p><p className="registration-note">This paper-scored Satellite uses director-reviewed placements, payouts, Q-Pool and Side-Pool results, and special-hand records. Every cashing scorecard must be cross-checked before publication.</p><section className="correction-item"><h2>ACC reporting</h2><p><strong>MRPs: Not applicable—Satellite event</strong></p><p>Satellite results never qualify a player for Main or Consolation.</p><p>The director-reviewed winners and payouts report is retained with the scorecards for at least twelve months. Automatic ACC submission remains disabled until an interface is approved.</p></section><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
+  if (selectedEvent.eventType === "satellite") return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>{selectedEvent.name} Results</h1><p className="card-context">{eventWorkspace.tournamentName}</p><p className="registration-note">Singles and paper-scored doubles Satellites use the same director-reviewed result package: cashing placements, prize amounts, Q-Pool and Side-Pool results, special hands, and cross-check evidence.</p><section className="correction-item"><h2>ACC reporting</h2><p><strong>MRPs: Not applicable—Satellite event</strong></p><p>Satellite results never qualify a player for Main or Consolation.</p><p>Scorecards and payout evidence are retained for at least twelve months. The downloadable report assists the director. Automatic ACC submission remains disabled until an interface is approved.</p></section><Link className="guide-link" href={`/tournament/${tournamentId}/satellite-results?event=${event}`}>Open Satellite Results</Link><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
   const standings = await getPreliminaryEventStandings(tournamentId, event);
   const qualification = buildPreliminaryQualification(standings.rows);
   const admin = createServerOnlyAdminClient();
+  const sidePoolResult = await admin.rpc("get_event_side_pool_workspace_v1", { p_actor_id: access.user.id, p_tournament_id: tournamentId });
+  const sidePoolWorkspace = !sidePoolResult.error && isSidePoolWorkspace(sidePoolResult.data) ? sidePoolResult.data : null;
+  const sidePools = sidePoolWorkspace?.events.find((item) => item.eventId === event)?.pools ?? [];
   const finalized = await getQualificationResult(admin, access.user.id, tournamentId, event);
   const finalReport = finalized ? await getFinalizedEventReport(admin, access.user.id, tournamentId, event) : null;
 
@@ -86,6 +90,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       </section>
       <p className="auth-note">Finalized by {finalized.finalizedBy}. This record does not calculate playoff placements, MRPs, Q-pools, payouts, or an official ACC export.</p>
     </>}
+    {sidePools.length ? <section className="correction-item"><h2>Side Pools</h2>{sidePools.map((pool) => <section key={pool.poolId}><strong>{pool.displayName}</strong><p>Collected {formatUsd(pool.collectedMinor)} · paid {formatUsd(pool.paidMinor)} · {pool.finalized ? "finalized" : "open"}</p><ol>{pool.payouts.map((payout) => <li key={payout.payoutId}>{payout.displayName} · place {payout.placement} · {formatUsd(payout.amountMinor)}</li>)}</ol></section>)}</section> : null}
     {finalReport ? <a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${event}/final-results.pdf`}>Download Final Event Results PDF</a> : null}
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
@@ -117,6 +122,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       {!qualification.cutoffTie && qualification.highNonQualifierTie ? <p className="error-text" role="status">The provisional High Non-Qualifier is tied and remains unresolved.</p> : null}
       <p className="auth-note">This preview does not show a winner or runner-up and does not calculate MRPs, Q-pools, or payouts.</p>
     </section> : <p className="registration-note">Enroll players before calculating a qualification preview.</p>}
+    {sidePools.length ? <section className="correction-item"><h2>Side Pool Status</h2>{sidePools.map((pool) => <p key={pool.poolId}><strong>{pool.displayName}</strong> · {pool.elections.filter((item) => item.elected).length} elected · collected {formatUsd(pool.collectedMinor)} · payouts {formatUsd(pool.paidMinor)}</p>)}</section> : null}
     {qualification && (access.role === "director" || access.role === "co_director") ? <QualificationFinalizationClient
       actorId={access.user.id} tournamentId={tournamentId} eventId={event}
       canFinalize={standings.scheduledScorecardsComplete && !standings.rows.some((row) => row.tied)}

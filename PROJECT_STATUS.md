@@ -2,6 +2,32 @@
 
 ## 2026-09-14 tournament operations lifecycle implementation
 
+- Completed the follow-on tournament-operations implementation rather than
+  leaving general late-player work behind an approval placeholder. The 2019
+  Director Manual and 2025 Rulebook now govern the defined fixed outcomes;
+  mixed-up rotations use a conflict-checked, previewed, audited director
+  amendment because that source leaves the pairing choice to the director.
+- Added immutable schedule-amendment versions, exact current-game 2/+10
+  forfeits, final-game substitute protection, two-games-per-opponent safeguards,
+  director-reviewed late refunds, excluded cross-checked extra games, and the
+  5/20/35-minute playoff-absence sequence. A final review repair ensures a
+  substitute remains allowed in the final qualifying game and that a forfeit
+  is current for both affected players.
+- Completed event-scoped Side Pool elections, received/remaining amounts,
+  posted payout policy, editable payout records, void/correction history,
+  cent-conserving finalization, finance/results visibility, and private CSV/PDF
+  reporting without merging Side Pools with the two Q Pools.
+- Completed every configured Satellite's draft/final/correct/reopen result
+  package, placement and cross-check validation, special-hand evidence,
+  explicit no-MRP/no-Main-or-Consolation-qualification semantics, twelve-month
+  retention date, and director-reviewed printable report.
+- Applied hosted pilot migrations 0169-0173. The rollback fixture passes after
+  the hosted chain and targeted new-table foreign-key coverage is complete.
+  `pnpm verify` passes the production audit, lint, 481/481 application tests,
+  provider checks, build, and 7/7 workspace checks; `pnpm verify:handoff`
+  passes 6/6. Physical multi-device/paper/offline rehearsal evidence remains
+  separate from implementation completeness.
+
 - Added an explicit event-specific Start Play boundary. Main, Consolation, and
   Satellite events now derive Preparing, Ready to Start, In Progress,
   Completed, and Finalized independently. An accepted start is append-only,
@@ -21,10 +47,12 @@
   Pool definition/election/payout storage and a normalized, paper-only team
   foundation that cannot enable digital team scoring.
 - Added event-scoped, audited absent, withdrawn, disqualified, substituted,
-  and reinstated states. No participant status operation manufactures a win
-  or rewrites an authoritative game. General late-entry/rotation/sit-out
-  schedule transformations remain gated because the current cached ACC
-  sources do not provide a complete safe algorithm.
+  and reinstated states. The follow-on operations release now uses the 2019
+  Director Manual for defined late-player, first-sit-out makeup, departure,
+  final-game substitute, excluded-extra-game, and playoff-absence outcomes.
+  Mixed-up rotations use a previewed, validated director amendment because the
+  source assigns that decision to the director rather than prescribing one
+  automatic pairing.
 - Results discovery now includes every configured event. Paper/team Satellite
   pages explicitly preserve no-MRP/no-Main-or-Consolation-qualification,
   cross-check, twelve-month retention, and director-reviewed reporting
