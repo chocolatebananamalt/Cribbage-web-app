@@ -9,6 +9,7 @@ const api = fs.readFileSync("src/lib/api/settlement-draft.ts", "utf8");
 const client = fs.readFileSync("src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-client.tsx", "utf8");
 const route = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/settlement-draft/working-copy/route.ts", "utf8");
 const fixture = fs.readFileSync("tests/settlement-working-copy-v3.sql", "utf8");
+const automaticMigration = fs.readFileSync("database/migrations/0190_automatic_standard_singles_mrp_results.sql", "utf8");
 
 test("v3 stores immutable qualification-bound MRP transcriptions and distinguishes explicit zero", () => {
   assert.match(migration, /create table app\.standard_singles_settlement_mrp_claims/);
@@ -38,7 +39,7 @@ test("v3 save is exact, authorized before receipts, versioned, locked, audited, 
   assert.match(writer, /v_existing\.request_hash<>v_hash[\s\S]*standard_singles_settlement_conflicts/);
 });
 
-test("v3 read and reconciliation RPCs are scoped and service-only", () => {
+test("v3 legacy read/reconciliation and v4 automatic-MRP wrappers are scoped and service-only", () => {
   assert.match(migration, /get_standard_singles_settlement_workspace_v3[\s\S]*get_standard_singles_settlement_workspace_v2/);
   assert.match(migration, /select draft\.qualification_result_version_id into v_qualification_id[\s\S]*'qualificationResultVersionId',v_qualification_id/);
   assert.match(migration, /get_standard_singles_settlement_reconciliation_v3[\s\S]*actor_profile_id=p_actor_id[\s\S]*tournament_id=p_tournament_id[\s\S]*target_id=p_event_id/);
@@ -51,8 +52,11 @@ test("v3 read and reconciliation RPCs are scoped and service-only", () => {
   assert.match(authorityRepair, /save_standard_singles_settlement_draft_v3/);
   assert.match(authorityRepair, /get_standard_singles_settlement_reconciliation_v3/);
   assert.match(authorityRepair, /from public, anon, authenticated[\s\S]*to service_role/);
-  assert.match(api, /get_standard_singles_settlement_workspace_v3/);
-  assert.match(api, /save_standard_singles_settlement_draft_v3/);
+  assert.match(api, /get_standard_singles_settlement_workspace_v4/);
+  assert.match(api, /save_standard_singles_settlement_draft_v4/);
+  assert.match(automaticMigration, /automatic_mrp_mismatch/);
+  assert.match(automaticMigration, /revoke all on function public\.save_standard_singles_settlement_draft_v4[\s\S]*from public,anon,authenticated/i);
+  assert.match(automaticMigration, /grant execute on function public\.save_standard_singles_settlement_draft_v4[\s\S]*to service_role/i);
 });
 
 test("director editor preserves exact retry payload including MRP claims and restores authoritative rejection", () => {
@@ -63,8 +67,8 @@ test("director editor preserves exact retry payload including MRP claims and res
   assert.match(client, /body: JSON\.stringify\(request\)/);
   assert.match(client, /disabled=\{busy \|\| !!locked\}/);
   assert.match(client, /response\.status === 409[\s\S]*setPlacements\(placementRows\(workspace\)\)[\s\S]*setAwards\(awardRows\(workspace\)\)[\s\S]*setMrpClaims\(mrpRows\(workspace\)\)/);
-  assert.match(client, /blank value means missing; enter 0 only/);
-  assert.match(client, /not calculated or ACC-approved/);
+  assert.match(client, /calculated and verified by the server/i);
+  assert.match(client, /Automatic MRP calculation is unavailable/i);
 });
 
 test("private CSV v3 is attachment-only and explicitly non-authoritative", () => {

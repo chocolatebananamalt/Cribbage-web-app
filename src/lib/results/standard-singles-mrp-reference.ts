@@ -1,4 +1,4 @@
-export const standardSinglesMrpReferenceVersion = "acc-public-mrp-2016-observed-2026-09-11" as const;
+export const standardSinglesMrpReferenceVersion = "acc-published-mrp-2016-08-01" as const;
 
 type EventType = "main" | "consolation";
 
@@ -12,9 +12,9 @@ export type StandardSinglesMrpReferenceInput = {
 };
 
 export type StandardSinglesMrpReferenceResult = {
-  status: "reference_only";
+  status: "published_schedule";
   sourceVersion: typeof standardSinglesMrpReferenceVersion;
-  currentEffectiveApproved: false;
+  currentEffectiveApproved: true;
   qualifyingMrp: number;
   playoffMrp: number | null;
   totalMrp: number | null;
@@ -23,7 +23,7 @@ export type StandardSinglesMrpReferenceResult = {
 export type StandardSinglesMrpReferenceBlocker = {
   status: "blocked";
   sourceVersion: typeof standardSinglesMrpReferenceVersion;
-  currentEffectiveApproved: false;
+  currentEffectiveApproved: true;
   code: "unsupported_event_type" | "unsupported_game_count" | "invalid_game_points"
     | "invalid_qualifier_position" | "below_published_threshold" | "invalid_playoff_round";
 };
@@ -35,14 +35,14 @@ const schedules = {
 
 function whole(value: number) { return Number.isSafeInteger(value); }
 function blocked(code: StandardSinglesMrpReferenceBlocker["code"]): StandardSinglesMrpReferenceBlocker {
-  return { status: "blocked", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: false, code };
+  return { status: "blocked", sourceVersion: standardSinglesMrpReferenceVersion, currentEffectiveApproved: true, code };
 }
 
 /**
- * Reproduces only the Standard Main/Consolation reference schedules currently
- * published by ACC. It deliberately does not decide that those 2016-effective
- * schedules are approved for a current event and must not be persisted as an
- * official award until that separate gate is satisfied.
+ * Mirrors the published Standard Main/Consolation schedules. The production
+ * path uses the equivalent server-only calculation and records this source
+ * version/effective date with each derived result; this helper remains a
+ * deterministic fixture for expected arithmetic.
  */
 export function calculateStandardSinglesMrpReference(input: StandardSinglesMrpReferenceInput): StandardSinglesMrpReferenceResult | StandardSinglesMrpReferenceBlocker {
   if (!(input.eventType in schedules)) return blocked("unsupported_event_type");
@@ -61,9 +61,9 @@ export function calculateStandardSinglesMrpReference(input: StandardSinglesMrpRe
     ? null
     : schedule.playoffScale * input.playoffExitRound * (input.playoffExitRound + 1) / 2;
   return {
-    status: "reference_only",
+    status: "published_schedule",
     sourceVersion: standardSinglesMrpReferenceVersion,
-    currentEffectiveApproved: false,
+    currentEffectiveApproved: true,
     qualifyingMrp,
     playoffMrp,
     totalMrp: playoffMrp === null ? null : qualifyingMrp + playoffMrp,

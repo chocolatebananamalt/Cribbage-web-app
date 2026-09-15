@@ -1,5 +1,32 @@
 # Project Status
 
+## 2026-09-15 automatic Main/Consolation MRP calculation and rehearsal runbook — applied; physical proof pending
+
+- Applied migration `0190_automatic_standard_singles_mrp_results` to the
+  approved pilot Supabase project. It records every supported Standard
+  Main/Consolation calculation with source version
+  `acc-published-mrp-2016-08-01` and effective date `2016-08-01`, derives the
+  published qualifying and recorded-playoff-exit-round values server-side, and
+  rejects incomplete/mismatched client values. Satellite events remain
+  explicitly MRP-not-applicable with no Main/Consolation qualification effect.
+- Updated playoff result entry so each qualifier has a recorded exit round;
+  settlement MRP values are read-only server calculations rather than director
+  transcription. The existing director-reviewed finalization/export boundary
+  remains in place; no automatic ACC submission was added.
+- Produced and visually verified the private three-page printable runbook at
+  `output/pdf/full-rehearsal-2026-09-16-runbook.pdf`. It contains only first
+  names/device roles and fictional ACC identifiers—no email addresses,
+  credentials, sign-in links, or real member records—and covers the four
+  agreed rehearsal events, all outage/recovery paths, and finance/results
+  evidence.
+- Local application tests pass **509/509** after this change. The migration was
+  applied successfully; its new `SECURITY DEFINER` functions are executable
+  only by `service_role`/database owner. Supabase’s existing project-wide
+  advisor list still contains legacy no-policy/info and leaked-password-plan
+  notices; this change introduced no new browser-executable function.
+- The physical six-device rehearsal is still the release gate. It has not been
+  represented as passed by the migration, runbook, or automated tests.
+
 ## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 
 - Removed the remaining user-visible team-scoring contradictions from the

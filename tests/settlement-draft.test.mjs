@@ -38,10 +38,10 @@ test("settlement outcomes remain explicitly unreconciled and blocked", () => {
   assert.equal(isRejectedSettlementDraft({ status: "rejected", code: "publish_anyway", eventId }, eventId), false);
 });
 
-test("settlement workspace rejects expanded capabilities", () => {
+test("settlement workspace accepts only server-calculated MRP capabilities and exact automatic rows", () => {
   const value = { tournamentId, eventId, qualificationResultVersionId, currencyCode: "USD", currentVersion: 0,
     qualifierChoices: ids.map((participantId, index) => ({ participantId, displayName: `Player ${index + 1}`, qualificationRank: index + 1 })),
-    configuredQPools: [], playoffResult: { playoffResultVersionId, version: 1, recordedAt: "2026-09-11T00:00:00Z", placements: ids.map((participantId, index) => ({ participantId, displayName: `Player ${index + 1}`, placement: index + 1 })) }, draft: null, capabilities: { publication: false, approval: false, officialExport: false, mrpTranscription: true, mrpCalculation: false } };
+    configuredQPools: [], playoffResult: { playoffResultVersionId, version: 1, recordedAt: "2026-09-11T00:00:00Z", placements: ids.map((participantId, index) => ({ participantId, displayName: `Player ${index + 1}`, placement: index + 1 })) }, draft: null, capabilities: { publication: false, approval: false, officialExport: false, mrpTranscription: false, mrpCalculation: true }, automaticMrp: { status: "available", sourceVersion: "acc-published-mrp-2016-08-01", effectiveDate: "2016-08-01", rows: ids.map((participantId, index) => ({ participantId, displayName: `Player ${index + 1}`, qualificationRank: index + 1, gamePoints: 14 - index, qualifyingMrp: 5, playoffMrp: 7, totalMrp: 12, evidenceNote: "ACC published MRP schedule effective 2016-08-01" })) } };
   assert.equal(isSettlementWorkspace(value, tournamentId, eventId), true);
   assert.equal(isSettlementWorkspace({ ...value, capabilities: { ...value.capabilities, publication: true } }, tournamentId, eventId), false);
 });
@@ -61,12 +61,12 @@ test("director UI keeps the draft private and labels withheld authority", () => 
   assert.match(route, /readMediumJson/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(reconciliation, /isRejectedSettlementDraft/);
-  assert.match(reconciliation, /get_standard_singles_settlement_reconciliation_v3/);
+  assert.match(reconciliation, /get_standard_singles_settlement_reconciliation_v4/);
   assert.match(client, /The prior save was rejected/);
   assert.match(client, /isSettlementDraftOutcome[\s\S]*setBusy\(false\); router\.refresh/);
   assert.match(client, /isRejectedSettlementDraft[\s\S]*setPlacements\(placementRows\(workspace\)\); setAwards\(awardRows\(workspace\)\); setMrpClaims\(mrpRows\(workspace\)\)/);
   assert.match(client, /participantId: ""/);
   assert.match(client, /Choose a qualifier/);
-  assert.match(client, /A blank value means missing; enter 0 only when the source expressly awards zero/);
-  assert.match(client, /short source or evidence note/i);
+  assert.match(client, /calculated and verified by the server/i);
+  assert.match(client, /automatic MRP calculation is unavailable/i);
 });

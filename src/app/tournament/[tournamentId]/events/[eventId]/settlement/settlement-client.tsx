@@ -34,6 +34,10 @@ function awardRows(workspace: SettlementWorkspace) {
 }
 function mrpRows(workspace: SettlementWorkspace) {
   const saved = new Map((workspace.draft?.mrpClaims ?? []).map((claim) => [claim.participantId, claim]));
+  if (workspace.automaticMrp.status === "available") return workspace.automaticMrp.rows.map((row) => {
+    const claim = saved.get(row.participantId);
+    return { participantId: row.participantId, displayName: row.displayName, mrpPoints: String(claim?.mrpPoints ?? row.totalMrp), evidenceNote: claim?.evidenceNote ?? row.evidenceNote };
+  });
   return workspace.qualifierChoices.map((choice) => {
     const claim = saved.get(choice.participantId);
     return { participantId: choice.participantId, displayName: choice.displayName,
@@ -88,6 +92,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
 
   async function save() {
     if (!workspace.playoffResult) { setMessage("Record the supervised playoff winner and runner-up before saving financial claims."); return; }
+    if (workspace.automaticMrp.status !== "available") { setMessage("Automatic MRP calculation is unavailable until every qualifier has a recorded playoff exit round."); return; }
     const parsedPlacements: SettlementPlacement[] = [];
     for (const entry of placements) {
       const prizeAmountMinor = parseUsdMinor(entry.prize, { allowZero: true, maxMinor: 2147483647 });
@@ -177,18 +182,17 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         <button className="secondary" type="button" onClick={() => setAwards((current) => [...current, { participantId: workspace.qualifierChoices[0].participantId, awardType: "other", qPoolSlot: null, amountMinor: 0, amount: "", note: "" }])}>Add Award</button>
       </fieldset>
       <fieldset disabled={busy || !!locked}>
-        <legend>Director-transcribed MRP claims</legend>
-        <p className="auth-note">Optional and provisional. A blank value means missing; enter 0 only when the source expressly awards zero. Every entered value requires its source or evidence.</p>
-        {mrpClaims.map((entry, index) => <div className="correction-item" key={entry.participantId}>
+        <legend>Server-calculated MRP awards</legend>
+        {workspace.automaticMrp.status === "available" ? <p className="auth-note">ACC published MRP schedule effective {workspace.automaticMrp.effectiveDate}. Values are calculated and verified by the server from the locked qualifying result and recorded playoff exit rounds.</p> : <p className="error-text">Automatic MRP calculation is blocked: {workspace.automaticMrp.code.replaceAll("_", " ")}.</p>}
+        {mrpClaims.map((entry) => <div className="correction-item" key={entry.participantId}>
           <strong>{entry.displayName}</strong>
-          <label>MRP claim (whole points)<input inputMode="numeric" min="0" step="1" value={entry.mrpPoints} onChange={(event) => setMrpClaims((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, mrpPoints: event.target.value } : item))} /></label>
-          <label>Required source or evidence note<input maxLength={500} value={entry.evidenceNote} onChange={(event) => setMrpClaims((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, evidenceNote: event.target.value } : item))} /></label>
+          <label>MRP award (whole points)<input readOnly inputMode="numeric" value={entry.mrpPoints} /></label>
+          <label>Calculation source<input readOnly value={entry.evidenceNote} /></label>
         </div>)}
-        <p className="error-text">Transcribed MRP claims are not calculated or ACC-approved.</p>
       </fieldset>
       <button className="primary" type="submit" disabled={busy || !workspace.playoffResult}>{busy ? "Checking…" : `Save Draft Version ${workspace.currentVersion + 1}`}</button>
     </form>
     {message ? <p className="error-text" role="alert">{message}</p> : null}
-    {workspace.draft ? <section className="correction-item"><h3>Latest saved draft</h3><p>Version {workspace.draft.version} by {workspace.draft.createdBy}</p><p>Bound playoff result: {workspace.draft.playoffResultVersionId ? "recorded" : "legacy draft — not bound"}</p><p>{workspace.draft.serverTotals.activePaymentReceiptCount} active receipts · {dollars(workspace.draft.serverTotals.activePaymentReceiptTotalMinor)} received</p><p>{workspace.draft.serverTotals.activeExpenseCount} active expenses · {dollars(workspace.draft.serverTotals.activeExpenseTotalMinor)} recorded</p><p>Unallocated tournament cash position: <strong>{dollars(workspace.draft.serverTotals.netCashPositionMinor)}</strong></p><p>{workspace.draft.mrpClaims.length} provisional MRP claim{workspace.draft.mrpClaims.length === 1 ? "" : "s"} transcribed.</p><a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft/working-copy`}>Download Private Working Copy (.CSV)</a><p className="auth-note">This private working copy is unreconciled and not an ACC submission. MRP claims are director transcriptions, not calculations or ACC-approved awards.</p></section> : null}
+    {workspace.draft ? <section className="correction-item"><h3>Latest saved draft</h3><p>Version {workspace.draft.version} by {workspace.draft.createdBy}</p><p>Bound playoff result: {workspace.draft.playoffResultVersionId ? "recorded" : "legacy draft — not bound"}</p><p>{workspace.draft.serverTotals.activePaymentReceiptCount} active receipts · {dollars(workspace.draft.serverTotals.activePaymentReceiptTotalMinor)} received</p><p>{workspace.draft.serverTotals.activeExpenseCount} active expenses · {dollars(workspace.draft.serverTotals.activeExpenseTotalMinor)} recorded</p><p>Unallocated tournament cash position: <strong>{dollars(workspace.draft.serverTotals.netCashPositionMinor)}</strong></p><p>{workspace.draft.mrpClaims.length} server-calculated MRP award{workspace.draft.mrpClaims.length === 1 ? "" : "s"} retained with the draft.</p><a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft/working-copy`}>Download Private Working Copy (.CSV)</a><p className="auth-note">This private working copy is unreconciled and not an ACC submission. MRP values are calculated and verified by the server from the recorded ACC schedule; director review remains required before finalization.</p></section> : null}
   </section>;
 }

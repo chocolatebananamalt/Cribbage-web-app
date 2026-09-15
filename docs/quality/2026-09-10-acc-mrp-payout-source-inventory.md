@@ -1,5 +1,14 @@
 # ACC MRP and payout source inventory — 2026-09-10
 
+> **Superseding implementation update — 2026-09-14:** The owner approved
+> automatic Main/Consolation MRP calculation from the currently published
+> schedules named below. Migration `0190_automatic_standard_singles_mrp_results`
+> records source version `acc-published-mrp-2016-08-01` and effective date
+> `2016-08-01` with server-derived results, after all qualifiers have a recorded
+> playoff exit round. This historical inventory still accurately describes the
+> missing automatic Q-pool/payout/ACC-submission contracts. Satellites remain
+> MRP-not-applicable.
+
 ## Acceptance criterion
 
 Identify the publicly published ACC MRP and payout materials, preserve their
@@ -81,4 +90,6 @@ mistaken for a current, production-authoritative financial rule.
 - Checked current public ACC standings and 2026 player-result records to
   distinguish active MRP recording from an authoritative calculation schedule.
 
-This is source-inventory evidence, not financial-calculation certification.
+This is source-inventory evidence. The dated Main/Consolation MRP implementation
+update above is limited to its explicitly supported schedule/exit-round inputs;
+it is not an automatic Q-pool, payout, or ACC-submission certification.

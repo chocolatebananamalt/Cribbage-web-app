@@ -12,7 +12,7 @@ const participants = ["50000000-0000-4000-8000-000000000001", "50000000-0000-400
 
 test("playoff placement request requires unique sequential qualifiers beginning with winner and runner-up", () => {
   const request = { qualificationResultVersionId, expectedVersion: 0, idempotencyKey: tournamentId,
-    placements: participants.slice(0, 2).map((participantId, index) => ({ participantId, placement: index + 1 })) };
+    placements: participants.slice(0, 2).map((participantId, index) => ({ participantId, placement: index + 1, mrpPlayoffExitRound: 1 })) };
   assert.equal(isPlayoffPlacementRequest(request), true);
   assert.equal(isPlayoffPlacementRequest({ ...request, placements: request.placements.slice(0, 1) }), false);
   assert.equal(isPlayoffPlacementRequest({ ...request, placements: [{ ...request.placements[0], placement: 2 }, request.placements[1]] }), false);
@@ -28,8 +28,8 @@ test("playoff result and workspace preserve a separate authority boundary", () =
   const choices = participants.map((participantId, index) => ({ participantId, displayName: `Player ${index + 1}`, qualificationRank: index + 1 }));
   const workspace = { tournamentId, eventId, qualificationResultVersionId, currentVersion: 1, qualifierChoices: choices,
     playoffResult: { playoffResultVersionId, version: 1, recordedAt: outcome.recordedAt, recordedBy: "Director",
-      placements: choices.slice(0, 2).map((choice, index) => ({ participantId: choice.participantId, displayName: choice.displayName, placement: index + 1 })) },
-    capabilities: { mrpCalculation: false, qPoolCalculation: false, payoutCalculation: false, publication: false } };
+      placements: choices.slice(0, 2).map((choice, index) => ({ participantId: choice.participantId, displayName: choice.displayName, placement: index + 1, mrpPlayoffExitRound: 1 })) },
+    capabilities: { mrpCalculation: true, qPoolCalculation: false, payoutCalculation: false, publication: false } };
   assert.equal(isPlayoffPlacementWorkspace(workspace, tournamentId, eventId), true);
   assert.equal(isPlayoffPlacementWorkspace({ ...workspace, capabilities: { ...workspace.capabilities, publication: true } }, tournamentId, eventId), false);
   assert.equal(isRejectedPlayoffPlacement({ status: "rejected", code: "invalid_placements", eventId }, eventId), true);
@@ -70,7 +70,8 @@ test("director UI visibly separates playoff finish from qualifying rank and with
   assert.match(page, /director.*co_director/);
   assert.match(client, /Supervised playoff placements/);
   assert.match(client, /Qualifying-round rank remains unchanged/);
-  assert.match(client, /does not calculate MRPs, Q-pools, prizes, or payouts/);
+  assert.match(client, /ACC published MRP schedule effective August 1, 2016/);
+  assert.match(client, /MRP playoff exit round/);
   assert.match(client, /playoff-placement:\$\{actorId\}:\$\{eventId\}/);
   assert.match(client, /reconciliation/);
   assert.match(client, /const request = requestFromEnvelope\(envelope\);[\s\S]*isPlayoffPlacementRequest\(request\)/);
