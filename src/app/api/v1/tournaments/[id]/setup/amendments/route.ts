@@ -25,7 +25,23 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       p_operation_id: body.operationId,
     });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
-    if (isSetupAmendmentResult(data, body)) return apiJson(data);
+    const admin = createServerOnlyAdminClient();
+    const amendedEvents = data && typeof data === "object" && !Array.isArray(data) && Array.isArray((data as Record<string, unknown>).events)
+      ? (data as Record<string, unknown>).events as Array<Record<string, unknown>> : [];
+    const teamEventIds = amendedEvents.filter((event) => ["doubles", "canadian_doubles"].includes(String(event.format))).map((event) => event.eventId);
+    if (teamEventIds.length) {
+      const enabled = await admin.rpc("enable_supported_team_scoring_v1", { p_actor_id: subject, p_tournament_id: id, p_event_ids: teamEventIds, p_parent_operation_id: body.operationId });
+      if (enabled.error || !enabled.data || typeof enabled.data !== "object" || (enabled.data as Record<string, unknown>).status !== "supported_team_scoring_enabled") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    }
+    const normalized = data && typeof data === "object" && !Array.isArray(data)
+      ? { ...data as Record<string, unknown>, events: Array.isArray((data as Record<string, unknown>).events)
+        ? ((data as Record<string, unknown>).events as Array<Record<string, unknown>>).map((event) => ({
+          ...event,
+          scoringMethod: ["doubles", "canadian_doubles"].includes(String(event.format)) ? "digital" : event.scoringMethod,
+        }))
+        : (data as Record<string, unknown>).events }
+      : data;
+    if (isSetupAmendmentResult(normalized, body)) return apiJson(normalized);
     if (isRejectedSetupAmendment(data)) {
       if (["tournament_unavailable", "not_director"].includes(data.code)) return apiJson({ error: "not_found" }, { status: 404 });
       return apiJson(data, { status: 409 });

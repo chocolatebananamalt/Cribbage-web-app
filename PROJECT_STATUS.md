@@ -1,5 +1,25 @@
 # Project Status
 
+## 2026-09-14 approved October standard correction — hosted implementation complete; deployment and physical acceptance pending
+
+- The October 3 release is no longer Standard-Singles-only. Two-person
+  Traditional Doubles and Canadian Doubles must support captain-selected shared
+  Digital or Paper team scoring, designated scorer/linkage resolution, team
+  seating and Verification IDs, independent opposing-team confirmation,
+  offline recovery, team standings, and member-preserving reporting.
+- Every signed-in participant, including paper users, must have the published
+  seating-directory lookup and private-field boundary. Each event must support
+  zero through six uniquely named, director-configurable Side Pools, including
+  equal fees under different names and event/combined printable reports.
+- Migrations `0174` through `0189` are now applied to the approved pilot
+  Supabase project. The hosted rollback fixture, including the new paper and
+  digital team paths, passed without retaining test data. Local verification
+  passes 509 tests, lint, dependency audit, provider checks, a production
+  build, workspace checks, and private-handoff verification.
+- Production deployment, runtime/browser smoke evidence, and the physical
+  independent-session rehearsal remain release gates. They are not being
+  represented as complete by this entry.
+
 ## 2026-09-14 tournament operations lifecycle implementation
 
 - Completed the follow-on tournament-operations implementation rather than
@@ -47,10 +67,11 @@
   uses authoritative verified/corrected results only, refreshes every ten
   seconds and after an accepted local result, and exposes freshness,
   offline/stale state, resolved games, and unresolved ties.
-- Added director Event Side Pools for the four customary categories while
-  preserving the separate two-Q-Pool configuration. Added append-only Side
-  Pool definition/election/payout storage and a normalized, paper-only team
-  foundation that cannot enable digital team scoring.
+- Historical implementation note: the initial operations release added four
+  customary Side Pools and a paper-only team foundation. The approved
+  2026-09-14 correction supersedes that boundary: six configurable Side Pools
+  and supported Digital/Paper Traditional and Canadian Doubles are now release
+  blockers; implementation and verification remain in progress.
 - Added event-scoped, audited absent, withdrawn, disqualified, substituted,
   and reinstated states. The follow-on operations release now uses the 2019
   Director Manual for defined late-player, first-sit-out makeup, departure,
@@ -1125,9 +1146,10 @@
   evidence, disputes/cross-check/corrections; results/qualifiers; and financial
   reconciliation.
 - Deferred production Rulebook/quick-reference integration, rich Judge Desk,
-  digital team scoring, flyer creation/import, online payments, SMS, OCR, and
-  automatic ACC portal submission. The demonstration may retain its
-  reference-only Rulebook preview; team events use paper scorecards. Main,
+  flyer creation/import, online payments, SMS, OCR, and automatic ACC portal
+  submission. The demonstration may retain its reference-only Rulebook
+  preview; supported team events now require the approved Digital/Paper paths,
+  while generic/custom team formats remain paper-only. Main,
   Consolation, and
   Satellites remain separate events under one tournament.
 - Added `Previous Screen` to Qualification Preview and aligned the Operations

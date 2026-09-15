@@ -6,6 +6,12 @@ Status: accepted product scope; implementation and release evidence remain in pr
 
 ## Decision
 
+> **Supersession note (2026-09-14):** This dated decision remains historical,
+> but its Standard-Singles-only and paper-team boundary is superseded by
+> `2026-09-14-october-team-scoring-seating-and-six-side-pools.md`. The current
+> September 18 gate includes supported two-person Traditional/Canadian Doubles
+> Digital/Paper scoring, participant seating lookup, and six Side Pools.
+
 The release target for director onboarding is September 18, 2026, followed by
 a supervised tournament on October 3, 2026. The pilot is Standard Singles
 only for digital scoring. A tournament remains one tournament record with

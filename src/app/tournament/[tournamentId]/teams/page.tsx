@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
+import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
+import TeamOperationsClient from "./team-operations-client";
+export default async function TeamOperationsPage({params}:{params:Promise<{tournamentId:string}>}){const{tournamentId}=await params;await requireTournamentAccess(tournamentId);return <main className="auth-shell"><section className="auth-card wide-card"><p className="eyebrow">TEAM EVENTS</p><h1>Team Scorecards</h1><p className="auth-note">Traditional Doubles and Canadian Doubles use one shared Digital or Paper scorecard per team. Each member keeps an individual identity and financial record.</p><TeamOperationsClient tournamentId={tournamentId}/><Link className="guide-link" href={`/tournament/${tournamentId}/seating-directory`}>Open Seating Directory</Link><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link><SharedDeviceSignOut/></section></main>}

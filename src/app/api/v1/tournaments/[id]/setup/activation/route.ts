@@ -26,7 +26,8 @@ export async function GET(
     if (!isUuid(id)) return apiJson({ error: "invalid_tournament" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await createServerOnlyAdminClient().rpc(
+    const admin = createServerOnlyAdminClient();
+    const { data, error } = await admin.rpc(
       "get_tournament_setup_activation_state_v3",
       { p_actor_id: subject, p_tournament_id: id },
     );
@@ -51,7 +52,8 @@ export async function POST(
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
 
-    const { data, error } = await createServerOnlyAdminClient().rpc(
+    const admin = createServerOnlyAdminClient();
+    const { data, error } = await admin.rpc(
       "activate_tournament_setup_v2",
       {
         p_actor_id: subject,
@@ -62,7 +64,24 @@ export async function POST(
       },
     );
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
-    if (isSetupActivationResult(data, body)) return apiJson(data);
+    const activatedEvents = data && typeof data === "object" && !Array.isArray(data) && Array.isArray((data as Record<string, unknown>).events)
+      ? (data as Record<string, unknown>).events as Array<Record<string, unknown>> : [];
+    const teamEventIds = activatedEvents.filter((event) => ["doubles", "canadian_doubles"].includes(String(event.format))).map((event) => event.eventId);
+    if (teamEventIds.length) {
+      const enabled = await admin.rpc("enable_supported_team_scoring_v1", { p_actor_id: subject, p_tournament_id: id, p_event_ids: teamEventIds, p_parent_operation_id: body.idempotencyKey });
+      if (enabled.error || !enabled.data || typeof enabled.data !== "object" || (enabled.data as Record<string, unknown>).status !== "supported_team_scoring_enabled") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    }
+    // The explicit audited promotion above commits supported doubles as
+    // digital-capable without widening generic/custom team formats.
+    const normalized = data && typeof data === "object" && !Array.isArray(data)
+      ? { ...data as Record<string, unknown>, events: Array.isArray((data as Record<string, unknown>).events)
+        ? ((data as Record<string, unknown>).events as Array<Record<string, unknown>>).map((event) => ({
+          ...event,
+          scoringMethod: ["doubles", "canadian_doubles"].includes(String(event.format)) ? "digital" : event.scoringMethod,
+        }))
+        : (data as Record<string, unknown>).events }
+      : data;
+    if (isSetupActivationResult(normalized, body)) return apiJson(normalized);
     if (isRejectedSetupActivation(data)) {
       if (["tournament_unavailable", "not_director"].includes(data.code)) {
         return apiJson({ error: "not_found" }, { status: 404 });
