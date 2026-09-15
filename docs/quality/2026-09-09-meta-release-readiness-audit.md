@@ -30,7 +30,7 @@ not evidence that a tournament workflow is safe to release.
 | `R-OFFLINE-01` offline/hybrid | Shared-device clearing exists; secure queue, reconnect/replay, and paper/dead-phone operation do not. | Incomplete — release blocker |
 | `R-CORR-01` corrections | Append-only correction, immediate/approval policy, audit, retry and private workspace boundaries exist. Published-result supersession and real concurrency/browser proof do not. | Partial — release blocker |
 | `R-RULE-01` judge/cross-check | Source-backed requirements exist; complete judge/dispute/capacity workflow does not. | Incomplete — release blocker |
-| `R-BOUND-01` event formats | Standard Singles is the bounded digital slice; team scoring remains gated. | Partial — safely bounded, not full product |
+| `R-BOUND-01` event formats | Historical audit row: Standard Singles was the bounded digital slice; the 2026-09-14 decision now adds two-person Traditional/Canadian Doubles as October Digital/Paper release blockers. | Partial — implementation and verification remain open |
 | `R-RET-01` retention/recovery | No proven backup, restore, retention, or deletion/hold implementation. | Incomplete — release blocker |
 | `R-EXP-01` ACC export | No approved `acc-results-v1` artifact/golden contract or tested export route. | Incomplete — release blocker |
 | `R-FIN-01` finance/reporting | Immutable manual payment evidence is implemented; reconciliation, fees, Q-pools, payouts, expenses, attachments, reports, and finalization are not. | Incomplete — release blocker |

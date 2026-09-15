@@ -167,6 +167,27 @@ export async function provisionOfflineSubmission(actorId: string, gameId: string
   return payload;
 }
 
+/** Team games share the proven device queue but use a separate server and
+ * database authority boundary so singles behavior cannot be rewritten. */
+export async function provisionOfflineTeamSubmission(actorId: string, gameId: string) {
+  const id = keyId(actorId, gameId);
+  const existing = await readOne<StoredCapability>(capabilityStore, id);
+  let device = await getDeviceKey(actorId, gameId);
+  const issue = async (capabilityId: string, deviceKeyId: string) => fetch(`/api/v1/team-games/${gameId}/offline-capability`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ capabilityId, deviceKeyId, publicJwk: device.publicJwk }),
+  });
+  let response = existing && isOfflineSubmissionCapability(existing.value) && existing.value.capabilityExpiresAtMs > Date.now() + 60_000
+    ? await issue(existing.value.capabilityId, existing.value.deviceKeyId)
+    : await issue(crypto.randomUUID(), crypto.randomUUID());
+  if (response.status === 409) { device = await createDeviceKey(actorId, gameId); response = await issue(crypto.randomUUID(), crypto.randomUUID()); }
+  const payload: unknown = await response.json().catch(() => null);
+  if (!response.ok || !isOfflineSubmissionCapability(payload) || payload.verifiedActorId !== actorId || payload.gameId !== gameId) throw new Error("offline_capability_unavailable");
+  await writeOne(keyStore, { ...device, id, serverDeviceKeyId: payload.deviceKeyId });
+  await writeOne(capabilityStore, { id, actorId, gameId, value: payload });
+  return payload;
+}
+
 export async function queueOfflineSubmission(capability: OfflineSubmissionCapability, winnerSide: "a" | "b", margin: number) {
   const device = await readOne<StoredDeviceKey>(keyStore, keyId(capability.verifiedActorId, capability.gameId));
   if (!device) throw new Error("offline_device_key_unavailable");
@@ -203,6 +224,12 @@ export async function readOfflineSubmission(actorId: string, gameId: string) {
 
 export async function replayOfflineSubmission(record: OfflineQueueRecord) {
   const response = await fetch("/api/v1/offline-score-replay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record.intent) });
+  const payload: unknown = await response.json().catch(() => null);
+  return { response, payload };
+}
+
+export async function replayOfflineTeamSubmission(record: OfflineQueueRecord) {
+  const response = await fetch("/api/v1/team-offline-score-replay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record.intent) });
   const payload: unknown = await response.json().catch(() => null);
   return { response, payload };
 }

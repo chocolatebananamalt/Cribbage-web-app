@@ -46,9 +46,11 @@ conditions require evidence from the real operating context:
 ACC authorization for official digital operational records and the
 current-effective values used for official MRP/Q-pool/payout reporting remain
 external approval inputs. ACC portal automation, online payments, SMS, flyer
-creation/import, live OCR, team scoring, the rich Judge Desk, and automatic
-rotation are post-pilot capabilities with manual October fallbacks; they are not
-launch blockers. The current tracker is `WORKING_OUTLINE.md`, and the evidence
+creation/import, live OCR, the rich Judge Desk, and automatic rotation are
+post-pilot capabilities with manual October fallbacks. Supported two-person
+Traditional/Canadian Doubles team scoring, participant seating lookup, and six
+Side Pools are October release blockers. The current tracker is
+`WORKING_OUTLINE.md`, and the evidence
 checklist is `OCTOBER_PILOT_REHEARSAL.md`.
 
 A successful protected-preview root response is not evidence that an

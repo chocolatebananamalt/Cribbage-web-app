@@ -13,6 +13,8 @@ import { QualificationFinalizationClient } from "./qualification-finalization-cl
 import { getTournamentResultEventSummary } from "../../../../lib/results/event-summary";
 import { LiveStandingsRefresh } from "./live-standings-refresh";
 import { isSidePoolWorkspace } from "../../../../lib/api/side-pools";
+import { isTeamWorkspace } from "../../../../lib/api/team-operations";
+import { isTeamResults } from "../../../../lib/api/team-results";
 
 const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
@@ -44,6 +46,16 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   const selectedEvent = eventWorkspace.events.find((item) => item.eventId === event);
   if (!selectedEvent) notFound();
   if (selectedEvent.eventType === "satellite") return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>{selectedEvent.name} Results</h1><p className="card-context">{eventWorkspace.tournamentName}</p><p className="registration-note">Singles and paper-scored doubles Satellites use the same director-reviewed result package: cashing placements, prize amounts, Q-Pool and Side-Pool results, special hands, and cross-check evidence.</p><section className="correction-item"><h2>ACC reporting</h2><p><strong>MRPs: Not applicable—Satellite event</strong></p><p>Satellite results never qualify a player for Main or Consolation.</p><p>Scorecards and payout evidence are retained for at least twelve months. The downloadable report assists the director. Automatic ACC submission remains disabled until an interface is approved.</p></section><Link className="guide-link" href={`/tournament/${tournamentId}/satellite-results?event=${event}`}>Open Satellite Results</Link><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
+  if (["doubles", "canadian_doubles"].includes(selectedEvent.format)) {
+    const admin = createServerOnlyAdminClient();
+    const [teamRead,resultRead] = await Promise.all([admin.rpc("get_event_team_workspace_v1", { p_actor_id: access.user.id, p_tournament_id: tournamentId }),admin.rpc("get_event_team_results_v1",{p_actor_id:access.user.id,p_tournament_id:tournamentId,p_event_id:event})]);
+    const normalized = teamRead.data && typeof teamRead.data === "object" && !Array.isArray(teamRead.data) ? { ...teamRead.data as Record<string, unknown>, actorId: access.user.id } : teamRead.data;
+    if (teamRead.error || resultRead.error || !isTeamWorkspace(normalized) || !isTeamResults(resultRead.data)) notFound();
+    const teamEvent = normalized.events.find((item) => item.eventId === event);
+    if (!teamEvent) notFound();
+    const report=resultRead.data;
+    return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>Live Team Standings</h1><p className="card-context">{normalized.tournamentName} · {teamEvent.name}</p><p className="registration-note">Only verified or officially corrected team games are included. {report.eventType==="satellite"?"Satellite results do not award MRPs or qualify teams for Main or Consolation.":`${report.qualificationCount} team${report.qualificationCount===1?"":"s"} qualify from ${report.entries.length} entries when the cutoff is resolved.`}</p>{report.qualificationBlocked?<p className="error-text" role="status">The qualification cutoff is tied. Compare the applicable head-to-head result; if it does not resolve the tie, the required playoff must be recorded before qualification is final.</p>:null}<div className="table-scroll"><table className="standings-table"><thead><tr><th>Rank</th><th>Team and members</th><th>Game Points</th><th>Won</th><th>Plus</th><th>Minus</th><th>Net</th></tr></thead><tbody>{report.entries.map((row)=><tr key={row.teamEntryId}><td>{row.rank}{row.qualifies?" · Q":row.qualificationStatus==="tie_review_required"?" · Tie review":""}</td><th>{row.teamName}<br/><small>{row.members.map((member)=>member.accNumber?`${member.name} (${member.accNumber})`:member.name).join(" / ")}</small></th><td>{row.gamePoints}</td><td>{row.gamesWon}</td><td>+{row.plusSpreadPoints}</td><td>−{row.minusSpreadPoints}</td><td>{formatSignedNet(row.netSpreadPoints)}</td></tr>)}</tbody></table></div><p className="auth-note">Both team members remain attached to the team entry for finance, pools, results, and ACC-ready reporting.</p><a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${event}/team-results.pdf`}>Download Team Results PDF</a><Link className="guide-link" href={`/tournament/${tournamentId}/teams`}>Open Team Scorecards</Link><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
+  }
   const standings = await getPreliminaryEventStandings(tournamentId, event);
   const qualification = buildPreliminaryQualification(standings.rows);
   const admin = createServerOnlyAdminClient();

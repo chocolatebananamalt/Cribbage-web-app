@@ -100,7 +100,7 @@ function isActivationEvent(value: unknown, keys: string[], includeActivationIds:
     && ["main", "consolation", "satellite", "custom"].includes(event.eventType as string)
     && typeof event.name === "string" && event.name.trim().length > 0 && event.name.length <= 200
     && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(format)
-    && method === (format === "standard_singles" ? "digital" : "manual")
+    && method === (["standard_singles", "doubles", "canadian_doubles"].includes(format) ? "digital" : "manual")
     && Number.isSafeInteger(event.gameCount) && (event.gameCount as number) >= 1 && (event.gameCount as number) <= 99;
 }
 

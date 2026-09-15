@@ -50,7 +50,7 @@ test("setup activation validates the exact server-derived result and safe exclus
       eventType: "satellite",
       name: "Canadian Doubles",
       format: "canadian_doubles",
-      scoringMethod: "manual",
+      scoringMethod: "digital",
       gameCount: 7,
     }],
     roundsCreated: false,
@@ -160,5 +160,5 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.match(client, /disabled=\{busy \|\| dirty\}/);
   assert.match(client, /Activate Tournament Events/);
   assert.match(client, /Tournament events are active/);
-  assert.match(client, /Team and doubles events remain paper-scored/);
+  assert.match(client, /Traditional Doubles and Canadian Doubles support shared Digital or Paper team scorecards/);
 });

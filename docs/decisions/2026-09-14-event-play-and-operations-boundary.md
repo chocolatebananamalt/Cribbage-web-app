@@ -10,7 +10,14 @@ All online submissions, confirmations, paper completions, failed-device recoveri
 
 Live Preliminary Standings use authoritative verified or officially corrected scorelines only. They refresh every ten seconds and after a locally accepted result, and disclose freshness, connectivity, resolved games, and unresolved ties.
 
-Side Pools are event-specific and separate from the existing two Q Pools. The four customary Side Pool categories are repeatable across events but unique within one event. Definitions, elections, and payouts use append-only records. Team identity is normalized as a team plus individual members and contributions; digital team scoring remains structurally impossible until separately approved and tested.
+Side Pools are event-specific and separate from the existing two Q Pools. The
+earlier four-customary-category boundary is superseded by the 2026-09-14
+October team decision: each event supports up to six uniquely named,
+director-configurable pools with arbitrary fees. Definitions, elections, and
+payouts use append-only records. Team identity remains normalized as a team
+plus individual members and contributions; supported two-person Traditional
+and Canadian Doubles now require separately implemented/tested Digital or Paper
+team scoring, while generic/custom teams remain paper-only.
 
 Participant absence, withdrawal, disqualification, substitution status, and reinstatement are audited and event-scoped. A status change never manufactures blanket wins or rewrites authoritative games. The 2019 ACC Tournament Director's Manual and 2025 ACC Rulebook are sufficient authority for the defined late-player, sit-out/makeup, early-departure, substitute, final-game, excluded-extra-game, refund, and playoff-absence outcomes. Mixed-up rotations are the one director-discretion case: the app validates conflicts and preserves a complete before/after version, but the director—not an invented automatic algorithm—chooses the corrected pairing.
 

@@ -42,7 +42,7 @@ The stable requirement IDs in this document (for example `R-SCORE-01`) are the c
 | R-OFFLINE-01 | Offline queue is authenticated, scoped, idempotent, conflict-aware, and never server verification by itself | queued operation replays once after reconnect and is accepted by server | forged/stale scope, replay, tampered payload, or local success is rejected/held |
 | R-CORR-01 | Corrections are append-only with explicit Pending/Applied state and configured standings/export effect | permitted non-self correction records old/new values and applies default policy | self-correction, unauthorized editor, or unapproved pending correction changing standings/export is rejected |
 | R-RULE-01 | Judge and cross-check protocol is source-backed, capacity-safe, and non-self-disputing | eligible judge/cross-checker handles a valid dispute within capacity | self-dispute, over-capacity assignment, or uncited rule decision is blocked |
-| R-BOUND-01 | Standard singles is the first digital scoring boundary; team/doubles/Canadian Doubles require an approved ruleset | singles scores end-to-end; flyer/export represents other formats as configured | app cannot claim digital scoring for an unapproved format |
+| R-BOUND-01 | Standard Singles plus two-person Traditional Doubles and Canadian Doubles are approved digital scoring boundaries; generic/custom teams require a separately defined ruleset | supported doubles score team-entry games; generic/custom formats remain paper-only | app cannot claim digital scoring for an unsupported format |
 | R-RET-01 | Retention defaults to restricted hold/no automatic purge until policy approval | authorized deletion/hold and backup/restore are audited | automatic purge, unauthorized deletion, or restore without integrity check is rejected |
 | R-EXP-01 | `acc-results-v1` is an internal director-assisted export pending an ACC golden contract | valid artifact downloads with schema/version and checksum | only export-specific unknowns block export; portal import/API is never claimed |
 | R-FIN-01 | Finance/reporting compliance gates reconcile fees, sanctioning fee, Q-pools, payouts, expenses, attachments, and required results | reconciled ledger matches approved result version and report | unreconciled money, missing required report field, or private-data leak blocks release/export |
@@ -69,7 +69,9 @@ The vertical slice and pilot are validation gates, not a reduced definition of t
 ### 2.1 September 18 minimum for the October 3 pilot
 
 The director-onboarding target is September 18, 2026, for a supervised
-October 3, 2026 Standard Singles pilot. The release-blocking capabilities are:
+October 3, 2026 pilot. The release-blocking capabilities are Standard Singles
+and supported two-person Traditional/Canadian Doubles in either team scorecard
+mode, plus the six Side Pool and seating-directory requirements below:
 tournament and event/Q-pool setup; player registration or authorized import;
 roster review, manual payment status and check-in; registration closure;
 initial seating and a director-entered/imported game schedule when approved
@@ -81,11 +83,12 @@ high-non-qualifier, playoff results, approved MRP/Q-pool calculations and
 export; and reconciled financials including expenses and payouts.
 
 Production integration of the Rulebook/quick-reference surface, Judge Desk,
-digital team scoring, flyer creation/import, online payments, SMS, OCR, and
-automatic ACC submission are deferred beyond this pilot. The synthetic
-demonstration may retain a reference-only Rulebook preview, but that preview is
-not operational functionality or release evidence. Team events use paper
-scorecards. These deferrals
+flyer creation/import, online payments, SMS, OCR, and automatic ACC submission
+are deferred beyond this pilot. Digital team scoring for supported two-person
+Traditional/Canadian Doubles is an October release blocker, while generic/custom
+team formats remain paper-only. The synthetic demonstration may retain a
+reference-only Rulebook preview, but that preview is not operational
+functionality or release evidence. These deferrals
 do not weaken the two-submission/two-confirmation, offline durability,
 authorization, unresolved-dispute, qualifying, or financial-integrity
 requirements. Automatic schedule generation rejects an event without its
@@ -97,7 +100,39 @@ Satellite are separate event records under one tournament record and remain
 available without a separate tournament login. See
 `docs/decisions/2026-09-11-september-18-october-pilot-minimum.md`.
 
-### 2.1 ACC authority and integration boundary
+### 2.1.1 October team, seating, and Side Pool requirements
+
+- A captain MUST create a two-person supported team and select the shared
+  Digital or Paper mode. Individual roster identities, accounts, ACC numbers,
+  personal preferences, payments, and audit history MUST remain separate.
+- A designated scorer MUST be recorded (captain by default) and changeable
+  before play. Digital mode requires a linked scorer account; missing linkage
+  MUST produce a director-resolution flag, never a silent mode change.
+- Team games MUST retain both teams, four members, team Verification IDs,
+  current Table/Seat snapshots, winner, spread, derived 0/2/3 points, and
+  reciprocal lines. Digital verification requires opposing independent
+  submissions and two distinct confirmations; the creator cannot self-confirm.
+  Offline records remain pending until synchronized and verified.
+- Every player and team MUST receive a published starting assignment and
+  permanent Verification ID. Signed-in participants in the tournament,
+  including paper users, MUST see their own starting/current assignment.
+  Published seating search MUST be scoped to the selected tournament/event,
+  support partial name or exact normalized ACC lookup, and disclose only name,
+  team when applicable, scorecard type, and Table/Seat. Directors additionally
+  need paper/digital, singles/team, and Table/Seat filters and printable card
+  preparation lists.
+- An event MUST allow zero through six active Side Pools with unique normalized
+  director-defined names and arbitrary fees. Equal fees are permitted for
+  different names; $10/$20/$50/$100 are presets only. A seventh pool or
+  duplicate normalized name MUST be rejected. Existing elections, receipts,
+  corrections, payouts, reconciliation, CSV, and PDF behavior MUST apply to
+  all six pools and remain separate from two Q Pools; event and combined
+  tournament reports are required.
+- Team creation, membership claims, mode/scorer/seating changes, scoring,
+  corrections, and financial changes MUST be versioned and audited. Completed
+  team scoring and six Side Pools are release blockers.
+
+### 2.1.2 ACC authority and integration boundary
 
 The first pilot is **integration-first and replacement-ready**. This app owns pilot live operations, while the existing ACC system remains authoritative for sanctioning, the official schedule, membership/Master Rating Points, approvals, and historical records. The first supported handoff is a validated, versioned, director-reviewed ACC package followed by manual portal entry. Generation of that package MUST NOT be displayed or recorded as ACC submission, acceptance, or publication.
 
@@ -138,7 +173,7 @@ The full suite MUST include these bounded workflows; they are not deferred by th
 - **Check-in lookup:** an authorized director/co-director workspace MUST provide a tournament-scoped player-name search that returns current attendance state and scorecard type, gives an explicit no-match result, and grants no additional roster visibility or mutation authority.
 - **Scorecard preference:** every tournament roster identity MUST carry an explicit `digital` or `paper` scorecard preference selected at public registration, director manual entry, or CSV import. The value is tournament-scoped, versioned, and audited; directors/co-directors may correct it before registration closes and initial seating is published. Roster, check-in/search, seating print, and event-enrollment read models MUST expose it. Account/profile linkage is a separate fact and MUST NOT be used to infer scorecard type.
 - **Shared-device clearing:** a shared tablet/phone session MUST have an explicit “clear player/context” action. Clearing removes local identity, draft score, and cached private data; the next player must authenticate or use the context-only PIN flow. A stale or uncleared context MUST block check-in and score confirmation.
-- **Seating/rotation:** the server assigns a unique current Table/Seat value per round and records effective time and source. Each player also has one permanent, tournament-scoped verification ID assigned when registration closes; it does not change as Table/Seat rotates and is the value entered in the scorecard Verification ID # field. Manual seating overrides require a director reason. Rotation, anchors, sit-outs, family restrictions, lateness/forfeits, and any seating eligibility rule MUST be backed by an approved dated ACC fixture before an official schedule or export is produced.
+- **Seating/rotation:** the server assigns a unique current Table/Seat value per game and records effective time and source. Each singles entry or team entry also has one permanent, event-scoped verification ID assigned when that event's registration closes; it does not change as Table/Seat rotates and is the value entered in the scorecard Verification ID # field. Both members of a team see the shared team assignment and ID. Manual seating overrides require a director reason. Rotation, anchors, sit-outs, family restrictions, lateness/forfeits, and any seating eligibility rule MUST be backed by an approved dated ACC fixture before an official schedule or export is produced.
 - **Known absence/forfeit fixtures:** Rule 11.4 gives a five-minute post-lunch grace period before one current-game 2/+10 and 0/-10 result, after which rotation resumes. The 2019 Director Manual pp. 16–18 supplies the defined late-player, first-sit-out makeup, early-departure, two-games-per-opponent, final-game substitute, and excluded-extra-game cases. Rule 13.1 supplies the separate 5/20/35-minute playoff sequence while retaining the absent qualifier's applicable round-loser award and MRPs. Mixed-up rotation pairing remains a director decision under the source and therefore MUST use a validated, previewed, audited manual amendment rather than an invented automatic pairing.
 - **Disputes:** a player/cross checker can open a dispute against a specific match/card/game. The dispute captures actor, target, evidence source (digital/paper), status, and resolution. A person MUST NOT resolve their own card dispute. A dispute blocks final standings/export until resolved or explicitly dispositioned by an eligible director/judge under the configured policy.
 - **Consolation eligibility:** the system may compute a draft eligibility list from configured event data, but MUST label it provisional and block official use until the applicable ACC rule/fixture and director approval are present.
@@ -326,10 +361,10 @@ Cached rulebook text/PDF is permitted only after separate ACC/copyright permissi
 
 - Flyer/event setup MUST support Main, Consolation (display nickname “Consy”), and any number of Satellites. Directors choose a standard event type or Custom event and provide name, date/time, format, game count, fees, pools, payout/qualifying details, and eligibility notes.
 - Before activation, tournament and event text, date/time, and money controls MUST remain full-width, accessible, and editable at phone and desktop widths. The screen MUST explain that **Add Main Event** exposes event details and that **Add Q Pool** within Main or Consolation exposes pool type, fee, and optional note. Fee-includes examples such as coffee, donuts, and lunch remain visible helper text after the director enters a value. Activation retains the existing immutable lock.
-- After a tournament setup is activated, a director or co-director MUST be able to append a later Consolation or Satellite event under the same tournament. This operation creates a new immutable setup snapshot and new operational rows only for the added events; it MUST NOT edit or replace any existing activated event, ruleset, setup snapshot, participant, game, score, seating, finance, or result. Concurrent requests serialize on the tournament and stale requests fail closed. Standard Singles additions use digital scoring; doubles, Canadian Doubles, team, and custom additions remain manual until their separate digital-scoring release.
+- After a tournament setup is activated, a director or co-director MUST be able to append a later Consolation or Satellite event under the same tournament. This operation creates a new immutable setup snapshot and new operational rows only for the added events; it MUST NOT edit or replace any existing activated event, ruleset, setup snapshot, participant, game, score, seating, finance, or result. Concurrent requests serialize on the tournament and stale requests fail closed. Standard Singles, Traditional Doubles, and Canadian Doubles additions may use their approved digital boundaries; generic/custom team additions remain manual until separately defined.
 - Flyers MUST disclose when Muggins is in effect, using director-provided tournament configuration and without implying a rule that was not selected. Flyer output MUST distinguish Standard Singles digital scoring from non-singles formats that are only manually entered/imported.
 - Main and Consolation support up to two Q-pools using the currently observed ACC options: equal payout, equal payout with double to the top qualifier, and graduated payout ratios. Payout/rounding rules require dated approved fixtures before official calculation.
-- The first digital scoring boundary is Standard Singles. Team, ordinary Doubles, and Canadian Doubles may be represented in flyer/event configuration and internal director-assisted exports, but their digital scoring, standings, eligibility, payout, and verification rules require a separately approved ruleset and fixtures. The product MUST NOT claim full digital support for those formats before that gate passes.
+- The approved October digital boundaries are Standard Singles and two-person Traditional Doubles/Canadian Doubles. Team, eligibility, payout, and verification records MUST preserve both members; generic/custom teams remain paper-only until separately defined. The product MUST NOT claim digital support for an unsupported format.
 - For non-singles events before that ruleset gate passes, results MUST be entered manually or imported from an approved external source, visibly labeled `manual/imported — not digitally scored`, and excluded from claims of digital verification. The app may publish those results only through the same configured reconciliation/director-approval gates.
 - Finance MUST use manual payment/status entry and the label **ACC Sanctioning Fee** (renamed from Reserve Fee). For the October pilot, directors configure cash, check, or both per tournament; at least one remains enabled. Registration records the intended method, while private finance records amount owed, current cumulative amount received, remaining balance, derived status, actor, timestamp, and immutable history. A check number may be stored only in the bounded optional receipt note; bank-account and routing numbers are prohibited.
 - A mistaken receipt, full refund, or partial refund MUST preserve its original evidence. The pilot workflow voids the current cumulative receipt with a required reason and, when a non-zero balance remains received, records a replacement cumulative receipt. The server rejects a newly received method that is disabled for the tournament. Payment state MUST remain independent of check-in, seating, enrollment, scoring, qualification, and results.

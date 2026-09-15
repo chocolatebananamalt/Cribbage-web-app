@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
+import SeatingDirectoryClient from "./seating-directory-client";
+export default async function SeatingDirectoryPage({params}:{params:Promise<{tournamentId:string}>}){const{tournamentId}=await params;await requireTournamentAccess(tournamentId);return <main className="auth-shell"><section className="auth-card wide-card"><p className="eyebrow">SEATING</p><h1>Seating Directory</h1><p className="auth-note">Look up published assignments by player name or ACC number. Only tournament seating information is shown.</p><SeatingDirectoryClient tournamentId={tournamentId}/><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link></section></main>}

@@ -1,4 +1,4 @@
-# October Standard Singles pilot rehearsal
+# October pilot rehearsal — Singles and supported two-person teams
 
 Target completion: 2026-09-17  
 Pilot go/no-go: 2026-09-18  
@@ -6,9 +6,16 @@ Live tournament: 2026-10-03
 
 ## Purpose
 
-Prove the already deployed October-critical workflows with independent people,
+Prove the October-critical workflows with independent people,
 devices, and browser sessions before official scores are accepted. This is an
 evidence checklist, not a request for additional product design.
+
+The rehearsal must cover Standard Singles and, once the implementation is
+available, two-person Traditional Doubles and Canadian Doubles in both captain-
+selected Digital and Paper modes. Generic/custom team formats remain
+paper-only. It must also cover the participant seating directory and zero
+through six configurable Side Pools; these are release blockers, not deferred
+post-October work.
 
 ## Required people and equipment
 
@@ -29,7 +36,8 @@ fictional. Do not use live October entrants until the rehearsal passes.
 2. Confirm the Supabase migration history includes `0163`.
 3. Confirm the Vercel runtime-error view is empty before the exercise.
 4. Open the distinct draft **Full Rehearsal — 09-16-2026** from **Your
-   tournaments** and configure its Standard Singles event. Do not reuse Pilot
+   tournaments** and configure its Standard Singles plus supported doubles
+   events. Do not reuse Pilot
    Tournament or October 3 Pilot Tournament.
 5. Add the required fictional roster entries with explicit digital/paper
    scorecard choices; do not reuse the real October roster.
@@ -70,6 +78,13 @@ be fictional.
   link no longer accepts entries.
 - Publish permanent initial Table/Seat assignments and verify those values are
   also the players' permanent verification IDs.
+- Verify both members see the team assignment and permanent team Verification
+  ID, and verify each signed-in paper participant sees their own assignment.
+- After publication, search the seating directory by partial name and exact
+  normalized ACC number. Confirm results disclose only name/team,
+  scorecard type, and Table/Seat; prove pre-publication and cross-tournament
+  denial and private-field non-disclosure. Exercise director paper/digital,
+  singles/team, and Table/Seat filters plus printable paper-card lists.
 - Enroll the checked-in players in the event.
 - Import or enter a director-reviewed schedule and prove duplicate player,
   duplicate seat, missing opponent, and capacity violations are rejected.
@@ -91,6 +106,22 @@ be fictional.
   independently reviewed paper evidence.
 - Prove an official cannot review their own game or their own prior entry.
 - Prove mismatched evidence stays pending and does not alter standings.
+
+### D1. Supported team scoring
+
+- Register a captain and partner, claim the team from the partner account, and
+  reject duplicate identities, unauthorized changes, and mismatched personal
+  preferences without overwriting either player's record.
+- Exercise captain-selected Digital and Paper team modes, scorer replacement,
+  missing linked Digital scorer resolution, and full-name team display.
+- Schedule Traditional and Canadian Doubles and verify team seating, all four
+  displayed members, team Verification IDs, current-game Table/Seat, and
+  reciprocal scorecard lines.
+- Exercise Digital/Digital, Digital/Paper, and Paper/Paper games, winner/spread
+  mismatch, corrections, offline queue/reconnect exactly-once replay, and
+  rejection when the creator attempts self-confirmation. Confirm only verified
+  or corrected games reach team standings/qualification and both members are
+  preserved in results, finance, pools, reports, and audit history.
 
 ### E. Correction and dispute
 
@@ -132,6 +163,11 @@ be fictional.
   history.
 - Complete the settlement working copy, bind the reviewed sources, and prove
   finalization rejects missing scores, disputes, corrections, or source data.
+- Configure zero through six Side Pools; reject a seventh and duplicate
+  normalized name, permit equal fees under different names, and verify
+  elections, amounts due/received/remaining, cash/check references,
+  corrections/voids, posted policy, cross-checked payouts, exact cents,
+  event PDF, combined tournament PDF, CSV, and finalization.
 
 ### H. Recovery and release
 

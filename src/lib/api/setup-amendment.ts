@@ -67,7 +67,7 @@ export function isSetupAmendmentResult(value: unknown, request: SetupAmendmentRe
         && isUuid(event.rulesetVersionId) && isUuid(event.eventId)
         && event.eventType === requested.eventKind && event.name === requested.displayName.trim()
         && event.format === requested.formatCode
-        && event.scoringMethod === (requested.formatCode === "standard_singles" ? "digital" : "manual")
+        && event.scoringMethod === (["standard_singles", "doubles", "canadian_doubles"].includes(requested.formatCode) ? "digital" : "manual")
         && event.gameCount === requested.gameCount;
     });
 }
