@@ -96,9 +96,10 @@ story.append(table([
     ["Ian", "Player", "Wi-Fi Samsung phone", "Paper", "Paper Team Charlie with Shonni"],
     ["Shonni", "Cross-checker · player", "Wi-Fi MacBook", "Paper", "Paper Team Charlie with Ian"],
     ["Luke", "Player", "Wi-Fi MacBook", "Paper", "Digital Team Alpha partner with Daron"],
+    ["Alice", "Co-director observer · non-player", "Director choice", "N/A", "Full rehearsal access; observe every workflow without active test duties"],
 ], [0.78*inch, 1.4*inch, 1.22*inch, 0.56*inch, 3.15*inch], small=True))
 story.append(Spacer(1, 6))
-story.append(p("Team scorecard choice is separate from a person’s Singles choice. Luke is Paper for Singles and Digital with Team Alpha. For the Paper Team Practice Satellite, Daron/Luke and Maryn/Gabe re-form as Paper teams.", "RunBody"))
+story.append(p("Alice is a seventh, non-playing co-director observer and is not one of the six fictional test identities. Add her as co-director after she signs in; she may inspect the rehearsal but should not replace an assigned test actor. Team scorecard choice is separate from a person’s Singles choice. Luke is Paper for Singles and Digital with Team Alpha. For the Paper Team Practice Satellite, Daron/Luke and Maryn/Gabe re-form as Paper teams.", "RunBody"))
 
 story += section("Four rehearsal events")
 story.append(table([
@@ -109,10 +110,10 @@ story.append(table([
     ["Paper Team Practice Satellite", "3 games · Paper teams Daron/Luke and Maryn/Gabe", "Paper/Paper team scoring; MRP not applicable"],
 ], [1.55*inch, 2.7*inch, 3.0*inch], small=True))
 
+story.append(PageBreak())
 story += section("MRP source boundary")
 story.append(p("Main and Consolation calculations use the currently published ACC schedules: <b>MainMRPs2017ver2.pdf</b> and <b>ConsMRPs2017ver2.pdf</b>, each marked effective <b>August 1, 2016</b>. The app records source version <b>acc-published-mrp-2016-08-01</b> and the effective date in the calculation/export. Every qualifier needs a recorded playoff exit round. Satellite reports must show <b>MRPs: Not applicable</b>; they do not qualify anyone for Main or Consy.", "RunBody"))
 
-story.append(PageBreak())
 story += section("Run the rehearsal — setup and intake")
 steps_one = [
     "Sign in as Daron. In <b>Your tournaments</b>, open Full Rehearsal — 09-16-2026. Confirm Daron is primary director; do not open a Pilot Tournament.",
@@ -143,7 +144,6 @@ steps_two = [
 for number, item in enumerate(steps_two, 12):
     story.append(checkbox(f"<b>{number}.</b> {item}"))
 
-story.append(PageBreak())
 story += section("Run the rehearsal — outage and recovery")
 for number, item in enumerate([
     "<b>Single-device outage (Gabe’s iPad):</b> disconnect Wi-Fi; enter a result; reload; reconnect; confirm exactly one synchronized entry and no duplicate. Screenshot the stored-local/pending indication and the recovered receipt.",

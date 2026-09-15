@@ -26,6 +26,10 @@
   notices; this change introduced no new browser-executable function.
 - The physical six-device rehearsal is still the release gate. It has not been
   represented as passed by the migration, runbook, or automated tests.
+- The private runbook also lists Alice Souza as a seventh, non-playing
+  co-director observer. Her app role is intentionally a manual primary-director
+  assignment after she signs in; no email address or account identity is stored
+  in the runbook or source tree.
 
 ## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 
