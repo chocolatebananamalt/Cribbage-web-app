@@ -97,7 +97,7 @@ export function isSetupActivationResult(value: unknown, request: SetupActivation
     && result.registrationState === "open";
 }
 
-function isActivationEvent(value: unknown, keys: string[], includeActivationIds: boolean) {
+function isActivationEvent(value: unknown, keys: string[], includeActivationIds: boolean, allowLegacyManualTeamScoring = false) {
   if (!value || typeof value !== "object" || !hasExactKeys(value, keys)) return false;
   const event = value as Record<string, unknown>;
   const format = event.format as string;
@@ -107,7 +107,11 @@ function isActivationEvent(value: unknown, keys: string[], includeActivationIds:
     && ["main", "consolation", "satellite", "custom"].includes(event.eventType as string)
     && typeof event.name === "string" && event.name.trim().length > 0 && event.name.length <= 200
     && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(format)
-    && method === (["standard_singles", "doubles", "canadian_doubles"].includes(format) ? "digital" : "manual")
+    && (format === "standard_singles"
+      ? method === "digital"
+      : ["doubles", "canadian_doubles"].includes(format)
+        ? (allowLegacyManualTeamScoring ? ["digital", "manual"].includes(String(method)) : method === "digital")
+        : method === "manual")
     && Number.isSafeInteger(event.gameCount) && (event.gameCount as number) >= 1 && (event.gameCount as number) <= 99;
 }
 
@@ -125,7 +129,9 @@ export function isSetupActivationState(value: unknown): value is SetupActivation
     && Number.isSafeInteger(state.setupVersion) && (state.setupVersion as number) >= 1
     && Number.isSafeInteger(state.eventCount) && (state.eventCount as number) >= 1 && (state.eventCount as number) <= 32
     && Array.isArray(state.events) && state.events.length === state.eventCount
-    && state.events.every((item) => isActivationEvent(item, activationStateEventKeys, false));
+    // Legacy scoreless paper team events remain valid historical active events.
+    // New activation replies still require supported doubles to be digital-capable.
+    && state.events.every((item) => isActivationEvent(item, activationStateEventKeys, false, true));
 }
 
 export function isRejectedSetupActivation(value: unknown): value is RejectedSetupActivation {

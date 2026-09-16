@@ -1,5 +1,35 @@
 # Project Status
 
+## 2026-09-16 pool setup controls and rehearsal finalization recovery — database applied; deployment verification pending
+
+- Added separate setup sections for the existing two **Q Pools** per Main or
+  Consolation and up to six named **Side Pools** per Main, Consolation, or
+  Satellite. Both have their own row-level removal control and limit message.
+  Side Pool configurations are private, immutable setup-revision records;
+  activation materializes them into the existing audited operational Side Pool
+  finance/reporting records. They do not alter Q Pools.
+- Repaired the activation-state reader so a scoreless legacy paper-scored
+  Traditional/Canadian Doubles event reads as a valid active event rather than
+  producing a false 503 and stale **Retry Finalize & Open Registration** path.
+  New activation replies remain strict: supported doubles must become
+  Digital/Paper-capable. An explicit server-authorized guarded upgrade control
+  is available for eligible unstarted legacy doubles.
+- Migration `setup_side_pool_definitions_and_recovery` is applied to the
+  approved pilot database. It was initially rejected before change because of
+  a missing referenced uniqueness constraint; the corrected migration applied
+  successfully. The only verified database effect is schema creation—no
+  rehearsal data was modified.
+- `pnpm verify` passes cleanly: audit, lint, **524/524** application tests,
+  provider readiness, production build, and workspace verification.
+  `pnpm exec tsc --noEmit` and `pnpm verify:handoff` also pass. A second
+  migration, `setup_side_pool_advisor_indexes`, is applied and resolves every
+  hosted performance-advisor unindexed-foreign-key finding for the new tables.
+  The only fresh notices are expected unused-index notices (no rehearsal
+  workload yet) and deliberate RLS-enabled/no-policy closed tables with all
+  direct browser grants revoked. Production deployment, protected
+  phone/desktop review, and the director’s audited retirement/upgrade/addition
+  actions remain pending.
+
 ## 2026-09-16 calculated ACC sanctioning fee and setup clarity — production deployed; director rehearsal verification pending
 
 - Replaced the editable tournament-wide ACC Sanctioning Fee with a live Main/

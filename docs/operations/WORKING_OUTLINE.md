@@ -1,6 +1,6 @@
 # ACC Tournament Desk — Working Outline
 
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-16
 
 > **October standard correction (approved 2026-09-14):** October is not
 > Standard-Singles-only. Two-person Traditional Doubles and Canadian Doubles
@@ -71,6 +71,16 @@ a separately identified editable copy; eligible individual/team enrollments
 and references to the same tournament payment ledger transfer without
 rewriting history or duplicating money. Production deployment and director
 visual proof remain before this finding is closed.
+
+**Category 2 — Pool setup and rehearsal recovery:** Q Pools now retain their
+two-pool Main/Consolation limit while Side Pools have their own zero-to-six
+Main/Consolation/Satellite configuration area, versioned setup records, and
+operational-financial materialization. The rehearsal’s active legacy
+paper-team event state is recognized as valid, so a stale finalization retry
+cannot reopen or duplicate registration. The remaining director-facing
+rehearsal actions are to retire the unused Traditional Doubles event, enable
+the existing Canadian Doubles event for Digital/Paper scoring, and add
+**Canadian Doubles Practice** through the audited later-event workflow.
 
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating

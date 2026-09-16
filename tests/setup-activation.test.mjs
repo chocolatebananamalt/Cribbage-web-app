@@ -6,6 +6,7 @@ import {
   isRejectedSetupActivation,
   isSetupActivationRequest,
   isSetupActivationResult,
+  isSetupActivationState,
 } from "../src/lib/api/setup-activation.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -76,6 +77,13 @@ test("setup activation exposes only known controlled rejections", () => {
   assert.equal(isRejectedSetupActivation({ status: "rejected", code: "unsupported_setup" }), true);
   assert.equal(isRejectedSetupActivation({ status: "rejected", code: "made_up" }), false);
   assert.equal(isRejectedSetupActivation({ status: "rejected", code: "not_director", detail: "private" }), false);
+});
+
+test("an already-open legacy paper doubles event remains readable but cannot weaken a new activation reply", () => {
+  const legacyState = { status: "activated", setupRevisionId: revisionId, setupVersion: 3, eventCount: 1, events: [{ eventId: "60000000-0000-4000-8000-000000000006", eventType: "satellite", name: "Legacy Canadian Doubles", format: "canadian_doubles", scoringMethod: "manual", gameCount: 3 }] };
+  assert.equal(isSetupActivationState(legacyState), true);
+  const newReply = { status: "tournament_setup_activated", setupRevisionId: revisionId, setupVersion: 3, eventCount: 1, events: [{ activationId: "30000000-0000-4000-8000-000000000003", setupEventVersionId: "40000000-0000-4000-8000-000000000004", rulesetVersionId: "50000000-0000-4000-8000-000000000005", eventId: "60000000-0000-4000-8000-000000000006", eventType: "satellite", name: "New Canadian Doubles", format: "canadian_doubles", scoringMethod: "manual", gameCount: 3 }], roundsCreated: false, participantsEnrolled: false, seatingUpdated: false, financeUpdated: false, resultsUpdated: false, payoutsCalculated: false, qualifiersCalculated: false, accSubmissionCreated: false, registrationState: "open" };
+  assert.equal(isSetupActivationResult(newReply, request), false);
 });
 
 test("activation migration is private, atomic, source-bound, and deliberately narrow", () => {

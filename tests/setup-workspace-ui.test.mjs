@@ -24,8 +24,14 @@ test("setup workspace exposes the October pilot event and Q Pool menus", async (
   ]) assert.match(client, new RegExp(required.replace(/[()]/g, "\\$&")));
   assert.match(client, /formatForStyle/);
   assert.match(client, /event\.qPools\.length >= 2/);
+  assert.match(client, /event\.sidePools\.length >= 6/);
   assert.match(client, /Click Add Main Event to enter its event name, fees, date and time, included items, and Q Pools/);
   assert.match(client, /Click Add Q Pool to enter its type, entry fee, and optional note/);
+  assert.match(client, /Click Add Side Pool to enter its type, entry fee, and optional note\. Each event may have up to six Side Pools\./);
+  assert.match(client, /Add Q Pool limit reached/);
+  assert.match(client, /Add Side Pool limit reached/);
+  assert.match(client, /Remove Q Pool/);
+  assert.match(client, /Remove Side Pool/);
   assert.match(client, /Coffee, donuts, lunch, etc\./);
   assert.match(client, /aria-describedby=\{`\$\{event\.clientRowId\}-fee-includes-help`\}/);
 });

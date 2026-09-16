@@ -18,10 +18,11 @@ export type SetupEvent = {
   eligibilityNote: string;
   mugginsStatus: "unset" | "in_effect" | "not_in_effect";
   qPools: SetupPool[];
+  sidePools: SetupPool[];
 };
 export type SetupOfficial = { profileId: string; role: "director" | "co_director" };
 export type SetupPayload = { tournamentName: string; city: string; venue: string; startsAt: string; endsAt: string; timezone: string; tournamentContactPhone: string; tournamentContactEmail: string; tournamentMailingAddress: string; mainSanctioningFeeRateCents: number; consolationSanctioningFeeRateCents: number; mainSanctioningFeeOverrideReason: string; mainSanctioningFeeOverrideReference: string; consolationSanctioningFeeOverrideReason: string; consolationSanctioningFeeOverrideReference: string; officials: SetupOfficial[]; events: SetupEvent[] };
-export type SetupCurrentEvent = SetupEvent & { sourceStatus: "director_configured_unverified"; qPools: Array<SetupPool & { slot: 1 | 2; sourceStatus: "director_configured_unverified" }> };
+export type SetupCurrentEvent = SetupEvent & { sourceStatus: "director_configured_unverified"; qPools: Array<SetupPool & { slot: 1 | 2; sourceStatus: "director_configured_unverified" }>; sidePools: Array<SetupPool & { slot: 1 | 2 | 3 | 4 | 5 | 6; sourceStatus: "director_configured_unverified" }> };
 export type SetupCurrent = Omit<SetupPayload, "events"> & { revisionId: string; version: number; createdAt: string; events: SetupCurrentEvent[] };
 export type SetupWorkspace = { current: SetupCurrent | null; history: Array<{ version: number; createdAt: string; eventCount: number }>; sanctioningFee: { mainRateCents: number; consolationRateCents: number; mainEligibleParticipantCount: number; consolationEligibleParticipantCount: number; runningTotalCents: number; mainRateSource: "setup" | "override"; consolationRateSource: "setup" | "override" } };
 export type SetupOfficialChoices = { directorProfileId: string; directorDisplayName: string; coDirectorProfileIds: string[] };
@@ -30,10 +31,10 @@ export type SetupRecoveryRequest = { idempotencyKey: string };
 const setupRejectionCodes = new Set([
   "authentication_required", "not_director", "idempotency_conflict", "setup_lifecycle_closed",
   "stale_version", "invalid_officials", "invalid_event", "invalid_q_pool", "invalid_request",
-  "invalid_setup_payload",
+  "invalid_setup_payload", "invalid_side_pool",
 ]);
 const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "mainSanctioningFeeRateCents", "consolationSanctioningFeeRateCents", "mainSanctioningFeeOverrideReason", "mainSanctioningFeeOverrideReference", "consolationSanctioningFeeOverrideReason", "consolationSanctioningFeeOverrideReference", "officials", "events"];
-const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools"];
+const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools", "sidePools"];
 const officialKeys = ["profileId", "role"];
 const poolKeys = ["poolTypeCode", "entryFeeCents", "note"];
 const own = (v: object, keys: string[]) => Object.keys(v).length === keys.length && keys.every((key) => key in v);
@@ -46,15 +47,19 @@ const contactPhone = (v: unknown) => typeof v === "string" && v.trim().length >=
 const contactEmail = (v: unknown) => typeof v === "string" && v.trim().length >= 3 && v.trim().length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 export function isSetupEvent(value: unknown): value is SetupEvent {
   if (!value || typeof value !== "object" || !own(value, eventKeys)) return false;
-  const e = value as Record<string, unknown>; const pools = e.qPools;
+  const e = value as Record<string, unknown>; const pools = e.qPools; const sidePools = e.sidePools;
+  const validPool = (pool: unknown) => !!pool && typeof pool === "object" && own(pool, poolKeys) && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents) && text((pool as Record<string, unknown>).note, 1000);
+  const normalizedPoolNames = new Set(Array.isArray(sidePools) ? sidePools.map((pool) => (pool as SetupPool).poolTypeCode.trim().toLowerCase()) : []);
   return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
     && text(e.displayName, 200, true) && localTime(e.startsAt) && text(e.timezone, 128, true)
     && text(e.styleCode, 160, true) && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(e.formatCode as string)
     && Number.isSafeInteger(e.gameCount) && (e.gameCount as number) >= 1 && (e.gameCount as number) <= 99 && money(e.entryFeeCents)
     && text(e.feeIncludesNote, 1000) && text(e.payoutNote, 2000) && text(e.qualificationNote, 2000) && text(e.eligibilityNote, 2000)
     && ["unset", "in_effect", "not_in_effect"].includes(e.mugginsStatus as string) && Array.isArray(pools) && pools.length <= 2
-    && pools.every((pool) => !!pool && typeof pool === "object" && own(pool, poolKeys) && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents) && text((pool as Record<string, unknown>).note, 1000))
-    && (["main", "consolation"].includes(e.eventKind as string) || pools.length === 0);
+    && pools.every(validPool) && (["main", "consolation"].includes(e.eventKind as string) || pools.length === 0)
+    && Array.isArray(sidePools) && sidePools.length <= 6 && sidePools.every(validPool)
+    && normalizedPoolNames.size === sidePools.length
+    && (["main", "consolation", "satellite"].includes(e.eventKind as string) || sidePools.length === 0);
 }
 export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   if (!value || typeof value !== "object" || !own(value, ["expectedVersion", "payload", "idempotencyKey"])) return false;
@@ -93,6 +98,13 @@ function workspaceEvent(value: unknown) {
     && Array.isArray(e.qPools) && new Set(e.qPools.map((pool) => pool && typeof pool === "object" ? (pool as Record<string, unknown>).slot : null)).size === e.qPools.length
     && e.qPools.every((pool) => !!pool && typeof pool === "object" && own(pool, workspacePoolKeys)
       && Number.isSafeInteger((pool as Record<string, unknown>).slot) && ([1, 2] as unknown[]).includes((pool as Record<string, unknown>).slot)
+      && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents)
+      && text((pool as Record<string, unknown>).note, 1000) && status((pool as Record<string, unknown>).sourceStatus))
+    && Array.isArray(e.sidePools) && e.sidePools.length <= 6 && (["main", "consolation", "satellite"].includes(e.eventKind as string) || e.sidePools.length === 0)
+    && new Set(e.sidePools.map((pool) => pool && typeof pool === "object" ? (pool as Record<string, unknown>).slot : null)).size === e.sidePools.length
+    && new Set(e.sidePools.map((pool) => pool && typeof pool === "object" ? String((pool as Record<string, unknown>).poolTypeCode).trim().toLowerCase() : "")).size === e.sidePools.length
+    && e.sidePools.every((pool) => !!pool && typeof pool === "object" && own(pool, workspacePoolKeys)
+      && Number.isSafeInteger((pool as Record<string, unknown>).slot) && ([1, 2, 3, 4, 5, 6] as unknown[]).includes((pool as Record<string, unknown>).slot)
       && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents)
       && text((pool as Record<string, unknown>).note, 1000) && status((pool as Record<string, unknown>).sourceStatus));
 }
