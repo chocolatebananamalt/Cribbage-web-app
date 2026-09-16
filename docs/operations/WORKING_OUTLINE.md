@@ -65,8 +65,12 @@ role-backed primary-director name, and versioned audit history. QR-link issue
 and replacement require those saved public contact values. Setup now separates
 Save All Events Draft from Finalize All Events / Open Registration, keeps a saved draft
 visible if finalization-status reading fails, and separates ordinary Sign out
-from safe app-data clearing. Production deployment and director visual proof
-remain before this finding is closed.
+from safe app-data clearing. Before Start Play, the primary director may use
+the exceptional Event Changes workspace to retire an event or replace it with
+a separately identified editable copy; eligible individual/team enrollments
+and references to the same tournament payment ledger transfer without
+rewriting history or duplicating money. Production deployment and director
+visual proof remain before this finding is closed.
 
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating

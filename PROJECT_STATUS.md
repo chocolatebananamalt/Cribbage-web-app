@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-15 finalize all events/open registration lifecycle — production deployed; director rehearsal pending
+## 2026-09-15 finalize all events/open registration lifecycle — replacement transfer/index completion ready for production promotion; director rehearsal pending
 
 - Replaced the ambiguous setup labels with **Save All Events Draft** and
   **Finalize All Events / Open Registration**. A draft remains editable until
@@ -16,9 +16,21 @@
   primary director may cancel/retire or cancel/replace an event with a required
   reason and audit receipt. Retirement preserves history and blocks new
   enrollment; replacement creates a separately identified copied setup
-  snapshot. Co-directors cannot use either operation; a platform emergency
-  override is recorded separately.
-- Migration `0194_finalize_registration_and_event_change_lifecycle` is applied
+  snapshot, replacement-scoped eligible individual/team enrollment records,
+  transferred team contributions, and immutable references to the existing
+  tournament-level cash/check credit. It never duplicates or moves money.
+  Co-directors cannot use either operation; a platform emergency override is
+  recorded separately.
+- Migrations `0195_event_replacement_enrollment_and_credit_transfer` and
+  `0196_event_change_and_transfer_fk_indexes` are applied to the approved
+  pilot Supabase project. The first adds the immutable transfer ledger and
+  server-only transfer trigger; the second covers its recovery/audit foreign
+  key lookups. The finalization UI now uses an in-page confirmation that lists
+  the current events and offers **Yes, Finalize & Open Registration** or
+  **Cancel**, rather than relying on an ambiguous browser prompt. Platform
+  administrators can open the emergency-only workspace without a tournament
+  role; the database still requires the emergency reason and audit record.
+  Migration `0194_finalize_registration_and_event_change_lifecycle` is applied
   to the approved pilot Supabase project. Pull request #53 was merged as main
   commit `3ba6673ee4b00915477c9a30031674c974988b2a`; Vercel production
   deployment `dpl_HwB73Hbcm9rBN4oDPFzw5ZdBJizx` is READY. Root/sign-in smoke

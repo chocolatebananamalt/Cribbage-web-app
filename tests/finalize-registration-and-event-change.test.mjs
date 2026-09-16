@@ -27,10 +27,13 @@ test("finalization opens registration only after explicit primary-director confi
 });
 
 test("retire and replace preserve history and reject event operations after Start Play", async () => {
-  const [sql, route, page] = await Promise.all([
+  const [sql, transferSql, indexSql, route, page, client] = await Promise.all([
     read("database/migrations/0194_finalize_registration_and_event_change_lifecycle.sql"),
+    read("database/migrations/0195_event_replacement_enrollment_and_credit_transfer.sql"),
+    read("database/migrations/0196_event_change_and_transfer_fk_indexes.sql"),
     read("src/app/api/v1/tournaments/[id]/event-changes/route.ts"),
     read("src/app/tournament/[tournamentId]/event-changes/event-changes-client.tsx"),
+    read("src/app/tournament/[tournamentId]/event-changes/page.tsx"),
   ]);
   for (const required of [
     "event_change_operations",
@@ -51,4 +54,24 @@ test("retire and replace preserve history and reject event operations after Star
   assert.match(page, /Cancel \/ Retire/);
   assert.match(page, /Cancel \/ Replace/);
   assert.match(page, /Required director reason/);
+  assert.match(client, /getCurrentSubject/);
+  assert.match(client, /getEventChangesWorkspaceAccess/);
+  for (const required of [
+    "event_replacement_transfer_records",
+    "event_change_operations_transfer_replacement_membership",
+    "individual_enrollment",
+    "tournament_payment_credit",
+    "team_enrollment",
+    "team_financial_contribution",
+    "status in ('registered','checked_in','absent')",
+    "Transferred with pre-play event replacement",
+  ]) assert.match(transferSql, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  for (const required of [
+    "event_change_operations_actor_idx",
+    "event_change_operations_original_event_scope_idx",
+    "event_replacement_transfer_records_source_event_scope_idx",
+    "event_replacement_transfer_records_payment_event_idx",
+  ]) assert.match(indexSql, new RegExp(required));
+  assert.match(page, /Yes, Retire Event/);
+  assert.match(page, /Yes, Cancel & Replace/);
 });

@@ -23,6 +23,13 @@ only the primary director may:
 - **Cancel/Replace Event**, preserving the original and creating a separately
   identified replacement with a copied immutable setup snapshot for review.
 
+Replacement additionally creates new event-scoped records for eligible
+individual/team enrollments and team contributions. It does not duplicate,
+move, or rewrite money: the receipt/obligation ledger is already scoped to the
+tournament, so immutable transfer records bind the applicable payment-credit
+references to the replacement. Withdrawn, disqualified, and substituted source
+participants remain only in the original event for later director review.
+
 Both actions require a reason, confirmation, exact idempotency receipt, and
 append-only audit evidence. Co-directors cannot perform them. A platform
 administrator may use the same server operation only under an auditable
