@@ -1,5 +1,22 @@
 # Project Status
 
+## 2026-09-16 rehearsal Setup 404 — validation compatibility repair verified locally; Production deployment pending
+
+- Repaired an identifier-validation mismatch that let the signed-in tournament
+  chooser list a PostgreSQL-valid canonical UUID while the protected Setup
+  route rejected that same identifier as a Next.js 404. The shared validator
+  now accepts the canonical PostgreSQL `8-4-4-4-12` hexadecimal UUID shape;
+  authorization remains unchanged and still occurs server-side.
+- This change does not create, rename, duplicate, or modify tournament,
+  role, registration, event, payment, or audit records. It only lets an
+  already-authorized route reach its existing server authorization boundary.
+- Focused regression tests pass for legacy canonical and RFC UUID shapes,
+  malformed-ID rejection, chooser compatibility, and the Setup page/API
+  shared validator. `pnpm verify` passes locally: audit, lint, **528/528**
+  application tests, provider readiness, Production build, workspace tests,
+  and private handoff checks. Deployment and signed-in Production route proof
+  remain the next required release evidence.
+
 ## 2026-09-16 tournament setup clarity and post-finalization layout — production deployed and responsive review passed
 
 - Required tournament-contact labels now render as one unbroken inline label
