@@ -125,7 +125,7 @@ async function verifyViewport(browser, width) {
   if (await page.getByRole("link", { name: "Open Sample Qualification PDF" }).count() !== 1) throw new Error("Qualification PDF link is missing.");
   if (width === 1280) await verifyQualificationPdf();
   await clickButton(page, "Previous Screen"); await clickButton(page, "Previous Screen"); await clickButton(page, "Satellite Events", true); await capture();
-  if (!/Qualification Rules Pending/.test(await page.locator("main").innerText())) throw new Error("Satellite fail-closed boundary is missing.");
+  if (!/Satellites do not award MRPs or qualify players or teams for Main or Consolation\./.test(await page.locator("main").innerText())) throw new Error("Satellite no-MRP/no-qualification boundary is missing.");
   await clickButton(page, "Rulebook"); await capture(); await clickButton(page, "Quick Reference Search"); await capture();
   await page.getByPlaceholder("For example: cross-checking").fill("cross-checking");
   if (!/Scorecards and cross-checking/.test(await page.locator("main").innerText())) throw new Error("Quick-reference search did not filter.");

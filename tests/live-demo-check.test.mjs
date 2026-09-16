@@ -22,6 +22,6 @@ test("live demo release check is explicit, responsive, read-only, and failure-se
   assert.match(source, /director registration-link management/);
   assert.match(source, /tournament setup activation/);
   assert.match(source, /event finalization readiness/);
-  assert.match(source, /Qualification Rules Pending/);
+  assert.match(source, /Satellite no-MRP\/no-qualification boundary is missing/);
   assert.doesNotMatch(source, /request\.(post|put|patch|delete)|page\.(request|evaluate)\([^)]*fetch/i);
 });
