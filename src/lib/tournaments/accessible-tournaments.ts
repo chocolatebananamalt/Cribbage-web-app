@@ -1,6 +1,7 @@
 import "server-only";
 
-import { isAccessibleTournamentList, isUuid, type AccessibleTournament } from "../api/tournament-chooser";
+import { isAccessibleTournamentList, type AccessibleTournament } from "../api/tournament-chooser";
+import { isUuid } from "../api/validation";
 import { createServerOnlyAdminClient } from "../supabase/private-admin";
 
 export type AccessibleTournamentResult =

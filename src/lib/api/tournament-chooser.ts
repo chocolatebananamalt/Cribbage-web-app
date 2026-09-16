@@ -1,7 +1,5 @@
-// PostgreSQL accepts the standard 8-4-4-4-12 hexadecimal UUID shape without
-// requiring RFC version/variant bits. Existing imported tournament IDs may use
-// that broader, still strongly typed representation.
-const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "./validation.ts";
+
 const datePattern = /^(?:|\d{2}-\d{2}-\d{4})$/;
 
 const statuses = new Set(["draft", "open", "pending_finalization", "finalized"]);
@@ -25,7 +23,7 @@ function exactObject(value: unknown): value is Record<string, unknown> {
 
 export function isAccessibleTournament(value: unknown): value is AccessibleTournament {
   if (!exactObject(value)) return false;
-  return typeof value.tournamentId === "string" && uuidPattern.test(value.tournamentId)
+  return isUuid(value.tournamentId)
     && typeof value.tournamentName === "string"
     && value.tournamentName.trim() === value.tournamentName
     && value.tournamentName.length >= 1
@@ -43,8 +41,4 @@ export function isAccessibleTournamentList(value: unknown): value is AccessibleT
     && value.length <= 500
     && value.every(isAccessibleTournament)
     && new Set(value.map((item) => item.tournamentId)).size === value.length;
-}
-
-export function isUuid(value: string) {
-  return uuidPattern.test(value);
 }
