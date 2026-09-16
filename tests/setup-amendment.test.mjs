@@ -7,7 +7,7 @@ import { isRejectedSetupAmendment, isSetupAmendmentRequest, isSetupAmendmentResu
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const base = "10000000-0000-4000-8000-000000000001";
 const operation = "20000000-0000-4000-8000-000000000002";
-const event = { clientRowId: "30000000-0000-4000-8000-000000000003", eventKind: "consolation", displayName: "Consolation", startsAt: "2026-10-03T18:00", timezone: "Pacific/Honolulu", styleCode: "Standard", formatCode: "standard_singles", gameCount: 9, entryFeeCents: 2000, feeIncludesNote: "", payoutNote: "", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [] };
+const event = { clientRowId: "30000000-0000-4000-8000-000000000003", eventKind: "consolation", displayName: "Consolation", startsAt: "2026-10-03T18:00", timezone: "Pacific/Honolulu", styleCode: "Standard", formatCode: "standard_singles", gameCount: 9, entryFeeCents: 2000, feeIncludesNote: "", payoutNote: "", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [], sidePools: [] };
 const request = { expectedSetupRevisionId: base, expectedSetupVersion: 1, events: [event], operationId: operation };
 
 test("activated setup amendment accepts only exact bounded new-event requests", () => {

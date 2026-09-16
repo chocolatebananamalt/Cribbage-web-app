@@ -35,7 +35,7 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /function finalizationEventLine\(event: SetupEvent\)/);
   assert.match(client, /eventLabels\[event\.eventKind\].*event\.displayName.*event\.styleCode/s);
   assert.match(client, /Satellite Event/);
-  assert.match(client, /Tournament contact phone <span className="required-field"/);
+  assert.match(client, /Tournament contact phone \(<span className="required-field"/);
   assert.match(client, /Tournament mailing address \(optional\).*Note: This address will be visible to players/s);
   assert.match(client, /Yes, Finalize &amp; Open Registration/);
   assert.match(css, /setup-workspace:has\(\[role="alertdialog"\]\)/);

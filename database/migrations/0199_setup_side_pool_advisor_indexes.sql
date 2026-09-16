@@ -1,0 +1,17 @@
+-- The Side Pool setup records are private append-only history. These indexes
+-- cover every foreign-key prefix used by the hosted advisor and by the scoped
+-- materialization/read paths without changing access or lifecycle behavior.
+
+create index tournament_setup_side_pool_versions_tournament_idx on app.tournament_setup_side_pool_versions(tournament_id);
+create index tournament_setup_side_pool_versions_revision_idx on app.tournament_setup_side_pool_versions(setup_revision_id,tournament_id);
+create index tournament_setup_side_pool_versions_event_idx on app.tournament_setup_side_pool_versions(setup_event_version_id,tournament_id,setup_revision_id);
+create index tournament_setup_side_pool_versions_actor_idx on app.tournament_setup_side_pool_versions(actor_profile_id);
+create index tournament_setup_side_pool_versions_receipt_idx on app.tournament_setup_side_pool_versions(operation_receipt_id,tournament_id);
+
+create index tournament_setup_side_pool_materializations_tournament_idx on app.tournament_setup_side_pool_materializations(tournament_id);
+create index tournament_setup_side_pool_materializations_setup_pool_idx on app.tournament_setup_side_pool_materializations(setup_side_pool_version_id,tournament_id);
+create index tournament_setup_side_pool_materializations_event_idx on app.tournament_setup_side_pool_materializations(event_id,tournament_id);
+create index tournament_setup_side_pool_materializations_pool_idx on app.tournament_setup_side_pool_materializations(pool_id,tournament_id,event_id);
+create index tournament_setup_side_pool_materializations_receipt_idx on app.tournament_setup_side_pool_materializations(operation_receipt_id,tournament_id);
+
+notify pgrst,'reload schema';

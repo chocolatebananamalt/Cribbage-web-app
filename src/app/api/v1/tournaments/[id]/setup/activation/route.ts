@@ -65,6 +65,10 @@ export async function POST(
       },
     );
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (data && typeof data === "object" && !Array.isArray(data) && (data as Record<string, unknown>).status === "tournament_setup_activated") {
+      const materialized = await admin.rpc("materialize_tournament_setup_side_pools_v1", { p_actor_id: subject, p_tournament_id: id, p_setup_revision_id: body.setupRevisionId });
+      if (materialized.error || !materialized.data || typeof materialized.data !== "object" || (materialized.data as Record<string, unknown>).status !== "setup_side_pools_materialized") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    }
     const activatedEvents = data && typeof data === "object" && !Array.isArray(data) && Array.isArray((data as Record<string, unknown>).events)
       ? (data as Record<string, unknown>).events as Array<Record<string, unknown>> : [];
     const teamEventIds = activatedEvents.filter((event) => ["doubles", "canadian_doubles"].includes(String(event.format))).map((event) => event.eventId);
