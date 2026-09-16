@@ -12,6 +12,8 @@
   active state. It clears stale local finalization-retry UI and never opens
   registration a second time. A guarded, audited upgrade is available only
   for eligible unstarted supported doubles.
+- A legacy upgrade appends an approved Appendix-B ruleset rather than mutating
+  the original paper ruleset or setup activation history.
 
 ## Executed evidence
 
@@ -32,11 +34,29 @@
   advisor reports the two tables as RLS-enabled with no policy; that is the
   deliberate closed-by-default private-table design because direct browser
   access is revoked and only server-only RPCs are granted.
+- Applied the legacy team-ruleset upgrade and its trigger repair. A first live
+  attempt failed closed because the production trigger was absent; the
+  transaction rolled back without changes. After the trigger repair, the
+  guarded server operation succeeded for the existing Canadian Doubles event.
+  It appended a dated Appendix-B ruleset and switched only that scoreless
+  event to Digital/Paper scoring. The same audited lifecycle APIs retired the
+  unused Traditional Doubles event and appended **Canadian Doubles Practice**;
+  the guarded operation then enabled the new practice event. Main,
+  Consolation, registration, payments, seats, schedules, and score evidence
+  were verified unchanged.
+- Pull request #59 merged as `134a7481f64f39e2f8e36706d6a3c1f15b4e2de9`.
+  Production deployment `dpl_7CVtim2mBP9AdzhvnpW918HmPAKD` is READY. Root
+  returned 200; the anonymous protected setup response was 401/no-store; and
+  Vercel's post-release runtime scan contained no errors.
+- Applied the activation-state retired-event filter. An authorized state read
+  now returns exactly four active rehearsal events, and a live protected
+  desktop screen confirms the retired event is absent from the current-event
+  list while the two Canadian Doubles events show Digital/Paper scoring.
 
 ## Remaining verification
 
-- Production deployment, protected phone/desktop review, and the primary
-  director's audited retirement/upgrade/addition actions remain required
-  before release evidence is complete.
-- No existing registration, roster, seat, schedule, score, payment, or event
-  record was altered by this work.
+- A protected primary-director browser rehearsal must still check the recovered
+  event list and exercise draft Side Pool add/remove at phone and desktop
+  widths.
+- The physical independent-device score, cross-check, offline, finance, and
+  results rehearsal remains a release gate.
