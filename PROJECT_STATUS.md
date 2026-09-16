@@ -30,9 +30,11 @@
   passed yet.
 - The first live 375px production review exposed browser-default `fieldset`
   min-content overflow, despite the new labels themselves remaining correct.
-  A focused `min-width: 0` fix and regression assertion now pass the full
-  local verification suite; it awaits its own production deployment and
-  repeated phone-width check before this item is marked production-verified.
+  The corrective rules now permit both the containing Setup fieldset and each
+  nested event-card fieldset to shrink. Their regression assertions pass the
+  full local verification suite; the final nested-card fix awaits Production
+  deployment and repeated phone-width check before this item is marked
+  production-verified.
 
 ## 2026-09-16 pool setup controls and rehearsal finalization recovery — production deployed; rehearsal recovery applied
 
