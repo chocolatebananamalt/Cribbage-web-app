@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-15 finalize all events/open registration lifecycle — replacement transfer/index completion ready for production promotion; director rehearsal pending
+## 2026-09-15 finalize all events/open registration lifecycle — production deployed; director rehearsal pending
 
 - Replaced the ambiguous setup labels with **Save All Events Draft** and
   **Finalize All Events / Open Registration**. A draft remains editable until
@@ -30,13 +30,15 @@
   **Cancel**, rather than relying on an ambiguous browser prompt. Platform
   administrators can open the emergency-only workspace without a tournament
   role; the database still requires the emergency reason and audit record.
-  Migration `0194_finalize_registration_and_event_change_lifecycle` is applied
-  to the approved pilot Supabase project. Pull request #53 was merged as main
-  commit `3ba6673ee4b00915477c9a30031674c974988b2a`; Vercel production
-  deployment `dpl_HwB73Hbcm9rBN4oDPFzw5ZdBJizx` is READY. Root/sign-in smoke
-  probes returned 200, the new protected route returned its expected 401 while
-  anonymous, and the Vercel 30-minute runtime-error scan was clean. Local
-  `pnpm verify` passes (**515/515**). An authorized director/browser rehearsal
+  Pull request #55 was merged as main commit
+  `c45fdc5d67159a54ff2c909e557b1c4d3adf3bbe`; Vercel production deployment
+  `dpl_6212Sy9KyJKBqzQ5hZZT5e7vyPrs` is READY. Root/sign-in smoke probes
+  returned 200, the protected event-change endpoint returned its expected
+  401/no-store response while anonymous, and Vercel reported no runtime errors
+  during the post-release 30-minute scan. Local `pnpm verify` passes
+  (**515/515**) and `pnpm verify:handoff` passes. The signed-in rehearsal form
+  was intentionally not reloaded during the release check because it contains
+  unsaved director-entered draft data. An authorized director/browser rehearsal
   of finalization, registration, and exceptional event changes remains.
 
 ## 2026-09-15 setup finalization and registration recovery repair — production deployed; director verification pending
