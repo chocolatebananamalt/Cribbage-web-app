@@ -55,6 +55,8 @@ on each nested event-card fieldset. Both are now explicitly `min-width: 0`.
 The last inspection then isolated an implicit auto-sized event-card grid track
 that preserved a select option's min-content width. The event card now uses
 `minmax(0, 1fr)` and static regression assertions cover all three constraints.
-The focused TypeScript/test suite passes; this final grid-track fix must
-complete another full verification, Production deployment, and 375px review
-before this evidence record is closed.
+The last live check found the child mobile `setup-grid` still kept an automatic
+minimum, so it now receives that same `minmax(0, 1fr)`/`min-width: 0`
+constraint. The focused TypeScript/test suite passes; this final child-grid
+fix must complete another full verification, Production deployment, and 375px
+review before this evidence record is closed.
