@@ -19,11 +19,11 @@ export type SetupEvent = {
   qPools: SetupPool[];
 };
 export type SetupOfficial = { profileId: string; role: "director" | "co_director" };
-export type SetupPayload = { tournamentName: string; city: string; venue: string; startsAt: string; endsAt: string; timezone: string; contactDetails: string; sanctioningFeeCents: number | null; officials: SetupOfficial[]; events: SetupEvent[] };
+export type SetupPayload = { tournamentName: string; city: string; venue: string; startsAt: string; endsAt: string; timezone: string; tournamentContactPhone: string; tournamentContactEmail: string; tournamentMailingAddress: string; sanctioningFeeCents: number | null; officials: SetupOfficial[]; events: SetupEvent[] };
 export type SetupCurrentEvent = SetupEvent & { sourceStatus: "director_configured_unverified"; qPools: Array<SetupPool & { slot: 1 | 2; sourceStatus: "director_configured_unverified" }> };
 export type SetupCurrent = Omit<SetupPayload, "events"> & { revisionId: string; version: number; createdAt: string; events: SetupCurrentEvent[] };
 export type SetupWorkspace = { current: SetupCurrent | null; history: Array<{ version: number; createdAt: string; eventCount: number }> };
-export type SetupOfficialChoices = { directorProfileId: string; coDirectorProfileIds: string[] };
+export type SetupOfficialChoices = { directorProfileId: string; directorDisplayName: string; coDirectorProfileIds: string[] };
 export type SetupSaveRequest = { expectedVersion: number; payload: SetupPayload; idempotencyKey: string };
 export type SetupRecoveryRequest = { idempotencyKey: string };
 const setupRejectionCodes = new Set([
@@ -31,7 +31,7 @@ const setupRejectionCodes = new Set([
   "stale_version", "invalid_officials", "invalid_event", "invalid_q_pool", "invalid_request",
   "invalid_setup_payload",
 ]);
-const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "officials", "events"];
+const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "sanctioningFeeCents", "officials", "events"];
 const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools"];
 const officialKeys = ["profileId", "role"];
 const poolKeys = ["poolTypeCode", "entryFeeCents", "note"];
@@ -39,6 +39,8 @@ const own = (v: object, keys: string[]) => Object.keys(v).length === keys.length
 const text = (v: unknown, max: number, required = false) => typeof v === "string" && v.length <= max && (!required || v.trim().length > 0);
 const money = (v: unknown, nullable = false) => (nullable && v === null) || (Number.isSafeInteger(v) && (v as number) >= 0 && (v as number) <= 100000000);
 const localTime = (v: unknown) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?$/.test(v);
+const contactPhone = (v: unknown) => typeof v === "string" && v.trim().length >= 7 && v.trim().length <= 40 && (v.match(/\d/g)?.length ?? 0) >= 7;
+const contactEmail = (v: unknown) => typeof v === "string" && v.trim().length >= 3 && v.trim().length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 export function isSetupEvent(value: unknown): value is SetupEvent {
   if (!value || typeof value !== "object" || !own(value, eventKeys)) return false;
   const e = value as Record<string, unknown>; const pools = e.qPools;
@@ -56,7 +58,7 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   const b = value as Record<string, unknown>; const p = b.payload;
   if (!Number.isSafeInteger(b.expectedVersion) || (b.expectedVersion as number) < 0 || !isUuid(b.idempotencyKey) || !p || typeof p !== "object" || !own(p, rootKeys)) return false;
   const x = p as Record<string, unknown>; const officials = x.officials; const events = x.events;
-  return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && text(x.contactDetails, 1000) && money(x.sanctioningFeeCents, true)
+  return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && contactPhone(x.tournamentContactPhone) && contactEmail(x.tournamentContactEmail) && text(x.tournamentMailingAddress, 500) && money(x.sanctioningFeeCents, true)
     && Array.isArray(officials) && officials.length >= 1 && officials.length <= 5 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
     && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
 }
@@ -65,7 +67,7 @@ export function isSavedSetup(value: unknown, request: SetupSaveRequest): value i
 export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && !Array.isArray(value) && own(value, ["status", "code"]) && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string" && setupRejectionCodes.has((value as Record<string, unknown>).code as string); }
 export function isRecoveredSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "setup_draft_saved" && isUuid((value as Record<string, unknown>).revisionId) && Number.isSafeInteger((value as Record<string, unknown>).version); }
 const workspaceKeys = ["current", "history"];
-const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "contactDetails", "sanctioningFeeCents", "createdAt", "officials", "events"];
+const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "sanctioningFeeCents", "createdAt", "officials", "events"];
 const workspaceEventKeys = [...eventKeys, "sourceStatus"];
 const workspacePoolKeys = ["slot", ...poolKeys, "sourceStatus"];
 const historyKeys = ["version", "createdAt", "eventCount"];
@@ -101,16 +103,16 @@ export function isSetupWorkspace(value: unknown): value is SetupWorkspace {
     && isUuid(current.revisionId) && Number.isSafeInteger(current.version) && (current.version as number) >= 1
     && text(current.tournamentName, 200, true) && text(current.city, 160, true) && text(current.venue, 240, true)
     && typeof current.startsAt === "string" && typeof current.endsAt === "string" && text(current.timezone, 128, true)
-    && text(current.contactDetails, 1000) && money(current.sanctioningFeeCents, true) && typeof current.createdAt === "string"
+    && text(current.tournamentContactPhone, 40) && text(current.tournamentContactEmail, 320) && text(current.tournamentMailingAddress, 500) && money(current.sanctioningFeeCents, true) && typeof current.createdAt === "string"
     && currentOfficials.length >= 1 && currentOfficials.length <= 5
     && currentOfficials.every((official) => !!official && typeof official === "object" && own(official, officialKeys) && isUuid(official.profileId) && ["director", "co_director"].includes(official.role as string))
     && currentOfficials.filter((official) => official.role === "director").length === 1 && new Set(currentOfficials.map((official) => official.profileId)).size === currentOfficials.length
     && Array.isArray(current.events) && current.events.length <= 32 && current.events.every(workspaceEvent) && history[0].eventCount === current.events.length;
 }
 export function isSetupOfficialChoices(value: unknown): value is SetupOfficialChoices {
-  if (!value || typeof value !== "object" || !own(value, ["directorProfileId", "coDirectorProfileIds"])) return false;
+  if (!value || typeof value !== "object" || !own(value, ["directorProfileId", "directorDisplayName", "coDirectorProfileIds"])) return false;
   const choices = value as Record<string, unknown>;
-  return isUuid(choices.directorProfileId) && Array.isArray(choices.coDirectorProfileIds)
+  return isUuid(choices.directorProfileId) && text(choices.directorDisplayName, 160, true) && Array.isArray(choices.coDirectorProfileIds)
     && choices.coDirectorProfileIds.length <= 4 && choices.coDirectorProfileIds.every(isUuid)
     && !choices.coDirectorProfileIds.includes(choices.directorProfileId) && new Set(choices.coDirectorProfileIds).size === choices.coDirectorProfileIds.length;
 }

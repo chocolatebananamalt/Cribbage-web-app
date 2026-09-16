@@ -49,6 +49,7 @@ const rejectedCodes = new Set([
   "stale_setup_revision",
   "unsupported_setup",
   "setup_officials_stale",
+  "missing_tournament_contact",
   "invalid_request",
 ]);
 

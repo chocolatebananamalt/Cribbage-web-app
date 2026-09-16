@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
+
+- Replaced the generic Director contact-details draft contract with required
+  tournament contact phone/email and an optional director-selected,
+  player-facing mailing address. The Setup screen shows the role-backed primary
+  director name; the registration response uses only the selected contact
+  fields and never joins a profile/account address.
+- Setup revisions now carry structured contact values and an immutable audit
+  event. Existing `contact_details` values remain historical-only. New event
+  activation fails closed when the required phone/email are absent.
+- Migration `0193_structured_tournament_contact_information` is applied to the
+  approved pilot Supabase project. It was proven against the disposable-project
+  standard-setup fixture after correcting the immutable-history implementation.
+  Production schema/permission checks confirm all three structured columns and
+  the intended service-only activation/public-registration boundaries.
+- `pnpm verify` now passes **513/513** checks, including the contact regression
+  checks, lint, audited dependency scan, provider readiness, production build,
+  and private handoff check. The previously discovered no-body co-director
+  invitation endpoint now uses a bounded empty JSON contract before any
+  protected operation.
+- App deployment and live phone/desktop verification remain pending. Until
+  those run against the deployed build, this Category 2 prerequisite is not
+  represented as complete for Full Rehearsal setup.
+
 ## 2026-09-15 rehearsal-finding priority clarification — requirements updated; implementation pending
 
 - Findings now use an owner-defined priority taxonomy: Category 1 must be fixed

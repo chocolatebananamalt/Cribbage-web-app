@@ -58,6 +58,13 @@ For a finding that could reasonably fit more than one class, present the owner
 with the recommendation and these three choices before assigning it. The
 calculated Main/Consolation ACC Sanctioning Fee is Category 2.
 
+**Category 2 — Structured tournament contact information:** implementation and
+verification are required before Full Rehearsal setup. The open-ended Director
+contact-details field is replaced with required tournament phone/email, an
+optional player-facing mailing address, role-backed primary-director name, and
+versioned audit history. It must not access or display a director’s private
+address.
+
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating
    → enrollment → schedule without altering the real October tournament.
