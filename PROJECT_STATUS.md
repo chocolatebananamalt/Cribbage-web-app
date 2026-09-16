@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-16 calculated ACC sanctioning fee and setup clarity — pilot schema applied; deployment verification pending
+## 2026-09-16 calculated ACC sanctioning fee and setup clarity — production deployed; director rehearsal verification pending
 
 - Replaced the editable tournament-wide ACC Sanctioning Fee with a live Main/
   Consolation rate calculation: `$3.00/person` Main and `$1.00/person`
@@ -17,10 +17,15 @@
   appears above its field, selected public phone/email fields are semantically
   required, and shared-device controls now present Sign out, retention
   explanation, safety state, then a safe-clear option only when eligible.
-- Local lint, production build, and targeted contract checks pass. Deployment,
-  full suite, protected phone/desktop review, authorized override, and live
-  Start Play snapshot verification remain before this Category 2 item is
-  marked release-complete.
+- Local `pnpm verify` passes (**520/520**) and `pnpm verify:handoff` passes.
+  Pull request #57 was merged as main commit
+  `6847e1a3f343924e1f92d79a68e6478751e967a6`; Vercel production deployment
+  `dpl_J3id1ohwZJKmvwsvoUtrNBasCtaN` is READY. Root/sign-in smoke probes
+  returned 200 and Vercel reported no build or runtime errors during the
+  post-release scan. The signed-in rehearsal form was intentionally not
+  reloaded because it contains unsaved director-entered values. Protected
+  phone/desktop review, an authorized rate override, and an actual
+  Main/Consolation Start Play snapshot remain rehearsal checks.
 
 ## 2026-09-15 finalize all events/open registration lifecycle — production deployed; director rehearsal pending
 
