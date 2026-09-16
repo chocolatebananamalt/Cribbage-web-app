@@ -14,13 +14,16 @@ pre-start event recovery workflow.
 - Read-only database probe confirmed the finalization RPC, event-change RPC,
   and event operational-state column exist. No tournament had been finalized
   by that probe.
-- `pnpm exec tsc --noEmit` passed.
-- `pnpm test` passed: **515/515** tests.
+- `pnpm verify` passed, including TypeScript, lint,  **515/515** application
+  tests, provider readiness, production build, and workspace checks.
+- Pull request #53 merged at `3ba6673ee4b00915477c9a30031674c974988b2a`.
+  Vercel production deployment `dpl_HwB73Hbcm9rBN4oDPFzw5ZdBJizx` is READY.
+  Root and sign-in smoke probes returned HTTP 200; the new anonymous protected
+  event-change endpoint returned its expected HTTP 401/no-store response; the
+  Vercel 30-minute runtime-error scan reported no errors.
 
 ## Required production evidence still pending
 
-- Merge/deploy this application revision and confirm Vercel production reports
-  a successful deployment with no runtime errors.
 - In an authorized independent browser session, save a draft, confirm the
   exact finalization dialog, verify QR/link management opens, and confirm the
   public registration claim succeeds only after finalization.
