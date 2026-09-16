@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-09-15 finalize all events/open registration lifecycle — Supabase applied; production deployment pending
+
+- Replaced the ambiguous setup labels with **Save All Events Draft** and
+  **Finalize All Events / Open Registration**. A draft remains editable until
+  the primary director accepts the explicit confirmation. Finalization opens
+  registration exactly once, records immutable confirmation/audit evidence,
+  and directs the director to QR/URL management; it does not start play,
+  close registration, seat players, charge anyone, or publish results.
+- The database now rejects QR issuance, rotation, public-link redemption, and
+  registration claims until a tournament is both finalized and registration is
+  open. Existing unused unfinalized drafts were safely changed to closed
+  registration; no roster, payment, scorecard, or result was changed.
+- Added the protected **Event Changes** workspace. Before Start Play, only the
+  primary director may cancel/retire or cancel/replace an event with a required
+  reason and audit receipt. Retirement preserves history and blocks new
+  enrollment; replacement creates a separately identified copied setup
+  snapshot. Co-directors cannot use either operation; a platform emergency
+  override is recorded separately.
+- Migration `0194_finalize_registration_and_event_change_lifecycle` is applied
+  to the approved pilot Supabase project. Local `pnpm exec tsc --noEmit` and
+  `pnpm test` pass (**515/515**). Merge, Vercel deployment, runtime-log scan,
+  and authorized director/browser rehearsal are still required before calling
+  this production-deployed.
+
 ## 2026-09-15 setup finalization and registration recovery repair — production deployed; director verification pending
 
 - Preserved **Full Rehearsal — 09-16-2026** and its four saved draft events;

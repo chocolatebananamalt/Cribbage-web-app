@@ -54,12 +54,13 @@ export async function POST(
 
     const admin = createServerOnlyAdminClient();
     const { data, error } = await admin.rpc(
-      "activate_tournament_setup_v2",
+      "finalize_tournament_setup_and_open_registration_v1",
       {
         p_actor_id: subject,
         p_tournament_id: id,
         p_setup_revision_id: body.setupRevisionId,
         p_expected_version: body.expectedVersion,
+        p_confirmed: body.confirmed,
         p_idempotency_key: body.idempotencyKey,
       },
     );

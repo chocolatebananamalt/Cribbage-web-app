@@ -63,7 +63,7 @@ repair:** the open-ended Director contact-details field is replaced with
 required tournament phone/email, an optional player-facing mailing address,
 role-backed primary-director name, and versioned audit history. QR-link issue
 and replacement require those saved public contact values. Setup now separates
-Save Draft Setup from Finalize Current Events for Use, keeps a saved draft
+Save All Events Draft from Finalize All Events / Open Registration, keeps a saved draft
 visible if finalization-status reading fails, and separates ordinary Sign out
 from safe app-data clearing. Production deployment and director visual proof
 remain before this finding is closed.

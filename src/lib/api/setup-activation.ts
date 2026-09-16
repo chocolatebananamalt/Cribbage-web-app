@@ -3,6 +3,7 @@ import { isUuid } from "./validation.ts";
 export type SetupActivationRequest = {
   setupRevisionId: string;
   expectedVersion: number;
+  confirmed: true;
   idempotencyKey: string;
 };
 export type SetupActivationResult = {
@@ -19,10 +20,11 @@ export type SetupActivationResult = {
   payoutsCalculated: false;
   qualifiersCalculated: false;
   accSubmissionCreated: false;
+  registrationState: "open";
 };
 export type RejectedSetupActivation = { status: "rejected"; code: string };
 
-const requestKeys = ["setupRevisionId", "expectedVersion", "idempotencyKey"];
+const requestKeys = ["setupRevisionId", "expectedVersion", "confirmed", "idempotencyKey"];
 const acceptedKeys = [
   "status",
   "setupRevisionId",
@@ -37,6 +39,7 @@ const acceptedKeys = [
   "payoutsCalculated",
   "qualifiersCalculated",
   "accSubmissionCreated",
+  "registrationState",
 ];
 const activationEventKeys = ["activationId", "setupEventVersionId", "rulesetVersionId", "eventId", "eventType", "name", "format", "scoringMethod", "gameCount"];
 const activationStateEventKeys = ["eventId", "eventType", "name", "format", "scoringMethod", "gameCount"];
@@ -50,6 +53,7 @@ const rejectedCodes = new Set([
   "unsupported_setup",
   "setup_officials_stale",
   "missing_tournament_contact",
+  "confirmation_required",
   "invalid_request",
 ]);
 
@@ -64,6 +68,7 @@ export function isSetupActivationRequest(value: unknown): value is SetupActivati
   return isUuid(request.setupRevisionId)
     && Number.isSafeInteger(request.expectedVersion)
     && (request.expectedVersion as number) >= 1
+    && request.confirmed === true
     && isUuid(request.idempotencyKey);
 }
 
@@ -88,7 +93,8 @@ export function isSetupActivationResult(value: unknown, request: SetupActivation
       "payoutsCalculated",
       "qualifiersCalculated",
       "accSubmissionCreated",
-    ].every((key) => result[key] === false);
+    ].every((key) => result[key] === false)
+    && result.registrationState === "open";
 }
 
 function isActivationEvent(value: unknown, keys: string[], includeActivationIds: boolean) {
