@@ -1,5 +1,56 @@
 # Project Status
 
+## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
+
+- Replaced the generic Director contact-details draft contract with required
+  tournament contact phone/email and an optional director-selected,
+  player-facing mailing address. The Setup screen shows the role-backed primary
+  director name; the registration response uses only the selected contact
+  fields and never joins a profile/account address.
+- Setup revisions now carry structured contact values and an immutable audit
+  event. Existing `contact_details` values remain historical-only. New event
+  activation fails closed when the required phone/email are absent.
+- Migration `0193_structured_tournament_contact_information` is applied to the
+  approved pilot Supabase project. It was proven against the disposable-project
+  standard-setup fixture after correcting the immutable-history implementation.
+  Production schema/permission checks confirm all three structured columns and
+  the intended service-only activation/public-registration boundaries.
+- `pnpm verify` now passes **513/513** checks, including the contact regression
+  checks, lint, audited dependency scan, provider readiness, production build,
+  and private handoff check. The previously discovered no-body co-director
+  invitation endpoint now uses a bounded empty JSON contract before any
+  protected operation.
+- App deployment and live phone/desktop verification remain pending. Until
+  those run against the deployed build, this Category 2 prerequisite is not
+  represented as complete for Full Rehearsal setup.
+
+## 2026-09-15 rehearsal-finding priority clarification — requirements updated; implementation pending
+
+- Findings now use an owner-defined priority taxonomy: Category 1 must be fixed
+  before October 3; Category 2 must be fixed before director setup begins,
+  including Full Rehearsal setup; Category 3 is a post-rehearsal improvement
+  for later pilots. Future status/report updates must show the recommendation
+  and request an owner selection when a classification is debatable.
+- The manual tournament-level ACC Sanctioning Fee field is now a Category 2
+  defect. The accepted replacement is an event-specific Main `$3 per
+  participant` / Consolation `$1 per participant` calculation, with audited
+  pre-start per-player overrides by director/co-director. Implementation and
+  verification have not yet been performed.
+
+## 2026-09-15 four-co-director tournament roles — applied; role acceptance rehearsal pending
+
+- Applied migrations `0191` and `0192` to the approved pilot Supabase project.
+  A tournament now supports one singular primary director plus up to four
+  co-directors; existing co-directors, including the rehearsal observer, were
+  backfilled into an auditable lifecycle record without creating a duplicate
+  role.
+- Added the primary-director Officials workspace, exact-email seven-day
+  invitation/explicit acceptance path, server-enforced active-plus-pending
+  capacity, immediate revocation, reasoned platform-administrator emergency
+  override, setup snapshots through five officials, and server-only function
+  grants. Physical independent-account acceptance/revocation remains a
+  rehearsal assertion and is not claimed as automated proof.
+
 ## 2026-09-15 automatic Main/Consolation MRP calculation and rehearsal runbook — applied; physical proof pending
 
 - Applied migration `0190_automatic_standard_singles_mrp_results` to the
@@ -26,10 +77,10 @@
   notices; this change introduced no new browser-executable function.
 - The physical six-device rehearsal is still the release gate. It has not been
   represented as passed by the migration, runbook, or automated tests.
-- The private runbook also lists Alice Souza as a seventh, non-playing
-  co-director observer. Her app role is intentionally a manual primary-director
-  assignment after she signs in; no email address or account identity is stored
-  in the runbook or source tree.
+- The private runbook lists Alice Souza as the existing seventh, non-playing
+  co-director observer. She already holds the rehearsal co-director role; no
+  duplicate invitation or assignment is required, and no account identity is
+  stored in the runbook or source tree.
 
 ## 2026-09-15 approved October standard correction — deployed; physical acceptance pending
 

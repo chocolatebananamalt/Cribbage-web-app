@@ -23,7 +23,8 @@ select 'setup_saved',public.save_tournament_setup_version(
   jsonb_build_object(
     'tournamentName','Synthetic October Tournament','city','Test City','venue','Test Venue',
     'startsAt','2026-10-03T09:00:00','endsAt','2026-10-03T22:00:00','timezone','Pacific/Honolulu',
-    'contactDetails','','sanctioningFeeCents',null,
+    'tournamentContactPhone','+1 808 555 0101','tournamentContactEmail','amend-director@test.invalid',
+    'tournamentMailingAddress','','sanctioningFeeCents',null,
     'officials',jsonb_build_array(jsonb_build_object('profileId','a1370000-0000-4000-8000-000000000001','role','director')),
     'events',jsonb_build_array(jsonb_build_object(
       'clientRowId','c1370000-0000-4000-8000-000000000001','eventKind','main','displayName','Main Event',
