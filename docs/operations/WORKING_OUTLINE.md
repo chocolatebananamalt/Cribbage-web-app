@@ -56,7 +56,7 @@ pilot time.
 
 For a finding that could reasonably fit more than one class, present the owner
 with the recommendation and these three choices before assigning it. The
-calculated Main/Consolation ACC Sanctioning Fee is Category 2.
+calculated Main/Consolation ACC Sanctioning Fee is Category 2. The implementation replaces the manual total with a Main/Consolation rate calculation, Start Play snapshot, and immutable pre-start override trail; release verification remains pending.
 
 **Category 2 — Structured tournament contact information and rehearsal setup
 repair:** the open-ended Director contact-details field is replaced with

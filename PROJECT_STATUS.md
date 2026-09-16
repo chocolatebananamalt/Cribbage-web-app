@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-16 calculated ACC sanctioning fee and setup clarity — pilot schema applied; deployment verification pending
+
+- Replaced the editable tournament-wide ACC Sanctioning Fee with a live Main/
+  Consolation rate calculation: `$3.00/person` Main and `$1.00/person`
+  Consolation defaults, an explicit **ACC Sanctioning Fee Running Total**, and
+  satellite omission until an authoritative rate exists. Payment receipts are
+  not calculation inputs. Legacy free-form totals remain historical-only.
+- Added immutable pre-start Main/Consolation rate overrides with required
+  reason/source evidence and an immutable Start Play snapshot of the effective
+  rate, eligible participant count, and calculated total. Migration
+  `calculated_sanctioning_fee_rates` is applied to the approved pilot database;
+  the override RPC is service-role-only.
+- Finalization now has consistent `Type: name - style` event lines. While its
+  dialog is pending, normal setup controls are hidden. Mailing-address guidance
+  appears above its field, selected public phone/email fields are semantically
+  required, and shared-device controls now present Sign out, retention
+  explanation, safety state, then a safe-clear option only when eligible.
+- Local lint, production build, and targeted contract checks pass. Deployment,
+  full suite, protected phone/desktop review, authorized override, and live
+  Start Play snapshot verification remain before this Category 2 item is
+  marked release-complete.
+
 ## 2026-09-15 finalize all events/open registration lifecycle — production deployed; director rehearsal pending
 
 - Replaced the ambiguous setup labels with **Save All Events Draft** and
