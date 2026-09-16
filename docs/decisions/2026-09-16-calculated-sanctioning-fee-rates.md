@@ -23,6 +23,12 @@ dated authoritative ACC source defines one.
 
 The finalization dialog alone exposes Cancel and **Yes, Finalize & Open
 Registration** while it is pending. Its event lines use `Type: name - style`.
-The setup screen labels selected phone/email fields as required, places the
-player-visible mailing-address note above the input, and keeps ordinary sign
-out separate from safe local-data clearing.
+The setup screen labels selected phone/email fields as required on one
+unbroken line, places the player-visible mailing-address note above the input,
+and keeps ordinary sign out separate from safe local-data clearing. The
+running estimate refreshes from the read-only setup workspace every fifteen
+seconds while visible and on browser focus; it updates only the derived count,
+never an unsaved setup draft. It displays a last-updated time and a manual
+refresh control. The post-finalization rate control is named **ACC Sanctioning
+Fee Rate Adjustment Tool** and states that it is only for ACC Board-approved
+changes.

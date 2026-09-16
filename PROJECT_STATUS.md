@@ -1,5 +1,34 @@
 # Project Status
 
+## 2026-09-16 tournament setup clarity and post-finalization layout — implementation complete; production verification pending
+
+- Required tournament-contact labels now render as one unbroken inline label
+  with a red asterisk only, while their inputs retain native and ARIA required
+  semantics. The mailing-address label and player-visibility note remain
+  above the input.
+- The **ACC Sanctioning Fee Running Total** now refreshes its server-derived
+  eligible Main/Consolation participation every fifteen seconds while Setup
+  is visible, on browser focus, after relevant completed director actions,
+  and through a manual **Refresh total** action. The displayed last-updated
+  time makes the estimate's freshness visible. Refreshing never replaces
+  unsaved setup fields or rate inputs; satellite participation remains
+  excluded.
+- The rate panel is now clearly named **ACC Sanctioning Fee Rate Adjustment
+  Tool** and states that it is for ACC Board-approved, pre-Start-Play changes
+  only. Existing server-side required reason/source, immutable audit, and
+  post-Start-Play lock remain unchanged.
+- After finalization, QR/URL management is the sole full-width primary
+  action. Side Pools, Exceptional Event Changes, and later Consolation or
+  Satellite additions are now grouped beneath **Post-finalization event
+  administration**, with a clear exceptional-use warning that none of those
+  actions starts play, rewrites active event details, or erases records.
+- Focused static UI/regression tests, TypeScript type checking, `pnpm verify`
+  (**526/526** application checks plus production build/workspace checks), and
+  `pnpm verify:handoff` pass. Production deployment, external-Chrome
+  responsive review, HTTP smoke testing, and runtime-error review are in
+  progress; do not represent the protected rehearsal flow as physically
+  passed yet.
+
 ## 2026-09-16 pool setup controls and rehearsal finalization recovery — production deployed; rehearsal recovery applied
 
 - Added separate setup sections for the existing two **Q Pools** per Main or
