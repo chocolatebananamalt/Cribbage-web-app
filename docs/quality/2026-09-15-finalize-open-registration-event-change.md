@@ -25,11 +25,16 @@ pre-start event recovery workflow.
   by that probe.
 - `pnpm verify` and `pnpm verify:handoff` passed, including TypeScript, lint, **515/515** application
   tests, provider readiness, production build, and workspace checks.
-- Pull request #53 merged at `3ba6673ee4b00915477c9a30031674c974988b2a`.
-  Vercel production deployment `dpl_HwB73Hbcm9rBN4oDPFzw5ZdBJizx` is READY.
-  Root and sign-in smoke probes returned HTTP 200; the new anonymous protected
+- Pull request #55 merged at `c45fdc5d67159a54ff2c909e557b1c4d3adf3bbe`.
+  Vercel production deployment `dpl_6212Sy9KyJKBqzQ5hZZT5e7vyPrs` is READY.
+  Root and sign-in smoke probes returned HTTP 200; the protected anonymous
   event-change endpoint returned its expected HTTP 401/no-store response; the
   Vercel 30-minute runtime-error scan reported no errors.
+- The signed-in external-Chrome setup screen was read without reload to avoid
+  discarding its unsaved director draft. It still showed the prior release,
+  which is expected until the browser is refreshed; the refreshed production
+  screen must be visually checked at desktop and phone widths during the
+  rehearsal before treating the UI acceptance gate as complete.
 
 ## Required production evidence still pending
 
