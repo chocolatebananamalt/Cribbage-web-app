@@ -51,7 +51,10 @@ The specific cause was the browser's default `fieldset` min-content sizing
 within the nested Setup workspace; it made the 278px grid child reserve a
 365px field width. The first correction allowed the containing workspace
 fieldset to shrink, while the next live check identified the identical default
-on each nested event-card fieldset. Both are now explicitly `min-width: 0`
-with static regression assertions. The focused TypeScript/test suite passes;
-the final nested-card fix must complete another full verification, Production
-deployment, and 375px review before this evidence record is closed.
+on each nested event-card fieldset. Both are now explicitly `min-width: 0`.
+The last inspection then isolated an implicit auto-sized event-card grid track
+that preserved a select option's min-content width. The event card now uses
+`minmax(0, 1fr)` and static regression assertions cover all three constraints.
+The focused TypeScript/test suite passes; this final grid-track fix must
+complete another full verification, Production deployment, and 375px review
+before this evidence record is closed.
