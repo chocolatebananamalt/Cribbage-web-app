@@ -50,7 +50,7 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(css, /\.required-label \{ display:inline-flex;[^}]*white-space:nowrap/);
   assert.match(css, /\.setup-workspace>fieldset \{ min-width:0; \}/);
   assert.match(css, /\.setup-event \{ grid-template-columns:minmax\(0,1fr\); min-width:0; \}/);
-  assert.match(css, /@media \(max-width:700px\) \{ \.setup-event>\.setup-grid \{ width:100%; max-width:100%; grid-template-columns:minmax\(0,1fr\); min-width:0; \}\.setup-event>\.setup-grid>\*,\.setup-event \.setup-subsection \{ min-width:0; max-width:100%; \} \}/);
+  assert.match(css, /@media \(max-width:700px\) \{ \.setup-event \.setup-grid \{ width:100%; max-width:100%; grid-template-columns:minmax\(0,1fr\); min-width:0; \}\.setup-event \.setup-grid>\*,\.setup-event \.setup-subsection \{ min-width:0; max-width:100%; \} \}/);
   assert.match(css, /\.registration-primary \{ display:grid; width:100%/);
   assert.match(css, /\.setup-post-finalization \{ display:grid/);
   assert.match(css, /setup-workspace:has\(\[role="alertdialog"\]\)/);
