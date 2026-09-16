@@ -32,11 +32,11 @@
   min-content overflow, despite the new labels themselves remaining correct.
   The corrective rules now permit both the containing Setup fieldset and each
   nested event-card fieldset to shrink, force the event card's implicit grid
-  track to `minmax(0, 1fr)`, and constrain its mobile child grid the same way
-  so long native select options cannot widen a phone layout. Their regression
-  assertions pass the full local verification suite; the final child-grid fix
-  awaits Production deployment and repeated phone-width check before this
-  item is marked production-verified.
+  track to `minmax(0, 1fr)`, and make its mobile child grid explicitly fill
+  only the card's content width so long native select options cannot widen a
+  phone layout. Their regression assertions pass the full local verification
+  suite; the final child-grid fix awaits Production deployment and repeated
+  phone-width check before this item is marked production-verified.
 
 ## 2026-09-16 pool setup controls and rehearsal finalization recovery — production deployed; rehearsal recovery applied
 

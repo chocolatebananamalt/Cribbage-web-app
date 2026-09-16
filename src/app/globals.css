@@ -79,7 +79,7 @@ footer { display:flex; justify-content:space-between; gap:20px; padding:24px cla
 /* Tournament setup: required labels, calculated fee status, and post-finalization actions. */
 .setup-workspace>fieldset { min-width:0; }
 .setup-event { grid-template-columns:minmax(0,1fr); min-width:0; }
-@media (max-width:700px) { .setup-event>.setup-grid { grid-template-columns:minmax(0,1fr); min-width:0; } }
+@media (max-width:700px) { .setup-event>.setup-grid { width:100%; grid-template-columns:minmax(0,1fr); min-width:0; } }
 .required-label { display:inline-flex; align-items:baseline; white-space:nowrap; }
 .sanctioning-fee-panel { grid-template-columns:1fr !important; align-items:stretch; }
 .policy-settings .sanctioning-fee-rate-inputs { display:grid; gap:14px; margin:0; padding:0; border:0; }
