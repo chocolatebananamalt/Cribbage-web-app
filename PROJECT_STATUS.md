@@ -45,6 +45,10 @@
   setup list while preserving their immutable activation/audit history. The
   recovered rehearsal screen therefore shows four active finalized events and
   no longer offers an unusable team-scoring upgrade for the retired event.
+- Follow-up pull request #60 merged as
+  `d8f3534574a79585ce622eced0ed98fa4a66cd98`; production deployment
+  `dpl_GivGLpWQFVxUDb6PUUYPhE6jQvAd` is READY. The stable production URL
+  returned HTTP 200 and the post-release runtime-error scan is empty.
 
 ## 2026-09-16 calculated ACC sanctioning fee and setup clarity — production deployed; director rehearsal verification pending
 
