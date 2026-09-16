@@ -52,6 +52,10 @@
   now returns exactly four active rehearsal events, and a live protected
   desktop screen confirms the retired event is absent from the current-event
   list while the two Canadian Doubles events show Digital/Paper scoring.
+- Follow-up pull request #60 merged as
+  `d8f3534574a79585ce622eced0ed98fa4a66cd98`; Vercel production deployment
+  `dpl_GivGLpWQFVxUDb6PUUYPhE6jQvAd` is READY. The stable production root
+  returned HTTP 200 and the post-release runtime-error scan is empty.
 
 ## Remaining verification
 
