@@ -20,9 +20,13 @@
   and private handoff check. The previously discovered no-body co-director
   invitation endpoint now uses a bounded empty JSON contract before any
   protected operation.
-- App deployment and live phone/desktop verification remain pending. Until
-  those run against the deployed build, this Category 2 prerequisite is not
-  represented as complete for Full Rehearsal setup.
+- Merged pull request `#49`; Vercel Production deployment
+  `dpl_utx7S8SvpbHCndbtetTnTbLE6Bs9` is READY for main commit
+  `2bf9f1cba61bd6b0216a00fe62309b0a2c884e7c`. Production returned HTTP 200,
+  the external-Chrome smoke check loaded the signed-in tournament chooser, and
+  Vercel reported no deployment runtime errors. A real authorized director
+  still needs to visually confirm the protected Setup form at phone and
+  desktop widths and a registration/flyer contact view during the rehearsal.
 
 ## 2026-09-15 rehearsal-finding priority clarification — requirements updated; implementation pending
 
