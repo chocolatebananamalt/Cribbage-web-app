@@ -39,9 +39,20 @@
 | `pnpm build` | Pass — Next.js 16.3.4 optimized production build |
 | `git diff --check` | Pass |
 
+## Deployment evidence
+
+- Pull request `#49` was merged after its GitHub verification and Vercel
+  preview checks passed.
+- Production deployment `dpl_utx7S8SvpbHCndbtetTnTbLE6Bs9` for main commit
+  `2bf9f1cba61bd6b0216a00fe62309b0a2c884e7c` is `READY` at
+  `https://cribbage-web-app.vercel.app/`.
+- The production root returned HTTP 200 with the expected no-store and browser
+  hardening headers. An external-Chrome smoke check loaded the signed-in
+  tournament chooser without an error overlay. Vercel recorded no runtime
+  errors and no error/fatal logs for this deployment after the smoke request.
+
 ## Remaining release evidence
 
-- Deploy the matching app commit to Production.
 - Verify the protected Setup screen at phone and desktop widths with a real
   authorized director session, including required-field errors and multiline
   address display.
