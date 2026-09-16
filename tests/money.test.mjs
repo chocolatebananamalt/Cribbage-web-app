@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { formatUsdInput, parseUsdMinor } from "../src/lib/money.ts";
+import { calculateSanctioningFeeRunningTotalCents, requiresSanctioningFeeOverrideEvidence } from "../src/lib/sanctioning-fee.ts";
 
 test("parses exact USD cents without floating-point rounding", () => {
   assert.equal(parseUsdMinor("10"), 1_000);
@@ -24,6 +25,13 @@ test("formats stored minor units for editable setup fields", () => {
   assert.equal(formatUsdInput(1_005), "10.05");
 });
 
+test("calculates Main and Consolation sanctioning fees without using receipts", () => {
+  assert.equal(calculateSanctioningFeeRunningTotalCents({ mainEligibleParticipantCount: 12, consolationEligibleParticipantCount: 7 }, { mainRateCents: 300, consolationRateCents: 100 }), 4_300);
+  assert.equal(requiresSanctioningFeeOverrideEvidence("main", 300), false);
+  assert.equal(requiresSanctioningFeeOverrideEvidence("consolation", 100), false);
+  assert.equal(requiresSanctioningFeeOverrideEvidence("main", 350), true);
+});
+
 test("tournament setup keeps draft text until blur and never silently rounds it", () => {
   const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
   assert.match(client, /setDraft\(event\.target\.value\)/);
@@ -31,6 +39,10 @@ test("tournament setup keeps draft text until blur and never silently rounds it"
   assert.match(client, /aria-invalid=\{invalid\}/);
   assert.match(client, /key={`pool-fee-\$\{pool\.entryFeeCents\}`}/);
   assert.match(client, /key={`event-fee-\$\{event\.entryFeeCents\}`}/);
-  assert.match(client, /key={`sanctioning-fee-\$\{payload\.sanctioningFeeCents \?\? "blank"\}`}/);
+  assert.match(client, /ACC Sanctioning Fee Running Total/);
+  assert.match(client, /Main rate per person/);
+  assert.match(client, /Consolation rate per person/);
+  assert.match(client, /requiresSanctioningFeeOverrideEvidence/);
+  assert.doesNotMatch(client, /sanctioningFeeCents/);
   assert.doesNotMatch(client, /Math\.round\(amount \* 100\)/);
 });

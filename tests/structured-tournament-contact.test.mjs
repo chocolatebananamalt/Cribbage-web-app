@@ -7,7 +7,10 @@ const uuid = "123e4567-e89b-42d3-a456-426614174000";
 const contact = { tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1\nHonolulu, HI" };
 const base = {
   tournamentName: "Full Rehearsal", city: "Honolulu", venue: "Club", startsAt: "2026-09-16T09:00",
-  endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", sanctioningFeeCents: null,
+  endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu",
+  mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100,
+  mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "",
+  consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "",
   officials: [{ profileId: uuid, role: "director" }], events: [], ...contact,
 };
 
@@ -21,7 +24,7 @@ test("setup requires structured phone/email while retaining an optional player-f
 
 test("older setup revisions can load blank structured contact fields for repair but cannot be saved unchanged", () => {
   const current = { revisionId: uuid, version: 1, createdAt: "2026-09-15T00:00:00Z", ...base, tournamentContactPhone: "", tournamentContactEmail: "", tournamentMailingAddress: "", events: [] };
-  assert.equal(isSetupWorkspace({ current, history: [{ version: 1, createdAt: current.createdAt, eventCount: 0 }] }), true);
+  assert.equal(isSetupWorkspace({ current, history: [{ version: 1, createdAt: current.createdAt, eventCount: 0 }], sanctioningFee: { mainRateCents: 300, consolationRateCents: 100, mainEligibleParticipantCount: 0, consolationEligibleParticipantCount: 0, runningTotalCents: 0, mainRateSource: "setup", consolationRateSource: "setup" } }), true);
 });
 
 test("database contract preserves legacy free text privately and exposes only structured selected contact", () => {
