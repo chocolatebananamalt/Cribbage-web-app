@@ -35,3 +35,21 @@ test("side-pool writes remain server-mediated and legacy team recovery remains p
   assert.match(teamRoute, /requireVerifiedSubject/);
   assert.match(teamRoute, /enable_supported_team_scoring_v1/);
 });
+
+test("a legacy paper team upgrade appends an Appendix-B ruleset instead of rewriting history", () => {
+  const sql = read("database/migrations/0200_legacy_team_ruleset_upgrade.sql");
+  assert.match(sql, /ACC Official Tournament Rules 2025 Appendix B/);
+  assert.match(sql, /create trigger ruleset_enable_supported_doubles before insert on app\.ruleset_versions/);
+  assert.match(sql, /event_row\.scoring_method<>'manual'/);
+  assert.match(sql, /insert into app\.ruleset_versions/);
+  assert.match(sql, /update app\.events set scoring_method='digital',ruleset_version_id=ruleset_id_value/);
+  assert.match(sql, /supported_team_scoring_enabled/);
+  assert.doesNotMatch(sql, /update app\.ruleset_versions set/);
+});
+
+test("retired events remain audited history but do not appear as current active setup events", () => {
+  const sql = read("database/migrations/0202_setup_activation_hides_retired_events.sql");
+  assert.match(sql, /event\.operational_state = 'active'/);
+  assert.match(sql, /event\.operational_state='active'/);
+  assert.match(sql, /get_tournament_setup_activation_state_v3/);
+});

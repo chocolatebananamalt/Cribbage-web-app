@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-16 pool setup controls and rehearsal finalization recovery — database applied; deployment verification pending
+## 2026-09-16 pool setup controls and rehearsal finalization recovery — production deployed; rehearsal recovery applied
 
 - Added separate setup sections for the existing two **Q Pools** per Main or
   Consolation and up to six named **Side Pools** per Main, Consolation, or
@@ -14,11 +14,13 @@
   New activation replies remain strict: supported doubles must become
   Digital/Paper-capable. An explicit server-authorized guarded upgrade control
   is available for eligible unstarted legacy doubles.
-- Migration `setup_side_pool_definitions_and_recovery` is applied to the
+- Migrations `setup_side_pool_definitions_and_recovery`,
+  `setup_side_pool_advisor_indexes`, and the guarded legacy-team ruleset
+  upgrade are applied to the
   approved pilot database. It was initially rejected before change because of
   a missing referenced uniqueness constraint; the corrected migration applied
   successfully. The only verified database effect is schema creation—no
-  rehearsal data was modified.
+  rehearsal data was modified until the explicitly authorized recovery below.
 - `pnpm verify` passes cleanly: audit, lint, **524/524** application tests,
   provider readiness, production build, and workspace verification.
   `pnpm exec tsc --noEmit` and `pnpm verify:handoff` also pass. A second
@@ -28,7 +30,21 @@
   workload yet) and deliberate RLS-enabled/no-policy closed tables with all
   direct browser grants revoked. Production deployment, protected
   phone/desktop review, and the director’s audited retirement/upgrade/addition
-  actions remain pending.
+  actions were completed through append-only, server-authorized operations:
+  the existing Canadian Doubles event received an approved Appendix-B ruleset
+  and Digital/Paper capability; the unused Traditional Doubles event was
+  audited-retired; and **Canadian Doubles Practice** was appended and enabled
+  for Digital/Paper scoring. Main, Consolation, registration, payments,
+  seating, schedules, and score evidence were left unchanged.
+- Pull request #59 merged as `134a7481f64f39e2f8e36706d6a3c1f15b4e2de9`.
+  Vercel production deployment `dpl_7CVtim2mBP9AdzhvnpW918HmPAKD` is READY.
+  Root returned 200, protected anonymous setup returned 401/no-store, and the
+  post-release runtime scan reported no errors. The protected director
+  multi-device rehearsal remains the physical acceptance gate.
+- The activation-state reader now excludes retired events from the current
+  setup list while preserving their immutable activation/audit history. The
+  recovered rehearsal screen therefore shows four active finalized events and
+  no longer offers an unusable team-scoring upgrade for the retired event.
 
 ## 2026-09-16 calculated ACC sanctioning fee and setup clarity — production deployed; director rehearsal verification pending
 
