@@ -45,6 +45,10 @@ test("setup saves are recoverable and never presented as operational activation"
   assert.match(client, /sessionStorage\.setItem/);
   assert.match(client, /Retry exact saved request/);
   assert.match(client, /isSavedSetup/);
-  assert.match(client, /Save Tournament Setup/);
-  assert.doesNotMatch(client, />Activate Tournament</);
+  assert.match(client, /Save Draft Setup/);
+  assert.match(client, /Finalize Current Events for Use/);
+  assert.match(client, /Finalizing does not start play, close registration, assign seats, charge anyone, or publish results/);
+  assert.match(client, /Event finalization status could not be checked/);
+  assert.match(client, /missing_tournament_contact/);
+  assert.doesNotMatch(client, />Activate Tournament Events</);
 });

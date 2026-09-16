@@ -157,8 +157,8 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.doesNotMatch(client, /activationEnabled/);
   assert.match(client, /fetch\(`\/api\/v1\/tournaments\/\$\{tournamentId\}\/setup\/activation`/);
   assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
-  assert.match(client, /disabled=\{busy \|\| dirty\}/);
-  assert.match(client, /Activate Tournament Events/);
-  assert.match(client, /Tournament events are active/);
+  assert.match(client, /disabled=\{busy \|\| dirty \|\| !activationStatusAvailable\}/);
+  assert.match(client, /Finalize Current Events for Use/);
+  assert.match(client, /Current events are finalized for use/);
   assert.match(client, /Traditional Doubles and Canadian Doubles support shared Digital or Paper team scorecards/);
 });

@@ -1,41 +1,65 @@
 "use client";
 
-import { useState } from "react";
-import { clearThenSignOut } from "../lib/client-session-storage";
+import { useEffect, useState } from "react";
+import { clearAppSessionStorage, countAppSessionStorageRecords } from "../lib/client-session-storage";
 import { clearOfflineScoreStorage, countOfflineSubmissions } from "../lib/offline-score-queue";
 
 export function SharedDeviceSignOut() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [localState, setLocalState] = useState<{ status: "checking" | "safe" | "unsafe" | "unavailable"; offlineCount: number; retryCount: number }>({ status: "checking", offlineCount: 0, retryCount: 0 });
+
+  async function refreshLocalState() {
+    try {
+      const [offlineCount] = await Promise.all([countOfflineSubmissions()]);
+      const retryCount = countAppSessionStorageRecords(window.sessionStorage);
+      setLocalState({ status: offlineCount === 0 && retryCount === 0 ? "safe" : "unsafe", offlineCount, retryCount });
+    } catch {
+      setLocalState({ status: "unavailable", offlineCount: 0, retryCount: 0 });
+    }
+  }
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => { void refreshLocalState(); }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   async function signOut() {
     if (busy) return;
     setBusy(true);
     setError(null);
-    let localClearFailed = false;
-    let offlineClearConfirmed = false;
     try {
-      const unresolved = await countOfflineSubmissions();
-      if (unresolved > 0 && !window.confirm(`${unresolved} saved offline score ${unresolved === 1 ? "entry is" : "entries are"} still waiting to sync. Signing out will permanently remove ${unresolved === 1 ? "it" : "them"} from this device. Stay signed in unless the result exists on paper or another authorized record.`)) {
-        setBusy(false);
-        return;
-      }
-      await clearOfflineScoreStorage();
-      offlineClearConfirmed = true;
-      const outcome = await clearThenSignOut(window.sessionStorage, async () => {
-        const response = await fetch("/auth/sign-out", { method: "POST", headers: { "x-acc-shared-device": "1" }, credentials: "same-origin", cache: "no-store" });
-        return response.ok;
-      });
-      localClearFailed = outcome.localClearFailed;
-      if (!outcome.signedOut) throw new Error("sign_out_unavailable");
+      const response = await fetch("/auth/sign-out", { method: "POST", credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) throw new Error("sign_out_unavailable");
       const destination = new URL("/sign-in", window.location.origin);
-      if (localClearFailed) destination.searchParams.set("notice", "local_clear_review");
       window.location.replace(destination.toString());
     } catch {
-      setError(!offlineClearConfirmed || localClearFailed ? "Local tournament data was not confirmed cleared and sign-out did not complete. Do not hand this device to another person; close the browser and try again." : "This device’s local tournament data was cleared, but sign-out could not be completed. Try again before handing over this device.");
+      setError("Sign-out did not complete. The local recovery copy was preserved; do not hand this device to another player yet.");
       setBusy(false);
     }
   }
 
-  return <div className="shared-device-sign-out"><p className="auth-note">Use this when another person will use this phone, tablet, or browser. It signs you out and removes only this app&apos;s local browser session, unsent retry records, offline score entries, cached score pages, and device keys. It does not delete saved tournament records, personal files, browser history, or data from other websites.</p><button type="button" className="secondary" onClick={signOut} disabled={busy}>{busy ? "Signing out…" : "Sign out and clear this device"}</button>{error ? <p className="error-text" role="alert">{error}</p> : null}</div>;
+  async function clearSafeAppData() {
+    if (busy || localState.status !== "safe") return;
+    setBusy(true);
+    setError(null);
+    try {
+      await clearOfflineScoreStorage();
+      clearAppSessionStorage(window.sessionStorage);
+      const response = await fetch("/auth/sign-out", { method: "POST", headers: { "x-acc-clear-safe-app-data": "1" }, credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) throw new Error("sign_out_unavailable");
+      window.location.replace(new URL("/sign-in", window.location.origin).toString());
+    } catch {
+      setError("Safe app-data clearing did not finish. The device should not be handed to another player until its recovery state has been checked.");
+      setBusy(false);
+      await refreshLocalState();
+    }
+  }
+
+  const safetyMessage = localState.status === "checking" ? "Checking whether this device has any local tournament recovery work…"
+    : localState.status === "safe" ? "This device has no unsent score entries or retry records. It may be safely cleared for a different player."
+      : localState.status === "unsafe" ? `${localState.offlineCount ? `${localState.offlineCount} offline score ${localState.offlineCount === 1 ? "entry is" : "entries are"}` : "No offline score entries are"} ${localState.retryCount ? `${localState.offlineCount ? "and " : ""}${localState.retryCount} retry ${localState.retryCount === 1 ? "record is" : "records are"}` : ""} still stored locally. Sign out is safe for the same player, but this device must not be cleared or handed to a different player until synchronization/retry is complete.`
+        : "The app cannot verify this device’s local recovery state. Keep it with the same player and try again after connectivity is restored.";
+
+  return <div className="shared-device-sign-out"><p className="auth-note">Sign out is appropriate on a personal device or when the same player will return. It keeps this app&apos;s offline recovery copy and retry records. It does not delete saved tournament records, personal files, browser history, or other websites&apos; data.</p><p className={localState.status === "safe" ? "auth-note" : "error-text"} role="status">{safetyMessage}</p><div className="setup-actions"><button type="button" className="secondary" onClick={() => void signOut()} disabled={busy}>{busy ? "Signing out…" : "Sign out"}</button>{localState.status === "safe" ? <button type="button" className="secondary danger-button" onClick={() => void clearSafeAppData()} disabled={busy}>Clear safe app data and sign out</button> : null}</div>{error ? <p className="error-text" role="alert">{error}</p> : null}</div>;
 }

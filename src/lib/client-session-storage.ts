@@ -24,13 +24,12 @@ export function clearAppSessionStorage(storage: Storage) {
   }
 }
 
-export async function clearThenSignOut(storage: Storage, signOut: () => Promise<boolean>) {
-  let localClearFailed = false;
-  try {
-    clearAppSessionStorage(storage);
-  } catch {
-    localClearFailed = true;
+/** Returns only app-owned retry records. It never inspects other sites' data. */
+export function countAppSessionStorageRecords(storage: Storage) {
+  let count = 0;
+  for (let index = 0; index < storage.length; index += 1) {
+    const key = storage.key(index);
+    if (key && appStoragePrefixes.some((prefix) => key.startsWith(prefix))) count += 1;
   }
-  const signedOut = await signOut();
-  return { localClearFailed, signedOut };
+  return count;
 }
