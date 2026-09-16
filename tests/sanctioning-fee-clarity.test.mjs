@@ -48,6 +48,7 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /Post-finalization event administration/);
   assert.match(client, /Use only when necessary after registration opens/);
   assert.match(css, /\.required-label \{ display:inline-flex;[^}]*white-space:nowrap/);
+  assert.match(css, /\.setup-workspace>fieldset \{ min-width:0; \}/);
   assert.match(css, /\.registration-primary \{ display:grid; width:100%/);
   assert.match(css, /\.setup-post-finalization \{ display:grid/);
   assert.match(css, /setup-workspace:has\(\[role="alertdialog"\]\)/);

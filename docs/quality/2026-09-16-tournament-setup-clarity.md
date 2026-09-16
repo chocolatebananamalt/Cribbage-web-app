@@ -43,3 +43,15 @@ Environment: Windows, repository worktree, Node/pnpm project toolchain.
 No protected director form or physical rehearsal result is claimed as passed
 until the deployed build is reviewed in independent browser sessions at phone
 and desktop widths.
+
+## Follow-up responsive finding
+
+The first Production review at a 375px viewport exposed a horizontal scrollbar.
+The specific cause was the browser's default `fieldset` min-content sizing
+within the nested Setup workspace; it made the 278px grid child reserve a
+365px field width. The focused correction explicitly allows the workspace
+fieldset to shrink with `min-width: 0`, and its static regression assertion,
+TypeScript check, focused test set, and a repeated full `pnpm verify`
+(526/526 application tests plus build/workspace checks) pass locally. A new
+Production deployment and repeated 375px review are required before closing
+this evidence record.
