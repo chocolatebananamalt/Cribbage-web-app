@@ -8,6 +8,7 @@ import { isUuid } from "../../../../../../../lib/api/validation";
 import { rotateRegistrationLink } from "../../../../../../../lib/registration-link-issuer";
 import { createServerOnlyAdminClient } from "../../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../../lib/supabase/server";
+import { registrationContactReadiness } from "../../../../../../../lib/api/tournament-registration-contact";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
@@ -18,6 +19,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!isUuid(id) || !isRegistrationLinkRotateRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const client = await createClient();
+    const { data: workspace, error: workspaceError } = await client.rpc("get_tournament_setup_workspace", { p_tournament_id: id });
+    const contact = workspaceError ? "unavailable" : registrationContactReadiness(workspace);
+    if (contact === "unavailable") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (contact === "missing") return apiJson({ error: "registration_contact_required" }, { status: 409 });
     const result = await rotateRegistrationLink(createServerOnlyAdminClient(), {
       actorId: subject,
       tournamentId: id,

@@ -7,6 +7,13 @@ import { isUuid } from "../../../../../../lib/api/validation";
 import { issueRegistrationLink } from "../../../../../../lib/registration-link-issuer";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../lib/supabase/server";
+import { registrationContactReadiness } from "../../../../../../lib/api/tournament-registration-contact";
+
+async function checkRegistrationContact(tournamentId: string) {
+  const client = await createClient();
+  const { data, error } = await client.rpc("get_tournament_setup_workspace", { p_tournament_id: tournamentId });
+  return error ? "unavailable" as const : registrationContactReadiness(data);
+}
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   return withApiFailureBoundary(async () => {
@@ -32,6 +39,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!isUuid(id) || !isRegistrationLinkIssueRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const contact = await checkRegistrationContact(id);
+    if (contact === "unavailable") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (contact === "missing") return apiJson({ error: "registration_contact_required" }, { status: 409 });
     const issued = await issueRegistrationLink(createServerOnlyAdminClient(), {
       actorId: subject, tournamentId: id, expiresAt: new Date(body.expiresAt),
       maxClaims: body.maxClaims, maxClaimsPerHour: body.maxClaimsPerHour, operationId: body.operationId,

@@ -67,7 +67,8 @@ export default function RegistrationLinkClient({ tournamentId, initialState }: {
       const body = rotating ? { ...basePayload, expectedLinkId: state.linkId, expectedVersion: state.version, operationId: crypto.randomUUID() } : { ...basePayload, operationId: crypto.randomUUID() };
       const result = await request(rotating ? "/rotate" : "", body);
       if (result.status === 201 && exactLinkResponse(result.body)) { await saveOneTimeLink(result.body); return; }
-      setMessage(result.status === 409 ? "The link changed before this request completed. Refresh before trying again." : "The registration link could not be created. No QR code was shown.");
+      const code = result.body && typeof result.body === "object" ? (result.body as { error?: unknown }).error : null;
+      setMessage(code === "registration_contact_required" ? "Before creating or replacing a QR link, save the current Tournament Setup with the public tournament contact phone and email. The app will use only those two director-selected contact details on registration." : result.status === 409 ? "The link changed before this request completed. Refresh before trying again." : "The registration link could not be created. No QR code was shown.");
     } catch { setMessage("The registration link could not be created. No QR code was shown."); } finally { setBusy(false); }
   }
   async function close() {

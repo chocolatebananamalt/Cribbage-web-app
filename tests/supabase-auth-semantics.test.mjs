@@ -294,7 +294,7 @@ test('every API v1 mutation remains behind the shared origin gate and RPC-only d
   }
 });
 
-test('protected screens offer a shared-device clear and local sign-out boundary', () => {
+test('protected screens offer a recovery-preserving sign-out and a safe clear boundary', () => {
   const control = read('src/components/shared-device-sign-out.tsx');
   const storage = read('src/lib/client-session-storage.ts');
   const signOut = read('src/app/auth/sign-out/route.ts');
@@ -304,15 +304,17 @@ test('protected screens offer a shared-device clear and local sign-out boundary'
     'src/app/tournament/[tournamentId]/corrections/page.tsx',
     'src/app/tournament/[tournamentId]/how-to/page.tsx',
   ].map(read).join('\n');
-  assert.match(control, /clearThenSignOut\(window\.sessionStorage/);
+  assert.match(control, /countAppSessionStorageRecords/);
   assert.match(control, /fetch\("\/auth\/sign-out"/);
   assert.match(control, /window\.location\.replace\(destination\.toString\(\)\)/);
-  assert.match(control, /removes only this app&apos;s local browser session, unsent retry records, offline score entries, cached score pages, and device keys/);
-  assert.match(control, /does not delete saved tournament records, personal files, browser history, or data from other websites/);
-  assert.match(control, /Sign out and clear this device/);
+  assert.match(control, /Sign out is appropriate on a personal device/);
+  assert.match(control, /does not delete saved tournament records, personal files, browser history, or other websites&apos; data/);
+  assert.match(control, /Clear safe app data and sign out/);
+  assert.match(control, /localState\.status !== "safe"/);
   assert.match(signOut, /isSameOriginRequest\(request\)/);
   assert.match(signOut, /private, no-store/);
   assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
+  assert.match(signOut, /x-acc-clear-safe-app-data/);
   assert.match(signOut, /Clear-Site-Data/);
   assert.match(signOut, /"cache", "storage"/);
   assert.match(signOut, /cache-control/);
@@ -364,19 +366,14 @@ test('shared-device cleanup removes manual and CSV roster retry envelopes', asyn
   ]);
 });
 
-test('shared-device sign-out continues when local storage cleanup fails', async () => {
+test('shared-device safe state counts only app-owned retry records', async () => {
   const storage = await import(pathToFileURL(path.join(root, 'src/lib/client-session-storage.ts')).href);
-  let signOutCalls = 0;
   const fixture = {
-    get length() { return 1; },
-    key() { return 'registration-operation:opaque-token'; },
-    removeItem() { throw new Error('storage unavailable'); },
+    get length() { return 3; },
+    key(index) { return ['registration-operation:opaque-token', 'unrelated', 'tournament-setup:actor:event'][index] ?? null; },
   };
-  const result = await storage.clearThenSignOut(fixture, async () => { signOutCalls += 1; return true; });
-  assert.equal(signOutCalls, 1);
-  assert.deepEqual(result, { localClearFailed: true, signedOut: true });
-  assert.match(read('src/app/sign-in/page.tsx'), /local_clear_review/);
-  assert.match(read('src/app/sign-in/sign-in-form.tsx'), /Close this browser before another person uses this device/);
+  assert.equal(storage.countAppSessionStorageRecords(fixture), 2);
+  assert.doesNotMatch(read('src/components/shared-device-sign-out.tsx'), /window\.confirm/);
 });
 
 test('ambiguous score submission locks one exact persisted retry envelope', async () => {
@@ -526,6 +523,9 @@ test('director registration-link issuance is a strict same-origin server-only bo
   assert.match(route, /registrationLinkManagementEnabled/);
   assert.match(route, /if \(!registrationLinkManagementEnabled\(\)\)/);
   assert.match(route, /requireVerifiedSubject/);
+  assert.match(route, /registrationContactReadiness/);
+  assert.match(route, /get_tournament_setup_workspace/);
+  assert.match(route, /registration_contact_required/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(route, /issueRegistrationLink/);
   assert.doesNotMatch(route, /NEXT_PUBLIC_SUPABASE/);
@@ -637,6 +637,8 @@ test('director rotation route is release-gated, strict, server-only, and returns
   assert.match(route, /isRegistrationLinkRotateRequest/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /rotateRegistrationLink/);
+  assert.match(route, /registrationContactReadiness/);
+  assert.match(route, /registration_contact_required/);
   assert.match(route, /credential_unavailable/);
   assert.match(route, /canonicalToken/);
   assert.doesNotMatch(route, /from\("tournament_registration_link/);
@@ -656,6 +658,7 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   assert.match(page, /No link was created or changed/);
   assert.match(workspace, /import "server-only"/);
   assert.match(workspace, /get_registration_link_state_v2/);
+  assert.match(client, /save the current Tournament Setup with the public tournament contact phone and email/);
   assert.match(client, /QRCode\.toDataURL/);
   assert.match(client, /\/register#\$\{result\.credential\}/);
   assert.match(client, /setOneTimeLink\(null\)/);

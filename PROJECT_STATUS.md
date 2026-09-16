@@ -1,5 +1,31 @@
 # Project Status
 
+## 2026-09-15 setup finalization and registration recovery repair — local verification complete; production deployment pending
+
+- Preserved **Full Rehearsal — 09-16-2026** and its four saved draft events;
+  this repair makes no tournament-record, role, event, or registration-claim
+  mutation.
+- The Setup screen now keeps a valid saved draft visible if the independent
+  finalization-status request is unavailable. It presents **Save Draft Setup**
+  and **Finalize Current Events for Use**, and explains that finalization does
+  not start play, close registration, assign seating, collect money, or
+  publish results.
+- Registration-link issue/rotation now fails with the actionable
+  `registration_contact_required` condition until a director saves the
+  current revision with a public tournament phone and email. That directly
+  explains why the rehearsal QR credential returned unavailable: its previous
+  saved revision has blank structured contact values. Saving a new revision
+  with selected contact values makes the existing non-expired credential
+  eligible for the existing public registration flow.
+- Replaced the combined destructive shared-device control. **Sign out** now
+  preserves recovery records for the same player. **Clear safe app data and
+  sign out** appears only after the browser detects zero offline score entries
+  and zero app-owned retry records.
+- Local evidence: `pnpm lint`, `pnpm test` (**513/513**), and `pnpm build`
+  pass. Production deploy/runtime review and a director’s two-device QR
+  confirmation remain open; see
+  `docs/quality/2026-09-15-setup-finalization-registration-repair.md`.
+
 ## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
 
 - Replaced the generic Director contact-details draft contract with required
