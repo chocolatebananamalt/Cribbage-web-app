@@ -34,7 +34,16 @@ whose latest setup lacks the public contact fields; this change adds a
 director-facing prevention/recovery boundary before another credential is
 issued or rotated.
 
-## Still required before calling this production-verified
+## Production deployment and remaining verification
+
+Pull request #51 merged as production commit
+`05dabd60dea3dbf44d3bce82f38beda1a3b80413`. Vercel reported the deployment
+successful; unauthenticated HTTP smoke probes for `/`, `/sign-in`, and `/demo`
+returned 200. The public demonstration’s scripted walkthrough also passed at
+320px, 640px, and 1280px: 20 distinct screens, with no overflow, console,
+page, HTTP, or CSP errors.
+
+Still required before calling the rehearsal workflow fully verified:
 
 - Deploy this tested revision and review its Production runtime logs.
 - A director signs into **Full Rehearsal — 09-16-2026**, saves the existing

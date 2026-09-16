@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-15 setup finalization and registration recovery repair — local verification complete; production deployment pending
+## 2026-09-15 setup finalization and registration recovery repair — production deployed; director verification pending
 
 - Preserved **Full Rehearsal — 09-16-2026** and its four saved draft events;
   this repair makes no tournament-record, role, event, or registration-claim
@@ -22,8 +22,10 @@
   sign out** appears only after the browser detects zero offline score entries
   and zero app-owned retry records.
 - Local evidence: `pnpm lint`, `pnpm test` (**513/513**), and `pnpm build`
-  pass. Production deploy/runtime review and a director’s two-device QR
-  confirmation remain open; see
+  pass. Pull request #51 was merged as production commit
+  `05dabd60dea3dbf44d3bce82f38beda1a3b80413`; Vercel reported a successful
+  production deployment and root, sign-in, and demo HTTP smoke probes returned
+  200. A director’s protected setup/QR check on two devices remains open; see
   `docs/quality/2026-09-15-setup-finalization-registration-repair.md`.
 
 ## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
