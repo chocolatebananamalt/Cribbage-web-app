@@ -1,5 +1,18 @@
 # Project Status
 
+## 2026-09-15 rehearsal-finding priority clarification — requirements updated; implementation pending
+
+- Findings now use an owner-defined priority taxonomy: Category 1 must be fixed
+  before October 3; Category 2 must be fixed before director setup begins,
+  including Full Rehearsal setup; Category 3 is a post-rehearsal improvement
+  for later pilots. Future status/report updates must show the recommendation
+  and request an owner selection when a classification is debatable.
+- The manual tournament-level ACC Sanctioning Fee field is now a Category 2
+  defect. The accepted replacement is an event-specific Main `$3 per
+  participant` / Consolation `$1 per participant` calculation, with audited
+  pre-start per-player overrides by director/co-director. Implementation and
+  verification have not yet been performed.
+
 ## 2026-09-15 four-co-director tournament roles — applied; role acceptance rehearsal pending
 
 - Applied migrations `0191` and `0192` to the approved pilot Supabase project.

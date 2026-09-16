@@ -45,6 +45,19 @@ pilot time.
 
 ## Current highest-priority work
 
+### Rehearsal findings priority rule
+
+1. **Must fix before October 3:** blocks safe scoring, verification, results,
+   finances, seating, or data recovery.
+2. **Fix before director setup begins:** required for accurate or practical
+   director setup, including setup of **Full Rehearsal — 09-16-2026**.
+3. **Post-rehearsal improvement:** valuable work to complete before later
+   pilots, but not required for the rehearsal or October 3.
+
+For a finding that could reasonably fit more than one class, present the owner
+with the recommendation and these three choices before assigning it. The
+calculated Main/Consolation ACC Sanctioning Fee is Category 2.
+
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating
    → enrollment → schedule without altering the real October tournament.

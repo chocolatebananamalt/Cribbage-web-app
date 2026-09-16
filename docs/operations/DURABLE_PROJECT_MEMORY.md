@@ -1,6 +1,6 @@
 # Durable Project Memory
 
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-15
 **Purpose:** Preserve owner corrections and verified source facts across tasks
 so a future worker does not depend on chat recall or ask the owner to repeat
 recoverable information.
@@ -50,6 +50,8 @@ When the owner corrects or clarifies the project:
 
 | Fact | Provenance | Consequence |
 | --- | --- | --- |
+| Rehearsal findings use three owner-defined priority classes: **1 — Must fix before October 3** for anything that blocks safe scoring, verification, results, finances, seating, or data recovery; **2 — Fix before director setup begins**, including Full Rehearsal setup, for setup accuracy/practicality; and **3 — Post-rehearsal improvement** for useful work to complete before later pilots that is not needed for the rehearsal or October 3. Each newly discovered finding needs the owner-facing recommendation and priority choice when classification is reasonably debatable. | Owner clarification, 2026-09-15 | Do not describe Category 2 as deferrable until after rehearsal. Use this exact taxonomy in the readiness report, runbook findings, working outline, and status updates. |
+| ACC Sanctioning Fee is not a director-entered tournament total. Main defaults to $3 per participant and Consolation to $1 per participant, shown as event-specific per-player charges and calculated from the official participant count at Start Play. A primary director or co-director may make a pre-start per-player override only with an audit reason and ACC source/reference; payments remain independent. | Owner decision, 2026-09-15; ACC public sources previously reviewed | Replace the current manual setup field. This is a Category 2 rehearsal/setup prerequisite; Satellite treatment remains unavailable until an authoritative rate is configured. |
 | October 3 is not Standard-Singles-only: two-person Traditional Doubles and Canadian Doubles must support either Digital or Paper team scoring. The captain chooses one shared team mode; both members remain individual identities and the designated scorer may change before play. | Owner decision, 2026-09-14 | Implement team-specific records, opposing-team confirmation, team standings/reporting, seating, paper-card preparation, and audit/offline safeguards. Generic/custom teams remain paper-only until separately defined. |
 | Every singles player and team receives a published event-scoped starting Table/Seat and permanent Verification ID. Signed-in participants in that tournament, including paper users, may use a scoped seating directory by partial name or exact normalized ACC number; results disclose only name/team, scorecard type, and assignment. | Owner decision, 2026-09-14 | Implement participant-visible assignment/current-game views, director filters, private-field non-disclosure, and pre-publication/cross-tournament denial. |
 | Each event supports zero through six active Side Pools with director-configurable unique normalized names and arbitrary fees; equal fees are allowed for different names. $10/$20/$50/$100 are presets only, and a seventh pool is rejected. | Owner decision, 2026-09-14 | Apply elections, collections, corrections, payouts, reconciliation, CSV/PDF, and dedicated event/combined reports to all six pools, separate from the two Q Pools. |
