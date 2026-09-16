@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-16 tournament setup clarity and post-finalization layout — implementation complete; production verification pending
+## 2026-09-16 tournament setup clarity and post-finalization layout — production deployed and responsive review passed
 
 - Required tournament-contact labels now render as one unbroken inline label
   with a red asterisk only, while their inputs retain native and ARIA required
@@ -22,21 +22,23 @@
   Satellite additions are now grouped beneath **Post-finalization event
   administration**, with a clear exceptional-use warning that none of those
   actions starts play, rewrites active event details, or erases records.
-- Focused static UI/regression tests, TypeScript type checking, `pnpm verify`
-  (**526/526** application checks plus production build/workspace checks), and
-  `pnpm verify:handoff` pass. Production deployment, external-Chrome
-  responsive review, HTTP smoke testing, and runtime-error review are in
-  progress; do not represent the protected rehearsal flow as physically
-  passed yet.
-- The first live 375px production review exposed browser-default `fieldset`
-  min-content overflow, despite the new labels themselves remaining correct.
-  The corrective rules now permit both the containing Setup fieldset and each
-  nested event-card fieldset to shrink, force the event card's implicit grid
-  track to `minmax(0, 1fr)`, and make its mobile child grid explicitly fill
-  only the card's content width so long native select options cannot widen a
-  phone layout. Their regression assertions pass the full local verification
-  suite; the final child-grid fix awaits Production deployment and repeated
-  phone-width check before this item is marked production-verified.
+- The first live 375px production review exposed a real nested-fieldset grid
+  overflow. PRs #67–#71 progressively constrained the outer card, nested pool
+  card, and label grid tracks without clipping any control. The final release
+  is merge commit `c900186f35df9f9a665c3f2142727d5e55809a79`, deployed by
+  Vercel as `https://cribbage-web-emz9224pt-cribbage-app.vercel.app` and
+  serving the stable Production address.
+- Current local verification passes: focused regression tests **10/10**,
+  TypeScript, and `pnpm verify` (**526/526** application checks plus audit,
+  lint, provider-readiness, Production build, and workspace checks). The
+  external-Chrome signed-in setup review passed at 375px and desktop widths:
+  all required labels stayed non-wrapping, every nested pool control stayed
+  within the card, document `scrollWidth` equaled `clientWidth` at phone width,
+  and the QR action filled its parent width. The inspected production page had
+  no browser-console errors; the stable root returned HTTP 200.
+- The protected, multi-device physical rehearsal remains an operational
+  acceptance gate. This UI verification does not claim that scoring,
+  cross-checking, payments, or offline recovery have been physically rehearsed.
 
 ## 2026-09-16 pool setup controls and rehearsal finalization recovery — production deployed; rehearsal recovery applied
 

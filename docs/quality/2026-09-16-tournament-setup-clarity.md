@@ -26,7 +26,11 @@ Environment: Windows, repository worktree, Node/pnpm project toolchain.
 | `git diff --check` | Passed |
 | `pnpm verify` | Passed: dependency audit, lint, 526/526 application tests, provider-readiness check, production build, and workspace/recovery checks. |
 | `pnpm verify:handoff` | Passed: 6/6 local private-handoff checks. |
-| Browser phone/desktop review | Pending production deployment; local external-browser verification is blocked by the host's localhost client policy. |
+| Production release | PRs #67–#71 passed their GitHub verification and Vercel preview checks. Final merge `c900186f35df9f9a665c3f2142727d5e55809a79` deployed READY as `https://cribbage-web-emz9224pt-cribbage-app.vercel.app`. |
+| Browser phone review | Passed in external Chrome at 375px: `scrollWidth` = `clientWidth` = 360px, no elements exceeded the content width, required labels were `nowrap`, and the QR action matched its parent width. |
+| Browser desktop review | Passed in external Chrome: the two labels remained one-line and the full-width QR action matched its 654px parent. |
+| Browser error review | Passed: no captured production console errors. |
+| Stable-root HTTP smoke | Passed: `https://cribbage-web-app.vercel.app/` returned HTTP 200. |
 
 ## Behavioral safety checks
 
@@ -40,9 +44,9 @@ Environment: Windows, repository worktree, Node/pnpm project toolchain.
 
 ## Release limitation
 
-No protected director form or physical rehearsal result is claimed as passed
-until the deployed build is reviewed in independent browser sessions at phone
-and desktop widths.
+The deployed protected director form has now passed one external-Chrome
+phone/desktop layout review. That does not replace the scheduled independent
+multi-device physical rehearsal or prove the tournament workflow end to end.
 
 ## Follow-up responsive finding
 
@@ -55,9 +59,8 @@ on each nested event-card fieldset. Both are now explicitly `min-width: 0`.
 The last inspection then isolated an implicit auto-sized event-card grid track
 that preserved a select option's min-content width. The event card now uses
 `minmax(0, 1fr)` and static regression assertions cover all three constraints.
-The last live check found Chrome's fieldset layout still let the child mobile
-`setup-grid` exceed the event content width despite the zero-minimum grid
-track. The grid now has an explicit `width: 100%` in addition to the
-`minmax(0, 1fr)`/`min-width: 0` constraint. The focused TypeScript/test suite
-passes; this final child-grid fix must complete another full verification,
-Production deployment, and 375px review before this evidence record is closed.
+The next live check found that nested Q Pool/Side Pool fieldsets and their
+internal label grids still retained auto minimums. The final rules constrain
+the nested grid, pool fieldset, and label grid to `minmax(0, 1fr)` with bounded
+widths. After final deployment, the 375px review found no remaining overflowing
+element and no horizontal document scroll.
