@@ -11,7 +11,7 @@ import {
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const revisionId = "10000000-0000-4000-8000-000000000001";
 const operationId = "20000000-0000-4000-8000-000000000002";
-const request = { setupRevisionId: revisionId, expectedVersion: 3, idempotencyKey: operationId };
+const request = { setupRevisionId: revisionId, expectedVersion: 3, confirmed: true, idempotencyKey: operationId };
 
 test("setup activation is a released October operation without a deployment toggle", () => {
   assert.doesNotMatch(read("src/lib/api/setup-activation.ts"), /ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED|tournamentSetupActivationEnabled/);
@@ -21,6 +21,7 @@ test("setup activation is a released October operation without a deployment togg
 test("setup activation accepts only a revision-bound exact request", () => {
   assert.equal(isSetupActivationRequest(request), true);
   assert.equal(isSetupActivationRequest({ ...request, expectedVersion: 0 }), false);
+  assert.equal(isSetupActivationRequest({ ...request, confirmed: false }), false);
   assert.equal(isSetupActivationRequest({ ...request, setupRevisionId: "not-a-uuid" }), false);
   assert.equal(isSetupActivationRequest({ ...request, eventId: revisionId }), false);
   assert.equal(isSetupActivationRequest({ ...request, format: "team" }), false);
@@ -61,6 +62,7 @@ test("setup activation validates the exact server-derived result and safe exclus
     payoutsCalculated: false,
     qualifiersCalculated: false,
     accSubmissionCreated: false,
+    registrationState: "open",
   };
   assert.equal(isSetupActivationResult(result, request), true);
   assert.equal(isSetupActivationResult({ ...result, setupRevisionId: operationId }, request), false);
@@ -118,7 +120,7 @@ test("activation route is released, same-origin, subject-bound, and server-only"
   assert.match(route, /readSmallJson/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
-  assert.match(route, /activate_tournament_setup_v2/);
+  assert.match(route, /finalize_tournament_setup_and_open_registration_v1/);
   assert.match(route, /get_tournament_setup_activation_state_v3/);
   assert.match(route, /p_actor_id: subject/);
   assert.match(route, /p_setup_revision_id: body\.setupRevisionId/);
@@ -158,7 +160,7 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.match(client, /fetch\(`\/api\/v1\/tournaments\/\$\{tournamentId\}\/setup\/activation`/);
   assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
   assert.match(client, /disabled=\{busy \|\| dirty \|\| !activationStatusAvailable\}/);
-  assert.match(client, /Finalize Current Events for Use/);
-  assert.match(client, /Current events are finalized for use/);
+  assert.match(client, /Finalize All Events \/ Open Registration/);
+  assert.match(client, /All events are finalized; registration is open/);
   assert.match(client, /Traditional Doubles and Canadian Doubles support shared Digital or Paper team scorecards/);
 });

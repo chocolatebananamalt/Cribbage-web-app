@@ -1,7 +1,8 @@
 # Setup finalization, registration contact, and device-recovery repair
 
 Date: 2026-09-15
-Status: Implemented locally; production verification pending
+Status: Superseded in terminology and registration timing by
+`2026-09-15-finalize-open-registration-and-event-replacement.md`
 
 ## Context
 
@@ -17,8 +18,9 @@ records could still be pending.
 
 ## Decisions
 
-- **Save Draft Setup** creates a private, versioned setup revision only.
-- **Finalize Current Events for Use** makes the saved event definitions
+- **Save All Events Draft** creates a private, versioned setup revision only.
+- **Finalize All Events / Open Registration** finalizes the complete saved
+  event set, opens registration, and makes the saved event definitions
   available for roster enrollment, seating, schedules, finance, and later
   Start Play. It does not start play, close registration, assign seats, charge
   anyone, or publish results.
