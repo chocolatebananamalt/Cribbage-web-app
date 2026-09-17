@@ -1,6 +1,7 @@
+import { isOptionalAccNumber } from "../acc-number.ts";
+
 export const isUuid = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 const exactKeys = (item: Record<string, unknown>, keys: string[]) => Object.keys(item).length === keys.length && keys.every((key) => key in item);
-const validAccNumber = (value: string) => value === "" || /^[A-Z]{2}\d+$/.test(value);
 export function isAcceptedRosterPromotion(value: unknown, decisionId: string) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
@@ -34,7 +35,7 @@ export function isManualRosterEntryRequest(value: unknown): value is ManualRoste
   return firstName.length >= 1 && firstName.length <= 80 && lastName.length >= 1 && lastName.length <= 80 && `${firstName} ${lastName}`.length <= 160
     && email.length <= 320
     && (email.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    && accNumber.length <= 64 && validAccNumber(accNumber)
+    && accNumber.length <= 64 && isOptionalAccNumber(accNumber)
     && (item.scorecardType === "digital" || item.scorecardType === "paper");
 }
 
@@ -78,7 +79,7 @@ export function isRosterCsvImportRequest(value: unknown): value is RosterCsvImpo
       && `${entry.firstName.trim()} ${entry.lastName.trim()}`.length <= 160
       && typeof entry.email === "string" && entry.email.trim().length <= 320
       && (entry.email.trim().length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(entry.email.trim()))
-      && typeof entry.accNumber === "string" && entry.accNumber.trim().length <= 64 && validAccNumber(entry.accNumber.trim())
+      && typeof entry.accNumber === "string" && entry.accNumber.trim().length <= 64 && isOptionalAccNumber(entry.accNumber.trim())
       && (entry.scorecardType === "digital" || entry.scorecardType === "paper");
   });
 }

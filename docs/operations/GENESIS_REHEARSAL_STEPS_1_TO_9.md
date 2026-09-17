@@ -132,7 +132,7 @@ Play Event QR Check-In** and displays the live code on an iPad, laptop, or
 monitor. Test that it changes after sixty seconds and rejects a stale code or
 a wrong event. A valid scan immediately opens a private five-minute completion
 session: enter required First name, Last name, Email, and uppercase ACC #
-(`HI296` format), then submit before the visible countdown expires. A scan at
+(`HI296` adult or `HI296Y` youth format), then submit before the visible countdown expires. A scan at
 the end of a sixty-second display period remains valid for the full five-minute
 form window; the original QR secret is removed from the address immediately.
 Test the one-minute and thirty-second warnings, expiry, reload retention,

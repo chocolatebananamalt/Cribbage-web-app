@@ -93,6 +93,14 @@ roster withdrawal; withdrawn records use an explicit expandable list and
 guarded reinstatement. Production browser and independent-session verification
 remain before this finding is closed.
 
+**Category 1 — Youth ACC-number support:** all current registration, manual
+roster, CSV, event QR check-in, roster matching, and Seating Directory paths
+now accept adult `HI296` and youth `HI296Y` identifiers. The final uppercase
+`Y` remains visible in the recorded value but is omitted only from the internal
+member-identity key, so adult/youth forms cannot create duplicate active
+records. The deployed physical rehearsal must still prove the phone, iPad, and
+desktop paths before this finding is closed.
+
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating
    → enrollment → schedule without altering the real October tournament.

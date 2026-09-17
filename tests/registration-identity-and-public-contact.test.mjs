@@ -9,14 +9,15 @@ const read = (relative) => readFile(path.join(root, relative), "utf8");
 const csv = await import(pathToFileURL(path.join(root, "src/lib/roster/csv.ts")).href);
 
 test("CSV requires separate names, a canonical ACC number, and Digital or Paper", () => {
-  const rows = csv.parseRosterCsv("First Name,Last Name,Email,ACC #,Scorecard Type\nMaryn,Example,,HI9001,Paper\nIan,Example,,,\n");
+  const rows = csv.parseRosterCsv("First Name,Last Name,Email,ACC #,Scorecard Type\nMaryn,Example,,HI9001,Paper\nIan,Example,,HI9002Y,\n");
   assert.deepEqual(rows, [
     { firstName: "Maryn", lastName: "Example", email: "", accNumber: "HI9001", scorecardType: "paper" },
-    { firstName: "Ian", lastName: "Example", email: "", accNumber: "", scorecardType: "digital" },
+    { firstName: "Ian", lastName: "Example", email: "", accNumber: "HI9002Y", scorecardType: "digital" },
   ]);
   assert.throws(() => csv.parseRosterCsv("Player Name,ACC #\nMaryn Example,HI9001\n"), /First Name and Last Name/);
   assert.throws(() => csv.parseRosterCsv("First Name,Last Name,ACC #\nMaryn,Example,hi9001\n"), /Row 2 has an invalid ACC #/);
   assert.throws(() => csv.parseRosterCsv("First Name,Last Name,ACC #\nMaryn,Example,HI 9001\n"), /Row 2 has an invalid ACC #/);
+  assert.throws(() => csv.parseRosterCsv("First Name,Last Name,ACC #\nMaryn,Example,HI9001YY\n"), /Row 2 has an invalid ACC #/);
   assert.throws(() => csv.parseRosterCsv("First Name,Last Name,Scorecard Type\nMaryn,Example,Cardboard\n"), /Digital or Paper/);
 });
 

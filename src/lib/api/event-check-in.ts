@@ -1,5 +1,6 @@
-import { isUuid } from "./validation";
-import { parseEventCheckInCredential } from "../event-check-in-token";
+import { isUuid } from "./validation.ts";
+import { parseEventCheckInCredential } from "../event-check-in-token.ts";
+import { isAccNumber } from "../acc-number.ts";
 
 type RecordValue = Record<string, unknown>;
 const isRecord = (value: unknown): value is RecordValue => !!value && typeof value === "object" && !Array.isArray(value);
@@ -17,7 +18,7 @@ export function isEventCheckInRequest(value: unknown): value is EventCheckInRequ
     && typeof value.firstName === "string" && value.firstName.trim().length >= 1 && value.firstName.length <= 80
     && typeof value.lastName === "string" && value.lastName.trim().length >= 1 && value.lastName.length <= 80
     && typeof value.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email.trim()) && value.email.length <= 320
-    && typeof value.accNumber === "string" && /^[A-Z]{2}\d+$/.test(value.accNumber);
+    && typeof value.accNumber === "string" && isAccNumber(value.accNumber);
 }
 
 export function isDirectorWindowAction(value: unknown): value is { action: "open" | "close"; eventId: string; idempotencyKey: string } {

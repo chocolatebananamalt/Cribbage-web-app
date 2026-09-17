@@ -1,10 +1,10 @@
 import { parseRegistrationLinkCredential } from "../registration-link-token.ts";
-import { isUuid } from "./validation";
+import { isUuid } from "./validation.ts";
+import { isOptionalAccNumber } from "../acc-number.ts";
 
 const methods = ["cash", "check"];
 const keys = ["credential", "firstName", "lastName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "operationId"];
 const own = (value: object) => Object.keys(value).length === keys.length && keys.every((key) => key in value);
-const validAccNumber = (value: string) => value === "" || /^[A-Z]{2}\d+$/.test(value);
 
 export type PublicRegistrationClaim = { credential: string; firstName: string; lastName: string; email: string; accNumber: string; intendedPaymentMethod: "cash" | "check"; scorecardType: "digital" | "paper"; operationId: string };
 
@@ -29,7 +29,7 @@ export function isPublicRegistrationClaim(value: unknown): value is PublicRegist
     && typeof claim.lastName === "string" && claim.lastName.trim().length >= 1 && claim.lastName.length <= 80
     && claim.firstName.trim().length + claim.lastName.trim().length + 1 <= 160
     && typeof claim.email === "string" && claim.email.trim().length >= 3 && claim.email.length <= 320
-    && typeof claim.accNumber === "string" && claim.accNumber.length <= 64 && validAccNumber(claim.accNumber)
+    && typeof claim.accNumber === "string" && claim.accNumber.length <= 64 && isOptionalAccNumber(claim.accNumber)
     && methods.includes(claim.intendedPaymentMethod as string)
     && (claim.scorecardType === "digital" || claim.scorecardType === "paper")
     && isUuid(claim.operationId);
