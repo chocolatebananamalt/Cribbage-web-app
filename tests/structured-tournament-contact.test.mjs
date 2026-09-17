@@ -11,7 +11,7 @@ const base = {
   mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100,
   mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "",
   consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "",
-  officials: [{ profileId: uuid, role: "director" }], events: [], ...contact,
+  tournamentDirectorPublicName: "Director Example", officials: [{ profileId: uuid, role: "director" }], events: [], ...contact,
 };
 
 test("setup requires structured phone/email while retaining an optional player-facing mailing address", () => {

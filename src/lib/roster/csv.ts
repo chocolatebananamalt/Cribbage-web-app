@@ -1,6 +1,7 @@
 import type { RosterCsvRow } from "../api/roster";
 
-const nameHeaders = new Set(["player", "player name", "name", "display name"]);
+const firstNameHeaders = new Set(["first name"]);
+const lastNameHeaders = new Set(["last name"]);
 const emailHeaders = new Set(["email", "email address"]);
 const accHeaders = new Set(["acc #", "acc#", "acc number", "acc no", "acc no."]);
 const scorecardHeaders = new Set(["scorecard", "scorecard type", "card", "card type"]);
@@ -28,30 +29,33 @@ export function parseRosterCsv(text: string): RosterCsvRow[] {
   const records = rowsFromCsv(text.replace(/^\uFEFF/, ""));
   if (records.length < 2) throw new Error("The CSV must contain a header and at least one player.");
   const headers = records[0].map((header) => header.trim().toLowerCase());
-  const nameIndex = headers.findIndex((header) => nameHeaders.has(header));
+  const firstNameIndex = headers.findIndex((header) => firstNameHeaders.has(header));
+  const lastNameIndex = headers.findIndex((header) => lastNameHeaders.has(header));
   const emailIndex = headers.findIndex((header) => emailHeaders.has(header));
   const accIndex = headers.findIndex((header) => accHeaders.has(header));
   const scorecardIndex = headers.findIndex((header) => scorecardHeaders.has(header));
-  if (nameIndex < 0) throw new Error("Add a Player Name or Name column.");
+  if (firstNameIndex < 0 || lastNameIndex < 0) throw new Error("Use separate First Name and Last Name columns; Player Name is no longer accepted.");
   if (records.length - 1 > 500) throw new Error("Import no more than 500 players at a time.");
   const rows = records.slice(1).map((fields, offset) => {
-    const displayName = (fields[nameIndex] ?? "").trim();
+    const firstName = (fields[firstNameIndex] ?? "").trim();
+    const lastName = (fields[lastNameIndex] ?? "").trim();
     const email = emailIndex < 0 ? "" : (fields[emailIndex] ?? "").trim();
     const accNumber = accIndex < 0 ? "" : (fields[accIndex] ?? "").trim();
-    const scorecardRaw = scorecardIndex < 0 ? "digital" : (fields[scorecardIndex] ?? "").trim().toLowerCase();
-    if (!displayName || displayName.length > 160) throw new Error(`Row ${offset + 2} needs a valid player name.`);
+    const suppliedScorecard = scorecardIndex < 0 ? "" : (fields[scorecardIndex] ?? "").trim().toLowerCase();
+    const scorecardRaw = suppliedScorecard || "digital";
+    if (!firstName || firstName.length > 80 || !lastName || lastName.length > 80 || `${firstName} ${lastName}`.length > 160) throw new Error(`Row ${offset + 2} needs a valid first and last name.`);
     if (email.length > 320 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) throw new Error(`Row ${offset + 2} has an invalid email address.`);
-    if (accNumber.length > 64) throw new Error(`Row ${offset + 2} has an invalid ACC number.`);
+    if (accNumber && !/^[A-Z]{2}\d+$/.test(accNumber)) throw new Error(`Row ${offset + 2} has an invalid ACC #. Use a two-letter state abbreviation followed immediately by the number, such as HI296.`);
     if (scorecardRaw !== "digital" && scorecardRaw !== "paper") throw new Error(`Row ${offset + 2} needs Digital or Paper in the Scorecard Type column.`);
-    return { displayName, email, accNumber, scorecardType: scorecardRaw as "digital" | "paper" };
+    return { firstName, lastName, email, accNumber, scorecardType: scorecardRaw as "digital" | "paper" };
   });
   const anonymousNames = new Set<string>(), emails = new Set<string>(), accNumbers = new Set<string>();
   for (const row of rows) {
-    const name = row.displayName.trim().toLowerCase().replace(/\s+/g, " ");
+    const name = `${row.firstName} ${row.lastName}`.trim().toLowerCase().replace(/\s+/g, " ");
     const email = row.email.trim().toLowerCase();
     const accNumber = row.accNumber.trim().toUpperCase().replace(/\s+/g, "");
     if ((email && emails.has(email)) || (accNumber && accNumbers.has(accNumber))
-      || (!email && !accNumber && anonymousNames.has(name))) throw new Error(`The file contains a duplicate entry for ${row.displayName}.`);
+      || (!email && !accNumber && anonymousNames.has(name))) throw new Error(`The file contains a duplicate entry for ${row.firstName} ${row.lastName}.`);
     if (email) emails.add(email);
     if (accNumber) accNumbers.add(accNumber);
     if (!email && !accNumber) anonymousNames.add(name);

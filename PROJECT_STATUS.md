@@ -1,5 +1,31 @@
 # Project Status
 
+## 2026-09-17 registration identity, Director contact, and CSV format — release candidate
+
+- The approved pilot database now has migration
+  `registration_identity_and_public_director_contact`: append-only,
+  private tournament-specific public-contact versions; separate roster name
+  parts for new entries; and v3 protected manual/CSV functions. Existing
+  Genesis Rehearsal events, registrations, payments, seats, roles, history,
+  and its active legacy QR credential were not changed.
+- New manual and CSV roster intake use required **First name** and **Last
+  name**; every selector now says **Scorecard Type** and uses only Digital or
+  Paper. CSV requires `First Name` and `Last Name`; a supplied ACC # must be
+  `HI296`-style and blank Scorecard Type defaults to Digital. Old `Player
+  Name` files are rejected safely instead of being guessed.
+- Setup now carries a required tournament-specific **Tournament Director name
+  (shown to players)** and rejects generic placeholders. The public screen
+  reads the saved selected name, not an account profile. After finalization,
+  only the primary director can correct that public name with an immutable
+  receipt and audit record; the correction cannot reopen or modify an event,
+  roster, payment, seating, or QR link.
+- Focused checks (14/14), TypeScript, `pnpm verify` (537 application tests),
+  and `pnpm verify:handoff` (6/6) pass. The database schema/function presence
+  was confirmed read-only. Local browser access is blocked by this host’s
+  Chrome extension, so production phone/desktop verification remains required
+  immediately after the deployment. See
+  `docs/quality/2026-09-17-registration-identity-and-public-director-contact.md`.
+
 ## 2026-09-17 persistent registration QR, public contact, and name parts — production deployed
 
 - New registration QR/link credentials are sealed server-side with a
