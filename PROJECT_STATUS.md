@@ -1,5 +1,30 @@
 # Project Status
 
+## 2026-09-17 rotating event QR check-in — pilot database migration applied; release verification pending
+
+- Added event-specific director/co-director check-in windows and a new
+  **Day-of-play Event QR Check-In** workspace. A live display generates a
+  fragment-only QR credential valid for sixty seconds and scoped to one
+  finalized event. The QR stores no player data and a scan has no roster,
+  payment, seat, schedule, score, or results disclosure path.
+- Exact paid-and-enrolled roster matches can record one event check-in;
+  unknown, unpaid, partial, non-enrolled, or unsafe matches receive only the
+  public desk instruction and become a private desk request. The desk writer
+  independently enforces active roster, event window, payment, and event
+  enrollment. Consolation check-in fails closed until Main qualification is
+  finalized. Attendance remains event-scoped rather than changing the existing
+  global seating/check-in history.
+- Migrations `0207_rotating_event_qr_check_in` and
+  `0208_event_check_in_desk_completion` are applied to the approved pilot
+  Supabase database. Local `pnpm verify` passed (**545 application tests**),
+  `pnpm verify:handoff` passed (**6/6**), and focused QR tests passed (**4/4**).
+  Browser automation is unavailable on this host and Chrome blocked local
+  loopback, so deployed phone/desktop and physical multi-device evidence are
+  still required. Resend/Supabase Auth delivery and the required 600-in-45
+  minute live test are intentionally fail-closed pending ACC-controlled SMTP
+  configuration. See
+  `docs/quality/2026-09-17-rotating-event-qr-check-in.md`.
+
 ## 2026-09-17 safe possible-duplicate review and Genesis rehearsal preparation — production deployed
 
 - The roster identity guard continues to hard-block a matching ACC # and,
