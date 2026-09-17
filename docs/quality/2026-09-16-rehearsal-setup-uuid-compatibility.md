@@ -20,12 +20,15 @@ the existing server-side `get_tournament_role` boundary.
 | Full release verification | Passed: `pnpm verify`, including audit, lint, 528/528 application tests, provider readiness, Production build, and workspace checks |
 | Data mutation | None; no Supabase migration or application-data operation was performed |
 
-## Required post-deployment evidence
+## Production evidence
 
-- In a signed-in Production session, open the rehearsal from **Your
-  tournaments**, open **Tournament workspace**, then open **Set Up
-  Tournament** without a 404.
-- Confirm the protected Setup API remains inaccessible to an anonymous
-  session and malformed IDs remain rejected.
-- Record the deployment and post-release runtime-error scan before calling
-  the repair Production-verified.
+- Pull request #73 merged as `e0e858adad3ff186595254791651a0451e3130f4`.
+  GitHub reported the Vercel Production deployment successful.
+- In a separate signed-in Production session, **Your tournaments → Genesis
+  Rehearsal → Set Up Tournament** loaded the saved finalized setup without a
+  404.
+- HTTP smoke probes: stable root returned `200`; anonymous Setup returned
+  `307` to sign-in.
+- Detailed Vercel runtime-log review is not recorded for this release because
+  the separate verification browser had no Vercel dashboard session. This is
+  a verification limitation, not an app failure.
