@@ -13,6 +13,7 @@ export type RegistrationClaimReviewItem = {
   submittedAt: string;
   decision: "approved_for_roster" | "rejected" | null;
   collisionClaimIds: string[];
+  requiresDistinctConfirmation: boolean;
 };
 
 const uuid = (value: unknown) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
@@ -21,7 +22,7 @@ const exact = (value: object, keys: string[]) => Object.keys(value).length === k
 function claim(value: unknown): value is RegistrationClaimReviewItem {
   if (!value || typeof value !== "object") return false;
   const item = value as Record<string, unknown>;
-  return exact(item, ["claimId", "displayName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "submittedAt", "decision", "collisionClaimIds"])
+  return exact(item, ["claimId", "displayName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "submittedAt", "decision", "collisionClaimIds", "requiresDistinctConfirmation"])
     && uuid(item.claimId)
     && typeof item.displayName === "string" && item.displayName.length > 0
     && typeof item.email === "string" && item.email.length > 0
@@ -30,7 +31,8 @@ function claim(value: unknown): value is RegistrationClaimReviewItem {
     && (item.scorecardType === "digital" || item.scorecardType === "paper")
     && typeof item.submittedAt === "string"
     && (item.decision === null || item.decision === "approved_for_roster" || item.decision === "rejected")
-    && Array.isArray(item.collisionClaimIds) && item.collisionClaimIds.every(uuid);
+    && Array.isArray(item.collisionClaimIds) && item.collisionClaimIds.every(uuid)
+    && typeof item.requiresDistinctConfirmation === "boolean";
 }
 
 export async function getRegistrationClaimReviewWorkspace(tournamentId: string): Promise<RegistrationClaimReviewItem[]> {

@@ -37,5 +37,5 @@ export function isRejectedRegistrationClaimReview(value: unknown, claimId: strin
   const item = value as Record<string, unknown>;
   return exact(item, ["status", "code", "claimId"])
     && item.status === "rejected" && item.claimId === claimId
-    && ["authentication_required", "not_director", "collision_unresolved", "invalid_duplicate_reference", "claim_already_decided", "idempotency_conflict", "review_rejected"].includes(item.code as string);
+    && ["authentication_required", "not_director", "collision_unresolved", "hard_duplicate_match", "invalid_duplicate_reference", "claim_already_decided", "idempotency_conflict", "review_rejected"].includes(item.code as string);
 }
