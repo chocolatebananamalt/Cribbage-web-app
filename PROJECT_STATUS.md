@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-17 rehearsal finalized-event consistency — local verification passed; deployment pending
+
+- Corrected the activated Setup view so it no longer renders editable event
+  cards from an older setup revision after registration opens. The visible
+  finalized-event list now comes only from the server-authorized active-event
+  state, which excludes retired events.
+- Each finalized entry now uses `Event type: Event name - Style`. Genesis
+  Rehearsal therefore has exactly four active events: Main, Consolation,
+  Satellite Event - C.D. (Canadian Doubles), and Canadian Doubles Practice
+  (Canadian Doubles). The retired Paper team Doubles event remains immutable
+  audit history and is not an active event, registration option, or Setup
+  card.
+- Focused checks passed **15/15**; TypeScript, `pnpm verify` (**530/530**),
+  `pnpm verify:handoff`, and `git diff --check` passed. See
+  `docs/quality/2026-09-17-rehearsal-event-list-consistency.md`.
+
 ## 2026-09-17 tournament workspace navigation and context — production deployed
 
 - The protected tournament workspace now has full-width, phone-friendly
