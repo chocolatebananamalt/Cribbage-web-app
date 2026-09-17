@@ -124,3 +124,14 @@ hand a device to a different person until the app reports no pending offline
 entries or retries and the server has acknowledged them. A personal player may
 sign out and later return to the same device without losing their safe local
 recovery copy.
+# Day-of-play QR check-in update
+
+The old two-official player-account activation ceremony is no longer the
+target day-of-play flow. For each event, a director/co-director opens **Day of
+Play Event QR Check-In** and displays the live code on an iPad, laptop, or
+monitor. Test that it changes after sixty seconds, rejects a stale code and a
+wrong event, records a paid/enrolled exact match once, and sends every other
+case to the desk. At the desk, first record the cash/check evidence and event
+enrollment, then use the event-specific check-in action. Do not claim email
+delivery as tested until the ACC-controlled Resend/Supabase configuration and
+600-in-45-minute evidence are present.

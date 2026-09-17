@@ -99,3 +99,27 @@ automatic OCR, and ACC portal automation remain default-off post-pilot
 capabilities. The remaining go/no-go
 work is the dated physical rehearsal checklist in
 `docs/operations/OCTOBER_PILOT_REHEARSAL.md`, not another scope decision.
+# Day-of-play event QR check-in
+
+- Each finalized Main, Consolation, and Satellite event has an independently
+  opened director/co-director check-in window. Its live-display QR code is a
+  fragment-only, opaque bearer that expires in sixty seconds and is scoped to
+  that event and tournament.
+- A scan can only create an event-specific check-in request. It never reveals
+  roster, payment, seating, scores, or results. A paid, enrolled exact match
+  is recorded once; any unpaid, partial, unknown, or unsafe match receives
+  only the desk direction.
+- Event attendance is separate from tournament registration, payments,
+  seating, enrollment, schedules, scorecards, and results. Consolation
+  check-in cannot open before Main qualification is finalized.
+- A director/co-director desk may record an event check-in only for an active,
+  paid-in-full, enrolled roster identity. This does not create a payment or
+  enrollment record and cannot bypass either boundary.
+- Every player remains a roster identity. Individual app access requires a
+  unique email/account even when family members share a contact email. Paper
+  players may have an account to view their seat, event state, and reviewed
+  records, but never receive digital score-entry authority.
+- Email delivery uses Supabase Auth with a verified ACC-controlled Resend SMTP
+  configuration. It is fail-closed until delivery capacity, callbacks,
+  duplicate suppression, retries, and 600 invitations in 45 minutes are
+  independently tested. SMS and online payments remain disabled.

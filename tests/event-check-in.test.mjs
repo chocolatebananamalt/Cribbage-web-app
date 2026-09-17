@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
+import test from 'node:test';
+
+const token = await import('../src/lib/event-check-in-token.ts');
+const id = '0f2f2d31-12ab-4bcd-8b8c-1234567890ab';
+
+test('event check-in credentials are opaque fragment-only 256-bit values', () => {
+  const credential = token.createEventCheckInCredential(id);
+  assert.match(credential.secret, /^[A-Za-z0-9_-]{43}$/);
+  assert.deepEqual(token.parseEventCheckInCredential(credential.canonicalToken), credential);
+  assert.equal(token.parseEventCheckInCredential(`https://example.test/event-check-in#${credential.canonicalToken}`), null);
+  assert.equal(token.parseEventCheckInCredential(`${credential.canonicalToken}.extra`), null);
+});
+
+test('event check-in retains only a fixed-length salted digest', () => {
+  const credential = token.createEventCheckInCredential(id);
+  const digest = token.digestEventCheckInCredential(randomBytes(32), credential.canonicalToken);
+  assert.equal(digest.byteLength, 32);
+  assert.throws(() => token.digestEventCheckInCredential(randomBytes(31), credential.canonicalToken), /Invalid/);
+});
+
+test('event QR migration constrains expiry, separates events, and fails closed', async () => {
+  const sql = await import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0207_rotating_event_qr_check_in.sql', 'utf8'));
+  assert.match(sql, /expires_at <= issued_at \+ interval '61 seconds'/);
+  assert.match(sql, /event_check_in_windows.*state in \('open','closed'\)/s);
+  assert.match(sql, /w\.state='open'.*c\.expires_at>now\(\)/s);
+  assert.match(sql, /return jsonb_build_object\('status','unavailable'\)/);
+  assert.match(sql, /consolation_not_eligible/);
+  assert.match(sql, /event_qr_player_is_paid_and_enrolled/);
+});
+
+test('public check-in does not expose roster or payment detail', async () => {
+  const source = await import('node:fs/promises').then(({ readFile }) => readFile('src/app/event-check-in/event-check-in-form.tsx', 'utf8'));
+  assert.match(source, /Please visit the tournament check-in desk to complete enrollment and payment\./);
+  assert.doesNotMatch(source, /amountOwed|amountReceived|rosterEntryId/);
+});

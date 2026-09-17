@@ -46,6 +46,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         {access.role === "director" ? <Link className="guide-link" href={`/tournament/${tournamentId}/officials`}>Officials</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/cross-checkers`}>Cross-checker assignments</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating</Link> : null}
+        {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/event-check-in`}>Day-of-play Event QR Check-In</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/schedule`}>Game schedule</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
