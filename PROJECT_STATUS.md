@@ -1,5 +1,37 @@
 # Project Status
 
+## 2026-09-17 safe possible-duplicate review and Genesis rehearsal preparation — production deployed
+
+- The roster identity guard continues to hard-block a matching ACC # and,
+  where no ACC # is supplied, matching normalized first name, last name, and
+  email. A name-only or email-only overlap is now a visible, director-owned
+  **Possible duplicate—director review required** decision rather than a
+  promotion dead end. The director may reject it as the same person or record
+  an immutable confirmed-distinct-person decision before creating the second
+  roster identity. A shared family email remains contact information only;
+  it cannot create a shared app account or authorize Digital scoring.
+- The roster screen now names the existing-record action **Remove from active
+  roster**, warns that it is not a way to resolve a pending candidate, shows
+  explicit expanded/collapsed withdrawn-record wording, and asks for a
+  confirmation before reinstating the original identity. History is unchanged.
+- Read-only hosted inspection confirmed Genesis Rehearsal is open with six
+  active intended roster identities, including reinstated Maryn, and zero
+  payments, check-ins, seats, enrollments, starts, or account links. Those are
+  the correct pre-rehearsal facts. The corrected steps through the
+  registration-closure test are in
+  `docs/operations/GENESIS_REHEARSAL_STEPS_1_TO_9.md`; human sign-ins,
+  witnessed activations, official assignments, and financial/check-in test
+  records remain deliberately operator-performed rather than invented.
+- Migration `0206_safe_possible_duplicate_review` is applied to the approved
+  pilot Supabase database. Local TypeScript, focused tests, `pnpm verify`
+  (**541 application tests**), `pnpm verify:handoff` (**6/6**), GitHub Verify,
+  and Vercel Preview passed. PR #87 merged as
+  `fdc53c9658bc3c146460bdf8adb2027b134cc7f0`; Production deployment
+  `dpl_EFh8PHGwnzSa5UWN6vXFM8jMEBWj` is READY. Authenticated external-Chrome
+  checks passed at desktop and 375px phone width with no horizontal overflow;
+  the runtime-error scan found no errors. See
+  `docs/quality/2026-09-17-safe-possible-duplicate-review.md`.
+
 ## 2026-09-16 cross-source duplicate prevention and safe roster correction
 
 - Applied pilot migration `roster_identity_guard_and_withdrawal`. Public QR
