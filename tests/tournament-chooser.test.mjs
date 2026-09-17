@@ -59,3 +59,14 @@ test("server adapter binds the verified subject and production home renders frie
   assert.match(page, />No tournament access yet</);
   assert.match(page, /href="\/demo"/);
 });
+
+test("the protected workspace gives every role a direct return to the signed-in tournament chooser", () => {
+  const page = read("src/app/tournament/[tournamentId]/page.tsx");
+  const css = read("src/app/globals.css");
+  assert.match(page, /getAccessibleTournaments\(access\.user\.id\)/);
+  assert.match(page, /tournamentName \?\? "Tournament workspace"/);
+  assert.match(page, /Your role: \{roleLabels\[access\.role\]/);
+  assert.equal((page.match(/>Back to Your Tournaments</g) ?? []).length, 2);
+  assert.equal((page.match(/className="secondary workspace-chooser-link(?: workspace-chooser-link-bottom)?"/g) ?? []).length, 2);
+  assert.match(css, /\.workspace-chooser-link \{ display:grid; width:100%; min-height:52px;/);
+});

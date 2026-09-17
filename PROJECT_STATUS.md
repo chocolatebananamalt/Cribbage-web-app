@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-17 tournament workspace navigation and context — release pending
+
+- The protected tournament workspace now has full-width, phone-friendly
+  **Back to Your Tournaments** controls before and after its action list. Both
+  use the signed-in chooser route directly, so they do not depend on browser
+  history and do not sign out, clear local recovery records, or alter a
+  tournament.
+- The workspace header now identifies the opened tournament by its saved name
+  and displays a human-readable role (for example, **Co-director**) instead of
+  only its internal role token. This prevents confusion when one account has
+  access to multiple tournaments.
+- Local verification passes: focused regression tests **4/4**, TypeScript,
+  lint, `pnpm verify` (**529/529** application checks plus audit,
+  provider-readiness, Production build, and workspace checks), and
+  `git diff --check`. The reviewed Production deployment and authenticated
+  phone/desktop navigation proof remain pending; see
+  `docs/quality/2026-09-17-tournament-workspace-navigation.md`.
+
 ## 2026-09-16 rehearsal Setup 404 — validation compatibility repair deployed and Production route verified
 
 - Repaired an identifier-validation mismatch that let the signed-in tournament
