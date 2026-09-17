@@ -1,5 +1,41 @@
 # Project Status
 
+## 2026-09-17 persistent registration QR, public contact, and name parts — production deployed
+
+- New registration QR/link credentials are sealed server-side with a
+  Production-only encryption key while their original salted one-way digest
+  remains the sole redemption authority. Directors and co-directors can
+  repeatedly display/copy a newly issued or replacement active QR/link without
+  rotating it, changing expiry/limits/version, or making the envelope public.
+  Authorized reveal records audit metadata only, never the bearer credential.
+- The existing Genesis Rehearsal registration link remains active exactly as
+  requested. It predates sealed-envelope storage, so the app accurately calls
+  it **legacy** and cannot redisplay it. It will become repeatedly viewable
+  only if an official explicitly replaces it, which invalidates the old QR.
+- Public registration now shows the primary director’s selected display name,
+  selected phone/email, and optional selected mailing address only. It requires
+  separate First name and Last name values for new claims and gives the
+  requested personalized review receipt. Earlier display-name-only claims are
+  preserved unchanged.
+- Migration `0203_persistent_registration_link_reveal_and_name_parts` is
+  applied to the approved pilot database without modifying the active Genesis
+  credential, existing claims, roster, payments, seating, or roles. It keeps
+  older deployed lifecycle RPCs intact during rollout; new availability/reveal
+  RPCs are service-role-only and role-scoped.
+- Local `pnpm verify` passed (**534/534** application checks), TypeScript,
+  lint, focused persistent-link tests (**4/4**), `pnpm verify:handoff`, and
+  diff checks. GitHub Verify and Vercel Preview passed for PRs #79 and #80.
+  PR #79 merged as `52ee24829bc6ab868cca4d01d65ea60e0a102357`; PR #80 merged
+  as `a84e54c63e19a2fdbb21684837e65e2944060214`. Production deployment
+  `dpl_EdnT3sNTvAxdgck2pkJdRp8VCwT7` is READY at the stable URL. An external
+  signed-in Chrome review confirmed one status line and the exact safe legacy
+  behavior; the production runtime-error scan found no errors. A full
+  recoverable-QR reveal test is intentionally deferred until a director elects
+  to replace the currently active legacy link, because performing it would
+  invalidate that live QR.
+- See `docs/quality/2026-09-17-persistent-registration-link-reveal.md` and
+  `docs/decisions/2026-09-17-persistent-registration-link-reveal-and-name-parts.md`.
+
 ## 2026-09-17 rehearsal finalized-event consistency — production deployed
 
 - Corrected the activated Setup view so it no longer renders editable event
