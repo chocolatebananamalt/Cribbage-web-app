@@ -14,6 +14,8 @@ test("adult and youth ACC numbers validate and share an identity key", () => {
   assert.equal(acc.accIdentityKey("HI296Y"), "HI296");
   assert.equal(acc.accIdentityKey("HI296"), "HI296");
   assert.equal(acc.normalizeAccNumberInput("hi 296y"), "HI296Y");
+  assert.equal(acc.normalizeAccNumberInput("hi-296y"), "HI-296Y");
+  assert.equal(acc.isAccNumber(acc.normalizeAccNumberInput("hi-296y")), false);
   for (const invalid of ["HI296YY", "HIY296", "HI-296Y", "HI 296Y"]) assert.equal(acc.isAccNumber(invalid), false);
 });
 
