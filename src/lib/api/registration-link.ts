@@ -25,6 +25,8 @@ export type RegistrationLinkCloseRequest = {
   operationId: string;
 };
 
+export type RegistrationLinkRevealRequest = RegistrationLinkCloseRequest;
+
 export type RegistrationLinkState =
   | { status: "none" }
   | {
@@ -90,6 +92,10 @@ export function isRegistrationLinkCloseRequest(value: unknown): value is Registr
   if (!value || typeof value !== "object" || !own(value, ["expectedLinkId", "expectedVersion", "operationId"])) return false;
   const request = value as Record<string, unknown>;
   return isExpectedLink(request) && isUuid(request.operationId);
+}
+
+export function isRegistrationLinkRevealRequest(value: unknown): value is RegistrationLinkRevealRequest {
+  return isRegistrationLinkCloseRequest(value);
 }
 
 export function isRegistrationCloseRequest(value: unknown): value is RegistrationCloseRequest {

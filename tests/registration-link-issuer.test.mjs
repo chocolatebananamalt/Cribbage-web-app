@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 const issuer = await import('../src/lib/registration-link-issuer.ts');
+process.env.ACC_REGISTRATION_LINK_REVEAL_KEY ??= Buffer.alloc(32, 7).toString("base64url");
 
 test('server-only registration issuer binds its returned credential ID and only sends bytea digests', async () => {
   let observed;
@@ -15,10 +16,12 @@ test('server-only registration issuer binds its returned credential ID and only 
     operationId: '2f2f2d31-12ab-4bcd-8b8c-1234567890ab',
   });
   assert.equal(result.status, 'issued');
-  assert.equal(observed.name, 'issue_registration_link_v2');
+  assert.equal(observed.name, 'issue_registration_link_v3');
   assert.equal(observed.args.p_link_id, result.credential.linkId);
   assert.match(observed.args.p_salt, /^\\x[0-9a-f]{64}$/);
   assert.match(observed.args.p_digest, /^\\x[0-9a-f]{64}$/);
+  assert.match(observed.args.p_reveal_nonce, /^[A-Za-z0-9_-]{16}$/);
+  assert.match(observed.args.p_reveal_ciphertext, /^[A-Za-z0-9_-]+$/);
   assert.equal(JSON.stringify(observed.args).includes(result.credential.secret), false);
   assert.equal(result.expiresAt, '2027-01-01T00:00:00.000Z');
 });
@@ -95,12 +98,14 @@ test('server-only registration rotation binds the replacement credential to the 
   });
   assert.equal(result.status, 'rotated');
   assert.equal(result.version, 8);
-  assert.equal(observed.name, 'rotate_registration_link_v2');
+  assert.equal(observed.name, 'rotate_registration_link_v3');
   assert.equal(observed.args.p_expected_link_id, '3f2f2d31-12ab-4bcd-8b8c-1234567890ab');
   assert.equal(observed.args.p_expected_version, 7);
   assert.equal(observed.args.p_link_id, result.credential.linkId);
   assert.match(observed.args.p_salt, /^\\x[0-9a-f]{64}$/);
   assert.match(observed.args.p_digest, /^\\x[0-9a-f]{64}$/);
+  assert.match(observed.args.p_reveal_nonce, /^[A-Za-z0-9_-]{16}$/);
+  assert.match(observed.args.p_reveal_ciphertext, /^[A-Za-z0-9_-]+$/);
   assert.equal(JSON.stringify(observed.args).includes(result.credential.secret), false);
 });
 

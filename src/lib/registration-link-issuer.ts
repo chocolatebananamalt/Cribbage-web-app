@@ -2,6 +2,7 @@ import "server-only";
 
 import { randomBytes, randomUUID } from "node:crypto";
 import { createRegistrationLinkCredential, digestRegistrationLinkCredential, type RegistrationLinkCredential } from "./registration-link-token.ts";
+import { sealRegistrationLinkCredential } from "./registration-link-secret.ts";
 
 type RpcClient = {
   rpc(name: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }>;
@@ -126,17 +127,21 @@ function isRejectedRotationResponse(value: unknown): value is RejectedRegistrati
 export async function issueRegistrationLink(
   admin: RpcClient,
   input: RegistrationLinkIssue,
+  env: Record<string, string | undefined> = process.env,
 ): Promise<RegistrationLinkIssueResult> {
   const credential = createRegistrationLinkCredential(randomUUID());
   const salt = randomBytes(32);
   const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
+  const envelope = sealRegistrationLinkCredential(input.tournamentId, credential.canonicalToken, env);
   const expiresAt = input.expiresAt.toISOString();
-  const { data, error } = await admin.rpc("issue_registration_link_v2", {
+  const { data, error } = await admin.rpc("issue_registration_link_v3", {
     p_actor_id: input.actorId,
     p_tournament_id: input.tournamentId,
     p_link_id: credential.linkId,
     p_salt: bytea(salt),
     p_digest: bytea(digest),
+    p_reveal_nonce: envelope.nonce,
+    p_reveal_ciphertext: envelope.ciphertext,
     p_expires_at: expiresAt,
     p_max_claims: input.maxClaims,
     p_max_claims_per_hour: input.maxClaimsPerHour,
@@ -162,12 +167,14 @@ export async function issueRegistrationLink(
 export async function rotateRegistrationLink(
   admin: RpcClient,
   input: RegistrationLinkRotation,
+  env: Record<string, string | undefined> = process.env,
 ): Promise<RegistrationLinkRotationResult> {
   const credential = createRegistrationLinkCredential(randomUUID());
   const salt = randomBytes(32);
   const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
+  const envelope = sealRegistrationLinkCredential(input.tournamentId, credential.canonicalToken, env);
   const expiresAt = input.expiresAt.toISOString();
-  const { data, error } = await admin.rpc("rotate_registration_link_v2", {
+  const { data, error } = await admin.rpc("rotate_registration_link_v3", {
     p_actor_id: input.actorId,
     p_tournament_id: input.tournamentId,
     p_expected_link_id: input.expectedLinkId,
@@ -175,6 +182,8 @@ export async function rotateRegistrationLink(
     p_link_id: credential.linkId,
     p_salt: bytea(salt),
     p_digest: bytea(digest),
+    p_reveal_nonce: envelope.nonce,
+    p_reveal_ciphertext: envelope.ciphertext,
     p_expires_at: expiresAt,
     p_max_claims: input.maxClaims,
     p_max_claims_per_hour: input.maxClaimsPerHour,
