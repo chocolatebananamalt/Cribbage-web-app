@@ -19,12 +19,13 @@ test("cross-source roster identity guard is locked, append-only, and withdrawal-
   assert.match(sql, /grant execute on function public\.set_roster_entry_active_status_v1[\s\S]*to service_role/);
 });
 
-test("new ACC values reject lowercase at every request boundary", async () => {
-  const roster = await read("src/lib/api/roster.ts");
-  const publicRegistration = await read("src/lib/api/public-registration-v2.ts");
-  assert.match(roster, /validAccNumber/);
-  assert.match(publicRegistration, /validAccNumber/);
-  assert.match(publicRegistration, /\^\[A-Z\]\{2\}\\d\+\$/);
+test("new ACC values use the shared uppercase youth-aware boundary", async () => {
+  const [roster, publicRegistration, shared] = await Promise.all([
+    read("src/lib/api/roster.ts"), read("src/lib/api/public-registration-v2.ts"), read("src/lib/acc-number.ts"),
+  ]);
+  assert.match(roster, /isOptionalAccNumber/);
+  assert.match(publicRegistration, /isOptionalAccNumber/);
+  assert.match(shared, /\^\[A-Z\]\{2\}\\d\+Y\?\$/);
 });
 
 test("confirmed distinct review permits only weak name or email matches", async () => {

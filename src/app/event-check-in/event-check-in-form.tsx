@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { ACC_NUMBER_INPUT_PATTERN, normalizeAccNumberInput } from "../../lib/acc-number.ts";
 
 type Completion = { token: string; expiresAt: string };
 const storageKey = "acc:event-check-in:completion";
@@ -36,7 +37,7 @@ export default function EventCheckInForm() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (!completion || expired) return; setBusy(true); setMessage("");
     const fields = new FormData(event.currentTarget);
-    const body = { completionSession: completion.token, firstName: String(fields.get("firstName") ?? "").trim(), lastName: String(fields.get("lastName") ?? "").trim(), email: String(fields.get("email") ?? "").trim(), accNumber: String(fields.get("accNumber") ?? "").trim().toUpperCase() };
+    const body = { completionSession: completion.token, firstName: String(fields.get("firstName") ?? "").trim(), lastName: String(fields.get("lastName") ?? "").trim(), email: String(fields.get("email") ?? "").trim(), accNumber: normalizeAccNumberInput(String(fields.get("accNumber") ?? "")) };
     try {
       const response = await fetch("/api/v1/event-check-in", { method: "POST", headers: { "content-type": "application/json" }, cache: "no-store", body: JSON.stringify(body) });
       const data = await response.json().catch(() => null) as { status?: string } | null;
@@ -51,6 +52,6 @@ export default function EventCheckInForm() {
   if (!completion) return <p className="live-status" role="status">{message}</p>;
   return <form className="setup-workspace" onSubmit={submit} aria-describedby="check-in-countdown">
     <section className="correction-item" aria-live="polite"><h2>Event Check-In</h2><p id="check-in-countdown"><strong>{format(secondsLeft)}</strong> remaining — complete check-in within the time shown.</p>{secondsLeft <= 60 && secondsLeft > 30 && !expired ? <p className="error-text">One minute or less remains.</p> : null}{secondsLeft <= 30 && !expired ? <p className="error-text">30 seconds remain.</p> : null}</section>
-    <label>First name<input name="firstName" required maxLength={80} autoComplete="given-name" disabled={expired || busy} /></label><label>Last name<input name="lastName" required maxLength={80} autoComplete="family-name" disabled={expired || busy} /></label><label>Email<input name="email" type="email" required maxLength={320} autoComplete="email" disabled={expired || busy} /></label><label>ACC #<input name="accNumber" required pattern="[A-Z]{2}[0-9]+" maxLength={64} inputMode="text" autoCapitalize="characters" disabled={expired || busy} onInput={(event) => { event.currentTarget.value = event.currentTarget.value.toUpperCase().replace(/\s/g, ""); }} /></label><button className="primary" type="submit" disabled={busy || expired}>{busy ? "Checking in…" : "Check in for this event"}</button><p className="live-status" role="status">{message}</p>
+    <label>First name<input name="firstName" required maxLength={80} autoComplete="given-name" disabled={expired || busy} /></label><label>Last name<input name="lastName" required maxLength={80} autoComplete="family-name" disabled={expired || busy} /></label><label>Email<input name="email" type="email" required maxLength={320} autoComplete="email" disabled={expired || busy} /></label><label>ACC #<input name="accNumber" required pattern={ACC_NUMBER_INPUT_PATTERN} maxLength={64} inputMode="text" autoCapitalize="characters" disabled={expired || busy} onInput={(event) => { event.currentTarget.value = normalizeAccNumberInput(event.currentTarget.value); }} /><span className="field-help">Use HI296, or HI296Y for a youth player.</span></label><button className="primary" type="submit" disabled={busy || expired}>{busy ? "Checking in…" : "Check in for this event"}</button><p className="live-status" role="status">{message}</p>
   </form>;
 }

@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-17 youth ACC-number support — migration applied; release verification in progress
+
+- New identity entry and lookup paths accept adult ACC numbers such as
+  `HI296` and youth numbers such as `HI296Y`. Forms uppercase and remove
+  spacing while CSV remains strict uppercase input. The final `Y` is retained
+  for public display and audit history, but the internal identity key omits it
+  so a youth-to-adult transition cannot create two active roster identities.
+- Migration `0210_youth_acc_number_support` is applied to the approved pilot
+  database. It leaves immutable historic records untouched; historic identity
+  keys are derived at read time and future writes populate the explicit key.
+  Read-only production preflight found zero active canonical collisions.
+- Focused youth validation, duplicate-guard, roster, registration, and QR
+  check-in tests pass (**20/20**). Full repository, browser, deployment, and
+  runtime-log verification remain required before this item is called
+  Production deployed. See
+  `docs/decisions/2026-09-17-youth-acc-number-identity.md` and
+  `docs/quality/2026-09-17-youth-acc-number-support.md`.
+
 ## 2026-09-17 five-minute event QR completion session — Production deployed; physical rehearsal pending
 
 - A valid scan of the existing sixty-second, event-scoped live QR now exchanges

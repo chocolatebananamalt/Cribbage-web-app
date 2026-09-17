@@ -9,6 +9,8 @@ const operationId = "00000000-0000-4000-8000-000000000001";
 test("manual roster request requires bounded first and last names with optional contact identifiers", () => {
   assert.equal(api.isManualRosterEntryRequest({ firstName: "Paper", lastName: "Player", email: "", accNumber: "", scorecardType: "paper", idempotencyKey: operationId }), true);
   assert.equal(api.isManualRosterEntryRequest({ firstName: "Test", lastName: "Player", email: "player@example.com", accNumber: "HI296", scorecardType: "digital", idempotencyKey: operationId }), true);
+  assert.equal(api.isManualRosterEntryRequest({ firstName: "Youth", lastName: "Player", email: "player@example.com", accNumber: "HI296Y", scorecardType: "digital", idempotencyKey: operationId }), true);
+  assert.equal(api.isManualRosterEntryRequest({ firstName: "Youth", lastName: "Player", email: "player@example.com", accNumber: "HI296YY", scorecardType: "digital", idempotencyKey: operationId }), false);
   assert.equal(api.isManualRosterEntryRequest({ firstName: "Player", lastName: "", email: "", accNumber: "", scorecardType: "digital", idempotencyKey: operationId }), false);
   assert.equal(api.isManualRosterEntryRequest({ firstName: "Player", lastName: "Name", email: "bad", accNumber: "", scorecardType: "digital", idempotencyKey: operationId }), false);
   assert.equal(api.isManualRosterEntryRequest({ firstName: "Player", lastName: "Name", email: "", accNumber: "", scorecardType: "digital", idempotencyKey: operationId, role: "director" }), false);

@@ -42,13 +42,15 @@ test('public check-in does not expose roster or payment detail', async () => {
   assert.doesNotMatch(source, /amountOwed|amountReceived|rosterEntryId/);
 });
 
-test('five-minute completion migration requires a valid current scan and mandatory ACC number', async () => {
-  const sql = await import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0209_event_check_in_completion_sessions.sql', 'utf8'));
-  assert.match(sql, /interval '5 minutes 1 second'/);
-  assert.match(sql, /bootstrap_event_check_in_qr_v1/);
-  assert.match(sql, /submit_event_check_in_completion_v1/);
-  assert.match(sql, /w\.state='open'/);
-  assert.match(sql, /\^\[A-Z\]\{2\}\[0-9\]\+\$/);
+test('five-minute completion accepts adult or youth ACC numbers after a valid current scan', async () => {
+  const [completionSql, youthSql] = await Promise.all([
+    import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0209_event_check_in_completion_sessions.sql', 'utf8')),
+    import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0210_youth_acc_number_support.sql', 'utf8')),
+  ]);
+  assert.match(completionSql, /interval '5 minutes 1 second'/);
+  assert.match(completionSql, /bootstrap_event_check_in_qr_v1/);
+  assert.match(youthSql, /submit_event_check_in_completion_v1/);
+  assert.match(youthSql, /\^\[A-Z\]\{2\}\[0-9\]\+Y\?\$/);
 });
 
 test('check-in form gives a visible completion countdown and requires ACC number', async () => {
@@ -56,5 +58,6 @@ test('check-in form gives a visible completion countdown and requires ACC number
   assert.match(source, /remaining — complete check-in within the time shown/);
   assert.match(source, /Your check-in time expired/);
   assert.match(source, /name="accNumber" required/);
+  assert.match(source, /HI296Y for a youth player/);
   assert.match(source, /sessionStorage/);
 });

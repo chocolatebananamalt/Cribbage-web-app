@@ -1,4 +1,5 @@
 import type { RosterCsvRow } from "../api/roster";
+import { isAccNumber } from "../acc-number.ts";
 
 const firstNameHeaders = new Set(["first name"]);
 const lastNameHeaders = new Set(["last name"]);
@@ -45,7 +46,7 @@ export function parseRosterCsv(text: string): RosterCsvRow[] {
     const scorecardRaw = suppliedScorecard || "digital";
     if (!firstName || firstName.length > 80 || !lastName || lastName.length > 80 || `${firstName} ${lastName}`.length > 160) throw new Error(`Row ${offset + 2} needs a valid first and last name.`);
     if (email.length > 320 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) throw new Error(`Row ${offset + 2} has an invalid email address.`);
-    if (accNumber && !/^[A-Z]{2}\d+$/.test(accNumber)) throw new Error(`Row ${offset + 2} has an invalid ACC #. Use a two-letter state abbreviation followed immediately by the number, such as HI296.`);
+    if (accNumber && !isAccNumber(accNumber)) throw new Error(`Row ${offset + 2} has an invalid ACC #. Use a two-letter state abbreviation followed immediately by the number, such as HI296 or HI296Y for a youth player.`);
     if (scorecardRaw !== "digital" && scorecardRaw !== "paper") throw new Error(`Row ${offset + 2} needs Digital or Paper in the Scorecard Type column.`);
     return { firstName, lastName, email, accNumber, scorecardType: scorecardRaw as "digital" | "paper" };
   });
