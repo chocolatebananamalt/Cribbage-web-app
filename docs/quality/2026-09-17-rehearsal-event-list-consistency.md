@@ -20,11 +20,15 @@
   verification.
 - `pnpm verify:handoff` — pass.
 - `git diff --check` — pass.
+- Pull request #77 merged as `8047b3c6b9cde94a84d25d9102f64189a4610da9`.
+  GitHub Verify passed for both push and pull-request runs, and Vercel reported
+  the Production deployment READY.
+- In a signed-in external Chrome session on Production, Genesis Rehearsal
+  displayed exactly four finalized events with `Event type: Event name - Style`
+  labels. The retired Paper team Doubles event had no visible Setup card,
+  enrollment option, or editable removal control.
 
 ## Remaining verification
 
-- Deploy through the reviewed Production path, then verify in an authorized
-  director browser session that Genesis Rehearsal displays only its four
-  active events and the retired Doubles event has no visible Setup card.
 - The independent-device rehearsal remains a separate physical acceptance
   gate for scoring, cross-checking, offline recovery, finances, and results.
