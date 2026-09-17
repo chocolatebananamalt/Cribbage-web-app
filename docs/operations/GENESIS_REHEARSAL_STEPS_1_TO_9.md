@@ -129,9 +129,15 @@ recovery copy.
 The old two-official player-account activation ceremony is no longer the
 target day-of-play flow. For each event, a director/co-director opens **Day of
 Play Event QR Check-In** and displays the live code on an iPad, laptop, or
-monitor. Test that it changes after sixty seconds, rejects a stale code and a
-wrong event, records a paid/enrolled exact match once, and sends every other
-case to the desk. At the desk, first record the cash/check evidence and event
-enrollment, then use the event-specific check-in action. Do not claim email
-delivery as tested until the ACC-controlled Resend/Supabase configuration and
-600-in-45-minute evidence are present.
+monitor. Test that it changes after sixty seconds and rejects a stale code or
+a wrong event. A valid scan immediately opens a private five-minute completion
+session: enter required First name, Last name, Email, and uppercase ACC #
+(`HI296` format), then submit before the visible countdown expires. A scan at
+the end of a sixty-second display period remains valid for the full five-minute
+form window; the original QR secret is removed from the address immediately.
+Test the one-minute and thirty-second warnings, expiry, reload retention,
+one paid/enrolled exact match, and desk routing for every other case. At the
+desk, first record the cash/check evidence and event enrollment, then use the
+event-specific check-in action. Do not claim email delivery as tested until the
+ACC-controlled Resend/Supabase configuration and 600-in-45-minute evidence are
+present.

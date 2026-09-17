@@ -104,7 +104,12 @@ work is the dated physical rehearsal checklist in
 - Each finalized Main, Consolation, and Satellite event has an independently
   opened director/co-director check-in window. Its live-display QR code is a
   fragment-only, opaque bearer that expires in sixty seconds and is scoped to
-  that event and tournament.
+  that event and tournament. A successful current-code scan creates a separate
+  opaque five-minute completion session; the scanned QR credential is removed
+  from browser history immediately. The form visibly counts down and requires
+  First name, Last name, Email, and uppercase ACC # (`HI296` format). The
+  server rejects a completion session after five minutes or after event-window
+  closure; an expired scan must use the current live QR again.
 - A scan can only create an event-specific check-in request. It never reveals
   roster, payment, seating, scores, or results. A paid, enrolled exact match
   is recorded once; any unpaid, partial, unknown, or unsafe match receives

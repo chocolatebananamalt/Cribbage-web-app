@@ -13,6 +13,12 @@ test('event check-in credentials are opaque fragment-only 256-bit values', () =>
   assert.equal(token.parseEventCheckInCredential(`${credential.canonicalToken}.extra`), null);
 });
 
+test('completion sessions use the same opaque 256-bit token shape', () => {
+  const completion = token.createEventCheckInCredential(id);
+  assert.match(completion.canonicalToken, /^[0-9a-f-]+\.[A-Za-z0-9_-]{43}$/);
+  assert.equal(token.parseEventCheckInCredential(completion.canonicalToken)?.canonicalToken, completion.canonicalToken);
+});
+
 test('event check-in retains only a fixed-length salted digest', () => {
   const credential = token.createEventCheckInCredential(id);
   const digest = token.digestEventCheckInCredential(randomBytes(32), credential.canonicalToken);
@@ -34,4 +40,21 @@ test('public check-in does not expose roster or payment detail', async () => {
   const source = await import('node:fs/promises').then(({ readFile }) => readFile('src/app/event-check-in/event-check-in-form.tsx', 'utf8'));
   assert.match(source, /Please visit the tournament check-in desk to complete enrollment and payment\./);
   assert.doesNotMatch(source, /amountOwed|amountReceived|rosterEntryId/);
+});
+
+test('five-minute completion migration requires a valid current scan and mandatory ACC number', async () => {
+  const sql = await import('node:fs/promises').then(({ readFile }) => readFile('database/migrations/0209_event_check_in_completion_sessions.sql', 'utf8'));
+  assert.match(sql, /interval '5 minutes 1 second'/);
+  assert.match(sql, /bootstrap_event_check_in_qr_v1/);
+  assert.match(sql, /submit_event_check_in_completion_v1/);
+  assert.match(sql, /w\.state='open'/);
+  assert.match(sql, /\^\[A-Z\]\{2\}\[0-9\]\+\$/);
+});
+
+test('check-in form gives a visible completion countdown and requires ACC number', async () => {
+  const source = await import('node:fs/promises').then(({ readFile }) => readFile('src/app/event-check-in/event-check-in-form.tsx', 'utf8'));
+  assert.match(source, /remaining — complete check-in within the time shown/);
+  assert.match(source, /Your check-in time expired/);
+  assert.match(source, /name="accNumber" required/);
+  assert.match(source, /sessionStorage/);
 });

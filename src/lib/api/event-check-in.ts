@@ -4,15 +4,20 @@ import { parseEventCheckInCredential } from "../event-check-in-token";
 type RecordValue = Record<string, unknown>;
 const isRecord = (value: unknown): value is RecordValue => !!value && typeof value === "object" && !Array.isArray(value);
 
-export type EventCheckInRequest = { credential: string; firstName: string; lastName: string; email: string; accNumber: string };
+export type EventCheckInBootstrapRequest = { credential: string };
+export type EventCheckInRequest = { completionSession: string; firstName: string; lastName: string; email: string; accNumber: string };
+
+export function isEventCheckInBootstrapRequest(value: unknown): value is EventCheckInBootstrapRequest {
+  return isRecord(value) && Object.keys(value).length === 1 && typeof value.credential === "string" && !!parseEventCheckInCredential(value.credential);
+}
 
 export function isEventCheckInRequest(value: unknown): value is EventCheckInRequest {
   if (!isRecord(value) || Object.keys(value).length !== 5) return false;
-  return typeof value.credential === "string" && !!parseEventCheckInCredential(value.credential)
+  return typeof value.completionSession === "string" && !!parseEventCheckInCredential(value.completionSession)
     && typeof value.firstName === "string" && value.firstName.trim().length >= 1 && value.firstName.length <= 80
     && typeof value.lastName === "string" && value.lastName.trim().length >= 1 && value.lastName.length <= 80
     && typeof value.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email.trim()) && value.email.length <= 320
-    && typeof value.accNumber === "string" && (value.accNumber === "" || /^[A-Z]{2}\d+$/.test(value.accNumber));
+    && typeof value.accNumber === "string" && /^[A-Z]{2}\d+$/.test(value.accNumber);
 }
 
 export function isDirectorWindowAction(value: unknown): value is { action: "open" | "close"; eventId: string; idempotencyKey: string } {
