@@ -3,7 +3,7 @@ export const ACC_NUMBER_INPUT_PATTERN = "[A-Z]{2}[0-9]+Y?";
 
 /** Formats a form value without accepting an invalid ACC number. */
 export function normalizeAccNumberInput(value: string) {
-  return value.toUpperCase().replace(/\s/g, "").replace(/[^A-Z0-9]/g, "");
+  return value.toUpperCase().replace(/\s/g, "");
 }
 
 export function isAccNumber(value: string) {
