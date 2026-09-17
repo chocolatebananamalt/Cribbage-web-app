@@ -25,12 +25,17 @@ Date: 2026-09-17
   readiness, Production build, and workspace integrity.
 - `pnpm verify:handoff`: **6/6 passed**.
 - TypeScript `pnpm exec tsc --noEmit`: passed before the full verification.
+- PR #89 merged as `766008fe23684d2529443e0414ef6bd3807f7da3`; Vercel
+  Production deployment `dpl_GNdjSELsHkV5WtTALM91iG7AEbfW` reached READY.
+  The public Production page `/event-check-in` rendered the expected
+  first-name, last-name, email, ACC #, and disabled-until-QR check-in form.
+  A one-hour Production runtime-error scan found no errors.
 
 ## Remaining release evidence
 
 - Local browser automation was unavailable on this workstation and Chrome
-  blocked the local loopback preview, so phone/desktop visual proof remains
-  pending a deployed preview/Production check.
+  blocked the local loopback preview, so the physical phone/desktop visual
+  rehearsal remains pending despite the public Production smoke check.
 - The real multi-device QR rotation/expiry/wrong-event and paid/unpaid desk
   rehearsal remains pending.
 - Resend/Supabase Auth email delivery, callback-to-roster linking, failure
