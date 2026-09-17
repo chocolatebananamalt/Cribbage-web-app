@@ -1,6 +1,6 @@
 # Five-minute Event QR Completion Session — Verification Record
 
-**Status:** Implemented; full local verification passed; production and physical rehearsal verification pending
+**Status:** Production deployed; full local and public fallback checks passed; physical rehearsal verification pending
 
 ## Acceptance criteria
 
@@ -30,6 +30,15 @@
   dependency audit, application tests, provider checks, production build, and
   workspace tests.
 - `pnpm verify:handoff` passed (**6/6**).
+- Pull request #91 passed both GitHub `verify` jobs and its Vercel preview,
+  then merged as `f8fb066a2cfbe4dfb3eb5541e43428148ed024b7`.
+- Production deployment `dpl_92Pqd86oWNN7AMfbHYdGeCS93KXx` reached `READY`.
+  A public `/event-check-in` smoke check showed the safe no-code state:
+  “Scan the current QR code displayed at the event.” The route did not expose
+  any tournament information.
+- Vercel's runtime-error scan for `/event-check-in` and
+  `/api/v1/event-check-in` found no errors after release; the deployment had no
+  error/fatal runtime logs.
 
 ## Remaining verification
 

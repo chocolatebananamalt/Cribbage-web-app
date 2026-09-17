@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-17 five-minute event QR completion session — pilot database migration applied; release verification pending
+## 2026-09-17 five-minute event QR completion session — Production deployed; physical rehearsal pending
 
 - A valid scan of the existing sixty-second, event-scoped live QR now exchanges
   immediately for an opaque five-minute completion credential. The browser
@@ -14,8 +14,12 @@
   timestamps behind forced RLS with no browser grants; it stores no form or
   roster data. Focused event-check-in tests pass (**7/7**) and the full
   repository and private-handoff verification passed (`pnpm verify`; `pnpm
-  verify:handoff`). Production release checks are next. Local browser
-  automation is unavailable on this host, so deployed
+  verify:handoff`). Pull request #91 passed its two GitHub verification jobs
+  and Vercel preview, merged as `f8fb066a`, and deployed to Production as
+  `dpl_92Pqd86oWNN7AMfbHYdGeCS93KXx`. The public no-code fallback correctly
+  instructs a visitor to scan the current event display; the deployment's
+  event-check-in runtime-error scan found no errors. Local browser
+  automation was unavailable on this host, so deployed
   phone/desktop and physical multi-device evidence remain required before
   claiming the day-of-play flow rehearsed.
 - See `docs/decisions/2026-09-17-five-minute-event-qr-completion-session.md`
