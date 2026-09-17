@@ -32,3 +32,16 @@ payments, seats, or the active QR credential.
 - Genesis Rehearsal keeps its active QR unchanged. Its primary director may
   enter the selected public director name through the protected correction
   control after deployment.
+
+## Roster identity correction, 2026-09-16
+
+All four roster-entry sources use the same transaction-scoped identity locks.
+An active normalized ACC number is a hard duplicate. If an ACC number is
+absent, the exact normalized first name, last name, and email are a hard
+duplicate. Name-only or email-only overlap is intentionally a reviewed
+warning because families and shared contact addresses can be legitimate.
+
+Roster history is append-only. A director or co-director may remove an entry
+from active roster operations only with an audited reason, and may reinstate
+it before play if no downstream activity exists. It does not delete or rewrite
+the original registration, receipt, seating, score, or audit evidence.

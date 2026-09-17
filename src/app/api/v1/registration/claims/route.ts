@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
     if (result.error || !result.data || typeof result.data !== "object") return apiJson({ error: "unavailable" }, { status: 404 });
     const response = result.data as Record<string, unknown>;
     if (response.status === "received" && Object.keys(response).length === 1) return apiJson({ status: "received" });
+    if (response.status === "rejected" && response.code === "already_registered") return apiJson({ status: "already_registered" }, { status: 409 });
     if (response.status === "rejected" && response.code === "registration_capacity_reached" && Object.keys(response).length === 2) return apiJson({ status: "unavailable" }, { status: 409 });
     return apiJson({ error: "unavailable" }, { status: 404 });
   });

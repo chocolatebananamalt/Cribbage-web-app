@@ -82,6 +82,15 @@ rehearsal actions are to retire the unused Traditional Doubles event, enable
 the existing Canadian Doubles event for Digital/Paper scoring, and add
 **Canadian Doubles Practice** through the audited later-event workflow.
 
+**Category 1 — Cross-source duplicate roster prevention:** resolved in the
+production database and awaiting physical director-screen verification. QR,
+manual, CSV, and claim-promotion intake now share transaction-scoped identity
+checks. ACC # or exact first/last/email duplication is blocked; name-only or
+email-only overlap is reviewed. Roster correction is append-only removal from
+active operations with guarded reinstatement, never deletion. The rehearsal's
+duplicate Manual Daron entry has been withdrawn as `duplicate_entry`; its
+Registration record remains active.
+
 1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
    identities. Complete setup → roster/check-in → registration-close → seating
    → enrollment → schedule without altering the real October tournament.
