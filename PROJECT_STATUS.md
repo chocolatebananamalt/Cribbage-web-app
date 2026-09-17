@@ -1,5 +1,26 @@
 # Project Status
 
+## 2026-09-17 five-minute event QR completion session — pilot database migration applied; release verification pending
+
+- A valid scan of the existing sixty-second, event-scoped live QR now exchanges
+  immediately for an opaque five-minute completion credential. The browser
+  removes the QR bearer from its address/history and shows a live countdown;
+  the required form captures First name, Last name, Email, and uppercase ACC #
+  (`HI296` format). The authoritative server rejects an expired session or an
+  event-window closure, while preserving the prior paid/enrolled and desk
+  routing boundaries.
+- Migration `0209_event_check_in_completion_sessions` is applied to the
+  approved pilot Supabase database. It holds only salted token digests and
+  timestamps behind forced RLS with no browser grants; it stores no form or
+  roster data. Focused event-check-in tests pass (**7/7**) and the full
+  repository and private-handoff verification passed (`pnpm verify`; `pnpm
+  verify:handoff`). Production release checks are next. Local browser
+  automation is unavailable on this host, so deployed
+  phone/desktop and physical multi-device evidence remain required before
+  claiming the day-of-play flow rehearsed.
+- See `docs/decisions/2026-09-17-five-minute-event-qr-completion-session.md`
+  and `docs/quality/2026-09-17-five-minute-event-qr-completion-session.md`.
+
 ## 2026-09-17 rotating event QR check-in — pilot database migration applied; release verification pending
 
 - Added event-specific director/co-director check-in windows and a new
