@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-17 registration identity, Director contact, and CSV format — release candidate
+## 2026-09-17 registration identity, Director contact, and CSV format — production deployed
 
 - The approved pilot database now has migration
   `registration_identity_and_public_director_contact`: append-only,
@@ -21,9 +21,13 @@
   roster, payment, seating, or QR link.
 - Focused checks (14/14), TypeScript, `pnpm verify` (537 application tests),
   and `pnpm verify:handoff` (6/6) pass. The database schema/function presence
-  was confirmed read-only. Local browser access is blocked by this host’s
-  Chrome extension, so production phone/desktop verification remains required
-  immediately after the deployment. See
+  was confirmed read-only. Pull request #82 passed GitHub Verify and Vercel
+  Preview, merged as `8eb5430dfae720253d26d36a57ed8513462aae8d`, and production
+  deployment `dpl_HyPRRdbqBuVnuGkYeTnSCMKbj7Up` is READY at the stable URL.
+  An authenticated external-Chrome review confirmed the Setup contact-correction
+  control and the roster’s First name, Last name, Scorecard Type, and exact CSV
+  guidance. Production `/register` returned HTTP 200; the post-release Vercel
+  runtime-error scan found no errors. See
   `docs/quality/2026-09-17-registration-identity-and-public-director-contact.md`.
 
 ## 2026-09-17 persistent registration QR, public contact, and name parts — production deployed
