@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-16 rehearsal Setup 404 — validation compatibility repair verified locally; Production deployment pending
+## 2026-09-16 rehearsal Setup 404 — validation compatibility repair deployed and Production route verified
 
 - Repaired an identifier-validation mismatch that let the signed-in tournament
   chooser list a PostgreSQL-valid canonical UUID while the protected Setup
@@ -14,8 +14,15 @@
   malformed-ID rejection, chooser compatibility, and the Setup page/API
   shared validator. `pnpm verify` passes locally: audit, lint, **528/528**
   application tests, provider readiness, Production build, workspace tests,
-  and private handoff checks. Deployment and signed-in Production route proof
-  remain the next required release evidence.
+  and private handoff checks. Pull request #73 merged as
+  `e0e858adad3ff186595254791651a0451e3130f4`; GitHub reported the Vercel
+  Production deployment successful. In an independent signed-in Production
+  browser session, **Your tournaments → Genesis Rehearsal → Set Up Tournament**
+  loaded the saved finalized configuration without a 404. The stable root
+  returned HTTP 200; anonymous Setup correctly redirected to sign-in (307).
+- Detailed Vercel runtime-log review remains unverified for this release
+  because the separate verification browser did not have a Vercel dashboard
+  session. No code or database change is pending for that log-access gap.
 
 ## 2026-09-16 tournament setup clarity and post-finalization layout — production deployed and responsive review passed
 
