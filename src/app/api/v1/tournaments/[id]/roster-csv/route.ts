@@ -14,7 +14,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const supabase = await createClient();
     const actor = await requireVerifiedSubject(supabase);
     if (!actor) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await createServerOnlyAdminClient().rpc("import_roster_csv_v2", { p_actor_id: actor, p_tournament_id: id, p_rows: body.rows, p_idempotency_key: body.idempotencyKey });
+    const { data, error } = await createServerOnlyAdminClient().rpc("import_roster_csv_v3", { p_actor_id: actor, p_tournament_id: id, p_rows: body.rows, p_idempotency_key: body.idempotencyKey });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
     if (isAcceptedRosterCsvImport(data)) return apiJson(data);
     if (isRejectedRosterCsvImport(data)) return apiJson(data, { status: 409 });

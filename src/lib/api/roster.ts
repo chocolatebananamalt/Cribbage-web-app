@@ -14,7 +14,8 @@ export function isRejectedRosterPromotion(value: unknown, decisionId: string) {
 }
 
 export type ManualRosterEntryRequest = {
-  displayName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   accNumber: string;
   scorecardType: "digital" | "paper";
@@ -24,12 +25,12 @@ export type ManualRosterEntryRequest = {
 export function isManualRosterEntryRequest(value: unknown): value is ManualRosterEntryRequest {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
-  if (!exactKeys(item, ["displayName", "email", "accNumber", "scorecardType", "idempotencyKey"])) return false;
-  if (!isUuid(item.idempotencyKey) || typeof item.displayName !== "string" || typeof item.email !== "string" || typeof item.accNumber !== "string") return false;
-  const name = item.displayName.trim();
+  if (!exactKeys(item, ["firstName", "lastName", "email", "accNumber", "scorecardType", "idempotencyKey"])) return false;
+  if (!isUuid(item.idempotencyKey) || typeof item.firstName !== "string" || typeof item.lastName !== "string" || typeof item.email !== "string" || typeof item.accNumber !== "string") return false;
+  const firstName = item.firstName.trim(), lastName = item.lastName.trim();
   const email = item.email.trim();
   const accNumber = item.accNumber.trim();
-  return name.length >= 1 && name.length <= 160
+  return firstName.length >= 1 && firstName.length <= 80 && lastName.length >= 1 && lastName.length <= 80 && `${firstName} ${lastName}`.length <= 160
     && email.length <= 320
     && (email.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     && accNumber.length <= 64
@@ -59,7 +60,7 @@ export function isRejectedManualRosterEntry(value: unknown) {
     && ["authentication_required", "not_director", "invalid_manual_entry", "duplicate_roster_entry", "registration_closed", "initial_seating_already_published", "idempotency_conflict", "manual_roster_entry_rejected"].includes(item.code as string);
 }
 
-export type RosterCsvRow = { displayName: string; email: string; accNumber: string; scorecardType: "digital" | "paper" };
+export type RosterCsvRow = { firstName: string; lastName: string; email: string; accNumber: string; scorecardType: "digital" | "paper" };
 export type RosterCsvImportRequest = { rows: RosterCsvRow[]; idempotencyKey: string };
 
 export function isRosterCsvImportRequest(value: unknown): value is RosterCsvImportRequest {
@@ -70,8 +71,10 @@ export function isRosterCsvImportRequest(value: unknown): value is RosterCsvImpo
   return item.rows.every((row) => {
     if (!row || typeof row !== "object" || Array.isArray(row)) return false;
     const entry = row as Record<string, unknown>;
-    return exactKeys(entry, ["displayName", "email", "accNumber", "scorecardType"])
-      && typeof entry.displayName === "string" && entry.displayName.trim().length >= 1 && entry.displayName.trim().length <= 160
+    return exactKeys(entry, ["firstName", "lastName", "email", "accNumber", "scorecardType"])
+      && typeof entry.firstName === "string" && entry.firstName.trim().length >= 1 && entry.firstName.trim().length <= 80
+      && typeof entry.lastName === "string" && entry.lastName.trim().length >= 1 && entry.lastName.trim().length <= 80
+      && `${entry.firstName.trim()} ${entry.lastName.trim()}`.length <= 160
       && typeof entry.email === "string" && entry.email.trim().length <= 320
       && (entry.email.trim().length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(entry.email.trim()))
       && typeof entry.accNumber === "string" && entry.accNumber.trim().length <= 64

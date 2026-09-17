@@ -15,10 +15,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const supabase = await createClient();
     const actor = await requireVerifiedSubject(supabase);
     if (!actor) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await createServerOnlyAdminClient().rpc("create_manual_roster_entry_v2", {
+    const { data, error } = await createServerOnlyAdminClient().rpc("create_manual_roster_entry_v3", {
       p_actor_id: actor,
       p_tournament_id: id,
-      p_display_name: body.displayName,
+      p_first_name: body.firstName,
+      p_last_name: body.lastName,
       p_email: body.email,
       p_acc_number: body.accNumber,
       p_scorecard_type: body.scorecardType,

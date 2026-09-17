@@ -42,11 +42,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const corePayload = { ...body.payload, events: body.payload.events.map((event) => {
       const coreEvent = { ...event }; Reflect.deleteProperty(coreEvent, "sidePools"); return coreEvent;
     }) };
+    Reflect.deleteProperty(corePayload, "tournamentDirectorPublicName");
     const { data, error } = await supabase.rpc("save_tournament_setup_version", { p_tournament_id: id, p_expected_version: body.expectedVersion, p_payload: corePayload, p_idempotency_key: body.idempotencyKey });
     if (error) return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
     if (isSavedSetup(data, body)) {
       const sidePools = await createServerOnlyAdminClient().rpc("configure_tournament_setup_side_pools_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_events: body.payload.events });
       if (sidePools.error || !sidePools.data || typeof sidePools.data !== "object" || (sidePools.data as Record<string, unknown>).status !== "setup_side_pools_configured") return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
+      const publicContact = await createServerOnlyAdminClient().rpc("configure_tournament_public_contact_from_setup_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_director_name: body.payload.tournamentDirectorPublicName });
+      if (publicContact.error || !publicContact.data || typeof publicContact.data !== "object" || (publicContact.data as Record<string, unknown>).status !== "public_contact_configured") return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
       return NextResponse.json(data, { headers: privateNoStore });
     }
     if (isRejectedSetup(data)) return NextResponse.json(data, { status: 409, headers: privateNoStore });

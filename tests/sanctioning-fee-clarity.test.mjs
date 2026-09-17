@@ -5,7 +5,7 @@ import { isSanctioningFeeRateOverrideRequest } from "../src/lib/api/sanctioning-
 import { isSetupSaveRequest } from "../src/lib/api/setup.ts";
 
 const id = "123e4567-e89b-42d3-a456-426614174000";
-const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
+const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentDirectorPublicName: "Director Example", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
 
 test("non-default setup rates require audit reason and ACC reference", () => {
   assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload }), true);
