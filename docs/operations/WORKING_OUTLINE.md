@@ -83,7 +83,8 @@ the existing Canadian Doubles event for Digital/Paper scoring, and add
 **Canadian Doubles Practice** through the audited later-event workflow.
 
 **Category 1 — Cross-source duplicate roster prevention:** resolved in the
-production database and awaiting physical director-screen verification. QR,
+production database and verified on the released director screen at desktop
+and phone widths. QR,
 manual, CSV, and claim-promotion intake now share transaction-scoped identity
 checks. ACC # or exact first/last/email duplication is blocked; name-only or
 email-only overlap is reviewed. Roster correction is append-only removal from
