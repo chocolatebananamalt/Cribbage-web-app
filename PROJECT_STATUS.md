@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-17 rehearsal finalized-event consistency — local verification passed; deployment pending
+## 2026-09-17 rehearsal finalized-event consistency — production deployed
 
 - Corrected the activated Setup view so it no longer renders editable event
   cards from an older setup revision after registration opens. The visible
@@ -15,6 +15,10 @@
 - Focused checks passed **15/15**; TypeScript, `pnpm verify` (**530/530**),
   `pnpm verify:handoff`, and `git diff --check` passed. See
   `docs/quality/2026-09-17-rehearsal-event-list-consistency.md`.
+- Pull request #77 merged as `8047b3c6b9cde94a84d25d9102f64189a4610da9`.
+  GitHub Verify passed and Vercel’s Production deployment is READY. An
+  authorized Production browser check confirmed the exact four-event list and
+  confirmed that no retired Draft event card or Remove Event control remains.
 
 ## 2026-09-17 tournament workspace navigation and context — production deployed
 
