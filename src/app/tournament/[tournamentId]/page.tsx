@@ -4,18 +4,33 @@ import Link from "next/link";
 import { registrationLinkManagementEnabled } from "../../../lib/api/public-registration-v2";
 import { accountActivationEnabled } from "../../../lib/api/account-activation-release";
 import { rule12CorrectionEnabled } from "../../../lib/api/rule12-correction-release";
+import { getAccessibleTournaments } from "../../../lib/tournaments/accessible-tournaments";
+
+const roleLabels: Record<string, string> = {
+  director: "Director",
+  co_director: "Co-director",
+  cross_checker: "Cross-checker",
+  judge: "Judge",
+  player: "Player",
+  viewer: "Viewer",
+};
 
 export default async function ProtectedTournamentPage({ params }: { params: Promise<{ tournamentId: string }> }) {
   const { tournamentId } = await params;
   const access = await requireTournamentAccess(tournamentId);
+  const chooser = await getAccessibleTournaments(access.user.id);
+  const tournamentName = chooser.status === "available"
+    ? chooser.tournaments.find((tournament) => tournament.tournamentId === tournamentId)?.tournamentName
+    : undefined;
   const isDirector = ["director", "co_director"].includes(access.role);
   const canViewResults = ["viewer", "player", "cross_checker", "director", "co_director"].includes(access.role);
   return (
     <main className="auth-shell">
       <section className="auth-card" aria-labelledby="tournament-title">
         <p className="eyebrow">AUTHORIZED TOURNAMENT</p>
-        <h1 id="tournament-title">Tournament workspace</h1>
-        <p className="lede">Access granted for role: {access.role}.</p>
+        <Link className="secondary workspace-chooser-link" href="/">Back to Your Tournaments</Link>
+        <h1 id="tournament-title">{tournamentName ?? "Tournament workspace"}</h1>
+        <p className="lede">Your role: {roleLabels[access.role] ?? access.role}.</p>
         <Link className="guide-link" href={`/tournament/${tournamentId}/how-to`}>Start Here / How To</Link>
         <Link className="guide-link" href={`/tournament/${tournamentId}/games`}>My Games</Link>
         <Link className="guide-link" href={`/tournament/${tournamentId}/teams`}>Team Scorecards</Link>
@@ -36,6 +51,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Manual payment evidence</Link> : null}
         {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link> : null}
         {canViewResults ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Tournament Results</Link> : null}
+        <Link className="secondary workspace-chooser-link workspace-chooser-link-bottom" href="/">Back to Your Tournaments</Link>
         <SharedDeviceSignOut />
       </section>
     </main>
