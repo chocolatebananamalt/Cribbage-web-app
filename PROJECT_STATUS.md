@@ -21,7 +21,8 @@
 - See `docs/decisions/2026-09-17-five-minute-event-qr-completion-session.md`
   and `docs/quality/2026-09-17-five-minute-event-qr-completion-session.md`.
 
-## 2026-09-17 rotating event QR check-in — pilot database migration applied; release verification pending
+
+## 2026-09-17 rotating event QR check-in — Production deployed; rehearsal and email gate pending
 
 - Added event-specific director/co-director check-in windows and a new
   **Day-of-play Event QR Check-In** workspace. A live display generates a
@@ -39,9 +40,14 @@
   `0208_event_check_in_desk_completion` are applied to the approved pilot
   Supabase database. Local `pnpm verify` passed (**545 application tests**),
   `pnpm verify:handoff` passed (**6/6**), and focused QR tests passed (**4/4**).
-  Browser automation is unavailable on this host and Chrome blocked local
-  loopback, so deployed phone/desktop and physical multi-device evidence are
-  still required. Resend/Supabase Auth delivery and the required 600-in-45
+  GitHub Verify and Vercel Preview passed for PR #89, which merged as
+  `766008fe23684d2529443e0414ef6bd3807f7da3`. Production deployment
+  `dpl_GNdjSELsHkV5WtTALM91iG7AEbfW` is READY at
+  `https://cribbage-web-app.vercel.app`; its public Event Check-In page was
+  smoke-tested and the one-hour runtime-error scan found no errors. Local
+  browser automation is unavailable on this host and Chrome blocked local
+  loopback, so physical multi-device rotation/expiry and phone/desktop
+  evidence are still required. Resend/Supabase Auth delivery and the required 600-in-45
   minute live test are intentionally fail-closed pending ACC-controlled SMTP
   configuration. See
   `docs/quality/2026-09-17-rotating-event-qr-check-in.md`.
