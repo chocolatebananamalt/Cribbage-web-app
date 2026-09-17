@@ -1,5 +1,23 @@
 # Project Status
 
+## 2026-09-16 cross-source duplicate prevention and safe roster correction
+
+- Applied pilot migration `roster_identity_guard_and_withdrawal`. Public QR
+  registration, director manual intake, CSV import, and approved-claim
+  promotion now share transaction-scoped identity checks: matching ACC # is a
+  hard block; without ACC #, exact first/last/email is a hard block; isolated
+  name or email matches require director review. New ACC inputs are uppercase
+  `HI296` format at the client and database boundaries.
+- Added a protected director/co-director roster-resolution workspace. It
+  append-only removes a duplicate, withdrawal, or administrative correction
+  from active roster operations and permits guarded reinstatement. It never
+  deletes a registration, identity, payment, seating, scorecard, or audit
+  record; any downstream activity is refused and routed to the relevant
+  financial or event workflow.
+- Resolved the Genesis Rehearsal duplicate as authorized: the Manual Daron
+  entry is recorded as `duplicate_entry`; the Registration Daron identity is
+  retained active. Neither record had downstream operational activity.
+
 ## 2026-09-17 registration identity, Director contact, and CSV format — production deployed
 
 - The approved pilot database now has migration
