@@ -26,3 +26,13 @@ test("new ACC values reject lowercase at every request boundary", async () => {
   assert.match(publicRegistration, /validAccNumber/);
   assert.match(publicRegistration, /\^\[A-Z\]\{2\}\\d\+\$/);
 });
+
+test("confirmed distinct review permits only weak name or email matches", async () => {
+  const sql = await read("database/migrations/0206_safe_possible_duplicate_review.sql");
+  assert.match(sql, /v_hard_collision/);
+  assert.match(sql, /when 'hard duplicate match' then 'hard_duplicate_match'/);
+  assert.match(sql, /v_outcome='duplicate'/);
+  assert.match(sql, /v_outcome='withdrawn'/);
+  assert.match(sql, /v_outcome='review' and v_decision\.duplicate_resolution is distinct from 'confirmed_distinct_person'/);
+  assert.match(sql, /roster_collision/);
+});

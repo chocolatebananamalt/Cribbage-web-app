@@ -45,3 +45,18 @@ Roster history is append-only. A director or co-director may remove an entry
 from active roster operations only with an audited reason, and may reinstate
 it before play if no downstream activity exists. It does not delete or rewrite
 the original registration, receipt, seating, score, or audit evidence.
+
+## Safe possible-duplicate review and shared-email support, 2026-09-17
+
+A weak name-only or email-only collision is not proof that two people are the
+same person. It must remain visible to a director as **Possible
+duplicate—director review required**. The director either rejects it as the
+same person or confirms that it is a different person, creating an immutable
+`confirmed_distinct_person` review decision before the candidate can become a
+roster identity. This preserves the original participant and audit history.
+
+An ACC-number match is always a hard block. Without an ACC number, the exact
+normalized first name, last name, and email are always a hard block. A shared
+family email permitted after the distinct-person decision is contact
+information only. Every Digital scorer and official still needs their own
+linked app account; a Paper participant does not.

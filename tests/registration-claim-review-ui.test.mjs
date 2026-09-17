@@ -11,8 +11,9 @@ test("director roster screen includes an actionable registration review queue", 
   const client = read("src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx");
   assert.match(page, /getRegistrationClaimReviewWorkspace/);
   assert.match(page, /RegistrationClaimReviewClient/);
-  assert.match(client, /Approve for roster/);
-  assert.match(client, /Reject request/);
+  assert.match(client, /Different person — approve for roster/);
+  assert.match(client, /Same person — reject duplicate/);
+  assert.match(client, /Possible duplicate—director review required/);
   assert.match(client, /Reason \(optional\)/);
   assert.match(client, /confirmed this is a different person/);
   assert.match(client, /registration-review-operation:/);
@@ -45,7 +46,20 @@ test("registration review workspace validates the private projection exactly", (
   assert.match(workspace, /get_registration_claim_review_workspace/);
   assert.match(workspace, /exact\(result, \["claims"\]\)/);
   assert.match(workspace, /collisionClaimIds\.every\(uuid\)/);
+  assert.match(workspace, /requiresDistinctConfirmation/);
   assert.match(workspace, /approved_for_roster/);
+});
+
+test("possible-duplicate decisions are explicit while hard matches stay blocked", () => {
+  const sql = read("database/migrations/0206_safe_possible_duplicate_review.sql");
+  const roster = read("src/app/tournament/[tournamentId]/roster/roster-client.tsx");
+  assert.match(sql, /hard duplicate match/);
+  assert.match(sql, /confirmed_distinct_person/);
+  assert.match(sql, /v_outcome='review' and v_decision\.duplicate_resolution is distinct from 'confirmed_distinct_person'/);
+  assert.match(sql, /requiresDistinctConfirmation/);
+  assert.match(roster, /You are removing the existing active roster record—not resolving a pending registration/);
+  assert.match(roster, /Withdrawn \/ resolved records/);
+  assert.match(roster, /Yes, reinstate original identity/);
 });
 
 test("accepted review receipts are bound to the requested decision", async () => {
