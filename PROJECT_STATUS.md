@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-17 youth ACC-number support — migration applied; release verification in progress
+## 2026-09-17 youth ACC-number support — Production deployed; physical rehearsal pending
 
 - New identity entry and lookup paths accept adult ACC numbers such as
   `HI296` and youth numbers such as `HI296Y`. Forms uppercase and remove
@@ -12,9 +12,16 @@
   keys are derived at read time and future writes populate the explicit key.
   Read-only production preflight found zero active canonical collisions.
 - Focused youth validation, duplicate-guard, roster, registration, and QR
-  check-in tests pass (**20/20**). Full repository, browser, deployment, and
-  runtime-log verification remain required before this item is called
-  Production deployed. See
+  check-in tests pass (**20/20**). Local `pnpm verify` passed **551**
+  application tests plus audit, lint, provider-readiness, optimized build, and
+  workspace checks; `pnpm verify:handoff` passed **6/6**. Pull request #93
+  passed GitHub Verify and Vercel Preview, merged as `4f2743b`, and Production
+  deployment `dpl_EF9Jdqj5WLz6ZasVZHx9c86hCHFN` is READY at
+  `https://cribbage-web-app.vercel.app`. The unauthenticated `/register`
+  fallback returned HTTP 200 with no browser console errors, and the Vercel
+  log window showed zero warnings, errors, or fatals. The physical rehearsal
+  still needs to prove an enrolled youth-form QR check-in after safe roster
+  ACC correction is available. See
   `docs/decisions/2026-09-17-youth-acc-number-identity.md` and
   `docs/quality/2026-09-17-youth-acc-number-support.md`.
 
