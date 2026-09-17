@@ -47,6 +47,8 @@ test("registration UI offers repeatable active viewing and renders status only o
   assert.match(client, /View Active Link/);
   assert.match(client, /Replace Active QR Code and Link/);
   assert.equal((client.match(/stateMessage\(state\)/g) ?? []).length, 1);
+  const page = await readFile("src/app/tournament/[tournamentId]/registration/page.tsx", "utf8");
+  assert.match(page, /legacy active link remains usable/i);
   assert.match(form, /Tournament Director:/);
   assert.match(form, /Phone:/);
   assert.match(form, /First name/);
