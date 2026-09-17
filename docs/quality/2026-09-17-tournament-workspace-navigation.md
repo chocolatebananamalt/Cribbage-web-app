@@ -31,11 +31,18 @@ tournament context.
 - Before this release, the signed-in Production workspace was observed to have
   neither a chooser-return action nor the tournament name; it showed only the
   internal `co_director` role token.
-- A local production server started successfully, but its unauthenticated root
-  returned the expected `operation_unavailable` response because the local
-  shell does not carry the deployed Supabase connection values. The isolated
-  browser check therefore confirms no local horizontal overflow or framework
-  overlay, but cannot render an authenticated workspace locally.
-- A signed-in Production phone and desktop check of the deployed change remains
-  required after the reviewed release. It will verify both return links, the
-  selected tournament name, role label, and no horizontal overflow.
+- The reviewed change was merged through pull request #75 as Production commit
+  `667bcbf5461b0fa5ea92343b378b69c7ea945e0d`. GitHub Verify passed; Vercel
+  reported the Production deployment successful.
+- In a signed-in external Chrome session, the Production **Pilot Tournament**
+  workspace showed its name, **Co-director** role, and both return controls.
+  Keyboard activation of each control returned to **Your tournaments**.
+- In the same signed-in session, **Genesis Rehearsal** showed its saved name,
+  **Director** role, the top control, and the lower control. The chooser still
+  listed only the account's authorized October 3 Pilot Tournament, Genesis
+  Rehearsal, and Pilot Tournament cards.
+- HTTP smoke probes returned `200` for the stable root and `307` to sign-in
+  for an anonymous protected workspace, as expected.
+- The signed-in external-browser desktop check is complete. A separate
+  physical phone-width review remains a rehearsal usability observation; the
+  controls themselves use the tested full-width, 52-pixel CSS contract.

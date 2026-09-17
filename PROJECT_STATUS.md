@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-17 tournament workspace navigation and context — release pending
+## 2026-09-17 tournament workspace navigation and context — production deployed
 
 - The protected tournament workspace now has full-width, phone-friendly
   **Back to Your Tournaments** controls before and after its action list. Both
@@ -14,8 +14,12 @@
 - Local verification passes: focused regression tests **4/4**, TypeScript,
   lint, `pnpm verify` (**529/529** application checks plus audit,
   provider-readiness, Production build, and workspace checks), and
-  `git diff --check`. The reviewed Production deployment and authenticated
-  phone/desktop navigation proof remain pending; see
+  `git diff --check`. Pull request #75 merged as
+  `667bcbf5461b0fa5ea92343b378b69c7ea945e0d`; GitHub Verify and the Vercel
+  Production deployment passed. In a signed-in external Chrome session, both
+  controls returned to the authorized chooser, and Genesis Rehearsal visibly
+  identified its Director role. Root returned HTTP 200 and anonymous protected
+  navigation correctly redirected 307 to sign-in. See
   `docs/quality/2026-09-17-tournament-workspace-navigation.md`.
 
 ## 2026-09-16 rehearsal Setup 404 — validation compatibility repair deployed and Production route verified
