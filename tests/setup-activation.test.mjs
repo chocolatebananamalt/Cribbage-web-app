@@ -172,3 +172,16 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.match(client, /All events are finalized; registration is open/);
   assert.match(client, /Traditional Doubles and Canadian Doubles support shared Digital or Paper team scorecards/);
 });
+
+test("an activated setup shows only its authoritative active-event list, not a retired draft event editor", () => {
+  const client = read("src/app/tournament/[tournamentId]/setup/setup-client.tsx");
+  const editorIndex = client.indexOf('<EventEditor key={event.clientRowId}');
+  const activationSummaryIndex = client.indexOf('<section className="setup-activation-summary">');
+  const editingGuardIndex = client.lastIndexOf('{!activated ? <>', editorIndex);
+  assert.ok(editorIndex > 0);
+  assert.ok(activationSummaryIndex > editorIndex);
+  assert.ok(editingGuardIndex >= 0 && editingGuardIndex < editorIndex);
+  assert.match(client, /function activatedEventLine\(event: ActivatedEvent\)/);
+  assert.match(client, /return `\$\{eventType\}: \$\{event\.name\} - \$\{style\}`/);
+  assert.match(client, /<strong>\{activatedEventLine\(event\)\}<\/strong>/);
+});
