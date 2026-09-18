@@ -135,3 +135,23 @@ game short a match, and an unenrolled ID are all still rejected.
 director picks who sits out, and a player who sits out earns nothing that game.
 Rotate the byes by hand or somebody finishes a game short.
 
+## What is still unproven, stated plainly
+
+The lone-official path was proven by calling the RPCs and by reading the pages
+back. **The new paper-game form itself has never rendered in a browser**, because
+it only exists on the branch: the deployed page still gates on
+`actorRole === "cross_checker" && actorIdentityConfirmed`. Its first render will
+be on Dad's deploy.
+
+That gate also means the live site cannot start paper scoring at all today.
+Genesis Rehearsal's officials are two directors, a co-director and a judge, with
+no cross-checker and no bound identities. Checklist item 2 carries the two-minute
+fix.
+
+Normal singles scoring is unaffected by any of this. Players enter their own
+scores at `/tournament/<id>/game/<gameId>` after Start Play, and that path needs
+no official.
+
+One cosmetic thing on the finalized page: it reads "Finalized by Tournament
+participant" although a director did it. `display_name` is unset on these
+profiles. Harmless, but it will be on screen.

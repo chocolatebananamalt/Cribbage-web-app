@@ -162,25 +162,48 @@ commit of his own to `main`**, or presses **Redeploy** on the latest `main`
 deployment from his own Vercel dashboard. Either one carries everything already
 merged, including the seating directory fix.
 
-### 2. Scoring alone works, but only after the deploy
+### 2. Normal singles scoring needs no official at all
 
-Paper scoring used to need two different signed-in officials: one to confirm
-your identity, one to record the cards, one to approve them. That is removed.
-A single director can now confirm their own identity, record both cards and
-approve the result. Proven end to end on the pilot, through to a finalized
-qualification ranking.
+**Players score their own games.** After Start Play, each player opens My Games,
+taps their game and enters the score at `/tournament/<id>/game/<gameId>`. Both
+players enter it and the two entries are compared. No director, no cross-checker,
+no second signature. This is the path tomorrow's Standard Singles events use, and
+nothing below affects it.
 
-Both cards are still required and must still agree, and the approval step still
-compares your re-entered result against what you recorded, so the score is still
-typed twice. The record names you for both steps.
+The rest of this item is about **paper scoring**, which is the fallback when a
+device fails and the required path for team and doubles events.
 
-**The database half is live now. The screens that show the forms only appear
-after Dad deploys** (item 1). Until then the paper game page still hides the
-recording form.
+Paper scoring used to need two different signed-in officials: one to confirm your
+identity, one to record the cards, one to approve them. Migration `0223` removes
+that, and a lone director can now do all three. Proven end to end on the pilot,
+through to a finalized qualification ranking. Both cards are still required and
+must still agree, the approval step still compares your re-entered result against
+what you recorded, and the record names you for both steps.
 
-If the deploy does not happen, the fallback that needs no deploy is a second
-official signing in: Genesis Rehearsal already has Dad as director,
-maggy416@yahoo.com as co-director and Luke as director and judge.
+**This one needs the deploy.** The database accepts it now, but the live page
+still renders the recording form only for a cross-checker:
+
+```
+actorRole === "cross_checker" && actorIdentityConfirmed
+```
+
+**Genesis Rehearsal has no cross-checker.** Its officials are two directors, a
+co-director and a judge, and no official identity is bound yet. So on the site as
+it stands right now, paper scoring cannot be started by anybody.
+
+Two ways out, in order of preference:
+
+1. **Deploy** (item 1). Then any director records and approves alone, and the
+   cross-checker question disappears.
+2. **Without the deploy**, assign one: Tournament, then **Cross-checkers**,
+   director only. It needs a linked tournament account. A director must then
+   confirm that person's identity on the Paper Games page, because the live page
+   hides the identity form from cross-checkers themselves. After that the
+   cross-checker can record and approve alone, because the database half is
+   already live.
+
+Do option 2 tonight even if you expect the deploy. It costs two minutes and it is
+the difference between a workable fallback and no fallback.
 
 ### 3. An odd number of players is fine now, but rotate the byes
 
