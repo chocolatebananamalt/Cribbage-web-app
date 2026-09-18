@@ -65,7 +65,8 @@ test("the protected workspace gives every role a direct return to the signed-in 
   const css = read("src/app/globals.css");
   assert.match(page, /getAccessibleTournaments\(access\.user\.id\)/);
   assert.match(page, /tournamentName \?\? "Tournament workspace"/);
-  assert.match(page, /Your role: \{roleLabels\[access\.role\]/);
+  assert.match(page, /Your role\{access\.roles\.length === 1/);
+  assert.match(page, /access\.roles\.map\(\(role\) => roleLabels\[role\]/);
   assert.equal((page.match(/>Back to Your Tournaments</g) ?? []).length, 2);
   assert.equal((page.match(/className="secondary workspace-chooser-link(?: workspace-chooser-link-bottom)?"/g) ?? []).length, 2);
   assert.match(css, /\.workspace-chooser-link \{ display:grid; width:100%; min-height:52px;/);

@@ -35,17 +35,12 @@ test("assignment route has the private mutation boundary", async () => {
   assert.match(route, /withApiFailureBoundary/);
 });
 
-test("director assignment screen is protected and discoverable", async () => {
+test("legacy cross-checker route redirects to the protected Setup management screen", async () => {
   const page = await readFile(path.join(root, "src/app/tournament/[tournamentId]/cross-checkers/page.tsx"), "utf8");
-  const client = await readFile(path.join(root, "src/app/tournament/[tournamentId]/cross-checkers/cross-checker-assignment-client.tsx"), "utf8");
   const home = await readFile(path.join(root, "src/app/tournament/[tournamentId]/page.tsx"), "utf8");
   assert.match(page, /requireTournamentAccess/);
-  assert.match(page, /\["director", "co_director"\]\.includes\(access\.role\).*notFound/s);
-  assert.match(page, /assignments are permanent from this screen/);
-  assert.match(client, /I confirm this person will independently check other players/);
-  assert.match(client, /crypto\.randomUUID\(\)/);
-  assert.doesNotMatch(client, /localStorage|sessionStorage/);
-  assert.match(home, /cross-checkers.*Cross-checker assignments/);
+  assert.match(page, /setup\/officials\/cross_checker/);
+  assert.doesNotMatch(home, /Cross-checker assignments/);
 });
 
 test("migration is assignment-only, audited, scoped, and service-only", async () => {

@@ -42,6 +42,7 @@ select 'setup_saved', public.save_tournament_setup_version(
     'venue', 'Test Venue',
     'startsAt', '2026-10-01T09:00:00',
     'endsAt', '2026-10-01T17:00:00',
+    'stateTerritory', 'Hawaii',
     'timezone', 'Pacific/Honolulu',
     'tournamentContactPhone', '+1 808 555 0101',
     'tournamentContactEmail', 'director-one@test.invalid',
@@ -82,6 +83,7 @@ select 'unsupported_setup_saved', public.save_tournament_setup_version(
     'venue', 'Test Venue',
     'startsAt', '2026-10-02T09:00:00',
     'endsAt', '2026-10-02T17:00:00',
+    'stateTerritory', 'Hawaii',
     'timezone', 'Pacific/Honolulu',
     'tournamentContactPhone', '+1 808 555 0101',
     'tournamentContactEmail', 'director-two@test.invalid',
@@ -118,7 +120,7 @@ select 'stale_director_setup_saved', public.save_tournament_setup_version(
   jsonb_build_object(
     'tournamentName', 'Synthetic Stale Director', 'city', 'Test City',
     'venue', 'Test Venue', 'startsAt', '2026-10-03T09:00:00',
-    'endsAt', '2026-10-03T17:00:00', 'timezone', 'Pacific/Honolulu',
+    'endsAt', '2026-10-03T17:00:00', 'stateTerritory', 'Hawaii', 'timezone', 'Pacific/Honolulu',
     'tournamentContactPhone', '+1 808 555 0101', 'tournamentContactEmail', 'director-three@test.invalid',
     'tournamentMailingAddress', '', 'sanctioningFeeCents', null,
     'officials', jsonb_build_array(jsonb_build_object(

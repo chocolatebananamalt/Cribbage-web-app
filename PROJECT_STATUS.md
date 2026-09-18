@@ -1,5 +1,55 @@
 # Project Status
 
+## 2026-09-17 workspace phases and transient two-Judge calls — database released; application PR pending
+
+- The Tournament workspace is grouped into five director phases without
+  removing the underlying protected operations. Live Judge Calls are available
+  from current started Singles/team games, accept exactly two non-playing
+  Judge-role users, and disappear when an assigned Judge selects **Situation
+  Resolved**. The Judge path never records a ruling or alters a score.
+- Migrations 0212–0214 are applied to the disposable and rehearsal Supabase
+  projects. The rollback-only hosted fixture passed on both, preserved all
+  rehearsal counts, and confirmed the browser role has no direct Judge Call
+  data or RPC authority.
+- `pnpm verify` passes 561 application tests plus audit, lint, provider checks,
+  optimized build, and workspace integrity; `pnpm verify:handoff` passes 6/6.
+  Independent-session Judge calls, responsive browser review, Production
+  deployment, smoke tests, and runtime-log review remain pending.
+- The exact implementation map and the incomplete portions of the owner's
+  broader seven-phase vision are recorded in
+  `docs/operations/2026-09-17-luke-streamline-and-judge-call-handoff.md`.
+
+## 2026-09-17 setup-based official management, time zones, and fee controls — database released; application PR pending
+
+- Tournament Setup now has a required State/Territory selector and a matching
+  DST-aware IANA Time Zone selector. It preserves UTC server timestamps while
+  correctly distinguishing Hawaii, Arizona, Puerto Rico, American Samoa, Guam,
+  Northern Mariana Islands, and U.S. Virgin Islands from the daylight-saving
+  zones. A historic setup with an unknown state remains readable but cannot be
+  finalized until a director saves the deliberate choice.
+- The ACC Sanctioning Fee display is one panel. Main and Consolation rates are
+  read-only until their individual **Adjust** button is selected, only one rate
+  may be edited at a time, and save requires inline `Reason (*required)`. The
+  server records the immutable before/after event and system-owned `ACC Board
+  approval — director attested` reference. The participant total loads on
+  Setup entry and only refreshes again when the director asks; there is no
+  periodic browser polling.
+- Co-Directors, Cross-Checkers, and Judges now have compact Setup summaries and
+  focused Add/Remove pages rather than ordinary workspace menu entries. Each
+  role is capped independently at 12 pending/active people. A nomination never
+  grants authority based solely on an existing account: the entered exact email
+  must complete a secure sign-in before the role is added. Removing a role
+  takes effect immediately while preserving the nomination, receipt, and audit
+  history. Legacy official pages redirect to their Setup equivalent.
+- Migration `0211_setup_official_management_timezones_and_fee_controls.sql`,
+  focused tests, and compatibility updates to the setup SQL fixtures are in
+  this worktree. Local `pnpm lint`, `pnpm build`, and `pnpm test` passed (556
+  application tests, 0 failures). No Supabase migration, email delivery test,
+  authenticated browser test, Production deployment, or runtime-log review has
+  been performed from this worktree. See
+  `docs/decisions/2026-09-17-setup-official-management-time-zones-and-fees.md`
+  and `docs/quality/2026-09-17-setup-official-management-time-zones-and-fees.md`.
+
 ## 2026-09-17 youth ACC-number support — Production deployed; physical rehearsal pending
 
 - New identity entry and lookup paths accept adult ACC numbers such as
@@ -4545,3 +4595,23 @@ explicit external confirmations tracked in `docs/operations/WORKING_OUTLINE.md`.
   their live provider evidence. The cash/check and manual paper workflows do
   not depend on them. Physical multi-user/offline/recovery/director rehearsal
   evidence remains the pilot acceptance task.
+## 2026-09-17 transient Judge Calls and streamlined workspace — local implementation
+
+- Reorganized the authenticated Tournament workspace into the normal operating
+  sequence: Setup; Registration and payments; Check-in and seating;
+  Cross-check and recovery; Results and reporting. The lifecycle protections
+  remain separate behind those navigation groups.
+- Added a transient, two-Judge coordination design for current started Singles
+  and team games. A player can call for help; only non-playing Judge-role
+  accounts may accept; the first two are assigned; later Judges see that two
+  accepted; either assigned Judge clears the live alert with **Situation
+  Resolved**. It deliberately records no ruling and never touches a score,
+  correction, or permanent dispute record.
+- Added a strict same-origin/verified-subject/server-only API, RLS-protected
+  migration `0212_transient_judge_calls.sql`, a player call button, a Judge
+  Calls desk, and focused regression coverage. Local focused tests, lint, and
+  production build pass.
+- This is not deployed or rehearsal-ready yet: the migration needs isolated
+  hosted rollback/authorization proof, independent user-session testing,
+  phone/desktop browser review, and the normal reviewed release path. See
+  `docs/quality/2026-09-17-transient-judge-calls-and-workspace-phases.md`.

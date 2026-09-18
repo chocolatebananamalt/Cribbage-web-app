@@ -19,7 +19,7 @@ export default async function EventCheckInPage({ params }: { params: Promise<{ t
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="event-check-in-title">
     <p className="eyebrow">DAY OF PLAY</p>
     <h1 id="event-check-in-title">Event QR Check-In</h1>
-    <p className="auth-note">Open one event at a time, then display its live QR code on an iPad, laptop, or monitor. The displayed code changes every 60 seconds and is not for printing.</p>
+    <p className="auth-note">Open each event independently, then display that event’s live QR code on an iPad, laptop, or monitor. Multiple event windows may be open, but each displayed code is event-specific, changes every 60 seconds, and is not for printing.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
     <EventCheckInClient tournamentId={tournamentId} workspace={data as EventCheckInWorkspace} />
     <SharedDeviceSignOut />

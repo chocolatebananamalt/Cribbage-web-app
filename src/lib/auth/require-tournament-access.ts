@@ -10,8 +10,14 @@ export async function requireTournamentAccess(tournamentId: string) {
   const profileId = claims?.claims?.sub;
   if (typeof profileId !== "string") redirect(`/sign-in?next=/tournament/${encodeURIComponent(tournamentId)}`);
 
-  const { data: role, error } = await supabase.rpc("get_tournament_role", { p_tournament_id: tournamentId });
+  const [{ data: role, error }, rolesResult] = await Promise.all([
+    supabase.rpc("get_tournament_role", { p_tournament_id: tournamentId }),
+    supabase.rpc("get_tournament_roles_v1", { p_tournament_id: tournamentId }),
+  ]);
 
   if (error || typeof role !== "string" || !allowedRoles.has(role)) notFound();
-  return { user: { id: profileId }, role };
+  const roles = Array.isArray(rolesResult.data) && rolesResult.data.every((item) => typeof item === "string" && allowedRoles.has(item))
+    ? rolesResult.data
+    : [role];
+  return { user: { id: profileId }, role, roles };
 }
