@@ -18,8 +18,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const dir = new URL('../database/migrations/', import.meta.url);
+const dir = fileURLToPath(new URL('../database/migrations/', import.meta.url));
 const files = fs.readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
 
 const AGGREGATES = /\b(max|min|count|sum|avg|array_agg|jsonb_agg|string_agg)\s*\(/i;
@@ -29,7 +30,7 @@ const AGGREGATES = /\b(max|min|count|sum|avg|array_agg|jsonb_agg|string_agg)\s*\
 function effectiveDefinitions() {
   const effective = new Map();
   for (const file of files) {
-    const sql = fs.readFileSync(path.join(dir.pathname.replace(/^\//, ''), file), 'utf8');
+    const sql = fs.readFileSync(path.join(dir, file), 'utf8');
     for (const m of sql.matchAll(/create\s+(?:or\s+replace\s+)?function\s+public\.([a-z0-9_]+)\s*\(/gi)) {
       const body = sql.slice(m.index, sql.indexOf('$$;', m.index) + 3);
       effective.set(m[1].toLowerCase(), { file, body });
