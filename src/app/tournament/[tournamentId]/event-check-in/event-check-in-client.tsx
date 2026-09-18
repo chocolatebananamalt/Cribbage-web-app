@@ -74,7 +74,7 @@ export default function EventCheckInClient({ tournamentId, workspace }: { tourna
   }, [liveCode, eventId, refreshCode]);
 
   return <section className="policy-settings">
-    <label>Event<select className="check-in-control" value={eventId} disabled={busy} onChange={(e) => { setEventId(e.target.value); setLiveCode(null); setMessage(null); }}>
+    <label className="event-check-in-selector"><span>Event</span><select className="check-in-control" value={eventId} disabled={busy} onChange={(e) => { setEventId(e.target.value); setLiveCode(null); setMessage(null); }}>
       {workspace.events.map((item) => <option key={item.eventId} value={item.eventId}>{item.eventType}: {item.name} · {item.windowState === 'open' ? 'Check-in open' : 'Check-in closed'}</option>)}
     </select></label>
     {event ? <section className="correction-item"><h2>{event.name}</h2><p>{event.checkedInCount} checked in · {event.noShowCount ?? 0} no-show · {unresolvedCount} unresolved · {event.pendingDeskCount} desk request{event.pendingDeskCount === 1 ? '' : 's'}.</p>

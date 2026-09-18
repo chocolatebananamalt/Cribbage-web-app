@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-18 event attendance readiness — implementation complete; release pending
+## 2026-09-18 event attendance readiness — released; final responsive proof in progress
 
 - Rebuilt Day-of-play Event QR Check-In around one current attendance state per
   player/event. The director desk now shows every active enrollee, payment
@@ -13,12 +13,16 @@
 - A roster identity cannot remain checked into two unfinished events. Both desk
   and public QR paths serialize on the roster identity before accepting event
   presence. The protected RPC remains service-role-only.
-- Local application tests pass **594/594** and TypeScript validation passes.
-  Migration 0217 applied cleanly to the disposable project; its rollback-only
-  hosted fixture proved incomplete-close rejection, no-show closure,
-  participant absence projection, and reset-to-unresolved. Production/rehearsal
-  migration, full verification, responsive browser proof, PR review, and
-  deployment are still pending.
+- Local `pnpm verify` passes **596/596** application tests plus audit, lint,
+  provider readiness, optimized build, and workspace checks. PR #100 and
+  Production deployment `dpl_CS1ZqvfRxL8FB4YtcNNRvfHW4wd1` released the desk;
+  migrations 0217 and 0218 are applied to the rehearsal database.
+- Signed-in Production proof found and then eliminated a retired-event leak:
+  PR #101 / deployment `dpl_GVdQRKUmBcAfNbJ72t5UnQNTma1P` now exposes exactly
+  the four active rehearsal events and rejects reopening historical events.
+  The browser proof did not open check-in or alter attendance. A narrow
+  selector-label layout correction and phone-width proof remain in progress;
+  independent Co-director proof remains a physical rehearsal requirement.
 
 
 ## 2026-09-18 pre-launch defect sweep — merged, database and Production released

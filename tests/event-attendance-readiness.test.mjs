@@ -53,3 +53,10 @@ test("retired and replaced events remain historical and cannot re-enter check-in
   assert.match(retiredEventSql, /join app\.events e on e\.id=p\.event_id[^\n]+e\.operational_state='active'/);
   assert.match(retiredEventSql, /'event_unavailable'/);
 });
+
+test("event selection keeps its label readable instead of shrinking beside the full-width menu", () => {
+  const css = read("src/app/globals.css");
+  assert.match(client, /className="event-check-in-selector"/);
+  assert.match(client, /<span>Event<\/span><select/);
+  assert.match(css, /\.policy-settings>label\.event-check-in-selector \{ display:grid;/);
+});
