@@ -72,7 +72,7 @@ test('the desk check-in repair keeps the write serialized on its target', () => 
   assert.match(body, /pg_advisory_xact_lock\(pg_catalog\.hashtextextended\('desk-check-in:'/,
     'the repair must take a target-keyed advisory lock');
   const lockAt = body.indexOf("'desk-check-in:'");
-  const guardAt = body.indexOf("e.state='checked_in'");
+  const guardAt = Math.max(body.indexOf("e.state='checked_in'"), body.indexOf("v_state='checked_in'"));
   const versionAt = body.indexOf('coalesce(max(version),0)+1');
   assert.ok(lockAt > 0 && guardAt > lockAt && versionAt > guardAt,
     'the lock must be taken before both the existence check and the version read');

@@ -34,3 +34,10 @@ export function isDeskEventCheckIn(value: unknown): value is { action: "desk_che
   return isRecord(value) && Object.keys(value).length === 4 && value.action === "desk_check_in"
     && isUuid(value.eventId) && isUuid(value.rosterEntryId) && isUuid(value.idempotencyKey);
 }
+
+export function isDirectorAttendanceAction(value: unknown): value is { action: "mark_no_show" | "reset_attendance"; eventId: string; rosterEntryId: string; reason: string; idempotencyKey: string } {
+  return isRecord(value) && Object.keys(value).length === 5
+    && (value.action === "mark_no_show" || value.action === "reset_attendance")
+    && isUuid(value.eventId) && isUuid(value.rosterEntryId) && isUuid(value.idempotencyKey)
+    && typeof value.reason === "string" && value.reason.trim().length >= 1 && value.reason.length <= 500;
+}

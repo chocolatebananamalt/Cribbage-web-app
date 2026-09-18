@@ -122,6 +122,17 @@ work is the dated physical rehearsal checklist in
 - A director/co-director desk may record an event check-in only for an active,
   paid-in-full, enrolled roster identity. This does not create a payment or
   enrollment record and cannot bypass either boundary.
+- The attendance desk lists every active enrollee for the selected event with
+  current payment evidence and exactly one current attendance disposition.
+  The check-in window cannot close until each enrollee is checked in or an
+  official has marked the player as a no-show. No-show and reset actions
+  require a reason, are append-only/audited, and are unavailable after Start
+  Play. Reopening a closed check-in window is a pre-Start-Play correction.
+- One roster identity cannot be actively checked into two unfinished events.
+  The server serializes event-presence decisions by roster identity; a second
+  event must wait until the first is completed/finalized or an official resets
+  the earlier attendance decision. A self-service scan cannot undo an
+  official no-show decision.
 - Every player remains a roster identity. Individual app access requires a
   unique email/account even when family members share a contact email. Paper
   players may have an account to view their seat, event state, and reviewed
