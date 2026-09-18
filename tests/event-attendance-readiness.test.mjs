@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path) => readFileSync(`${root}/${path}`, "utf8");
 const sql = read("database/migrations/0217_event_attendance_readiness.sql");
+const retiredEventSql = read("database/migrations/0218_event_check_in_hides_retired_events.sql");
 const api = read("src/app/api/v1/tournaments/[id]/event-check-in/route.ts");
 const client = read("src/app/tournament/[tournamentId]/event-check-in/event-check-in-client.tsx");
 
@@ -44,4 +45,11 @@ test("workspace exposes current attendance and payment evidence rather than hist
   assert.match(sql, /'paymentMethod'/);
   assert.match(client, /row\.events\?\.find/);
   assert.match(client, /row\.checkedInEventIds\?\.includes/);
+});
+
+test("retired and replaced events remain historical and cannot re-enter check-in", () => {
+  assert.match(retiredEventSql, /e\.operational_state='active'/);
+  assert.match(retiredEventSql, /join app\.events e on e\.id=q\.event_id[^\n]+e\.operational_state='active'/);
+  assert.match(retiredEventSql, /join app\.events e on e\.id=p\.event_id[^\n]+e\.operational_state='active'/);
+  assert.match(retiredEventSql, /'event_unavailable'/);
 });
