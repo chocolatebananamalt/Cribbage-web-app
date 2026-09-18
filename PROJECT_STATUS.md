@@ -1,6 +1,27 @@
 # Project Status
 
-## 2026-09-18 pre-launch defect sweep — merged; database released; Production retriggered
+## 2026-09-18 event attendance readiness — implementation complete; release pending
+
+- Rebuilt Day-of-play Event QR Check-In around one current attendance state per
+  player/event. The director desk now shows every active enrollee, payment
+  evidence, checked-in/no-show/unresolved counts, and explicit check-in,
+  no-show, and reset controls.
+- Closing check-in is server-blocked until every active enrollee is checked in
+  or marked no-show. No-show/reset requires a reason, appends immutable audit
+  and participant-status evidence, and is rejected after Start Play. Reopening
+  is a pre-start correction; self-service QR cannot undo an official no-show.
+- A roster identity cannot remain checked into two unfinished events. Both desk
+  and public QR paths serialize on the roster identity before accepting event
+  presence. The protected RPC remains service-role-only.
+- Local application tests pass **594/594** and TypeScript validation passes.
+  Migration 0217 applied cleanly to the disposable project; its rollback-only
+  hosted fixture proved incomplete-close rejection, no-show closure,
+  participant absence projection, and reset-to-unresolved. Production/rehearsal
+  migration, full verification, responsive browser proof, PR review, and
+  deployment are still pending.
+
+
+## 2026-09-18 pre-launch defect sweep — merged, database and Production released
 
 - PR #97 merged nine pre-launch repairs, including QR event check-in RPC
   binding, successful desk check-in, Hawaiian-name PDF safety, dynamic CSP-safe
@@ -16,10 +37,11 @@
   desk lock, denies browser execution of the money RPC, preserves server
   execution, and leaves the rehearsal at three tournaments and seven events.
 - Vercel blocked the first `main` Production build because the squash commit
-  was attributed to a GitHub collaborator outside the Vercel team. This
-  connected-author follow-up retriggers Production without granting broader
-  hosting access. Production smoke/runtime evidence is still required before
-  calling this release live. See
+  was attributed to a GitHub collaborator outside the Vercel team. Follow-up
+  PR #98 retriggered the connected-author path; Production deployment
+  `dpl_5uMLzubNxMcc297BEFwmwFAGbvHn` reached READY. The stable home,
+  registration, and event-check-in routes returned 200 and the post-release
+  runtime scan found no errors. See
   `docs/quality/2026-09-18-pre-launch-release-follow-up.md`.
 
 ## 2026-09-17 workspace phases and transient two-Judge calls — database released; application PR pending

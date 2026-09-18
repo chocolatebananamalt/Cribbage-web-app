@@ -26,4 +26,8 @@ export default async function EventCheckInPage({ params }: { params: Promise<{ t
   </section></main>;
 }
 
-export type EventCheckInWorkspace = { events: Array<{ eventId: string; name: string; eventType: string; format: string; windowState: 'open' | 'closed'; checkedInCount: number; pendingDeskCount: number }>; requests: Array<{ requestId: string; eventId: string; rosterEntryId: string | null; firstName: string; lastName: string; email: string; accNumber: string | null; createdAt: string }>; roster: Array<{ rosterEntryId: string; displayName: string; accNumber: string | null; eventIds: string[]; paid: boolean; checkedInEventIds: string[] }> };
+export type EventCheckInWorkspace = {
+  events: Array<{ eventId: string; name: string; eventType: string; format: string; playState?: string; windowState: 'open' | 'closed'; checkedInCount: number; noShowCount?: number; unresolvedCount?: number; pendingDeskCount: number }>;
+  requests: Array<{ requestId: string; eventId: string; rosterEntryId: string | null; firstName: string; lastName: string; email: string; accNumber: string | null; createdAt: string }>;
+  roster: Array<{ rosterEntryId: string; displayName: string; accNumber: string | null; events?: Array<{ eventId: string; participantStatus: string; attendanceState: 'checked_in' | 'no_show' | 'cancelled' | 'unresolved' }>; eventIds?: string[]; checkedInEventIds?: string[]; paid: boolean; amountOwedMinor?: number; amountReceivedMinor?: number; paymentMethod?: string | null }>;
+};

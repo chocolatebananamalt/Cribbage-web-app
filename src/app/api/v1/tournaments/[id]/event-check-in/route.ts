@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { isDeskEventCheckIn, isDirectorQrIssue, isDirectorWindowAction } from "../../../../../../lib/api/event-check-in";
+import { isDeskEventCheckIn, isDirectorAttendanceAction, isDirectorQrIssue, isDirectorWindowAction } from "../../../../../../lib/api/event-check-in";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../lib/api/validation";
@@ -31,6 +31,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const admin = createServerOnlyAdminClient();
     if (isDeskEventCheckIn(body)) {
       const { data, error } = await admin.rpc("desk_check_in_event_v1", { p_actor_id: actor, p_tournament_id: id, p_event_id: body.eventId, p_roster_entry_id: body.rosterEntryId, p_idempotency_key: body.idempotencyKey });
+      if (error || !data || typeof data !== "object") return apiJson({ error: "operation_unavailable" }, { status: 503 });
+      return apiJson(data, { status: (data as Record<string, unknown>).status === "rejected" ? 409 : 200 });
+    }
+    if (isDirectorAttendanceAction(body)) {
+      const { data, error } = await admin.rpc("set_event_attendance_v1", { p_actor_id: actor, p_tournament_id: id, p_event_id: body.eventId, p_roster_entry_id: body.rosterEntryId, p_state: body.action === "mark_no_show" ? "no_show" : "cancelled", p_reason: body.reason.trim(), p_idempotency_key: body.idempotencyKey });
       if (error || !data || typeof data !== "object") return apiJson({ error: "operation_unavailable" }, { status: 503 });
       return apiJson(data, { status: (data as Record<string, unknown>).status === "rejected" ? 409 : 200 });
     }
