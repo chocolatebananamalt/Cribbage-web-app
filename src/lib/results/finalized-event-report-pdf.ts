@@ -2,16 +2,12 @@ import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf
 
 import type { FinalizedEventReport } from "../api/finalized-event-report.ts";
 import type { SidePool } from "../api/side-pools.ts";
+import { safeText } from "./pdf-text.ts";
 
 const PAGE_WIDTH = 612;
 const PAGE_HEIGHT = 792;
 const MARGIN = 36;
 const CONTENT_WIDTH = PAGE_WIDTH - 2 * MARGIN;
-
-function safeText(value: string) {
-  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[–—−]/g, "-")
-    .replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[^\x20-\x7E]/g, "?");
-}
 
 function usd(minor: number) { return `$${(minor / 100).toFixed(2)}`; }
 function signed(value: number) { return value > 0 ? `+${value}` : String(value); }

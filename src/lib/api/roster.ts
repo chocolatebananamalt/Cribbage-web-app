@@ -1,6 +1,5 @@
 import { isOptionalAccNumber } from "../acc-number.ts";
-
-export const isUuid = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+import { isUuid } from "./validation.ts";
 const exactKeys = (item: Record<string, unknown>, keys: string[]) => Object.keys(item).length === keys.length && keys.every((key) => key in item);
 export function isAcceptedRosterPromotion(value: unknown, decisionId: string) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;

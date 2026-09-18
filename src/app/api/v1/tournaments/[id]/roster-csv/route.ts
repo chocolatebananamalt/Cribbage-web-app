@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
-import { isAcceptedRosterCsvImport, isRejectedRosterCsvImport, isRosterCsvImportRequest, isUuid } from "../../../../../../lib/api/roster";
+import { isAcceptedRosterCsvImport, isRejectedRosterCsvImport, isRosterCsvImportRequest } from "../../../../../../lib/api/roster";
+import { isUuid } from "../../../../../../lib/api/validation";
 import { apiJson, readLargeJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 

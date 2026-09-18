@@ -69,6 +69,25 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
   const [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [offlinePageReady, setOfflinePageReady] = useState(false);
   const offlineSyncInFlight = useRef(false);
+
+  // router.refresh() re-renders this component with fresh server props but does
+  // not remount it, so the useState initializer above never runs again and
+  // canConfirm keeps whatever the server said when the page first loaded. The
+  // player whose submission completes the match is the one this hurts: their
+  // entry flips the game to confirmation_pending, but their Confirm button
+  // never appears, and the game cannot reach verified until they happen to
+  // reload the page by hand. Follow the server's answer instead of a snapshot.
+  //
+  // Adjusted during render rather than in an effect. An effect would work but
+  // cascades an extra render, which is what react-hooks/set-state-in-effect
+  // objects to; this is the pattern React documents for reacting to a changed
+  // prop, and the re-render happens before anything is shown to the player.
+  const [lastServerCanConfirm, setLastServerCanConfirm] = useState(context.canConfirm);
+  if (lastServerCanConfirm !== context.canConfirm) {
+    setLastServerCanConfirm(context.canConfirm);
+    setCanConfirm(context.canConfirm);
+    if (context.canConfirm) setStatus("Both entries match. Confirm your own entry to continue.");
+  }
   const margin = Number(marginText);
   const derived = isScoreEntryReady(margin, winner) ? deriveScore(margin, winner) : null;
   const winnerSide = winner === "player" ? context.player.side : context.opponent.side;
@@ -98,21 +117,21 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
         } else {
           setOfflineReplayClosed(true);
           setStatus(disposition === "conflict"
-            ? "The server recorded a conflict for this offline entry. It needs official review and was not applied to the scorecard."
+            ? "The server recorded a conflict for this offline entry. It was not applied to the scorecard and this device no longer holds it. Re-enter the result from the paper card and tell your director."
             : disposition === "quarantined"
-              ? "The server quarantined this offline entry for official review. It was not applied to the scorecard."
-              : "The server rejected this offline entry. It was not applied to the scorecard.");
+              ? "The server quarantined this offline entry. It was not applied to the scorecard and this device no longer holds it. Re-enter the result from the paper card and tell your director."
+              : "The server rejected this offline entry. It was not applied to the scorecard and this device no longer holds it. Re-enter the result from the paper card and tell your director.");
         }
         router.refresh();
         return;
       }
       if (!response.ok) {
         if (response.status === 401) setStatus("Your saved offline entry is still on this device. Sign in as the same player to sync it.");
-        else setStatus("Your saved offline entry is still on this device. Sync will retry when service returns.");
+        else setStatus("Your saved offline entry is still on this device. Tap Sync Saved Entry to try again.");
         return;
       }
     } catch {
-      setStatus("Your saved offline entry is still on this device. Sync will retry when service returns.");
+      setStatus("Your saved offline entry is still on this device. Tap Sync Saved Entry to try again.");
     } finally { offlineSyncInFlight.current = false; setBusy(false); }
   };
 
