@@ -39,5 +39,10 @@ begin
  insert into app.event_side_pool_team_election_versions(election_id,pool_id,tournament_id,event_id,team_entry_id,version,elected,amount_due_minor,amount_received_minor,payment_method,payment_reference,reason,actor_profile_id,operation_receipt_id) values(p_election_id,p_pool_id,p_tournament_id,p_event_id,p_team_entry_id,v,p_elected,case when p_elected then d.entry_fee_minor else 0 end,p_amount_received_minor,p_payment_method,nullif(trim(p_payment_reference),''),trim(p_reason),p_actor_id,rid); return response;
 end $$;
 
+revoke all on function public.set_event_side_pool_team_election_v1(uuid,uuid,uuid,uuid,uuid,uuid,boolean,integer,text,text,text,uuid)
+  from public,anon,authenticated;
+grant execute on function public.set_event_side_pool_team_election_v1(uuid,uuid,uuid,uuid,uuid,uuid,boolean,integer,text,text,text,uuid)
+  to service_role;
+
 drop trigger if exists event_side_pool_team_election_guard on app.event_side_pool_team_election_versions;
 create trigger event_side_pool_team_election_guard before insert on app.event_side_pool_team_election_versions for each row execute function app.guard_side_pool_team_election_v3();

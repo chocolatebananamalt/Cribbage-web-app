@@ -91,4 +91,10 @@ test('team side-pool money elections are authorized at both the trigger and the 
   assert.ok(rpc, 'the team election RPC must be defined');
   assert.match(rpc.body, /tournament_roles/, `${rpc.file} must reject a non-director inside the RPC`);
   assert.match(rpc.body, /not_director/, `${rpc.file} must return the shared not_director code`);
+
+  const repair = fs.readFileSync(path.join(root, dir, '0215_side_pool_team_election_authorization.sql'), 'utf8');
+  assert.match(repair, /revoke all on function public\.set_event_side_pool_team_election_v1[\s\S]*from public,anon,authenticated/i,
+    'the browser roles must not call the security-definer money RPC directly');
+  assert.match(repair, /grant execute on function public\.set_event_side_pool_team_election_v1[\s\S]*to service_role/i,
+    'the protected server route must retain service-role execution');
 });
