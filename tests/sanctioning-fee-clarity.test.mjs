@@ -5,18 +5,19 @@ import { isSanctioningFeeRateOverrideRequest } from "../src/lib/api/sanctioning-
 import { isSetupSaveRequest } from "../src/lib/api/setup.ts";
 
 const id = "123e4567-e89b-42d3-a456-426614174000";
-const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentDirectorPublicName: "Director Example", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
+const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club", stateTerritory: "Hawaii", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentDirectorPublicName: "Director Example", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
 
-test("non-default setup rates require audit reason and ACC reference", () => {
+test("saved drafts require the selected State/Territory and preserve legacy override evidence", () => {
   assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload }), true);
+  assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload: { ...payload, stateTerritory: "" } }), false);
   assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload: { ...payload, mainSanctioningFeeRateCents: 350 } }), false);
   assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload: { ...payload, mainSanctioningFeeRateCents: 350, mainSanctioningFeeOverrideReason: "ACC notice", mainSanctioningFeeOverrideReference: "ACC notice 2026-09-01" } }), true);
 });
 
-test("rate override endpoint requires a bounded reason, ACC reference, event kind, and idempotency key", () => {
-  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "main", rateCents: 350, reason: "ACC notice", accReference: "ACC notice 2026-09-01", idempotencyKey: id }), true);
-  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "satellite", rateCents: 350, reason: "ACC notice", accReference: "ACC notice", idempotencyKey: id }), false);
-  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "main", rateCents: 350, reason: "", accReference: "ACC notice", idempotencyKey: id }), false);
+test("rate override endpoint requires a bounded reason, event kind, and idempotency key", () => {
+  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "main", rateCents: 350, reason: "ACC notice", idempotencyKey: id }), true);
+  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "satellite", rateCents: 350, reason: "ACC notice", idempotencyKey: id }), false);
+  assert.equal(isSanctioningFeeRateOverrideRequest({ eventKind: "main", rateCents: 350, reason: "", idempotencyKey: id }), false);
 });
 
 test("database preserves legacy totals, snapshots Start Play, and rejects post-start rate changes", () => {
@@ -39,10 +40,13 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /className="required-label"/);
   assert.match(client, /Tournament mailing address \(optional\).*Note: This address will be visible to players/s);
   assert.match(client, /Yes, Finalize &amp; Open Registration/);
-  assert.match(client, /ACC Sanctioning Fee Rate Adjustment Tool/);
+  assert.match(client, /Adjust Main rate/);
+  assert.match(client, /Adjust Consolation rate/);
+  assert.match(client, /Save Adjusted Main Rate/);
+  assert.match(client, /Reason \(<span className="required-field"/);
   assert.match(client, /Only adjust with ACC Board approval\. Before Start Play only/);
   assert.match(client, /refreshSanctioningFee/);
-  assert.match(client, /15_000/);
+  assert.doesNotMatch(client, /15_000/);
   assert.match(client, /Refresh total/);
   assert.match(client, /registration-primary/);
   assert.match(client, /Post-finalization event administration/);
