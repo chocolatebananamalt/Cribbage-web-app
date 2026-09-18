@@ -21,7 +21,7 @@ shows that dependency explicitly.
 | --- | --- | --- |
 | Director onboarding build | **2026-09-18 — at risk** | The corrected October pilot minimum below (Standard Singles plus supported two-person doubles, seating directory, and six Side Pools) passes real server, offline, independent-user, phone/desktop, backup/restore, and rehearsal checks. |
 | Supervised first tournament | **2026-10-03** | The September build survives director rehearsal and any release-blocking defects are closed. |
-| Deferred full-suite capabilities | **After 2026-10-03** | Production Rulebook/quick-reference integration, Judge Desk, flyer creation/import, online payments, SMS, OCR, and automatic ACC submission are delivered separately. Supported doubles team scoring, seating directory, and six Side Pools are release work. |
+| Deferred full-suite capabilities | **After 2026-10-03** | Production Rulebook/quick-reference integration, flyer creation/import, online payments, SMS, OCR, and automatic ACC submission are delivered separately. The temporary two-Judge call surface is release work; it is not a ruling register. Supported doubles team scoring, seating directory, and six Side Pools are release work. |
 
 September 18 is the requested operating target, not a promise that an unsafe
 or unverified build will be called ready. The release candidate now contains
@@ -41,7 +41,7 @@ pilot time.
 | 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, six Side Pools, Main/Consolation MRP calculation, expenses, fees, payouts, reconciliation, and director exports operate per event. | Deployed; rehearsal remains | **MRP calculation applied 2026-09-15; rehearsal target 2026-09-17** | Main/Consolation MRP values are server-calculated only from the owner-approved currently published ACC schedule source `acc-published-mrp-2016-08-01`, after complete recorded playoff exit rounds. Satellite reports remain MRP-not-applicable. Six configurable event-scoped Side Pools support unique names, equal-fee pools with different names, elections, collections, corrections, payouts, reconciliation, CSV/PDF reports, and seventh-pool rejection. The 2026-09-16 recovery is deployed: Q Pool and Side Pool setup are separate, the stale finalization path is cleared, existing Canadian Doubles is Digital/Paper-capable, the unused Traditional Doubles was retired, and Canadian Doubles Practice was added. Physical results/finance review remains. |
 | 6 | **Pilot release proof.** Phone/desktop/zoom, independent sessions, offline/reconnect, backup/restore, rollback, monitoring, and director rehearsal pass against the release candidate. | In progress | **Target 2026-09-18** | Automated 320/375/640/1280 rendering, full local gate, hosted rollback fixtures, Production smoke/runtime monitoring, Vercel rollback, and isolated schema reconstruction/parity pass. On 2026-09-13 `pnpm verify:live-demo` operated 20 distinct production-demo screens at 320/640/1280 with zero overflow, CSP violations, failed requests, console errors, or page errors and parsed both required PDFs. Hosted rollback proof now covers migrations through `0163`, including director administration and independent paper-image authorization, while retaining no synthetic fixture users or tournaments. Independent player/official sessions, single-device and whole-venue disconnect/reconnect, a private-record backup/content restore, and the director walkthrough remain physical acceptance rehearsals in `OCTOBER_PILOT_REHEARSAL.md`. |
 | 7 | **Supervised October 3 event.** Monitor the first tournament, preserve rollback/recovery paths, and capture issues without losing scorecards. | Not started | **2026-10-03** | Requires Step 6 and director approval. |
-| 8 | **Deferred full suite.** Production Rulebook/quick-reference integration, Judge Desk, flyer creation/import, online payments, SMS, live OCR activation, and automatic ACC submission. | Foundations prepared; live integrations deferred | **After 2026-10-03** | These do not include supported October doubles, seating directory, or six Side Pools, which block the September 18 gate. Future payment methods remain default-off; OCR remains disabled. |
+| 8 | **Deferred full suite.** Production Rulebook/quick-reference integration, flyer creation/import, online payments, SMS, live OCR activation, and automatic ACC submission. | Foundations prepared; live integrations deferred | **After 2026-10-03** | These do not include the temporary two-Judge call surface, supported October doubles, seating directory, or six Side Pools, which block the September 18 gate. Future payment methods remain default-off; OCR remains disabled. |
 
 ## Current highest-priority work
 
@@ -56,7 +56,15 @@ pilot time.
 
 For a finding that could reasonably fit more than one class, present the owner
 with the recommendation and these three choices before assigning it. The
-calculated Main/Consolation ACC Sanctioning Fee is Category 2. The implementation replaces the manual total with a Main/Consolation rate calculation, Start Play snapshot, and immutable pre-start override trail; release verification remains pending.
+calculated Main/Consolation ACC Sanctioning Fee is Category 2. The implementation replaces the manual total with one on-entry/manual-refresh calculation panel, immutable Start Play snapshot, and a one-rate-at-a-time pre-start adjustment requiring a director reason and system-recorded ACC Board-approval attestation; release verification remains pending.
+
+**Category 2 — Setup-based official administration and time zones:** Setup
+requires a State/Territory and DST-aware IANA Time Zone before it can finalize.
+It also becomes the primary director's compact assignment surface for up to 12
+Co-Directors, Cross-Checkers, and Judges per role. Exact-email secure sign-in
+is required before a pending official receives authority; old separate
+official/cross-checker pages redirect to Setup. Migration, independent-session,
+email-provider, browser, and production proof remain release gates.
 
 **Category 2 — Structured tournament contact information and rehearsal setup
 repair:** the open-ended Director contact-details field is replaced with
@@ -129,7 +137,7 @@ facts, not missing integrations or hidden engineering work.
 | --- | --- | --- |
 | Tournament setup | Activated | No engineering action remains for the setup shell. |
 | Private roster identities | 2 | Director completes the real roster by manual entry, CSV import, or approved public registration claims. |
-| Assigned official accounts | 2 — director and co-director; 0 cross-checkers as of the last hosted read | Use the protected Cross-checker Assignments screen after the intended officials' accounts are linked. At least two independent cross-checkers are required for the rehearsal. |
+| Assigned official accounts | 2 — director and co-director; 0 cross-checkers as of the last hosted read | Use **Set Up Tournament** → the applicable Co-Directors, Cross-Checkers, or Judges **Add/Remove** page after the intended official’s exact-email secure sign-in. At least two independent cross-checkers are required for the rehearsal. |
 | Assigned player accounts | 0 | At least two real test players sign in and are linked before independent-session proof can begin. |
 | Check-ins | 0 | Director records arrival during the rehearsal. |
 | Event enrollments | 0 | Director enrolls the final roster after registration closes. |

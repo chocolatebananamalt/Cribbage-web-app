@@ -1,5 +1,6 @@
 import { isUuid } from "./validation.ts";
 import { DEFAULT_CONSOLATION_SANCTIONING_FEE_RATE_CENTS, DEFAULT_MAIN_SANCTIONING_FEE_RATE_CENTS, MAX_SANCTIONING_FEE_RATE_CENTS } from "../sanctioning-fee.ts";
+import { isTournamentStateTerritory } from "../tournament-timezones.ts";
 
 export type SetupPool = { poolTypeCode: string; entryFeeCents: number; note: string };
 export type SetupEvent = {
@@ -21,7 +22,7 @@ export type SetupEvent = {
   sidePools: SetupPool[];
 };
 export type SetupOfficial = { profileId: string; role: "director" | "co_director" };
-export type SetupPayload = { tournamentName: string; city: string; venue: string; startsAt: string; endsAt: string; timezone: string; tournamentDirectorPublicName: string; tournamentContactPhone: string; tournamentContactEmail: string; tournamentMailingAddress: string; mainSanctioningFeeRateCents: number; consolationSanctioningFeeRateCents: number; mainSanctioningFeeOverrideReason: string; mainSanctioningFeeOverrideReference: string; consolationSanctioningFeeOverrideReason: string; consolationSanctioningFeeOverrideReference: string; officials: SetupOfficial[]; events: SetupEvent[] };
+export type SetupPayload = { tournamentName: string; city: string; venue: string; stateTerritory: string; startsAt: string; endsAt: string; timezone: string; tournamentDirectorPublicName: string; tournamentContactPhone: string; tournamentContactEmail: string; tournamentMailingAddress: string; mainSanctioningFeeRateCents: number; consolationSanctioningFeeRateCents: number; mainSanctioningFeeOverrideReason: string; mainSanctioningFeeOverrideReference: string; consolationSanctioningFeeOverrideReason: string; consolationSanctioningFeeOverrideReference: string; officials: SetupOfficial[]; events: SetupEvent[] };
 export type SetupCurrentEvent = SetupEvent & { sourceStatus: "director_configured_unverified"; qPools: Array<SetupPool & { slot: 1 | 2; sourceStatus: "director_configured_unverified" }>; sidePools: Array<SetupPool & { slot: 1 | 2 | 3 | 4 | 5 | 6; sourceStatus: "director_configured_unverified" }> };
 export type SetupCurrent = Omit<SetupPayload, "events"> & { revisionId: string; version: number; createdAt: string; events: SetupCurrentEvent[] };
 export type SetupWorkspace = { current: SetupCurrent | null; history: Array<{ version: number; createdAt: string; eventCount: number }>; sanctioningFee: { mainRateCents: number; consolationRateCents: number; mainEligibleParticipantCount: number; consolationEligibleParticipantCount: number; runningTotalCents: number; mainRateSource: "setup" | "override"; consolationRateSource: "setup" | "override" } };
@@ -33,7 +34,7 @@ const setupRejectionCodes = new Set([
   "stale_version", "invalid_officials", "invalid_event", "invalid_q_pool", "invalid_request",
   "invalid_setup_payload", "invalid_side_pool",
 ]);
-const rootKeys = ["tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "tournamentDirectorPublicName", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "mainSanctioningFeeRateCents", "consolationSanctioningFeeRateCents", "mainSanctioningFeeOverrideReason", "mainSanctioningFeeOverrideReference", "consolationSanctioningFeeOverrideReason", "consolationSanctioningFeeOverrideReference", "officials", "events"];
+const rootKeys = ["tournamentName", "city", "venue", "stateTerritory", "startsAt", "endsAt", "timezone", "tournamentDirectorPublicName", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "mainSanctioningFeeRateCents", "consolationSanctioningFeeRateCents", "mainSanctioningFeeOverrideReason", "mainSanctioningFeeOverrideReference", "consolationSanctioningFeeOverrideReason", "consolationSanctioningFeeOverrideReference", "officials", "events"];
 const eventKeys = ["clientRowId", "eventKind", "displayName", "startsAt", "timezone", "styleCode", "formatCode", "gameCount", "entryFeeCents", "feeIncludesNote", "payoutNote", "qualificationNote", "eligibilityNote", "mugginsStatus", "qPools", "sidePools"];
 const officialKeys = ["profileId", "role"];
 const poolKeys = ["poolTypeCode", "entryFeeCents", "note"];
@@ -72,7 +73,7 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
     && ((x.mainSanctioningFeeRateCents === DEFAULT_MAIN_SANCTIONING_FEE_RATE_CENTS) || (text(x.mainSanctioningFeeOverrideReason, 1000, true) && text(x.mainSanctioningFeeOverrideReference, 1000, true)))
     && ((x.consolationSanctioningFeeRateCents === DEFAULT_CONSOLATION_SANCTIONING_FEE_RATE_CENTS) || (text(x.consolationSanctioningFeeOverrideReason, 1000, true) && text(x.consolationSanctioningFeeOverrideReference, 1000, true)));
   const directorName = x.tournamentDirectorPublicName;
-  return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && typeof directorName === "string" && text(directorName, 160, true) && !["tournament participant", "tournament director", "primary director"].includes(directorName.trim().toLowerCase()) && contactPhone(x.tournamentContactPhone) && contactEmail(x.tournamentContactEmail) && text(x.tournamentMailingAddress, 500) && ratesAreValid
+  return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venue, 240, true) && isTournamentStateTerritory(x.stateTerritory) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && typeof directorName === "string" && text(directorName, 160, true) && !["tournament participant", "tournament director", "primary director"].includes(directorName.trim().toLowerCase()) && contactPhone(x.tournamentContactPhone) && contactEmail(x.tournamentContactEmail) && text(x.tournamentMailingAddress, 500) && ratesAreValid
     && Array.isArray(officials) && officials.length >= 1 && officials.length <= 5 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
     && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
 }
@@ -81,7 +82,7 @@ export function isSavedSetup(value: unknown, request: SetupSaveRequest): value i
 export function isRejectedSetup(value: unknown) { return !!value && typeof value === "object" && !Array.isArray(value) && own(value, ["status", "code"]) && (value as Record<string, unknown>).status === "rejected" && typeof (value as Record<string, unknown>).code === "string" && setupRejectionCodes.has((value as Record<string, unknown>).code as string); }
 export function isRecoveredSetup(value: unknown) { return !!value && typeof value === "object" && (value as Record<string, unknown>).status === "setup_draft_saved" && isUuid((value as Record<string, unknown>).revisionId) && Number.isSafeInteger((value as Record<string, unknown>).version); }
 const workspaceKeys = ["current", "history", "sanctioningFee"];
-const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "startsAt", "endsAt", "timezone", "tournamentDirectorPublicName", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "mainSanctioningFeeRateCents", "consolationSanctioningFeeRateCents", "mainSanctioningFeeOverrideReason", "mainSanctioningFeeOverrideReference", "consolationSanctioningFeeOverrideReason", "consolationSanctioningFeeOverrideReference", "createdAt", "officials", "events"];
+const currentKeys = ["revisionId", "version", "tournamentName", "city", "venue", "stateTerritory", "startsAt", "endsAt", "timezone", "tournamentDirectorPublicName", "tournamentContactPhone", "tournamentContactEmail", "tournamentMailingAddress", "mainSanctioningFeeRateCents", "consolationSanctioningFeeRateCents", "mainSanctioningFeeOverrideReason", "mainSanctioningFeeOverrideReference", "consolationSanctioningFeeOverrideReason", "consolationSanctioningFeeOverrideReference", "createdAt", "officials", "events"];
 const workspaceEventKeys = [...eventKeys, "sourceStatus"];
 const workspacePoolKeys = ["slot", ...poolKeys, "sourceStatus"];
 const historyKeys = ["version", "createdAt", "eventCount"];
@@ -130,7 +131,7 @@ export function isSetupWorkspace(value: unknown): value is SetupWorkspace {
   const currentOfficials = Array.isArray(current.officials) ? current.officials as Record<string, unknown>[] : [];
   return history.length > 0 && history[0].version === current.version && history.every((item, index) => index === 0 || item.version === (history[index - 1].version as number) - 1)
     && isUuid(current.revisionId) && Number.isSafeInteger(current.version) && (current.version as number) >= 1
-    && text(current.tournamentName, 200, true) && text(current.city, 160, true) && text(current.venue, 240, true)
+    && text(current.tournamentName, 200, true) && text(current.city, 160, true) && text(current.venue, 240, true) && text(current.stateTerritory, 80)
     && typeof current.startsAt === "string" && typeof current.endsAt === "string" && text(current.timezone, 128, true)
     && text(current.tournamentDirectorPublicName, 160) && text(current.tournamentContactPhone, 40) && text(current.tournamentContactEmail, 320) && text(current.tournamentMailingAddress, 500)
     && sanctioningRate(current.mainSanctioningFeeRateCents) && sanctioningRate(current.consolationSanctioningFeeRateCents)

@@ -665,7 +665,7 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   assert.match(client, /isRegistrationLinkState/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
   assert.match(client, /Date\.now\(\) \+ 30 \* 24 \* 60 \* 60 \* 1000/);
-  assert.match(tournament, /Registration link and QR code/);
+  assert.match(tournament, /Registration QR code and link/);
   assert.match(tournament, /registrationLinkManagementEnabled\(\)/);
 });
 

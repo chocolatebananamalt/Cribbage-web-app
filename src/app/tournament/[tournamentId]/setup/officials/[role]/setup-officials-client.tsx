@@ -1,0 +1,35 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { isAccNumber, normalizeAccNumberInput } from "../../../../../../lib/acc-number";
+import { type SetupOfficialRole, type SetupOfficialsWorkspace } from "../../../../../../lib/api/setup-officials";
+
+const label: Record<SetupOfficialRole, string> = { co_director: "Co-Director", cross_checker: "Cross-Checker", judge: "Judge" };
+
+export default function SetupOfficialsClient({ tournamentId, role, initial }: { tournamentId: string; role: SetupOfficialRole; initial: SetupOfficialsWorkspace }) {
+  const router = useRouter();
+  const [firstName, setFirstName] = useState(""); const [lastName, setLastName] = useState(""); const [email, setEmail] = useState(""); const [accNumber, setAccNumber] = useState(""); const [busy, setBusy] = useState(false); const [message, setMessage] = useState("");
+  const complete = firstName.trim().length > 0 && firstName.trim().length <= 80 && lastName.trim().length > 0 && lastName.trim().length <= 80 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim()) && isAccNumber(normalizeAccNumberInput(accNumber));
+  async function submit() {
+    if (!complete || busy) return;
+    setBusy(true); setMessage(`Saving ${label[role]}…`);
+    try {
+      const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup-officials/${role}`, { method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), accNumber: normalizeAccNumberInput(accNumber), operationId: crypto.randomUUID() }) });
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || !data || typeof data !== "object") { setMessage("The official could not be saved. Review the details and try again."); return; }
+      const result = data as Record<string, unknown>;
+      setMessage(result.status === "registered_approved" ? `${label[role]} is Registered & Approved.` : result.status === "invitation_email_sent" ? `Not Registered — invitation email sent.` : "The official was saved, but email delivery could not be confirmed.");
+      setFirstName(""); setLastName(""); setEmail(""); setAccNumber(""); router.refresh();
+    } catch { setMessage("The result could not be confirmed. Refresh before trying again."); } finally { setBusy(false); }
+  }
+  async function manage(nominationId: string, action: "remove" | "restore") {
+    if (busy) return; setBusy(true); setMessage(action === "remove" ? "Removing official authority…" : "Restoring official authority…");
+    try {
+      const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup-officials/${role}`, { method: "PATCH", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify({ nominationId, action, operationId: crypto.randomUUID() }) });
+      setMessage(response.ok ? action === "remove" ? "Official authority was removed immediately." : "Official authority was restored." : "The official role was not changed. Refresh and review the current list.");
+      if (response.ok) router.refresh();
+    } catch { setMessage("The result could not be confirmed. Refresh before trying again."); } finally { setBusy(false); }
+  }
+  return <section className="director-admin-workspace"><p className="auth-note" role="status">{message || `${initial.entries.length} of ${initial.capacity} ${label[role].toLowerCase()} positions are active or awaiting secure sign-in.`}</p><ul className="director-admin-list">{initial.entries.map((entry) => <li key={entry.nominationId}><div><strong>{entry.displayName}</strong>{entry.accNumber || entry.email ? <span>{[entry.accNumber, entry.email].filter(Boolean).join(" · ")}</span> : <span>Historic official identity</span>}<span>{entry.status === "registered_approved" ? "Registered & Approved" : entry.status === "invitation_email_sent" ? "Not Registered — invitation email sent" : "Invitation delivery unavailable"}</span></div><div className="director-admin-buttons"><button type="button" className="secondary" disabled={busy} onClick={() => void manage(entry.nominationId, "remove")}>Remove</button></div></li>)}</ul>{initial.canManage ? <section className="manual-roster-panel"><h2>Add {label[role]}</h2><div className="manual-roster-form"><label><span className="required-label">First name (<span className="required-field" aria-hidden="true">*</span>required)</span><input required aria-required="true" value={firstName} onChange={(event) => setFirstName(event.target.value)} /></label><label><span className="required-label">Last name (<span className="required-field" aria-hidden="true">*</span>required)</span><input required aria-required="true" value={lastName} onChange={(event) => setLastName(event.target.value)} /></label><label><span className="required-label">Email (<span className="required-field" aria-hidden="true">*</span>required)</span><input required aria-required="true" type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label><span className="required-label">ACC # (<span className="required-field" aria-hidden="true">*</span>required)</span><input required aria-required="true" value={accNumber} pattern="[A-Z]{2}[0-9]+Y?" onChange={(event) => setAccNumber(normalizeAccNumberInput(event.target.value))} /></label></div><button className="primary" type="button" disabled={busy || !complete || initial.entries.length >= initial.capacity} onClick={() => void submit()}>Save</button></section> : null}</section>;
+}

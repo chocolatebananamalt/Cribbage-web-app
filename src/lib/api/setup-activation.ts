@@ -53,6 +53,7 @@ const rejectedCodes = new Set([
   "unsupported_setup",
   "setup_officials_stale",
   "missing_tournament_contact",
+  "missing_state_territory",
   "confirmation_required",
   "invalid_request",
 ]);

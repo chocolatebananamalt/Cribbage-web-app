@@ -54,5 +54,6 @@ test("results navigation is visible to signed-in tournament readers while settle
   assert.match(page, /getTournamentResultEventSummary/);
   assert.match(page, /Open Post-event Draft/);
   assert.match(page, /access\.role === "director" \|\| access\.role === "co_director"/);
-  assert.match(home, /canViewResults \? <Link[^\n]*Tournament Results/);
+  assert.match(home, /canViewResults \? <section[^\n]*Results and reporting/);
+  assert.match(home, /Tournament Results/);
 });

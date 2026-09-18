@@ -107,7 +107,7 @@ trigger (0177) are both intact. The gap is confined to elections.
 
 ### Change, written but not applied
 
-`database/migrations/0211_side_pool_team_election_authorization.sql` repairs both
+`database/migrations/0215_side_pool_team_election_authorization.sql` repairs both
 layers:
 
 1. the RPC rejects a non-director with the same `not_director` code the singles
@@ -135,7 +135,7 @@ migrations and fails if any trigger that was ever bound to a role-checking
 function ends up bound to one that is not. It is a check on the class of
 mistake, not on this one incident.
 
-Verified by removing 0211 from the migration directory: the test fails and
+Verified by removing 0215 from the migration directory: the test fails and
 describes the 0177 to 0187 regression on its own, from the migrations alone.
 
 ## Finding 3: any Hawaiian name crashes three of the four PDF reports
@@ -552,7 +552,7 @@ evidence.
 
 ## Limitations
 
-- Migration 0211 has not been applied to any database holding the target tables.
+- Migration 0215 has not been applied to any database holding the target tables.
   Until it is, the pilot database still allows any signed-in user to write a team
   side-pool election.
 - The authenticated browser sweep is incomplete. It ran against a local dev

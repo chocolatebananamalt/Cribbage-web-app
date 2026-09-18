@@ -84,16 +84,25 @@ footer { display:flex; justify-content:space-between; gap:20px; padding:24px cla
 .required-label { display:inline-flex; align-items:baseline; white-space:nowrap; }
 .sanctioning-fee-panel { grid-template-columns:1fr !important; align-items:stretch; }
 .policy-settings .sanctioning-fee-rate-inputs { display:grid; gap:14px; margin:0; padding:0; border:0; }
+.sanctioning-fee-rate-inputs>div { display:grid; gap:8px; }
+.sanctioning-fee-rate-inputs .secondary { width:100%; }
 .sanctioning-fee-status { display:flex; align-items:center; justify-content:space-between; gap:14px; }
 .sanctioning-fee-status .secondary { flex:none; margin:0; }
 .registration-primary { display:grid; width:100%; min-height:52px; place-items:center; margin-top:16px; text-align:center; text-decoration:none; }
+.setup-finalized-tournament-summary { display:grid; gap:10px; margin:18px 0; padding:14px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; }
+.setup-finalized-tournament-summary h3 { margin:0; font-size:16px; }.setup-finalized-tournament-summary dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:0; }.setup-finalized-tournament-summary dl>div { display:grid; gap:3px; }.setup-finalized-tournament-summary dt { color:var(--muted); font-size:14px; font-weight:700; }.setup-finalized-tournament-summary dd { margin:0; font-size:15px; }
 .setup-post-finalization { display:grid; gap:16px; margin-top:24px; padding:20px; border:1px solid var(--line); border-radius:12px; background:#f8fafc; }
 .setup-post-finalization h2,.setup-post-finalization h3,.setup-post-finalization p { margin:0; }
 .setup-post-finalization>p { color:var(--muted); font-size:15px; }
 .setup-post-finalization-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 .setup-post-finalization-actions .button-link { display:grid; min-height:48px; place-items:center; text-align:center; text-decoration:none; }
 .setup-post-finalization .setup-amendment { margin:0; padding-top:18px; border-top:1px solid var(--line); }
-@media (max-width:700px) { .sanctioning-fee-status,.setup-post-finalization-actions { align-items:stretch; grid-template-columns:1fr; flex-direction:column; }.sanctioning-fee-status .secondary { width:100%; }.setup-post-finalization-actions .button-link { width:100%; } }
+.setup-official-summary { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 0; border-top:1px solid var(--line); }
+.setup-official-summary span { display:grid; gap:3px; }.setup-official-summary small { color:var(--muted); font-size:14px; }.setup-official-summary .button-link { display:grid; min-height:44px; place-items:center; text-decoration:none; }
+.tournament-workspace { display:grid; gap:18px; }.workspace-phase-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }.workspace-phase { display:grid; align-content:start; gap:8px; padding:18px; border:1px solid var(--line); border-radius:12px; background:#f8fafc; }.workspace-phase h2,.workspace-phase p { margin:0; }.workspace-phase h2 { font-size:20px; }.workspace-phase p { color:var(--muted); font-size:15px; line-height:1.4; }.workspace-phase .guide-link { margin-top:2px; }
+.judge-call-player { margin:12px 0; }.judge-call-player .auth-note { margin:8px 0 0; }.judge-call-list { display:grid; gap:12px; }.judge-call-item { padding:14px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; }.judge-call-item p { margin:7px 0; }
+@media (max-width:700px) { .sanctioning-fee-status,.setup-post-finalization-actions { align-items:stretch; grid-template-columns:1fr; flex-direction:column; }.sanctioning-fee-status .secondary,.setup-official-summary .button-link { width:100%; }.setup-post-finalization-actions .button-link { width:100%; }.setup-official-summary { align-items:stretch; flex-direction:column; }.setup-finalized-tournament-summary dl { grid-template-columns:1fr; } }
+@media (max-width:700px) { .workspace-phase-grid { grid-template-columns:1fr; }.tournament-workspace { gap:14px; } }
 
 /* The Judge Desk tile is genuinely disabled but was styled identically to the six
    working tiles. The icon chip is the strongest "this tile is live" signal, so it

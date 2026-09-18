@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!actor) return apiJson({ error: "unauthorized" }, { status: 401 });
     const { data, error } = await createServerOnlyAdminClient().rpc("override_tournament_sanctioning_fee_rate_v1", {
       p_actor_id: actor, p_tournament_id: id, p_event_kind: body.eventKind, p_rate_cents: body.rateCents,
-      p_reason: body.reason, p_acc_reference: body.accReference, p_idempotency_key: body.idempotencyKey,
+      p_reason: body.reason, p_acc_reference: "ACC Board approval — director attested", p_idempotency_key: body.idempotencyKey,
     });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
     if (isSanctioningFeeRateOverrideResult(data, body)) return apiJson(data);

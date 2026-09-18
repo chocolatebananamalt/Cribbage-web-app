@@ -32,7 +32,7 @@ test("calculates Main and Consolation sanctioning fees without using receipts", 
   assert.equal(requiresSanctioningFeeOverrideEvidence("main", 350), true);
 });
 
-test("tournament setup keeps draft text until blur and never silently rounds it", () => {
+test("tournament setup keeps ordinary money drafts precise and rate changes explicitly gated", () => {
   const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
   assert.match(client, /setDraft\(event\.target\.value\)/);
   assert.match(client, /onBlur=/);
@@ -42,7 +42,9 @@ test("tournament setup keeps draft text until blur and never silently rounds it"
   assert.match(client, /ACC Sanctioning Fee Running Total/);
   assert.match(client, /Main rate per person/);
   assert.match(client, /Consolation rate per person/);
-  assert.match(client, /requiresSanctioningFeeOverrideEvidence/);
+  assert.match(client, /Adjust Main rate/);
+  assert.match(client, /Save Adjusted Main Rate/);
+  assert.match(client, /Reason \(<span className="required-field"/);
   assert.doesNotMatch(client, /sanctioningFeeCents/);
   assert.doesNotMatch(client, /Math\.round\(amount \* 100\)/);
 });
