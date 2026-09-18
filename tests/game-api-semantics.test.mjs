@@ -143,7 +143,21 @@ test('private API failure boundary distinguishes unavailable claims, missing ses
   await assert.rejects(() => boundary.requireVerifiedSubject({ auth: { getClaims: async () => ({ data: null, error: { message: 'unavailable' } }) } }));
   const responseBoundary = read('src/lib/api/route-boundary.ts');
   assert.match(responseBoundary, /headers\.set\("cache-control", "private, no-store"\)/);
-  assert.match(responseBoundary, /catch \{\s*return apiJson\(\{ error: "operation_unavailable" \}, \{ status: 503 \}\);/);
+  // Assert the WHOLE catch body, not that the re-throw appears somewhere in it.
+  // A substring match passed with the call commented out (the text survives in
+  // the comment) and passed with arbitrary code injected ahead of it, so it did
+  // not actually protect the behaviour it was written for.
+  const catchBody = responseBoundary
+    .slice(responseBoundary.indexOf('catch (error) {') + 'catch (error) {'.length)
+    .split('\n  }')[0]
+    .replace(/^\s*\/\/.*$/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  assert.equal(
+    catchBody,
+    'unstable_rethrow(error); return apiJson({ error: "operation_unavailable" }, { status: 503 });',
+    'the API failure boundary must re-throw framework control flow and then return 503, with nothing else in the catch',
+  );
 });
 
 test('check-in and initial-seating routes accept only strict, bounded, migration-defined request and response shapes', async () => {

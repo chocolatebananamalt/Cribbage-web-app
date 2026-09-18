@@ -75,3 +75,21 @@ test('local handoff verification', {skip: !existsSync('imports/acc-handoff-2026-
   const r=spawnSync(process.execPath,['--test','tests/handoff.test.mjs'],{encoding:'utf8',env});
   console.log(r.stdout);assert.equal(r.status,0,r.stderr+r.stdout);
 });
+
+test('no interactive route is build-time prerendered under the nonce-only CSP', () => {
+  // Runs here because `pnpm verify` executes this file AFTER `pnpm build`, so
+  // the manifest is the real build output rather than a source heuristic. The
+  // source-level checks live in tests/interactive-pages-are-not-prerendered.test.mjs;
+  // this one catches a page that becomes prerenderable for some other reason.
+  const manifestPath = '.next/prerender-manifest.json';
+  assert.ok(existsSync(manifestPath),
+    'run pnpm build before this file; pnpm verify already orders it that way');
+  const routes = Object.keys(JSON.parse(readFileSync(manifestPath, 'utf8')).routes ?? {});
+  // Next requires these three to be statically renderable and none of them
+  // carries an interactive control, so a dead script tag costs nothing there.
+  const allowed = new Set(['/_global-error', '/_not-found', '/icon.svg']);
+  const offenders = routes.filter((r) => !allowed.has(r));
+  assert.deepEqual(offenders, [],
+    'these routes are prerendered, so their scripts ship without the per-request nonce '
+    + `and strict-dynamic blocks every one, leaving the page unhydrated:\n${offenders.join('\n')}`);
+});

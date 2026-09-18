@@ -1,9 +1,10 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { SatelliteCurrent } from "../api/satellite-results";
 import type { SidePool } from "../api/side-pools";
+import { safeText } from "./pdf-text.ts";
 type Report = { tournamentName: string; eventName: string; format: string; scoringMethod: string; current: SatelliteCurrent; sidePools?: SidePool[] };
 const money = (minor: number) => `$${(minor / 100).toFixed(2)}`;
-function wrap(text: string, font: PDFFont, size: number, width: number) { const words = text.split(/\s+/); const lines: string[] = []; let line = ""; for (const word of words) { const next = line ? `${line} ${word}` : word; if (font.widthOfTextAtSize(next, size) <= width) line = next; else { if (line) lines.push(line); line = word; } } if (line) lines.push(line); return lines; }
+function wrap(text: string, font: PDFFont, size: number, width: number) { const words = safeText(text).split(/\s+/); const lines: string[] = []; let line = ""; for (const word of words) { const next = line ? `${line} ${word}` : word; if (font.widthOfTextAtSize(next, size) <= width) line = next; else { if (line) lines.push(line); line = word; } } if (line) lines.push(line); return lines; }
 export async function buildSatelliteResultsPdf(report: Report) {
   const document = await PDFDocument.create(); const regular = await document.embedFont(StandardFonts.Helvetica); const bold = await document.embedFont(StandardFonts.HelveticaBold); const pages: PDFPage[] = [];
   const page = () => { const next = document.addPage([612, 792]); pages.push(next); return next; }; let current = page(); let y = 750;
