@@ -1,5 +1,27 @@
 # Project Status
 
+## 2026-09-18 pre-launch defect sweep — merged; database released; Production retriggered
+
+- PR #97 merged nine pre-launch repairs, including QR event check-in RPC
+  binding, successful desk check-in, Hawaiian-name PDF safety, dynamic CSP-safe
+  interactive pages, score-confirmation refresh, recoverable dead sessions,
+  API authorization ordering, legacy tournament-ID CSV support, and Windows
+  verification portability.
+- The integration review additionally repaired the migration scanner's encoded
+  path handling and made the team Side Pool election RPC explicitly
+  service-role-only. Local `pnpm verify` passed 590 application tests plus the
+  optimized build; both GitHub Verify jobs and Vercel preview passed.
+- Migrations 0215 and 0216 are applied to the disposable and rehearsal
+  Supabase projects. Direct hosted proof confirms the repaired trigger and
+  desk lock, denies browser execution of the money RPC, preserves server
+  execution, and leaves the rehearsal at three tournaments and seven events.
+- Vercel blocked the first `main` Production build because the squash commit
+  was attributed to a GitHub collaborator outside the Vercel team. This
+  connected-author follow-up retriggers Production without granting broader
+  hosting access. Production smoke/runtime evidence is still required before
+  calling this release live. See
+  `docs/quality/2026-09-18-pre-launch-release-follow-up.md`.
+
 ## 2026-09-17 workspace phases and transient two-Judge calls — database released; application PR pending
 
 - The Tournament workspace is grouped into five director phases without
