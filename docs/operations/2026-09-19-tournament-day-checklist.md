@@ -138,13 +138,88 @@ same money gate.
 
 All four are applied to the live database and verified there.
 
+## Four things that will stop the tournament
+
+Each was measured on the deployed site on 2026-09-18. They are ordered by how
+early they bite.
+
+### 1. The site must be deployed from Dad's account first
+
+The live site is running the build from 10:38 UTC and is missing the seating
+directory fix. Every deploy triggered by Luke's commits was **refused before any
+build ran**, with `Git author sukelevensai must have access to the project on
+Vercel to create deployments`. Eleven commits, no exceptions: every commit
+authored by Luke was blocked, every commit authored by
+chocolatebananamalt@gmail.com deployed.
+
+**Merging a pull request is not enough.** GitHub keeps the original author through
+a squash merge, so a merge performed by the owner still carries Luke as author and
+is still refused. This already happened once and was worked around without being
+understood.
+
+What works, and was proven in production today at 09:58 UTC: **Dad pushes any
+commit of his own to `main`**, or presses **Redeploy** on the latest `main`
+deployment from his own Vercel dashboard. Either one carries everything already
+merged, including the seating directory fix.
+
+### 2. Nobody can score a game alone
+
+Every scoring route needs **two different signed-in officials**, by design, and the
+screens say so:
+
+- Paper games: "Another director or co-director must confirm your official
+  identity before you can record or review paper games." You cannot confirm
+  yourself.
+- Player app access: "A different signed-in director must compare the player's
+  request ID and witness phrase in person before approving it."
+
+A player cannot get an app account without a second official, so digital scoring
+needs one too. Genesis Rehearsal has three officials: Dad as director,
+maggy416@yahoo.com as co-director, and Luke as director and judge. **Two of them
+must be signed in, on two devices, before any score can be recorded.**
+
+### 3. Enroll an even number of players per event
+
+Publishing a game schedule requires an even number of participants, all checked
+in. An odd number is refused as `participants_unavailable`, which does not name
+the real cause. The roster currently holds seven entries. Seven in one event
+cannot be scheduled.
+
+### 4. The schedule is a file you supply, not something the app works out
+
+The Game Schedule page imports director-reviewed pairings. The app pairs nobody.
+Prepare a CSV before play starts:
+
+```
+Game,Player A ID,Player B ID,Player A Table/Seat,Player B Table/Seat
+1,A-1,A-2,A-1,A-2
+```
+
+The IDs are the verification IDs that publishing seating assigns, so the file can
+only be finished after seating is published. There is a "Download CSV template"
+button. Every game number from 1 to the event's game count must be present, with
+every player appearing exactly once per game. The page lists each missing piece.
+
+**Start Play lives on this same page**, below the schedule, behind a confirmation
+checkbox. It is not on the tournament hub.
+
+## Smaller surprises, none of them faults
+
+- **Closing event check-in leaves a red error.** "The live QR code could not be
+  refreshed" is the QR poller still running after the window shut. The close
+  already worked.
+- **The tournament list can be empty on the first page load after signing in.**
+  It says "Tournaments are temporarily unavailable". Reload once and it is there.
+- **Once a schedule is published, that event's player list is frozen.** The
+  database refuses to add or remove a participant afterwards.
+
 ## Known, not fixed
 
-- **Seating Directory 500s for every signed-in user.** `origin/main`'s
-  `seating-directory-client.tsx:5` reads `window.location.search` inside a
-  `useState` initializer, which React runs during the server render. The fix is
-  local commit `1223551` and has not been pushed or merged.
+- **Seating Directory returns 500 for every signed-in user on the live site.**
+  Confirmed twice on 2026-09-18, on two different tournaments, one of them with
+  seating actually published. The fix is merged into `main` as `02d2234`. It is
+  not deployed. Item 1 above is what deploys it.
 - The first thing to do tomorrow morning is load Seating Directory and Event QR
-  Check-In **while signed in as a director**. Every route returns a redirect to
-  anonymous requests, so no amount of unauthenticated checking can see past the
-  sign-in gate.
+  Check-In **while signed in as a director**, after the deploy. Every route
+  redirects anonymous requests, so no amount of signed-out checking can see past
+  the sign-in gate.
