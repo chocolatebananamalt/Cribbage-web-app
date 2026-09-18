@@ -162,28 +162,38 @@ commit of his own to `main`**, or presses **Redeploy** on the latest `main`
 deployment from his own Vercel dashboard. Either one carries everything already
 merged, including the seating directory fix.
 
-### 2. Nobody can score a game alone
+### 2. Scoring alone works, but only after the deploy
 
-Every scoring route needs **two different signed-in officials**, by design, and the
-screens say so:
+Paper scoring used to need two different signed-in officials: one to confirm
+your identity, one to record the cards, one to approve them. That is removed.
+A single director can now confirm their own identity, record both cards and
+approve the result. Proven end to end on the pilot, through to a finalized
+qualification ranking.
 
-- Paper games: "Another director or co-director must confirm your official
-  identity before you can record or review paper games." You cannot confirm
-  yourself.
-- Player app access: "A different signed-in director must compare the player's
-  request ID and witness phrase in person before approving it."
+Both cards are still required and must still agree, and the approval step still
+compares your re-entered result against what you recorded, so the score is still
+typed twice. The record names you for both steps.
 
-A player cannot get an app account without a second official, so digital scoring
-needs one too. Genesis Rehearsal has three officials: Dad as director,
-maggy416@yahoo.com as co-director, and Luke as director and judge. **Two of them
-must be signed in, on two devices, before any score can be recorded.**
+**The database half is live now. The screens that show the forms only appear
+after Dad deploys** (item 1). Until then the paper game page still hides the
+recording form.
 
-### 3. Enroll an even number of players per event
+If the deploy does not happen, the fallback that needs no deploy is a second
+official signing in: Genesis Rehearsal already has Dad as director,
+maggy416@yahoo.com as co-director and Luke as director and judge.
 
-Publishing a game schedule requires an even number of participants, all checked
-in. An odd number is refused as `participants_unavailable`, which does not name
-the real cause. The roster currently holds seven entries. Seven in one event
-cannot be scheduled.
+### 3. An odd number of players is fine now, but rotate the byes
+
+The parity requirement is removed, so seven players in one event is no longer a
+problem. With an odd field exactly one player sits out each game.
+
+**Nothing picks the byes for you and nothing compensates them.** You write the
+schedule, so you choose who sits out, and a player who sits out earns nothing
+that game. Spread the byes evenly or somebody finishes a game short through no
+fault of their own.
+
+As with item 2, the database accepts this now; the page stops refusing it once
+Dad deploys.
 
 ### 4. The schedule is a file you supply, not something the app works out
 

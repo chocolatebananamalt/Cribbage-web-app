@@ -80,59 +80,58 @@ showed `paid` on the desk, their "Check in at desk" button was enabled, and the
 check-in completed. Before `0219` and `0221` that button was disabled forever and
 no receipt could be recorded to release it.
 
-## Scoring needs two officials, and that is by design
+## Scoring, results and finalization: now proven
 
-Scoring could not be completed, and the reason is not a defect.
+Two rules blocked this and Luke asked for both to be removed on 2026-09-18.
+Migrations `0222` and `0223` are applied to the live database. With them in
+place the entire chain was driven to the end:
 
-- **Paper games** say it outright: "Another director or co-director must confirm
-  your official identity before you can record or review paper games", and "You
-  cannot confirm yourself." One official records both cards, a second and distinct
-  official independently enters the same evidence.
-- **Player app access** applies the same rule: "A different signed-in director must
-  compare the player's request ID and witness phrase in person before approving
-  it", and "No account is linked until the server accepts an independently
-  witnessed approval."
+- **12 of 12 games scored.** A single director bound their own official
+  identity, recorded both paper cards and approved the result. Before `0223`
+  each of those three steps needed a second, different signed-in official.
+- **Live standings rendered from the scores.** "12 of 12 scheduled matchups
+  resolved. Every scheduled matchup has verified or corrected scorecards."
+- **Finalize Qualification completed.** The locked ranking reads: qualifier
+  Browser Pilot Player, 16 game points, 7 won, +49 net; high non-qualifier
+  Pilot Test Player, 12 game points, 5 won, -49 net. "Finalized by Tournament
+  participant."
 
-So digital scoring is unreachable without a second official too, because a player
-cannot get an app account without one.
+So the full path now has evidence behind it, start to finish:
 
-**Tomorrow this is satisfiable and today it was not.** Genesis Rehearsal carries
-three officials: chocolatebananamalt@gmail.com as director, maggy416@yahoo.com as
-co-director, and luke@sitesmithai.com as director and judge. Two of them signed in
-on two devices satisfies every dual-control step. One person working alone cannot
-score a single game, on paper or digitally.
+  setup, payments, roster check-in, enrollment, event check-in with a live QR,
+  desk check-in, closing registration, publishing seating, importing and
+  publishing a schedule, Start Play, scoring every game, standings, and
+  finalization.
 
-## Things that will surprise the director
+### What was removed, and what was deliberately kept
 
-**The game schedule is an import, not a generator.** The app does not pair anybody.
-The director supplies a CSV of every matchup: `Game, Player A ID, Player B ID,
-Player A Table/Seat, Player B Table/Seat`, using the verification IDs that seating
-assigned. There is a "Download CSV template" button. The validator is precise and
-refuses to publish until every game is complete, so the work has to be done before
-play starts, not during it.
+Removed: the requirement that two *different* officials be involved. That was
+enforced in five places, four functions and one table constraint. The
+constraint, `official_profile_id <> confirming_profile_id`, was found only by
+calling the function; reading the code alone would have missed it, and it fails
+as a raw database error rather than a handled rejection.
 
-**An odd number of checked-in players cannot be scheduled at all.**
-`publish_director_reviewed_event_schedule_core_v1` requires
-`mod(participant_count, 2) = 0` and every participant to be `checked_in`. It
-reports this as `participants_unavailable`, which names neither cause. Genesis
-Rehearsal has seven roster entries. Seven players enrolled in one event cannot be
-scheduled. Enroll an even number.
+Kept, and re-verified by deliberately trying to break each one:
 
-**Start Play is on the Game Schedule page, behind a confirmation checkbox.** It is
-not on the tournament hub. The button stays greyed until the confirmation is
-ticked.
+| Rule | Test | Result |
+|---|---|---|
+| Both paper cards must agree | recorded winner a/21 against winner b/9 | rejected, `nonreciprocal_card_claims` |
+| The confirmation must match what was recorded | approved with margin 7 against a recorded 21 | rejected, `review_claims_mismatch` |
+| An official may not score their own game | `paper_official_is_independent` untouched | unchanged |
+| The audit trail names who did what | read back after a solo completion | recorder and approver both recorded, role `director` |
 
-**Closing event check-in leaves a red error on screen.** The QR refresher keeps
-polling after the window shuts, gets a 503, and reports "The live QR code could not
-be refreshed." The close already succeeded. Ignore it.
+The result is still entered twice and still compared. One person may now enter
+it both times, which is exactly what Luke asked for and is a real reduction in
+control. It is not anonymous: the record shows the same person did both.
 
-**Once the schedule is published the participant set is frozen.** A database
-trigger, `app.protect_scheduled_event_participant`, raises "published event
-participant set is immutable" on any insert or delete. A late player cannot be
-added to that event afterwards by any screen.
+## An odd number of players can now be scheduled
 
-## Still not proven
+`0222` removes the parity requirement. With an odd field exactly one player sits
+out each game. Verified: three players over three games, five over two, and
+seven over twelve all validate, while a player appearing twice in one game, a
+game short a match, and an unenrolled ID are all still rejected.
 
-Actual score entry, standings, results and finalization. All of them sit behind
-the two-official rule above, and no second official mailbox was reachable from
-this machine.
+**Byes are not handled for you.** The director supplies the schedule, so the
+director picks who sits out, and a player who sits out earns nothing that game.
+Rotate the byes by hand or somebody finishes a game short.
+
