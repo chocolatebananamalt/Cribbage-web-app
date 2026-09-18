@@ -9,6 +9,16 @@ import type { EventCheckInWorkspace } from "./page";
 
 type LiveCode = { eventId: string; url: string; expiresAt: string; image: string };
 
+// The workspace RPC returns one entry per event a player is enrolled in, each
+// carrying its own attendance state. It does NOT return the flat eventIds and
+// checkedInEventIds arrays this file used to read: those came from migration
+// 0208 and were replaced in the database without a migration, so every read of
+// row.eventIds threw and the page answered 500. See migration 0217.
+function isAwaitingCheckIn(row: EventCheckInWorkspace["roster"][number], eventId: string): boolean {
+  const entry = row.events.find((item) => item.eventId === eventId);
+  return entry !== undefined && entry.attendanceState !== "checked_in";
+}
+
 export default function EventCheckInClient({ tournamentId, workspace }: { tournamentId: string; workspace: EventCheckInWorkspace }) {
   const router = useRouter();
   const [eventId, setEventId] = useState(workspace.events[0]?.eventId ?? "");
@@ -62,7 +72,7 @@ export default function EventCheckInClient({ tournamentId, workspace }: { tourna
     </section> : null}
     {event?.windowState === 'open' ? <section className="correction-item"><h2>Live event QR code</h2><p>Keep this page open on the physical event display. It refreshes automatically every 60 seconds.</p>{liveCode?.image ? <Image unoptimized src={liveCode.image} alt={`Live check-in QR code for ${event.name}`} width={320} height={320} /> : <p>Preparing live code…</p>}<button className="secondary" type="button" disabled={busy} onClick={() => void refreshCode()}>Refresh QR now</button></section> : null}
     <section className="correction-item"><h2>Desk requests</h2><p>Requests that cannot safely be checked in automatically stay here. Record cash/check payment and approve event enrollment first. Then select the matching paid, enrolled player below to check them in.</p><ul>{workspace.requests.map((request) => <li key={request.requestId}><strong>{request.firstName} {request.lastName}</strong> · {workspace.events.find((item) => item.eventId === request.eventId)?.name ?? 'Event'} · awaiting desk review</li>)}{workspace.requests.length === 0 ? <li>No desk review requests are waiting.</li> : null}</ul></section>
-    <section className="correction-item"><h2>Check in at desk</h2><p>Only paid, enrolled players for the selected event can be checked in here. This action cannot create a payment receipt or bypass event enrollment.</p><ul>{workspace.roster.filter((row) => row.eventIds.includes(eventId) && !row.checkedInEventIds.includes(eventId)).map((row) => <li key={row.rosterEntryId}><strong>{row.displayName}</strong>{row.accNumber ? ` · ${row.accNumber}` : ''} · {row.paid ? 'paid' : 'payment due'} <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void deskCheckIn(row.rosterEntryId)}>Check in and send app access</button></li>)}{workspace.roster.filter((row) => row.eventIds.includes(eventId) && !row.checkedInEventIds.includes(eventId)).length === 0 ? <li>No un-checked-in enrolled players are available for this event.</li> : null}</ul></section>
+    <section className="correction-item"><h2>Check in at desk</h2><p>Only paid, enrolled players for the selected event can be checked in here. This action cannot create a payment receipt or bypass event enrollment.</p><ul>{workspace.roster.filter((row) => isAwaitingCheckIn(row, eventId)).map((row) => <li key={row.rosterEntryId}><strong>{row.displayName}</strong>{row.accNumber ? ` · ${row.accNumber}` : ''} · {row.paid ? 'paid' : 'payment due'} <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void deskCheckIn(row.rosterEntryId)}>Check in and send app access</button></li>)}{workspace.roster.filter((row) => isAwaitingCheckIn(row, eventId)).length === 0 ? <li>No un-checked-in enrolled players are available for this event.</li> : null}</ul></section>
     {message ? <p className="error-text" role="alert">{message}</p> : null}
   </section>;
 }
