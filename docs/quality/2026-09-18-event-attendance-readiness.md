@@ -50,10 +50,19 @@
   choices—Main, Consolation, Satellite Event -C.D., and Canadian Doubles
   Practice. The retired Paper Team Doubles event is no longer offered. No
   check-in window or attendance record was changed during browser proof.
+- PR #102 passed both GitHub verification jobs and Vercel preview, then merged
+  as `eee68a6fb1a0551630a200c73c12c7b717c202aa`. Production deployment
+  `dpl_5dgT7Mnx5CvN4YQNkkeGk6CX1S3H` reached READY.
+- Signed-in visual proof at the normal desktop viewport and an explicit
+  390-by-844 phone viewport passed. The Event label remains intact above its
+  full-width selector, all controls stay within the phone card, and the active
+  event list remains four. The viewport override was reset afterward.
+- Stable Production smoke: `/` and `/register` returned 200. A signed-out
+  request to the protected check-in route returned the expected 307 sign-in
+  redirect, while the existing authenticated Director session rendered the
+  protected page. The deployment error/fatal runtime scan returned no entries.
 
-## Remaining release proof
+## Remaining rehearsal proof
 
-- Release the follow-up label-layout correction found during desktop visual
-  inspection, then verify the protected desk at phone width.
 - A separate Co-director session is still required before claiming the
   multi-session rehearsal proof complete.

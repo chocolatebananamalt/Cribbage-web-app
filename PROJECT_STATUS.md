@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-18 event attendance readiness — released; final responsive proof in progress
+## 2026-09-18 event attendance readiness — released and Production-verified
 
 - Rebuilt Day-of-play Event QR Check-In around one current attendance state per
   player/event. The director desk now shows every active enrollee, payment
@@ -20,9 +20,14 @@
 - Signed-in Production proof found and then eliminated a retired-event leak:
   PR #101 / deployment `dpl_GVdQRKUmBcAfNbJ72t5UnQNTma1P` now exposes exactly
   the four active rehearsal events and rejects reopening historical events.
-  The browser proof did not open check-in or alter attendance. A narrow
-  selector-label layout correction and phone-width proof remain in progress;
-  independent Co-director proof remains a physical rehearsal requirement.
+  The browser proof did not open check-in or alter attendance.
+- PR #102 / Production deployment `dpl_5dgT7Mnx5CvN4YQNkkeGk6CX1S3H`
+  released the selector-label layout correction. Signed-in desktop and
+  390-by-844 phone inspection passed, stable public routes returned 200, the
+  protected route retained its sign-in redirect for anonymous probes, and the
+  post-release error/fatal scan was empty. Independent Co-director proof remains
+  a physical multi-session rehearsal requirement rather than an implementation
+  blocker.
 
 
 ## 2026-09-18 pre-launch defect sweep — merged, database and Production released
