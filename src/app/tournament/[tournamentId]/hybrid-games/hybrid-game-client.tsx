@@ -137,7 +137,7 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
 }
 
 export default function HybridGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, candidates, reviewCases }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; candidates: HybridGameItem[]; reviewCases: HybridGameItem[] }) {
-  return <><SavedHybridReconciler actorId={actorId} tournamentId={tournamentId} />{!actorIdentityConfirmed ? <p className="error-text">Another director or co-director must confirm your official identity first.</p> : null}
+  return <><SavedHybridReconciler actorId={actorId} tournamentId={tournamentId} />{!actorIdentityConfirmed ? <p className="error-text">Confirm your official identity before reviewing these games.</p> : null}
     {actorRole === "cross_checker" && actorIdentityConfirmed ? <><h2>Match one digital entry to one paper card</h2>{candidates.length ? <ul className="correction-list">{candidates.map((item) => <CreateForm key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No current mixed-scorecard games are waiting for a paper-card match.</p>}</> : null}
     <h2>Independent mixed-card confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.caseId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No mixed-card confirmations are waiting for you.</p>}</>;
 }

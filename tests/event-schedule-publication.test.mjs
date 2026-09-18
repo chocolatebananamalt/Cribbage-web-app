@@ -19,13 +19,27 @@ test("schedule CSV parser accepts exact safe columns and rejects malformed rows"
   assert.equal(parseScheduleCsv("Game,Player A ID,Player B ID,Player A Table/Seat,Player B Table/Seat\n1,A-1,A-1,A-1,A-2").errors.length, 1);
 });
 
-test("event validation requires a complete permutation of players and seats for every game", () => {
+test("event validation seats every player each game, allowing one to sit out when the field is odd", () => {
   assert.deepEqual(validateScheduleForEvent(matches, 2, ["A-1", "A-2"]), []);
   assert.match(validateScheduleForEvent([{ ...matches[0], sideBTableSeat: "B-2" }, matches[1]], 2, ["A-1", "A-2"], 2, 2).join(" "), /same table/);
   assert.match(validateScheduleForEvent([{ ...matches[0], sideBTableSeat: "A-3" }, matches[1]], 2, ["A-1", "A-2"], 1, 2).join(" "), /outside the published table plan/);
   assert.match(validateScheduleForEvent(matches.slice(0, 1), 2, ["A-1", "A-2"]).join(" "), /Expected 2 matches/);
   assert.match(validateScheduleForEvent([{ ...matches[0], sideBVerificationId: "A-3" }, matches[1]], 2, ["A-1", "A-2"]).join(" "), /not enrolled/);
-  assert.match(validateScheduleForEvent(matches, 2, ["A-1", "A-2", "A-3"])[0], /even number/);
+  // An odd field is legitimate: exactly one player sits out each game, so three
+  // players over two games is one match per game and that is complete.
+  assert.deepEqual(validateScheduleForEvent(matches, 2, ["A-1", "A-2", "A-3"]), []);
+  // Fewer than two players still cannot be scheduled.
+  assert.match(validateScheduleForEvent(matches, 2, ["A-1"])[0], /at least two/);
+  // An odd field must still reject a player appearing twice in one game, which
+  // is the error that "one player sits out" would otherwise hide.
+  const five = ["A-1", "A-2", "A-3", "A-4", "A-5"];
+  const seatedTwice = [
+    { gameNumber: 1, sideAVerificationId: "A-1", sideBVerificationId: "A-2", sideATableSeat: "A-1", sideBTableSeat: "A-2" },
+    { gameNumber: 1, sideAVerificationId: "A-1", sideBVerificationId: "A-3", sideATableSeat: "A-1", sideBTableSeat: "A-3" },
+  ];
+  assert.match(validateScheduleForEvent(seatedTwice, 1, five).join(" "), /at most once/);
+  // And it must still reject a game that is short a match.
+  assert.match(validateScheduleForEvent(seatedTwice.slice(0, 1), 1, five).join(" "), /needs 2 matches/);
 });
 
 test("request, result, and workspace validators bind exact shapes", () => {

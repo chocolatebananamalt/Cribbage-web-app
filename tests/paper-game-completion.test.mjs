@@ -153,7 +153,11 @@ test("paper completion route and page enforce protected cross-check access", () 
   assert.match(route, /createServerOnlyAdminClient\(\)\.rpc\("complete_paper_vs_paper_game_v1"/);
   const page = readFileSync(new URL("../src/app/tournament/[tournamentId]/paper-games/page.tsx", import.meta.url), "utf8");
   assert.match(page, /director.*co_director.*cross_checker/);
-  assert.match(page, /second, distinct authorized official/i);
+  // Separation of duties was removed on 2026-09-18 so a lone director can score.
+  // The page must still describe double entry, because the evidence is still
+  // entered twice and still compared, even when one official does both.
+  assert.match(page, /independently re-enters the same evidence/i);
+  assert.match(page, /one official may do both/i);
   const client = readFileSync(new URL("../src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx", import.meta.url), "utf8");
   assert.match(client, /paper-game-completion:\$\{actorId\}:\$\{gameId\}/);
   assert.match(client, /Retry the same locked request/);
