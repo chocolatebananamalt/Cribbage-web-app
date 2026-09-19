@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isRejectedSidePool, isSidePoolMutation, isSidePoolMutationResult, type SidePool, type SidePoolMutation, type SidePoolTeamBeneficiary, type SidePoolWorkspace } from "../../../../lib/api/side-pools";
+import { canRetireSidePool, isSidePoolRetirementResult, retirementRejectionMessage } from "../../../../lib/api/side-pool-retirement";
 const presetCodes = ["10", "20", "50", "100"] as const;
 const presets = [{ code: presetCodes[0], name: "$10 Side Pool", fee: 1000 }, { code: presetCodes[1], name: "$20 Side Pool", fee: 2000 }, { code: presetCodes[2], name: "$50 Side Pool", fee: 5000 }, { code: presetCodes[3], name: "$100 Side Pool", fee: 10000 }] as const;
 const money = (minor: number) => `$${(minor / 100).toFixed(2)}`;
@@ -12,7 +13,7 @@ export default function SidePoolsClient({ tournamentId, workspace }: { tournamen
   async function mutate(request: SidePoolMutation) { if (!isSidePoolMutation(request) || busy) return; setBusy(true); setMessage(""); try { const response = await fetch(`/api/v1/tournaments/${tournamentId}/side-pools`, { method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", body: JSON.stringify(request) }); const data: unknown = await response.json().catch(() => null); if (response.ok && isSidePoolMutationResult(data, request)) { setMessage("Side Pool record saved and audited."); router.refresh(); } else if (isRejectedSidePool(data)) setMessage(errors[data.code] ?? `Side Pool request rejected: ${data.code.replaceAll("_", " ")}.`); else setMessage("The Side Pool request is unresolved. Refresh before retrying."); } catch { setMessage("The Side Pool request is unresolved. Refresh before retrying."); } finally { setBusy(false); } }
   async function add(eventId: string, name: string, fee: number) { await mutate({ action: "add_pool", eventId, poolId: crypto.randomUUID(), categoryCode: name, displayName: name, entryFeeMinor: fee, idempotencyKey: crypto.randomUUID() }); }
   async function addCustom(eventId: string, name: string, fee: string) { const trimmed = name.trim(); const amount = cents(fee); if (!trimmed || !Number.isSafeInteger(amount) || amount < 0) return; await add(eventId, trimmed, amount); }
-  return <section className="policy-settings">{workspace.events.map((event) => <section className="correction-item" key={event.eventId}><h2>{event.name}</h2>{event.pools.length ? event.pools.map((pool) => <div key={pool.poolId}><PoolOperations eventId={event.eventId} pool={pool} participants={event.participants} busy={busy} mutate={mutate}/>{event.teamBeneficiaries.length ? <TeamPoolOperations eventId={event.eventId} pool={pool} teams={event.teamBeneficiaries} busy={busy} mutate={mutate}/> : null}</div>) : <p>No Side Pools configured.</p>}{event.pools.length < 6 ? <PoolAdder eventId={event.eventId} busy={busy} add={add} addCustom={addCustom}/> : <p>Maximum of six active Side Pools reached.</p>}</section>)}<p className="live-status" role="status">{message}</p></section>;
+  return <section className="policy-settings">{workspace.events.map((event) => <section className="correction-item" key={event.eventId}><h2>{event.name}</h2>{event.pools.length ? event.pools.map((pool) => <div key={pool.poolId}><PoolOperations eventId={event.eventId} pool={pool} participants={event.participants} busy={busy} mutate={mutate}/>{event.teamBeneficiaries.length ? <TeamPoolOperations eventId={event.eventId} pool={pool} teams={event.teamBeneficiaries} busy={busy} mutate={mutate}/> : null}<RetireSidePool tournamentId={tournamentId} eventId={event.eventId} pool={pool} teamBeneficiaries={event.teamBeneficiaries} parentBusy={busy}/></div>) : <p>No Side Pools configured.</p>}{event.pools.length < 6 ? <PoolAdder eventId={event.eventId} busy={busy} add={add} addCustom={addCustom}/> : <p>Maximum of six active Side Pools reached.</p>}</section>)}<p className="live-status" role="status">{message}</p></section>;
 }
 function PoolAdder({ eventId, busy, add, addCustom }: { eventId: string; busy: boolean; add: (eventId: string, name: string, fee: number) => Promise<void>; addCustom: (eventId: string, name: string, fee: string) => Promise<void> }) {
   const [name, setName] = useState(""); const [fee, setFee] = useState("");
@@ -46,4 +47,60 @@ function TeamPoolOperations({eventId,pool,teams,busy,mutate}:{eventId:string;poo
   <ul>{teams.flatMap((item)=>item.elections.filter((entry)=>entry.poolId===pool.poolId&&entry.elected).map((entry)=><li key={entry.electionId}>{item.displayName} · due {money(entry.amountDueMinor)} · received {money(entry.amountReceivedMinor)} · remaining {money(entry.amountRemainingMinor)}</li>))}</ul>
   <fieldset disabled={busy||!pool.policy||!teamEntryId||pool.finalized}><legend>Cross-checked team payout</legend><label>Placement<input inputMode="numeric" value={placement} onChange={(event)=>setPlacement(event.target.value)}/></label><label>Payout amount<input inputMode="decimal" value={payout} onChange={(event)=>setPayout(event.target.value)}/></label><button className="secondary" type="button" onClick={()=>void mutate({action:"set_team_payout",eventId,poolId:pool.poolId,teamEntryId,payoutId:crypto.randomUUID(),placement:Number(placement),amountMinor:cents(payout),voided:false,reason:"Director recorded team payout after cross-checking",idempotencyKey:crypto.randomUUID()})}>Record Team Payout</button></fieldset>
   <ol>{payouts.filter((item)=>!item.voided).map((item)=><li key={item.payoutId}>{item.displayName} · place {item.placement} · {money(item.amountMinor)} <button className="secondary" type="button" disabled={busy} onClick={()=>void mutate({action:"set_team_payout",eventId,poolId:pool.poolId,teamEntryId:item.teamEntryId,payoutId:item.payoutId,placement:item.placement,amountMinor:item.amountMinor,voided:true,reason:"Director voided team payout",idempotencyKey:crypto.randomUUID()})}>Void</button></li>)}</ol></section>;
+}
+
+// Setup's Remove Side Pool button closes with the revision, so after activation
+// a pool configured by mistake had no way out of any screen. This is that way
+// out, and it renders only for a pool with nothing recorded against it, which is
+// the same question retire_event_side_pool_v1 asks of the money tables before it
+// agrees. The button disappearing is the convenience; the rejection is the rule.
+function RetireSidePool({ tournamentId, eventId, pool, teamBeneficiaries, parentBusy }: { tournamentId: string; eventId: string; pool: SidePool; teamBeneficiaries: SidePoolTeamBeneficiary[]; parentBusy: boolean }) {
+  const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  // Held across retries so a request that may already have been applied returns
+  // as the same operation instead of being counted twice.
+  const operationId = useRef<string | null>(null);
+  async function retire() {
+    setBusy(true); setMessage("");
+    try {
+      operationId.current ??= crypto.randomUUID();
+      const response = await fetch(`/api/v1/tournaments/${tournamentId}/side-pools/retire`, {
+        method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin",
+        body: JSON.stringify({ eventId, poolId: pool.poolId, reason: reason.trim(), idempotencyKey: operationId.current }),
+      });
+      const body = await response.json().catch(() => null) as unknown;
+      if (!isSidePoolRetirementResult(body)) { setMessage("The Side Pool could not be removed. Reload and try again."); return; }
+      if (body.status === "rejected") {
+        // A rejection returns before retire_event_side_pool_v1 writes its
+        // receipt, so nothing is recorded against this id and a fresh one is
+        // safe. Keeping it would make the natural recovery, read the refusal,
+        // void the election, retry with a clearer reason, come back as
+        // idempotency_conflict, because the reason is part of the request hash.
+        operationId.current = null;
+        setMessage(retirementRejectionMessage(body.code, body.activity));
+        return;
+      }
+      operationId.current = null;
+      setConfirming(false);
+      router.refresh();
+    } catch { setMessage("The Side Pool could not be removed. Reload and try again."); }
+    finally { setBusy(false); }
+  }
+  if (!canRetireSidePool(pool, teamBeneficiaries)) return null;
+  if (!confirming) {
+    return <section className="setup-actions"><button className="secondary" type="button" disabled={parentBusy || busy} onClick={() => setConfirming(true)}>Remove this Side Pool</button>{message ? <p className="error-text" role="alert">{message}</p> : null}</section>;
+  }
+  return <section className="registration-note" aria-labelledby={`retire-side-pool-${pool.poolId}`}>
+    <h4 id={`retire-side-pool-${pool.poolId}`}>Remove {pool.displayName}?</h4>
+    <p className="auth-note">Nobody has elected into this pool and no money has been received, so nothing is lost. It stops appearing on this page, its name and its slot are freed for another pool, and the removal is recorded in the audit history with your reason. If you need it back, add it again with the same name and fee.</p>
+    <label>Reason (*required)<input value={reason} maxLength={500} disabled={busy} onChange={(event) => setReason(event.target.value)} placeholder="Configured on the wrong event during setup." /></label>
+    <div className="setup-actions">
+      <button className="secondary" type="button" disabled={busy} onClick={() => { setConfirming(false); setMessage(""); }}>Keep Side Pool</button>
+      <button className="secondary danger-button" type="button" disabled={parentBusy || busy || !reason.trim()} onClick={() => void retire()}>{busy ? "Removing…" : "Yes, remove this Side Pool"}</button>
+    </div>
+    {message ? <p className="error-text" role="alert">{message}</p> : null}
+  </section>;
 }

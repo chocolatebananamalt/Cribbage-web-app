@@ -55,7 +55,7 @@ test('five-minute completion accepts adult or youth ACC numbers after a valid cu
 
 test('check-in form gives a visible completion countdown and requires ACC number', async () => {
   const source = await import('node:fs/promises').then(({ readFile }) => readFile('src/app/event-check-in/event-check-in-form.tsx', 'utf8'));
-  assert.match(source, /remaining — complete check-in within the time shown/);
+  assert.match(source, /remaining. Complete check-in within the time shown/);
   assert.match(source, /Your check-in time expired/);
   assert.match(source, /name="accNumber" required/);
   assert.match(source, /HI296Y for a youth player/);

@@ -56,6 +56,8 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/seating`}>Check-in and seating publication</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/participants`}>Event participants</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/schedule`}>Game schedule</Link>
+            <Link className="guide-link" href={`/tournament/${tournamentId}/event-control`}>Event play control</Link>
+            <Link className="guide-link" href={`/tournament/${tournamentId}/tournament-day-import`}>Tournament Day CSV Import</Link>
             {accountActivationEnabled() ? <Link className="guide-link" href={`/tournament/${tournamentId}/account-activations`}>Player app access</Link> : null}
           </section> : null}
           {isCrossCheckOfficial ? <section className="workspace-phase"><h2>4. Cross-check and recovery</h2><p>Complete paper evidence, correct authorized cards, and recover failed devices.</p>
@@ -63,6 +65,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/hybrid-games`}>Digital-versus-paper games</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/paper-games`}>Paper-versus-paper games</Link>
             {rule12CorrectionEnabled() && isCrossCheckOfficial ? <Link className="guide-link" href={`/tournament/${tournamentId}/corrections`}>Independent scorecard corrections</Link> : null}
+            {isDirector ? <Link className="guide-link" href={`/tournament/${tournamentId}/cross-check-finalization`}>Finalize Cross-Checking</Link> : null}
           </section> : null}
           {canViewResults ? <section className="workspace-phase"><h2>5. Results and reporting</h2><p>Review live standings, qualifications, event results, and director reports.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Tournament Results</Link>
