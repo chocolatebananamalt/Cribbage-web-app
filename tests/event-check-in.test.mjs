@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import test from 'node:test';
@@ -60,4 +61,18 @@ test('check-in form gives a visible completion countdown and requires ACC number
   assert.match(source, /name="accNumber" required/);
   assert.match(source, /HI296Y for a youth player/);
   assert.match(source, /sessionStorage/);
+});
+
+test("a desk row that cannot be checked in says why on screen", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/event-check-in/event-check-in-client.tsx", "utf8");
+  // Every control on the row is gated on row.paid, and the desk rule behind it
+  // needs a recorded obligation rather than a zero balance. A player nobody has
+  // priced yet reads as "$0.00 received of $0.00", which looks square, while
+  // all three buttons sit dead with nothing saying why.
+  assert.match(client, /has no recorded payment for this tournament, so the desk cannot check them in/);
+  assert.match(client, /enter 0 if there is no fee/);
+  assert.match(client, /Check-in is closed for this event, so this row cannot be changed/);
+  const reason = client.indexOf("rowBlockedReason && attendance !== 'checked_in'");
+  const deskButton = client.indexOf("Check in at desk");
+  assert.ok(reason > -1 && reason < deskButton, "the reason must render above the buttons it explains");
 });
