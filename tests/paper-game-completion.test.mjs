@@ -194,3 +194,17 @@ test("workspace includes roster-backed scheduled games without requiring profile
   assert.match(sql, /app\.recovery_participant_profile_id/);
   assert.match(sql, /'reviewcases'/);
 });
+
+test("the how-to guide promises a second official only where one is still required", () => {
+  const guide = readFileSync("src/app/tournament/[tournamentId]/how-to/page.tsx", "utf8");
+  const relaxed = readFileSync("database/migrations/0223_one_official_can_complete_a_paper_game.sql", "utf8");
+  const hybrid = readFileSync("database/migrations/0148_hybrid_digital_paper_authoritative_completion.sql", "utf8");
+  // 0223 dropped all three separation gates on the paper-versus-paper path.
+  assert.match(relaxed, /This removes the SEPARATION of duties and nothing else\./);
+  assert.match(guide, /One official may do both steps, and the app records who did each\./);
+  assert.match(guide, /An official may never score a game they are playing in\./);
+  assert.doesNotMatch(guide, /A second distinct cross checker, co-director, or director/);
+  // The digital-versus-paper path still rejects the first official as reviewer.
+  assert.match(hybrid, /if v_role is null or p_actor_id=v_case\.first_official_profile_id then return jsonb_build_object\('status','rejected','code','not_eligible_reviewer'/);
+  assert.match(guide, /A second distinct authorized official independently re-enters and confirms both sources\./);
+});
