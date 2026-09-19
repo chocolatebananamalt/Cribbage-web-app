@@ -335,3 +335,102 @@ as the 0229 probe showed.
 
 The live signed-in click-through. Everything above is server-side and static
 verification. No one has pressed these buttons in a browser as a director.
+
+## Setup page, clicked end to end in the live browser (08:00 to 08:25 UTC)
+
+Test tournament `57516b95-4d6e-455d-b448-d7f72b3fed64`, "Button Audit 09-19-2026",
+created through the UI and walked control by control on
+`https://cribbage-web-app.vercel.app`. Every line below was pressed, not read.
+
+### The reported defect, and what it actually was
+
+Luke: "i still cant adjust main rate or adjust consolation rate ... dosen't allow
+me to click it".
+
+`setup-client.tsx` gated both buttons on `canAdjust={!!revisionId && !pending}`.
+`revisionId` is null until a setup draft has been saved once, so on every newly
+created tournament both buttons were disabled, and since `.secondary` has no
+`:disabled` styling they looked pressable. Pressing one fired zero network
+requests, which is what "does not work" looked like from the outside.
+
+No server rule required it. Probed against production on a tournament with zero
+setup revisions, with the rollback `raise` idiom:
+
+    revisions=0  currentRate=300  source=setup
+    override={"status":"sanctioning_fee_rate_overridden","version":1,"rateCents":150}
+
+`override_tournament_sanctioning_fee_rate_v1` checks tournament status, the
+director role, whether play has started, and whether the rate changed. It has
+never looked at a setup revision. The director row exists from tournament
+creation (`0194_finalize_registration_and_event_change_lifecycle.sql:79`).
+
+Second half of the same defect: the panel read its rates from the setup payload,
+and a tournament with no revision falls back to `blankPayload`, which carries the
+$3.00 and $1.00 defaults. A director who recorded an override would have watched
+the panel reload and show the old rate back. The panel and the running total now
+read the effective rate from the setup workspace, which is what
+`current_sanctioning_fee_rate_v1` resolves and what Start Play snapshots.
+
+Verified live after deploy: Main 3.00 to 4.00, Consolation 1.00 to 2.50, both on
+a tournament with no saved setup. Confirmed in the database:
+
+    version 1  main         300 -> 400  "ACC Board approved rate for the 2026-09-19 event"
+    version 2  consolation  100 -> 250  "ACC Board approved consolation rate"
+
+### Second defect found while clicking, same class
+
+The Co-Director form left Save greyed out with all four fields filled. Save is
+gated on `isAccNumber`, which wants `[A-Z]{2}[0-9]+Y?`, so a bare member number
+such as 99001 never enables it. The input carries a `pattern` attribute, but a
+disabled button never submits, so the browser never shows it. The event check-in
+form and the roster already print the HI296 example; this form was the one that
+did not. It now prints it and names the field holding Save back.
+
+### Everything pressed, and the result
+
+| Control | Result |
+|---|---|
+| Create Tournament | works, tournament created |
+| Tournament name, City, Venue | typed and persisted |
+| State/Territory select | Hawaii selected, and it auto-set Time zone to Hawaiian |
+| Starts, Ends | 09/19/2026 09:00 AM and 05:00 PM accepted |
+| Tournament Director name | typed and persisted |
+| Contact phone, contact email, mailing address | typed and persisted |
+| Refresh total | timestamp advanced, rates held |
+| Adjust Main rate | FIXED, full round trip, DB row written |
+| Adjust Consolation rate | FIXED, full round trip, DB row written |
+| Cancel rate change | closes the editor, no write |
+| Co-Directors Add/Remove | page loads, add wrote a nomination, Remove removed it |
+| Cross-Checkers, Judges Add/Remove | pages load with the same form |
+| Back to tournament setup | returns with version 2 loaded |
+| Add Main Event | Main Event 1 created |
+| Style, Games, Entry fee, Fee includes, Payout information | all accepted |
+| Add Q Pool | Q Pool 1 created, pool type, fee and note all accepted |
+| Add Q Pool a second time | limit honoured, button reads "Add Q Pool limit reached" |
+| Remove Q Pool | removed pool 2, left pool 1 intact |
+| Add Side Pool | created, name and fee accepted |
+| Add Consolation Event | created, inherited the tournament start time |
+| Add Satellite Event | created with its own Payout ratio select and no Q Pools |
+| Remove event | removed the satellite only |
+| Save All Events Draft | "Tournament setup version 1 was saved", then version 2 |
+| Unsaved-changes guard | a navigation away raised the browser Leave site prompt |
+| Finalize All Events / Open Registration | confirmation lists both events |
+| Cancel on that confirmation | returns to the editable form, nothing lost |
+| Yes, Finalize & Open Registration | activated, routed to the Registration Link page |
+| Create Link | active link and QR issued, expires 2026-10-19 18:18 UTC |
+| Begin event check-in | OPENS CHECK-IN, live QR displayed, button flips to Close |
+
+### Not pressed, deliberately
+
+- **Sign out** and **Clear safe app data and sign out** would end the signed-in
+  session being used to test. Both render and both carry accurate warning text.
+- **Archive tournament** is saved for last, since it removes the tournament from
+  the list.
+- The player side of registration needs a second account and is not covered here.
+
+### Open, not a blocker for today
+
+Adding the co-director returned "The official was saved, but email delivery could
+not be confirmed." The address used was `@buttonaudit.test`, which cannot receive
+mail, so that outcome is expected and the message is honest about it. Whether
+invitation email delivers to a real address is untested.
