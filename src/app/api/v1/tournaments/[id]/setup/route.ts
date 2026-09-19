@@ -39,10 +39,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Legacy setup storage deliberately owns the core event fields. Side Pool
     // definitions are versioned separately and are materialized only once an
     // event becomes active, so they cannot be mistaken for Q Pools.
+    // tournamentDirectorPublicName stays IN the payload. save_tournament_setup_version
+    // requires the key to be present and strips it itself before the legacy writer
+    // sees it, the same way it handles stateTerritory. Deleting it here made every
+    // save fail the RPC's presence check and return invalid_setup_payload.
     const corePayload = { ...body.payload, events: body.payload.events.map((event) => {
       const coreEvent = { ...event }; Reflect.deleteProperty(coreEvent, "sidePools"); return coreEvent;
     }) };
-    Reflect.deleteProperty(corePayload, "tournamentDirectorPublicName");
     const { data, error } = await supabase.rpc("save_tournament_setup_version", { p_tournament_id: id, p_expected_version: body.expectedVersion, p_payload: corePayload, p_idempotency_key: body.idempotencyKey });
     if (error) return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
     if (isSavedSetup(data, body)) {
