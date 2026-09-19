@@ -142,6 +142,14 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
     {event ? <section className="correction-item"><h2>{event.name}</h2><p>{event.checkedInCount} checked in · {event.noShowCount ?? 0} no-show · {unresolvedCount} unresolved · {event.pendingDeskCount} desk request{event.pendingDeskCount === 1 ? '' : 's'}.</p>
       {event.windowState === 'open' ? <button className="secondary" type="button" disabled={busy || unresolvedCount > 0} onClick={() => void toggleWindow('close')}>Close event check-in</button> : <button className="primary" type="button" disabled={busy || ['in_progress','completed','finalized'].includes(event.playState ?? '')} onClick={() => void toggleWindow('open')}>{event.checkedInCount || event.noShowCount ? 'Reopen event check-in' : 'Begin event check-in'}</button>}
       {event.windowState === 'open' && unresolvedCount > 0 ? <p className="auth-note">Close becomes available after every enrolled player is checked in or marked as a no-show.</p> : null}
+      {/* Measured on the 2026-09-19 walkthrough: on an event whose play was
+          already completed, this button sat greyed with nothing said, and the
+          desk buttons below it were greyed too. Pressing it did nothing and
+          printed nothing, which reads as a broken screen rather than a closed
+          one. The condition is the same list the button's disabled test uses. */}
+      {event.windowState !== 'open' && ['in_progress','completed','finalized'].includes(event.playState ?? '')
+        ? <p className="auth-note">Check-in cannot be opened because play for this event has already started. The desk buttons below stay unavailable while check-in is closed.</p>
+        : null}
     </section> : null}
     {event?.windowState === 'open' ? <section className="correction-item"><h2>Live event QR code</h2><p>Keep this page open on the physical event display. It refreshes automatically every 60 seconds.</p>{liveCode?.image ? <Image unoptimized src={liveCode.image} alt={`Live check-in QR code for ${event.name}`} width={320} height={320} /> : <p>Preparing live code…</p>}<button className="secondary" type="button" disabled={busy} onClick={() => void refreshCode()}>Refresh QR now</button></section> : null}
     <section className="correction-item"><h2>Desk requests</h2><p>Requests that cannot safely be checked in automatically stay here. Record cash/check payment and approve event enrollment first. Then select the matching paid, enrolled player below to check them in.</p><ul>{workspace.requests.map((request) => <li key={request.requestId}><strong>{request.firstName} {request.lastName}</strong> · {eventNames.get(request.eventId) ?? 'Event'} · awaiting desk review</li>)}{workspace.requests.length === 0 ? <li>No desk review requests are waiting.</li> : null}</ul></section>

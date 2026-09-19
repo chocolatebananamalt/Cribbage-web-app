@@ -288,3 +288,42 @@ test("the money message states the amount the pool is holding", () => {
   assert.match(retirementRejectionMessage("side_pool_has_money", activity), /\$25\.00/);
   assert.doesNotMatch(retirementRejectionMessage("side_pool_has_money"), /\$/, "with no activity payload it must not invent a figure");
 });
+
+// Measured live against production on 2026-09-19: retire the pool, then press
+// the same quick-add preset, and the page answers "Side Pool request rejected:
+// duplicate pool name." The confirmation panel had promised the opposite, that
+// the name was freed and the pool could be added back under the same name and
+// fee. The cause is that event_side_pool_active_name_unique_idx is unique over
+// ROWS, (event_id, lower(trim(display_name))) where active, not over the newest
+// version of each pool, so version 1 keeps saying active=true and keeps holding
+// the name. The definition table is append-only, so that row can never be
+// changed. Nothing pinned this copy, which is why it was wrong.
+test("the removal confirmation does not promise an undo it cannot deliver", () => {
+  const client = readFileSync(
+    fileURLToPath(new URL("../src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx", import.meta.url)),
+    "utf8");
+  const panel = /Nobody has elected into this pool[\s\S]*?Keep Side Pool/.exec(client);
+  assert.ok(panel, "the removal confirmation panel must still exist");
+  const copy = panel[0];
+  assert.doesNotMatch(copy, /name and its slot are freed/,
+    "the name is NOT freed; only the slot is");
+  assert.doesNotMatch(copy, /add it again with the same name/,
+    "re-adding under the same name is refused duplicate_pool_name");
+  assert.match(copy, /cannot be undone/i,
+    "the director must be told this is one way before they press it");
+  assert.match(copy, /slot is freed/,
+    "the slot genuinely is freed and that is worth saying");
+});
+
+test("duplicate pool name explains why no pool by that name is visible", () => {
+  const client = readFileSync(
+    fileURLToPath(new URL("../src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx", import.meta.url)),
+    "utf8");
+  const map = /const errors: Record<string, string> = \{[\s\S]*?\};/.exec(client);
+  assert.ok(map, "the add-path error map must still exist");
+  assert.match(map[0], /duplicate_pool_name:/,
+    "otherwise the director sees the bare enum 'duplicate pool name'");
+  const message = /duplicate_pool_name: "([^"]+)"/.exec(map[0])[1];
+  assert.match(message, /removed pool keeps its name/,
+    "the message must say why the name is taken when nothing by that name is on the page");
+});
