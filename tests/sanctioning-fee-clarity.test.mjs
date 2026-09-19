@@ -67,8 +67,8 @@ test("the ACC sanctioning fee rate editor is typeable and never saves silently",
   // draft and drops focus, so the rate cannot be typed at all.
   assert.doesNotMatch(client, /key=\{`main-sanctioning-rate-\$\{displayedMain\}`\}/);
   assert.doesNotMatch(client, /key=\{`consolation-sanctioning-rate-\$\{displayedConsolation\}`\}/);
-  assert.match(client, /key=\{`main-sanctioning-rate-\$\{payload\.mainSanctioningFeeRateCents\}-\$\{eventKind === "main"\}`\}/);
-  assert.match(client, /key=\{`consolation-sanctioning-rate-\$\{payload\.consolationSanctioningFeeRateCents\}-\$\{eventKind === "consolation"\}`\}/);
+  assert.match(client, /key=\{`main-sanctioning-rate-\$\{storedMainRateCents\}-\$\{eventKind === "main"\}`\}/);
+  assert.match(client, /key=\{`consolation-sanctioning-rate-\$\{storedConsolationRateCents\}-\$\{eventKind === "consolation"\}`\}/);
   // Save must be blocked by disabled state, not by an early return that leaves
   // the director with no rate change and no explanation.
   assert.match(client, /const canSave = eventKind !== null && reason\.trim\(\)\.length > 0 && rateChanged;/);
@@ -76,4 +76,38 @@ test("the ACC sanctioning fee rate editor is typeable and never saves silently",
   assert.match(client, /eventKind === "consolation" && !canSave/);
   assert.match(client, /A reason is required\./);
   assert.match(client, /Cancel rate change/);
+});
+
+test("the Adjust rate buttons do not wait for a first setup save", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
+  // A director sets the ACC rates while creating the tournament, before any
+  // draft exists. The RPC has always allowed that: it checks tournament status,
+  // the director role, and whether play started, never a setup revision. The
+  // page used to gate on canAdjust={!!revisionId && !pending}, so both buttons
+  // were dead on every new tournament and nothing on screen said why.
+  assert.doesNotMatch(client, /canAdjust=\{!!revisionId/);
+  assert.match(client, /canAdjust=\{!pending\}/);
+  assert.match(client, /unavailableReason/);
+});
+
+test("the panel shows the rate in force, not the rate in the saved draft", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
+  // An override applies with or without a saved revision. Reading the rate off
+  // the setup payload showed 3.00 straight back to a director who had just
+  // changed it, because a never-saved tournament falls back to blankPayload.
+  assert.match(client, /const effectiveMainRateCents = sanctioningFee\?\.mainRateCents/);
+  assert.match(client, /const effectiveConsolationRateCents = sanctioningFee\?\.consolationRateCents/);
+  assert.match(client, /mainRateCents=\{effectiveMainRateCents\}/);
+  assert.match(client, /mainRateCents: workspace\.sanctioningFee\.mainRateCents/);
+});
+
+test("each rate rejection names its own reason", async () => {
+  const { sanctioningFeeRateRejectionMessage } = await import("../src/lib/api/sanctioning-fee.ts");
+  assert.match(sanctioningFeeRateRejectionMessage("rate_locked_after_start"), /Play has already started/);
+  assert.match(sanctioningFeeRateRejectionMessage("rate_unchanged"), /already the rate in force/);
+  assert.match(sanctioningFeeRateRejectionMessage("not_director"), /Co-Director/);
+  assert.match(sanctioningFeeRateRejectionMessage("tournament_unavailable"), /draft or open/);
+  assert.match(sanctioningFeeRateRejectionMessage(null), /Reload the page/);
+  const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
+  assert.doesNotMatch(client, /Confirm the event has not started and try again/);
 });
