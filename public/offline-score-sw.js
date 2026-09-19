@@ -54,12 +54,45 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith((async () => {
-      const names = await caches.keys();
-      for (const name of names.filter((value) => value.startsWith(OFFLINE_SCORE_CACHE_PREFIX))) {
-        const cached = await caches.open(name).then((cache) => cache.match(request));
-        if (cached) return cached;
+      // This MUST try the network first. Serving a cached build asset whenever
+      // one exists looks harmless because these paths are conventionally
+      // immutable, but this app's build id is the literal string "immutable",
+      // so /_next/static/immutable/chunks/<name>.js is the SAME URL in every
+      // deploy. Cache-first therefore pinned a device to the JavaScript of
+      // whichever build first prepared a game for offline use, forever.
+      //
+      // The page still rendered, because the HTML is server-rendered fresh on
+      // every request and is not cached here. Fresh HTML against stale chunks
+      // fails hydration, React never attaches its handlers, and the result is a
+      // page that looks completely normal and ignores every click and
+      // keystroke. Observed 2026-09-18 on two separate directors' devices right
+      // after a deploy: neither could type into Create Tournament, while a
+      // browser with no cache worked.
+      //
+      // The cached copy is still the right answer when the network is gone,
+      // which is the only thing this worker exists for. The timeout keeps a
+      // dead-slow venue connection from stalling score entry.
+      const cachedCopy = async () => {
+        const names = await caches.keys();
+        for (const name of names.filter((value) => value.startsWith(OFFLINE_SCORE_CACHE_PREFIX))) {
+          const cached = await caches.open(name).then((cache) => cache.match(request));
+          if (cached) return cached;
+        }
+        return null;
+      };
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 3000);
+        try {
+          const network = await fetch(request, { signal: controller.signal });
+          if (network && network.status < 400) return network;
+        } finally {
+          clearTimeout(timer);
+        }
+      } catch {
+        // offline, aborted, or a network error: fall through to the cache
       }
-      return fetch(request);
+      return (await cachedCopy()) ?? fetch(request);
     })());
   }
 });
