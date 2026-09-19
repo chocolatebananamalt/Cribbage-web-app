@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
@@ -13,5 +14,5 @@ export default async function CorrectionPolicyPage({ params }: { params: Promise
   const access = await requireTournamentAccess(tournamentId);
   if (!['director', 'co_director'].includes(access.role)) notFound();
   const policy = await getCorrectionPolicy(access.user.id, tournamentId);
-  return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="policy-title"><p className="eyebrow">DIRECTOR SETTINGS</p><h1 id="policy-title">Correction Policy</h1><p className="auth-note">New tournaments start with immediate correction authority and an optional reason.</p><CorrectionPolicyClient actorId={access.user.id} policy={policy} /><SharedDeviceSignOut /></section></main>;
+  return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="policy-title"><p className="eyebrow">DIRECTOR SETTINGS</p><h1 id="policy-title">Correction Policy</h1><p className="auth-note">New tournaments start with immediate correction authority and an optional reason.</p><CorrectionPolicyClient actorId={access.user.id} policy={policy} /><Link className="guide-link" href={`/tournament/${tournamentId}/corrections`}>Back to Score Corrections</Link><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link><SharedDeviceSignOut /></section></main>;
 }

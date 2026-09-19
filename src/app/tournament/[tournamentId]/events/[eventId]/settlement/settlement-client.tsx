@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { mrpBlockerMessage } from "../../../../../../lib/results/mrp-blocker-message";
 
 import { isRejectedSettlementDraft, isSettlementDraftOutcome, isSettlementDraftRequest, type SettlementAward, type SettlementDraftRequest, type SettlementMrpClaim, type SettlementPlacement, type SettlementWorkspace } from "../../../../../../lib/api/settlement-draft";
 import { formatUsdInput, parseUsdMinor } from "../../../../../../lib/money";
@@ -183,7 +184,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
       </fieldset>
       <fieldset disabled={busy || !!locked}>
         <legend>Server-calculated MRP awards</legend>
-        {workspace.automaticMrp.status === "available" ? <p className="auth-note">ACC published MRP schedule effective {workspace.automaticMrp.effectiveDate}. Values are calculated and verified by the server from the locked qualifying result and recorded playoff exit rounds.</p> : <p className="error-text">Automatic MRP calculation is blocked: {workspace.automaticMrp.code.replaceAll("_", " ")}.</p>}
+        {workspace.automaticMrp.status === "available" ? <p className="auth-note">ACC published MRP schedule effective {workspace.automaticMrp.effectiveDate}. Values are calculated and verified by the server from the locked qualifying result and recorded playoff exit rounds.</p> : <p className="error-text">{mrpBlockerMessage(workspace.automaticMrp.code)}</p>}
         {mrpClaims.map((entry) => <div className="correction-item" key={entry.participantId}>
           <strong>{entry.displayName}</strong>
           <label>MRP award (whole points)<input readOnly inputMode="numeric" value={entry.mrpPoints} /></label>

@@ -9,11 +9,15 @@ export function SharedDeviceSignOut() {
   const [error, setError] = useState<string | null>(null);
   const [localState, setLocalState] = useState<{ status: "checking" | "safe" | "unsafe" | "unavailable"; offlineCount: number; retryCount: number }>({ status: "checking", offlineCount: 0, retryCount: 0 });
 
+  async function readLocalState() {
+    const [offlineCount] = await Promise.all([countOfflineSubmissions()]);
+    const retryCount = countAppSessionStorageRecords(window.sessionStorage);
+    return { status: offlineCount === 0 && retryCount === 0 ? "safe" as const : "unsafe" as const, offlineCount, retryCount };
+  }
+
   async function refreshLocalState() {
     try {
-      const [offlineCount] = await Promise.all([countOfflineSubmissions()]);
-      const retryCount = countAppSessionStorageRecords(window.sessionStorage);
-      setLocalState({ status: offlineCount === 0 && retryCount === 0 ? "safe" : "unsafe", offlineCount, retryCount });
+      setLocalState(await readLocalState());
     } catch {
       setLocalState({ status: "unavailable", offlineCount: 0, retryCount: 0 });
     }
@@ -21,7 +25,14 @@ export function SharedDeviceSignOut() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => { void refreshLocalState(); }, 0);
-    return () => window.clearTimeout(timer);
+    const onVisible = () => { if (document.visibilityState === "visible") void refreshLocalState(); };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+    };
   }, []);
 
   async function signOut() {
@@ -44,6 +55,13 @@ export function SharedDeviceSignOut() {
     setBusy(true);
     setError(null);
     try {
+      const current = await readLocalState();
+      if (current.status !== "safe") {
+        setLocalState(current);
+        setError("This device now has unsent tournament work, so nothing was cleared. Let the app finish sending before handing the device to another player.");
+        setBusy(false);
+        return;
+      }
       await clearOfflineScoreStorage();
       clearAppSessionStorage(window.sessionStorage);
       const response = await fetch("/auth/sign-out", { method: "POST", headers: { "x-acc-clear-safe-app-data": "1" }, credentials: "same-origin", cache: "no-store" });
