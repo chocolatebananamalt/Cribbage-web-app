@@ -127,3 +127,19 @@ test("hosted rollback fixture covers all team evidence modes, mismatch, authorit
     "offline replay conflict accepted","set constraints all immediate","rollback;",
   ]) assert.match(hostedFixture,new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));
 });
+
+test("the seating directory offers an event to choose when none is in the URL", () => {
+  const page = readFileSync("src/app/tournament/[tournamentId]/seating-directory/page.tsx", "utf8");
+  const client = readFileSync("src/app/tournament/[tournamentId]/seating-directory/seating-directory-client.tsx", "utf8");
+  const hub = readFileSync("src/app/tournament/[tournamentId]/page.tsx", "utf8");
+  // The client still has no picker of its own, which is why the page must supply one.
+  assert.match(client, /const\[data,setData\][\s\S]*?\[eventId\]=useState\(initialEventId\)/);
+  assert.match(client, /Choose a specific event to open its published seating directory\./);
+  // The hub link carries no event, so the no-event path is the one a director hits.
+  assert.match(hub, /href=\{`\/tournament\/\$\{tournamentId\}\/seating-directory`\}/);
+  assert.match(page, /const chooser=event\?null:await getTournamentResultEventSummary\(access\.user\.id,tournamentId\);/);
+  assert.match(page, /seating-directory\?event=\$\{item\.eventId\}/);
+  assert.match(page, /Open published seating/);
+  assert.match(page, /No tournament events are active yet, so no seating has been published\./);
+  assert.ok(page.indexOf("chooser?") < page.indexOf("<SeatingDirectoryClient"));
+});
