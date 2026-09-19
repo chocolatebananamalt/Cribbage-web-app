@@ -167,13 +167,16 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
       const attendance = row.attendanceState;
       const payment = row.paid ? `paid${row.paymentMethod ? ` by ${row.paymentMethod}` : ''}` : `$${((row.amountReceivedMinor ?? 0) / 100).toFixed(2)} received of $${((row.amountOwedMinor ?? 0) / 100).toFixed(2)}`;
       // Every check-in control on this row is gated on row.paid, and the desk
-      // rule behind it needs a recorded obligation, not merely a zero balance.
+      // rule behind it needs a recorded amount owed to exist at all. A zero
+      // obligation counts as paid with no receipt; no obligation never does.
       // A player nobody has priced yet reads as "$0.00 received of $0.00",
       // which looks square, while all three buttons sit dead with no reason.
+      // Verified live: the Payments page says "Not set" for the same player,
+      // so only this screen flattens the two cases into one number.
       const rowBlockedReason = event?.windowState !== 'open'
         ? 'Check-in is closed for this event, so this row cannot be changed. Reopen the event above to check anyone in.'
         : !row.paid
-          ? `${row.displayName} has no recorded payment for this tournament, so the desk cannot check them in. Open Payments, set the amount owed, enter 0 if there is no fee, and record the receipt. Then come back here.`
+          ? `${row.displayName} has no amount owed recorded for this tournament, so the desk cannot check them in. Open Payments, set the amount owed, enter 0 if there is no fee, and record the receipt if money changed hands. Then come back here.`
           : null;
       return <li key={row.rosterEntryId}><span><strong>{row.displayName}</strong>{row.accNumber ? ` · ${row.accNumber}` : ''}<br />{payment} · {attendance === 'checked_in' ? 'checked in' : attendance === 'no_show' ? 'no-show' : 'not resolved'}</span>{rowBlockedReason && attendance !== 'checked_in' ? <p className="auth-note">{rowBlockedReason}</p> : null}<span className="attendance-actions">{attendance !== 'checked_in' ? <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void deskCheckIn(row.rosterEntryId)}>Check in at desk</button> : null}{appAccessOffers.has(row.rosterEntryId) ? <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void sendAppAccess(row.rosterEntryId, row.displayName)}>{attendance === 'checked_in' ? 'Send app access' : 'Check in and send app access'}</button> : null}{attendance === 'unresolved' || attendance === 'cancelled' ? <button className="secondary" type="button" disabled={busy || event?.windowState !== 'open'} onClick={() => void setAttendance(row.rosterEntryId, 'mark_no_show')}>Mark no-show</button> : <button className="secondary" type="button" disabled={busy || ['in_progress','completed','finalized'].includes(event?.playState ?? '')} onClick={() => void setAttendance(row.rosterEntryId, 'reset_attendance')}>Reset attendance</button>}</span></li>;
     })}{rosterForEvent.length === 0 ? <li>No enrolled players are available for this event.</li> : null}</ul></section>

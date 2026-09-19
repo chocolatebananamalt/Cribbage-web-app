@@ -66,10 +66,10 @@ test('check-in form gives a visible completion countdown and requires ACC number
 test("a desk row that cannot be checked in says why on screen", () => {
   const client = readFileSync("src/app/tournament/[tournamentId]/event-check-in/event-check-in-client.tsx", "utf8");
   // Every control on the row is gated on row.paid, and the desk rule behind it
-  // needs a recorded obligation rather than a zero balance. A player nobody has
+  // needs a recorded amount owed to exist at all. A player nobody has
   // priced yet reads as "$0.00 received of $0.00", which looks square, while
   // all three buttons sit dead with nothing saying why.
-  assert.match(client, /has no recorded payment for this tournament, so the desk cannot check them in/);
+  assert.match(client, /has no amount owed recorded for this tournament, so the desk cannot check them in/);
   assert.match(client, /enter 0 if there is no fee/);
   assert.match(client, /Check-in is closed for this event, so this row cannot be changed/);
   const reason = client.indexOf("rowBlockedReason && attendance !== 'checked_in'");
