@@ -235,7 +235,11 @@ test("both new routes follow the archive route shape and avoid the page-only acc
   assert.match(read(PAUSE_ROUTE), /set_event_play_pause_v1/);
   assert.match(read(CLOSE_ROUTE), /close_event_play_v1/);
   assert.match(read(CLOSE_ROUTE), /reopen_event_play_v1/);
-  assert.match(read(CLOSE_ROUTE), /p_confirmed: true/);
+  // The route forwards the caller's own confirmation rather than a literal,
+  // so the check inside close_event_play_v1 is a real second layer. The
+  // request contract is what guarantees the value is true for a close.
+  assert.match(read(CLOSE_ROUTE), /p_confirmed: body\.confirmed/);
+  assert.match(read("src/lib/api/event-control.ts"), /value\.confirmed === true/);
 });
 
 test("the request predicates accept exactly the four supported bodies", async () => {

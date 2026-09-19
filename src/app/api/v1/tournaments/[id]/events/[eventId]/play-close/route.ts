@@ -28,7 +28,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         p_tournament_id: id,
         p_event_id: eventId,
         p_reason: body.reason.trim(),
-        p_confirmed: true,
+        // Forward the caller's own confirmation rather than a constant, so the
+        // check inside close_event_play_v1 is a real second layer instead of a
+        // guard the route always satisfies for it.
+        p_confirmed: body.confirmed,
         p_operation_id: body.idempotencyKey,
       })
       : await admin.rpc("reopen_event_play_v1", {
