@@ -55,7 +55,14 @@ test("the public contact is tournament-scoped, primary-director-only, and does n
   const publicReaderStart = migration.indexOf("create or replace function public.get_public_registration_payment_options_v1");
   const publicReader = migration.slice(publicReaderStart, migration.indexOf("$$;", publicReaderStart));
   assert.doesNotMatch(publicReader, /join app\.profiles/);
-  assert.match(setupRoute, /Reflect\.deleteProperty\(corePayload, "tournamentDirectorPublicName"\)/);
+  // The director public name must never reach the legacy setup revision, but the route
+  // is no longer what keeps it out. 0211 made save_tournament_setup_version REQUIRE the
+  // key and 0225 makes that same wrapper strip it, exactly as it does stateTerritory.
+  // Deleting it in the route instead failed the wrapper's presence check and rejected
+  // every save, so assert the invariant where it now actually lives.
+  const wrapper = await read("database/migrations/0225_setup_save_stops_rejecting_every_payload.sql");
+  assert.match(wrapper, /p_payload-'stateTerritory'-'tournamentDirectorPublicName'/);
+  assert.doesNotMatch(setupRoute, /deleteProperty\(\s*corePayload\s*,\s*"tournamentDirectorPublicName"\s*\)/);
   assert.match(setupRoute, /configure_tournament_public_contact_from_setup_v1/);
   assert.match(contactRoute, /correct_tournament_public_contact_v1/);
   assert.match(setupClient, /Tournament Director name \(shown to players\)/);

@@ -149,3 +149,26 @@ export function isSetupOfficialChoices(value: unknown): value is SetupOfficialCh
     && choices.coDirectorProfileIds.length <= 4 && choices.coDirectorProfileIds.every(isUuid)
     && !choices.coDirectorProfileIds.includes(choices.directorProfileId) && new Set(choices.coDirectorProfileIds).size === choices.coDirectorProfileIds.length;
 }
+
+// The save RPC chain returns a precise reason and the workspace used to collapse
+// every one of them into "The setup was not changed." On 2026-09-19 that hid a
+// real deadlock for hours: the payload validator rejected every possible payload
+// and the director had no way to know why. Say the actual reason.
+const setupRejectionMessages: Record<string, string> = {
+  authentication_required: "Your sign-in expired. Reload the page, sign in again, then press Save All Events Draft. Your typing on this page is kept until you reload.",
+  not_director: "Only the tournament Director or a Co-director can save this setup. Ask the Director to add you under Officials, then reload.",
+  idempotency_conflict: "That same save was already recorded. Reload the page to see the saved version before changing anything else.",
+  setup_lifecycle_closed: "This tournament is past setup, so the draft can no longer be changed. Open Event Changes to amend a tournament that has started.",
+  stale_version: "Someone else saved this setup while you were typing. Reload the page to load their version, then re-enter your changes.",
+  invalid_officials: "One of the officials could not be accepted. Check that every co-director is a real account and that nobody is listed twice.",
+  invalid_event: "One of the events could not be accepted. Check the event name, kind, game count and entry fee on each event card.",
+  invalid_q_pool: "One of the Q Pool entries could not be accepted. Check the pool type and entry fee on each Q Pool.",
+  invalid_side_pool: "One of the Side Pool entries could not be accepted. Check the pool type and entry fee on each Side Pool.",
+  invalid_request: "The save could not be accepted as sent. Reload the page and re-enter the changes.",
+  invalid_setup_payload: "The setup details could not be accepted. Check the State or Territory, the start and end dates, the time zone, and that any ACC fee rate changed from the standard rate has both a reason and a reference.",
+};
+
+export function setupRejectionMessage(code: unknown) {
+  return (typeof code === "string" && setupRejectionMessages[code])
+    || "The setup was not saved and the reason was not recognized. Reload the page and try again.";
+}
