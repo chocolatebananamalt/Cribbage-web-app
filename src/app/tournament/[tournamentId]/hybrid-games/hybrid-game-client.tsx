@@ -138,6 +138,13 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
 
 export default function HybridGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, candidates, reviewCases }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; candidates: HybridGameItem[]; reviewCases: HybridGameItem[] }) {
   return <><SavedHybridReconciler actorId={actorId} tournamentId={tournamentId} />{!actorIdentityConfirmed ? <p className="error-text">Confirm your official identity before reviewing these games.</p> : null}
+    {/* Matching a digital entry to a paper card is a cross-checker action, and
+        it also needs a confirmed official identity. A director opening this page
+        from the hub used to get the explanation and then nothing at all, which
+        reads as a broken screen rather than as a role or a step they are missing. */}
+    {actorRole === "cross_checker" && actorIdentityConfirmed ? null : <p className="auth-note">{actorRole === "cross_checker"
+      ? "Confirm your official identity on the paper-versus-paper screen before matching a digital entry to a paper card."
+      : "Only an assigned cross-checker can match a digital entry to a paper card. Your role can independently confirm one after a cross-checker records it. Assign a cross-checker on the Cross-Checkers screen if nobody holds that role yet."}</p>}
     {actorRole === "cross_checker" && actorIdentityConfirmed ? <><h2>Match one digital entry to one paper card</h2>{candidates.length ? <ul className="correction-list">{candidates.map((item) => <CreateForm key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No current mixed-scorecard games are waiting for a paper-card match.</p>}</> : null}
     <h2>Independent mixed-card confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.caseId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No mixed-card confirmations are waiting for you.</p>}</>;
 }
