@@ -88,3 +88,15 @@ test("clearing shared-device data re-reads the gate at the moment it clears", ()
   assert.ok(check < wipe, "the re-read must happen before anything is deleted");
   assert.match(component, /visibilitychange/, "returning to the tab must refresh the gate");
 });
+
+test("the CSV import outcome renders beside the Import button, not a screen below it", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/tournament-day-import/tournament-day-import-client.tsx", "utf8");
+  const button = client.indexOf("onClick={() => void importCsv()}");
+  const message = client.indexOf('{message ? <p className="error-text" role="status">{message}</p> : null}');
+  const activeEvents = client.indexOf('id="active-events-title"');
+  assert.ok(button > -1 && message > -1 && activeEvents > -1);
+  // A refusal used to render after the preview and the active-event list, about
+  // a screenful below the control, so the visible page did not change at all.
+  assert.ok(message > button, "the outcome must follow the button that causes it");
+  assert.ok(message < activeEvents, "the outcome must come before the active-event list");
+});

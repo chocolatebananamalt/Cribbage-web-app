@@ -133,6 +133,11 @@ export default function TournamentDayImportClient({ tournamentId, workspace }: {
           <label>Registered player CSV<input type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => void selectCsv(event)} /></label>
           <button className="primary" type="button" disabled={busy || !rows.length} onClick={() => void importCsv()}>Import {rows.length || ""} Row{rows.length === 1 ? "" : "s"}</button>
         </div>
+        {/* The outcome of Import belongs beside Import. It used to render after
+            the preview and the active-event list, roughly a screenful below the
+            button, so a refusal left the visible part of the page unchanged and
+            read as nothing happening. Verified live against a 409. */}
+        {message ? <p className="error-text" role="status">{message}</p> : null}
         {fileName ? <p><strong>{fileName}</strong> · {rows.length} validated row{rows.length === 1 ? "" : "s"}</p> : null}
         {rows.length ? <section aria-labelledby="csv-preview-title"><h3 id="csv-preview-title">Import preview</h3><ul><li>{totals.eventEnrollments} event enrollment record{totals.eventEnrollments === 1 ? "" : "s"}</li><li>{dollars(totals.paymentMinor)} total payment evidence</li><li>{dollars(totals.qPoolMinor)} Q Pool payment evidence included in the audit/payment summary</li><li>{totals.sidePoolElections} operational Side Pool election{totals.sidePoolElections === 1 ? "" : "s"}</li></ul></section> : null}
       </section>
@@ -140,7 +145,6 @@ export default function TournamentDayImportClient({ tournamentId, workspace }: {
         <h2 id="active-events-title">Active events available to this import</h2>
         <ul>{workspace.events.map((event) => <li key={event.eventId}><strong>{event.name}</strong> · {event.eventType} · {event.format} · {event.scoringMethod}{event.qPoolSlots.length ? ` · Q Pools ${event.qPoolSlots.join(", ")}` : ""}{event.sidePools.length ? ` · Side Pools: ${event.sidePools.map((pool) => `${pool.displayName} ${dollars(pool.entryFeeMinor)}`).join("; ")}` : ""}</li>)}</ul>
       </section>
-      {message ? <p className="error-text" role="status">{message}</p> : null}
     </section>
   );
 }
