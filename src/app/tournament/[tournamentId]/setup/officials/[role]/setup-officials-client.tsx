@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { isAccNumber, normalizeAccNumberInput } from "../../../../../../lib/acc-number";
-import { type SetupOfficialRole, type SetupOfficialsWorkspace } from "../../../../../../lib/api/setup-officials";
+import { officialRejectionMessage, type SetupOfficialRole, type SetupOfficialsWorkspace } from "../../../../../../lib/api/setup-officials";
 
 const label: Record<SetupOfficialRole, string> = { co_director: "Co-Director", cross_checker: "Cross-Checker", judge: "Judge" };
 
@@ -17,7 +17,13 @@ export default function SetupOfficialsClient({ tournamentId, role, initial }: { 
     try {
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup-officials/${role}`, { method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), accNumber: normalizeAccNumberInput(accNumber), operationId: crypto.randomUUID() }) });
       const data: unknown = await response.json().catch(() => null);
-      if (!response.ok || !data || typeof data !== "object") { setMessage("The official could not be saved. Review the details and try again."); return; }
+      if (!response.ok || !data || typeof data !== "object") {
+        // The server already told us exactly why. Show that instead of blaming
+        // the director's typing, which is almost never the actual cause.
+        const code = data && typeof data === "object" ? (data as Record<string, unknown>).code : undefined;
+        setMessage(officialRejectionMessage(code, role));
+        return;
+      }
       const result = data as Record<string, unknown>;
       setMessage(result.status === "registered_approved" ? `${label[role]} is Registered & Approved.` : result.status === "invitation_email_sent" ? `Not Registered — invitation email sent.` : "The official was saved, but email delivery could not be confirmed.");
       setFirstName(""); setLastName(""); setEmail(""); setAccNumber(""); router.refresh();
@@ -27,7 +33,9 @@ export default function SetupOfficialsClient({ tournamentId, role, initial }: { 
     if (busy) return; setBusy(true); setMessage(action === "remove" ? "Removing official authority…" : "Restoring official authority…");
     try {
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup-officials/${role}`, { method: "PATCH", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify({ nominationId, action, operationId: crypto.randomUUID() }) });
-      setMessage(response.ok ? action === "remove" ? "Official authority was removed immediately." : "Official authority was restored." : "The official role was not changed. Refresh and review the current list.");
+      const patched: unknown = response.ok ? null : await response.json().catch(() => null);
+      const patchCode = patched && typeof patched === "object" ? (patched as Record<string, unknown>).code : undefined;
+      setMessage(response.ok ? action === "remove" ? "Official authority was removed immediately." : "Official authority was restored." : officialRejectionMessage(patchCode, role));
       if (response.ok) router.refresh();
     } catch { setMessage("The result could not be confirmed. Refresh before trying again."); } finally { setBusy(false); }
   }

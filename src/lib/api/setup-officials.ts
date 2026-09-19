@@ -26,3 +26,21 @@ export function isSetupOfficialsWorkspace(value: unknown): value is SetupOfficia
   if (!object(value) || !exact(value, ["tournamentName", "role", "canManage", "capacity", "entries"]) || typeof value.tournamentName !== "string" || !isSetupOfficialRole(String(value.role)) || typeof value.canManage !== "boolean" || value.capacity !== 12 || !Array.isArray(value.entries) || value.entries.length > 12) return false;
   return value.entries.every((entry) => object(entry) && exact(entry, ["nominationId", "displayName", "firstName", "lastName", "email", "accNumber", "status", "profileId"]) && isUuid(entry.nominationId) && name(entry.displayName) && typeof entry.firstName === "string" && typeof entry.lastName === "string" && typeof entry.email === "string" && typeof entry.accNumber === "string" && ["registered_approved", "invitation_email_sent", "delivery_unavailable"].includes(String(entry.status)) && (entry.profileId === null || isUuid(entry.profileId)));
 }
+
+// nominate_tournament_setup_official_v1 returns a specific rejection code for
+// each refusal, and the client used to collapse all seven into "Review the
+// details and try again". That is wrong in the most common case: the details are
+// correct and the tournament setup simply has not been saved yet, so there is no
+// setup revision to hang the invitation expiry on. A director reading the old
+// message re-typed correct details over and over.
+export function officialRejectionMessage(code: unknown, role: string) {
+  const who = role === "co_director" ? "co-director" : role === "cross_checker" ? "cross-checker" : "judge";
+  if (code === "saved_setup_end_required") return `Save the tournament setup first. Open Set Up Tournament, fill in the state or territory and the end date, and press Save All Events Draft. The ${who} invitation expires with the tournament, so it needs a saved end date before it can be sent.`;
+  if (code === "not_primary_director") return `Only the tournament's primary director can add a ${who}.`;
+  if (code === "official_capacity_reached") return `This tournament already has the maximum of 12 ${who} positions filled or pending.`;
+  if (code === "duplicate_official") return `That email address is already assigned as a ${who} for this tournament.`;
+  if (code === "self_assignment_forbidden") return `You cannot assign yourself as a ${who}.`;
+  if (code === "idempotency_conflict") return "A different request is already using this submission id. Reload the page and try again.";
+  if (code === "invalid_request") return "Check the first name, last name, email address, and ACC number, then try again.";
+  return `The ${who} could not be saved. Reload the page and try again.`;
+}
