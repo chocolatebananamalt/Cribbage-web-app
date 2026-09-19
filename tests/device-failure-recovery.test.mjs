@@ -100,3 +100,15 @@ test("recovery browser preserves proposal and review identities across interrupt
   assert.match(client, /Retry sends the exact same protected request/);
   assert.match(client, /Retry sends the exact same protected decision/);
 });
+
+test("a non cross-checker is told why the recovery screen is empty", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/recoveries/recovery-client.tsx", "utf8");
+  // Proposing a recovery is a cross-checker action. A director reaching this
+  // page from the hub saw the explanation of what recovery is and then nothing,
+  // which reads as a broken screen rather than as a role they do not hold.
+  assert.match(client, /Only an assigned cross-checker can start a recovery/);
+  assert.match(client, /Assign a cross-checker on the Cross-Checkers screen/);
+  const note = client.indexOf("Only an assigned cross-checker can start a recovery");
+  const gate = client.indexOf('actorRole === "cross_checker" ? <>');
+  assert.ok(note > -1 && gate > -1 && note < gate, "the note must render before the gated section");
+});
