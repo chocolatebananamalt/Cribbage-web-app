@@ -172,3 +172,13 @@ test("route and UI retain the server-only authority and reviewed import boundary
   assert.match(storage, /"event-roster-enrollment:"/);
   assert.match(storage, /"event-schedule:"/);
 });
+
+test("the enrolled player list does not call an unlinked player a paper scorecard", () => {
+  const client = read("src/app/tournament/[tournamentId]/schedule/schedule-client.tsx");
+  // The workspace returns profileLinked, which is whether an app account is
+  // attached, and nothing about the roster's scorecard type. Labelling it
+  // Digital/Paper made this page contradict the roster and the participants
+  // page for every digital player who has not claimed an account yet.
+  assert.doesNotMatch(client, /profileLinked \? "Digital" : "Paper"/);
+  assert.match(client, /profileLinked \? "App account linked" : "No app account"/);
+});

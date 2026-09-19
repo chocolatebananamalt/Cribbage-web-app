@@ -134,7 +134,11 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
         : <p className="success-text">{activeEvent.playState === "in_progress" ? "Play is in progress." : activeEvent.playState === "completed" ? "All scheduled games are complete." : "This event is finalized."}{activeEvent.startedAt ? ` Started by ${activeEvent.startedBy ?? "an official"}.` : ""}</p>}
     </section> : <>
       <section className="correction-item"><div className="participant-selection-heading"><div><h2>Enrolled Players</h2><p>Use these permanent IDs in the schedule file.</p></div><button className="secondary" type="button" onClick={downloadTemplate}>Download CSV template</button></div>
-        <ul className="schedule-roster-list">{participants.map((participant) => <li key={participant.participantId}><strong>{participant.verificationId}</strong><span>{participant.displayName}</span><small>{participant.profileLinked ? "Digital" : "Paper"}</small></li>)}</ul></section>
+        <ul className="schedule-roster-list">{participants.map((participant) => <li key={participant.participantId}><strong>{participant.verificationId}</strong><span>{participant.displayName}</span>{/* This reads profileLinked, which is whether an app account is attached,
+            not the roster's scorecard type. Labelling it Digital/Paper made this
+            page contradict the roster and the participants page, where a player
+            set to a digital scorecard with no account yet still reads Digital. */}
+          <small>{participant.profileLinked ? "App account linked" : "No app account"}</small></li>)}</ul></section>
       <section className="correction-item"><h2>Import Reviewed Schedule</h2><label>Choose CSV file<input className="check-in-control" type="file" accept=".csv,text/csv,text/plain" disabled={!ready || busy || !!pending} onChange={(event) => {
         const file = event.target.files?.[0]; if (!file) return; if (file.size > 750_000) { setMessage("The schedule file is too large."); return; }
         void file.text().then((text) => { setCsv(text); setReviewed(false); setMessage(null); }).catch(() => setMessage("The schedule file could not be read. Choose the file again or paste its rows."));
