@@ -55,7 +55,7 @@ export default function RegistrationClaimReviewClient({ actorId, tournamentId, c
   function decide(claim: RegistrationClaimReviewItem, decision: "approved_for_roster" | "rejected") {
     if (!ready || busy || locked) return;
     const draft = draftFor(claim.claimId);
-    const envelope: RegistrationClaimReviewRequest = { claimId: claim.claimId, decision, duplicateResolution: decision === "approved_for_roster" && claim.collisionClaimIds.length ? "confirmed_distinct_person" : null, duplicateOfClaimId: null, reason: draft.reason.trim(), idempotencyKey: crypto.randomUUID() };
+    const envelope: RegistrationClaimReviewRequest = { claimId: claim.claimId, decision, duplicateResolution: decision === "approved_for_roster" && claim.requiresDistinctConfirmation ? "confirmed_distinct_person" : null, duplicateOfClaimId: null, reason: draft.reason.trim(), idempotencyKey: crypto.randomUUID() };
     if (!write(storageKey, envelope)) { setMessage("This browser cannot safely retain the review for retry. Enable session storage before continuing."); return; }
     setLocked(envelope); void send(envelope);
   }
