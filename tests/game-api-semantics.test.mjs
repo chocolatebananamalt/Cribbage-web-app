@@ -634,7 +634,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /Playing with one paper card and one digital card/);
   assert.match(liveScore, /Both assigned players must sign in as themselves/);
   assert.match(liveScore, /navigator\.onLine/);
-  assert.match(liveScore, /Saved Offline — Waiting to Sync/);
+  assert.match(liveScore, /Saved Offline, Waiting to Sync/);
   assert.match(liveScore, /queueOfflineSubmission/);
   assert.match(liveScore, /replayOfflineSubmission/);
   assert.match(liveScore, /This confirmation has not been saved\. Reconnect before confirming\./);

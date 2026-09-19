@@ -122,3 +122,87 @@ Qualifiers: Walter Nagel and Clement Fosdick. High non-qualifier: Harold Breck.
 Three players tied on 12 game points and 6 wins, and the app ordered them by net
 spread and reported no unresolved tie. Observed, not checked against the
 rulebook: the ordering was game points, then wins, then net spread.
+
+## What happened after this log was first written
+
+Everything below was measured after the walkthrough, on the same tournament and
+the same deployment, and is recorded here so the log is not read as the last
+word.
+
+### The three defects above
+
+1. **Replace and Close now confirm first.** Both controls open a panel naming
+   exactly what stops working, and both state that registrations already
+   received are kept either way. Merged as PR #115 and confirmed present in the
+   production bundle `2ulpngs2l8m7u.js`, which carries all three confirmation
+   strings. The behavioural click test still needs a tournament with an open
+   link; this one's link is closed.
+2. **Display names are still the placeholder.** Deferred by the owner. The two
+   accounts that need real names are `chocolatebananamalt@gmail.com` and
+   `maggy416@yahoo.com`.
+3. **The `form_input` note stands.** Not a product defect.
+
+### Automatic MRP: a correct refusal, not a defect
+
+Step 33 finalized qualification, and the settlement screen then said "Automatic
+MRP calculation is blocked: unsupported game count." That was recorded as an
+open item. It is not a bug.
+
+The ACC published schedule `acc-published-mrp-2016-08-01` defines a minimum
+qualifying game-point figure only for Main events of 12, 14, 16, 18, 20, 21 or
+22 games, and Consolation events of 7, 8, 9, 10 or 12. This tournament's Main
+Event is configured for 9 games, read from
+`app.tournament_setup_event_versions.game_count`. A 9-game Main has no published
+row, so there is no MRP to calculate and adding a row would be inventing rating
+points. The `case` expression in
+`0190_automatic_standard_singles_mrp_results.sql` and the TypeScript table in
+`src/lib/results/standard-singles-mrp-reference.ts` were compared line by line
+and agree exactly; a test now holds them to each other.
+
+What was actually wrong is that the screen printed the raw enum, so a director
+could not tell a broken feature from a correct refusal. Every blocker the server
+can return now has a sentence naming the cause and the next action. Merged as
+PR #116 and verified live on the settlement screen.
+
+**Operational consequence for a real tournament: a Main event must be configured
+for 12, 14, 16, 18, 20, 21 or 22 games, or MRPs will not calculate
+automatically and must be reported to the ACC by hand.**
+
+### Two findings from the earlier audit were false
+
+- **The 409 on roster removal is accurate.** "This player has payments,
+  check-in, seating, enrollment, or score activity. Use the applicable financial
+  or event workflow instead." That is what the guard checks. The remove flow
+  also already has Reason, Note and Cancel.
+- **The officials and cross-checker pages are reachable.** Both top-level routes
+  are redirect shims to `setup/officials/<role>`, which
+  `setup-official-summaries.tsx` links for every role. This matches
+  `docs/product/requirements.md` line 72, which retires the old workspace links
+  and keeps the bookmarks redirecting. A route reachability test now walks all
+  31 routes under the tournament workspace and allowlists exactly these two,
+  with that reason.
+
+### Also verified live since
+
+- **`0226`**: a Consolation event was created against the amended revision.
+- **`0227`, both halves**: Cancel and Retire succeeded in the UI on a
+  not-started event with registration closed, and the roster-scoping half was
+  proved by a rolled-back production probe returning
+  `old_guard_would_block=t | clean_player={"status":"roster_entry_withdrawn"} |
+  enrolled_player={"code":"downstream_activity_requires_event_workflow"}`.
+- **Create Private Link** works: one `roster_account_activations` row and one
+  event row. Full account activation still requires a second signed-in director
+  witnessing the request ID and witness phrase in person, which is by design.
+- **Registration does not touch Supabase email.** The public claim route is
+  anonymous and uses the service-role admin client, so the rate limit that
+  matters is magic-link sign-in, not registration.
+- **Vercel is deploying commits authored by Luke again.** PRs #113, #114, #115
+  and #116 each produced a Production deployment that reported success. The
+  earlier rule, that only a merge commit authored by the repository owner would
+  deploy, no longer holds.
+
+### Not exercised by this walkthrough
+
+The digital scoring path. All eight players were paper participants with no app
+account, so two independent digital submissions plus two confirmations were
+never run end to end. That remains the largest untested surface.

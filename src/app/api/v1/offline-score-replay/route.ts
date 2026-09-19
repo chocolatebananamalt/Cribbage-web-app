@@ -49,6 +49,24 @@ export async function POST(request: NextRequest) {
     const identity = await requireVerifiedIdentity(supabase);
     if (!identity) return apiJson({ error: "unauthorized" }, { status: 401 });
     if (raw.verifiedActorId !== identity.subject) return apiJson({ error: "actor_mismatch" }, { status: 401 });
+    // This route, not games/[id]/submissions, is where a first-time score
+    // arrives: score-entry.tsx saves the entry to the device queue and syncs it
+    // here, and only a recovered retry envelope takes the direct submission
+    // path. Pause All Play and Close Event (0229) therefore have to be enforced
+    // in both places or they are enforced in neither.
+    //
+    // The status is deliberately 423 rather than 409. A 409 here is the receipt
+    // protocol: syncOffline reads it as a disposition and, on a well-formed
+    // receipt, DELETES the queued entry. A paused submission has not been judged
+    // and must survive on the device, so it takes the branch that leaves the
+    // record in place and keeps Sync Saved Entry available. It also runs before
+    // the capability read, so a pause never burns a capability or writes a
+    // rejection row the player would have to be talked through later.
+    const gate = await supabase.rpc("get_game_play_gate_v1", { p_game_id: raw.gameId });
+    if (gate.error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (gate.data === "paused" || gate.data === "closed") {
+      return apiJson({ error: gate.data === "paused" ? "event_play_paused" : "event_play_closed" }, { status: 423 });
+    }
     // A fresh magic-link session for the same actor may replay the immutable
     // device-signed queue. The original session remains part of the signed
     // payload and capability lookup; a different actor is always rejected.
