@@ -46,6 +46,11 @@ export function CorrectionPolicyClient({ actorId, policy }: { actorId: string; p
   const [locked, setLocked] = useState<Envelope | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  // A save that works only moves "Active policy version N" by one, in a
+  // sentence above the controls that a director is not looking at. Every
+  // failure path here already says something; the success path said nothing,
+  // so the honest read of a working save was that the button did nothing.
+  const [saved, setSaved] = useState<string | null>(null);
 
   const reconcile = useCallback(async (envelope: Envelope): Promise<ReconciliationState> => {
     const response = await fetch(`/api/v1/tournaments/${policy.tournamentId}/correction-policy/reconciliation`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ idempotencyKey: envelope.idempotencyKey }) });
@@ -83,7 +88,7 @@ export function CorrectionPolicyClient({ actorId, policy }: { actorId: string; p
         return;
       }
     }
-    setBusy(true); setStatus(null);
+    setBusy(true); setStatus(null); setSaved(null);
     try {
       const response = await fetch(`/api/v1/tournaments/${policy.tournamentId}/correction-policy`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(envelope) });
       if (!response.ok) {
@@ -91,11 +96,11 @@ export function CorrectionPolicyClient({ actorId, policy }: { actorId: string; p
         setStatus(response.status === 409 ? "The tournament server cannot accept this policy now. Refresh to see the current policy." : "The policy save could not be completed. Retry uses the same protected request.");
         return;
       }
-      clearEnvelope(storageKey); setLocked(null); router.refresh();
+      clearEnvelope(storageKey); setLocked(null); setSaved(`Correction policy saved as version ${envelope.expectedPolicyVersion + 1}. A reason is ${envelope.reasonRequired ? "required" : "optional"}, and a correction ${envelope.requiredApprovals === 1 ? "waits for an independent approval before it applies" : "applies immediately"}. Corrections already recorded keep the policy they were made under.`); router.refresh();
     } catch {
       setLocked(envelope); setStatus("Network issue. Retry uses the same protected request.");
     } finally { setBusy(false); }
   }
 
-  return <section className="policy-settings"><p>Active policy version {policy.policyVersion}. Each saved change is preserved as a new version for future corrections; existing corrections keep their original policy.</p><label><input type="checkbox" checked={reasonRequired} disabled={!hydrated || busy || !!locked || !policy.canConfigure} onChange={(event) => setReasonRequired(event.target.checked)} /> Require a short reason for every correction</label><fieldset disabled={!hydrated || busy || !!locked || !policy.canConfigure}><legend>Correction authority</legend><label><input type="radio" checked={requiredApprovals === 0} onChange={() => setRequiredApprovals(0)} /> Apply a permitted correction immediately</label><label><input type="radio" checked={requiredApprovals === 1} onChange={() => setRequiredApprovals(1)} /> Require an independent cross-checker, director, or co-director approval</label></fieldset>{policy.canConfigure ? <button className="primary full" type="button" disabled={!hydrated || busy} onClick={save}>{busy ? "Saving policy…" : locked ? "Retry policy save" : "Save correction policy"}</button> : <p className="auth-note">This tournament is no longer configurable. The recorded policy remains visible for audit.</p>}{status ? <p className="error-text" role="alert">{status}</p> : null}</section>;
+  return <section className="policy-settings"><p>Active policy version {policy.policyVersion}. Each saved change is preserved as a new version for future corrections; existing corrections keep their original policy.</p><label><input type="checkbox" checked={reasonRequired} disabled={!hydrated || busy || !!locked || !policy.canConfigure} onChange={(event) => setReasonRequired(event.target.checked)} /> Require a short reason for every correction</label><fieldset disabled={!hydrated || busy || !!locked || !policy.canConfigure}><legend>Correction authority</legend><label><input type="radio" checked={requiredApprovals === 0} onChange={() => setRequiredApprovals(0)} /> Apply a permitted correction immediately</label><label><input type="radio" checked={requiredApprovals === 1} onChange={() => setRequiredApprovals(1)} /> Require an independent cross-checker, director, or co-director approval</label></fieldset>{policy.canConfigure ? <button className="primary full" type="button" disabled={!hydrated || busy} onClick={save}>{busy ? "Saving policy…" : locked ? "Retry policy save" : "Save correction policy"}</button> : <p className="auth-note">This tournament is no longer configurable. The recorded policy remains visible for audit.</p>}{status ? <p className="error-text" role="alert">{status}</p> : null}{saved ? <p role="status">{saved}</p> : null}</section>;
 }
