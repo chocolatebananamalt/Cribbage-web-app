@@ -137,9 +137,19 @@ test("the seating directory offers an event to choose when none is in the URL", 
   assert.match(client, /Choose a specific event to open its published seating directory\./);
   // The hub link carries no event, so the no-event path is the one a director hits.
   assert.match(hub, /href=\{`\/tournament\/\$\{tournamentId\}\/seating-directory`\}/);
-  assert.match(page, /const chooser=event\?null:await getTournamentResultEventSummary\(access\.user\.id,tournamentId\);/);
   assert.match(page, /seating-directory\?event=\$\{item\.eventId\}/);
   assert.match(page, /Open published seating/);
   assert.match(page, /No tournament events are active yet, so no seating has been published\./);
   assert.ok(page.indexOf("chooser?") < page.indexOf("<SeatingDirectoryClient"));
+  // The listing RPC serves only these roles and the helper turns its null into
+  // notFound(), so an ungated chooser would 404 a judge who used to reach the
+  // page. 0183 made the per-event requirement a privacy boundary, so passing a
+  // null event instead of listing events is not an option.
+  const listing = readFileSync("database/migrations/0146_scorecard_preference_and_results_discovery.sql", "utf8");
+  const privacy = readFileSync("database/migrations/0183_team_claim_lifecycle_directory_privacy.sql", "utf8");
+  assert.match(listing, /get_tournament_result_events_v1/);
+  assert.match(listing, /r[.]role in\('viewer','player','cross_checker','director','co_director'\)/);
+  assert.match(privacy, /and p_event_id is not null/);
+  assert.match(page, /const canListEvents=\["viewer","player","cross_checker","director","co_director"\]\.some\(\(role\)=>access\.roles\.includes\(role\)\);/);
+  assert.match(page, /const chooser=event\|\|!canListEvents\?null:await getTournamentResultEventSummary/);
 });
