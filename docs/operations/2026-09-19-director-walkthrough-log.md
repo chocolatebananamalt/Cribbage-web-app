@@ -434,3 +434,55 @@ Adding the co-director returned "The official was saved, but email delivery coul
 not be confirmed." The address used was `@buttonaudit.test`, which cannot receive
 mail, so that outcome is expected and the message is honest about it. Whether
 invitation email delivers to a real address is untested.
+
+## Section 2, Registration and roster
+
+Tournament `57516b95-4d6e-455d-b448-d7f72b3fed64`, "Button Audit 09-19-2026",
+pressed control by control in Chrome against production.
+
+### Verified working
+
+| Control | Result |
+|---|---|
+| Add Player Manually, 4 times | "Player added to the roster." Alice HI911, Ben HI912, Carla HI913, Dan HI914 |
+| Scorecard Type on the add form | Selecting Paper for Ben was accepted and stored |
+| Download CSV template | File landed at `tournament-player-list-template.csv`, header `First Name,Last Name,Email,ACC #,Scorecard Type` |
+| Player CSV chooser plus Import Players | "2 players imported." Elena HI915, Frank HI916 |
+| CSV Scorecard Type column | Honored per row: Elena digital, Frank paper |
+| Source provenance pill | Manual on the first four, CSV on the imported two |
+| Per-row Scorecard Type select | Changed Carla and Dan from paper to digital. Both moved to `scorecard_preference_version` 2 in `app.tournament_roster_entries` |
+
+### Defect found and fixed: the add form kept the previous Scorecard Type
+
+Adding Ben as Paper left the select on Paper. Carla and Dan were then both
+filed as Paper although nobody chose it, because every other field cleared
+and the form read as empty.
+
+Fix in `4248201`: reset the select to Digital alongside the other fields, the
+same default the CSV import documents. Pinned by a test in
+`tests/manual-roster-intake.test.mjs`. Suite 717 of 717.
+
+### Not verified: Remove from active roster
+
+The resolve form never opened. The click that should have opened it signed
+the director out instead, and the page redirected to `/sign-in`.
+
+That sign-out was an accident of this audit, not an application defect. The
+evidence rules out an expired session: every cookie was gone while
+`localStorage.__acc_walkthrough_link` survived, which is
+`signOut({ scope: "local" })` and not the "Clear safe app data" button; the
+`auth.sessions` row was still alive with its refresh token unrevoked; and the
+session had run 7 hours 18 minutes with writes succeeding minutes earlier.
+
+### Worth noting: Sign out sits directly under the last roster row
+
+`roster/page.tsx:19` renders `<SharedDeviceSignOut />` immediately after
+`<RosterClient />`, with no separator. The bottom roster row's "Remove from
+active roster" button and the "Sign out" button are therefore neighbours. A
+director reaching for the last player's Remove button on a tablet can sign
+the desk out mid-event. Recorded, not changed.
+
+### Carried forward
+
+Tournament Day CSV Import is a section 3 feature and is separate from the
+roster Import Player List verified above. It is still untested.
