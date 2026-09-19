@@ -5,6 +5,7 @@ import { registrationLinkManagementEnabled } from "../../../lib/api/public-regis
 import { accountActivationEnabled } from "../../../lib/api/account-activation-release";
 import { rule12CorrectionEnabled } from "../../../lib/api/rule12-correction-release";
 import { getAccessibleTournaments } from "../../../lib/tournaments/accessible-tournaments";
+import { ArchiveTournamentClient } from "./archive-tournament-client";
 
 const roleLabels: Record<string, string> = {
   director: "Director",
@@ -67,6 +68,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Tournament Results</Link>
           </section> : null}
         </section>
+        {access.roles.includes("director") ? <ArchiveTournamentClient tournamentId={tournamentId} tournamentName={tournamentName ?? "this tournament"} /> : null}
         <Link className="secondary workspace-chooser-link workspace-chooser-link-bottom" href="/">Back to Your Tournaments</Link>
         <SharedDeviceSignOut />
       </section>

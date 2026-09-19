@@ -38,12 +38,29 @@ test("setup workspace exposes the October pilot event and Q Pool menus", async (
 
 test("setup text, date, and money controls are not reduced to checkbox dimensions", async () => {
   const css = await readFile(cssPath, "utf8");
-  const genericCheckboxRule = css.lastIndexOf(".policy-settings input { min-height:auto; width:20px; height:20px;");
-  const setupInputRule = css.lastIndexOf(".policy-settings.setup-workspace input { width:100%; height:auto; min-height:46px;");
-  const setupLabelRule = css.lastIndexOf(".policy-settings.setup-workspace .setup-grid label,.policy-settings.setup-workspace .setup-subsection label { display:grid;");
-  assert.ok(genericCheckboxRule >= 0, "expected the existing policy checkbox rule");
-  assert.ok(setupInputRule > genericCheckboxRule, "setup input dimensions must override the checkbox rule");
-  assert.ok(setupLabelRule > genericCheckboxRule, "setup labels must override the policy checkbox layout");
+  // The 20x20 sizing exists for checkboxes and radios. It must never be written
+  // as a bare `.policy-settings input` rule: that shrank every text, date and
+  // money field on 20 of the 21 forms down to a 26x22 target that could be
+  // focused programmatically but was too small for a person to tap or type in.
+  assert.ok(
+    !/\.policy-settings input \{/.test(css),
+    "the checkbox sizing must be scoped to [type=checkbox]/[type=radio], never a bare .policy-settings input rule",
+  );
+  assert.match(css, /\.policy-settings input\[type=checkbox\],\.policy-settings input\[type=radio\] \{ min-height:auto; width:20px; height:20px;/);
+  assert.match(css, /\.policy-settings input:not\(\[type=checkbox\]\):not\(\[type=radio\]\) \{ width:100%; height:auto; min-height:46px;/);
+  assert.match(css, /\.policy-settings>label:has\(input:not\(\[type=checkbox\]\):not\(\[type=radio\]\)\)/);
+  // Every rule that stretches an input to full width must exclude checkboxes and
+  // radios, so the inverse defect cannot appear either: a checkbox blown up to
+  // 100% width inside a container that was only meant to size text fields.
+  const stretchRules = css.match(/[^{};,]*input[^{;]*\{[^}]*width:100%[^}]*\}/g) ?? [];
+  for (const rule of stretchRules) {
+    const selector = rule.slice(0, rule.indexOf("{"));
+    if (!selector.includes("policy-settings")) continue;
+    assert.ok(
+      selector.includes("[type=checkbox]") || selector.includes(":not([type=checkbox])"),
+      `full-width input rule must exclude checkboxes and radios: ${selector.trim()}`,
+    );
+  }
 });
 
 test("setup saves are recoverable and never presented as operational activation", async () => {

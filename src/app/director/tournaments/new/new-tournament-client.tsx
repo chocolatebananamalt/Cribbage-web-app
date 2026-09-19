@@ -31,9 +31,10 @@ export function NewTournamentClient() {
   }
 
   return <form className="policy-settings" onSubmit={create}>
-    <label>Tournament name<input required maxLength={200} disabled={!!pendingRequest} value={name} onChange={(event) => setName(event.target.value)} placeholder="Full Rehearsal — 09-16-2026" /></label>
-    <label>Planned tournament date<input required type="date" disabled={!!pendingRequest} value={plannedStartDate} onChange={(event) => setPlannedStartDate(event.target.value)} /></label>
+    <label>Tournament name<input required maxLength={200} value={name} onChange={(event) => { setName(event.target.value); setPendingRequest(null); }} placeholder="Full Rehearsal 09-16-2026" /></label>
+    <label>Planned tournament date<input required type="date" value={plannedStartDate} onChange={(event) => { setPlannedStartDate(event.target.value); setPendingRequest(null); }} /></label>
     <button className="primary full" disabled={busy || !name.trim() || !plannedStartDate} type="submit">{busy ? "Creating…" : pendingRequest ? "Retry Exact Draft Creation" : "Create Draft and Continue Setup"}</button>
+    {pendingRequest ? <p className="auth-note" role="status">That attempt did not confirm. Press Retry to send the identical request again, which cannot create a second tournament. Editing either field above starts a fresh attempt instead.</p> : null}
     {message ? <p className="error-text" role="alert">{message}</p> : null}
   </form>;
 }
