@@ -59,3 +59,21 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(css, /\.setup-post-finalization \{ display:grid/);
   assert.match(css, /setup-workspace:has\(\[role="alertdialog"\]\)/);
 });
+
+test("the ACC sanctioning fee rate editor is typeable and never saves silently", () => {
+  const client = readFileSync(new URL("../src/app/tournament/[tournamentId]/setup/setup-client.tsx", import.meta.url), "utf8");
+  // RateInput commits on every parseable keystroke. If its React key interpolates
+  // the value being edited, each accepted digit remounts the input, resets its
+  // draft and drops focus, so the rate cannot be typed at all.
+  assert.doesNotMatch(client, /key=\{`main-sanctioning-rate-\$\{displayedMain\}`\}/);
+  assert.doesNotMatch(client, /key=\{`consolation-sanctioning-rate-\$\{displayedConsolation\}`\}/);
+  assert.match(client, /key=\{`main-sanctioning-rate-\$\{payload\.mainSanctioningFeeRateCents\}-\$\{eventKind === "main"\}`\}/);
+  assert.match(client, /key=\{`consolation-sanctioning-rate-\$\{payload\.consolationSanctioningFeeRateCents\}-\$\{eventKind === "consolation"\}`\}/);
+  // Save must be blocked by disabled state, not by an early return that leaves
+  // the director with no rate change and no explanation.
+  assert.match(client, /const canSave = eventKind !== null && reason\.trim\(\)\.length > 0 && rateChanged;/);
+  assert.match(client, /eventKind === "main" && !canSave/);
+  assert.match(client, /eventKind === "consolation" && !canSave/);
+  assert.match(client, /A reason is required\./);
+  assert.match(client, /Cancel rate change/);
+});
