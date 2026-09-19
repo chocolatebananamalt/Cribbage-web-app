@@ -749,3 +749,130 @@ These need a second human, and the audit stopped rather than faking them.
 
 Close Event and Archive tournament are one way. They were left for a decision
 rather than taken during an audit.
+
+## Read this first if a tournament runs today
+
+**A digital versus paper game cannot be completed without two different
+officials signed in, and this tournament has zero cross-checkers.**
+
+`0148_hybrid_digital_paper_authoritative_completion.sql:264` rejects the first
+official as the reviewer, and line 265 requires that first official to hold the
+`cross_checker` role. So a mixed game needs a cross-checker to record it and a
+second, different official to confirm it. Neither exists here. Paper versus
+paper does not have this problem: `0223_one_official_can_complete_a_paper_game.sql`
+removed the separation of duties there on 2026-09-18.
+
+The unblock is one action, and it also unlocks four screens that stayed empty
+through this whole audit: add a cross-checker at Set Up Tournament, Tournament
+officials, Cross-Checker, Add/Remove, using an email address Luke controls, and
+have that person complete the emailed sign in. The add form was opened live and
+works. It was not submitted during the audit because the route calls
+`signInWithOtp` and a bounced send still spends the project's email rate limit.
+
+Until then, plan for every game to be scored the same way on both sides.
+
+## Correction to an earlier entry in this log
+
+Two claims elsewhere in this file were checked again and one was loose.
+
+**Verified properly.** "Nothing else reads this finalization" was first checked
+by grepping the function name. It was rechecked at table level:
+`0230_finalize_cross_checking.sql` creates exactly one table,
+`app.cross_check_finalizations`, and that name appears nowhere else in
+`database/migrations` or `src`. `0229_pause_all_play_and_close_event.sql` and
+`0224_archive_and_restore_a_tournament.sql` were read directly and neither
+mentions cross-checking in any of its rejection paths. Close Event and Archive
+genuinely do not depend on it.
+
+**Corrected.** A first reading of this session concluded that `ddbb37f`, the
+correction policy save confirmation, did not work in production, because a
+click produced no message and left the version display behind. It does work.
+Re-tested with the DOM polled every 400ms for 2.8 seconds: the confirmation
+appears, the displayed version moves to 3, and both persist. The earlier read
+caught a `router.refresh()` race in which the page briefly re-rendered with the
+pre-write version. Worth knowing because a director who hits that race and
+presses Save again gets a `stale_policy` refusal; the confirmation sentence,
+which names the version it just wrote, is the reliable signal.
+
+## Found after the section 5 pass
+
+### The Seating Directory was returning nothing at all
+
+Following the new event chooser through to a real event produced "Published
+seating is not available for this event yet" on an event whose seating is
+published. The RPC was queried directly and returned five correct rows. The
+route was answering `404 not_found`.
+
+The player branch of `get_tournament_seating_directory_unbounded_v1` builds
+`isSelf` as `l.profile_id=p_actor_id` across a LEFT JOIN on
+`app.roster_account_links`. A seated player with no app account puts a null on
+the left of that comparison, so `isSelf` comes back null, and the guard's
+`typeof entry.isSelf === "boolean"` then fails for the entire payload.
+
+That is the ordinary case, not an edge. A paper player never links an account,
+and one such player is enough to take the printed seating list out completely.
+Fixed in `d4c51c3` by normalising null to false at the route, which is exact
+rather than lenient: for an unlinked roster entry the answer is definitively
+false. Verified live afterwards: five assignments render, the Table filter
+fills with A and B, and Print Current List is usable.
+
+The SQL should `coalesce` at source. That is a change to a production function
+and is left for Luke to approve rather than applied during an audit.
+
+### Event Play Control looked available and was inert
+
+The readiness line read "All 24 scheduled games are recorded and verified.
+Close Event is available." while nothing on the screen could be operated. The
+confirmation tick box reported `disabled:false` in the DOM and still could not
+be ticked, because both fieldsets carry `disabled={busy || !reasonUsable}` and
+the disabled attribute therefore sits on the ancestor.
+
+The gate itself is correct: a reason is kept with the record. Nothing said so.
+Fixed in `0635cca`: the field is marked required and a line above both
+fieldsets names the rule.
+
+### The label and field fix was verified on the deployed site
+
+`label:has` is present in the served stylesheet. Five screens were then audited
+in the live page: setup, payments, side-pools, event-check-in and
+correction-policy. No horizontal overflow, no control sitting outside its
+label, and checkbox and radio labels still compute to `display: flex`, so they
+still read inline beside their box. Correction Policy was compared against a
+screenshot taken earlier in the same session and is pixel equivalent.
+
+One limit worth stating: the browser tooling would not change the viewport
+width, so this was confirmed at 1920 only. The rule replaces a side by side
+layout with a stacked one, which is the direction that helps a narrow screen
+rather than the direction that hurts it, but it has not been seen on a tablet.
+
+## Close Event and Archive: attempted, not completed
+
+Both were reached and both were correctly gated up to the final press.
+
+Close Event: the reason was entered, the confirmation tick accepted, and the
+dialog opened reading "Close Main Event? Every scheduled game is recorded and
+verified. After this, no player can submit a score for this event, and the
+event belongs to cross-checking." The dialog names the event, which is the
+behaviour the Event Changes screen was missing.
+
+The final confirmation was refused by the session's own permission layer as a
+change to a shared resource. That is a stop rather than something to work
+around, so neither Close Event nor Archive was completed. Everything up to the
+last press is verified.
+
+## Still open, added after section 5
+
+11. **`isSelf` should be coalesced in the seating directory SQL.** The route
+    normalises it, but the null originates in the function and any other caller
+    would hit the same 404.
+12. **A `router.refresh()` race leaves a saved correction policy showing the
+    previous version.** The next save then fails with `stale_policy`.
+13. **Resolved disputes vanish from the register**, so there is no record of
+    what was raised and how it was settled.
+14. **Em dashes in more app copy:** the seating directory's empty Team cell and
+    the Event Changes event list, which `b29b82e` changed to a colon.
+15. **"Main Eventcompleted" runs together** in the Event Play Control summary
+    list, with no separator between the event name and its state.
+16. **`display_name` "Tournament participant" now seen in six places,** the
+    newest being the dispute register's "Opened by" line and Event Play
+    Control's "Last resumed by" line.
