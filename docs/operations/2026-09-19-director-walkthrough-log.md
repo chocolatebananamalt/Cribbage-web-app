@@ -206,3 +206,132 @@ automatically and must be reported to the ACC by hand.**
 The digital scoring path. All eight players were paper participants with no app
 account, so two independent digital submissions plus two confirmations were
 never run end to end. That remains the largest untested surface.
+
+## Migrations 0229 to 0232: applied, probed, merged, deployed (07:20 UTC)
+
+Applying a migration is not evidence it works. plpgsql does not parse-analyse a
+function body at CREATE time, so a migration can apply cleanly and still raise on
+first call. Every function below was therefore called inside a transaction that
+was rolled back by a deliberate `raise`, forcing each branch to execute against
+live production data. After each probe the tables were re-counted to confirm zero
+residue, and all four came back clean.
+
+### 0229 pause and close
+
+Gate moved `open -> paused -> open -> closed`. Closing the Consolation event,
+which has no scheduled games, was refused `event_not_started`. Reopening the Main
+after it had downstream activity was refused `downstream_activity`. Calling close
+with `p_confirmed` false was refused `invalid_request`. Main readiness read
+36 scheduled, 36 resolved, 0 unresolved.
+
+### 0230 finalize cross-checking
+
+All 11 conditions evaluated. On the walkthrough tournament the only outstanding
+one was `cross_checkers_not_assigned`, which is a true statement about that
+tournament rather than a defect. Assigning a cross-checker inside the probe made
+`canFinalize` true, and the happy path then wrote its receipt, its finalization
+row with an 11-element conditions snapshot, and its audit row. Replay under the
+same operation id returned the identical payload; a second operation returned
+`already_finalized`; the immutability trigger refused an update with
+`immutable history`.
+
+One fix went in before applying. The games condition counted
+`state not in ('verified','corrected')`. Forfeits and approved device-failure
+recoveries leave `canonical_games.state` at `pending` forever by design, so that
+test would have left Finalize Cross-Checking permanently unpressable on any
+tournament with a single forfeit. It now calls
+`app.game_is_authoritatively_resolved_v1`, the shared predicate. The team-game
+half deliberately keeps the state test.
+
+### 0231 retire a side pool
+
+Money is refused first (`side_pool_has_money`, reporting `collectedMinor` 2000 in
+the probe), then any history at all (`side_pool_has_activity`, firing on a lone
+reconciliation row with no money). No receipt is written on any rejection;
+exactly one was written for the one accepted retirement. Replay identical,
+`idempotency_conflict` on reused id with different arguments,
+`side_pool_already_retired` on a second attempt.
+
+The pool left the director's screen, which is the defect this fixes: the
+workspace went from `$10 | $20 | $50 | $100` to `$20 | $50 | $100`. The slot
+freed too, active count 4 to 3, and adding `$15 Side Pool` succeeded.
+
+**Correction to that file's own header.** It claimed retirement also frees the
+pool NAME. It does not. Re-adding `$10 Side Pool` was refused
+`duplicate_pool_name`, even though that function's newest-version name check
+evaluates to false; the refusal comes from its trailing
+`exception when unique_violation` handler firing on
+`event_side_pool_active_name_unique_idx`, which is unique over ROWS
+`(event_id, lower(trim(display_name))) where active`. Retirement appends version
+2 with `active=false`, but version 1 still says `active=true` and stays indexed
+forever, and `event_side_pool_definitions_immutable` means that row can never be
+updated or deleted. No change to the function can free the name; only the index
+can. The header now records this with the measurement. The remaining dead end is
+narrow, since the pool is off the screen and the slot is back, so the index
+change is deferred to after the tournament rather than made on the morning of an
+event.
+
+### 0232 tournament day CSV import
+
+Every rejection branch returned its own code with the right row number and wrote
+nothing: `not_director`, `invalid_batch` for an empty batch, a non-array, an
+81-character name part, a blank name part and a bad scorecard type,
+`duplicate_in_batch`, `withdrawn_roster_entry`, `event_unavailable`,
+`side_pool_unavailable`, `received_exceeds_due`, `q_pool_unavailable` and
+`registration_closed`. A two-row batch whose second row was bad correctly
+reported `rowNumber 2`.
+
+The happy path, three rows: 2 roster entries created and 1 matched, 4
+participants created at status `registered` with `source_kind` `director_csv`, 3
+obligations (5500, 2000, 1500), 2 payment events (the unpaid row correctly got
+none), 1 side pool election at due 1000 / received 1000 / cash, 3 audit rows.
+Replay under the same key returned the identical payload. Re-running the same
+file under a NEW key wrote nothing and reported every item as existing, which is
+the case a director actually hits when they upload twice. Changing a paid
+player's total was refused `payment_conflict`.
+
+Three fixes went in during the port from PR #106: the obligation guard now
+refuses a silent downward rewrite of a recorded balance, a side pool election for
+an event the row is not enrolled in is refused with its row number instead of
+failing at write time, and an over-long or blank name part is caught in the
+validation pass rather than as a bare 503 at the desk.
+
+### Whole-app checks
+
+- All **193** RPCs called anywhere in `src/` exist in production and are
+  executable by `service_role`. Zero missing. That rules out the entire
+  "the migration was never applied" class of failure for every screen, not just
+  the new ones.
+- Every new RPC is granted to `service_role` only. The single exception is
+  `get_game_play_gate_v1`, additionally granted to `authenticated` by design,
+  because the scoring screen reads it as the player.
+- Parameter names on all nine new functions match what the routes pass. The
+  reopen branch correctly omits `p_confirmed`, which `reopen_event_play_v1` does
+  not take.
+- 710 of 710 tests, `tsc --noEmit` clean, `next build` compiles.
+- Merged as PR #117 and deployed: `event-control`, `cross-check-finalization`
+  and `tournament-day-import` all return 307 on production while a nonexistent
+  route under the same tournament still returns 404, so the 307 is real.
+
+### MRP: not a bug
+
+The ACC published schedule covers Main at 12, 14, 16, 18, 20, 21 and 22 games and
+Consolation at 7, 8, 9, 10 and 12. Checked every activated event in the database:
+the only one without a published row is this walkthrough tournament's own Main,
+configured for **9 games**. The Genesis Rehearsal and October 3 Pilot Mains are
+both at 12 and are fine. The settlement screen used to print the bare enum
+`unsupported game count`; it now explains which counts are covered, which one
+this event is set to, and that MRPs must be reported by hand while payouts and
+the result package are unaffected.
+
+### Noted, not fixed
+
+The close branch of the play-close route hardcodes `p_confirmed: true`, so the
+server-side unconfirmed-close guard can never fire in production and the
+confirmation step lives only in the client. The guard works when called directly,
+as the 0229 probe showed.
+
+### What is NOT verified
+
+The live signed-in click-through. Everything above is server-side and static
+verification. No one has pressed these buttons in a browser as a director.
