@@ -51,3 +51,15 @@ test("the workspace has no separate official or cross-checker menu entry", () =>
   assert.match(setup, /Tournament officials/);
   assert.match(setup, /Add\/Remove/);
 });
+
+test("the officials form says what an ACC # looks like and why Save is unavailable", () => {
+  const client = readFileSync("src/app/tournament/[tournamentId]/setup/officials/[role]/setup-officials-client.tsx", "utf8");
+  // Save is gated on isAccNumber, so a bare member number such as 99001 leaves
+  // the button greyed out. The event check-in form and the roster already print
+  // the HI296 example; this form was the one that did not, and its pattern
+  // attribute never surfaces because a disabled button never submits.
+  assert.match(client, /Use HI296, or HI296Y for a youth official\./);
+  assert.match(client, /unavailableReason/);
+  assert.match(client, /two-letter state abbreviation/);
+  assert.match(client, /positions are filled\. Remove one before adding another\./);
+});

@@ -47,23 +47,25 @@ function readinessLine(event: EventControlEvent) {
 
 export default function EventControlClient({ tournamentId, workspace }: { tournamentId: string; workspace: EventControlWorkspace }) {
   const router = useRouter();
-  const [events, setEvents] = useState(workspace.events);
-  const [selectedId, setSelectedId] = useState(workspace.events[0]?.eventId ?? "");
+  const events = workspace.events;
+  const [selectedId, setSelectedId] = useState(events[0]?.eventId ?? "");
   const [reason, setReason] = useState("");
   const [closeTicked, setCloseTicked] = useState(false);
   const [confirming, setConfirming] = useState<ConfirmKind>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
-  // router.refresh() re-runs the server page and hands down a new workspace.
-  // Without this the panel would keep showing the state it had before the last
-  // action, which on a pause screen is the one thing that must never go stale.
-  useEffect(() => {
-    setEvents(workspace.events);
-    setSelectedId((current) => workspace.events.some((item) => item.eventId === current) ? current : workspace.events[0]?.eventId ?? "");
-  }, [workspace]);
+  // router.refresh() re-runs the server page and hands down a new workspace, so
+  // the event list is read straight off that prop rather than copied into state.
+  // The copy was the whole reason this needed an effect, and an effect that
+  // calls setState on every new workspace is a cascading render on a pause
+  // screen. Only the selection is local, and it is corrected during render, the
+  // one place React sanctions for state that derives from props.
+  const fallbackId = events[0]?.eventId ?? "";
+  const resolvedId = events.some((item) => item.eventId === selectedId) ? selectedId : fallbackId;
+  if (resolvedId !== selectedId) setSelectedId(resolvedId);
 
-  const selected = events.find((item) => item.eventId === selectedId) ?? null;
+  const selected = events.find((item) => item.eventId === resolvedId) ?? null;
   const trimmedReason = reason.trim();
   const reasonUsable = trimmedReason.length > 0 && trimmedReason.length <= 1000;
   const controllable = !!selected && selected.started && !selected.teamEvent;
@@ -71,7 +73,7 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
     && selected.readiness.scheduledGames > 0 && selected.readiness.unresolvedGames === 0;
 
   async function send(path: "play-pause" | "play-close", body: Record<string, unknown>) {
-    const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${selectedId}/${path}`, {
+    const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${resolvedId}/${path}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       cache: "no-store",
@@ -162,7 +164,7 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
     </section>
 
     <label>Event to control
-      <select value={selectedId} onChange={(changed) => { setSelectedId(changed.target.value); setConfirming(null); setCloseTicked(false); setMessage(""); }} disabled={busy}>
+      <select value={resolvedId} onChange={(changed) => { setSelectedId(changed.target.value); setConfirming(null); setCloseTicked(false); setMessage(""); }} disabled={busy}>
         {events.map((item) => <option key={item.eventId} value={item.eventId}>{item.name}</option>)}
       </select>
     </label>
