@@ -29,3 +29,9 @@ test("manual roster routes and UI enforce session, origin, bounded JSON, and non
   for (const source of [route, reconciliation]) { assert.match(source, /isSameOriginRequest/); assert.match(source, /readSmallJson/); assert.match(source, /requireVerifiedSubject/); assert.match(source, /withApiFailureBoundary/); }
   assert.match(client, /Add Player Manually/); assert.match(client, /manual-roster-operation:/); assert.match(client, /Retry manual entry/); assert.match(client, /credentials: "same-origin"/); assert.match(client, /JSON\.stringify\(\{ idempotencyKey: envelope\.idempotencyKey \}\)/); assert.doesNotMatch(client, /sessionStorage[^\n]*(displayName|email|accNumber)/);
 });
+test("a successful manual add clears the scorecard type with the rest of the form", async () => {
+  const client = await read("src/app/tournament/[tournamentId]/roster/roster-client.tsx");
+  const success = client.match(/setManualPending\(null\); setFirstName\(""\);[\s\S]*?setMessage\("Player added to the roster\."\);/);
+  assert.ok(success, "the successful manual-add branch should still clear the form");
+  assert.match(success[0], /setScorecardType\("digital"\)/);
+});

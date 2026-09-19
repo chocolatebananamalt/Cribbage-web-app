@@ -53,7 +53,12 @@ export default function RosterClient({ actorId, tournamentId, rosterEntries, wit
     try { window.sessionStorage.setItem(manualKey, JSON.stringify({ kind: "manual-roster", idempotencyKey: body.idempotencyKey })); } catch { setBusy(false); setManualPending(null); setMessage("This browser cannot safely retain a roster request for recovery. Enable session storage before continuing."); return; }
     try { const response = await send("roster-manual", body), payload: unknown = await response.json().catch(() => null);
       if (response.ok && isAcceptedManualRosterEntry(payload)) { window.sessionStorage.removeItem(manualKey);
-        setManualPending(null); setFirstName(""); setLastName(""); setEmail(""); setAccNumber(""); setMessage("Player added to the roster."); router.refresh(); return; }
+        setManualPending(null); setFirstName(""); setLastName(""); setEmail(""); setAccNumber("");
+        // Reset the scorecard type with the rest of the form. Leaving it sticky
+        // while every other field clears reads as an empty form, so the next
+        // player silently inherits the previous one's type. Digital is the
+        // documented default everywhere else, including the CSV import.
+        setScorecardType("digital"); setMessage("Player added to the roster."); router.refresh(); return; }
       if (response.status === 409 && isRejectedManualRosterEntry(payload)) { window.sessionStorage.removeItem(manualKey);
         setManualPending(null); const code = (payload as { code: string }).code; setMessage(code === "withdrawn_roster_entry" ? "This player was previously withdrawn. Reinstate the existing roster identity instead." : code === "duplicate_roster_entry" ? "That player is already on this tournament roster." : code === "potential_duplicate" ? "A possible name or email match needs director review. Use the existing roster identity or resolve it first." : "The tournament server did not accept that manual roster entry."); return; }
       setMessage("The manual entry is unresolved. Refresh the roster before entering that player again.");
