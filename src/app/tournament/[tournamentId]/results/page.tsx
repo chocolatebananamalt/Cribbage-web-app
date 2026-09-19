@@ -112,6 +112,29 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     <SharedDeviceSignOut />
   </section></main>;
 
+  // "Standings are still in progress" and "Resolve every completion notice and
+  // ranking tie" are both true and both useless: the reader is told a state,
+  // not which of seven conditions is unmet or for whom. Verified live on an
+  // event with 24 of 24 matchups resolved, 0 unresolved ties, 12 games
+  // configured per player and a published schedule that only gives each of the
+  // 5 players 9 or 10. Finalize Qualification was permanently disabled and
+  // nothing on the page said why. The conditions are the ones
+  // preliminary-standings-contract.ts computes `complete` from, in that order.
+  const shortOfConfigured = standings.configuredGameCount === null ? [] : standings.rows
+    .filter((row) => row.verifiedGames !== standings.configuredGameCount)
+    .map((row) => `${row.displayName} has ${row.verifiedGames}`);
+  const tiedRows = standings.rows.filter((row) => row.tied);
+  const completionBlockedReason = standings.scheduledScorecardsComplete ? null
+    : !standings.schedulePublished ? "The schedule for this event is not published yet, so there are no scheduled matchups to complete. Publish it on the Game schedule screen."
+    : standings.configuredGameCount === null ? "This event has no configured games-per-player count, so completion cannot be measured. Set it on the Set Up Tournament screen."
+    : standings.rows.length === 0 ? "No player is enrolled in this event yet, so there is nothing to complete. Enroll players on the Event participants screen."
+    : standings.persistedMatchCount !== standings.scheduledMatchCount ? `The published schedule lists ${standings.scheduledMatchCount} matchups but only ${standings.persistedMatchCount} games exist. Republish the schedule on the Game schedule screen.`
+    : standings.resolvedMatchCount !== standings.scheduledMatchCount ? `${standings.scheduledMatchCount - standings.resolvedMatchCount} of ${standings.scheduledMatchCount} scheduled matchups still have no verified or corrected scorecard. Finish them on the scoring screens.`
+    : shortOfConfigured.length > 0 ? `This event is configured for ${standings.configuredGameCount} games per player, and the published schedule does not give every player that many: ${shortOfConfigured.join(", ")}. Every scheduled matchup is already resolved, so playing on will not close this gap. Either change the configured games-per-player count to match the schedule, or republish a schedule that gives all ${standings.rows.length} players ${standings.configuredGameCount} games each.`
+    : "Completion is still short. Recheck the scheduled matchups on the Game schedule screen.";
+  const finalizeBlockedReason = completionBlockedReason
+    ?? (tiedRows.length > 0 ? `${tiedRows.length === 1 ? `${tiedRows[0].displayName} is` : `${tiedRows.map((row) => row.displayName).join(", ")} are`} tied on the ranking, and a tie has to be resolved before the qualifying ranking can be locked.` : null);
+
   return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
     <p className="eyebrow">TOURNAMENT RESULTS</p>
     <h1 id="standings-title">Live Preliminary Standings</h1>
@@ -123,6 +146,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
       <p>{standings.schedulePublished ? "Published schedule" : "Schedule not published"} · {standings.resolvedMatchCount} of {standings.scheduledMatchCount} scheduled matchups resolved.</p>
       <p>{standings.configuredGameCount === null ? "Configured game count is unavailable." : `${standings.configuredGameCount} games configured per player.`}</p>
       <strong>{standings.scheduledScorecardsComplete ? "Every scheduled matchup has verified or corrected scorecards." : "Standings are still in progress."}</strong>
+      {completionBlockedReason ? <p className="auth-note">{completionBlockedReason}</p> : null}
     </section>
     {qualification ? <section className="correction-item" aria-labelledby="qualification-title">
       <h2 id="qualification-title">Qualification Preview</h2>
@@ -138,6 +162,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     {qualification && (access.role === "director" || access.role === "co_director") ? <QualificationFinalizationClient
       actorId={access.user.id} tournamentId={tournamentId} eventId={event}
       canFinalize={standings.scheduledScorecardsComplete && !standings.rows.some((row) => row.tied)}
+      blockedReason={finalizeBlockedReason}
     /> : null}
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     <div className="table-scroll"><table className="standings-table">

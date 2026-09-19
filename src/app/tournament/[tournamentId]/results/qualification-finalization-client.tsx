@@ -62,8 +62,8 @@ async function isFinalized(tournamentId: string, eventId: string) {
   } catch { return false; }
 }
 
-export function QualificationFinalizationClient({ actorId, tournamentId, eventId, canFinalize }: {
-  actorId: string; tournamentId: string; eventId: string; canFinalize: boolean;
+export function QualificationFinalizationClient({ actorId, tournamentId, eventId, canFinalize, blockedReason }: {
+  actorId: string; tournamentId: string; eventId: string; canFinalize: boolean; blockedReason: string | null;
 }) {
   const router = useRouter();
   const storageKey = `qualification-finalization:${actorId}:${eventId}`;
@@ -129,7 +129,7 @@ export function QualificationFinalizationClient({ actorId, tournamentId, eventId
     <button className="primary-action" type="button" disabled={!canFinalize || pending} onClick={finalize}>
       {pending ? "Finalizing…" : locked ? "Retry Finalization" : "Finalize Qualification"}
     </button>
-    {!canFinalize ? <p className="auth-note">Resolve every completion notice and ranking tie before finalizing.</p> : null}
+    {!canFinalize ? <p className="auth-note">{blockedReason ?? "Resolve every completion notice and ranking tie before finalizing."}</p> : null}
     {message ? <p className="error-text" role="alert">{message}</p> : null}
   </section>;
 }
