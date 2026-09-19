@@ -13,11 +13,28 @@ export type RegistrationLinkSecretEnvelope = {
   ciphertext: string;
 };
 
+// The operator types this value into a hosting dashboard once, so accept any
+// ordinary encoding of 32 bytes rather than base64url alone. Requiring base64url
+// silently rejected the output of `openssl rand -base64 32`, which is padded and
+// uses + and /, and the only symptom was Create Link returning 503 with the
+// reason swallowed by the failure boundary. The strength requirement is
+// unchanged: exactly 32 bytes, or this throws.
+//
+// Nothing here may reach a log, an error message or a response. Every branch
+// throws the same sentence and never includes the value or its length.
+function decodeRevealKey(encoded: string) {
+  const candidates: Buffer[] = [];
+  if (/^[0-9a-fA-F]{64}$/.test(encoded)) candidates.push(Buffer.from(encoded, "hex"));
+  if (/^[A-Za-z0-9_-]+={0,2}$/.test(encoded)) candidates.push(Buffer.from(encoded, "base64url"));
+  if (/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) candidates.push(Buffer.from(encoded, "base64"));
+  return candidates.find((candidate) => candidate.byteLength === 32);
+}
+
 function key(env: Record<string, string | undefined> = process.env) {
   const encoded = env.ACC_REGISTRATION_LINK_REVEAL_KEY?.trim();
-  if (!encoded || !/^[A-Za-z0-9_-]+$/.test(encoded)) throw new Error("Registration-link reveal encryption is not configured.");
-  const value = Buffer.from(encoded, "base64url");
-  if (value.byteLength !== 32) throw new Error("Registration-link reveal encryption is not configured.");
+  if (!encoded) throw new Error("Registration-link reveal encryption is not configured.");
+  const value = decodeRevealKey(encoded);
+  if (!value) throw new Error("Registration-link reveal encryption is not configured.");
   return value;
 }
 
@@ -63,4 +80,20 @@ export function openRegistrationLinkCredential(
   const credential = parseRegistrationLinkCredential(token);
   if (!credential || credential.linkId !== linkId) throw new Error("Registration-link reveal envelope is unavailable.");
   return credential.canonicalToken;
+}
+
+/**
+ * Whether the reveal key is present and usable, without decoding, logging or
+ * returning any part of the value. Used so the registration link screen can name
+ * the missing configuration instead of showing a blank failure: Create Link
+ * returned 503 with the reason swallowed by the API failure boundary, and the
+ * director had no way to tell a misconfigured server from a broken feature.
+ */
+export function registrationLinkRevealKeyConfigured(env: Record<string, string | undefined> = process.env) {
+  try {
+    key(env);
+    return true;
+  } catch {
+    return false;
+  }
 }

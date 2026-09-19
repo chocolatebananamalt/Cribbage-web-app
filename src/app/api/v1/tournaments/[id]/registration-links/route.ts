@@ -5,6 +5,7 @@ import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../.
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { issueRegistrationLink } from "../../../../../../lib/registration-link-issuer";
+import { registrationLinkRevealKeyConfigured } from "../../../../../../lib/registration-link-secret";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../lib/supabase/server";
 import { registrationContactReadiness } from "../../../../../../lib/api/tournament-registration-contact";
@@ -42,6 +43,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const contact = await checkRegistrationContact(id);
     if (contact === "unavailable") return apiJson({ error: "operation_unavailable" }, { status: 503 });
     if (contact === "missing") return apiJson({ error: "registration_contact_required" }, { status: 409 });
+    // Sealing the credential throws when the reveal key is absent or is not 32
+    // bytes, and the failure boundary turned that into a bare 503 that named
+    // nothing. Check it first so the screen can say which setting is missing.
+    if (!registrationLinkRevealKeyConfigured()) return apiJson({ error: "registration_link_reveal_key_required" }, { status: 409 });
     const issued = await issueRegistrationLink(createServerOnlyAdminClient(), {
       actorId: subject, tournamentId: id, expiresAt: new Date(body.expiresAt),
       maxClaims: body.maxClaims, maxClaimsPerHour: body.maxClaimsPerHour, operationId: body.operationId,
