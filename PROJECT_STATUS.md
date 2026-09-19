@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-09-18 tournament-day CSV import fallback — implemented locally, database release pending
+
+- Added a protected **Tournament Day CSV Import** workflow for director/co-director
+  use when the desk spreadsheet is the registration source and public
+  registration, email delivery, online payments, and ACC submission are being
+  bypassed for rehearsal. Tournament Setup remains active and authoritative for
+  event creation, Q/Side Pool setup, and co-director/cross-checker/Judge
+  management; the fallback only consumes active finalized setup. The workspace
+  exposes a tournament-specific CSV header template, blank downloadable CSV,
+  and preview.
+- Migration `0219_tournament_day_csv_import.sql` adds service-role-only
+  workspace/import RPCs. The import reuses or creates roster identities by ACC
+  identity, enrolls players in active finalized events, records amount owed for
+  paid and unpaid rows, records received payment evidence only for rows marked
+  `Paid`, and writes operational Side Pool elections/collections. Unpaid rows
+  remain enrolled but are routed to the desk by event QR check-in. Q Pool
+  dollars are preserved in payment/audit evidence only; a full operational Q
+  Pool election ledger remains separate future work.
+- Local verification passed: focused tournament-day import tests, `pnpm lint`,
+  `pnpm test` (**600/600**), `pnpm build`, `pnpm providers:check`,
+  workspace checks, full `pnpm verify`, and `pnpm verify:handoff`. Authenticated
+  browser and hosted Supabase proof are pending until migration 0219 is applied
+  to a real backend.
+
 ## 2026-09-18 event attendance readiness — released and Production-verified
 
 - Rebuilt Day-of-play Event QR Check-In around one current attendance state per

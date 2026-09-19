@@ -47,6 +47,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
           </section> : null}
           {isDirector ? <section className="workspace-phase"><h2>2. Registration and payments</h2><p>Review registrations, maintain the roster, and record payment evidence.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration and roster</Link>
+            <Link className="guide-link" href={`/tournament/${tournamentId}/tournament-day-import`}>Tournament Day CSV Import</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Payments and expenses</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link>
           </section> : null}
