@@ -177,9 +177,16 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
       {!selected.started ? <p className="auth-note">Play has not started for this event, so there is nothing to pause or close yet.</p>
         : selected.teamEvent ? <p className="auth-note">Team events record scores through a separate path that these controls do not reach, so Pause and Close Event are not offered for them.</p>
         : <>
-          <label>Reason, kept with the record
+          <label>Reason (<span className="required-field">*</span>required), kept with the record
             <input value={reason} onChange={(changed) => setReason(changed.target.value)} disabled={busy} maxLength={1000} aria-label="Reason for this change" />
           </label>
+          {/* Both fieldsets below are disabled until a reason is typed. Nothing
+              said so, and the readiness line directly above can read "All 24
+              scheduled games are recorded and verified. Close Event is
+              available." while every control under it is inert. Verified live:
+              the tick box reported disabled:false yet could not be ticked,
+              because the ancestor fieldset carried the disabled attribute. */}
+          {!reasonUsable ? <p className="auth-note">Pause All Play and Close Event are disabled until you enter a reason above. It is kept with the record of what you did.</p> : null}
 
           <fieldset disabled={busy || !reasonUsable}>
             <legend>Pause all play</legend>

@@ -397,3 +397,14 @@ test("every string this feature puts in front of a person obeys the copy standar
     assert.doesNotMatch(source, /[^-]--[^-]/, `${file} contains a double hyphen`);
   }
 });
+
+test("the reason field is marked required and the inert controls say why", () => {
+  const client = fs.readFileSync("src/app/tournament/[tournamentId]/event-control/event-control-client.tsx", "utf8");
+  // Both fieldsets gate on reasonUsable, which is what makes every control
+  // inert while the readiness line can still read "Close Event is available."
+  assert.match(client, /<fieldset disabled=\{busy \|\| !reasonUsable\}>[\s\S]*<legend>Pause all play<\/legend>/);
+  assert.match(client, /Reason \(<span className="required-field">\*<\/span>required\), kept with the record/);
+  assert.match(client, /Pause All Play and Close Event are disabled until you enter a reason above\./);
+  assert.match(client, /It is kept with the record of what you did\./);
+  assert.ok(client.indexOf("Pause All Play and Close Event are disabled until") < client.indexOf("<legend>Pause all play</legend>"));
+});
