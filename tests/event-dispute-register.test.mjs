@@ -141,3 +141,13 @@ test("protected staff UI lists published games, preserves retries, and exposes n
   assert.match(disputesClient, /isResolvedEventDisputeOutcome/);
   assert.match(resultsPage, /Open Event Dispute Register/);
 });
+
+test("the dispute register states the independence rule the server actually enforces", () => {
+  const migration = fs.readFileSync("database/migrations/0138_event_dispute_register_and_finalization_guard.sql", "utf8");
+  const page = fs.readFileSync("src/app/tournament/[tournamentId]/events/[eventId]/disputes/page.tsx", "utf8");
+  // The only independence check on the resolver is "not one of the two players".
+  assert.match(migration, /participant\.id in \(v_game\.side_a_participant_id,v_game\.side_b_participant_id\)\s*\n\s*and participant\.profile_id = p_actor_id\) then\s*\n\s*raise exception using errcode = 'P0001', message = 'event dispute resolver not independent';/);
+  assert.doesNotMatch(migration, /opened_by_profile_id\s*<>\s*p_actor_id/);
+  assert.match(page, /Any authorized official who is not one of the two players in that game may resolve it, including whoever opens it\./);
+  assert.doesNotMatch(page, /A different authorized official/);
+});
