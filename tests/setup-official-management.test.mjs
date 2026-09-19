@@ -58,7 +58,10 @@ test("the officials form says what an ACC # looks like and why Save is unavailab
   // the button greyed out. The event check-in form and the roster already print
   // the HI296 example; this form was the one that did not, and its pattern
   // attribute never surfaces because a disabled button never submits.
-  assert.match(client, /Use HI296, or HI296Y for a youth official\./);
+  assert.match(client, /<span className="field-help">Use HI296, or HI296Y for a youth official\.<\/span>/);
+  // The reason the pattern attribute never surfaces is a note for whoever reads
+  // this code, not copy for a tournament director standing at a desk.
+  assert.doesNotMatch(client, /field-help">[^<]*pattern input attribute/);
   assert.match(client, /unavailableReason/);
   assert.match(client, /two-letter state abbreviation/);
   assert.match(client, /positions are filled\. Remove one before adding another\./);
