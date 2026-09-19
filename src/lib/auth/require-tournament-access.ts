@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { createClient } from "../supabase/server";
 
-const allowedRoles = new Set(["director", "co_director", "player", "cross_checker", "judge", "viewer"]);
+import { allowedRoles, resolveRoles } from "./tournament-roles.ts";
 
 export async function requireTournamentAccess(tournamentId: string) {
   const supabase = await createClient();
@@ -24,8 +24,6 @@ export async function requireTournamentAccess(tournamentId: string) {
   ]);
 
   if (error || typeof role !== "string" || !allowedRoles.has(role)) notFound();
-  const roles = Array.isArray(rolesResult.data) && rolesResult.data.every((item) => typeof item === "string" && allowedRoles.has(item))
-    ? rolesResult.data
-    : [role];
+  const roles = resolveRoles(rolesResult.data, role);
   return { user: { id: profileId }, role, roles };
 }

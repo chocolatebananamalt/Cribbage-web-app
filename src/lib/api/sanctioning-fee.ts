@@ -14,8 +14,13 @@ export function isSanctioningFeeRateOverrideRequest(value: unknown): value is Sa
     && text(request.reason, 1000) && isUuid(request.idempotencyKey);
 }
 
+// The RPC returns {status, eventKind, rateCents, version}, where version is the
+// override's sequence number for this tournament. This guard looked for a
+// "receipt" uuid instead, which the RPC has never returned, so every successful
+// override was rejected here as a malformed response.
 export function isSanctioningFeeRateOverrideResult(value: unknown, request: SanctioningFeeRateOverrideRequest) {
-  if (!value || typeof value !== "object" || Array.isArray(value) || !own(value, ["status", "eventKind", "rateCents", "receipt"])) return false;
+  if (!value || typeof value !== "object" || Array.isArray(value) || !own(value, ["status", "eventKind", "rateCents", "version"])) return false;
   const result = value as Record<string, unknown>;
-  return result.status === "sanctioning_fee_rate_overridden" && result.eventKind === request.eventKind && result.rateCents === request.rateCents && isUuid(result.receipt);
+  return result.status === "sanctioning_fee_rate_overridden" && result.eventKind === request.eventKind && result.rateCents === request.rateCents
+    && Number.isSafeInteger(result.version) && (result.version as number) > 0;
 }

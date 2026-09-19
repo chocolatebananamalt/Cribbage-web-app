@@ -211,13 +211,18 @@ export function parseScheduleCsv(input: string): ScheduleCsvResult {
 
 export function validateScheduleForEvent(matches: EventScheduleMatch[], gameCount: number, verificationIds: string[], tableCount?: number, seatsPerTable?: number): string[] {
   const errors: string[] = [];
-  if (!positiveInt(gameCount, 99) || verificationIds.length < 2 || verificationIds.length % 2 !== 0) {
-    return ["This event needs an even number of enrolled players and a valid game count."];
+  if (!positiveInt(gameCount, 99) || verificationIds.length < 2) {
+    return ["This event needs at least two enrolled players and a valid game count."];
   }
+  // With an odd number of players exactly one sits out each game, so a game
+  // seats one fewer than the full field and the field size itself is no longer
+  // the expected count. Integer division floors on purpose.
+  const pairsPerGame = Math.floor(verificationIds.length / 2);
+  const playersPerGame = pairsPerGame * 2;
   if (new Set(verificationIds).size !== verificationIds.length || verificationIds.some((id) => !isSeat(id))) {
     return ["Every enrolled player needs one unique Verification ID before scheduling."];
   }
-  const expectedMatches = (verificationIds.length / 2) * gameCount;
+  const expectedMatches = pairsPerGame * gameCount;
   if (matches.length !== expectedMatches) errors.push(`Expected ${expectedMatches} matches; found ${matches.length}.`);
   const allowed = new Set(verificationIds);
   const seatIsInPlan = (seat: string) => {
@@ -229,10 +234,10 @@ export function validateScheduleForEvent(matches: EventScheduleMatch[], gameCoun
     const rows = matches.filter((match) => match.gameNumber === game);
     const ids = rows.flatMap((match) => [match.sideAVerificationId, match.sideBVerificationId]);
     const seats = rows.flatMap((match) => [match.sideATableSeat, match.sideBTableSeat]);
-    if (rows.length !== verificationIds.length / 2) errors.push(`Game ${game} needs ${verificationIds.length / 2} matches.`);
+    if (rows.length !== pairsPerGame) errors.push(`Game ${game} needs ${pairsPerGame} matches.`);
     if (ids.some((id) => !allowed.has(id))) errors.push(`Game ${game} contains a Verification ID not enrolled in this event.`);
-    if (new Set(ids).size !== verificationIds.length || ids.length !== verificationIds.length) errors.push(`Every player must appear exactly once in game ${game}.`);
-    if (new Set(seats).size !== verificationIds.length || seats.length !== verificationIds.length) errors.push(`Every Table/Seat must be unique in game ${game}.`);
+    if (new Set(ids).size !== playersPerGame || ids.length !== playersPerGame) errors.push(`Every player may appear at most once in game ${game}.`);
+    if (new Set(seats).size !== playersPerGame || seats.length !== playersPerGame) errors.push(`Every Table/Seat must be unique in game ${game}.`);
     if (tableCount && seatsPerTable && seats.some((seat) => !seatIsInPlan(seat))) errors.push(`Game ${game} contains a Table/Seat outside the published table plan.`);
     if (rows.some((match) => match.sideATableSeat[0] !== match.sideBTableSeat[0])) errors.push(`Every matchup in game ${game} must seat both players at the same table.`);
   }

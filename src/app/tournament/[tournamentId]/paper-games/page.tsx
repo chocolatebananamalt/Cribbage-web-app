@@ -16,7 +16,7 @@ export default async function PaperGamePage({ params }: { params: Promise<{ tour
     <p className="eyebrow">CROSS CHECK</p>
     <h1 id="paper-games-title">Complete paper-versus-paper games</h1>
     <p className="card-context">{workspace.tournamentName}</p>
-    <p className="registration-note">One cross checker records both original paper cards. A second, distinct authorized official independently enters the same evidence before the result becomes official. A mismatch stays out of scorecards and standings.</p>
+    <p className="registration-note">An authorized official records both original paper cards, then independently re-enters the same evidence to confirm it. A mismatch stays out of scorecards and standings. Two officials may split these steps, and one official may do both.</p>
     <PaperGameClient actorId={access.user.id} tournamentId={tournamentId} actorRole={workspace.actorRole} actorIdentityConfirmed={workspace.actorIdentityConfirmed} unboundOfficials={workspace.unboundOfficials} rosterChoices={workspace.rosterChoices} candidates={workspace.candidates} reviewCases={workspace.reviewCases} />
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
     <SharedDeviceSignOut />

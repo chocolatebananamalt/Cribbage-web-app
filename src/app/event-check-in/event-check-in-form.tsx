@@ -7,6 +7,25 @@ type Completion = { token: string; expiresAt: string };
 const storageKey = "acc:event-check-in:completion";
 const format = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
+// submit_event_check_in_completion_v1 reports why a check-in could not complete.
+// Four unrelated causes used to reach the player as one "your time expired"
+// line, which told them nothing and left the desk with nothing to act on. A
+// player who mistyped their ACC number and a player who owes an entry fee need
+// different instructions, and only the server can tell them apart.
+function deskMessage(reason?: string) {
+  if (reason === "not_recognized") return "We could not match those details to the tournament roster. Check your first and last name, the email address the tournament has on file, and your ACC number. If they are correct, the check-in desk can check you in.";
+  if (reason === "not_enrolled_or_unpaid") return "You are not enrolled in this event yet, or your entry fee is not recorded as paid. The check-in desk can finish both.";
+  if (reason === "checked_in_to_another_event") return "You are still checked in to another event that has not finished. The check-in desk can move you to this one.";
+  if (reason === "marked_no_show") return "You were marked as a no show for this event. The check-in desk can reinstate you.";
+  return "Please visit the tournament check-in desk to complete enrollment and payment.";
+}
+
+function failureMessage(reason?: string) {
+  if (reason === "invalid_details") return "Please check your name, email address and ACC number, then try again.";
+  if (reason === "session_expired_or_window_closed") return "Your check-in time expired, or the desk has closed check-in for this event. Scan the current code on the event display to begin again.";
+  return "Your check-in time expired. Please scan the current code on the event display to begin again.";
+}
+
 export default function EventCheckInForm() {
   const [completion, setCompletion] = useState<Completion | null>(null);
   const [now, setNow] = useState(() => Date.now());
@@ -40,11 +59,11 @@ export default function EventCheckInForm() {
     const body = { completionSession: completion.token, firstName: String(fields.get("firstName") ?? "").trim(), lastName: String(fields.get("lastName") ?? "").trim(), email: String(fields.get("email") ?? "").trim(), accNumber: normalizeAccNumberInput(String(fields.get("accNumber") ?? "")) };
     try {
       const response = await fetch("/api/v1/event-check-in", { method: "POST", headers: { "content-type": "application/json" }, cache: "no-store", body: JSON.stringify(body) });
-      const data = await response.json().catch(() => null) as { status?: string } | null;
+      const data = await response.json().catch(() => null) as { status?: string; reason?: string } | null;
       if (response.ok && data?.status === "checked_in") { window.sessionStorage.removeItem(storageKey); setCompletion(null); setMessage("You are checked in. If you have not already activated app access, the tournament desk will send it after payment is confirmed. Digital scoring remains locked until Start Play."); }
       else if (response.ok && data?.status === "already_checked_in") { window.sessionStorage.removeItem(storageKey); setCompletion(null); setMessage("You are already checked in for this event."); }
-      else if (response.ok && data?.status === "desk_required") { window.sessionStorage.removeItem(storageKey); setCompletion(null); setMessage("Please visit the tournament check-in desk to complete enrollment and payment."); }
-      else setMessage("Your check-in time expired. Please scan the current code on the event display to begin again.");
+      else if (response.ok && data?.status === "desk_required") { window.sessionStorage.removeItem(storageKey); setCompletion(null); setMessage(deskMessage(data.reason)); }
+      else setMessage(failureMessage(data?.reason));
     } catch { setMessage("This check-in request could not be sent. Please try the current displayed QR code or visit the desk."); }
     finally { setBusy(false); }
   }
