@@ -153,3 +153,17 @@ test("the seating directory offers an event to choose when none is in the URL", 
   assert.match(page, /const canListEvents=\["viewer","player","cross_checker","director","co_director"\]\.some\(\(role\)=>access\.roles\.includes\(role\)\);/);
   assert.match(page, /const chooser=event\|\|!canListEvents\?null:await getTournamentResultEventSummary/);
 });
+
+test("a seated player with no app account does not 404 the whole seating directory", () => {
+  const route = readFileSync("src/app/api/v1/tournaments/[id]/seating-directory/route.ts", "utf8");
+  const guard = readFileSync("src/lib/api/team-operations.ts", "utf8");
+  const rpc = readFileSync("database/migrations/0178_team_scoring_integrity_and_recovery.sql", "utf8");
+  // The RPC compares across a LEFT JOIN, so an unlinked roster entry yields null.
+  assert.match(rpc, /left join app\.roster_account_links l on l\.tournament_id=r\.tournament_id and l\.roster_entry_id=r\.id/);
+  assert.match(rpc, /'isSelf',l\.profile_id=p_actor_id/);
+  // The guard demands a boolean, which is what turned that null into a 404.
+  assert.match(guard, /typeof entry\.isSelf==="boolean"/);
+  assert.match(route, /function normalizeIsSelf\(value:unknown\):unknown\{/);
+  assert.match(route, /\(entry as Record<string,unknown>\)\.isSelf===null/);
+  assert.match(route, /isSeatingDirectory\(normalizeIsSelf\(result\.data\)\)\?apiJson\(normalizeIsSelf\(result\.data\)\)/);
+});
