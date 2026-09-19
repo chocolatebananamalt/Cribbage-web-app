@@ -486,3 +486,266 @@ the desk out mid-event. Recorded, not changed.
 
 Tournament Day CSV Import is a section 3 feature and is separate from the
 roster Import Player List verified above. It is still untested.
+
+## Section 3. Check-in and seating
+
+Every control below was pressed in the live browser against tournament
+`57516b95-4d6e-455d-b448-d7f72b3fed64`, signed in as the director.
+
+| Control | Result |
+| --- | --- |
+| Record check-in, five roster rows | Alice HI911, Ben HI912, Carla HI913, Dan HI914, Elena HI915 all moved to checked in |
+| Withdraw with reason | Frank HI916 withdrawn, reason recorded |
+| Close registration | Registration closed, seating controls unlocked |
+| Auto-assign table plan | 2 tables of 4 seats, five players placed in roster order |
+| Publish permanent seating | Published. A1 through A4 and B1 issued as permanent verification IDs |
+| Enroll roster entries in Main Event | 5 enrolled. Consolation left at 0 |
+| Event selector | Switches between Main and Consolation, counts follow |
+| Participant status, mark absent then reinstate | Round trip clean, both writes recorded |
+| Schedule CSV validation | Rejected a bad file with a precise per game reason |
+| Publish schedule | 12 rounds, 24 matchups, 24 games created |
+| Game selector | Lists all 24 games with both sides |
+| Start Main Event | Play state moved to in progress |
+| Desk check-in, four rows | All four checked in at the event desk |
+| Check in and send app access | Private activation link issued and shown once |
+| Refresh QR | New QR issued, prior one invalidated |
+| Close event check-in | Closed, and the reopen refusal was honest about why |
+| Account activations page | Lists the issued activation, status correct |
+| Pause All Play, then Resume Play | Both recorded with the reason text supplied |
+| Close Event, before games were done | Refused with the outstanding counts named |
+| Tournament Day CSV import, preview | One row validated, preview totals correct |
+| Tournament Day CSV import, submit | Refused with 409, registration is not open |
+
+### Defect found and fixed: the schedule page called digital players Paper
+
+`schedule-client.tsx:137` read `participant.profileLinked`, which is whether an
+app account is attached, and labelled it Digital or Paper. A player set to a
+digital scorecard with no account yet read as Paper, contradicting both the
+roster and the participants page. Fixed in `a79a45d` to say "App account
+linked" or "No app account", which is what the field actually holds.
+
+### Defect found and fixed: desk check-in rows sat dead with no reason
+
+Every check-in control on a row is gated on `row.paid`, and the desk rule
+behind it needs a recorded amount owed to exist at all. A player nobody had
+priced yet read as "$0.00 received of $0.00", which looks square, while all
+three buttons sat dead and said nothing. Fixed in `8389d70`.
+
+The first version of that fix told the director to record a receipt for a zero
+fee player. Testing live showed a $0.00 obligation with no receipt already
+flips the player to paid, so the copy was wrong. Corrected in `4155ea3`.
+
+### Defect found and fixed: the CSV import outcome rendered a screenful away
+
+The refusal was not silent, which is what it looked like. The message rendered
+after the preview and the Active events panel, roughly 500px below the Import
+button, so pressing Import left the visible part of the page unchanged. Moved
+directly under the button in `2462939` and confirmed live in production: the
+409 now appears beside the control that caused it.
+
+### Defect found and fixed: three director controls refused without a reason
+
+`f63e55f` named the reason for the seating publish gate, the locked payment
+row, and the play close confirmation. On seating the publish button greys out
+when the plan holds fewer seats than there are checked in players, and a
+director reading a page of filled dropdowns had no way to see which rule was
+holding it.
+
+## Section 4. Cross-check and recovery
+
+| Control | Result |
+| --- | --- |
+| Confirm official identity | Bound, and required before any paper entry |
+| Paper versus paper, record both cards | All 24 games recorded |
+| Paper versus paper, independent confirmation | All 24 confirmed |
+| Failed device score recovery | Empty for a director, see below |
+| Digital versus paper games | Empty for a director, see below |
+| Independent scorecard corrections | Empty for a director, see below |
+| Correction policy settings | Saved, version 0 to version 1 |
+| Finalize Cross-Checking | Correctly disabled, and said exactly why |
+| Event dispute register, open | Dispute opened against Game 1.1 |
+| Event dispute register, resolve | Resolved by the same director who opened it |
+
+### Defect found and fixed, three times over: a screen empty by role said nothing
+
+Recoveries, Digital versus paper games and Independent scorecard corrections
+are all built on the server for `cross_checker` only. A director opens each one
+and sees an empty page. Corrections was the worst of the three, because it said
+"No eligible scorecards need a correction" to a director looking at 24 verified
+games, which states something false about the tournament rather than something
+true about the reader.
+
+Fixed in `82b8e2f`, `e9388e4` and `ee3c793`. A first pass pointed the reader at
+a `/cross-checkers` screen that is a redirect only legacy route with no inbound
+link. Corrected in `cc71a13` to name the path that works: Set Up Tournament,
+Tournament officials, Cross-Checker, Add/Remove. That path was then opened live
+and confirmed to render the add form.
+
+### Defect found and fixed: a saved correction policy confirmed nothing
+
+Every failure path on that screen said something. Success cleared the envelope
+and refreshed, so the only evidence a save had landed was "Active policy
+version N" moving by one, in a sentence above the controls. Fixed in `ddbb37f`.
+
+### Defect found and fixed: the dispute register overstated its own rule
+
+The page said "A different authorized official who is not either player must
+resolve it". `resolve_event_dispute_v1` rejects only an actor who is one of the
+two players in the disputed game, at
+`0138_event_dispute_register_and_finalization_guard.sql:347-351`. There is no
+check against the opener.
+
+That mattered, because an open dispute blocks qualification finalization. The
+old line told a lone director that opening one would deadlock the event. Tested
+live: a dispute was opened and then resolved by the same director, and the
+register returned to "No open disputes". Fixed in `43ac046`.
+
+### Defect found and fixed: the guide promised a second official that 0223 removed
+
+`0223_one_official_can_complete_a_paper_game.sql` removed the separation of
+duties on the paper versus paper path on 2026-09-18, at Luke's instruction. The
+how-to guide still told directors and players that "a second distinct cross
+checker, co-director, or director" was required. Fixed in `143c50a`.
+
+The digital versus paper paragraph was left alone on purpose.
+`0148_hybrid_digital_paper_authoritative_completion.sql:264` still rejects the
+first official as the reviewer on that path, so two distinct officials are
+genuinely required there.
+
+### Working as intended: Finalize Cross-Checking
+
+This screen is the standard the rest of the app should be measured against. It
+lists every condition, marks each outstanding or met with a count, and prints
+the disabled reason as a sentence naming the one condition that is short:
+
+> This is disabled because one condition is still outstanding: No cross-checker
+> has been assigned to this tournament.
+
+`0230_finalize_cross_checking.sql:102-105` counts only real
+`app.tournament_roles` rows, and its own comment says a pending nomination is
+deliberately not counted. Nothing else in the codebase reads this finalization,
+so it is a record keeping step and does not gate Close Event, results or
+archiving.
+
+## Section 5. Results and reporting
+
+| Control | Result |
+| --- | --- |
+| Tournament Results, event list | Both events listed with enrolled counts |
+| View Results, Main Event | Live standings rendered, 24 resolved games, 0 ties |
+| View Results, Consolation Event | Empty state correct and explained |
+| Qualification Preview | 2 qualifying places, 4 player bracket, 2 byes |
+| Provisional High Non-Qualifier | Dan Iona, numeric rank 3 |
+| Side Pool Status | Early Bird Side Pool, 0 elected, $0.00 collected |
+| Finalize Qualification | Permanently disabled, see below |
+| Open Event Dispute Register | Opens, lists all 24 published games |
+| Seating Directory | Dead end, see below |
+| My Games | Renders, three empty sections all explained |
+| Team Scorecards | Renders, "No Traditional or Canadian Doubles event has been activated yet" |
+| How to run this tournament | Renders |
+| ACC Rulebook | Renders. Both PDF links return 200 and the cached copy is byte identical to cribbage.org |
+| Event Changes | Renders, controls correctly hidden for the started event |
+
+### The most important finding: an event can be configured so it can never finish
+
+Main Event is configured for 12 games per player. The published schedule is 12
+rounds of 2 games, which is 24 games and 48 player slots across 5 players, so
+the players got 9, 10, 9, 10 and 10 games. `scheduledScorecardsComplete` in
+`src/lib/results/preliminary-standings-contract.ts:87-92` requires every row to
+equal the configured count, so it is false forever, and Finalize Qualification
+is disabled forever.
+
+Nothing in the publish path checks that a schedule can satisfy the configured
+games per player. The page then said "Standings are still in progress" and
+"Resolve every completion notice and ranking tie before finalizing", neither of
+which points at anything.
+
+This is not a synthetic case. With an odd number of players somebody sits out
+every round, so the configured count and the achievable count diverge by
+default.
+
+`a1f1948` makes the screen name the unmet condition in the order the contract
+evaluates it, list the players short of the configured count with their actual
+totals, and say plainly that playing on will not close the gap, so the way out
+is to republish the schedule or change the configured count.
+
+The publish time check is not built. It is the recommended next change and is
+recorded here rather than guessed at during the audit.
+
+### Defect found and fixed: the Seating Directory had no way to choose an event
+
+The client freezes `eventId` from its prop and has no picker, so with no
+`?event` it sat on "Choose a specific event to open its published seating
+directory" with nothing on screen to choose. Both inbound links reach it that
+way. Only `team-operations-client.tsx` passes an event, and only once a doubles
+event exists. Fixed in `3a05195`.
+
+### Defect found and fixed: labels overlapping their own fields
+
+Seen on three screens, two of them on the payment path: "Required director
+reason" on Event Changes, "Optional reason for change" and "Optional receipt
+note" on Payments, and "Reason (*required)" on Side Pools. A label that wraps
+its own control rendered the control inline after the label text and the two
+collided. Several containers already set the grid by hand. `b29b82e` declares
+it once by shape, excluding checkbox and radio labels so those keep reading
+inline.
+
+### Defect found and fixed: a destructive confirmation that did not name its target
+
+Cancel/Retire and Cancel/Replace render inside the list item they act on, but
+they float beside a bulleted list of every event, and the confirmation only
+asked "Retire this event?". It now names the event and its enrolled count.
+
+The same file had a ternary whose two branches carried the same sentence, so a
+co-director read a neutral policy note and was never told the screen was closed
+to them. Both in `b29b82e`.
+
+## Still open
+
+These were found and are not fixed. None of them blocks running a tournament.
+
+1. **`display_name` is the literal string "Tournament participant"** in five
+   places now: the expense audit trail, the play start audit line, the pause
+   record, the paper games Official selector, and the dispute register's
+   "Opened by" line. This is data, not code. The five real profiles need real
+   names.
+2. **No publish time check that a schedule can satisfy the configured games per
+   player.** Described in full above. This is the one worth building next.
+3. **"Save accepted methods" on Payments saves with no confirmation.** Same
+   class as the correction policy save that `ddbb37f` fixed.
+4. **Resolved disputes disappear.** The register shows open disputes only, so a
+   director cannot show what was raised and how it was settled.
+5. **"$ 40.00 USD" has a stray space** in the payments receipt history.
+6. **"Statu / s" wraps mid word** on the seating check-in rows.
+7. **Em dashes remain in app copy**, against the project copy standard:
+   `roster-client.tsx:118`, the withdrawn records summary line,
+   `schedule-amendments`, and `setup-official-summaries.tsx:17`.
+8. **Side Pools "Participant election and payment" is dead** with an empty
+   select and no explanation.
+9. **Published seating rows print the seat value twice**, once as
+   `initialTableSeat` and once as `verificationId`, with no column labels.
+10. **A withdrawn player still appears** on the Payments page and the seating
+    check in list. Whether that is correct is a tournament rules question, not
+    a code question.
+
+## Not verifiable by one person
+
+These need a second human, and the audit stopped rather than faking them.
+
+- **Adding a cross-checker sends a real sign in email.** The route calls
+  `signInWithOtp` before returning. It was not fired, because a bounced send
+  still spends the project's email rate limit, and that limit is what a
+  director needs on tournament day.
+- **Every cross-checker only screen** therefore stayed empty: recoveries,
+  digital versus paper, corrections proposals, and the cross-checker side of
+  Finalize Cross-Checking. Authority arrives only after that person completes
+  an email sign in.
+- **Digital versus paper games need two distinct officials**, a cross-checker
+  to record and a different official to confirm. With zero cross-checkers
+  assigned, a mixed digital and paper game cannot be completed at all. Paper
+  versus paper does not have this problem since 0223.
+
+## Not yet pressed
+
+Close Event and Archive tournament are one way. They were left for a decision
+rather than taken during an audit.
