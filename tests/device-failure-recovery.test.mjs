@@ -107,7 +107,7 @@ test("a non cross-checker is told why the recovery screen is empty", () => {
   // page from the hub saw the explanation of what recovery is and then nothing,
   // which reads as a broken screen rather than as a role they do not hold.
   assert.match(client, /Only an assigned cross-checker can start a recovery/);
-  assert.match(client, /Assign a cross-checker on the Cross-Checkers screen/);
+  assert.match(client, /Add one under Tournament officials on the Set Up Tournament screen/);
   const note = client.indexOf("Only an assigned cross-checker can start a recovery");
   const gate = client.indexOf('actorRole === "cross_checker" ? <>');
   assert.ok(note > -1 && gate > -1 && note < gate, "the note must render before the gated section");

@@ -163,7 +163,7 @@ export default function RecoveryClient({ actorId, tournamentId, actorRole, propo
         page from the hub used to get the explanation of what recovery is and
         then nothing at all, which reads as a broken screen rather than as a
         role they do not hold. Say which role does it. */}
-    {actorRole === "cross_checker" ? null : <p className="auth-note">Only an assigned cross-checker can start a recovery. Your role can review one after a cross-checker proposes it. Assign a cross-checker on the Cross-Checkers screen if nobody holds that role yet.</p>}
+    {actorRole === "cross_checker" ? null : <p className="auth-note">Only an assigned cross-checker can start a recovery. Your role can review one after a cross-checker proposes it. Add one under Tournament officials on the Set Up Tournament screen if nobody holds that role yet.</p>}
     {actorRole === "cross_checker" ? <><h2>Games eligible for evidence recovery</h2>{proposalCandidates.length ? <ul className="correction-list">{proposalCandidates.map((item) => <Proposal key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No unresolved non-self games are available for recovery.</p>}</> : null}
     <h2>Independent recovery reviews</h2>
     {reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <Review key={item.recoveryId} actorId={actorId} item={item} />)}</ul> : <p className="auth-note">No recovery reviews are waiting for you.</p>}

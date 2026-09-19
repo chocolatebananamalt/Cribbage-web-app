@@ -144,7 +144,7 @@ export default function HybridGameClient({ actorId, tournamentId, actorRole, act
         reads as a broken screen rather than as a role or a step they are missing. */}
     {actorRole === "cross_checker" && actorIdentityConfirmed ? null : <p className="auth-note">{actorRole === "cross_checker"
       ? "Confirm your official identity on the paper-versus-paper screen before matching a digital entry to a paper card."
-      : "Only an assigned cross-checker can match a digital entry to a paper card. Your role can independently confirm one after a cross-checker records it. Assign a cross-checker on the Cross-Checkers screen if nobody holds that role yet."}</p>}
+      : "Only an assigned cross-checker can match a digital entry to a paper card. Your role can independently confirm one after a cross-checker records it. Add one under Tournament officials on the Set Up Tournament screen if nobody holds that role yet."}</p>}
     {actorRole === "cross_checker" && actorIdentityConfirmed ? <><h2>Match one digital entry to one paper card</h2>{candidates.length ? <ul className="correction-list">{candidates.map((item) => <CreateForm key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No current mixed-scorecard games are waiting for a paper-card match.</p>}</> : null}
     <h2>Independent mixed-card confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.caseId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No mixed-card confirmations are waiting for you.</p>}</>;
 }
