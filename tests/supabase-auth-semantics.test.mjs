@@ -114,7 +114,12 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   assert.match(page, /await searchParams/);
   assert.match(page, /handoffWarning/);
   assert.match(form, /signInWithOtp/);
-  assert.doesNotMatch(form, /signInWithPassword|signUp\s*\(|type="password"/);
+  // Passwordless remains the default and the only way an account is created.
+  // A password is allowed as a sign-in fallback, because the emailed link is a
+  // single point of failure: when mail is throttled or filtered, a director at
+  // the desk has no way in at all. Account creation by password stays banned.
+  assert.doesNotMatch(form, /signUp\s*\(/);
+  assert.match(form, /signInWithPassword/);
   assert.match(form, /shouldCreateUser: true/);
   const bootstrap = read('database/migrations/0067_passwordless_profile_bootstrap.sql');
   assert.match(bootstrap, /after insert on auth\.users/);
