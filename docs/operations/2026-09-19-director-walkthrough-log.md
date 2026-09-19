@@ -8,9 +8,18 @@ Test tournament: **Verification Walkthrough 09-19**
 (`fe1ef5f5-6225-4c00-840b-337be49aa8b8`), created through the UI for this pass so
 Genesis Rehearsal and the October 3 Pilot keep their history.
 
-Every row below is a button pressed in a real browser, not a function read. Where
-a result is recorded as PASS, the database was queried afterwards to confirm the
-row the button was supposed to write actually exists.
+Every row below is a control operated in the live browser, not a function read.
+Where a result is recorded as PASS, the database was queried afterwards to
+confirm the row the button was supposed to write actually exists.
+
+Two of the steps say how they were driven, because it matters. Steps 30 and 31
+cover 72 submissions across 36 games. Those were driven from the page itself: the
+same React inputs were filled and the same buttons clicked, in the page, by
+script rather than by hand. The click handlers, API routes and RPCs all ran for
+real, and the database rows are the evidence, but nobody moved a mouse 72 times.
+One game, Dorothy Pike against Vernon Tilley in game 1, was done by hand first,
+both halves, to establish that the path works before the rest were driven.
+Every other row in this log was a real cursor on a real control.
 
 ## Critical path
 
@@ -110,5 +119,6 @@ Final standings as the app computed them:
 | 8 | Marjorie Cassel | 6 | 3 | -77 |
 
 Qualifiers: Walter Nagel and Clement Fosdick. High non-qualifier: Harold Breck.
-Three players tied on 12 game points and 6 wins and the tiebreak ordered them by
-net spread with no unresolved tie, which is the behaviour the rules require.
+Three players tied on 12 game points and 6 wins, and the app ordered them by net
+spread and reported no unresolved tie. Observed, not checked against the
+rulebook: the ordering was game points, then wins, then net spread.
