@@ -122,3 +122,18 @@ footer { display:flex; justify-content:space-between; gap:20px; padding:24px cla
 .live-matchup { display:grid; gap:4px; margin:22px 0 18px; padding:15px; background:#f7f9fc; border-radius:12px; }
 .live-matchup strong { font-size:17px; }
 .live-matchup span,.live-matchup b { color:var(--muted); font-size:16px; }
+
+/* A label that wraps its own control has to stack, or the control renders
+   inline after the label text and the two collide. Several containers already
+   set `label { display:grid; gap:6px }` by hand, and the ones that were missed
+   are the ones where it shows: "Required director reason" on Event Changes,
+   "Optional reason for change" and "Optional receipt note" on Payments, and
+   "Reason (*required)" on Side Pools. Two of those sit on the payment path.
+   Declaring it once by shape covers every container instead of the list of
+   containers somebody remembered. Checkbox and radio labels are excluded
+   because those are meant to read inline, next to their box. */
+label:has(> input:not([type="checkbox"]):not([type="radio"])),
+label:has(> select),
+label:has(> textarea) { display:grid; gap:6px; }
+label > textarea,label > input:not([type="checkbox"]):not([type="radio"]),label > select { width:100%; }
+label > textarea { min-height:92px; padding:10px; border:1px solid var(--line); border-radius:8px; color:var(--ink); font:inherit; font-size:16px; resize:vertical; }

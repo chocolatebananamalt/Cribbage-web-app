@@ -75,3 +75,33 @@ test("retire and replace preserve history and reject event operations after Star
   assert.match(page, /Yes, Retire Event/);
   assert.match(page, /Yes, Cancel & Replace/);
 });
+
+test("event changes name the event they act on and tell a co-director they cannot act", async () => {
+  const client = await read("src/app/tournament/[tournamentId]/event-changes/event-changes-client.tsx");
+  assert.match(client, /Only the primary director may make these exceptional changes\. Enter a reason to enable them\./);
+  assert.match(client, /You cannot make these changes\. Only the primary director who created this tournament may retire or replace an event; a co-director cannot\./);
+  // The two ternary branches must not be the same sentence again.
+  assert.doesNotMatch(client, /data\.canManage \? "Only the primary director may make these exceptional changes\." : "Only the primary director may make these exceptional changes\."/);
+  // The destructive confirmation has to name the event, since the buttons sit
+  // beside a bulleted list of every event.
+  assert.match(client, /`Retire \$\{pendingChange\.event\.name\}\?`/);
+  assert.match(client, /`Cancel and replace \$\{pendingChange\.event\.name\}\?`/);
+  assert.match(client, /\$\{pendingChange\.event\.name\} keeps its registrations, payment history and audit history/);
+  assert.match(client, /enrolled participant\$\{pendingChange\.event\.participantCount === 1 \? "" : "s"\} stay on record\./);
+});
+
+test("a label that wraps its own control stacks instead of colliding with it", async () => {
+  const css = await read("src/app/globals.css");
+  assert.match(css, /label:has\(> input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\)\),\s*\nlabel:has\(> select\),\s*\nlabel:has\(> textarea\) \{ display:grid; gap:6px; \}/);
+  assert.match(css, /label > textarea \{ min-height:92px;/);
+  // Checkbox and radio labels must keep reading inline next to their box.
+  assert.match(css, /label > textarea,label > input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\),label > select \{ width:100%; \}/);
+  for (const file of [
+    "src/app/tournament/[tournamentId]/event-changes/event-changes-client.tsx",
+    "src/app/tournament/[tournamentId]/payments/payment-obligation-client.tsx",
+    "src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx",
+  ]) {
+    const source = await read(file);
+    assert.ok(/<label>[^<]+<(textarea|input)/.test(source), `${file} should still wrap a control in its label`);
+  }
+});
