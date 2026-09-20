@@ -13,10 +13,15 @@
 ## Executed checks
 
 - TypeScript: `tsc --noEmit` — passed.
-- Focused Node tests: setup workspace, sanctioning-fee clarity, setup official management, and structured tournament contact — 23 passed, 0 failed before the final added rejection assertions.
+- Focused Node tests: final setup/contact/registration group — 70 passed, 0 failed; layered Setup adapter contract — 4 passed, 0 failed.
+- Clean-checkout `pnpm verify` — passed: dependency audit, lint with two existing warnings and zero errors, 736/736 application tests, provider readiness, optimized Production build, and workspace checks.
+- `pnpm verify:handoff` — unavailable because the ignored private handoff package is not present in either checkout; the standard verification confirms this is intentionally excluded from Git.
 - Revised desktop layout preview rendered in headless Chrome at 1200 pixels with an 860-pixel compact form area.
-- A true 390-pixel Chromium viewport preview was rendered to inspect the one-column field order and horizontal fit; authenticated browser verification remains required after approval and before merge.
+- A true 390-pixel Chromium viewport preview was rendered to inspect the one-column field order and horizontal fit.
+- Migrations 0233–0235 were applied first to the synthetic Supabase project and then to the pilot project. A pilot rollback-only fixture returned `setup_draft_saved` and `public_contact_configured`, preserved all five structured values, stored omitted phone/email as null in both immutable records, and left the selected tournament at zero setup revisions after rollback.
+- Direct privilege checks on both hosted projects returned `authenticated_can_execute=false` and `service_can_execute=true` for Setup activation.
+- Post-DDL Supabase advisors show the established RPC-mediated RLS and performance baseline; the new migrations add no tables or foreign keys. Reference: [Supabase database linter](https://supabase.com/docs/guides/database/database-linter).
 
-## Current limitation
+## Remaining release checks
 
-The database migration has not been applied to a hosted Supabase project, the full repository verification has not yet run, and this branch has not been pushed, merged, or deployed. Those steps intentionally wait for owner approval of the proposed layout.
+Push the reviewed branch, pass GitHub checks, merge it, confirm the connected Vercel Production deployment is READY, inspect the signed-in Setup screen at desktop and phone widths, smoke-test stable public routes, and scan runtime errors.

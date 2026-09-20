@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-20 compact structured Tournament Setup — revised preview awaiting owner approval
+## 2026-09-20 compact structured Tournament Setup — owner-approved; release verification passed
 
 - Tournament Setup now has separate Venue name, street, city, State/Territory,
   and ZIP controls. One outlined **Tournament Director Information (shown to
@@ -14,10 +14,19 @@
 - Migration `0234_optional_player_facing_director_contact.sql` makes public
   phone/email optional without exposing profile contact data; supplied values
   still validate, while blank values no longer block activation or QR links.
-- TypeScript and the first focused setup regression run passed (23/23). A
-  headless-Chrome desktop preview was produced for owner review. Full
-  verification, hosted migration proof, authenticated browser checks, PR,
-  merge, and Production deployment are intentionally pending layout approval.
+- The owner approved the compact desktop and phone layout. Clean-checkout
+  `pnpm verify` passes 736/736 application tests, dependency audit, provider
+  readiness, optimized Production build, and workspace checks (two existing
+  lint warnings, zero errors). The ignored private handoff package is absent,
+  so `pnpm verify:handoff` is unavailable rather than a product failure.
+- Migrations 0233–0235 are applied to the synthetic and pilot Supabase
+  projects. A rollback-only pilot fixture proved structured persistence,
+  optional contact null storage, public-contact creation, and zero residual
+  records. Direct privilege proof confirms Setup activation remains
+  service-only. Supabase advisors reported the established RPC-mediated RLS,
+  foreign-key-index, and unused-index baseline; these migrations add no table
+  or foreign-key exposure. GitHub PR, merge, Vercel Production deployment,
+  signed-in browser smoke checks, and runtime scan remain the release steps.
 - Decision and evidence: `docs/decisions/2026-09-19-structured-venue-and-director-name-layout.md`
   and `docs/quality/2026-09-19-structured-venue-and-director-name-preview.md`.
 

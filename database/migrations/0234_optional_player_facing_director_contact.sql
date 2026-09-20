@@ -134,7 +134,7 @@ begin
     p_actor_id,p_tournament_id,p_setup_revision_id,p_expected_version,p_idempotency_key);
 end $$;
 revoke all on function public.activate_tournament_setup_v2_before_optional_contact(uuid,uuid,uuid,integer,uuid) from public,anon,authenticated;
-revoke all on function public.activate_tournament_setup_v2(uuid,uuid,uuid,integer,uuid) from public,anon;
+revoke all on function public.activate_tournament_setup_v2(uuid,uuid,uuid,integer,uuid) from public,anon,authenticated;
 grant execute on function public.activate_tournament_setup_v2(uuid,uuid,uuid,integer,uuid) to service_role;
 
 notify pgrst,'reload schema';

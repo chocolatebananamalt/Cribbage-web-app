@@ -34,6 +34,7 @@ test("older setup revisions can load blank optional player-facing contact fields
 test("database contract preserves legacy free text privately and exposes only structured selected contact", () => {
   const sql = fs.readFileSync(new URL("../database/migrations/0193_structured_tournament_contact_information.sql", import.meta.url), "utf8");
   const optionalSql = fs.readFileSync(new URL("../database/migrations/0234_optional_player_facing_director_contact.sql", import.meta.url), "utf8");
+  const activationGrantSql = fs.readFileSync(new URL("../database/migrations/0235_revoke_browser_setup_activation.sql", import.meta.url), "utf8");
   assert.match(sql, /add column tournament_contact_phone text/);
   assert.match(sql, /save_tournament_setup_version_legacy/);
   assert.match(sql, /'tournamentContactPhone'/);
@@ -51,4 +52,6 @@ test("database contract preserves legacy free text privately and exposes only st
   assert.doesNotMatch(optionalSql, /r\.tournament_contact_phone is not null and r\.tournament_contact_email is not null/);
   assert.match(optionalSql, /activate_tournament_setup_v2_legacy/);
   assert.doesNotMatch(optionalSql, /missing_tournament_contact/);
+  assert.match(activationGrantSql, /from public,anon,authenticated/);
+  assert.match(activationGrantSql, /to service_role/);
 });
