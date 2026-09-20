@@ -1,6 +1,6 @@
 # Project Status
 
-## 2026-09-20 Tournament Setup visual cleanup — implemented; release pending
+## 2026-09-20 Tournament Setup visual cleanup — Production deployed; signed-in owner inspection pending
 
 - Corrected the deployed Director-information layout that allowed its help
   sentence to share a grid row with First/Last name. The help now occupies a
@@ -13,8 +13,14 @@
 - Focused Setup tests pass 6/6. Headless Chromium proof passed at 1200, 760,
   and 390 pixels: all 13 single-line controls measured 46 pixels, the help
   block ended above the field grid, and no viewport had horizontal overflow.
-- Full repository verification, reviewed merge, Production deployment,
-  signed-in Production inspection, and runtime scan remain release steps.
+- `pnpm verify` passed 736/736 application tests plus dependency, provider,
+  lint, optimized build, and workspace gates. PR #120 passed both GitHub Verify
+  jobs and Vercel Preview, merged as `8f1d707`, and deployed to Production as
+  `dpl_8z1uYMMxMUTfc6BqNDFqiGDLXwLM`. Stable sign-in and registration routes
+  returned 200, the stable CSS contains the fixed-height and isolated Director
+  panel rules, and the post-release error/fatal scan was empty. The current
+  in-app browser is signed out, so the owner still needs to refresh and inspect
+  the protected Setup screen in their authenticated session.
 
 ## 2026-09-20 compact structured Tournament Setup — owner-approved; release verification passed
 
