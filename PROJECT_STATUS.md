@@ -1,11 +1,41 @@
 # Project Status
 
+## 2026-09-20 compact structured Tournament Setup — owner-approved; release verification passed
+
+- Tournament Setup now has separate Venue name, street, city, State/Territory,
+  and ZIP controls. One outlined **Tournament Director Information (shown to
+  players)** area contains required First name/Last name and optional Phone,
+  Email, and Mailing Address for Correspondence. Desktop rows use a compact
+  860-pixel form area; responsive rules stack every field on phones.
+- Migration `0233_structured_venue_and_director_names.sql` adds the structured
+  values to the immutable setup revision, keeps historic revisions unchanged,
+  and retains compatibility projections for existing readers and public
+  registration contact display.
+- Migration `0234_optional_player_facing_director_contact.sql` makes public
+  phone/email optional without exposing profile contact data; supplied values
+  still validate, while blank values no longer block activation or QR links.
+- The owner approved the compact desktop and phone layout. Clean-checkout
+  `pnpm verify` passes 736/736 application tests, dependency audit, provider
+  readiness, optimized Production build, and workspace checks (two existing
+  lint warnings, zero errors). The ignored private handoff package is absent,
+  so `pnpm verify:handoff` is unavailable rather than a product failure.
+- Migrations 0233–0235 are applied to the synthetic and pilot Supabase
+  projects. A rollback-only pilot fixture proved structured persistence,
+  optional contact null storage, public-contact creation, and zero residual
+  records. Direct privilege proof confirms Setup activation remains
+  service-only. Supabase advisors reported the established RPC-mediated RLS,
+  foreign-key-index, and unused-index baseline; these migrations add no table
+  or foreign-key exposure. GitHub PR, merge, Vercel Production deployment,
+  signed-in browser smoke checks, and runtime scan remain the release steps.
+- Decision and evidence: `docs/decisions/2026-09-19-structured-venue-and-director-name-layout.md`
+  and `docs/quality/2026-09-19-structured-venue-and-director-name-preview.md`.
+
 ## 2026-09-19 tournament-details save gate — implemented; review deployment pending
 
 - Reworked the start of **Set Up Tournament** into a required first stage for
   Tournament name, City, Venue name/address, State/Territory, Time Zone,
-  start/end date and time, player-facing Tournament Director name, required
-  tournament phone/email, and optional tournament mailing address.
+  start/end date and time, and player-facing Tournament Director information.
+  First and Last name are required; public phone/email/address are optional.
 - **Save Tournament Details & Continue** now writes the existing private,
   versioned setup revision with zero events for a new tournament. Tournament
   Event controls remain visibly disabled and name the missing/invalid fields
@@ -579,6 +609,10 @@
   `docs/quality/2026-09-15-setup-finalization-registration-repair.md`.
 
 ## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
+
+- Superseded for new setup revisions on 2026-09-20: phone/email are now
+  optional player-facing selections. Historical revisions and the original
+  release evidence below remain unchanged.
 
 - Replaced the generic Director contact-details draft contract with required
   tournament contact phone/email and an optional director-selected,

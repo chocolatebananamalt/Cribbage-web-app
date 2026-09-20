@@ -5,7 +5,7 @@ import { isSanctioningFeeRateOverrideRequest } from "../src/lib/api/sanctioning-
 import { isSetupSaveRequest } from "../src/lib/api/setup.ts";
 
 const id = "123e4567-e89b-42d3-a456-426614174000";
-const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club", stateTerritory: "Hawaii", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentDirectorPublicName: "Director Example", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
+const payload = { tournamentName: "Rehearsal", city: "Honolulu", venue: "Club — 123 Main St · 96825", venueName: "Club", venueStreet: "123 Main St", venuePostalCode: "96825", stateTerritory: "Hawaii", startsAt: "2026-09-16T09:00", endsAt: "2026-09-16T17:00", timezone: "Pacific/Honolulu", tournamentDirectorPublicName: "Director Example", tournamentDirectorFirstName: "Director", tournamentDirectorLastName: "Example", tournamentContactPhone: "+1 808 555 0101", tournamentContactEmail: "director@example.test", tournamentMailingAddress: "PO Box 1", mainSanctioningFeeRateCents: 300, consolationSanctioningFeeRateCents: 100, mainSanctioningFeeOverrideReason: "", mainSanctioningFeeOverrideReference: "", consolationSanctioningFeeOverrideReason: "", consolationSanctioningFeeOverrideReference: "", officials: [{ profileId: id, role: "director" }], events: [] };
 
 test("saved drafts require the selected State/Territory and preserve legacy override evidence", () => {
   assert.equal(isSetupSaveRequest({ expectedVersion: 0, idempotencyKey: id, payload }), true);
@@ -36,9 +36,10 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /function finalizationEventLine\(event: SetupEvent\)/);
   assert.match(client, /eventLabels\[event\.eventKind\].*event\.displayName.*event\.styleCode/s);
   assert.match(client, /Satellite Event/);
-  assert.match(client, /Tournament contact phone \(<span className="required-field"/);
-  assert.match(client, /className="required-label"/);
-  assert.match(client, /Tournament mailing address \(optional\).*Note: This address will be visible to players/s);
+  assert.match(client, /Tournament Director Information \(shown to players\)/);
+  assert.match(client, />Phone<input type="tel"/);
+  assert.match(client, />Email<input type="email"/);
+  assert.match(client, /Mailing Address for Correspondence.*Note: This address will be visible to players/s);
   assert.match(client, /Yes, Finalize &amp; Open Registration/);
   assert.match(client, /Adjust Main rate/);
   assert.match(client, /Adjust Consolation rate/);

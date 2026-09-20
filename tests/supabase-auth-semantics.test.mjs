@@ -663,7 +663,7 @@ test('director QR registration workspace is role-gated and holds a one-time cred
   assert.match(page, /No link was created or changed/);
   assert.match(workspace, /import "server-only"/);
   assert.match(workspace, /get_registration_link_state_v2/);
-  assert.match(client, /save the current Tournament Setup with the public tournament contact phone and email/);
+  assert.match(client, /save the current Tournament Setup\. Only the player-facing Director information deliberately entered there can appear on registration/);
   assert.match(client, /QRCode\.toDataURL/);
   assert.match(client, /\/register#\$\{result\.credential\}/);
   assert.match(client, /setOneTimeLink\(null\)/);

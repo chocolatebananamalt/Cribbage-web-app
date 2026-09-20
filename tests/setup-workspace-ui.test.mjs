@@ -73,7 +73,7 @@ test("setup saves are recoverable and never presented as operational activation"
   assert.match(client, /Finalizing opens registration; it does not start play, close registration, assign seats, charge anyone, or publish results/);
   assert.match(client, /Please confirm you intend to open registration for these events/);
   assert.match(client, /Event finalization status could not be checked/);
-  assert.match(client, /missing_tournament_contact/);
+  assert.doesNotMatch(client, /missing_tournament_contact/);
   assert.doesNotMatch(client, />Activate Tournament Events</);
 });
 
@@ -86,5 +86,34 @@ test("tournament details must be saved before event setup unlocks", async () => 
   assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| busy \|\| !!pending/);
   assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| pending \|\| activated\) return/);
   assert.match(client, /Tournament details saved\. Tournament Events is now available\./);
-  assert.match(client, /Venue name and address/);
+  for (const label of ["Tournament name", "Venue name", "Venue street address", "Venue city", "Venue State", "Venue ZIP", "Start date", "End date", "Time Zone", "First name", "Last name"]) {
+    assert.match(client, new RegExp(label));
+  }
+  assert.match(client, /setup-span-4/);
+  assert.match(client, /setup-span-6/);
+  assert.match(client, /setup-span-2/);
+  assert.match(client, /setup-director-info setup-span-12/);
+  const css = await readFile(new URL("../src/app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.setup-details-grid \{ width:min\(100%,860px\)/);
+  assert.match(css, /@media \(max-width:700px\).*\.setup-grid,\.setup-details-grid \{ width:100%; grid-template-columns:minmax\(0,1fr\)/s);
+  assert.match(client, /Tournament Director Information \(shown to players\)/);
+  assert.match(client, /Use the information players should see for this tournament\. It is separate from private account information\./);
+  assert.match(client, /Mailing Address for Correspondence.*Note: This address will be visible to players/s);
+  assert.doesNotMatch(client, /Tournament contact phone .*required/s);
+  assert.doesNotMatch(client, /Tournament contact email .*required/s);
+});
+
+test("structured venue and Director name values are versioned without rewriting historic setups", async () => {
+  const [api, migration] = await Promise.all([
+    readFile(new URL("../src/lib/api/setup.ts", import.meta.url), "utf8"),
+    readFile(new URL("../database/migrations/0233_structured_venue_and_director_names.sql", import.meta.url), "utf8"),
+  ]);
+  for (const key of ["venueName", "venueStreet", "venuePostalCode", "tournamentDirectorFirstName", "tournamentDirectorLastName"]) {
+    assert.match(api, new RegExp(key));
+    assert.match(migration, new RegExp(key));
+  }
+  assert.match(migration, /before insert on app\.tournament_setup_revisions/);
+  assert.match(migration, /save_tournament_setup_version_before_structured_details/);
+  assert.match(migration, /get_tournament_setup_workspace_before_structured_details/);
+  assert.match(migration, /p_payload-array\['venueName','venueStreet','venuePostalCode','tournamentDirectorFirstName','tournamentDirectorLastName'\]/);
 });
