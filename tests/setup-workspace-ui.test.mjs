@@ -76,3 +76,15 @@ test("setup saves are recoverable and never presented as operational activation"
   assert.match(client, /missing_tournament_contact/);
   assert.doesNotMatch(client, />Activate Tournament Events</);
 });
+
+test("tournament details must be saved before event setup unlocks", async () => {
+  const client = await readFile(clientPath, "utf8");
+  assert.match(client, /Save Tournament Details &amp; Continue/);
+  assert.match(client, /Tournament Events is locked until the tournament details are saved/);
+  assert.match(client, /payload: revisionId \? payload : \{ \.\.\.payload, events: \[\] \}/);
+  assert.match(client, /stage: "details"/);
+  assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| busy \|\| !!pending/);
+  assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| pending \|\| activated\) return/);
+  assert.match(client, /Tournament details saved\. Tournament Events is now available\./);
+  assert.match(client, /Venue name and address/);
+});

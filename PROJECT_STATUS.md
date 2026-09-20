@@ -1,5 +1,31 @@
 # Project Status
 
+## 2026-09-19 tournament-details save gate — implemented; review deployment pending
+
+- Reworked the start of **Set Up Tournament** into a required first stage for
+  Tournament name, City, Venue name/address, State/Territory, Time Zone,
+  start/end date and time, player-facing Tournament Director name, required
+  tournament phone/email, and optional tournament mailing address.
+- **Save Tournament Details & Continue** now writes the existing private,
+  versioned setup revision with zero events for a new tournament. Tournament
+  Event controls remain visibly disabled and name the missing/invalid fields
+  until that save is confirmed. Fee-rate and official-management controls are
+  likewise withheld until the saved detail stage is valid.
+- Existing saved tournaments continue into event setup normally. A legacy
+  revision missing currently required details must save a corrected revision;
+  that correction preserves any existing event drafts. Later detail edits use
+  the existing complete-draft save and block finalization while unsaved.
+- Focused setup coverage passed 15/15. Full `pnpm verify` passed the dependency
+  audit, lint (0 errors, 2 pre-existing warnings), 719 application tests,
+  provider readiness, optimized production build, and workspace checks. The
+  private handoff was absent. PR #118 is open and mergeable; both GitHub Verify
+  jobs and its Vercel Preview passed. Browser Use blocked local/LAN development
+  URLs and the Preview requires Vercel authentication, so merge/Production
+  deployment plus signed-in phone/desktop visual proof and a runtime-error scan
+  remain required before calling this Production-released.
+- Decision and evidence: `docs/decisions/2026-09-19-tournament-details-save-gate.md`
+  and `docs/quality/2026-09-19-tournament-details-save-gate.md`.
+
 ## 2026-09-18 event attendance readiness — released and Production-verified
 
 - Rebuilt Day-of-play Event QR Check-In around one current attendance state per
