@@ -1,5 +1,21 @@
 # Project Status
 
+## 2026-09-20 Tournament Setup visual cleanup — implemented; release pending
+
+- Corrected the deployed Director-information layout that allowed its help
+  sentence to share a grid row with First/Last name. The help now occupies a
+  full-width row, the field controls keep their normal height, and the mailing
+  address uses the full panel width.
+- Standardized every single-line Tournament Details input/select at 46 pixels,
+  including Venue State, Time Zone, and Director First/Last name. Wide desktop
+  keeps First/Last/Phone/Email in one row, the screenshot-sized tablet layout
+  uses two balanced rows, and phones stack without horizontal overflow.
+- Focused Setup tests pass 6/6. Headless Chromium proof passed at 1200, 760,
+  and 390 pixels: all 13 single-line controls measured 46 pixels, the help
+  block ended above the field grid, and no viewport had horizontal overflow.
+- Full repository verification, reviewed merge, Production deployment,
+  signed-in Production inspection, and runtime scan remain release steps.
+
 ## 2026-09-20 compact structured Tournament Setup — owner-approved; release verification passed
 
 - Tournament Setup now has separate Venue name, street, city, State/Territory,

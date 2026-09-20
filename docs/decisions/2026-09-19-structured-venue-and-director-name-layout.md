@@ -16,6 +16,12 @@ Desktop rows are fixed as follows:
 
 At phone width every field stacks into one column. Existing immutable setup revisions are not parsed, guessed, or rewritten. A legacy draft must deliberately supply the missing structured values before a new setup revision can be saved.
 
+All single-line controls have one fixed visual height. The Director help text is
+a separate full-width block above the field grid so it cannot stretch the
+First/Last name inputs or wrap into a narrow column. Between phone and wide
+desktop widths, the four Director fields use two balanced rows rather than
+becoming too narrow.
+
 ## Compatibility and data integrity
 
 - The legacy venue projection includes name, street, and ZIP so the existing idempotency digest still binds those values.
