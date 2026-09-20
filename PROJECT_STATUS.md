@@ -18,9 +18,11 @@
 - Focused setup coverage passed 15/15. Full `pnpm verify` passed the dependency
   audit, lint (0 errors, 2 pre-existing warnings), 719 application tests,
   provider readiness, optimized production build, and workspace checks. The
-  private handoff was absent. Browser Use blocked local and LAN development
-  URLs, so reviewed deployment plus signed-in phone/desktop visual proof and a
-  runtime-error scan remain required before calling this Production-released.
+  private handoff was absent. PR #118 is open and mergeable; both GitHub Verify
+  jobs and its Vercel Preview passed. Browser Use blocked local/LAN development
+  URLs and the Preview requires Vercel authentication, so merge/Production
+  deployment plus signed-in phone/desktop visual proof and a runtime-error scan
+  remain required before calling this Production-released.
 - Decision and evidence: `docs/decisions/2026-09-19-tournament-details-save-gate.md`
   and `docs/quality/2026-09-19-tournament-details-save-gate.md`.
 

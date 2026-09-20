@@ -1,7 +1,8 @@
 # Tournament details save gate — verification record
 
-**Status:** Implemented and locally verified; reviewed deployment and
-authenticated responsive browser evidence pending.
+**Status:** Implemented and locally verified; PR checks and Vercel Preview
+passed; authenticated responsive browser evidence and Production release
+pending.
 
 ## Acceptance coverage
 
@@ -36,9 +37,11 @@ authenticated responsive browser evidence pending.
 - The development server started successfully with Next.js 16.3.4. The
   browser-verification executable is not installed on this host, and both the
   in-app browser and managed Chrome rejected loopback and LAN development URLs
-  with `net::ERR_BLOCKED_BY_CLIENT`. No authenticated phone/desktop visual pass
-  is claimed. The CSS includes a phone-width full-width primary action and the
-  production build verifies the rendered component tree, but a reviewed
+  with `net::ERR_BLOCKED_BY_CLIENT`. PR #118's Vercel Preview built successfully
+  but is protected by Vercel authentication, so it was not used to claim an
+  app-session visual pass. No authenticated phone/desktop visual pass is
+  claimed. The CSS includes a phone-width full-width primary action and the
+  production build verifies the rendered component tree, but the reviewed
   deployment still needs signed-in desktop and phone inspection.
 
 ## Release limits
@@ -47,6 +50,9 @@ authenticated responsive browser evidence pending.
   valid revision with zero events and remains the only persistence boundary.
 - No live tournament, setup revision, event, role, registration, payment, or
   deployment was changed by local verification.
+- PR #118 is open and mergeable. Both GitHub Verify jobs and the Vercel Preview
+  deployment passed; Supabase Preview correctly skipped because this change has
+  no migration.
 - Do not describe this change as Production-deployed until its reviewed PR is
   merged, the signed-in setup flow is inspected at desktop and phone widths,
   and deployment runtime errors are reviewed.
