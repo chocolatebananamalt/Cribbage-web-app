@@ -93,8 +93,14 @@ test("tournament details must be saved before event setup unlocks", async () => 
   assert.match(client, /setup-span-6/);
   assert.match(client, /setup-span-2/);
   assert.match(client, /setup-director-info setup-span-12/);
+  assert.match(client, /className="setup-director-fields"/);
   const css = await readFile(new URL("../src/app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.setup-details-grid \{ width:min\(100%,860px\)/);
+  assert.match(css, /\.setup-details-grid input:not\(\[type=checkbox\]\):not\(\[type=radio\]\),\.setup-details-grid select \{ height:46px; min-height:46px; \}/);
+  assert.match(css, /\.setup-director-info \{ display:block;/);
+  assert.match(css, /\.setup-director-help \{ margin:0 0 14px; \}/);
+  assert.match(css, /\.setup-director-fields \{ display:grid; grid-template-columns:repeat\(12,minmax\(0,1fr\)\); align-items:start;/);
+  assert.match(css, /@media \(min-width:701px\) and \(max-width:900px\).*\.setup-director-first,\.setup-director-last,\.setup-director-phone,\.setup-director-email \{ grid-column:span 3; \}/s);
   assert.match(css, /@media \(max-width:700px\).*\.setup-grid,\.setup-details-grid \{ width:100%; grid-template-columns:minmax\(0,1fr\)/s);
   assert.match(client, /Tournament Director Information \(shown to players\)/);
   assert.match(client, /Use the information players should see for this tournament\. It is separate from private account information\./);
