@@ -68,7 +68,7 @@ email-provider, browser, and production proof remain release gates.
 
 **Category 2 — Structured tournament contact information and rehearsal setup
 repair:** the open-ended Director contact-details field is replaced with
-required tournament phone/email, an optional player-facing mailing address,
+optional player-facing phone/email and Mailing Address for Correspondence,
 role-backed primary-director name, and versioned audit history. QR-link issue
 and replacement require those saved public contact values. Setup now separates
 Save All Events Draft from Finalize All Events / Open Registration, keeps a saved draft
@@ -79,6 +79,15 @@ a separately identified editable copy; eligible individual/team enrollments
 and references to the same tournament payment ledger transfer without
 rewriting history or duplicating money. Production deployment and director
 visual proof remain before this finding is closed.
+
+**Category 2 — Structured venue and Director identity:** the first Setup stage
+uses separate required Venue name, street, city, State/Territory, and ZIP
+fields plus separate player-facing Tournament Director First name and Last
+name fields. Desktop rows follow the owner-approved layout and stack safely on
+phones. The immutable setup revision stores each value, while compatibility
+projections keep existing registration and reporting readers working without
+rewriting historic revisions. The layout preview requires owner approval
+before PR, merge, hosted migration, or Production deployment.
 
 **Category 2 — Pool setup and rehearsal recovery:** Q Pools now retain their
 two-pool Main/Consolation limit while Side Pools have their own zero-to-six

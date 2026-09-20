@@ -29,10 +29,11 @@ export function isPublicRegistrationOptions(value: unknown): value is PublicRegi
     && fields.directorName.trim().length >= 1
     && fields.directorName.length <= 160
     && typeof fields.phone === "string"
-    && fields.phone.trim().length >= 7
     && fields.phone.length <= 40
+    && (!fields.phone.trim() || fields.phone.replace(/\D/g, "").length >= 7)
     && typeof fields.email === "string"
-    && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)
+    && fields.email.length <= 320
+    && (!fields.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email))
     && typeof fields.mailingAddress === "string"
     && fields.mailingAddress.length <= 500;
 }

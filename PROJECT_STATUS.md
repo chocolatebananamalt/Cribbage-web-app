@@ -1,11 +1,32 @@
 # Project Status
 
+## 2026-09-20 compact structured Tournament Setup — revised preview awaiting owner approval
+
+- Tournament Setup now has separate Venue name, street, city, State/Territory,
+  and ZIP controls. One outlined **Tournament Director Information (shown to
+  players)** area contains required First name/Last name and optional Phone,
+  Email, and Mailing Address for Correspondence. Desktop rows use a compact
+  860-pixel form area; responsive rules stack every field on phones.
+- Migration `0233_structured_venue_and_director_names.sql` adds the structured
+  values to the immutable setup revision, keeps historic revisions unchanged,
+  and retains compatibility projections for existing readers and public
+  registration contact display.
+- Migration `0234_optional_player_facing_director_contact.sql` makes public
+  phone/email optional without exposing profile contact data; supplied values
+  still validate, while blank values no longer block activation or QR links.
+- TypeScript and the first focused setup regression run passed (23/23). A
+  headless-Chrome desktop preview was produced for owner review. Full
+  verification, hosted migration proof, authenticated browser checks, PR,
+  merge, and Production deployment are intentionally pending layout approval.
+- Decision and evidence: `docs/decisions/2026-09-19-structured-venue-and-director-name-layout.md`
+  and `docs/quality/2026-09-19-structured-venue-and-director-name-preview.md`.
+
 ## 2026-09-19 tournament-details save gate — implemented; review deployment pending
 
 - Reworked the start of **Set Up Tournament** into a required first stage for
   Tournament name, City, Venue name/address, State/Territory, Time Zone,
-  start/end date and time, player-facing Tournament Director name, required
-  tournament phone/email, and optional tournament mailing address.
+  start/end date and time, and player-facing Tournament Director information.
+  First and Last name are required; public phone/email/address are optional.
 - **Save Tournament Details & Continue** now writes the existing private,
   versioned setup revision with zero events for a new tournament. Tournament
   Event controls remain visibly disabled and name the missing/invalid fields
@@ -579,6 +600,10 @@
   `docs/quality/2026-09-15-setup-finalization-registration-repair.md`.
 
 ## 2026-09-15 structured tournament contact information — Category 2 implementation complete; release verification pending
+
+- Superseded for new setup revisions on 2026-09-20: phone/email are now
+  optional player-facing selections. Historical revisions and the original
+  release evidence below remain unchanged.
 
 - Replaced the generic Director contact-details draft contract with required
   tournament contact phone/email and an optional director-selected,
