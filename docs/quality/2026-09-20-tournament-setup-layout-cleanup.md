@@ -20,8 +20,23 @@
 - Visual inspection of the three screenshots confirmed the wide one-row,
   tablet two-row, and phone one-column layouts.
 
-## Remaining release checks
+## Release verification
 
-- Run `pnpm verify` from the final diff.
-- Pass reviewed GitHub checks, merge, deploy to Production, inspect the actual
-  signed-in Setup page, and scan Production runtime errors.
+- `pnpm verify` — passed: 736/736 application tests, dependency audit, provider
+  readiness, optimized Production build, and workspace checks; lint retained
+  two existing warnings and zero errors.
+- PR #120 passed both GitHub Verify jobs and Vercel Preview, then merged as
+  `8f1d70734c93c4bea0a09e7d85931becb4b32960`.
+- Production deployment `dpl_8z1uYMMxMUTfc6BqNDFqiGDLXwLM` reached READY and
+  received the stable `cribbage-web-app.vercel.app` alias without error.
+- Stable `/sign-in` and `/register` returned HTTP 200. The stable Production
+  stylesheet contains the fixed 46-pixel field rule and the isolated
+  `display:block` Director panel rule.
+- The thirty-minute Production runtime-error cluster and error/fatal log scans
+  were empty.
+
+## Remaining evidence
+
+The in-app browser was signed out during release verification. The owner must
+refresh the protected Setup page in their authenticated session to confirm the
+real tournament values visually; no credential was requested or entered.
