@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
 const route = readFileSync("src/app/api/v1/tournaments/[id]/setup/route.ts", "utf8");
 const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
@@ -20,20 +20,22 @@ test("the setup route must not delete tournamentDirectorPublicName from the payl
 // The wrapper accepted two adapter keys and stripped only one, which is what made the
 // two validators impossible to satisfy at the same time.
 test("the setup save wrapper strips every adapter key it adds", () => {
-  const migrations = readdirSync("database/migrations").filter((name) => name.endsWith(".sql")).sort();
-  const latest = migrations
-    .map((name) => readFileSync(`database/migrations/${name}`, "utf8"))
-    .filter((sql) => /create (or replace )?function public\.save_tournament_setup_version\(/.test(sql))
-    .at(-1);
-  assert.ok(latest, "no migration defines public.save_tournament_setup_version");
-  const call = /save_tournament_setup_version_before_state_territory\(([\s\S]*?)\);/.exec(latest);
-  assert.ok(call, "the wrapper must delegate to the pre-adapter writer");
+  const stateAdapter = readFileSync("database/migrations/0225_setup_save_stops_rejecting_every_payload.sql", "utf8");
+  const structuredAdapter = readFileSync("database/migrations/0233_structured_venue_and_director_names.sql", "utf8");
+  const optionalContactAdapter = readFileSync("database/migrations/0234_optional_player_facing_director_contact.sql", "utf8");
+  const stateCall = /save_tournament_setup_version_before_state_territory\(([\s\S]*?)\);/.exec(stateAdapter);
+  assert.ok(stateCall, "the State\/Territory wrapper must delegate to the pre-adapter writer");
   for (const key of ["stateTerritory", "tournamentDirectorPublicName"]) {
     assert.ok(
-      call[1].includes(`-'${key}'`),
+      stateCall[1].includes(`-'${key}'`),
       `the wrapper adds '${key}' to its own accepted keys, so it must strip it before the legacy writer, which rejects unknown keys`,
     );
   }
+  assert.match(structuredAdapter, /return\s+public\.save_tournament_setup_version_before_structured_details\(/, "the structured-details wrapper must delegate to the State\/Territory adapter");
+  for (const key of ["venueName", "venueStreet", "venuePostalCode", "tournamentDirectorFirstName", "tournamentDirectorLastName"]) {
+    assert.match(structuredAdapter, new RegExp(`p_payload-array\\[[^\\]]*'${key}'`), `the structured-details wrapper must strip '${key}' before the older adapter`);
+  }
+  assert.match(optionalContactAdapter, /save_tournament_setup_version_before_optional_contact\([\s\S]*?v_forward_payload/);
 });
 
 // A rejection used to read "The setup was not changed." for all eleven distinct reasons.
