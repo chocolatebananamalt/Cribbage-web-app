@@ -31,8 +31,8 @@ alter table app.tournament_public_contact_versions
   alter column tournament_contact_phone drop not null,
   alter column tournament_contact_email drop not null;
 alter table app.tournament_public_contact_versions
-  drop constraint tournament_public_contact_versions_tournament_contact_phone_check,
-  drop constraint tournament_public_contact_versions_tournament_contact_email_check;
+  drop constraint tournament_public_contact_versio_tournament_contact_phone_check,
+  drop constraint tournament_public_contact_versio_tournament_contact_email_check;
 alter table app.tournament_public_contact_versions
   add constraint tournament_public_contact_versions_tournament_contact_phone_check
     check (tournament_contact_phone is null or length(trim(tournament_contact_phone)) between 7 and 40),
