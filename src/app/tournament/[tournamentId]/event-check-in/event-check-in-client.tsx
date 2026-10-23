@@ -3,11 +3,12 @@
 import QRCode from "qrcode";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { appAccessFailureMessage, checkInRejectionMessage, isCheckInAndSendAppAccessResult } from "../../../../lib/api/check-in-and-send-app-access";
 import { formatUtcDateTime } from "../../../../lib/date-time";
+import { isDirectorWindowResult } from "../../../../lib/api/event-check-in-window";
 import type { EventCheckInAppAccess, EventCheckInWorkspace } from "./page";
 
 type LiveCode = { eventId: string; url: string; expiresAt: string; image: string };
@@ -25,6 +26,8 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
   const [message, setMessage] = useState<string | null>(null);
   const [appAccessLink, setAppAccessLink] = useState<AppAccessLink | null>(null);
   const [busy, setBusy] = useState(false);
+  const [qrClosedEventId, setQrClosedEventId] = useState<string | null>(null);
+  const qrGeneration = useRef(0), closingEvent = useRef<string | null>(null);
   const event = workspace.events.find((item) => item.eventId === eventId);
   const eventNames = useMemo(() => new Map(workspace.events.map((item) => [item.eventId, item.name])), [workspace.events]);
   const rosterForEvent = useMemo(() => workspace.roster.flatMap((row) => {
@@ -49,20 +52,42 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
     } finally { setBusy(false); }
   }, [tournamentId]);
   async function toggleWindow(action: 'open' | 'close') {
-    const { response, data } = await call({ action, eventId, idempotencyKey: crypto.randomUUID() });
+    if (busy) return;
+    // A closing window invalidates in-flight QR responses immediately, even
+    // before refreshed server props replace the old open-window projection.
+    qrGeneration.current += 1;
+    if (action === 'close') closingEvent.current = eventId;
+    let result;
+    try { result = await call({ action, eventId, idempotencyKey: crypto.randomUUID() }); }
+    catch { closingEvent.current = null; setMessage('The check-in change could not be confirmed. Refresh to review its current state.'); return; }
+    const { response, data } = result;
     if (!response.ok || data?.status === 'rejected') {
+      closingEvent.current = null;
       if (data?.code === 'attendance_incomplete') setMessage(`Check-in cannot close yet. ${String(data.unresolvedCount ?? unresolvedCount)} enrolled player${Number(data.unresolvedCount ?? unresolvedCount) === 1 ? '' : 's'} still need to be checked in or marked as a no-show.`);
       else setMessage('The check-in window was not changed. Refresh and try again.');
       return;
     }
+    if (!isDirectorWindowResult(data, action, eventId)) {
+      closingEvent.current = null;
+      setMessage('The check-in change could not be confirmed. Refresh to review its current state.');
+      return;
+    }
+    if (action === 'open') closingEvent.current = null;
+    setQrClosedEventId(action === 'close' ? eventId : null);
+    setMessage(action === 'close' ? 'Event check-in closed. Its live QR code has been removed.' : 'Event check-in opened.');
     setLiveCode(null); router.refresh();
   }
   const refreshCode = useCallback(async () => {
-    if (!eventId || event?.windowState !== 'open') return;
-    const { response, data } = await call({ eventId, idempotencyKey: crypto.randomUUID() });
+    if (!eventId || event?.windowState !== 'open' || closingEvent.current === eventId) return;
+    const generation = qrGeneration.current;
+    let result;
+    try { result = await call({ eventId, idempotencyKey: crypto.randomUUID() }); }
+    catch { if (generation === qrGeneration.current && closingEvent.current !== eventId) setMessage('The live QR code could not be refreshed. Refresh this page to check the window status.'); return; }
+    if (generation !== qrGeneration.current || closingEvent.current === eventId) return;
+    const { response, data } = result;
     if (!response.ok || data?.status !== 'issued' || typeof data.url !== 'string' || typeof data.expiresAt !== 'string') { setMessage('The live QR code could not be refreshed. Keep the prior code displayed until it expires, then refresh this page.'); return; }
-    try { setLiveCode({ eventId, url: data.url, expiresAt: data.expiresAt, image: await QRCode.toDataURL(data.url, { errorCorrectionLevel: 'M', margin: 1, width: 320 }) }); }
-    catch { setMessage('The check-in window is open, but this device could not draw its QR image.'); }
+    try { const image = await QRCode.toDataURL(data.url, { errorCorrectionLevel: 'M', margin: 1, width: 320 }); if (generation === qrGeneration.current && closingEvent.current !== eventId) setLiveCode({ eventId, url: data.url, expiresAt: data.expiresAt, image }); }
+    catch { if (generation === qrGeneration.current && closingEvent.current !== eventId) setMessage('The check-in window is open, but this device could not draw its QR image.'); }
   }, [call, event?.windowState, eventId]);
   async function deskCheckIn(rosterEntryId: string) {
     const { response, data } = await call({ action: 'desk_check_in', eventId, rosterEntryId, idempotencyKey: crypto.randomUUID() });
@@ -136,7 +161,7 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
   }, [liveCode, eventId, refreshCode]);
 
   return <section className="policy-settings">
-    <label className="event-check-in-selector"><span>Event</span><select className="check-in-control" value={eventId} disabled={busy} onChange={(e) => { setEventId(e.target.value); setLiveCode(null); setMessage(null); }}>
+    <label className="event-check-in-selector"><span>Event</span><select className="check-in-control" value={eventId} disabled={busy} onChange={(e) => { qrGeneration.current += 1; closingEvent.current = null; setQrClosedEventId(null); setEventId(e.target.value); setLiveCode(null); setMessage(null); }}>
       {workspace.events.map((item) => <option key={item.eventId} value={item.eventId}>{item.eventType}: {item.name} · {item.windowState === 'open' ? 'Check-in open' : 'Check-in closed'}</option>)}
     </select></label>
     {event ? <section className="correction-item"><h2>{event.name}</h2><p>{event.checkedInCount} checked in · {event.noShowCount ?? 0} no-show · {unresolvedCount} unresolved · {event.pendingDeskCount} desk request{event.pendingDeskCount === 1 ? '' : 's'}.</p>
@@ -151,7 +176,7 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
         ? <p className="auth-note">Check-in cannot be opened because play for this event has already started. The desk buttons below stay unavailable while check-in is closed.</p>
         : null}
     </section> : null}
-    {event?.windowState === 'open' ? <section className="correction-item"><h2>Live event QR code</h2><p>Keep this page open on the physical event display. It refreshes automatically every 60 seconds.</p>{liveCode?.image ? <Image unoptimized src={liveCode.image} alt={`Live check-in QR code for ${event.name}`} width={320} height={320} /> : <p>Preparing live code…</p>}<button className="secondary" type="button" disabled={busy} onClick={() => void refreshCode()}>Refresh QR now</button></section> : null}
+    {event?.windowState === 'open' && qrClosedEventId !== eventId ? <section className="correction-item"><h2>Live event QR code</h2><p>Keep this page open on the physical event display. It refreshes automatically every 60 seconds.</p>{liveCode?.image ? <Image unoptimized src={liveCode.image} alt={`Live check-in QR code for ${event.name}`} width={320} height={320} /> : <p>Preparing live code…</p>}<button className="secondary" type="button" disabled={busy} onClick={() => void refreshCode()}>Refresh QR now</button></section> : null}
     <section className="correction-item"><h2>Desk requests</h2><p>Requests that cannot safely be checked in automatically stay here. Record cash/check payment and approve event enrollment first. Then select the matching paid, enrolled player below to check them in.</p><ul>{workspace.requests.map((request) => <li key={request.requestId}><strong>{request.firstName} {request.lastName}</strong> · {eventNames.get(request.eventId) ?? 'Event'} · awaiting desk review</li>)}{workspace.requests.length === 0 ? <li>No desk review requests are waiting.</li> : null}</ul></section>
     {appAccessLink ? <section className="correction-item" aria-label="One-time player activation link"><h2>Private app access link for {appAccessLink.displayName}</h2>
       <label>Activation URL<input readOnly value={appAccessLink.url} aria-label="Activation URL" /></label>
@@ -176,7 +201,7 @@ export default function EventCheckInClient({ tournamentId, workspace, appAccess 
       const rowBlockedReason = event?.windowState !== 'open'
         ? 'Check-in is closed for this event, so this row cannot be changed. Reopen the event above to check anyone in.'
         : !row.paid
-          ? `${row.displayName} has no amount owed recorded for this tournament, so the desk cannot check them in. Open Payments, set the amount owed, enter 0 if there is no fee, and record the receipt if money changed hands. Then come back here.`
+          ? `${row.displayName} is not confirmed paid in full, so the desk cannot check them in. Open Payments, set the amount owed, enter 0 if there is no fee, and record the receipt if money changed hands. Then come back here.`
           : null;
       return <li key={row.rosterEntryId}><span><strong>{row.displayName}</strong>{row.accNumber ? ` · ${row.accNumber}` : ''}<br />{payment} · {attendance === 'checked_in' ? 'checked in' : attendance === 'no_show' ? 'no-show' : 'not resolved'}</span>{rowBlockedReason && attendance !== 'checked_in' ? <p className="auth-note">{rowBlockedReason}</p> : null}<span className="attendance-actions">{attendance !== 'checked_in' ? <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void deskCheckIn(row.rosterEntryId)}>Check in at desk</button> : null}{appAccessOffers.has(row.rosterEntryId) ? <button className="secondary" type="button" disabled={busy || !row.paid || event?.windowState !== 'open'} onClick={() => void sendAppAccess(row.rosterEntryId, row.displayName)}>{attendance === 'checked_in' ? 'Send app access' : 'Check in and send app access'}</button> : null}{attendance === 'unresolved' || attendance === 'cancelled' ? <button className="secondary" type="button" disabled={busy || event?.windowState !== 'open'} onClick={() => void setAttendance(row.rosterEntryId, 'mark_no_show')}>Mark no-show</button> : <button className="secondary" type="button" disabled={busy || ['in_progress','completed','finalized'].includes(event?.playState ?? '')} onClick={() => void setAttendance(row.rosterEntryId, 'reset_attendance')}>Reset attendance</button>}</span></li>;
     })}{rosterForEvent.length === 0 ? <li>No enrolled players are available for this event.</li> : null}</ul></section>

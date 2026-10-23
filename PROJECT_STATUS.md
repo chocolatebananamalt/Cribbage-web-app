@@ -1,5 +1,70 @@
 # Project Status
 
+## 2026-10-23 isolated database verification completed locally
+
+WSL2.7.13, Docker Desktop4.96.3/Engine29.9.2 and pinned official Supabase
+CLI2.121.0 are installed. No Windows restart occurred. All236 migrations passed
+in a fresh unlinked PostgreSQL17.11 project; reviewed rollback fixture and all
+five true concurrent RPC races passed. All exact-project containers, volumes and network were discarded after testing.
+Evidence, recovery history and retained local cleanup targets:
+`docs/quality/2026-10-23-local-database-execution.md`.
+
+Final `pnpm verify` exit0:772/772 application tests, production audit0, lint
+0errors/2existingwarnings, provider fallbacks, TypeScript/Next16.4.2 build,
+workspace7pass/1expected private-handoff skip. Synthetic phone/desktop browser
+16/16 passed before the subsequent SQL-fixture-only changes. Full audit remains
+1 development-only high braces advisory with no published fix (was20); production
+was13 and is now0. No advisory suppression or weakened checks.
+
+Repair candidate is prepared on codex/director-setup-journey for an authorized draft PR. No
+deployment, shared migration or production mutation. Staging HTTP/multi-device,
+SMTP, offline and complete final-results proof remain access-dependent release
+gaps. Earlier status entries below are historical and superseded by this entry.
+## 2026-10-23 isolated database setup — administrator step pending
+
+Windows11 Home26H2 build26300.9711 compatibility and31.4GB RAM confirmed.
+Official pinned Supabase CLI2.121.0 is checksum-verified and runs from the task
+tools folder. Microsoft WSL2.7.13 installation failed with OS error0x80073d28
+(administrator privileges required); no retry after that block and no restart.
+WSL still reports not installed. Docker remains uninstalled; migration and true
+concurrency execution remain pending. Exact elevated user step and evidence:
+`docs/quality/2026-10-23-local-database-environment-setup.md`.
+
+## 2026-10-23 dependency security and start recovery — local candidate
+
+Production audit is now 0 (was13); full audit1 development-only high (was20).
+Next/eslint-config-next16.4.2 and patched transitive packages preserve the
+unchanged verification pipeline. Remaining braces advisory has no published fix
+and is not suppressed. Final verification passes771 application tests, build, lint
+0errors/2existingwarnings, providers and workspace7pass/1private skip. Synthetic
+browser16/16 passes at390/1440, including start recovery and twelve-game CSV.
+Local migration0236 and rollback/concurrency fixtures have independent source
+review with no introduced blocker; Doubles rules are preserved. No local DB
+runtime was found, so database/concurrency execution remains unverified and
+release certification is blocked. No shared migration, push, PR, deployment or production
+mutation. Evidence: `docs/quality/2026-10-23-dependency-security-and-start-recovery.md`.
+
+## 2026-10-23 director setup journey — local candidate; release blocked by dependency audit
+
+Implemented a persisted-state director checklist, authoritative Create-to-Setup
+name/date carry-forward, registration prerequisite guidance, exact request
+recovery for Create/Setup/roster promotion/amount owed, action-bound QR closure,
+and truthful email cooldown/quota messages. Scorecard/rules, backend guards,
+audit history, schema, financial policy and real records are unchanged.
+
+Isolated Windows branch `codex/director-setup-journey` starts from reverified
+remote main `7b318e64`. Application tests755/755, TypeScript, production build,
+provider checks and lint (0 errors,2 existing warnings) pass; post-build workspace
+checks7 pass/1 private-handoff skip. Synthetic Chrome12 scenarios at390/1440 pass,
+including persistence, cancelled finalization, back/retry, malformed receipts,
+actor isolation and quota wording. Independent Sol source review passes after
+recovery fixes. Aggregate `pnpm verify` fails at unchanged dependency audit:
+13 findings (1 low,5 moderate,4 high,3 critical). No production mutation, real
+email, payment, push, PR or deployment. Real multi-device/backend and SMTP proof
+remain unverified. Next: separately remediate dependencies and complete staging
+acceptance; obtain approval before any draft PR/release action. Full evidence
+and changed-file inventory: `docs/quality/2026-10-23-director-setup-journey.md`.
+
 ## 2026-09-20 Tournament Setup visual cleanup — Production deployed; signed-in owner inspection pending
 
 - Corrected the deployed Director-information layout that allowed its help

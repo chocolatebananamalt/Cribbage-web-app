@@ -48,6 +48,7 @@ const rejectedCodes = new Set([
   "not_director",
   "idempotency_conflict",
   "event_not_approved",
+  "event_already_started",
   "roster_entry_unavailable",
   "not_checked_in",
   "duplicate_roster_entry",

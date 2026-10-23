@@ -11,7 +11,12 @@ export function isRejectedRosterPromotion(value: unknown, decisionId: string) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
   return exactKeys(item, ["status", "code", "approvalDecisionId"])
-    && item.status === "rejected" && item.approvalDecisionId === decisionId && ["authentication_required", "not_director", "approved_decision_required", "claim_already_promoted", "duplicate_roster_entry", "withdrawn_roster_entry", "potential_duplicate", "idempotency_conflict", "roster_promotion_rejected"].includes(item.code as string);
+    && item.status === "rejected" && item.approvalDecisionId === decisionId && ["authentication_required", "not_director", "approved_decision_required", "claim_already_promoted", "duplicate_roster_entry", "withdrawn_roster_entry", "potential_duplicate", "registration_closed", "initial_seating_already_published", "idempotency_conflict", "roster_promotion_rejected"].includes(item.code as string);
+}
+
+export function rosterPromotionReconciliation(value: unknown, decisionId: string): "accepted" | "rejected" | "unresolved" {
+  const result = value && typeof value === "object" && "result" in value ? value.result : null;
+  return isAcceptedRosterPromotion(result, decisionId) ? "accepted" : isRejectedRosterPromotion(result, decisionId) ? "rejected" : "unresolved";
 }
 
 export type ManualRosterEntryRequest = {

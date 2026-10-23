@@ -6,6 +6,8 @@ import { accountActivationEnabled } from "../../../lib/api/account-activation-re
 import { rule12CorrectionEnabled } from "../../../lib/api/rule12-correction-release";
 import { getAccessibleTournaments } from "../../../lib/tournaments/accessible-tournaments";
 import { ArchiveTournamentClient } from "./archive-tournament-client";
+import DirectorChecklist from "./director-checklist";
+import { readDirectorChecklist } from "../../../lib/director-checklist-reader";
 
 const roleLabels: Record<string, string> = {
   director: "Director",
@@ -24,6 +26,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
     ? chooser.tournaments.find((tournament) => tournament.tournamentId === tournamentId)?.tournamentName
     : undefined;
   const isDirector = access.roles.some((role) => ["director", "co_director"].includes(role));
+  const checklist = isDirector ? await readDirectorChecklist(access.user.id, tournamentId) : null;
   const isCrossCheckOfficial = access.roles.some((role) => ["director", "co_director", "cross_checker"].includes(role));
   const canViewResults = access.roles.some((role) => ["viewer", "player", "cross_checker", "director", "co_director"].includes(role));
   return (
@@ -33,6 +36,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <Link className="secondary workspace-chooser-link" href="/">Back to Your Tournaments</Link>
         <h1 id="tournament-title">{tournamentName ?? "Tournament workspace"}</h1>
         <p className="lede">Your role{access.roles.length === 1 ? "" : "s"}: {access.roles.map((role) => roleLabels[role] ?? role).join(", ")}.</p>
+        {checklist ? <DirectorChecklist tournamentId={tournamentId} snapshot={checklist} /> : null}
         <section className="workspace-phase-grid" aria-label="Tournament operations">
           <section className="workspace-phase"><h2>Start here</h2><p>Personal tournament information and player tools.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/how-to`}>How to run this tournament</Link>

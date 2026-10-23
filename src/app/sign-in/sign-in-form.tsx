@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { normalizeEmailSignInError } from "../../lib/auth/email-sign-in-error";
 import { createClient } from "../../lib/supabase/client";
 
 // Both sign-in paths land on the same place, and an open redirect here would
@@ -17,9 +18,27 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [cooldownSeconds, setCooldownSeconds] = useState<number | null>(null);
+  const requestInFlight = useRef(false);
+
+  useEffect(() => {
+    if (cooldownSeconds === null) return;
+    const timer = window.setTimeout(() => {
+      if (cooldownSeconds <= 1) {
+        setCooldownSeconds(null);
+        setError(null);
+        return;
+      }
+      setCooldownSeconds(cooldownSeconds - 1);
+    }, 1_000);
+    return () => window.clearTimeout(timer);
+  }, [cooldownSeconds]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (requestInFlight.current || cooldownSeconds !== null) return;
+    requestInFlight.current = true;
+    setBusy(true);
     setStatus(null);
     setError(null);
     try {
@@ -33,10 +52,12 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
       if (result.error) throw result.error;
       setStatus("Check your email for a secure sign-in link.");
     } catch (caught) {
-      const message = caught instanceof Error ? caught.message : "";
-      setError(message.toLowerCase().includes("rate limit")
-        ? "Too many sign-in emails were requested. Please wait a few minutes, then request one new link."
-        : message || "Unable to start sign-in.");
+      const failure = normalizeEmailSignInError(caught);
+      setError(failure.message);
+      setCooldownSeconds(failure.cooldownSeconds);
+    } finally {
+      requestInFlight.current = false;
+      setBusy(false);
     }
   }
 
@@ -47,6 +68,8 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
   // waiting on a mail server.
   async function submitPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (requestInFlight.current) return;
+    requestInFlight.current = true;
     setStatus(null);
     setError(null);
     setBusy(true);
@@ -64,6 +87,7 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
           ? "Password sign-in is turned off for this project. Enable the email provider's password option, or use the emailed link."
           : message || "Unable to sign in.");
     } finally {
+      requestInFlight.current = false;
       setBusy(false);
     }
   }
@@ -87,12 +111,13 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
           <form onSubmit={submit}>
             <label htmlFor="email">Email address</label>
             <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
-            <button className="primary-action" type="submit">Email me a sign-in link</button>
+            <button className="primary-action" type="submit" disabled={busy || cooldownSeconds !== null}>{busy ? "Requesting sign-in link." : "Email me a sign-in link"}</button>
           </form>
         )}
         {status ? <p role="status">{status}</p> : null}
         {error ? <p className="error-text" role="alert">{error}</p> : null}
-        <button className="secondary" type="button" onClick={() => { setUsePassword(!usePassword); setStatus(null); setError(null); setPassword(""); }}>
+        {cooldownSeconds !== null ? <p className="auth-note" aria-live="off">Email link requests available in {cooldownSeconds} {cooldownSeconds === 1 ? "second" : "seconds"}.</p> : null}
+        <button className="secondary" type="button" disabled={busy} onClick={() => { setUsePassword(!usePassword); setStatus(null); setError(null); setPassword(""); }}>
           {usePassword ? "Use an emailed sign-in link instead" : "Sign in with a password instead"}
         </button>
         <p className="auth-note">{usePassword

@@ -70,3 +70,10 @@ export function isSavedPaymentObligation(value: unknown, request: PaymentObligat
   return item.status === "payment_obligation_saved" && item.rosterEntryId === request.rosterEntryId
     && item.obligationVersion === request.expectedVersion + 1 && item.amountOwedMinor === request.amountOwedMinor;
 }
+
+const paymentObligationRejectionCodes = new Set(["invalid_request", "tournament_unavailable", "not_director", "idempotency_conflict", "roster_entry_unavailable", "stale_obligation"]);
+export function isRejectedPaymentObligation(value: unknown, request: PaymentObligationRequest): value is { status: "rejected"; code: string; rosterEntryId: string } {
+  if (!value || typeof value !== "object" || Array.isArray(value) || !exact(value, ["status", "code", "rosterEntryId"])) return false;
+  const item = value as Record<string, unknown>;
+  return item.status === "rejected" && typeof item.code === "string" && paymentObligationRejectionCodes.has(item.code) && item.rosterEntryId === request.rosterEntryId;
+}

@@ -69,7 +69,7 @@ test("a desk row that cannot be checked in says why on screen", () => {
   // needs a recorded amount owed to exist at all. A player nobody has
   // priced yet reads as "$0.00 received of $0.00", which looks square, while
   // all three buttons sit dead with nothing saying why.
-  assert.match(client, /has no amount owed recorded for this tournament, so the desk cannot check them in/);
+  assert.match(client, /is not confirmed paid in full, so the desk cannot check them in/);
   assert.match(client, /enter 0 if there is no fee/);
   assert.match(client, /Check-in is closed for this event, so this row cannot be changed/);
   const reason = client.indexOf("rowBlockedReason && attendance !== 'checked_in'");

@@ -161,14 +161,17 @@ test('successful magic-link sessions are visible and cannot request another link
   const subject = read('src/lib/auth/current-subject.ts');
   const signInPage = read('src/app/sign-in/page.tsx');
   const form = read('src/app/sign-in/sign-in-form.tsx');
+  const emailError = read('src/lib/auth/email-sign-in-error.ts');
   assert.match(subject, /server-only/);
   assert.match(subject, /auth\.getClaims\(\)/);
   assert.match(subject, /claims\?\.sub/);
   assert.doesNotMatch(subject, /getSession|getUser/);
   assert.match(signInPage, /getCurrentSubject/);
   assert.match(signInPage, /if \(subject\) redirect\("\/"\)/);
-  assert.match(form, /Too many sign-in emails were requested/);
-  assert.match(form, /wait a few minutes, then request one new link/);
+  assert.match(form, /normalizeEmailSignInError/);
+  assert.match(emailError, /Too many sign-in emails were requested/);
+  assert.match(emailError, /exact reset time is unavailable/);
+  assert.doesNotMatch(form + emailError, /wait a few minutes/i);
 });
 
 test('the public production demonstration is explicit, synthetic-only, and disconnected from tournament writes', () => {
