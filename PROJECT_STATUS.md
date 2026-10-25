@@ -1,5 +1,15 @@
 # Project Status
 
+## 2026-10-25 root landing repair - local only
+
+Root now always uses the existing verified-identity tournament chooser or anonymous sign-in prompt; the hostname-based sample override and unused helper are removed. Explicit /demo and player scoring routes are unchanged. Fresh aggregate775/775, audit0, lint0errors/2existingwarnings, build/TypeScript/providers and workspace7+1expectedskip passed. Five rendered role states at390/1440, exact adapter actor/anonymous no-call checks, Back/refresh/demo passed; independent source and executed-evidence review PASS. Not published. See docs/quality/2026-10-25-authenticated-root-landing.md for evidence and feasible remaining staging QA.
+
+
+## 2026-10-25 latest hosted activation verification
+
+Published68315d0 passed both CI jobs and fresh authenticated privileged staging isolation. Hosted disabled Finalizing events label, cancellation without activation, saved refresh, workspace redirect and finalized revisit all passed; one activation/event and versions1,2 persisted. Preview root still intentionally shows the sample scoring prototype; direct director navigation works. Code unchanged; latest aggregate775/775 and Chrome20/20 remain applicable. See appended hosted evidence and unchanged release/security gaps.
+
+
 ## 2026-10-25 published Preview follow-up
 
 Published9367177 passed both CI Verify jobs and reached READY Preview. New authenticated staging isolation, corrected activation workspace redirect, Adding player and seating Saving labels passed hosted retest with one fictional fixture; persisted activation/roster/check-in each exactly once. A final active-activation Retry label correction is reviewed locally: fresh aggregate775/775, build/TypeScript, lint0errors/2existingwarnings, audit0 and workspace7+1expectedskip passed; Chrome20/20 passed. It remains unpublished. See the appended hosted quality evidence; all remaining release/security gates still apply.

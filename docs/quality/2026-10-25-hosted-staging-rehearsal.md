@@ -146,3 +146,43 @@ director-browser.mjs, PROJECT_STATUS.md and this report. Commit/remote remains
 Next step: review/publish this small follow-up through the normal repair-branch
 path when authorized, then verify its hosted activation busy label. No merge or
 production release is authorized.
+
+## Latest published activation verification, 2026-10-25 19:15 UTC
+
+Commit68315d08d8b829716dac256ab07042e0022cfa50 is READY on
+https://cribbage-web-qeslhs73g-cribbage-app.vercel.app, with both exact-SHA Verify
+jobs successful. The user completed password sign-in; staging auth metadata
+verified fictional director de0f27a1-60d0-4449-af83-fdf360a9bc08 at19:10:29 UTC.
+The root URL displayed the existing Sample Cribbage Classic score-entry prototype.
+Source page.tsx deliberately renders that prototype on review-enabled Preview
+hosts; this was a landing-page usability mismatch, not failed authentication.
+Direct navigation to the actual director setup succeeded without another login.
+
+A new fictional fixture TEST ONLY - PR122 Activation Label 68315d0,
+9e77c4c7-4036-454f-aac8-b3ae5d9c5c53, was created through this deployment's
+privileged server path and independently found in sole approved staging
+nnhcnvksxgxnpvdqjgpg with the exact fictional director role. No credentials read.
+Required details and a zero-fee twelve-game Main event saved as revisions1,2.
+
+Hosted checks on68315d0 passed:
+- Cancel finalization, reload: persisted versions[1,2], zero activations.
+- Reopen confirmation and accept: exact Finalizing events label with U+2026
+  present and disabled (isEnabled false) while Activating status was visible.
+- Successful workspace redirect; refresh preserved checklist steps1-3 Complete,
+  roster Next and registration open.
+- Return to Setup: finalized summary, zero Finalize or Retry Finalize buttons.
+- Read-only database evidence: one activation, one operational event, versions[1,2],
+  zero roster entries for this fixture. No duplicate save/activation observed.
+
+No forced hosted timeout/network interruption or concurrent duplicate submission
+was injected; uncertain-response/exact-retry behavior retains the separately
+executed20/20 local synthetic browser evidence. Current code is unchanged from
+the prior775/775 aggregate, production audit0, lint0errors/2existingwarnings,
+TypeScript/build/providers PASS and workspace7pass/1expectedskip. No need to
+repeat unchanged code checks for this evidence-only update.
+
+No additional permissions/accounts, real email/payment, production data/settings,
+merge, release or denied redeploy action occurred. Existing cross-checker/final
+settlement, larger event, independent digital/physical devices/offline, SMTP,
+registration-link feature and staging database-password rotation gaps remain.
+The Preview root's sample landing remains a documented usability limitation.

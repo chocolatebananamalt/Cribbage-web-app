@@ -135,28 +135,20 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   assert.match(read('src/app/page.tsx'), /export default|TournamentDashboard/);
 });
 
-test('the synthetic review dashboard is unavailable from a production deployment while production offers safe sign-in discovery', async () => {
-  const { allowsReviewPrototype } = await import(pathToFileURL(path.join(root, 'src/lib/review-prototype-boundary.ts')).href);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'production' }), false);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-q81o14eoc-cribbage-app.vercel.app' }), true);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'development', host: 'localhost:3000' }), true);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-app.vercel.app' }), false, 'promotion must not turn the default production hostname into a review surface');
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'tournament.example.org' }), false, 'an unlisted custom production hostname must fail closed');
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production' }), false);
+test('root always uses verified identity and the sample dashboard stays on explicit demo', () => {
   const page = read('src/app/page.tsx');
-  assert.match(page, /await headers\(\)/);
-  assert.match(page, /requestHeaders\.get\("host"\)/);
-  assert.match(page, /allowsReviewPrototype/);
-  assert.match(page, /return <TournamentDashboard/);
+  const demo = read('src/app/demo/page.tsx');
+  assert.doesNotMatch(page, /allowsReviewPrototype|TournamentDashboard|requestHeaders/);
+  assert.match(page, /const subject = await getCurrentSubject\(\)/);
+  assert.match(page, /if \(subject\)/);
+  assert.match(page, /getAccessibleTournaments\(subject\)/);
   assert.match(page, /href="\/sign-in"/);
-  assert.match(page, /Tournament registration uses the QR code or registration link/);
-  assert.match(page, /getCurrentSubject/);
-  assert.match(page, /You’re signed in/);
-  assert.match(page, /secure email sign-in is complete/);
+  assert.match(page, /href="\/demo"/);
   assert.match(page, /SharedDeviceSignOut/);
-  assert.doesNotMatch(page, /notFound\(/);
+  assert.match(demo, /Demonstration notice/);
+  assert.match(demo, /Sample Data Only/);
+  assert.match(demo, /<TournamentDashboard initialScreen=/);
 });
-
 test('successful magic-link sessions are visible and cannot request another link', () => {
   const subject = read('src/lib/auth/current-subject.ts');
   const signInPage = read('src/app/sign-in/page.tsx');
