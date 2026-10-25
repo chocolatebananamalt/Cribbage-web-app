@@ -1,5 +1,29 @@
 # Project Status
 
+## 2026-10-25 isolated hosted PR122 rehearsal
+
+All236 migrations are verified in the separate Free staging project. The user
+rebuilt the repair Preview at53feac5 after automated redeploy was denied; the
+denied route was not bypassed. Branch-only staging connection and authenticated
+privileged server access were verified. One fictional director, two paper players
+and one twelve-game tournament completed setup, registration, attendance, seating,
+schedule, start, twelve independent paper confirmations, standings, qualification
+and event closure. Cross-check finalization correctly blocks without an assigned
+cross-checker. No production, real-email or payment mutation occurred.
+
+Three narrow UI corrections remain local: disabled registration-feature activation
+redirect/message, pending roster label, and pending seating label. Source review
+passed. Fresh aggregate:775/775 app tests, lint0errors/2existingwarnings,
+TypeScript/build/providers pass, workspace7pass/1expectedskip. Expanded synthetic
+browser rehearsal20/20 passed, including seating and all eleven fixture views at
+390px/1440px without overflow. Full audit now0; the former development braces advisory
+was withdrawn by GitHub on2026-10-23. No suppression/dependency change.
+
+Evidence and remaining release/security gates:
+`docs/quality/2026-10-25-hosted-staging-rehearsal.md`. The later local fixes are not
+the hosted build. Staging database-password rotation remains unresolved; no
+production release or merge is authorized.
+
 ## 2026-10-23 isolated database verification completed locally
 
 WSL2.7.13, Docker Desktop4.96.3/Engine29.9.2 and pinned official Supabase

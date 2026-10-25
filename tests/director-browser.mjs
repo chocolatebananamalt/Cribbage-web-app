@@ -17,6 +17,7 @@ import {NewTournamentClient} from '../../../src/app/director/tournaments/new/new
 import {SignInForm} from '../../../src/app/sign-in/sign-in-form';
 import SetupClient from '../../../src/app/tournament/[tournamentId]/setup/setup-client';
 import RosterClient from '../../../src/app/tournament/[tournamentId]/roster/roster-client';
+import SeatingClient from '../../../src/app/tournament/[tournamentId]/seating/seating-client';
 import EventCheckInClient from '../../../src/app/tournament/[tournamentId]/event-check-in/event-check-in-client';
 import DirectorChecklist from '../../../src/app/tournament/[tournamentId]/director-checklist';
 import PaymentObligationClient from '../../../src/app/tournament/[tournamentId]/payments/payment-obligation-client';
@@ -28,9 +29,10 @@ if(view==='auth')return <SignInForm handoffWarning={false}/>;
 if(view==='participants')return <main className="auth-shell"><section className="auth-card corrections-card"><ParticipantsClient actorId="${id}" tournamentId="${id}" workspace={{tournamentName:'Synthetic tournament',registrationClosed:true,seatingPublished:true,events:[{eventId:'${id}',name:'Main',eventType:'main',format:'standard_singles',scoringMethod:'digital',participantCount:0}],roster:[{rosterEntryId:'${id}',displayName:'Fictional Player',checkInState:'checked_in',profileLinked:false,scorecardType:'paper',verificationId:'A-1',enrolledEventIds:[]}]}}/></section></main>;
 if(view==='create-other')return <main className="auth-shell"><section className="auth-card"><NewTournamentClient actorId="20000000-0000-4000-8000-000000000002"/></section></main>;
 if(view==='roster-open')return <main className="auth-shell"><section className="auth-card corrections-card"><RosterClient actorId="${id}" tournamentId="${id}" intakeState="open" rosterEntries={[]} withdrawnRosterEntries={[]} promotionCandidates={[{approvalDecisionId:'${id}',sourceClaimId:'${id}',displayName:'Fictional Candidate',email:'fictional@example.invalid',accNumber:null,intendedPaymentMethod:'unspecified',scorecardType:'paper',submittedAt:'2027-01-01T00:00:00Z'}]}/></section></main>;
+if(view==='seating-open')return <main className="auth-shell"><section className="auth-card corrections-card"><SeatingClient actorId="${id}" tournamentId="${id}" registrationClosed={false} publication={null} checkIn={[{rosterEntryId:'${id}',displayName:'Fictional Player',state:'not_checked_in',scorecardType:'paper'}]}/></section></main>;
 if(view==='payment')return <main className="auth-shell"><section className="auth-card corrections-card"><PaymentObligationClient actorId="${id}" tournamentId="${id}" entries={[{rosterEntryId:'${id}',displayName:'Fictional Player',obligationVersion:0,amountOwedMinor:null,amountReceivedMinor:0,amountRemainingMinor:null,paymentStatus:'not_configured'}]}/></section></main>;
 return <main className="auth-shell"><section className="auth-card corrections-card setup-card">
-{view==='create'?<NewTournamentClient actorId="${id}"/>:view==='setup'||view==='setup-no-seed'?<SetupClient actorId="${id}" tournamentId="${id}" creationSeed={view==='setup'?{name:'Synthetic tournament',plannedDate:'2027-02-03'}:undefined}/>:view==='roster'?<RosterClient actorId="${id}" tournamentId="${id}" intakeState="setup_required" rosterEntries={[]} withdrawnRosterEntries={[]} promotionCandidates={[]}/>:view==='qr'?<EventCheckInClient tournamentId="${id}" appAccess={null} workspace={{events:[{eventId:'${id}',name:'Main',eventType:'main',format:'standard_singles',windowState:'open',checkedInCount:2,noShowCount:0,unresolvedCount:0,pendingDeskCount:0}],requests:[],roster:[]}}/>:<DirectorChecklist tournamentId="${id}" snapshot={{setup:null,activation:null,seating:null,enrollment:null,payments:null,schedule:null,attendance:null}}/>}
+{view==='create'?<NewTournamentClient actorId="${id}"/>:view==='setup'||view==='setup-no-seed'||view==='setup-registration'?<SetupClient actorId="${id}" tournamentId="${id}" registrationLinkManagementEnabled={view==='setup-registration'} creationSeed={view==='setup'||view==='setup-registration'?{name:'Synthetic tournament',plannedDate:'2027-02-03'}:undefined}/>:view==='roster'?<RosterClient actorId="${id}" tournamentId="${id}" intakeState="setup_required" rosterEntries={[]} withdrawnRosterEntries={[]} promotionCandidates={[]}/>:view==='qr'?<EventCheckInClient tournamentId="${id}" appAccess={null} workspace={{events:[{eventId:'${id}',name:'Main',eventType:'main',format:'standard_singles',windowState:'open',checkedInCount:2,noShowCount:0,unresolvedCount:0,pendingDeskCount:0}],requests:[],roster:[]}}/>:<DirectorChecklist tournamentId="${id}" snapshot={{setup:null,activation:null,seating:null,enrollment:null,payments:null,schedule:null,attendance:null}}/>}
 </section></main>}`);
 const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "dev", fixture, "--hostname", "127.0.0.1", "--port", "3217"], { cwd: root, env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1", NEXT_PUBLIC_SUPABASE_URL: "https://synthetic.invalid", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "synthetic-not-a-credential" }, stdio: ["ignore", "pipe", "pipe"] });
 let logs = ""; child.stdout.on("data", (data) => { logs += data; }); child.stderr.on("data", (data) => { logs += data; });
@@ -46,6 +48,7 @@ try {
   await context.route("**/*", async (route) => { if (!route.request().url().startsWith(base)) await route.abort(); else await route.continue(); });
   const page = await context.newPage();
   let savedSetup = null, setupVersion = 0, setupWrites = [], failSetupRefresh = false;
+  let activationWrites = [];
   const fee = { mainRateCents: 300, consolationRateCents: 100, mainEligibleParticipantCount: 0, consolationEligibleParticipantCount: 0, runningTotalCents: 0, mainRateSource: "setup", consolationRateSource: "setup" };
   await page.route("**/api/v1/tournaments/*/setup", async (route) => {
     if (route.request().method() === "POST") {
@@ -57,17 +60,21 @@ try {
     if (failSetupRefresh) return route.fulfill({ status: 503, json: {} });
     return route.fulfill({ json: { workspace: { current: savedSetup, history: savedSetup ? [{ version: setupVersion, createdAt: savedSetup.createdAt, eventCount: savedSetup.events.length }] : [], sanctioningFee: fee }, officialChoices: { directorProfileId: id, directorDisplayName: "Fictional Director", coDirectorProfileIds: [] } } });
   });
-  await page.route("**/api/v1/tournaments/*/setup/activation", (route) => route.fulfill({ json: { status: "not_activated" } }));
+  await page.route("**/api/v1/tournaments/*/setup/activation", async (route) => {
+    if (route.request().method() !== "POST") return route.fulfill({ json: { status: "not_activated" } });
+    const request = route.request().postDataJSON(); activationWrites.push(request);
+    return route.fulfill({ json: { status: "tournament_setup_activated", setupRevisionId: request.setupRevisionId, setupVersion: request.expectedVersion, eventCount: 1, events: [{ activationId: id, setupEventVersionId: id, rulesetVersionId: id, eventId: id, eventType: "main", name: "Main Event", format: "standard_singles", scoringMethod: "digital", gameCount: 12 }], roundsCreated: false, participantsEnrolled: false, seatingUpdated: false, financeUpdated: false, resultsUpdated: false, payoutsCalculated: false, qualifiersCalculated: false, accSubmissionCreated: false, registrationState: "open" } });
+  });
   await page.route("**/api/v1/tournaments/*/setup/officials**", (route) => route.fulfill({ status: 503, json: {} }));
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
-    for (const view of ["checklist", "roster", "create", "auth", "setup", "qr", "payment", "schedule-ready", "participants"]) {
+    for (const view of ["checklist", "roster", "create", "auth", "setup", "setup-registration", "seating-open", "qr", "payment", "schedule-ready", "participants"]) {
       await page.goto(`${base}?view=${view}`);
       await page.locator("main").first().waitFor();
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${view} overflow at ${width}`);
       await page.screenshot({ path: path.join(fixture, `${view}-${width}.png`), fullPage: true });
     }
-    evidence.push(`No horizontal overflow: checklist, roster, create, auth, setup, event check-in, amount owed, schedule/start, enrollment at ${width}px`);
+    evidence.push(`No horizontal overflow: checklist, roster, create, auth, setup, seating, event check-in, amount owed, schedule/start, enrollment at ${width}px`);
   }
   await page.goto(`${base}?view=roster`);
   await page.getByLabel("First name", { exact: true }).fill("Fictional"); await page.getByLabel("Last name", { exact: true }).fill("Player");
@@ -107,6 +114,18 @@ try {
   assert.equal(setupWrites.length, 2);
   assert.equal(await page.getByRole("alertdialog").count(), 0);
   evidence.push("Saved events reload correctly; cancelling finalization makes no activation write");
+
+  await page.getByRole("button", { name: "Finalize All Events / Open Registration", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Yes, Finalize & Open Registration", exact: true }).click();
+  await page.waitForURL(`**/tournament/${id}`);
+  assert.equal(activationWrites.length, 1);
+  evidence.push("Successful activation without registration-link management returns to the tournament workspace");
+  await page.goto(`${base}?view=setup-registration`);
+  await page.getByRole("button", { name: "Finalize All Events / Open Registration", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Yes, Finalize & Open Registration", exact: true }).click();
+  await page.waitForURL(`**/tournament/${id}/registration`);
+  assert.equal(activationWrites.length, 2);
+  evidence.push("Successful activation with registration-link management opens the registration workspace");
 
   let obligationWrites = [], acceptObligation = false;
   await page.route("**/api/v1/tournaments/*/payment-obligations", async (route) => {
@@ -156,7 +175,40 @@ try {
 
   let promotions = [];
   await page.route("**/api/v1/tournaments/*/roster-promotions", async (route) => { promotions.push(route.request().postDataJSON()); await route.fulfill({ status: 503, json: {} }); });
+  let manualWrites = [];
+  await page.route("**/api/v1/tournaments/*/roster-manual", async (route) => {
+    manualWrites.push(route.request().postDataJSON());
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    await route.fulfill({ status: 503, json: {} });
+  });
+  let seatingWrites = [];
+  await page.route("**/api/v1/tournaments/*/seating/check-in", async (route) => {
+    seatingWrites.push(route.request().postDataJSON());
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    await route.fulfill({ status: 503, json: {} });
+  });
   await page.route("**/api/v1/tournaments/*/roster-promotions/reconciliation", (route) => route.fulfill({ json: { result: null } }));
+  await page.evaluate(() => sessionStorage.clear());
+  await page.goto(`${base}?view=roster-open`);
+  await page.getByLabel("First name", { exact: true }).fill("Manual");
+  await page.getByLabel("Last name", { exact: true }).fill("Entry");
+  await page.getByRole("button", { name: "Add Player", exact: true }).click();
+  await page.getByRole("button", { name: "Adding player…", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry manual entry", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry manual entry", exact: true }).click();
+  await page.getByRole("button", { name: "Adding player…", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry manual entry", exact: true }).waitFor();
+  assert.equal(manualWrites.length, 2); assert.deepEqual(manualWrites[0], manualWrites[1]);
+  evidence.push("Manual roster entry shows Adding player while pending, then preserves exact request for explicit uncertain retry");
+  await page.goto(`${base}?view=seating-open`);
+  await page.getByRole("button", { name: "Save check-in status", exact: true }).click();
+  await page.getByRole("button", { name: "Saving…", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry the same protected request", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry the same protected request", exact: true }).click();
+  await page.getByRole("button", { name: "Saving…", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Retry the same protected request", exact: true }).waitFor();
+  assert.equal(seatingWrites.length, 2); assert.deepEqual(seatingWrites[0], seatingWrites[1]);
+  evidence.push("Seating check-in shows Saving while pending, then preserves the exact protected request for explicit retry");
   await page.goto(`${base}?view=roster-open`);
   await page.getByRole("button", { name: "Create approved roster identity" }).click();
   await page.getByRole("button", { name: "Retry exact roster request" }).waitFor();

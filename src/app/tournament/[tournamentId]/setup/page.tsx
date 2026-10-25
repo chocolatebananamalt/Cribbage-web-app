@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { isUuid } from "../../../../lib/api/validation";
+import { registrationLinkManagementEnabled } from "../../../../lib/api/public-registration-v2";
 import { getAccessibleTournaments } from "../../../../lib/tournaments/accessible-tournaments";
 import SetupClient from "./setup-client";
 
@@ -20,7 +21,7 @@ export default async function TournamentSetupPage({ params }: { params: Promise<
     <p className="eyebrow">OPERATIONS</p><h1 id="setup-title">Set Up Tournament</h1>
     <p className="auth-note">Configure the tournament and its Main, Consolation, and Satellite events. Saving creates a private versioned setup record; it does not publish results or charge anyone.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
-    <SetupClient actorId={access.user.id} tournamentId={tournamentId} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
+    <SetupClient actorId={access.user.id} tournamentId={tournamentId} registrationLinkManagementEnabled={registrationLinkManagementEnabled()} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
     <SharedDeviceSignOut />
   </section></main>;
 }
