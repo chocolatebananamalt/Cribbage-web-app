@@ -81,3 +81,68 @@ Changed files in this unpublished follow-up:
 - Public registration QR/link management was disabled in this Preview; its real public submission flow was not tested. No release gate or provider setting was weakened.
 - Staging database password was accidentally included by browser accessibility output from a stale reset connection dialog. The dialog was cleared; no value was copied into repository/evidence or used. User-performed staging-only rotation remains recommended and is not yet authorized/completed. Never reuse that password for another purpose.
 - Next release step: publish the reviewed local follow-up only through an explicitly permitted Preview update path, then repeat affected hosted navigation. No push or alternate deployment route was attempted while the automated redeploy denial remained binding. Production release/merge remains separately gated.
+
+## Published Preview retest, 2026-10-25 18:40 UTC
+
+The user-authorized push published commit936717746a6083e7c5350ed348c8cfec5e587d2f
+on the existing draft PR122. Both exact-SHA GitHub Verify jobs passed; normal
+Vercel branch integration produced READY Preview
+https://cribbage-web-ddpemvq3g-cribbage-app.vercel.app. No redeploy API retry,
+merge, production promotion, or production configuration change occurred.
+
+After the user personally signed in, staging auth metadata confirmed the sole
+fictional identity pr122-director@test.invalid (last sign-in18:39:44 UTC).
+The new Preview's privileged Create Tournament page succeeded. A second
+fictional fixture, TEST ONLY - PR122 Published Fix Retest 2026-10-25,
+9443647d-bf58-47a0-a216-ff02d4ce3f10, was created through hosted UI. Independent
+read-only queries found it in staging nnhcnvksxgxnpvdqjgpg; the actor matches
+the approved fictional director. This verifies the authenticated server write
+path anew, without reading any credential.
+
+Hosted results on9367177:
+- Create showed Creating, carried the exact name/date into setup, and saved once.
+- Required details and twelve-game zero-fee Main event saved as versions1 and2.
+- Finalize confirmation accepted; disabled registration-link feature redirected
+  to the working tournament workspace, with checklist1-3 Complete and roster Next.
+- Manual Paper entry Fictional Gamma showed disabled Adding player during flight.
+- Check-in save showed disabled Saving during flight; Checked in survived refresh.
+- Database evidence: exactly one activation, one roster entry, one checked_in event
+  by the fictional director, and setup versions[1,2]. No duplicate writes observed.
+- One diagnostic query incorrectly assumed tournaments.created_by; it failed
+  read-only. Corrected verified existing columns, with no data mutation/retry.
+
+The hosted run additionally found disabled Retry Finalize wording during active
+activation. A local presentation-only correction now shows Finalizing events
+while busy and preserves the prior exact Retry label for unresolved outcomes.
+Changed setup-client.tsx and director-browser.mjs only; a400ms synthetic delay
+asserts the disabled busy label before navigation. Independent focused review PASS.
+This additional correction is not yet published or hosted-tested. No accounting,
+scoring, authorization, storage, or request identity changed.
+
+Cross-checker assignment/final settlement, realistic larger event, digital
+independent sessions/physical devices/offline recovery, SMTP delivery and the
+recommended staging-only database-password rotation remain unresolved exactly
+as above. No extra account permission, email, payment or production write occurred.
+
+Fresh local rendered regression after the final wording correction: Chrome20/20,
+exit0, including disabled Finalizing events before accepted activation, both
+redirect destinations, exact retry bodies and390px/1440px overflow sweeps.
+Evidence remains ignored/outside Git in director-browser-evidence-1792954035999.
+The first invocations were interrupted before output while command lookup stalled;
+explicit trusted runtime paths resolved launch. No failing product check was
+reclassified. Aggregate audit passed; remaining aggregate stages tracked below.
+
+Final aggregate rerun exit0:775/775 application tests, production audit0,
+lint0errors/2existingwarnings, provider fallback checks, production build and
+TypeScript PASS, workspace7pass/1expected private-handoff skip. The first
+completed aggregate failed only its workspace Git-ignore subprocess because the
+shortened runtime PATH omitted installed Git (spawn status null); adding the
+existing trusted Git directory and rerunning the unchanged full aggregate passed.
+No verification was weakened. Logs: ignored test-results/pr122-published-retest-
+verify-final.log and pr122-published-retest-browser.log. Final diff-check exit0
+with line-ending notices only. Four local changed files: setup-client.tsx,
+director-browser.mjs, PROJECT_STATUS.md and this report. Commit/remote remains
+9367177; the extra reviewed label fix and appended evidence are not published.
+Next step: review/publish this small follow-up through the normal repair-branch
+path when authorized, then verify its hosted activation busy label. No merge or
+production release is authorized.

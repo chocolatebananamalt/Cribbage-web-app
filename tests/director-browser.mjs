@@ -62,7 +62,7 @@ try {
   });
   await page.route("**/api/v1/tournaments/*/setup/activation", async (route) => {
     if (route.request().method() !== "POST") return route.fulfill({ json: { status: "not_activated" } });
-    const request = route.request().postDataJSON(); activationWrites.push(request);
+    const request = route.request().postDataJSON(); activationWrites.push(request); await new Promise(resolve => setTimeout(resolve, 400));
     return route.fulfill({ json: { status: "tournament_setup_activated", setupRevisionId: request.setupRevisionId, setupVersion: request.expectedVersion, eventCount: 1, events: [{ activationId: id, setupEventVersionId: id, rulesetVersionId: id, eventId: id, eventType: "main", name: "Main Event", format: "standard_singles", scoringMethod: "digital", gameCount: 12 }], roundsCreated: false, participantsEnrolled: false, seatingUpdated: false, financeUpdated: false, resultsUpdated: false, payoutsCalculated: false, qualifiersCalculated: false, accSubmissionCreated: false, registrationState: "open" } });
   });
   await page.route("**/api/v1/tournaments/*/setup/officials**", (route) => route.fulfill({ status: 503, json: {} }));
@@ -117,6 +117,7 @@ try {
 
   await page.getByRole("button", { name: "Finalize All Events / Open Registration", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Yes, Finalize & Open Registration", exact: true }).click();
+  assert.equal(await page.getByRole("button", { name: "Finalizing events…", exact: true }).isDisabled(), true);
   await page.waitForURL(`**/tournament/${id}`);
   assert.equal(activationWrites.length, 1);
   evidence.push("Successful activation without registration-link management returns to the tournament workspace");

@@ -1,5 +1,10 @@
 # Project Status
 
+## 2026-10-25 published Preview follow-up
+
+Published9367177 passed both CI Verify jobs and reached READY Preview. New authenticated staging isolation, corrected activation workspace redirect, Adding player and seating Saving labels passed hosted retest with one fictional fixture; persisted activation/roster/check-in each exactly once. A final active-activation Retry label correction is reviewed locally: fresh aggregate775/775, build/TypeScript, lint0errors/2existingwarnings, audit0 and workspace7+1expectedskip passed; Chrome20/20 passed. It remains unpublished. See the appended hosted quality evidence; all remaining release/security gates still apply.
+
+
 ## 2026-10-25 isolated hosted PR122 rehearsal
 
 All236 migrations are verified in the separate Free staging project. The user
