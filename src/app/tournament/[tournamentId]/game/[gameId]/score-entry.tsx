@@ -42,7 +42,7 @@ function ResultPreview({ context, score }: { context: AssignedGameContext; score
 }
 
 function PaperDigitalGuide() {
-  return <details className="how-to"><summary>Playing with one paper card and one digital card</summary><p>Keep the paper card as the shared reference. Both assigned players must sign in as themselves, independently enter that result, and confirm their own entry. On a shared device, the first player must sign out before the second player signs in. If either player cannot sign in and submit, leave the card pending for the authorized cross-check or judge process.</p></details>;
+  return <details className="how-to"><summary>Playing with one paper card and one digital card</summary><p>The digital player submits their own result in the app. The paper player records the same result on the original paper scorecard and does not need an app account. Keep that card for an assigned cross-checker to match against the digital entry. A second distinct authorized non-playing official must independently re-enter and confirm both sources before the result counts. A missing entry or mismatch stays unresolved; ask the director for help.</p></details>;
 }
 
 export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {

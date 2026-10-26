@@ -632,7 +632,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(submittedInvariant, /g\.state in \('mismatch', 'confirmation_pending', 'verified', 'corrected'\) and submission_count <> 2/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
-  assert.match(liveScore, /Both assigned players must sign in as themselves/);
+  assert.match(liveScore, /digital player submits their own result in the app/);
+  assert.match(liveScore, /paper player records the same result on the original paper scorecard and does not need an app account/);
+  assert.match(liveScore, /assigned cross-checker to match against the digital entry/);
+  assert.match(liveScore, /second distinct authorized non-playing official must independently re-enter and confirm both sources/);
+  assert.match(liveScore, /missing entry or mismatch stays unresolved/);
   assert.match(liveScore, /navigator\.onLine/);
   assert.match(liveScore, /Saved Offline, Waiting to Sync/);
   assert.match(liveScore, /queueOfflineSubmission/);

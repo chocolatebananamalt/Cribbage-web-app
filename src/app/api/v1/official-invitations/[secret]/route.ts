@@ -7,6 +7,17 @@ import { isUuid } from "../../../../../lib/api/validation";
 import { isOfficialRejection } from "../../../../../lib/api/officials";
 import { createServerOnlyAdminClient } from "../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../lib/supabase/server";
+import { getOfficialInvitationContext } from "../../../../../lib/official-invitation-context";
 export const dynamic = "force-dynamic";
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ secret: string }> }) {
+  return withApiFailureBoundary(async () => {
+    const actorId = await requireVerifiedSubject(await createClient());
+    if (!actorId) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const { secret } = await params;
+    if (!isUuid(secret)) return apiJson({ error: "invitation_unavailable" }, { status: 404 });
+    const context = await getOfficialInvitationContext(createServerOnlyAdminClient(), actorId, secret);
+    return context ? apiJson(context) : apiJson({ error: "invitation_unavailable" }, { status: 404 });
+  });
+}
 const isEmptyAcceptanceRequest = (value: unknown): value is Record<string, never> => typeof value === "object" && value !== null && !Array.isArray(value) && Object.keys(value).length === 0;
 export async function POST(request: NextRequest, { params }: { params: Promise<{ secret: string }> }) { return withApiFailureBoundary(async () => { if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 }); const body = await readSmallJson(request); if (!isEmptyAcceptanceRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 }); const actorId = await requireVerifiedSubject(await createClient()); if (!actorId) return apiJson({ error: "unauthorized" }, { status: 401 }); const { secret } = await params; const admin = createServerOnlyAdminClient(); const isSetupNominationId = isUuid(String(secret)); if (isSetupNominationId) { const setupResult = await acceptSetupOfficialById(admin, { actorId, nominationId: secret, operationId: crypto.randomUUID() }); return setupResult.status === "official_accepted" ? apiJson(setupResult) : apiJson({ error: String(setupResult.code ?? "invitation_unavailable") }, { status: 409 }); } if (secret.length < 32) return apiJson({ error: "invalid_request" }, { status: 400 }); const setupResult = await acceptSetupOfficial(admin, { actorId, secret, operationId: crypto.randomUUID() }); if (setupResult.status === "official_accepted") return apiJson(setupResult); const result = await acceptCoDirector(admin, { actorId, secret, operationId: crypto.randomUUID() }) as Record<string, unknown>; return isOfficialRejection(result) ? apiJson({ error: result.code }, { status: 409 }) : apiJson(result); }); }

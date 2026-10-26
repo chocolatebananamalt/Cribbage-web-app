@@ -736,8 +736,11 @@ test('protected Rulebook reference provides dated cached and online ACC sources 
   assert.match(page, /isUuid/);
   assert.match(page, /ACC Rulebook Cached/);
   assert.match(page, /ACC Rulebook Online/);
-  assert.match(reference, /Each assigned player signs in as themselves/);
-  assert.match(reference, /stays pending for cross-checking or a judge/);
+  assert.match(reference, /Digital player submits their own result/);
+  assert.match(reference, /Paper player keeps the original paper scorecard and does not need an app account/);
+  assert.match(reference, /assigned cross-checker matches the sources/);
+  assert.match(reference, /second distinct authorized non-playing official independently re-enters and confirms both/);
+  assert.match(reference, /Missing evidence or a mismatch stays unresolved/);
   assert.match(page, /acc-rulebook-2025\.pdf/);
   assert.match(page, /DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD/);
   assert.match(page, /rel="noreferrer"/);

@@ -9,14 +9,15 @@ const exact = (value: RecordValue, keys: string[]) => Object.keys(value).length 
 const email = (value: unknown) => typeof value === "string" && value.trim().length <= 320 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value.trim());
 const name = (value: unknown) => typeof value === "string" && value.trim().length > 0 && value.trim().length <= 80;
 
-export type SetupOfficialNominationRequest = { firstName: string; lastName: string; email: string; accNumber: string; operationId: string };
+export type SetupOfficialNominationRequest = { firstName: string; lastName: string; email: string; accNumber: string; operationId: string; delivery?: "email" | "copy_link" };
 export type SetupOfficialManageRequest = { nominationId: string; action: "remove" | "restore"; operationId: string };
 export type SetupOfficialEntry = { nominationId: string; displayName: string; firstName: string; lastName: string; email: string; accNumber: string; status: "registered_approved" | "invitation_email_sent" | "delivery_unavailable"; profileId: string | null };
 export type SetupOfficialsWorkspace = { tournamentName: string; role: SetupOfficialRole; canManage: boolean; capacity: 12; entries: SetupOfficialEntry[] };
 
 export function isSetupOfficialRole(value: string): value is SetupOfficialRole { return (setupOfficialRoles as readonly string[]).includes(value); }
 export function isSetupOfficialNominationRequest(value: unknown): value is SetupOfficialNominationRequest {
-  if (!object(value) || !exact(value, ["firstName", "lastName", "email", "accNumber", "operationId"])) return false;
+  if (!object(value) || !(exact(value, ["firstName", "lastName", "email", "accNumber", "operationId"]) || exact(value, ["firstName", "lastName", "email", "accNumber", "operationId", "delivery"]))) return false;
+  if ("delivery" in value && value.delivery !== "email" && value.delivery !== "copy_link") return false;
   return name(value.firstName) && name(value.lastName) && email(value.email) && typeof value.accNumber === "string" && isAccNumber(normalizeAccNumberInput(value.accNumber)) && isUuid(value.operationId);
 }
 export function isSetupOfficialManageRequest(value: unknown): value is SetupOfficialManageRequest {

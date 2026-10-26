@@ -23,7 +23,17 @@ import DirectorChecklist from '../../../src/app/tournament/[tournamentId]/direct
 import PaymentObligationClient from '../../../src/app/tournament/[tournamentId]/payments/payment-obligation-client';
 import ScheduleClient from '../../../src/app/tournament/[tournamentId]/schedule/schedule-client';
 import ParticipantsClient from '../../../src/app/tournament/[tournamentId]/participants/participants-client';
+import ActivationWorkspaceClient from '../../../src/app/tournament/[tournamentId]/account-activations/activation-workspace-client';
+import {ActivationWitness} from '../../../src/components/activation-witness';
+import SetupOfficialsClient from '../../../src/app/tournament/[tournamentId]/setup/officials/[role]/setup-officials-client';
+import OfficialInvitationClient from '../../../src/app/official-invitations/[secret]/official-invitation-client';
 export default async function Page({searchParams}:{searchParams:Promise<{view?:string}>}){const {view}=await searchParams;
+if(view==='officials')return <main className="auth-shell"><section className="auth-card corrections-card wide-card"><SetupOfficialsClient tournamentId="${id}" role="cross_checker" initial={{tournamentName:'TEST ONLY mixed',role:'cross_checker',canManage:true,capacity:12,entries:[{nominationId:'${id}',displayName:'TEST ONLY Pending Official',firstName:'TEST ONLY',lastName:'Pending Official',email:'pending@test.invalid',accNumber:'ZZ122',status:'invitation_email_sent',profileId:null}]}}/></section></main>;
+if(view==='official-invitation-signed-out'||view==='official-invitation-legacy')return <main className="auth-shell"><section className="auth-card"><OfficialInvitationClient invitationId={view==='official-invitation-legacy'?'x'.repeat(64):'${id}'} initial={null} signedIn={view!=='official-invitation-signed-out'} legacy={view==='official-invitation-legacy'}/></section></main>;
+if(view==='official-invitation'||view==='official-invitation-unavailable'||view==='official-invitation-accepted')return <main className="auth-shell"><section className="auth-card"><OfficialInvitationClient invitationId="${id}" initial={view==='official-invitation-unavailable'?null:{status:view==='official-invitation-accepted'?'accepted':'pending',nominationId:'${id}',tournamentName:'TEST ONLY mixed tournament',role:'cross_checker',expiresAt:'2030-01-01T00:30:45.000Z'}}/></section></main>;
+if(view==='activation-player'||view==='activation-player-legacy')return <main className="auth-shell"><section className="auth-card"><ActivationWitness pending={{status:'pending',activationId:'${id}',requestId:'${id}',confirmationPhrase:'ABCD-EFGH',...(view==='activation-player'?{expiresAt:'2030-01-01T00:30:45.000Z'}:{})}}/></section></main>;
+if(view==='activation-expired')return <main className="auth-shell"><section className="auth-card corrections-card"><ActivationWorkspaceClient tournamentId="${id}" workspace={{tournamentName:'Synthetic expired request',pendingRequests:[],rosterEntries:[{rosterEntryId:'${id}',displayName:'TEST ONLY Expired Player',activation:{activationId:'${id}',state:'expired',expiresAt:'2026-01-01T00:00:00Z'}}]}}/></section></main>;
+if(view==='activation-witness')return <main className="auth-shell"><section className="auth-card corrections-card"><ActivationWorkspaceClient tournamentId="${id}" workspace={{tournamentName:'Synthetic witness fixture',rosterEntries:[],pendingRequests:[{requestId:'${id}',activationId:'${id}',rosterEntryId:'${id}',rosterDisplayName:'TEST ONLY Player A',requestedAt:'2026-10-26T00:00:00Z',expiresAt:'2027-01-01T00:00:00Z',canApprove:false},{requestId:'20000000-0000-4000-8000-000000000002',activationId:'20000000-0000-4000-8000-000000000002',rosterEntryId:'20000000-0000-4000-8000-000000000002',rosterDisplayName:'TEST ONLY Player B',requestedAt:'2026-10-26T00:00:00Z',expiresAt:'2027-01-01T00:00:00Z',canApprove:true}]}}/></section></main>;
 if(view?.startsWith('schedule')){const published=view!=='schedule'; const event={eventId:'${id}',name:'Main Event',format:'standard_singles' as const,scoringMethod:'digital' as const,gameCount:12,participantCount:2,schedulePublished:published,schedulePublicationId:published?'${id}':null,participantSnapshotDigest:published?'a'.repeat(64):null,publishedMatchCount:published?12:0,playState:(view==='schedule-started'?'in_progress':published?'ready_to_start':'preparing') as 'in_progress'|'ready_to_start'|'preparing',startedAt:null,startedBy:null}; return <main className="auth-shell"><section className="auth-card schedule-card"><ScheduleClient actorId="${id}" tournamentId="${id}" workspace={{tournamentName:'Synthetic tournament',registrationClosed:true,tableCount:1,seatsPerTable:2,events:view==='schedule-retired'?[]:[event,{...event,eventId:'20000000-0000-4000-8000-000000000002',name:'Later Event'}],participants:[{eventId:'${id}',participantId:'${id}',displayName:'Fictional A',verificationId:'A-1',profileLinked:false},{eventId:'${id}',participantId:'20000000-0000-4000-8000-000000000002',displayName:'Fictional B',verificationId:'A-2',profileLinked:false}],matches:[]}}/></section></main>;}
 if(view==='auth')return <SignInForm handoffWarning={false}/>;
 if(view==='participants')return <main className="auth-shell"><section className="auth-card corrections-card"><ParticipantsClient actorId="${id}" tournamentId="${id}" workspace={{tournamentName:'Synthetic tournament',registrationClosed:true,seatingPublished:true,events:[{eventId:'${id}',name:'Main',eventType:'main',format:'standard_singles',scoringMethod:'digital',participantCount:0}],roster:[{rosterEntryId:'${id}',displayName:'Fictional Player',checkInState:'checked_in',profileLinked:false,scorecardType:'paper',verificationId:'A-1',enrolledEventIds:[]}]}}/></section></main>;
@@ -68,7 +78,7 @@ try {
   await page.route("**/api/v1/tournaments/*/setup/officials**", (route) => route.fulfill({ status: 503, json: {} }));
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
-    for (const view of ["checklist", "roster", "create", "auth", "setup", "setup-registration", "seating-open", "qr", "payment", "schedule-ready", "participants"]) {
+    for (const view of ["checklist", "roster", "create", "auth", "setup", "setup-registration", "seating-open", "qr", "payment", "schedule-ready", "participants", "activation-witness", "activation-expired", "officials", "official-invitation", "official-invitation-unavailable", "official-invitation-accepted"]) {
       await page.goto(`${base}?view=${view}`);
       await page.locator("main").first().waitFor();
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${view} overflow at ${width}`);
@@ -76,6 +86,85 @@ try {
     }
     evidence.push(`No horizontal overflow: checklist, roster, create, auth, setup, seating, event check-in, amount owed, schedule/start, enrollment at ${width}px`);
   }
+  let officialWrites=0,acceptWrites=0,acceptedOfficial=false,loseAcceptanceReply=true;
+  await page.route('**/api/v1/tournaments/*/setup-officials/*',async route=>{
+    if(route.request().method()!=='POST')return route.fulfill({json:{status:'official_removed'}});
+    officialWrites++;const body=route.request().postDataJSON();assert.equal(body.delivery,'copy_link');
+    await new Promise(resolve=>setTimeout(resolve,350));
+    return route.fulfill({json:{status:'invitation_link_ready',nominationId:id,acceptancePath:'/official-invitations/'+id}});
+  });
+  await page.goto(base+'?view=officials');
+  assert.equal(await page.getByText('Awaiting secure acceptance',{exact:true}).count(),1);
+  assert.equal(await page.getByLabel('Invitation delivery').inputValue(),'email');
+  await page.getByLabel('First name',{exact:false}).fill('TEST ONLY');await page.getByLabel('Last name',{exact:false}).fill('Official B');
+  await page.getByRole('textbox',{name:/^Email/}).fill('pr122-player-b@test.invalid');await page.getByLabel('ACC #',{exact:false}).fill('ZZ1222026102602');
+  await page.getByLabel('Invitation delivery').selectOption('copy_link');
+  await page.getByRole('button',{name:'Save',exact:true}).evaluate(button=>{button.click();button.click();});
+  await page.waitForFunction(()=>document.querySelector('button.primary')?.disabled);
+  await page.getByLabel('Private acceptance link').waitFor();assert.equal(officialWrites,1);
+  assert.equal(await page.getByLabel('Private acceptance link').inputValue(),base+'/official-invitations/'+id);
+  assert.equal(await page.getByText('no email was sent.',{exact:false}).count(),1);
+  await page.reload();await page.getByRole('button',{name:'Show acceptance link',exact:true}).click();
+  assert.equal(await page.getByLabel('Private acceptance link').inputValue(),base+'/official-invitations/'+id);assert.equal(officialWrites,1);
+  evidence.push('Copy-link nomination defaults email, saves once, truthfully sends no email, restores pending handoff without another write');
+  await page.route('**/api/v1/official-invitations/*',async route=>{
+    if(route.request().method()==='POST'){
+      acceptWrites++;acceptedOfficial=true;await new Promise(resolve=>setTimeout(resolve,300));
+      if(loseAcceptanceReply){loseAcceptanceReply=false;return route.abort();}
+      return route.fulfill({json:{status:'official_accepted',tournamentId:id,nominationId:id}});
+    }
+    return route.fulfill({json:{status:acceptedOfficial?'accepted':'pending',nominationId:id,tournamentName:'TEST ONLY mixed tournament',role:'cross_checker',expiresAt:'2030-01-01T00:30:45.000Z'}});
+  });
+  await page.goto(base+'?view=official-invitation');
+  assert.equal(await page.getByRole('heading',{name:'TEST ONLY mixed tournament'}).count(),1);
+  assert.equal(await page.getByText('Cross-Checker',{exact:true}).count(),1);
+  await page.getByRole('button',{name:'Accept invitation',exact:true}).evaluate(button=>{button.click();button.click();});
+  await page.getByText('The result is uncertain. Check status before trying again.',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Accept invitation',exact:true}).isDisabled(),true);
+  await page.getByRole('button',{name:'Check acceptance status',exact:true}).click();
+  await page.getByRole('button',{name:'Accepted',exact:true}).waitFor();assert.equal(acceptWrites,1);
+  await page.getByRole('button',{name:'Check acceptance status',exact:true}).click();assert.equal(acceptWrites,1);
+  await page.goto(base+'?view=official-invitation-unavailable');assert.equal(await page.getByRole('button',{name:'Accept invitation',exact:true}).isDisabled(),true);
+  assert.equal(await page.getByText('This invitation is unavailable or does not match your signed-in email.',{exact:true}).count(),1);
+  await page.goto(base+'?view=official-invitation-accepted');assert.equal(await page.getByRole('button',{name:'Accepted',exact:true}).isDisabled(),true);assert.equal(acceptWrites,1);
+  evidence.push('Exact-context acceptance reconciles committed lost reply through GET, prevents duplicate POST and disables accepted/unavailable states');
+  await page.goto(base+'?view=official-invitation-signed-out');
+  assert.equal(await page.getByRole('button',{name:'Accept invitation',exact:true}).isDisabled(),true);
+  assert.equal(await page.getByRole('link',{name:'Sign in',exact:true}).getAttribute('href'),'/sign-in?next='+encodeURIComponent('/official-invitations/'+id));
+  await page.route('**/api/v1/official-invitations/'+ 'x'.repeat(64),route=>route.abort());
+  await page.goto(base+'?view=official-invitation-legacy');await page.getByRole('button',{name:'Accept invitation',exact:true}).click();
+  await page.getByText('The result is uncertain. Open Your Tournaments to check your access, then reload this invitation before trying again.',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Check acceptance status',exact:true}).count(),0);
+  assert.equal(await page.getByRole('link',{name:'Your Tournaments',exact:true}).count(),1);
+  evidence.push('Signed-out invitation retains safe return path; legacy uncertain acceptance offers truthful recovery without unsupported context lookup');
+  await page.goto(base+'?view=activation-expired');
+  assert.equal(await page.getByText('Any pending request from this expired link can no longer be approved.',{exact:false}).count(),1);
+  assert.equal(await page.getByRole('button',{name:'Create Replacement Private Link',exact:true}).count(),1);
+  assert.equal(await page.getByRole('button',{name:'Approve witnessed match',exact:true}).count(),0);
+  evidence.push('Expired request explains original deadline and explicit replacement; no approval is offered');
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:1000});await page.goto(base+'?view=activation-player');
+    await page.getByRole('heading',{name:'Confirm with the tournament director',exact:true}).waitFor();
+    assert.equal(await page.locator('time').innerText(),'2030-01-01 00:30:45 UTC');
+    assert.equal(await page.getByText('Both player redemption and director approval must finish before the original deadline.',{exact:false}).count(),1);
+    assert.equal(await page.getByRole('button',{name:'Confirm activation',exact:true}).count(),0);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    await page.screenshot({path:path.join(fixture,'activation-player-'+width+'.png'),fullPage:true});
+  }
+  await page.goto(base+'?view=activation-player-legacy');
+  await page.getByText('This server did not return the exact time.',{exact:false}).waitFor();
+  assert.equal(await page.locator('time').count(),0);
+  evidence.push('Player witness shows original UTC deadline at phone/desktop and never invents one for legacy server; rendering does not issue or redeem links');
+  await page.goto(`${base}?view=activation-witness`);
+  const ownRequest=page.getByRole('article').filter({has:page.getByRole('heading',{name:'TEST ONLY Player A',exact:true})});
+  const otherRequest=page.getByRole('article').filter({has:page.getByRole('heading',{name:'TEST ONLY Player B',exact:true})});
+  assert.equal(await ownRequest.getByRole('button',{name:'Approve witnessed match',exact:true}).isDisabled(),true);
+  assert.equal(await ownRequest.getByText('You cannot approve your own player request.',{exact:false}).count(),1);
+  assert.equal(await ownRequest.getByLabel('Witness phrase').count(),0);
+  assert.equal(await otherRequest.getByRole('button',{name:'Approve witnessed match',exact:true}).isDisabled(),true);
+  await otherRequest.getByLabel('Witness phrase').fill('ABCD-EFGH');
+  assert.equal(await otherRequest.getByRole('button',{name:'Approve witnessed match',exact:true}).isEnabled(),true);
+  evidence.push('Witness copy explains player/approver separation; own request stays blocked, other request still needs the exact phrase');
   await page.goto(`${base}?view=roster`);
   await page.getByLabel("First name", { exact: true }).fill("Fictional"); await page.getByLabel("Last name", { exact: true }).fill("Player");
   assert.equal(await page.getByRole("button", { name: "Add Player", exact: true }).isDisabled(), true);

@@ -80,3 +80,39 @@ write, push, deployment, merge or release occurred in this repair.
 This candidate is local and unpublished. PR122/remote head remains68315d0.
 Next step: review this result before authorizing a Preview update, then verify
 the actual signed-in root on that new hosted build.
+
+## Hosted landing verification — 2026-10-26
+
+Published commit6d9fc549dd5e666e0c50ea13b3f06edc20d47738 remains READY Preview
+https://cribbage-web-megtq2kct-cribbage-app.vercel.app. Exact deployment metadata
+was rechecked. User sign-in confirmed in sole staging project
+nnhcnvksxgxnpvdqjgpg at04:23:03 UTC for pr122-director@test.invalid,
+profile de0f27a1-60d0-4449-af83-fdf360a9bc08; one auth user, three tournaments.
+
+Hosted PASS:
+- Existing root page displayed the real Your tournaments chooser, all three
+  fictional staging fixtures, Director roles and Create Tournament, not sample
+  Score Entry. The current viewport had no horizontal overflow.
+- Root refresh preserved all three links; authorized workspace navigation opened
+  its director checklist. Browser Back returned to the real chooser.
+- Create Tournament loaded its protected form, exercising the privileged
+  director-access server reader. Nothing was submitted.
+- The server-only chooser's three tournament IDs/names and actor/director roles
+  exactly matched independent read-only staging SQL. This is fresh runtime
+  authenticated and privileged-read-path isolation proof; no new mutation was
+  needed or claimed as write-path proof on this build.
+- Explicit /demo displayed Public Demonstration / Sample Data Only, Score Entry
+  and the synthetic Scorecard view. Demo Tournament sign-in redirected the
+  existing authenticated session back to the real root chooser without email.
+- Browser tooling twice returned an observation-wrapper error after navigation;
+  fresh state established the navigation had succeeded. No uncertain action was
+  repeated. These were not app error pages or failed sign-ins.
+
+Chrome was left on the real signed-in chooser; the session was preserved. No
+credential, role, setting, tournament, score or financial mutation occurred.
+Real independent player scoring was not tested with this director-only identity;
+its existing route/auth/scoring regression evidence remains separate. Remaining
+cross-checker/settlement, larger-event, multi-device/offline, SMTP and staging
+password-rotation gates are unchanged. No code changed or checks weakened; prior
+775/775 aggregate and five-state browser evidence remain the code verification.
+This appended hosted evidence is local only; no new push/deployment was needed.

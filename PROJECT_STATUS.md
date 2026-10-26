@@ -1,4 +1,21 @@
 # Project Status
+## 2026-10-26 no-email official handoff — local only
+
+Explicit copy-link delivery now reuses canonical nomination/acceptance without OTP or fabricated delivery events. Email stays default; pending labels are truthful, exact-email nominees see server-backed tournament/role/deadline before explicit acceptance, and GET reconciles accepted lost responses after expiry. Local0238adds only a service-only reader; copy-link preflight blocks writes until it exists. All existing role/expiry/audit/scoring guards unchanged. Final794/794aggregate,Chrome26/26,all4actual isolated rollback SQL fixtures,full/prod audits0,lint0errors/2existingwarnings,build/TS/providers/workspace7+1expectedskip and independent Sol review PASS. Disposable database empty and removed.40combined changed files remain uncommitted/unpublished;0237/0238unapplied hosted. PR122stilldraft at6d9fc54. Hosted mixed test still needs separately approved B co-director/cross-checker nominations and explicit acceptance; none performed. Current A session untouched. See docs/quality/2026-10-26-no-email-official-invitations-local.md for scope, rollout sequencing, evidence and remaining gates.
+
+## 2026-10-26 bounded hosted digital match verified
+
+After explicit user approval and secure user-created staging accounts, the fresh TEST ONLY Sequential Digital fixture completed witnessed linking, two linked enrollments, zero owed, attendance, seating, twelve-match schedule and exactly one start. Game 1 reached verified only after two distinct digital submissions and two distinct own confirmations. Refresh preserved exact counts; scorecard/standings A2points/1win/+15, B0/0/-15. Eleven games remain pending. This was sequential account testing, not simultaneous-device, concurrency or offline proof. Player A session is retained. Witness-copy and expiry UX fixes are now complete locally: original deadline/legacy fallback/expired recovery, metadata-only unapplied0237, and accurate mixed Digital/Paper help. Fresh786/786 aggregate,Chrome23/23,actual local expiry and both mixed rollback SQL fixtures,unchangedACL proof,production/full audits0,lint0errors/2existingwarnings,build/TS/providers/workspace7+1expectedskip and independent review passed. Hosted mixed UI still needs independently bound official roles; none granted. No code/release/production publication. See appended digital evidence in docs/quality/2026-10-26-larger-paper-and-digital-prerequisites.md.
+
+## 2026-10-26 larger paper rehearsal - bounded first round
+
+Sixteen fictional Paper entrants completed setup/zero-fee Q Pool, tournament/event check-in, explicit zero owed, seating, reviewed96-match schedule and exactly one start on isolated staging. Eight captures plus eight re-entry approvals persisted8verified/88pending; standings expected, qualification/cross-check blocked. Real interrupted check-in recovery replay kept16events exactly. CSV upload blocked by extension file-URL permission; manual fallback used without permission changes. At this earlier paper checkpoint, Digital QA still needed two fictional Auth users and witnessed linking before enrollment; their later creation and sequential scoring proof are recorded above. Local copy correction clarifies director/player separation without changing guards. Fresh776/776 aggregate, audit0, lint0errors/2existingwarnings, build/TS/providers, workspace7+1expectedskip and Chrome21/21 passed. No new publication. See docs/quality/2026-10-26-larger-paper-and-digital-prerequisites.md.
+
+
+## 2026-10-26 hosted landing verification complete
+
+Published6d9fc54 passed fresh authenticated staging and privileged server-read isolation. Root chooser, three authorized fixtures, refresh, workspace/Back, protected Create form, explicit demo score-entry/scorecard and signed-in demo return all passed. No tournament write or extra fixture needed. User session preserved on real chooser. Independent player scoring and prior release/security gates remain separate. See appended authenticated-root quality report. No code change or production action.
+
 
 ## 2026-10-25 root landing repair - local only
 
