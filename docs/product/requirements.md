@@ -1,5 +1,9 @@
 # Product Requirements
 
+## 2026-10-27 local payback repair — not deployed
+
+Owner-approved local repair separates cash conservation from the ACC 85%-of-gross player-return check, classifies actual expense evidence as eligible benefits or operating costs, and requires one positive total award for each ordinary cash-eligible qualifier. The schedule is explicitly director-selected, not a mandated ACC formula; equal finishing cohorts receive equal awards in the first slice. Eligibility is recorded per qualifier; sanction-only/legal-age exceptions and unknown classifications block this slice. No cumulative round-payment inference or historical rewrite is allowed. Source, compatibility limits, exact local checks and separate rollout boundary: [payback validation](../quality/2026-10-27-payback-review-local-validation.md). This is local verification, not production or sanctioned-event readiness.
+
 > **Normative baseline:** [production-requirements.md](production-requirements.md) is the authoritative, self-contained production requirements document. This file remains the traceability summary and historical source map; when a summary line and the normative document differ, the normative document and its cited decision/source control.
 
 Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-14. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MutableRefObject } from "react";
+import { useEffect, useRef, useState, type MutableRefObject, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import {
   isRejectedSettlementV5, isSettlementV5DraftSaved, isSettlementV5FinalizationRequest,
@@ -114,7 +114,7 @@ function initialRequest(workspace: SettlementV5Workspace): SettlementV5Request {
   return { source: source ? { kind: source.kind, resultId: source.resultId, qualificationResultVersionId: source.qualificationResultVersionId } : { kind: "playoff_outcome_v3", resultId: "", qualificationResultVersionId: "" }, expectedVersion: workspace.currentDraftVersion, prizeClaims: [], eventIncomeMinor: 0, eventExpenseMinor: 0, retainedBalanceMinor: 0, sanctioningExpenseEventId: null, officialSourceReference: "" };
 }
 
-export default function SettlementV5Client({ actorId, tournamentId, eventId, workspace }: { actorId: string; tournamentId: string; eventId: string; workspace: SettlementV5Workspace | null }) {
+export default function SettlementV5Client({ actorId, tournamentId, eventId, workspace, paybackReady = false, children }: { actorId: string; tournamentId: string; eventId: string; workspace: SettlementV5Workspace | null; paybackReady?: boolean; children?: ReactNode }) {
   const sharedFlightRef = useRef(false);
   const draft = useRetainedOperation("settlement-v5", `settlement-v5:${actorId}:${tournamentId}:${eventId}`, tournamentId, eventId, sharedFlightRef);
   const final = useRetainedOperation("settlement-v5-finalization", `settlement-v5-finalization:${actorId}:${tournamentId}:${eventId}`, tournamentId, eventId, sharedFlightRef);
@@ -130,7 +130,7 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
   const allAttested = Object.values(attestations).every(Boolean);
   const finalCandidate: SettlementV5FinalizationRequest | null = current && allAttested ? { draftId: current.draftId, draftVersion: current.version, expectedVersion: workspace.currentFinalVersion, attestations: Object.fromEntries(Object.keys(attestationLabels).map(key => [key, true])) as SettlementV5FinalizationRequest["attestations"] } : null;
   const alreadyFinal = current && workspace.finalization?.draftId === current.draftId;
-  const canStartFinal = !!finalCandidate && !draft.pending && mrp?.status === "available" && workspace.blockers.length === 0 && !alreadyFinal;
+  const canStartFinal = !!finalCandidate && !draft.pending && mrp?.status === "available" && workspace.blockers.length === 0 && !alreadyFinal && paybackReady;
   const updateClaim = (index: number, field: string, value: string | number | null) => patch({ prizeClaims: effectiveRequest.prizeClaims.map((claim, position) => position === index ? { ...claim, [field]: value } : claim) });
   return <section className="policy-settings settlement-v5-workspace" aria-labelledby="settlement-review-title">
     <h2 id="settlement-review-title">Versioned settlement review</h2>
@@ -163,6 +163,8 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
     {mrp?.status === "available" ? <section className="correction-item"><h3>Canonical MRP evidence</h3><p>MRP source: {mrp.sourceVersion}. Bracket derivation: {mrp.bracketSourceVersion}.</p>
       <div className="settlement-evidence-scroll" role="region" aria-label="Canonical MRP evidence table" tabIndex={0}><table><caption>Saved draft participant MRP and elimination evidence</caption><thead><tr><th>Participant</th><th>Played wins</th><th>Byes</th><th>Eliminated in round</th><th>Cohort</th><th>Qualifying MRP</th><th>Playoff MRP</th><th>Total MRP</th></tr></thead><tbody>{mrp.rows.map(row => <tr key={row.participantId}><td>{row.displayName}</td><td>{row.playedMatchWins}</td><td>{row.byeWins}</td><td>{row.eliminatedInRound ?? "Champion"}</td><td>{row.bandStart === row.bandEnd ? row.bandStart : `${row.bandStart}–${row.bandEnd}`}</td><td>{row.qualifyingMrp}</td><td>{row.playoffMrp}</td><td>{row.totalMrp}</td></tr>)}</tbody></table></div>
     </section> : <p role="status">{mrp?.status === "blocked" ? `MRP evidence requires correction: ${mrp.code}. Draft claims may be saved, but finalization must wait.` : "Save a draft to obtain canonical evidence before final review."}</p>}
+    {children}
+    {current && !paybackReady ? <p role="alert">Payback review is unavailable, incomplete, or no longer matches this draft. New finalization must wait. Any retained finalization request remains available for exact receipt recovery.</p> : null}
     {current ? <fieldset disabled={disabled || !!draft.pending}><legend>Director evidence review and manual finalization</legend>
       <p>Review saved draft {current.version} and its evidence above. The server also rechecks disputes, current cross-check completion and ledger conservation when recording this review. This records manual reconciliation, not a bank payment or ACC submission.</p>
       {(Object.keys(attestationLabels) as AttestationKey[]).map(key => <label key={key}><input type="checkbox" checked={attestations[key]} disabled={!!final.pending} onChange={event => setAttestations({ ...attestations, [key]: event.target.checked })} />{attestationLabels[key]}</label>)}

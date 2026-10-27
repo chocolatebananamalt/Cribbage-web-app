@@ -17,6 +17,7 @@ const appStoragePrefixes = [
   "playoff-outcome:",
   "settlement-v5:",
   "settlement-v5-finalization:",
+  "payback-review:",
   "playoff-placement:",
   "settlement-finalization:",
   "qualification-finalization:",

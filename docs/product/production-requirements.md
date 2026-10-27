@@ -1,5 +1,11 @@
 # ACC Digital Tournament System — Normative Production Requirements
 
+## Owner-approved payback repair addendum — 2026-10-27, local only
+
+Cash conservation does not by itself establish ACC payback compliance. A reviewed settlement must separately classify actual expense evidence and calculate eligible player return against gross entry fees, without deducting sanctioning or other costs twice. Unknown classifications cannot be treated as compliant. The first implemented local slice requires a sourced director-selected schedule, exactly one positive total award per ordinary full-entry cash-eligible qualifier and equal awards within each elimination cohort; it introduces no fixed ACC percentage or cumulative round-payment formula. Each qualifier needs explicit eligibility evidence. Legal-age/sanction-only exceptions in current ACC Policy Manual chapter 6 I.G (printed 6-3/PDF 35) require an unsupported-case blocker rather than automatic cash awards.
+
+Local migration 0241 binds versioned review evidence to an exact immutable draft and current financial/qualification facts, preserves historical receipt replay, and gates new writes only in its explicit event domain. Legacy records are not retroactively labeled compliant. Supported scope and current execution evidence are in [the local validation report](../quality/2026-10-27-payback-review-local-validation.md); multi-event allocation, pools, refunds, byes and exception handling remain outside this first slice. This addendum is not a production deployment, official sanctioning validation or approval of a particular prize split.
+
 **Document ID:** PRD-001
 
 **Version:** 1.0
