@@ -44,6 +44,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/teams`}>Team Scorecards</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/seating-directory`}>Seating Directory</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/rulebook`}>ACC Rulebook</Link>
+            <Link className="guide-link" href={`/tournament/${tournamentId}/prize-schedules`}>Director-selected prize schedules</Link>
             {access.roles.includes("judge") ? <Link className="guide-link" href={`/tournament/${tournamentId}/judge-calls`}>Judge Calls</Link> : null}
           </section>
           {isDirector ? <section className="workspace-phase"><h2>1. Set up</h2><p>Configure the tournament, officials, events, pools, and registration.</p>

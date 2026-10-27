@@ -7,6 +7,7 @@ import {
   isSettlementV5Finalized, isSettlementV5Reconciliation, isSettlementV5Request,
   type SettlementV5FinalizationRequest, type SettlementV5Request, type SettlementV5Workspace,
 } from "../../../../../../lib/api/settlement-v5";
+import { isPrizeScheduleResolution, type PrizeScheduleResolution } from "../../../../../../lib/api/prize-schedule";
 import { isUuid } from "../../../../../../lib/api/validation";
 
 type Request = SettlementV5Request | SettlementV5FinalizationRequest;
@@ -108,18 +109,23 @@ const attestationLabels = {
 };
 type AttestationKey = keyof typeof attestationLabels;
 const unchecked = Object.fromEntries(Object.keys(attestationLabels).map(key => [key, false])) as Record<AttestationKey, boolean>;
-function initialRequest(workspace: SettlementV5Workspace): SettlementV5Request {
+function initialRequest(workspace: SettlementV5Workspace, scheduleVersionId?: string): SettlementV5Request {
   if (workspace.draft) return { ...workspace.draft.request, expectedVersion: workspace.currentDraftVersion };
   const source = workspace.sources[0];
-  return { source: source ? { kind: source.kind, resultId: source.resultId, qualificationResultVersionId: source.qualificationResultVersionId } : { kind: "playoff_outcome_v3", resultId: "", qualificationResultVersionId: "" }, expectedVersion: workspace.currentDraftVersion, prizeClaims: [], eventIncomeMinor: 0, eventExpenseMinor: 0, retainedBalanceMinor: 0, sanctioningExpenseEventId: null, officialSourceReference: "" };
+  return { ...(scheduleVersionId ? { scheduleVersionId } : {}), source: source ? { kind: source.kind, resultId: source.resultId, qualificationResultVersionId: source.qualificationResultVersionId } : { kind: "playoff_outcome_v3", resultId: "", qualificationResultVersionId: "" }, expectedVersion: workspace.currentDraftVersion, prizeClaims: [], eventIncomeMinor: 0, eventExpenseMinor: 0, retainedBalanceMinor: 0, sanctioningExpenseEventId: null, officialSourceReference: "" };
 }
 
-export default function SettlementV5Client({ actorId, tournamentId, eventId, workspace, paybackReady = false, children }: { actorId: string; tournamentId: string; eventId: string; workspace: SettlementV5Workspace | null; paybackReady?: boolean; children?: ReactNode }) {
+export default function SettlementV5Client({ actorId, tournamentId, eventId, workspace, paybackReady = false, scheduleVersionId, children }: { actorId: string; tournamentId: string; eventId: string; workspace: SettlementV5Workspace | null; paybackReady?: boolean; scheduleVersionId?: string; children?: ReactNode }) {
   const sharedFlightRef = useRef(false);
   const draft = useRetainedOperation("settlement-v5", `settlement-v5:${actorId}:${tournamentId}:${eventId}`, tournamentId, eventId, sharedFlightRef);
   const final = useRetainedOperation("settlement-v5-finalization", `settlement-v5-finalization:${actorId}:${tournamentId}:${eventId}`, tournamentId, eventId, sharedFlightRef);
-  const [request, setRequest] = useState<SettlementV5Request | null>(() => workspace ? initialRequest(workspace) : null);
+  const [request, setRequest] = useState<SettlementV5Request | null>(() => workspace ? initialRequest(workspace, scheduleVersionId) : null);
   const [attestations, setAttestations] = useState(unchecked);
+  const [resolution, setResolution] = useState<PrizeScheduleResolution | null>(null);
+  const [resolutionMessage, setResolutionMessage] = useState("");
+  const [resolutionBusy, setResolutionBusy] = useState(false);
+  const resolutionFlight = useRef(false);
+  const [resolutionSource, setResolutionSource] = useState<string | null>(null);
   const effectiveRequest = draft.pending?.request && isSettlementV5Request(draft.pending.request) ? draft.pending.request : request;
   if (!workspace || !effectiveRequest) return <p role="alert">Settlement evidence is unavailable. No new save has been attempted.</p>;
   const disabled = draft.busy || final.busy || draft.blocked || final.blocked;
@@ -127,6 +133,25 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
   const current = workspace.draft;
   const mrp = current?.canonicalMrp;
   const patch = (changes: Partial<SettlementV5Request>) => setRequest({ ...effectiveRequest, ...changes });
+  async function readCalculatedAwards() {
+    if (!effectiveRequest || editingLocked || resolutionFlight.current) return;
+    resolutionFlight.current = true; setResolutionBusy(true); setResolution(null);
+    const sourceKey = JSON.stringify(effectiveRequest.source);
+    try {
+      const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/prize-schedule-resolution`, { method: "POST", cache: "no-store", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ source: effectiveRequest.source }) });
+      const body: unknown = response.ok ? await response.json().catch(() => null) : null;
+      if (!isPrizeScheduleResolution(body)) { setResolutionMessage("Calculated awards are unavailable. No draft was changed."); return; }
+      setResolutionSource(sourceKey); setResolution(body);
+      setResolutionMessage(body.status === "available" ? "Read the server-derived total awards before using them. This has not saved a draft or paid anyone." : body.status === "blocked" ? `Cannot calculate: ${body.code.replaceAll("_", " ")}. Review setup and current evidence.` : "This event has no structured schedule. Historical manual claims remain separate.");
+    } catch { setResolutionMessage("Calculated awards are unavailable. No draft was changed."); }
+    finally { resolutionFlight.current = false; setResolutionBusy(false); }
+  }
+  function useCalculatedAwards() {
+    if (editingLocked || !effectiveRequest || resolution?.status !== "available" || resolutionSource !== JSON.stringify(effectiveRequest.source) || resolution.scheduleVersionId !== scheduleVersionId) return;
+    patch({ scheduleVersionId: resolution.scheduleVersionId, eventIncomeMinor: resolution.grossEntryIncomeMinor, eventExpenseMinor: resolution.expenseTotalMinor, retainedBalanceMinor: 0,
+      prizeClaims: resolution.awards.map(a => ({ participantId: a.participantId, amountMinor: a.totalAwardMinor, prizeOrder: null, note: "Director-selected structured schedule total award; reviewed source required." })) });
+    setResolutionMessage("Calculated total awards copied into the editable draft. Review expense binding and evidence before saving; nothing has been submitted.");
+  }
   const allAttested = Object.values(attestations).every(Boolean);
   const finalCandidate: SettlementV5FinalizationRequest | null = current && allAttested ? { draftId: current.draftId, draftVersion: current.version, expectedVersion: workspace.currentFinalVersion, attestations: Object.fromEntries(Object.keys(attestationLabels).map(key => [key, true])) as SettlementV5FinalizationRequest["attestations"] } : null;
   const alreadyFinal = current && workspace.finalization?.draftId === current.draftId;
@@ -134,9 +159,13 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
   const updateClaim = (index: number, field: string, value: string | number | null) => patch({ prizeClaims: effectiveRequest.prizeClaims.map((claim, position) => position === index ? { ...claim, [field]: value } : claim) });
   return <section className="policy-settings settlement-v5-workspace" aria-labelledby="settlement-review-title">
     <h2 id="settlement-review-title">Versioned settlement review</h2>
-    <p>This records explicit financial claims and server-derived MRP evidence. It does not automatically calculate or pay prizes, record a payment, or submit to the ACC. Q Pool claims are not supported in this workflow.</p>
+    <p>This records explicit financial claims and server-derived MRP evidence. A structured schedule can calculate proposed total awards from current evidence; it does not pay prizes, record a payment, or submit to the ACC. Q Pool claims are not supported in this workflow.</p>
     {workspace.blockers.length ? <div role="alert"><p>Known preflight blockers:</p><ul>{workspace.blockers.map(code => <li key={code}>{code.replaceAll("_", " ")}</li>)}</ul></div> : null}
     <p>Sanctioning assessment: {workspace.sanctioningAssessmentMinor === null ? "source evidence unavailable" : `${workspace.sanctioningAssessmentMinor} USD cents`}. An assessment is not evidence of payment. Binding an existing expense creates no new expense or payment.</p>
+    {scheduleVersionId ? <section className="correction-item" aria-label="Saved schedule calculation"><h3>Saved director-selected schedule</h3><p>New claims must match the explicitly saved schedule version. The server rechecks entries, expenses, qualifiers and equal-band awards; a mismatch is rejected.</p>
+      <button type="button" disabled={editingLocked || resolutionBusy} onClick={() => void readCalculatedAwards()}>{resolutionBusy ? "Reading calculated awards…" : "Read calculated awards"}</button><p role="status">{resolutionMessage}</p>
+      {resolution?.status === "available" ? <><p>Available prizes: {resolution.prizeBudgetMinor} USD cents. Remainder assigned to champion: {resolution.roundingRemainderMinor} cents.</p><ul>{resolution.awards.map(a => <li key={a.participantId}>Band {a.bandStart === a.bandEnd ? a.bandStart : `${a.bandStart}–${a.bandEnd}`}: {a.totalAwardMinor} USD cents total award.</li>)}</ul><button type="button" disabled={editingLocked || resolutionBusy || resolution.scheduleVersionId !== scheduleVersionId || resolutionSource !== JSON.stringify(effectiveRequest.source)} onClick={useCalculatedAwards}>Use these total awards in draft</button></> : null}
+    </section> : null}
     <section className="correction-item"><h3>Authoritative ledger</h3>
       <p>Current receipts: {workspace.ledgerSnapshot.paymentCount}; total {workspace.ledgerSnapshot.paymentTotalMinor} USD cents. Current recorded expenses: {workspace.ledgerSnapshot.expenseCount}; total {workspace.ledgerSnapshot.expenseTotalMinor} USD cents.</p>
       {current ? <p>Saved draft snapshot: receipts {current.ledgerSnapshot.paymentCount}, {current.ledgerSnapshot.paymentTotalMinor} USD cents; expenses {current.ledgerSnapshot.expenseCount}, {current.ledgerSnapshot.expenseTotalMinor} USD cents.</p> : null}

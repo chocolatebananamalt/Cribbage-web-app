@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../../../components/shared-device-sign-out";
 import { getSettlementV5Workspace } from "../../../../../../lib/api/settlement-v5";
+import { listPrizeSchedules } from "../../../../../../lib/api/prize-schedule";
 import { getPaybackReviewWorkspace } from "../../../../../../lib/api/payback-review";
 import { canStartPaybackFinalization } from "../../../../../../lib/results/payback-finalization-gate";
 import { isUuid } from "../../../../../../lib/api/validation";
@@ -17,17 +18,23 @@ export default async function SettlementV5Page({ params }: { params: Promise<{ t
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
   const admin = createServerOnlyAdminClient();
-  const [workspace, payback] = await Promise.all([
+  const [workspace, payback, schedules] = await Promise.all([
     getSettlementV5Workspace(admin, access.user.id, tournamentId, eventId),
     getPaybackReviewWorkspace(admin, access.user.id, tournamentId, eventId),
+    listPrizeSchedules(admin, access.user.id, tournamentId),
   ]);
   const current = workspace?.draft;
-  const paybackReady = canStartPaybackFinalization(payback, current);
+  const scheduleWorkspace = schedules?.find(s => s.eventId === eventId);
+  const scheduleVersionId = scheduleWorkspace?.settingsCurrent ? scheduleWorkspace.versions[0]?.scheduleId : undefined;
+  const paybackReady = schedules !== null && (!scheduleWorkspace || scheduleWorkspace.settingsCurrent) && canStartPaybackFinalization(payback, current);
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="settlement-v5-title">
     <p className="eyebrow">PRIVATE SETTLEMENT REVIEW</p><h1 id="settlement-v5-title">Settlement review</h1>
     <Link className="guide-link" href={`/tournament/${tournamentId}/events/${eventId}/playoff-outcomes`}>Back to playoff outcomes</Link>
+    <Link className="guide-link" href={`/tournament/${tournamentId}/prize-schedules`}>Review the director-selected prize schedule</Link>
+    {schedules === null ? <p role="alert">The saved schedule status is unavailable. Historical evidence remains readable, but a new finalization cannot be started.</p> : null}
+    {scheduleWorkspace && !scheduleWorkspace.settingsCurrent ? <p role="alert">The saved prize schedule no longer matches event settings. A supported reviewed revision is required; no newer rule is selected automatically.</p> : null}
     <SettlementV5Client key={`${workspace?.currentDraftVersion ?? "unavailable"}-${current?.draftId ?? "none"}-${workspace?.currentFinalVersion ?? "unavailable"}-${payback?.currentReviewVersion ?? "unavailable"}`}
-      actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={workspace} paybackReady={paybackReady}>
+      actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={workspace} paybackReady={paybackReady} scheduleVersionId={scheduleVersionId}>
       {payback ? <PaybackReviewClient key={`${current?.draftId ?? "none"}-${payback.currentReviewVersion}`}
         actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={payback}
         draft={current ? { draftId: current.draftId, version: current.version } : null} />

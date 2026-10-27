@@ -1,0 +1,36 @@
+// Real overlapping local RPC sessions. No hosted connection or user browser access.
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import {spawn,spawnSync} from 'node:child_process';
+if(process.argv.length!==5||process.argv[2]!=='--isolated-container'||process.argv[3]!=='--container-id'||!/^[a-f0-9]{64}$/.test(process.argv[4]))throw Error('Exact --isolated-container --container-id <64 lowercase hex> required');
+const container='cribbage-0240-isolated',database='fixture_prize_schedule_race';
+const actor='a1310000-0000-4000-8000-000000000001',tid='b1310000-0000-4000-8000-000000000001',rowId='e1310000-0000-4000-8000-000000000003';
+function docker(args,input){const r=spawnSync('docker',['--context','desktop-linux',...args],{input,encoding:'utf8',maxBuffer:64*1024*1024});if(r.status!==0)throw Error(String(r.stderr));return String(r.stdout);}
+const meta=JSON.parse(docker(['inspect',container]))[0];
+assert.equal(meta.Id,process.argv[4]);assert.equal(meta.State.Status,'running');assert.equal(meta.Config.Image,'public.ecr.aws/supabase/postgres:17.11.0.004');assert.equal(meta.HostConfig.Binds?.length??0,0);
+assert.equal(meta.Image,'sha256:b15d862126dd2dac02da524696ccfde2dcce2ceaee0a58973b2727befe492706');
+assert.equal(meta.Config.Labels['codex.fixture'],container);assert.equal(meta.HostConfig.NetworkMode,'none');assert.equal(meta.Mounts.length,0);assert.equal(Object.keys(meta.HostConfig.PortBindings??{}).length,0);assert.equal(meta.HostConfig.Privileged,false);
+const sql=(query,db=database)=>docker(['exec','-i',container,'psql','-X','-qAt','-U','supabase_admin','-d',db,'-v','ON_ERROR_STOP=1'],'set role postgres;\n'+query).trim();
+assert.equal(sql('select (select count(*)from auth.users),(select count(*)from app.tournaments);','fixture_0240'),'0|0');
+assert.equal(sql(`select count(*)from pg_database where datname='${database}';`,'postgres'),'0','Inspect an uncertain prior race before retry');
+const hash=s=>crypto.createHash('sha256').update(s.replaceAll('\r\n','\n')).digest('hex');
+const files=[['\\ir ../database/migrations/0240_versioned_settlement_v5.sql','database/migrations/0240_versioned_settlement_v5.sql','19107d90cc6c86fbf3497bb7bd0f28ad19c07f48f0393eb0ee0d9e693f40b701'],['\\ir ../docs/quality/2026-10-27-proposed-payback-review-v1.sql','docs/quality/2026-10-27-proposed-payback-review-v1.sql','46c14bb2b7ad9e2f5ba27e78997043f6b9503801eb3503234db24017d41abca9'],['\\ir ../docs/quality/2026-10-27-proposed-prize-schedule-v1.sql','docs/quality/2026-10-27-proposed-prize-schedule-v1.sql','4b93e65892a6ca7293a7485df600ee1d16340823312686b7bdcb6caa75971f2b']];
+const fixture=fs.readFileSync('tests/prize-schedule-v1.sql','utf8');
+const marker="\ndo $$declare actor constant uuid:='a1310000-0000-4000-8000-000000000001';";
+assert.ok(fixture.indexOf(marker)>0,'Explicit pre-first-save seed boundary required');
+let seed=fixture.slice(0,fixture.indexOf(marker));
+assert.equal(seed.split("current_database()<>'fixture_0240'").length,2);seed=seed.replace("current_database()<>'fixture_0240'",`current_database()<>'${database}'`);
+for(const [include,path,pin]of files){const source=fs.readFileSync(path,'utf8');assert.equal(hash(source),pin,`Reviewed source changed: ${path}`);assert.equal(seed.split(include).length,2);seed=seed.replace(include,()=>source);}
+assert.doesNotMatch(seed,/^\s*\\i/m);
+function session(query,label){const child=spawn('docker',['--context','desktop-linux','exec','-i',container,'psql','-X','-qAt','-U','supabase_admin','-d',database,'-v','ON_ERROR_STOP=1'],{stdio:['pipe','pipe','pipe']});let out='',err='',signal;const held=new Promise(r=>signal=r);child.stdout.on('data',x=>{out+=x;if(out.includes('LOCK_HELD'))signal();});child.stderr.on('data',x=>err+=x);const done=new Promise((resolve,reject)=>{child.on('error',reject);child.on('close',code=>code===0?resolve(out.trim()):reject(Error(label+': '+err)));});child.stdin.end(`set role postgres;set application_name='${label}';set statement_timeout='15s';\n`+query);return{held,done};}
+async function race(body,operations,tag){const hold=session(`begin;select id from app.tournaments where id='${tid}'for update;select 'LOCK_HELD';select pg_sleep(4);commit;`,tag+'_hold');await Promise.race([hold.held,hold.done.then(()=>{throw Error('Holder exited early');})]);const queries=operations.map((op,i)=>session(`select public.save_setup_prize_schedule_v1('${actor}','${tid}','${rowId}','${JSON.stringify(body).replaceAll("'","''")}'::jsonb,'${op}');`,tag+'_'+i));let waiting=0;for(let i=0;i<20;i++){waiting=Number(sql(`select count(*)from pg_stat_activity where datname=current_database()and application_name in('${tag}_0','${tag}_1')and wait_event_type='Lock';`));if(waiting===2)break;await new Promise(r=>setTimeout(r,100));}assert.equal(waiting,2,'Both real independent requests must overlap while blocked');const replies=await Promise.all(queries.map(q=>q.done));await hold.done;return replies.map(s=>JSON.parse(s));}
+let created=false;
+try{docker(['exec',container,'createdb','-U','supabase_admin','-O','postgres','--template=fixture_0240',database]);created=true;sql(seed+'\nset constraints all immediate;commit;');
+ const schedule={kind:'director-selected-prize-schedule-v1',amountBasis:'total_award',expectedQualifierCount:4,sourceReference:'TEST ONLY overlapping local schedule',roundingRule:'floor_each_weighted_share_then_assign_remainder_to_champion',cohorts:[{bandStart:1,bandEnd:1,weight:4},{bandStart:2,bandEnd:2,weight:3},{bandStart:3,bandEnd:4,weight:2}]};
+ const body={expectedVersion:0,schedule,reviewed:true,reason:'TEST ONLY concurrent first declaration'};
+ const same=await race(body,['02420000-0000-4000-8000-000000000201','02420000-0000-4000-8000-000000000201'],'schedule_same');assert.deepEqual(same[0],same[1]);assert.equal(same[0].status,'prize_schedule_saved_v1');assert.equal(same[0].version,1);
+ const stale=await race({...body,expectedVersion:1,reason:'TEST ONLY concurrent reviewed revision'},['02420000-0000-4000-8000-000000000202','02420000-0000-4000-8000-000000000203'],'schedule_stale');assert.equal(stale.filter(x=>x.status==='prize_schedule_saved_v1'&&x.version===2).length,1);assert.equal(stale.filter(x=>x.code==='stale_version').length,1);
+ assert.equal(sql('select count(*)from app.setup_prize_schedule_streams_v1;'),'1');assert.equal(sql('select count(*)from app.setup_prize_schedule_versions_v1;'),'2');assert.equal(sql("select count(*)from app.operation_receipts where operation_type='save_setup_prize_schedule_v1';"),'3');assert.equal(sql("select count(*)from app.audit_events where action in('prize_schedule_saved_v1','prize_schedule_rejected');"),'3');assert.equal(sql('select count(*)from app.event_prize_schedule_bindings_v1;'),'0');
+ console.log('PRIZE_SCHEDULE_REAL_OVERLAP_SAME_KEY_AND_STALE_VERSION_PASSED: two waiting sessions per race; one stream, two versions, three receipts/audits, zero event bindings or settlements.');
+}finally{if(created)docker(['exec',container,'dropdb','-U','supabase_admin','--force',database]);assert.equal(sql(`select count(*)from pg_database where datname='${database}';`,'postgres'),'0');assert.equal(sql('select (select count(*)from auth.users),(select count(*)from app.tournaments);','fixture_0240'),'0|0');console.log('Race database removed; rollback database remains empty.');}

@@ -145,3 +145,8 @@ work is the dated physical rehearsal checklist in
   configuration. It is fail-closed until delivery capacity, callbacks,
   duplicate suppression, retries, and 600 invitations in 45 minutes are
   independently tested. SMS and online payments remain disabled.
+
+
+## 2026-10-27 owner-approved director prize schedule (local implementation)
+
+Directors choose and explicitly review a structured setup prize rule, rather than an app-mandated ACC ratio. Version the per-person cohort weights/source/rounding policy, distinguish estimated budget from server-derived actual awards, bind settlement claims to the exact saved schedule, and expose a sanitized printable player summary. Freeze revisions when qualification is finalized; unsupported brackets fail closed. Preserve historical unstructured notes/replays. Initial local slice: one Standard Main12, four no-bye qualifiers, no pools; independent 85%-of-gross review remains required. Verification and rollout boundary: docs/quality/2026-10-27-setup-prize-schedule-local.md. No hosted rollout authorized by this local feature approval.
