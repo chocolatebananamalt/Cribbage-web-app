@@ -57,3 +57,18 @@ test('a discarded offline entry tells the player it is gone and must be re-enter
       `the ${outcome} message must tell the player how to recover`);
   }
 });
+
+test('saved pending entries do not assume an opponent mode or official review stage', () => {
+  const message = 'Your entry is saved. Required verification is still pending.';
+  assert.equal(source.split(message).length - 1, 2,
+    'server-restored and newly accepted pending submissions must use neutral copy');
+  assert.doesNotMatch(source, /Your entry is saved and waiting for your opponent/);
+  const initial = source.slice(source.indexOf('const [status, setStatus]'), source.indexOf('const [busy, setBusy]'));
+  assert.match(initial, /context\.state === "verified"[\s\S]*Game verified/);
+  assert.match(initial, /context\.state === "mismatch"[\s\S]*needs cross-checking/);
+  assert.match(initial, /context\.canConfirm[\s\S]*Confirm your own entry/);
+  const accepted = source.slice(source.indexOf('setCanConfirm(result.status === "confirmation_pending")'), source.indexOf('const confirm = async'));
+  assert.match(accepted, /result\.status === "confirmation_pending"[\s\S]*Confirm your own entry/);
+  assert.match(accepted, /result\.status === "mismatch"[\s\S]*needs cross-checking/);
+  assert.ok(accepted.includes(message));
+});

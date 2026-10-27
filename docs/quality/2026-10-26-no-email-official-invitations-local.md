@@ -1,5 +1,8 @@
 # Local no-email official invitations — 2026-10-26
 
+> Historical local checkpoint. Publication and staging application were completed afterward; current state is in [the staging rollout record](2026-10-26-staging-0237-0238-rollout.md). The original migration sources/checksums are preserved.
+
+
 ## Scope and acceptance
 
 The owner retained two distinct officials for mixed Digital/Paper results. This patch prepares a supported no-email invitation handoff; it does not nominate anyone or grant hosted access. The current Player A browser session was not touched. The existing 25-file expiry/witness/mixed-help work remains local alongside this addition.

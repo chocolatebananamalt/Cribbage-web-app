@@ -1,5 +1,8 @@
 # Local expiry clarification and mixed-scorecard acceptance - 2026-10-26
 
+> Historical local checkpoint. Publication and staging application were completed afterward; current state is in [the staging rollout record](2026-10-26-staging-0237-0238-rollout.md). The original migration sources/checksums are preserved.
+
+
 ## Outcome and boundaries
 
 Local changes are complete and unpublished on `codex/director-setup-journey` at unchanged HEAD `6d9fc549dd5e666e0c50ea13b3f06edc20d47738`. PR122 remains draft. No hosted migration, account/role grant, deployment, production action or additional hosted match was performed. Player A's authenticated Chrome session was not touched during this local work.

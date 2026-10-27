@@ -52,6 +52,9 @@ test("director UI keeps the draft private and labels withheld authority", () => 
   const route = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/settlement-draft/route.ts", "utf8");
   const reconciliation = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/settlement-draft/reconciliation/route.ts", "utf8");
   assert.match(page, /director.*co_director/);
+  assert.match(page, /getSettlementV5Workspace/);
+  assert.match(page, /settlementV5\?\.draft[\s\S]*redirect\(`\/tournament/);
+  assert.match(page, /requireTournamentAccess[\s\S]*getSettlementV5Workspace/);
   assert.match(page, /key={`\$\{workspace\.currentVersion\}-\$\{workspace\.draft\?\.settlementDraftId \?\? "new"\}`}/);
   assert.match(client, /Draft only/);
   assert.match(client, /not reconciled, approved, published, or an official ACC submission/);

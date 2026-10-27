@@ -66,7 +66,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
           ? "Game verified. The authoritative scorecard is updated."
           : context.ownConfirmed
             ? "Your confirmation is saved. The game will verify after the other player confirms their own entry."
-        : "Your entry is saved and waiting for your opponent’s independent entry."
+        : "Your entry is saved. Required verification is still pending."
       : "Enter your independent result. It is not verified until both players submit and confirm.");
   const [busy, setBusy] = useState(false);
   const [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
@@ -284,7 +284,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       setSubmissionId(id);
       try { window.localStorage.setItem("acc-score-result-accepted", new Date().toISOString()); } catch { /* ten-second refresh remains available */ }
       setCanConfirm(result.status === "confirmation_pending");
-      setStatus(result.status === "confirmation_pending" ? "Both entries match. Confirm your own entry to continue." : result.status === "mismatch" ? "The entries do not match. This game needs cross-checking." : "Your entry is saved and waiting for your opponent’s independent entry.");
+      setStatus(result.status === "confirmation_pending" ? "Both entries match. Confirm your own entry to continue." : result.status === "mismatch" ? "The entries do not match. This game needs cross-checking." : "Your entry is saved. Required verification is still pending.");
     } catch {
       setStatus("Network issue. Retry this same entry after the connection is restored.");
     } finally { setBusy(false); }

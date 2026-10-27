@@ -63,9 +63,11 @@ test("director editor preserves exact retry payload including MRP claims and res
   assert.match(client, /type Envelope = SettlementDraftRequest/);
   assert.match(client, /requestFromEnvelope/);
   assert.match(client, /mrpClaims: parsedMrpClaims/);
-  assert.match(client, /sessionStorage\.setItem\(storageKey, JSON\.stringify\(envelope\)\)/);
+  assert.match(client, /const rawAtSend = JSON\.stringify\(envelope\)[\s\S]*sessionStorage\.setItem\(storageKey, rawAtSend\)/);
   assert.match(client, /body: JSON\.stringify\(request\)/);
-  assert.match(client, /disabled=\{busy \|\| !!locked\}/);
+  assert.match(client, /disabled=\{busy \|\| storageBlocked \|\| !!locked\}/);
+  assert.ok(client.includes("if (locked) { await transmit(locked); return; }") && client.indexOf("if (locked) { await transmit(locked); return; }") < client.indexOf("if (!workspace.playoffResult)"), "exact retry precedes fresh workspace validation");
+  assert.match(client, /sessionStorage\.getItem\(storageKey\) !== originalRaw/);
   assert.match(client, /response\.status === 409[\s\S]*setPlacements\(placementRows\(workspace\)\)[\s\S]*setAwards\(awardRows\(workspace\)\)[\s\S]*setMrpClaims\(mrpRows\(workspace\)\)/);
   assert.match(client, /calculated and verified by the server/i);
   assert.match(client, /Automatic MRP calculation is unavailable/i);

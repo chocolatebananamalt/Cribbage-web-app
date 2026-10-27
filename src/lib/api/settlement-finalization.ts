@@ -74,7 +74,7 @@ export type ManualSettlementFinalizationWorkspace = {
 const REJECTIONS = new Set([
   "invalid_request", "not_director", "tournament_unavailable", "settlement_draft_unavailable",
   "version_binding_unavailable", "event_dispute_unresolved", "mrp_claims_incomplete", "payout_totals_changed",
-  "ledger_snapshot_changed", "non_conserving_ledger", "ledger_allocation_exceeded", "stale_version", "idempotency_conflict",
+  "ledger_snapshot_changed", "non_conserving_ledger", "ledger_allocation_exceeded", "stale_version", "idempotency_conflict", "settlement_domain_conflict",
 ]);
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
 const exact = (value: Record<string, unknown>, keys: string[]) => {
