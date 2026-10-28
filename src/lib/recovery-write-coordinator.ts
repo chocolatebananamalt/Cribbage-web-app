@@ -8,6 +8,7 @@ import {
 } from "./auth/recovery-owner.ts";
 import { isAppRecoveryStorageKey } from "./client-session-storage.ts";
 import { createRecoveryCoordinationState, trackRecoveryWriter } from "./recovery-coordination-state.ts";
+import { recoveryStage } from "./recovery-diagnostic.ts";
 
 const recoveryProtocolVersion = "acc-recovery-coordination-v2";
 const recoveryDocumentLock = "acc-recovery-document-v2";
@@ -50,17 +51,17 @@ async function ensureRecoveryWorker() {
   workerSetup = (async () => {
     expectedControllerChange = true;
     try {
-      const registration = await navigator.serviceWorker.register(recoveryWorkerPath, { scope: "/", updateViaCache: "none" });
-      await registration.update();
-      await navigator.serviceWorker.ready;
+      const registration = await recoveryStage("worker-register", () => navigator.serviceWorker.register(recoveryWorkerPath, { scope: "/", updateViaCache: "none" }));
+      await recoveryStage("worker-update", () => registration.update());
+      await recoveryStage("worker-ready", () => navigator.serviceWorker.ready);
       if (!currentController()) {
-        await new Promise<void>((resolve, reject) => {
+        await recoveryStage("controller", () => new Promise<void>((resolve, reject) => {
           const timer = window.setTimeout(() => reject(new Error("recovery_controller_unavailable")), 4000);
           navigator.serviceWorker.addEventListener("controllerchange", () => {
             window.clearTimeout(timer);
             resolve();
           }, { once: true });
-        });
+        }));
       }
       workerPrepared = true;
     } finally {
@@ -137,7 +138,7 @@ async function inventoryWindows() {
 
 async function acquireSharedLock() {
   if (releaseShared) return;
-  const expected = await verifyControllerProtocol();
+  const expected = await recoveryStage("protocol", () => verifyControllerProtocol());
   let resolveAcquired!: () => void;
   let rejectAcquired!: (error: unknown) => void;
   const acquired = new Promise<void>((resolve, reject) => { resolveAcquired = resolve; rejectAcquired = reject; });
@@ -215,9 +216,9 @@ function assertRecoveryValueCanBeStored(storage: Storage, key: string, value: st
 }
 
 export async function acquireRecoveryDocument(nextActorId: string | null): Promise<void> {
-  if (!navigator.locks || !navigator.serviceWorker) throw new Error("recovery_coordination_unavailable");
+  await recoveryStage("capability", () => { if (!navigator.locks || !navigator.serviceWorker) throw new Error("recovery_coordination_unavailable"); });
   await ensureRecoveryWorker();
-  if (blockedReason) throw new Error(blockedReason);
+  await recoveryStage("controller", () => { if (blockedReason) throw new Error(blockedReason); });
   actorId = nextActorId;
   if (!actorInitialized) {
     actorInitialized = true;
@@ -225,11 +226,11 @@ export async function acquireRecoveryDocument(nextActorId: string | null): Promi
     actorReadyResolve = null;
   }
   if (releaseShared || releaseExclusive) {
-    await verifyControllerProtocol();
+    await recoveryStage("protocol", () => verifyControllerProtocol());
     return;
   }
   if (!acquisition) {
-    acquisition = acquireSharedLock().catch((error) => {
+    acquisition = recoveryStage("document-lease", () => acquireSharedLock()).catch((error) => {
       blockedReason = error instanceof Error ? error.message : "recovery_coordination_unavailable";
       throw error;
     }).finally(() => { acquisition = null; });

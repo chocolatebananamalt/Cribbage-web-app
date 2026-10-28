@@ -3,6 +3,7 @@ import { createClient } from "../../../lib/supabase/server";
 import { isSameOriginRequest } from "../../../lib/api/same-origin";
 import { readSmallJson } from "../../../lib/api/bounded-json";
 import { privateAuthJson } from "../../../lib/auth/recovery-auth";
+import { signOutClaimsStatus } from "../../../lib/auth/sign-out-claims";
 export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) return privateAuthJson({ status: "unconfirmed" }, 403);
   const input = await readSmallJson(request);
@@ -10,8 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getClaims();
-    if (error?.name === "AuthSessionMissingError") return privateAuthJson({ status: "signed_out" });
-    if (error) return privateAuthJson({ status: "unconfirmed" }, 503);
-    return privateAuthJson({ status: data?.claims?.sub ? "signed_in" : "unconfirmed" });
+    const status = signOutClaimsStatus(data, error);
+    return privateAuthJson({ status }, status === "unconfirmed" ? 503 : 200);
   } catch { return privateAuthJson({ status: "unconfirmed" }, 503); }
 }
