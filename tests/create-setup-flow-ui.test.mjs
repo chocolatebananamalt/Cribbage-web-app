@@ -10,7 +10,7 @@ const page = read("src/app/tournament/[tournamentId]/setup/page.tsx");
 
 test("new tournament preserves the exact request across uncertain outcomes", () => {
   assert.match(create, /director-new-tournament-pending:\$\{actorId\}/);
-  assert.match(create, /sessionStorage\.setItem\(storageKey/);
+  assert.match(create, /setAppRecoveryItem\(sessionStorage, storageKey/);
   assert.match(createPage, /<NewTournamentClient actorId=\{actorId\}/);
   assert.match(create, /Retry the same request when the connection is available/);
   assert.match(create, /response\.status >= 400 && response\.status < 500/);

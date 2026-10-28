@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ const money = (minor: number | null) => minor === null ? "Not set" : new Intl.Nu
 function cents(value: string) { const match = /^(0|[1-9]\d*)(?:\.(\d{1,2}))?$/.exec(value.trim()); if (!match) return null; const result = Number(match[1]) * 100 + Number((match[2] ?? "").padEnd(2, "0") || "0"); return Number.isSafeInteger(result) && result <= 2147483647 ? result : null; }
 function storageKey(actorId: string, tournamentId: string, rosterEntryId: string) { return `payment-obligation:${actorId}:${tournamentId}:${rosterEntryId}`; }
 function readPending(key: string, rosterEntryId: string): PaymentObligationRequest | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return isPaymentObligationRequest(value) && value.rosterEntryId === rosterEntryId ? value : null; } catch { return null; } }
-function storePending(key: string, request: PaymentObligationRequest) { try { sessionStorage.setItem(key, JSON.stringify(request)); return true; } catch { return false; } }
+function storePending(key: string, request: PaymentObligationRequest) { try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(request)); return true; } catch { return false; } }
 function clearPending(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted server receipt remains authoritative */ } }
 function rejectionMessage(code: string) { return code === "invalid_request" ? "The amount owed request was invalid. Review the amount and reason, then try again." : code === "tournament_unavailable" ? "This tournament is unavailable for payment changes." : code === "not_director" ? "Only a tournament Director or Co-director can save amount owed." : code === "idempotency_conflict" ? "That request key was already used with different data. Refresh before trying again." : code === "roster_entry_unavailable" ? "This roster entry is no longer available." : "Another amount owed update was saved first. Refresh this row before trying again."; }
 

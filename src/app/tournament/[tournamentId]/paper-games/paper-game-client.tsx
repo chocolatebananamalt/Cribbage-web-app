@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -31,7 +32,7 @@ function readLocked(key: string): CompletePaperGameRequest | null {
 }
 
 function saveLocked(key: string, value: CompletePaperGameRequest) {
-  try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; }
+  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; }
   catch { return false; }
 }
 
@@ -255,7 +256,7 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
       sideAClaim: { winnerSide: sideAWinner, margin: aMargin, evidenceReference: sideAReference.trim() },
       sideBClaim: { winnerSide: sideBWinner, margin: bMargin, evidenceReference: sideBReference.trim() },
       idempotencyKey: crypto.randomUUID() } satisfies ReviewPaperGameRequest;
-    if (!locked) { try { window.sessionStorage.setItem(key, JSON.stringify(request)); } catch { setMessage("This browser cannot safely retain the request. Enable session storage before continuing."); return; } }
+    if (!locked) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(request)); } catch { setMessage("This browser cannot safely retain the request. Enable session storage before continuing."); return; } }
     setLocked(request); setBusy(true); setMessage("");
     try {
       const response = await fetch(`/api/v1/paper-game-completions/${encodeURIComponent(item.completionId)}/reviews`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(request) });
@@ -320,7 +321,7 @@ function IdentityBinding({ actorId, tournamentId, officials, roster }: { actorId
     const request = locked ?? { bindingId: crypto.randomUUID(), officialProfileId: official, bindingKind: choice === "nonparticipant" ? "nonparticipant" : "roster_entry", rosterEntryId: choice === "nonparticipant" ? null : choice, expectedBindingVersion: officials.find((item) => item.profileId === official)?.bindingVersion ?? -1, idempotencyKey: crypto.randomUUID() } satisfies BindPaperOfficialIdentityRequest;
     if (!isBindPaperOfficialIdentityRequest(request)) return;
     if (!locked) {
-      try { window.sessionStorage.setItem(key, JSON.stringify(request)); }
+      try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(request)); }
       catch { setMessage("This browser cannot safely retain the request. Enable session storage before continuing."); return; }
       setLocked(request);
     }

@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { accBenefitExpenseCategories, accOperatingExpenseCategories, type AccExpenseCategory } from "../../../../../../lib/results/acc-payback";
@@ -63,7 +64,7 @@ export default function PaybackReviewClient({ actorId, tournamentId, eventId, wo
       if (sessionStorage.getItem(key) !== retained.current) { setBlocked(true); setMessage("Another request changed recovery storage. It has not been overwritten."); return; }
       const operation: Envelope = pending ?? { kind: "payback-review", operationId: crypto.randomUUID(), request: body };
       const raw = retained.current ?? JSON.stringify(operation);
-      if (!pending) sessionStorage.setItem(key, raw);
+      if (!pending) setAppRecoveryItem(sessionStorage, key, raw);
       retained.current = raw; setPending(operation); setMessage("Saving the exact payback review request.");
       const response = await fetch(endpoint, { method: "POST", cache: "no-store", credentials: "same-origin", headers: { "content-type": "application/json", "x-idempotency-key": operation.operationId }, body: JSON.stringify(operation.request) });
       const result: unknown = await response.json().catch(() => null);

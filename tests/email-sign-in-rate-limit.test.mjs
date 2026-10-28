@@ -44,7 +44,7 @@ test('email sign-in blocks duplicate requests while keeping a quiet accessible c
   assert.match(form, /disabled=\{busy \|\| cooldownSeconds !== null\}/);
   assert.match(form, /role="alert">\{error\}/);
   assert.match(form, /aria-live="off"/);
-  assert.match(form, /signInWithPassword/);
+  assert.match(form, /submitCoordinatedAuthentication/);
   assert.match(form, /Sign in with a password instead/);
   assert.doesNotMatch(form, /wait a few minutes/i);
 });

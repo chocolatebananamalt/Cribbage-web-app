@@ -1,3 +1,4 @@
+import { setAppRecoveryItem } from "./recovery-write-coordinator.ts";
 export type PendingScoreSubmission = {
   version: 1;
   kind: "submission";
@@ -39,7 +40,7 @@ function isPendingScoreSubmission(value: unknown): value is PendingScoreSubmissi
 
 export function writePendingScoreSubmission(storage: Storage, envelope: PendingScoreSubmission) {
   try {
-    storage.setItem(scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide), JSON.stringify(envelope));
+    setAppRecoveryItem(storage, scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide), JSON.stringify(envelope));
     return true;
   } catch {
     return false;
@@ -52,7 +53,8 @@ export function readPendingScoreSubmission(storage: Storage, actorId: string, to
     const raw = storage.getItem(key);
     const value: unknown = raw ? JSON.parse(raw) : null;
     if (isPendingScoreSubmission(value) && value.actorId === actorId && value.tournamentId === tournamentId && value.gameId === gameId && value.playerSide === playerSide) return value;
-    if (raw) storage.removeItem(key);
+    // Unknown/malformed retained work is not trusted, but must remain intact
+    // and keep the shared-device safety gate closed for explicit recovery.
   } catch {
     // An unreadable local record is never trusted as a score mutation.
   }

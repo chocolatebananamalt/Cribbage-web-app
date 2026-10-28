@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -93,7 +94,7 @@ function tournamentDetailIssues(payload: SetupPayload) {
   return issues;
 }
 function readPending(key: string): PendingSave | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && (value as PendingSave).kind === "tournament-setup" && isSetupSaveRequest((value as PendingSave).request) ? value as PendingSave : null; } catch { return null; } }
-function storePending(key: string, value: PendingSave | PendingActivation | PendingAmendment) { try { sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function storePending(key: string, value: PendingSave | PendingActivation | PendingAmendment) { try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clearPending(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted server receipt remains authoritative */ } }
 function readCreationSeed(key: string, tournamentId: string): CreationSeed | undefined { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return isTournamentCreated(value) && value.tournamentId === tournamentId ? { name: value.tournamentName, plannedDate: value.tournamentDate } : undefined; } catch { return undefined; } }
 function clearCreationSeed(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted setup receipt remains authoritative */ } }

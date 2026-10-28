@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -113,7 +114,7 @@ export default function SettlementFinalizationClient({ actorId, tournamentId, ev
     if (!isManualSettlementFinalizationRequest(request)) { setMessage("The retained finalization request could not be validated and remains saved."); return; }
     flight.current = true;
     try {
-      const rawAtSend = JSON.stringify(envelope); if (sessionStorage.getItem(key) !== null && sessionStorage.getItem(key) !== rawAtSend) { setMessage("Another finalization request is retained. Review it before starting a new finalization."); return; } sessionStorage.setItem(key, rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
+      const rawAtSend = JSON.stringify(envelope); if (sessionStorage.getItem(key) !== null && sessionStorage.getItem(key) !== rawAtSend) { setMessage("Another finalization request is retained. Review it before starting a new finalization."); return; } setAppRecoveryItem(sessionStorage, key, rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-finalization`, {
         method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store",
         body: JSON.stringify(request),

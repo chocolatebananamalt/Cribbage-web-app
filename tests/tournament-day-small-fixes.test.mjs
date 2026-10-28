@@ -83,7 +83,8 @@ test("clearing shared-device data re-reads the gate at the moment it clears", ()
   const clear = /async function clearSafeAppData\(\)[\s\S]*?\n  \}/.exec(component);
   assert.ok(clear, "clearSafeAppData must still exist");
   const check = clear[0].indexOf("await readLocalState()");
-  const wipe = clear[0].indexOf("clearOfflineScoreStorage()");
+  const wipe = clear[0].indexOf("clearOfflineScoreStorage(progress)");
+  assert.ok(wipe !== -1, "the clear must report bounded stage progress");
   assert.ok(check !== -1, "the gate must be re-read inside the clear");
   assert.ok(check < wipe, "the re-read must happen before anything is deleted");
   assert.match(component, /visibilitychange/, "returning to the tab must refresh the gate");

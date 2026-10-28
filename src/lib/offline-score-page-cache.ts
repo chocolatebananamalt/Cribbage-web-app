@@ -1,4 +1,5 @@
 "use client";
+import { trackAppRecoveryWrite } from "./recovery-write-coordinator";
 
 export const offlineScoreCachePrefix = "acc-offline-score-pages-v2:";
 export const offlineScoreOwnerCookie = "acc_offline_score_owner";
@@ -28,6 +29,7 @@ export function markOfflineScoreOwner(actorId: string) {
 }
 
 export async function prepareCurrentScorePageForOffline(actorId: string, gameId: string, expiresAtMs: number) {
+  return trackAppRecoveryWrite(async () => {
   const pathMatch = window.location.pathname.match(gamePath);
   if (!supported() || !pathMatch || pathMatch[1].toLowerCase() !== gameId.toLowerCase() || expiresAtMs <= Date.now()) return false;
 
@@ -71,12 +73,20 @@ export async function prepareCurrentScorePageForOffline(actorId: string, gameId:
     throw error;
   }
   return true;
+
+  });
 }
 
 export async function clearOfflineScorePageCache() {
   if ("caches" in window) {
     const names = await caches.keys();
     await Promise.all(names.filter((name) => name.startsWith(offlineScoreCachePrefix) || name === "acc-offline-score-pages-v1").map((name) => caches.delete(name)));
+    if ((await caches.keys()).some((name) => name.startsWith(offlineScoreCachePrefix) || name === "acc-offline-score-pages-v1")) {
+      throw new Error("offline_cache_clear_unconfirmed");
+    }
   }
   document.cookie = `${offlineScoreOwnerCookie}=; Path=/; Max-Age=0; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+  if (document.cookie.split(";").some((part) => part.trim().startsWith(`${offlineScoreOwnerCookie}=`))) {
+    throw new Error("offline_owner_clear_unconfirmed");
+  }
 }

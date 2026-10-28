@@ -1,4 +1,5 @@
 "use client";
+import { trackAppRecoveryWrite } from "./recovery-write-coordinator";
 
 import {
   canonicalOfflineSubmissionPayload,
@@ -149,6 +150,7 @@ export async function readPreparedOfflineSubmissionCapability(actorId: string, g
 }
 
 export async function provisionOfflineSubmission(actorId: string, gameId: string) {
+  return trackAppRecoveryWrite(async () => {
   const id = keyId(actorId, gameId);
   const existing = await readOne<StoredCapability>(capabilityStore, id);
   let device = await getDeviceKey(actorId, gameId);
@@ -165,11 +167,14 @@ export async function provisionOfflineSubmission(actorId: string, gameId: string
   await writeOne(keyStore, { ...device, id, serverDeviceKeyId: payload.deviceKeyId });
   await writeOne(capabilityStore, { id, actorId, gameId, value: payload });
   return payload;
+
+  });
 }
 
 /** Team games share the proven device queue but use a separate server and
  * database authority boundary so singles behavior cannot be rewritten. */
 export async function provisionOfflineTeamSubmission(actorId: string, gameId: string) {
+  return trackAppRecoveryWrite(async () => {
   const id = keyId(actorId, gameId);
   const existing = await readOne<StoredCapability>(capabilityStore, id);
   let device = await getDeviceKey(actorId, gameId);
@@ -186,9 +191,12 @@ export async function provisionOfflineTeamSubmission(actorId: string, gameId: st
   await writeOne(keyStore, { ...device, id, serverDeviceKeyId: payload.deviceKeyId });
   await writeOne(capabilityStore, { id, actorId, gameId, value: payload });
   return payload;
+
+  });
 }
 
 export async function queueOfflineSubmission(capability: OfflineSubmissionCapability, winnerSide: "a" | "b", margin: number) {
+  return trackAppRecoveryWrite(async () => {
   const device = await readOne<StoredDeviceKey>(keyStore, keyId(capability.verifiedActorId, capability.gameId));
   if (!device) throw new Error("offline_device_key_unavailable");
   const unsigned: UnsignedOfflineSubmission = {
@@ -209,6 +217,8 @@ export async function queueOfflineSubmission(capability: OfflineSubmissionCapabi
   // score data that a later magic-link exchange could orphan or expose.
   markOfflineScoreOwner(capability.verifiedActorId);
   return writeOfflineQueueRecordOnce(record);
+
+  });
 }
 
 export async function readOfflineSubmission(actorId: string, gameId: string) {
@@ -234,7 +244,7 @@ export async function replayOfflineTeamSubmission(record: OfflineQueueRecord) {
   return { response, payload };
 }
 
-export async function deleteOfflineSubmission(queueId: string) { await removeOne(queueStore, queueId); }
+export async function deleteOfflineSubmission(queueId: string) { return trackAppRecoveryWrite(async () => { await removeOne(queueStore, queueId); }); }
 
 export async function countOfflineSubmissions() {
   const db = await openDatabase();
@@ -242,11 +252,24 @@ export async function countOfflineSubmissions() {
   finally { db.close(); }
 }
 
-export async function clearOfflineScoreStorage() {
-  await new Promise<void>((resolve, reject) => {
-    const request = indexedDB.deleteDatabase(databaseName);
-    request.onsuccess = () => resolve(); request.onblocked = () => reject(new Error("offline_storage_blocked"));
-    request.onerror = () => reject(request.error ?? new Error("offline_storage_unavailable"));
-  });
-  await clearOfflineScorePageCache();
+let offlineClearInFlight: Promise<void> | null = null;
+export function clearOfflineScoreStorage(onStage?: (stage: "offline-database" | "offline-database-blocked" | "offline-cache") => void) {
+  if (offlineClearInFlight) return offlineClearInFlight;
+  const operation = async () => {
+    onStage?.("offline-database");
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.deleteDatabase(databaseName);
+      request.onsuccess = () => resolve();
+      // A blocked delete cannot be cancelled: stay pending, never allow retry.
+      request.onblocked = () => onStage?.("offline-database-blocked");
+      request.onerror = () => {
+        onStage?.("offline-database");
+        reject(new Error("offline_storage_unavailable"));
+      };
+    });
+    onStage?.("offline-cache");
+    await clearOfflineScorePageCache();
+  };
+  offlineClearInFlight = operation().finally(() => { offlineClearInFlight = null; });
+  return offlineClearInFlight;
 }

@@ -1,0 +1,16 @@
+# Local safe sign-out diagnosis
+
+Hosted director session and B's pending nomination preserved. No second clear, alternate sign-out endpoint, credential access, security change, hosted code change or publication performed.
+
+Local diagnostic tests/safe-sign-out-diagnostic.mjs extracts the exact production clearOfflineScoreStorage function and transpiles it with the current offline-page-cache module. Disposable headless Chrome context, synthetic localhost origin, no Supabase/Vercel connection or user profile. Initial sandbox navigation failed ERR_NETWORK_ACCESS_DENIED; exact scoped localhost execution was then admitted through supported escalation and exited0. Browser/context/local server cleaned up in finally.
+
+Actual browser results:
+1. A second local tab deliberately holds an IndexedDB connection. Production deleteDatabase rejects with offline_storage_blocked. Closing the held connection later lets the already-rejected deletion request complete. IndexedDB deletion has no cancellation method: the UI failure does not prove no storage mutation occurred, nor that all mutations have finished.
+2. Injected synthetic SecurityError from caches.keys reproduces a failure after IndexedDB deletion and before retry-storage clearing/server sign-out.
+3. An explicitly modeled current stage ordering shows offline/sessionStorage/POST failures all collapse to the same generic UI message. This pipeline is a model, not a test of the React component or HTTP transport.
+
+These prove possible causes and diagnostic insufficiency, not the actual hosted cause. Current app UI safely reports0unsent/retry records and refreshed director authentication, but exposes no stage code or pending-deletion state. Targeted browser sign-out/general error diagnostics were empty and exact-deployment Vercel /auth/sign-out search found no logs; absence does not prove the POST was never made. No non-mutating current supported UI identifies the failure stage.
+
+Recommended narrow local fix, not implemented/deployed: preserve a typed safe diagnostic code and stage for offline database deletion, offline page cache, retry-storage clearing and sign-out response; expose only those codes/status, never stored values, auth headers, cookies, tokens or private score records. Treat onblocked as pending deletion rather than terminal failure; keep the switch barrier active and never start another delete while its request remains unsettled. A diagnostic timeout must remain blocked and retain the request's eventual completion handling. On versionchange, app-owned IndexedDB connections should close when their operations safely finish. Do not weaken origin/auth checks or allow another account until successful cleanup/sign-out. Add regressions for blocked-then-complete, cache/storage/HTTP failures, no POST on earlier failure, repeated-click single flight and recovery-data preservation. This is bounded error/lifecycle handling, not a new authentication design.
+
+Next: approve/authorize the narrow local repair if desired, independently review and test it before any separately approved publication. The immediate hosted user should not be asked to retry sign-out or B login on the uncertain device. No need to recreate the invitation or change account permissions.

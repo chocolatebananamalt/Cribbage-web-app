@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -247,7 +248,7 @@ export function LiveScoreEntry({ context }: { context: AssignedGameContext }) {
       const existing = window.sessionStorage.getItem(storageKey);
       if (existing) return { storageKey, value: existing };
       const value = crypto.randomUUID();
-      window.sessionStorage.setItem(storageKey, value);
+      setAppRecoveryItem(window.sessionStorage, storageKey, value);
       return { storageKey, value };
     } catch { return null; }
   };

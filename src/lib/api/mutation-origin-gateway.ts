@@ -20,7 +20,7 @@ export function rejectsApiMutationOrigin({
   requestOrigin: string;
 }) {
   if (!pathname.startsWith("/api/v1/") || safeMethods.has(method)) return false;
-  if (origin !== requestOrigin) return true;
+  if (!requestOrigin || origin !== requestOrigin) return true;
   // Fetch Metadata is not universal, so an absent header remains compatible
   // with older clients. An explicit cross-site value is never valid for an
   // in-app state-changing request and should fail closed at the shared edge.

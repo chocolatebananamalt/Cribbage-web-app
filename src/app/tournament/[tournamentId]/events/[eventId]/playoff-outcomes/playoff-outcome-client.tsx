@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -73,7 +74,7 @@ export default function PlayoffOutcomeClient({ actorId, tournamentId, eventId, w
       const serialized = JSON.stringify(envelope);
       const existing = sessionStorage.getItem(key);
       if (existing !== null && existing !== serialized) { setStorageBlocked(true); setBusy(false); setMessage("Another playoff outcome request is already retained. Review it before starting a new save."); return; }
-      sessionStorage.setItem(key, serialized);
+      setAppRecoveryItem(sessionStorage, key, serialized);
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/playoff-outcomes`, { method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify(envelope.request) });
       const result: unknown = await response.json().catch(() => null);
       if (sessionStorage.getItem(key) !== serialized) { setStorageBlocked(true); setMessage("The saved playoff outcome request changed while the write was pending; it was retained."); return; }

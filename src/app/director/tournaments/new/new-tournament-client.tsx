@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -6,9 +7,9 @@ import { isTournamentCreated } from "../../../../lib/api/director-administration
 
 type CreateRequest = { name: string; plannedStartDate: string; idempotencyKey: string };
 function readPendingRequest(storageKey: string): CreateRequest | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(storageKey) ?? "null"); if (!value || typeof value !== "object") return null; const request = value as Partial<CreateRequest>; return typeof request.name === "string" && typeof request.plannedStartDate === "string" && typeof request.idempotencyKey === "string" ? { name: request.name, plannedStartDate: request.plannedStartDate, idempotencyKey: request.idempotencyKey } : null; } catch { return null; } }
-function writePendingRequest(storageKey: string, request: CreateRequest) { try { sessionStorage.setItem(storageKey, JSON.stringify(request)); return true; } catch { return false; } }
+function writePendingRequest(storageKey: string, request: CreateRequest) { try { setAppRecoveryItem(sessionStorage, storageKey, JSON.stringify(request)); return true; } catch { return false; } }
 function clearPendingRequest(storageKey: string) { try { sessionStorage.removeItem(storageKey); } catch { /* server receipt remains authoritative */ } }
-function storeCreationReceipt(actorId: string, receipt: { status: "tournament_created"; tournamentId: string; tournamentName: string; tournamentDate: string }) { try { sessionStorage.setItem(`tournament-creation-seed:${actorId}:${receipt.tournamentId}`, JSON.stringify(receipt)); } catch { /* navigation and server receipt remain authoritative */ } }
+function storeCreationReceipt(actorId: string, receipt: { status: "tournament_created"; tournamentId: string; tournamentName: string; tournamentDate: string }) { try { setAppRecoveryItem(sessionStorage, `tournament-creation-seed:${actorId}:${receipt.tournamentId}`, JSON.stringify(receipt)); } catch { /* navigation and server receipt remain authoritative */ } }
 
 export function NewTournamentClient({ actorId }: { actorId: string }) {
   const router = useRouter();

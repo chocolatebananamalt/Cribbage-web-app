@@ -59,7 +59,7 @@ test("director UI keeps the draft private and labels withheld authority", () => 
   assert.match(client, /Draft only/);
   assert.match(client, /not reconciled, approved, published, or an official ACC submission/);
   assert.match(client, /settlement-draft:\$\{actorId\}:\$\{eventId\}/);
-  assert.match(client, /sessionStorage\.setItem/);
+  assert.match(client, /setAppRecoveryItem/);
   assert.match(route, /isSameOriginRequest/);
   assert.match(route, /readMediumJson/);
   assert.match(route, /createServerOnlyAdminClient/);

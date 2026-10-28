@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ type VoidFields = Omit<PaymentVoidRequest, "rosterEntryId" | "expectedPaymentVer
 
 function validEnvelope(value: unknown): value is Envelope { if (!value || typeof value !== "object") return false; const item = value as Record<string, unknown>; const digestValue = item.digest; return item.kind === "payment" && typeof digestValue === "string" && /^[a-f0-9]{64}$/.test(digestValue) && isPaymentRecoveryRequest(item); }
 function readEnvelope(key: string) { try { const raw = window.sessionStorage.getItem(key); const value: unknown = raw ? JSON.parse(raw) : null; return validEnvelope(value) ? value : null; } catch { return null; } }
-function writeEnvelope(key: string, value: Envelope) { try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function writeEnvelope(key: string, value: Envelope) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clearEnvelope(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* Server state is authoritative. */ } }
 function clearOtherActors(storage: Storage, actorId: string) { for (let index = storage.length - 1; index >= 0; index -= 1) { const key = storage.key(index); if (key?.startsWith("payment-operation:") && !key.startsWith(`payment-operation:${actorId}:`)) storage.removeItem(key); } }
 async function digest(value: unknown) { const bytes = new TextEncoder().encode(JSON.stringify(value)); const hash = await crypto.subtle.digest("SHA-256", bytes); return Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, "0")).join(""); }

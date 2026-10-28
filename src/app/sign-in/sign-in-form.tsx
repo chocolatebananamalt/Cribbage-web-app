@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { normalizeEmailSignInError } from "../../lib/auth/email-sign-in-error";
 import { createClient } from "../../lib/supabase/client";
+import { submitCoordinatedAuthentication } from "../../lib/auth/recovery-auth-client";
+import { SharedDeviceSignOut } from "../../components/shared-device-sign-out";
 
 // Both sign-in paths land on the same place, and an open redirect here would
 // hand a signed-in session to whatever a crafted link pointed at.
@@ -74,19 +76,13 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
     setError(null);
     setBusy(true);
     try {
-      const supabase = createClient();
-      const result = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-      if (result.error) throw result.error;
-      window.location.assign(safeNext());
-    } catch (caught) {
-      const message = caught instanceof Error ? caught.message : "";
-      const lowered = message.toLowerCase();
-      setError(lowered.includes("invalid login")
-        ? "That email and password did not match an account. If no password has been set on this account yet, use the emailed link instead."
-        : lowered.includes("not enabled") || lowered.includes("disabled")
-          ? "Password sign-in is turned off for this project. Enable the email provider's password option, or use the emailed link."
-          : message || "Unable to sign in.");
+      const result = await submitCoordinatedAuthentication({ mode: "password", email: email.trim(), password, attemptId: crypto.randomUUID(), next: safeNext() });
+      if (result.status === "signed_in") window.location.assign(result.next);
+      else setError(result.message);
+    } catch {
+      setError("Sign-in is paused. Finish pending work and close other tournament tabs, then try again. Recovery work was preserved.");
     } finally {
+      setPassword("");
       requestInFlight.current = false;
       setBusy(false);
     }
@@ -123,6 +119,7 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
         <p className="auth-note">{usePassword
           ? "A password works only if one has been set on this account. Nothing else about the account changes either way."
           : "This app uses passwordless email sign-in. A password is available as a fallback when email is slow or filtered."}</p>
+        <details><summary>Local recovery and account handoff</summary><p>Pending work must stay with its original account. Empty local app data can be cleared explicitly after its safety check.</p><SharedDeviceSignOut /></details>
       </section>
     </main>
   );

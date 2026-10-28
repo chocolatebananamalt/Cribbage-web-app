@@ -154,3 +154,6 @@ label > textarea { min-height:92px; padding:10px; border:1px solid var(--line); 
 .settlement-v5-workspace input,.settlement-v5-workspace select { min-width:0; max-width:100%; }
 .settlement-evidence-scroll table { width:100%; min-width:680px; border-collapse:collapse; }
 .settlement-evidence-scroll th,.settlement-evidence-scroll td { padding:8px; text-align:left; border-bottom:1px solid var(--line); }
+#acc-recovery-frozen-shield { display: none; }
+.acc-recovery-frozen #acc-recovery-live-app { visibility: hidden !important; }
+.acc-recovery-frozen #acc-recovery-frozen-shield { display: block; padding: 1.5rem; background: white; color: black; }

@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,12 +19,12 @@ function readSaved(key: string): EventScheduleRequest | null {
   } catch { return null; }
 }
 function writeSaved(key: string, request: EventScheduleRequest) {
-  try { window.sessionStorage.setItem(key, JSON.stringify({ kind: "event-schedule-publication", request } satisfies SavedRequest)); return true; }
+  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-schedule-publication", request } satisfies SavedRequest)); return true; }
   catch { return false; }
 }
 function clearSaved(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* receipt is authoritative */ } }
 function readSavedStart(key: string): EventStartRequest | null { try { const value: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null"); if (!value || typeof value !== "object" || Array.isArray(value)) return null; const saved = value as Record<string, unknown>; return saved.kind === "event-start" && isEventStartRequest(saved.request) ? saved.request : null; } catch { return null; } }
-function writeSavedStart(key: string, request: EventStartRequest) { try { window.sessionStorage.setItem(key, JSON.stringify({ kind: "event-start", request } satisfies SavedStartRequest)); return true; } catch { return false; } }
+function writeSavedStart(key: string, request: EventStartRequest) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-start", request } satisfies SavedStartRequest)); return true; } catch { return false; } }
 
 export default function ScheduleClient({ actorId, tournamentId, workspace }: { actorId: string; tournamentId: string; workspace: EventScheduleWorkspace }) {
   const router = useRouter();

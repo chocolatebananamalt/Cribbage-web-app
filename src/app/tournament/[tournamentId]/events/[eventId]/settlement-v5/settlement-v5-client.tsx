@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useRef, useState, type MutableRefObject, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
@@ -80,7 +81,7 @@ function useRetainedOperation(kind: Kind, key: string, tournamentId: string, eve
     const raw = JSON.stringify(envelope);
     sharedFlightRef.current = true; setBusy(true); setPending(envelope);
     try {
-      sessionStorage.setItem(key, raw); retainedRaw.current = raw;
+      setAppRecoveryItem(sessionStorage, key, raw); retainedRaw.current = raw;
       const endpoint = kind === "settlement-v5" ? "settlement-v5" : "settlement-v5/finalization";
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/${endpoint}`, {
         method: "POST", credentials: "same-origin", cache: "no-store", headers: { "content-type": "application/json", "x-idempotency-key": envelope.operationId }, body: JSON.stringify(envelope.request),

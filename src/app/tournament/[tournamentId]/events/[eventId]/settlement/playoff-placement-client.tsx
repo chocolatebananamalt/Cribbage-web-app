@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -88,7 +89,7 @@ export default function PlayoffPlacementClient({ actorId, tournamentId, eventId,
       const rawBeforeWrite = sessionStorage.getItem(key);
       if (rawBeforeWrite !== null && rawBeforeWrite !== storedRaw) { setStorageBlocked(true); setMessage("Another playoff placement request is already retained. Review it before recording a result."); return; }
       const rawAtSend = JSON.stringify(envelope);
-      sessionStorage.setItem(key, rawAtSend); setStoredRaw(rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
+      setAppRecoveryItem(sessionStorage, key, rawAtSend); setStoredRaw(rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/playoff-placements`, {
         method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify(request),
       });

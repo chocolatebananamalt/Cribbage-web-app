@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ function readSaved(key: string) {
   } catch { return null; }
 }
 function writeSaved(key: string, request: EventRosterEnrollmentRequest) {
-  try { window.sessionStorage.setItem(key, JSON.stringify({ kind: "event-roster-enrollment", request })); return true; }
+  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-roster-enrollment", request })); return true; }
   catch { return false; }
 }
 function clearSaved(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* server receipt is authoritative */ } }

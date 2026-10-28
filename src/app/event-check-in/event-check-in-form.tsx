@@ -1,10 +1,10 @@
 "use client";
+import { setPublicCheckInRecoveryItem } from "../../lib/recovery-write-coordinator";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { ACC_NUMBER_INPUT_PATTERN, normalizeAccNumberInput } from "../../lib/acc-number.ts";
 
-type Completion = { token: string; expiresAt: string };
-const storageKey = "acc:event-check-in:completion";
+import { type CheckInCompletion as Completion, checkInCompletionStorageKey as storageKey, parseCheckInCompletion, removeExpiredCheckInCompletion } from "../../lib/event-check-in-recovery";
 const format = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
 // submit_event_check_in_completion_v1 reports why a check-in could not complete.
@@ -36,7 +36,9 @@ export default function EventCheckInForm() {
 
   useEffect(() => {
     const raw = window.sessionStorage.getItem(storageKey);
-    if (raw) try { const saved = JSON.parse(raw) as Completion; if (typeof saved.token === "string" && new Date(saved.expiresAt).valueOf() > Date.now()) { const timer = window.setTimeout(() => { setCompletion(saved); setMessage("Complete check-in within the time shown."); }, 0); return () => window.clearTimeout(timer); } } catch { /* discard malformed local state */ }
+    const saved = parseCheckInCompletion(raw);
+    if (saved && Date.parse(saved.expiresAt) > Date.now()) { const timer = window.setTimeout(() => { setCompletion(saved); setMessage("Complete check-in within the time shown."); }, 0); return () => window.clearTimeout(timer); }
+    removeExpiredCheckInCompletion(window.sessionStorage, raw, Date.now());
     const credential = window.location.hash.slice(1);
     if (!credential) { const timer = window.setTimeout(() => setMessage("Scan the current QR code displayed at the event."), 0); return () => window.clearTimeout(timer); }
     void (async () => {
@@ -46,12 +48,12 @@ export default function EventCheckInForm() {
         if (!response.ok || data.status !== "ready" || !data.completionSession || !data.expiresAt) throw new Error();
         const next = { token: data.completionSession, expiresAt: data.expiresAt };
         window.history.replaceState(null, "", window.location.pathname);
-        window.sessionStorage.setItem(storageKey, JSON.stringify(next)); setCompletion(next); setMessage("Complete check-in within the time shown.");
+        setPublicCheckInRecoveryItem(window.sessionStorage, storageKey, JSON.stringify(next)); setCompletion(next); setMessage("Complete check-in within the time shown.");
       } catch { window.history.replaceState(null, "", window.location.pathname); setMessage("This event check-in code is unavailable or expired. Please scan the current code on the event display."); }
     })();
   }, []);
   useEffect(() => { if (!completion) return; const timer = window.setInterval(() => setNow(Date.now()), 1_000); return () => window.clearInterval(timer); }, [completion]);
-  useEffect(() => { if (!expired) return; window.sessionStorage.removeItem(storageKey); const timer = window.setTimeout(() => setMessage("Your check-in time expired. Please scan the current code on the event display to begin again."), 0); return () => window.clearTimeout(timer); }, [expired]);
+  useEffect(() => { if (!expired || !completion) return; const raw = window.sessionStorage.getItem(storageKey); const saved = parseCheckInCompletion(raw); if (saved?.token === completion.token && saved.expiresAt === completion.expiresAt) removeExpiredCheckInCompletion(window.sessionStorage, raw, Date.now()); const timer = window.setTimeout(() => setMessage("Your check-in time expired. Please scan the current code on the event display to begin again."), 0); return () => window.clearTimeout(timer); }, [expired, completion]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (!completion || expired) return; setBusy(true); setMessage("");

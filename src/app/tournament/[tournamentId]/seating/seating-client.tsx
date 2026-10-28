@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +18,7 @@ function valid(value: unknown): value is Envelope {
   return Object.keys(item).length === 2 && ((item.kind === "check-in" && isCheckInRequest(item.request)) || (item.kind === "publish-initial-seating" && isInitialSeatingRequest(item.request)) || (item.kind === "registration-close" && isRegistrationCloseRequest(item.request)));
 }
 function get(key: string) { try { const value: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null"); return valid(value) ? value : null; } catch { return null; } }
-function put(key: string, value: Envelope) { try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function put(key: string, value: Envelope) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clear(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* database receipt remains authoritative */ } }
 function seats(tables: number, seatsPerTable: number) { return Array.from({ length: tables }, (_, table) => Array.from({ length: seatsPerTable }, (_, seat) => `${String.fromCharCode(65 + table)}-${seat + 1}`)).flat(); }
 function draft(checkIn: SeatingCheckIn[], tables: number, seatsPerTable: number) { return checkIn.filter((entry) => entry.state === "checked_in").map((entry, index) => ({ rosterEntryId: entry.rosterEntryId, tableSeat: seats(tables, seatsPerTable)[index] ?? "" })); }

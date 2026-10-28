@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -147,7 +148,7 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
     if (!isSettlementDraftRequest(request)) { setMessage("The retained draft request could not be validated and remains saved."); return; }
     flight.current = true;
     try {
-      const rawAtSend = JSON.stringify(envelope); if (sessionStorage.getItem(storageKey) !== null && sessionStorage.getItem(storageKey) !== rawAtSend) { setMessage("Another settlement request is retained. Review it before starting a new save."); return; } sessionStorage.setItem(storageKey, rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
+      const rawAtSend = JSON.stringify(envelope); if (sessionStorage.getItem(storageKey) !== null && sessionStorage.getItem(storageKey) !== rawAtSend) { setMessage("Another settlement request is retained. Review it before starting a new save."); return; } setAppRecoveryItem(sessionStorage, storageKey, rawAtSend); setLocked(envelope); setBusy(true); setMessage(null);
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${eventId}/settlement-draft`, {
         method: "POST", headers: { "content-type": "application/json" }, credentials: "same-origin", cache: "no-store", body: JSON.stringify(request),
       });

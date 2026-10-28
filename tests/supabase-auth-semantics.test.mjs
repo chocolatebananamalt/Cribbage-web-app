@@ -95,17 +95,19 @@ test('browser CSP allow-list accepts only one exact configured Supabase origin',
   }
 });
 
-test('callback only accepts same-origin relative redirect paths', () => {
+test('callback defers exchange to coordinated POST and validates redirect paths centrally', () => {
   const route = read('src/app/auth/callback/route.ts');
-  assert.match(route, /startsWith\("\/\/"\)/);
-  assert.match(route, /startsWith\("\/"\)/);
-  assert.match(route, /exchangeCodeForSession/);
-  assert.match(route, /response\.headers\.set\("cache-control", "private, no-store"\)/);
+  const core = read('src/lib/auth/recovery-auth.ts');
+  assert.match(route, /safeAuthNext/);
+  assert.match(core, /startsWith\("\/\/"\)/);
+  assert.match(core, /startsWith\("\/"\)/);
+  assert.doesNotMatch(route, /exchangeCodeForSession/);
+  assert.match(read('src/lib/auth/recovery-auth-route.ts'), /exchangeCodeForSession/);
+  assert.match(route, /recoveryAuthPost\(request, "code"\)/);
+  assert.match(route, /target.hash/);
+  assert.match(route, /cache-control", "private, no-store/);
+  assert.match(route, /referrer-policy", "no-referrer/);
   assert.match(route, /error=missing_code/);
-  assert.doesNotMatch(route, /error=missing_code";\s*return NextResponse\.redirect\(destination\)/);
-  assert.doesNotMatch(route, /error=callback_failed";\s*return NextResponse\.redirect\(destination\)/);
-  assert.match(route, /error=missing_code";\s*return privateRedirect\(destination\)/);
-  assert.match(route, /error=callback_failed";\s*return privateRedirect\(destination\)/);
 });
 
 test('sign-in uses publishable browser auth and keeps the prototype route available', () => {
@@ -119,7 +121,8 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   // single point of failure: when mail is throttled or filtered, a director at
   // the desk has no way in at all. Account creation by password stays banned.
   assert.doesNotMatch(form, /signUp\s*\(/);
-  assert.match(form, /signInWithPassword/);
+  assert.match(form, /submitCoordinatedAuthentication/);
+  assert.match(read('src/lib/auth/recovery-auth-route.ts'), /signInWithPassword/);
   assert.match(form, /shouldCreateUser: true/);
   const bootstrap = read('database/migrations/0067_passwordless_profile_bootstrap.sql');
   assert.match(bootstrap, /after insert on auth\.users/);
@@ -259,7 +262,7 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);
   assert.equal(check('/api/v2/games/example/submissions', 'POST', 'https://other.example'), false);
-  const request = (origin, fetchSite = null) => ({ headers: new Headers([["origin", origin], ...(fetchSite ? [["sec-fetch-site", fetchSite]] : [])]), nextUrl: { origin: requestOrigin } });
+  const request = (origin, fetchSite = null) => new Request(requestOrigin + '/api/v1/fixture', { headers: new Headers([["origin", origin], ...(fetchSite ? [["sec-fetch-site", fetchSite]] : [])]) });
   assert.equal(isSameOriginRequest(request(requestOrigin)), true);
   assert.equal(isSameOriginRequest(request(requestOrigin, 'same-origin')), true);
   assert.equal(isSameOriginRequest(request(requestOrigin, 'cross-site')), false);
@@ -314,9 +317,9 @@ test('protected screens offer a recovery-preserving sign-out and a safe clear bo
   assert.match(signOut, /isSameOriginRequest\(request\)/);
   assert.match(signOut, /private, no-store/);
   assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
-  assert.match(signOut, /x-acc-clear-safe-app-data/);
-  assert.match(signOut, /Clear-Site-Data/);
-  assert.match(signOut, /"cache", "storage"/);
+  assert.doesNotMatch(signOut, /headers\.set\("Clear-Site-Data"/);
+  assert.match(control, /beginSafeRecoverySwitch/);
+  assert.match(control, /clearRecoveryStorageOwner/);
   assert.match(signOut, /cache-control/);
   assert.doesNotMatch(signOut, /source\.headers\.forEach/);
   assert.match(storage, /"acc-score:"/);
@@ -385,16 +388,18 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
     removeItem(key) { values.delete(key); },
   };
   const envelope = { version: 1, kind: 'submission', actorId: 'actor-1', tournamentId: 'tournament-1', gameId: 'game-1', playerSide: 'a', submissionId: 'submission-1', idempotencyKey: 'operation-1', submissionSlot: 1, winnerSide: 'a', margin: 31 };
-  assert.equal(retry.writePendingScoreSubmission(storage, envelope), true);
+  assert.equal(retry.writePendingScoreSubmission(storage, envelope), false, 'uncoordinated writers fail closed; happy path is exercised in the real browser');
+  assert.equal(values.size, 0);
+  values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify(envelope));
   assert.deepEqual(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), envelope);
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
   values.set(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a'), JSON.stringify(envelope));
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
-  assert.equal(values.has(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a')), false);
+  assert.equal(values.has(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a')), true, 'unknown ownership is preserved, not erased');
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'b'), null);
   values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), null);
-  assert.equal(values.size, 0);
+  assert.equal(values.size, 2, 'malformed recovery stays retained and blocks switching');
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, 'different-server-submission'), { action: 'clear' });
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, null), { action: 'retry', envelope });
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned' }, 'game-1', 'submission'), true);
@@ -420,10 +425,11 @@ test('route callback propagates refreshed cookies and membership function is nar
   const server = read('src/lib/supabase/server.ts');
   const migration = read('database/migrations/0002_pilot_membership_authorization.sql');
   const envExample = read('.env.example');
-  assert.match(callback, /createRouteClient/);
-  assert.match(callback, /withCookies/);
-  assert.match(callback, /source\.headers\.forEach/);
-  assert.match(callback, /name\.toLowerCase\(\) !== "set-cookie"/);
+  const isolated = read('src/lib/auth/recovery-auth-route.ts');
+  assert.match(callback, /recoveryAuthPost/);
+  assert.match(isolated, /createRouteClient/);
+  assert.match(isolated, /result\.accepted && cookieResponse/);
+  assert.match(isolated, /source\.cookies\.getAll/);
   assert.match(callback, /private, no-store/);
   assert.match(server, /const response = new NextResponse\(null\)/);
   assert.doesNotMatch(server, /NextResponse\.next/);

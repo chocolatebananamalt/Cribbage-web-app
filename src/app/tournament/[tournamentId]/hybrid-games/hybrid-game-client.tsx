@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PrivatePaperCardPhoto } from "../../../../components/private-paper-card-photo";
@@ -8,7 +9,7 @@ import type { HybridGameItem } from "../../../../lib/hybrid-games/workspace";
 
 const createKey = (actor: string, game: string) => "hybrid-game-create:" + actor + ":" + game;
 const reviewKey = (actor: string, id: string) => "hybrid-game-review:" + actor + ":" + id;
-function save(key: string, value: unknown) { try { sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function save(key: string, value: unknown) { try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clear(key: string) { try { sessionStorage.removeItem(key); } catch { /* Server receipt remains authoritative. */ } }
 async function reconcile(tournamentId: string, operationType: "create_hybrid_digital_paper_case_v1" | "review_hybrid_digital_paper_case_v1", targetId: string, idempotencyKey: string) {
   const response = await fetch("/api/v1/tournaments/" + encodeURIComponent(tournamentId) + "/hybrid-game-operations/reconciliation", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ operationType, targetId, idempotencyKey }) });

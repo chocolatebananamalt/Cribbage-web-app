@@ -63,7 +63,7 @@ test("director editor preserves exact retry payload including MRP claims and res
   assert.match(client, /type Envelope = SettlementDraftRequest/);
   assert.match(client, /requestFromEnvelope/);
   assert.match(client, /mrpClaims: parsedMrpClaims/);
-  assert.match(client, /const rawAtSend = JSON\.stringify\(envelope\)[\s\S]*sessionStorage\.setItem\(storageKey, rawAtSend\)/);
+  assert.match(client, /const rawAtSend = JSON\.stringify\(envelope\)[\s\S]*setAppRecoveryItem\(sessionStorage, storageKey, rawAtSend\)/);
   assert.match(client, /body: JSON\.stringify\(request\)/);
   assert.match(client, /disabled=\{busy \|\| storageBlocked \|\| !!locked\}/);
   assert.ok(client.includes("if (locked) { await transmit(locked); return; }") && client.indexOf("if (locked) { await transmit(locked); return; }") < client.indexOf("if (!workspace.playoffResult)"), "exact retry precedes fresh workspace validation");

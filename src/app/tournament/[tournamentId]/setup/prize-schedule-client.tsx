@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useEffect, useRef, useState } from "react";
 import { directorPrizeScheduleVersion, type DirectorPrizeScheduleV1 } from "../../../../lib/results/prize-schedule";
 
@@ -58,7 +59,7 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
     try {
       if (sessionStorage.getItem(key) !== retained.current) { setBlocked(true); setMessage("Another request changed recovery storage. It has not been overwritten."); return; }
       const operation = pending ?? { kind: "prize-schedule" as const, operationId: crypto.randomUUID(), request }; const raw = retained.current ?? JSON.stringify(operation);
-      if (!pending) sessionStorage.setItem(key, raw); retained.current = raw; setPending(operation); setMessage("Saving the exact schedule request.");
+      if (!pending) setAppRecoveryItem(sessionStorage, key, raw); retained.current = raw; setPending(operation); setMessage("Saving the exact schedule request.");
       const response = await fetch(endpoint, { method: "POST", cache: "no-store", credentials: "same-origin", headers: { "content-type": "application/json", "x-idempotency-key": operation.operationId }, body: JSON.stringify(operation.request) }); const result: unknown = await response.json().catch(() => null);
       if (sessionStorage.getItem(key) !== raw) { setBlocked(true); setMessage("The retained request changed while the write was pending. The newer record remains saved."); return; }
       const accepted = response.ok && outcome(result, tournamentId, clientRowId) === "saved", rejected = response.status === 409 && outcome(result, tournamentId, clientRowId) === "rejected";
