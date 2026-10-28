@@ -54,6 +54,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
           {isDirector ? <section className="workspace-phase"><h2>2. Registration and payments</h2><p>Review registrations, maintain the roster, and record payment evidence.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration and roster</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Payments and expenses</Link>
+              <Link className="guide-link" href={`/tournament/${tournamentId}/q-pools`}>Q Pool membership and receipt allocation</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link>
           </section> : null}
           {isDirector ? <section className="workspace-phase"><h2>3. Check-in and seating</h2><p>Open event check-in, manage desk requests, publish seating, and schedule play.</p>

@@ -208,3 +208,7 @@ The detailed requirements and release gates remain in
 `docs/product/production-requirements.md`, `docs/quality/`, and
 `docs/operations/LAUNCH_PLAN.md`. This document is their plain-language
 execution tracker.
+
+## 2026-10-28 approved local Q Pool foundation
+
+Owner-approved app defaults: explicit opt-in to exact configured pool versions; named receipt allocation; full base/pool payment for paid-entry status; ordinary entries lock at Start Play; later director corrections require a reason and existing pre-play evidence. Local implementation is bounded to a single activated Standard Main without Side Pool/other-event cash domains. Existing immutable histories stay intact; no payment or payout is created by election/allocation. Automatic Q payouts, canonical Q settlement, late first opt-ins/new payment sources, multi-event allocation and CSV migration remain separate gates. Evidence: docs/quality/2026-10-28-q-pool-membership-local.md. No staging/production rollout authorized by this local milestone.

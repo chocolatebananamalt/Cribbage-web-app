@@ -135,6 +135,16 @@
       "path": "src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx",
       "calls": 1,
       "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "calls": 1,
+      "kind": "exact Q Pool request envelope"
+    },
+    {
+      "path": "src/lib/paper-games/photo-retry-envelope.ts",
+      "calls": 1,
+      "kind": "exact private photo metadata request; no image bytes"
     }
   ],
   "asynchronousWriters": [

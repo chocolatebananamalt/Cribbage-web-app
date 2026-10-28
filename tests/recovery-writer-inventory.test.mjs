@@ -24,7 +24,7 @@ test('new direct session-storage writers cannot bypass the inventory',()=>{
   }
 });
 test('all retained prefixes block switching and targeted cleanup leaves unrelated records intact',()=>{
-  const data=new Map([['paper-official-identity:fixture','pending'],['event-dispute:open:fixture','pending'],['hybrid-game-review:fixture','pending'],['acc:event-check-in:completion','pending'],['unrelated-site-preference','keep']]);
+  const data=new Map([['paper-official-identity:fixture','pending'],['event-dispute:open:fixture','pending'],['hybrid-game-review:fixture','pending'],['acc:event-check-in:completion','pending'],['payment-obligation:q-pool:actor:tournament','pending'],['unrelated-site-preference','keep']]);
   const storage={get length(){return data.size},key:i=>[...data.keys()][i]??null,removeItem:key=>data.delete(key)};
-  assert.equal(countAppSessionStorageRecords(storage),4);clearAppSessionStorage(storage);assert.deepEqual([...data],[['unrelated-site-preference','keep']]);assert.equal(isAppRecoveryStorageKey('unregistered:new'),false);
+  assert.equal(countAppSessionStorageRecords(storage),5);clearAppSessionStorage(storage);assert.deepEqual([...data],[['unrelated-site-preference','keep']]);assert.equal(isAppRecoveryStorageKey('unregistered:new'),false);
 });
