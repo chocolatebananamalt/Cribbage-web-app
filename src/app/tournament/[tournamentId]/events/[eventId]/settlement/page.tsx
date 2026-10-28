@@ -6,6 +6,8 @@ import { getPlayoffPlacementWorkspace } from "../../../../../../lib/api/playoff-
 import { getSettlementWorkspace } from "../../../../../../lib/api/settlement-draft";
 import { getManualSettlementFinalizationWorkspace } from "../../../../../../lib/api/settlement-finalization";
 import { getSettlementV5Workspace } from "../../../../../../lib/api/settlement-v5";
+import { listPrizeSchedules } from "../../../../../../lib/api/prize-schedule";
+import { settlementEntryRoute } from "../../../../../../lib/results/settlement-navigation";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
@@ -23,11 +25,19 @@ export default async function SettlementPage({ params }: { params: Promise<{ tou
   const admin = createServerOnlyAdminClient();
   const settlementV5 = await getSettlementV5Workspace(admin, access.user.id, tournamentId, eventId);
   if (settlementV5?.draft || settlementV5?.sources.some((source) => source.kind === "playoff_outcome_v3")) redirect(`/tournament/${tournamentId}/events/${eventId}/settlement-v5`);
-  const [workspace, playoffWorkspace, finalizationWorkspace] = await Promise.all([
+  const [workspace, playoffWorkspace, finalizationWorkspace, schedules] = await Promise.all([
     getSettlementWorkspace(admin, access.user.id, tournamentId, eventId),
     getPlayoffPlacementWorkspace(admin, access.user.id, tournamentId, eventId),
     getManualSettlementFinalizationWorkspace(admin, access.user.id, tournamentId, eventId),
+    listPrizeSchedules(admin, access.user.id, tournamentId),
   ]);
+  const route = settlementEntryRoute({
+    hasVersionedDraft: false, hasCanonicalOutcome: false,
+    currentStructuredSchedule: !!schedules?.some(s => s.eventId === eventId && s.settingsCurrent && s.activated && s.versions.length > 0),
+    legacyReadAvailable: !!workspace && !!playoffWorkspace && !!finalizationWorkspace,
+    hasLegacyHistory: !!workspace?.draft || !!playoffWorkspace?.playoffResult || !!finalizationWorkspace?.draft || !!finalizationWorkspace?.finalization,
+  });
+  if (route === "playoff-outcomes") redirect(`/tournament/${tournamentId}/events/${eventId}/playoff-outcomes`);
   if (!workspace || !playoffWorkspace || !finalizationWorkspace) notFound();
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="settlement-title">
     <p className="eyebrow">PRIVATE RESULTS AND FINANCE</p>

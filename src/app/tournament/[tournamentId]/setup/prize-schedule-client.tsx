@@ -2,6 +2,7 @@
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useEffect, useRef, useState } from "react";
 import { directorPrizeScheduleVersion, type DirectorPrizeScheduleV1 } from "../../../../lib/results/prize-schedule";
+import { formatUsd, parseUsdMinor } from "../../../../lib/money";
 
 type Props = { actorId: string; tournamentId: string; clientRowId: string; entryFeeCents: number; disabled?: boolean; onBlockingChange?: (blocking: boolean) => void };
 import { isPrizeScheduleRequest, isPrizeScheduleWorkspace, isPrizeScheduleSaved, isRejectedPrizeSchedule, isPrizeScheduleReconciliation, type PrizeScheduleRequest, type PrizeScheduleWorkspace } from "../../../../lib/api/prize-schedule";
@@ -14,7 +15,6 @@ function validEnvelope(x: unknown): x is Envelope { return record(x) && exact(x,
 function outcome(x: unknown, tournamentId: string, clientRowId: string): "saved" | "rejected" | null {
   return isPrizeScheduleSaved(x, tournamentId, clientRowId) ? "saved" : isRejectedPrizeSchedule(x, clientRowId) ? "rejected" : null;
 }
-const money = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n / 100);
 export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId, entryFeeCents, disabled = false, onBlockingChange }: Props) {
   const endpoint = `/api/v1/tournaments/${tournamentId}/setup/prize-schedules/${clientRowId}`, key = `prize-schedule:${actorId}:${tournamentId}:${clientRowId}`;
   const retained = useRef<string | null>(null), flight = useRef(false), baseline = useRef(JSON.stringify({ weights: ["", "", ""], source: "", reason: "", reviewed: false }));
@@ -69,8 +69,8 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
     finally { flight.current = false; setBusy(false); }
   }
   const locked = busy || blocked || !!pending || disabled || !workspace;
-  const nums = weights.map(Number), count = Number(entries), cost = Number(expenses), gross = count * entryFeeCents, budget = gross - cost;
-  const canPreview = entries !== "" && expenses !== "" && /^\d+$/.test(entries) && /^\d+$/.test(expenses) && whole(count) && whole(cost) && whole(gross) && budget > 0 && weights.every(w => /^[1-9]\d*$/.test(w)) && nums.every(n => whole(n, 1));
+  const nums = weights.map(Number), count = Number(entries), expenseMinor = parseUsdMinor(expenses, { allowZero: true }), gross = count * entryFeeCents, cost = expenseMinor ?? 0, budget = gross - cost;
+  const canPreview = entries !== "" && expenses !== "" && /^\d+$/.test(entries) && whole(count) && expenseMinor !== null && whole(gross) && budget > 0 && weights.every(w => /^[1-9]\d*$/.test(w)) && nums.every(n => whole(n, 1));
   let awards: number[] | null = null;
   if (canPreview) { const denominator = BigInt(nums[0]) + BigInt(nums[1]) + BigInt(2) * BigInt(nums[2]); if (denominator <= BigInt(Number.MAX_SAFE_INTEGER)) { const b = BigInt(budget); const a = nums.map(n => Number(b * BigInt(n) / denominator)); a[0] += budget - a[0] - a[1] - 2 * a[2]; if (a.every(n => n > 0)) awards = a; } }
   return <section className="policy-settings" aria-labelledby={`prize-schedule-${clientRowId}`}><h3 id={`prize-schedule-${clientRowId}`}>Main prize schedule</h3><p>Choose and post the rule before qualifying ends. A reviewed revision is allowed only before qualification is finalized and before playoff or settlement records exist; later weight changes are blocked.</p>
@@ -78,7 +78,7 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
     {workspace && <><p>Current version: {workspace.currentVersion}. {workspace.activated ? "Event activated; the server determines whether revisions remain open." : "Event not yet activated."} {!workspace.settingsCurrent && "Setup settings have changed; review and save a revised schedule before activation."}</p>{workspace.versions.length > 0 && <details><summary>Saved schedule versions</summary>{workspace.versions.map(v => <div key={v.scheduleId}><p>Version {v.version} · {v.recordedAt}</p><p>Weights: {v.schedule.cohorts.map(c => c.weight).join(" / ")}; source: {v.schedule.sourceReference}; reason: {v.reason}</p></div>)}</details>}</>}
     <p>Schedule source and reason can appear in a player-visible summary. Do not include private information.</p><fieldset disabled={locked}><legend>Director selection</legend>{["1st place weight", "2nd place weight", "3rd–4th per-person weight"].map((label, i) => <label key={label}>{label}<input type="number" min="1" step="1" value={weights[i]} onChange={e => setWeights(weights.map((w, j) => i === j ? e.target.value : w))} /></label>)}<label>Schedule source reference<input maxLength={500} value={source} onChange={e => setSource(e.target.value)} /></label><label>Reason for schedule<input maxLength={500} value={reason} onChange={e => setReason(e.target.value)} /></label><label><input type="checkbox" checked={reviewed} onChange={e => setReviewed(e.target.checked)} />I reviewed this schedule and its source</label></fieldset>
     <button type="button" className="primary" disabled={busy || blocked || (!pending && (disabled || !workspace))} onClick={() => void save()}>{busy ? "Loading or saving schedule" : pending ? "Retry exact schedule" : "Save prize schedule"}</button>
-    <fieldset><legend>Estimated prize budget preview</legend><p>Local assumptions only; this preview is not final or authoritative. Enter estimated entry count and total expenses in cents.</p><label>Estimated entry count<input type="number" min="0" step="1" value={entries} onChange={e => setEntries(e.target.value)} /></label><label>Estimated total expenses (cents)<input type="number" min="0" step="1" value={expenses} onChange={e => setExpenses(e.target.value)} /></label>{awards && <><p>Estimated gross {money(gross)}, expenses {money(cost)}, prize budget {money(budget)}.</p><p>Estimated total awards: 1st {money(awards[0])}; 2nd {money(awards[1])}; 3rd and 4th {money(awards[2])} each. Each weighted share is rounded down; remaining cents go to the champion.</p></>}</fieldset>
+    <fieldset><legend>Estimated prize budget preview</legend><p>Local assumptions only; this preview is not final or authoritative. Enter estimated entry count and total expenses in dollars.</p><label>Estimated entry count<input type="number" min="0" step="1" value={entries} onChange={e => setEntries(e.target.value)} /></label><label>Estimated total expenses (USD)<input type="text" inputMode="decimal" value={expenses} onChange={e => setExpenses(e.target.value)} aria-invalid={expenses !== "" && expenseMinor === null} /></label>{expenses !== "" && expenseMinor === null && <p role="alert">Enter a valid non-negative dollar amount with up to two decimal places.</p>}{awards && <><p>Estimated gross {formatUsd(gross)}, expenses {formatUsd(cost)}, prize budget {formatUsd(budget)}.</p><p>Estimated total awards: 1st {formatUsd(awards[0])}; 2nd {formatUsd(awards[1])}; 3rd and 4th {formatUsd(awards[2])} each. Each weighted share is rounded down; remaining cents go to the champion.</p></>}</fieldset>
   </section>;
 }
 

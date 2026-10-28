@@ -1,5 +1,9 @@
 # ACC Tournament Desk — Working Outline
 
+## 2026-10-28 current local checkpoint
+
+Funded synthetic staging rehearsal is finalized and preserved. Local repair makes money displays/inputs dollar-based without changing integer-cent records, clarifies exact saved schedule references, and routes new structured events to canonical playoff outcomes while preserving legacy history. Verification and separate publication boundary: [currency repair](../quality/2026-10-28-usd-display-local-repair.md). Next proposed bounded development is explicit Q Pool membership/payment allocation, with sourced eligibility/distribution fixtures before automatic payouts; photo/OCR and interrupted multi-device/byes remain separate acceptance gates. Do not infer Q Pool election from recorded dollars or reuse Side Pool payout estimates as Q Pool authority.
+
 **Last updated:** 2026-09-17
 
 > **October standard correction (approved 2026-09-14):** October is not

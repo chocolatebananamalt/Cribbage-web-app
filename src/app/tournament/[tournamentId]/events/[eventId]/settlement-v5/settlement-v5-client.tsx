@@ -10,6 +10,8 @@ import {
 } from "../../../../../../lib/api/settlement-v5";
 import { isPrizeScheduleResolution, type PrizeScheduleResolution } from "../../../../../../lib/api/prize-schedule";
 import { isUuid } from "../../../../../../lib/api/validation";
+import { formatUsd } from "../../../../../../lib/money";
+import { UsdAmountInput } from "../../../../../../components/usd-amount-input";
 
 type Request = SettlementV5Request | SettlementV5FinalizationRequest;
 type Kind = "settlement-v5" | "settlement-v5-finalization";
@@ -162,26 +164,29 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
     <h2 id="settlement-review-title">Versioned settlement review</h2>
     <p>This records explicit financial claims and server-derived MRP evidence. A structured schedule can calculate proposed total awards from current evidence; it does not pay prizes, record a payment, or submit to the ACC. Q Pool claims are not supported in this workflow.</p>
     {workspace.blockers.length ? <div role="alert"><p>Known preflight blockers:</p><ul>{workspace.blockers.map(code => <li key={code}>{code.replaceAll("_", " ")}</li>)}</ul></div> : null}
-    <p>Sanctioning assessment: {workspace.sanctioningAssessmentMinor === null ? "source evidence unavailable" : `${workspace.sanctioningAssessmentMinor} USD cents`}. An assessment is not evidence of payment. Binding an existing expense creates no new expense or payment.</p>
+    <p>Sanctioning assessment: {workspace.sanctioningAssessmentMinor === null ? "source evidence unavailable" : formatUsd(workspace.sanctioningAssessmentMinor)}. An assessment is not evidence of payment. Binding an existing expense creates no new expense or payment.</p>
     {scheduleVersionId ? <section className="correction-item" aria-label="Saved schedule calculation"><h3>Saved director-selected schedule</h3><p>New claims must match the explicitly saved schedule version. The server rechecks entries, expenses, qualifiers and equal-band awards; a mismatch is rejected.</p>
       <button type="button" disabled={editingLocked || resolutionBusy} onClick={() => void readCalculatedAwards()}>{resolutionBusy ? "Reading calculated awards…" : "Read calculated awards"}</button><p role="status">{resolutionMessage}</p>
-      {resolution?.status === "available" ? <><p>Available prizes: {resolution.prizeBudgetMinor} USD cents. Remainder assigned to champion: {resolution.roundingRemainderMinor} cents.</p><ul>{resolution.awards.map(a => <li key={a.participantId}>Band {a.bandStart === a.bandEnd ? a.bandStart : `${a.bandStart}–${a.bandEnd}`}: {a.totalAwardMinor} USD cents total award.</li>)}</ul><button type="button" disabled={editingLocked || resolutionBusy || resolution.scheduleVersionId !== scheduleVersionId || resolutionSource !== JSON.stringify(effectiveRequest.source)} onClick={useCalculatedAwards}>Use these total awards in draft</button></> : null}
+      {resolution?.status === "available" ? <><p>Available prizes: {formatUsd(resolution.prizeBudgetMinor)}. Remainder assigned to champion: {formatUsd(resolution.roundingRemainderMinor)}.</p><ul>{resolution.awards.map(a => <li key={a.participantId}>Band {a.bandStart === a.bandEnd ? a.bandStart : `${a.bandStart}–${a.bandEnd}`}: {formatUsd(a.totalAwardMinor)} total award.</li>)}</ul><button type="button" disabled={editingLocked || resolutionBusy || resolution.scheduleVersionId !== scheduleVersionId || resolutionSource !== JSON.stringify(effectiveRequest.source)} onClick={useCalculatedAwards}>Use these total awards in draft</button></> : null}
     </section> : null}
     <section className="correction-item"><h3>Authoritative ledger</h3>
-      <p>Current receipts: {workspace.ledgerSnapshot.paymentCount}; total {workspace.ledgerSnapshot.paymentTotalMinor} USD cents. Current recorded expenses: {workspace.ledgerSnapshot.expenseCount}; total {workspace.ledgerSnapshot.expenseTotalMinor} USD cents.</p>
-      {current ? <p>Saved draft snapshot: receipts {current.ledgerSnapshot.paymentCount}, {current.ledgerSnapshot.paymentTotalMinor} USD cents; expenses {current.ledgerSnapshot.expenseCount}, {current.ledgerSnapshot.expenseTotalMinor} USD cents.</p> : null}
+      <p>Current receipts: {workspace.ledgerSnapshot.paymentCount}; total {formatUsd(workspace.ledgerSnapshot.paymentTotalMinor)}. Current recorded expenses: {workspace.ledgerSnapshot.expenseCount}; total {formatUsd(workspace.ledgerSnapshot.expenseTotalMinor)}.</p>
+      {current ? <p>Saved draft snapshot: receipts {current.ledgerSnapshot.paymentCount}, {formatUsd(current.ledgerSnapshot.paymentTotalMinor)}; expenses {current.ledgerSnapshot.expenseCount}, {formatUsd(current.ledgerSnapshot.expenseTotalMinor)}.</p> : null}
       <LinkToLedger tournamentId={tournamentId} />
-      <ul>{workspace.expenseEvidence.map(evidence => <li key={evidence.expenseEventId}>{evidence.description}: {evidence.amountMinor} {evidence.currencyCode} cents — {evidence.expenseEventId}</li>)}</ul>
+      <ul>{workspace.expenseEvidence.map(evidence => <li key={evidence.expenseEventId}>{evidence.description}: {formatUsd(evidence.amountMinor)} — {evidence.expenseEventId}</li>)}</ul>
     </section>
     <fieldset disabled={editingLocked}><legend>Draft financial claims</legend>
       <label>Playoff evidence<select value={effectiveRequest.source.resultId} onChange={event => { const selected = workspace.sources.find(source => source.resultId === event.target.value); if (selected) patch({ source: { kind: selected.kind, resultId: selected.resultId, qualificationResultVersionId: selected.qualificationResultVersionId } }); }}><option value="">Choose recorded evidence</option>{workspace.sources.map(source => <option key={source.resultId} value={source.resultId}>{source.label}</option>)}</select></label>
-      {(["eventIncomeMinor", "eventExpenseMinor", "retainedBalanceMinor"] as const).map(field => <label key={field}>{field === "eventIncomeMinor" ? "Event income allocation" : field === "eventExpenseMinor" ? "Event expense allocation" : "Retained balance"} (USD cents)<input type="number" min="0" step="1" value={effectiveRequest[field]} onChange={event => patch({ [field]: Number(event.target.value) })} /></label>)}
-      <label>Existing sanctioning expense evidence<select value={effectiveRequest.sanctioningExpenseEventId ?? ""} onChange={event => patch({ sanctioningExpenseEventId: event.target.value || null })}><option value="">No expense bound</option>{workspace.expenseEvidence.map(evidence => <option key={evidence.expenseEventId} value={evidence.expenseEventId}>{evidence.description} — {evidence.amountMinor} USD cents</option>)}</select></label>
+      {(["eventIncomeMinor", "eventExpenseMinor", "retainedBalanceMinor"] as const).map(field => {
+        const label = `${field === "eventIncomeMinor" ? "Event income allocation" : field === "eventExpenseMinor" ? "Event expense allocation" : "Retained balance"} (USD $)`;
+        return <label key={field}>{label}<UsdAmountInput label={label} value={effectiveRequest[field]} onChange={minor => patch({ [field]: minor })} /></label>;
+      })}
+      <label>Existing sanctioning expense evidence<select value={effectiveRequest.sanctioningExpenseEventId ?? ""} onChange={event => patch({ sanctioningExpenseEventId: event.target.value || null })}><option value="">No expense bound</option>{workspace.expenseEvidence.map(evidence => <option key={evidence.expenseEventId} value={evidence.expenseEventId}>{evidence.description} — {formatUsd(evidence.amountMinor)}</option>)}</select></label>
       <label>Reviewed source reference<input maxLength={500} value={effectiveRequest.officialSourceReference} onChange={event => patch({ officialSourceReference: event.target.value })} /></label>
       <p>Prize order is optional financial claim data, separate from the ACC elimination cohort. No third/fourth order is inferred.</p>
       {effectiveRequest.prizeClaims.map((claim, index) => <div className="correction-item" key={index}>
         <label>Qualifier participant ID<input value={claim.participantId} onChange={event => updateClaim(index, "participantId", event.target.value)} /></label>
-        <label>Claim amount (USD cents)<input type="number" min="0" step="1" value={claim.amountMinor} onChange={event => updateClaim(index, "amountMinor", Number(event.target.value))} /></label>
+        <label>Claim amount (USD $)<UsdAmountInput label="Claim amount (USD $)" value={claim.amountMinor} onChange={minor => updateClaim(index, "amountMinor", minor)} /></label>
         <label>Optional prize order<input type="number" min="1" max="256" value={claim.prizeOrder ?? ""} onChange={event => updateClaim(index, "prizeOrder", event.target.value ? Number(event.target.value) : null)} /></label>
         <label>Reviewed claim note<input maxLength={500} value={claim.note} onChange={event => updateClaim(index, "note", event.target.value)} /></label>
         <button type="button" onClick={() => patch({ prizeClaims: effectiveRequest.prizeClaims.filter((_, position) => position !== index) })}>Remove claim</button>

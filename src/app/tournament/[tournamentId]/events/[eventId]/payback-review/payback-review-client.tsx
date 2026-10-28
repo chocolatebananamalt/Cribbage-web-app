@@ -13,16 +13,16 @@ function envelopeValid(v: unknown): v is Envelope {
   const item = v as Record<string, unknown>;
   return Object.keys(item).sort().join(",") === "kind,operationId,request" && item.kind === "payback-review" && isUuid(item.operationId) && isPaybackReviewRequest(item.request);
 }
-function initial(w: PaybackReviewWorkspace, d: Draft): PaybackReviewRequest | null {
+function initial(w: PaybackReviewWorkspace, d: Draft, savedScheduleReference?: string): PaybackReviewRequest | null {
   if (!d) return null;
   if (w.review?.draftId === d.draftId && w.review.draftVersion === d.version) return { ...w.review.request, expectedVersion: w.currentReviewVersion };
-  return { draftId: d.draftId, draftVersion: d.version, expectedVersion: w.currentReviewVersion, scheduleKind: "director_selected", amountBasis: "total_award", scheduleReference: "", sourceReference: "", eligibilityEvidence: [], expenseClassifications: [] };
+  return { draftId: d.draftId, draftVersion: d.version, expectedVersion: w.currentReviewVersion, scheduleKind: "director_selected", amountBasis: "total_award", scheduleReference: savedScheduleReference ?? "", sourceReference: "", eligibilityEvidence: [], expenseClassifications: [] };
 }
-export default function PaybackReviewClient({ actorId, tournamentId, eventId, workspace, draft }: { actorId: string; tournamentId: string; eventId: string; workspace: PaybackReviewWorkspace; draft: Draft }) {
+export default function PaybackReviewClient({ actorId, tournamentId, eventId, workspace, draft, savedScheduleReference }: { actorId: string; tournamentId: string; eventId: string; workspace: PaybackReviewWorkspace; draft: Draft; savedScheduleReference?: string }) {
   const router = useRouter(), flight = useRef(false), retained = useRef<string | null>(null);
   const key = `payback-review:${actorId}:${tournamentId}:${eventId}`;
   const endpoint = `/api/v1/tournaments/${tournamentId}/events/${eventId}/payback-review`;
-  const [request, setRequest] = useState(() => initial(workspace, draft));
+  const [request, setRequest] = useState(() => initial(workspace, draft, savedScheduleReference));
   const [pending, setPending] = useState<Envelope | null>(null);
   const [busy, setBusy] = useState(true), [blocked, setBlocked] = useState(false), [completed, setCompleted] = useState(false);
   const [message, setMessage] = useState("Checking retained payback review requests.");
@@ -95,7 +95,8 @@ export default function PaybackReviewClient({ actorId, tournamentId, eventId, wo
       <p>Server-derived gross entry income: {workspace.scope.grossEntryIncomeMinor === null ? "unavailable" : money(workspace.scope.grossEntryIncomeMinor)}.</p>
       {effective ? <fieldset disabled={locked}><legend>Director-selected prize schedule and evidence</legend>
         <p>No arbitrary split, percentage, payout or award amount is prefilled. Equal finishing bands require equal total awards in this supported workflow.</p>
-        <label>Schedule reference<input maxLength={500} value={effective.scheduleReference} onChange={e => patch({ scheduleReference: e.target.value })} /></label>
+        <label>Schedule reference<input maxLength={500} readOnly={!!savedScheduleReference} value={effective.scheduleReference} onChange={e => patch({ scheduleReference: e.target.value })} /></label>
+        {savedScheduleReference ? <><p className="field-help">This reference must exactly match the saved schedule bound to this draft. It is filled from that record; the official source below is reviewed separately.</p>{effective.scheduleReference !== savedScheduleReference ? <><p role="alert">This review uses a different schedule reference. Retained requests remain unchanged until their outcome is reconciled.</p><button type="button" disabled={locked} onClick={() => patch({ scheduleReference: savedScheduleReference })}>Use the saved schedule reference</button></> : null}</> : null}
         <label>Official source reference<input maxLength={500} value={effective.sourceReference} onChange={e => patch({ sourceReference: e.target.value })} /></label>
         <fieldset><legend>Eligibility evidence</legend>{workspace.scope.qualifiers.map(q => {
           const item = effective.eligibilityEvidence.find(v => v.participantId === q.participantId);

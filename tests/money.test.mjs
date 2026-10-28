@@ -1,7 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { formatUsdInput, parseUsdMinor } from "../src/lib/money.ts";
+import { formatUsd, formatUsdInput, parseUsdMinor } from "../src/lib/money.ts";
+
+test("formats dollars exactly without rescaling minor-unit records", () => {
+  for (const [minor, dollars] of [[0,"$0.00"],[1,"$0.01"],[2400,"$24.00"],[4800,"$48.00"],[9600,"$96.00"],[21600,"$216.00"],[48000,"$480.00"],[-105,"-$1.05"],[123456,"$1,234.56"]]) assert.equal(formatUsd(minor), dollars);
+  assert.equal(formatUsdInput(Number.MAX_SAFE_INTEGER), "90071992547409.91");
+  assert.equal(parseUsdMinor("90071992547409.91"), Number.MAX_SAFE_INTEGER);
+  assert.equal(parseUsdMinor("90071992547409.92"), null);
+  assert.equal(parseUsdMinor("9".repeat(10000)), null);
+  assert.equal(formatUsd(Number.NaN), "Amount unavailable");
+});
 import { calculateSanctioningFeeRunningTotalCents, requiresSanctioningFeeOverrideEvidence } from "../src/lib/sanctioning-fee.ts";
 
 test("parses exact USD cents without floating-point rounding", () => {
@@ -17,6 +26,21 @@ test("rejects ambiguous, over-precise, negative, and excessive money", () => {
     assert.equal(parseUsdMinor(value), null, value);
   }
   assert.equal(parseUsdMinor("1000000.01", { allowZero: true, maxMinor: 100_000_000 }), null);
+});
+
+test("Side Pool and Satellite forms fail closed on malformed dollar amounts", () => {
+  const sidePools = readFileSync("src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx", "utf8");
+  const satellite = readFileSync("src/app/tournament/[tournamentId]/satellite-results/satellite-results-client.tsx", "utf8");
+  assert.match(sidePools, /parseUsdMinor\(value, \{ allowZero: true \}\)/);
+  assert.match(sidePools, /amountReceivedMinor = parseAmount\(received\); if \(amountReceivedMinor === null\)/);
+  assert.match(sidePools, /payoutScheduleValid[\s\S]*parsedSchedule\.every/);
+  assert.doesNotMatch(sidePools, /\.filter\(\(item\) => Number\.isSafeInteger\(item\.placement\)/);
+  assert.match(satellite, /if\(prize\.trim\(\)===""\)/);
+  assert.match(satellite, /parseUsdMinor\(prize,\{allowZero:true\}\)/);
+  assert.match(satellite, /qPool\.trim\(\)===""\?0:parseUsdMinor/);
+  assert.match(satellite, /sidePool\.trim\(\)===""\?0:parseUsdMinor/);
+  assert.match(satellite, /prizeMinor===null\|\|qPoolMinor===null\|\|sidePoolMinor===null/);
+  assert.doesNotMatch(`${sidePools}\n${satellite}`, /Math\.round\(Number\(.*\* 100/);
 });
 
 test("formats stored minor units for editable setup fields", () => {

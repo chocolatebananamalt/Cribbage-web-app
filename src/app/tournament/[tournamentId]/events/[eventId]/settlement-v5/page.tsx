@@ -5,6 +5,7 @@ import { getSettlementV5Workspace } from "../../../../../../lib/api/settlement-v
 import { listPrizeSchedules } from "../../../../../../lib/api/prize-schedule";
 import { getPaybackReviewWorkspace } from "../../../../../../lib/api/payback-review";
 import { canStartPaybackFinalization } from "../../../../../../lib/results/payback-finalization-gate";
+import { boundScheduleReference } from "../../../../../../lib/results/settlement-navigation";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
@@ -37,7 +38,8 @@ export default async function SettlementV5Page({ params }: { params: Promise<{ t
       actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={workspace} paybackReady={paybackReady} scheduleVersionId={scheduleVersionId}>
       {payback ? <PaybackReviewClient key={`${current?.draftId ?? "none"}-${payback.currentReviewVersion}`}
         actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={payback}
-        draft={current ? { draftId: current.draftId, version: current.version } : null} />
+        draft={current ? { draftId: current.draftId, version: current.version } : null}
+        savedScheduleReference={boundScheduleReference(schedules, eventId, current?.request.scheduleVersionId)} />
         : <p role="alert">Structured payback review is unavailable. Historical settlement evidence remains readable; a new finalization cannot be started here.</p>}
     </SettlementV5Client>
     <LegacySettlementRecovery actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} /><SharedDeviceSignOut />

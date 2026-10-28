@@ -12,6 +12,7 @@ await fs.writeFile(path.join(dir,'package.json'),'{"private":true,"type":"module
 await fs.writeFile(path.join(dir,'next.config.mjs'),`export default {turbopack:{root:${JSON.stringify(root)}}};`);
 await fs.writeFile(path.join(dir,'app/layout.tsx'),`import '../../../src/app/globals.css';export default function Layout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}`);
 await fs.writeFile(path.join(dir,'app/page.tsx'),`import Client from '../../../src/app/tournament/[tournamentId]/events/[eventId]/settlement-v5/settlement-v5-client';export default function Page(){return <main className="auth-shell"><section className="auth-card corrections-card"><p>TEST ONLY LOCAL MOCK — no backend or account</p><Client actorId="40000000-0000-4000-8000-000000000001" tournamentId="${workspace.tournamentId}" eventId="${workspace.eventId}" workspace={${JSON.stringify(workspace)}}/></section></main>}`);
+await fs.mkdir(path.join(dir,'public'),{recursive:true});await fs.copyFile(path.join(root,'public/offline-score-sw.js'),path.join(dir,'public/offline-score-sw.js'));const fixtureLayout=path.join(dir,'app/layout.tsx');let fixtureLayoutText=await fs.readFile(fixtureLayout,'utf8');fixtureLayoutText=`import {RecoveryDocumentBoundary} from '../../../src/components/recovery-document-boundary';`+fixtureLayoutText.replace('{children}</body>','<RecoveryDocumentBoundary actorId="40000000-0000-4000-8000-000000000001">{children}</RecoveryDocumentBoundary></body>');await fs.writeFile(fixtureLayout,fixtureLayoutText);
 const child=spawn(process.execPath,['node_modules/next/dist/bin/next','dev',dir,'--hostname','127.0.0.1','--port','3229'],{cwd:root,env:{...process.env,NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});
 let logs='',browser;child.stdout.on('data',x=>logs+=x);child.stderr.on('data',x=>logs+=x);
 try {
@@ -45,7 +46,7 @@ try {
  await page.getByRole('button',{name:'Save reviewed draft',exact:true}).click();
  await page.getByText('Review the required fields before saving.',{exact:true}).waitFor();assert.equal(writes.length,0,'Invalid claim must not write');
  await page.getByLabel('Qualifier participant ID',{exact:true}).fill(workspace.draft.canonicalMrp.rows[0].participantId);
- await page.getByLabel('Claim amount (USD cents)',{exact:true}).fill('100');
+ await page.getByLabel('Claim amount (USD $)',{exact:true}).fill('1.00');
  await page.getByLabel('Reviewed claim note',{exact:true}).fill('TEST ONLY explicit claim; no payout policy');
  assert.equal(await page.getByLabel('Optional prize order',{exact:true}).inputValue(),'','No third/fourth order is inferred');
  await page.getByRole('button',{name:'Save reviewed draft',exact:true}).dblclick();
@@ -53,8 +54,8 @@ try {
  assert.equal(writes.length,1,'Double click must create one request');
  const first=writes[0];
  await page.reload();await page.getByText('No completed receipt is available yet. The exact request is retained and can be retried safely.',{exact:true}).waitFor();
- assert.equal(await page.getByLabel('Claim amount (USD cents)',{exact:true}).inputValue(),'100');
- assert.equal(await page.getByLabel('Claim amount (USD cents)',{exact:true}).isDisabled(),true,'Pending intent is locked');
+ assert.equal(await page.getByLabel('Claim amount (USD $)',{exact:true}).inputValue(),'1.00');
+ assert.equal(await page.getByLabel('Claim amount (USD $)',{exact:true}).isDisabled(),true,'Pending intent is locked');
  mode='reject';await page.getByRole('button',{name:'Retry exact draft request',exact:true}).click();
  await page.getByText('The operation was rejected (sanctioning_assessment_unfunded). Review the current evidence.',{exact:true}).waitFor();
  assert.deepEqual(writes[1],first,'Retry preserves exact original key/body');

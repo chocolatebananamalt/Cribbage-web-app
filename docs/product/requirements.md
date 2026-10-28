@@ -1,5 +1,9 @@
 # Product Requirements
 
+## 2026-10-28 owner correction: money is presented and entered as dollars
+
+All user-facing monetary amounts, including current and historical ledger snapshots, assessments, awards, budgets, setup estimates and human-facing exports, use USD dollars (for example $24.00), not raw minor-unit amounts such as 2400 USD cents. Dollar entry converts exactly to the existing integer-cent contract; do not rescale saved records or silently round malformed/overprecise input. Existing payout/eligibility/authorization and immutable-history rules are unchanged. Evidence: [local currency repair](../quality/2026-10-28-usd-display-local-repair.md). No publication or hosted migration is implied.
+
 ## 2026-10-27 local payback repair — not deployed
 
 Owner-approved local repair separates cash conservation from the ACC 85%-of-gross player-return check, classifies actual expense evidence as eligible benefits or operating costs, and requires one positive total award for each ordinary cash-eligible qualifier. The schedule is explicitly director-selected, not a mandated ACC formula; equal finishing cohorts receive equal awards in the first slice. Eligibility is recorded per qualifier; sanction-only/legal-age exceptions and unknown classifications block this slice. No cumulative round-payment inference or historical rewrite is allowed. Source, compatibility limits, exact local checks and separate rollout boundary: [payback validation](../quality/2026-10-27-payback-review-local-validation.md). This is local verification, not production or sanctioned-event readiness.
