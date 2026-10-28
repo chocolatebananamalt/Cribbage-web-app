@@ -14,6 +14,7 @@ import {
   type QPoolMutation,
 } from "../../../../lib/api/q-pool-membership";
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
+import { Q_POLICY_TEXT, qPolicyPrefix, type QPolicy } from "../../../../lib/results/q-pool-preview";
 
 type Envelope = { kind: "q-pool-operation"; operationId: string; request: QPoolMutation };
 // Nest under an already shipped financial-recovery prefix so older pages also block account switching.
@@ -28,11 +29,12 @@ const controlMessage = (result: unknown, request: QPoolMutation) => isQPoolMutat
   ? result.status === "q_pool_saved" ? "Q Pool record saved. Refreshing the authoritative membership and allocation state." : `Q Pool request rejected: ${result.code.replaceAll("_", " ")}. Review the current records.`
   : "The exact Q Pool request is unresolved. Its recovery record is retained.";
 
-export default function QPoolMembershipClient({ actorId, tournamentId, canManage, workspace }: {
+export default function QPoolMembershipClient({ actorId, tournamentId, canManage, workspace, policies = [] }: {
   actorId: string;
   tournamentId: string;
   canManage: boolean;
   workspace: QPoolMembershipWorkspace | null;
+  policies?: QPolicy[];
 }) {
   const router = useRouter();
   const key = keyFor(actorId, tournamentId);
@@ -135,18 +137,19 @@ export default function QPoolMembershipClient({ actorId, tournamentId, canManage
           {!workspace.pools.length && <p>No Q Pools are configured for this event.</p>}
           <p>Q Pool elections are separate for each pool. A saved payment receipt is required before allocation. No payment is created here. Paid entry eligibility is not payout eligibility.</p>
           <p>Before collecting Q Pool entries, disclose the payout method to participants. This screen records membership and allocates recorded receipts; it does not calculate or promise payouts.</p>
-          {workspace.entries.map((entry) => <QPoolEntry key={`${entry.rosterEntryId}:${entry.membershipVersion}:${entry.allocationVersion}:${entry.receiptVersion}:${entry.obligationVersion}`} workspace={workspace} entry={entry} editable={canManageWorkspace && (!workspace.started || workspace.canCorrect)} busy={busy} onSubmit={submit}/>) }
+          {workspace.entries.map((entry) => <QPoolEntry key={`${entry.rosterEntryId}:${entry.membershipVersion}:${entry.allocationVersion}:${entry.receiptVersion}:${entry.obligationVersion}:${policies.map((p) => p.id).join()}`} policies={policies} workspace={workspace} entry={entry} editable={canManageWorkspace && (!workspace.started || workspace.canCorrect)} busy={busy} onSubmit={submit}/>) }
         </>}
       </section>
     </>}
   </section>;
 }
 
-function QPoolEntry({ workspace, entry, editable, busy, onSubmit }: {
+function QPoolEntry({ workspace, entry, editable, busy, onSubmit, policies }: {
   workspace: QPoolMembershipWorkspace;
   entry: QPoolMembershipEntry;
   editable: boolean;
   busy: boolean;
+  policies: QPolicy[];
   onSubmit: (request: QPoolMutation) => Promise<void>;
 }) {
   const [membership, setMembership] = useState(() => entry.pools.map((pool) => ({ ...pool })));
@@ -157,11 +160,16 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit }: {
     poolVersionId: pool.poolVersionId,
     amount: entry.allocationCurrent ? formatUsdInput(pool.amountAllocatedMinor) : "",
   })));
+  const boundConsent = (poolVersionId: string, consentReference: string) => {
+    const policy = policies.find((p) => p.poolVersionId === poolVersionId);
+    const prefix = policy ? qPolicyPrefix(policy.id) : "";
+    return policy && !consentReference.startsWith(prefix) ? prefix + consentReference : consentReference;
+  };
   const [allocationReason, setAllocationReason] = useState("");
   const [allocationCorrection, setAllocationCorrection] = useState(false);
   const prePlayElected = entry.pools.some((pool) => pool.prePlayElected);
   const canSaveMembership = editable && workspace.pools.length > 0 && membershipReason.trim().length > 0
-    && membership.every((pool) => !pool.elected || pool.consentReference.trim().length > 0)
+    && membership.every((pool) => !pool.elected || (pool.consentReference.trim().length > 0 && boundConsent(pool.poolVersionId, pool.consentReference).length <= 500))
     && (!workspace.started || membership.every((pool) => !pool.elected || entry.pools.find((current) => current.poolVersionId === pool.poolVersionId)?.prePlayElected))
     && (!membershipCorrection || (entry.membershipVersion > 0 && workspace.canCorrect))
     && (!workspace.started || (entry.membershipVersion > 0 && prePlayElected && workspace.canCorrect));
@@ -182,7 +190,7 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit }: {
     const request: QPoolMutation = {
       action: "membership", rosterEntryId: entry.rosterEntryId, expectedVersion: entry.membershipVersion,
       correction: workspace.started || membershipCorrection, reason: membershipReason,
-      pools: membership.map(({ poolVersionId, elected, consentReference }) => ({ poolVersionId, elected, consentReference })),
+      pools: membership.map(({ poolVersionId, elected, consentReference }) => ({ poolVersionId, elected, consentReference: elected ? boundConsent(poolVersionId, consentReference) : consentReference })),
     };
     void onSubmit(request);
   }
@@ -202,10 +210,12 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit }: {
       <legend>Q Pool membership election · version {entry.membershipVersion}</legend>
       {workspace.pools.map((pool) => {
         const value = membership.find((item) => item.poolVersionId === pool.poolVersionId)!;
+        const policy = policies.find((p) => p.poolVersionId === pool.poolVersionId);
         return <section className="registration-note" key={pool.poolVersionId}>
           <label><input type="checkbox" checked={value.elected} disabled={workspace.started && !entry.pools.find((item) => item.poolVersionId === pool.poolVersionId)?.prePlayElected} onChange={(event) => setMembership((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, elected: event.target.checked } : item))}/>
             Elect into Q Pool {pool.slot}: {pool.name} ({formatUsd(pool.feeMinor)})</label>
-          {value.elected && <label>Consent reference for {pool.name}<input maxLength={500} value={value.consentReference} onChange={(event) => setMembership((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, consentReference: event.target.value } : item))}/></label>}
+          {policies.filter((p) => p.poolVersionId === pool.poolVersionId).map((p) => <div key={p.id}><p>{Q_POLICY_TEXT}</p><p>Frozen policy {p.id}. The consent reference below records the director&apos;s acknowledgment of this exact policy; it is not proof of personal player consent.</p></div>)}
+          {value.elected && <label>Consent reference for {pool.name}<input maxLength={policy && !value.consentReference.startsWith(qPolicyPrefix(policy.id)) ? 450 : 500} value={value.consentReference} onChange={(event) => setMembership((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, consentReference: event.target.value } : item))}/></label>}
           <p>Amount owed: {formatUsd(value.amountOwedMinor)}. Paid entry eligible: {value.paidEntryEligible ? "Yes" : "No"}. This is not payout eligibility.</p>
         </section>;
       })}

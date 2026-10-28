@@ -21,6 +21,7 @@ export default async function TournamentSetupPage({ params }: { params: Promise<
     <p className="eyebrow">OPERATIONS</p><h1 id="setup-title">Set Up Tournament</h1>
     <p className="auth-note">Configure the tournament and its Main, Consolation, and Satellite events. Saving creates a private versioned setup record; it does not publish results or charge anyone.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
+    <p><Link href={`/tournament/${tournamentId}/q-pool-policy`}>Q Pool policy and payout preview</Link> — activate the configured pool, then disclose and freeze its method before recording any receipts or elections.</p>
     <SetupClient actorId={access.user.id} tournamentId={tournamentId} registrationLinkManagementEnabled={registrationLinkManagementEnabled()} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
     <SharedDeviceSignOut />
   </section></main>;

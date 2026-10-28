@@ -5,6 +5,7 @@ import { isUuid } from "../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import QPoolMembershipClient from "./q-pools-client";
+import { isQPreviewSources, type QPolicy } from "../../../../lib/results/q-pool-preview";
 
 export const dynamic = "force-dynamic";
 
@@ -14,12 +15,15 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
   let workspace = null;
+  let policies: QPolicy[] = [];
   try {
     const { data, error } = await createServerOnlyAdminClient().rpc("get_q_pool_membership_workspace_v1", {
       p_actor_id: access.user.id,
       p_tournament_id: tournamentId,
     });
     if (!error && isQPoolMembershipWorkspace(data, tournamentId)) workspace = data;
+    const policyRead = await createServerOnlyAdminClient().rpc("get_q_pool_preview_sources_v1", { p_actor_id: access.user.id, p_tournament_id: tournamentId });
+    if (!policyRead.error && isQPreviewSources(policyRead.data, tournamentId)) policies = policyRead.data.policies;
   } catch {
     // RPC availability is a separate status from a supported/unsupported event shape.
   }
@@ -27,7 +31,8 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
     <p className="eyebrow">EVENT MEMBERSHIP</p>
     <h1 id="q-pool-title">Q Pool Membership and Payment Allocation</h1>
     <p className="auth-note">Q Pool participation is a separate election for each configured pool. Elections do not create payments. Allocation records only use an existing receipt and obligation; enter the base fee and every Q Pool amount explicitly. Paid entry eligibility is not payout eligibility. Automatic payout and settlement are not part of this screen.</p>
-    <QPoolMembershipClient actorId={access.user.id} tournamentId={tournamentId} canManage={["director", "co_director"].includes(access.role)} workspace={workspace}/>
+    <p><a href={`/tournament/${tournamentId}/q-pool-policy`}>Disclose a Q Pool policy before collection / review payout preview</a></p>
+    <QPoolMembershipClient actorId={access.user.id} tournamentId={tournamentId} canManage={["director", "co_director"].includes(access.role)} workspace={workspace} policies={policies}/>
     <SharedDeviceSignOut />
   </section></main>;
 }
