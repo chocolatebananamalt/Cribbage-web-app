@@ -19,6 +19,7 @@ export default async function QPoolPolicyPage({ params }: { params: Promise<{ to
   return <main className="auth-shell"><section className="auth-card corrections-card"><p className="eyebrow">Q POOL POLICY</p><h1>Disclosed Q Pool policy and payout preview</h1>
     <p><a href={`/tournament/${tournamentId}/setup`}>Back to setup</a> · <a href={`/tournament/${tournamentId}/q-pools`}>Membership and receipt allocation</a></p>
     {access.role === "director" && <p><a href={`/tournament/${tournamentId}/q-obligation-reviews`}>Record or review unpaid Q obligations</a></p>}
+    {access.role === "director" && <p><a href={`/tournament/${tournamentId}/q-operating-schedules`}>Disclosed equal and graduated operating schedules</a>. Existing v1 policies and unpaid history below are preserved.</p>}
     <QPolicyClient actorId={access.user.id} tournamentId={tournamentId} source={source}/><SharedDeviceSignOut/>
   </section></main>;
 }

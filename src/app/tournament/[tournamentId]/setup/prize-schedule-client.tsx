@@ -3,6 +3,7 @@ import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useEffect, useRef, useState } from "react";
 import { directorPrizeScheduleVersion, type DirectorPrizeScheduleV1 } from "../../../../lib/results/prize-schedule";
 import { formatUsd, parseUsdMinor } from "../../../../lib/money";
+import { parsePrizePercentBasisPoints, semifinalWeightsFromPercentText } from "../../../../lib/results/prize-percentage-input";
 
 type Props = { actorId: string; tournamentId: string; clientRowId: string; entryFeeCents: number; disabled?: boolean; onBlockingChange?: (blocking: boolean) => void };
 import { isPrizeScheduleRequest, isPrizeScheduleWorkspace, isPrizeScheduleSaved, isRejectedPrizeSchedule, isPrizeScheduleReconciliation, type PrizeScheduleRequest, type PrizeScheduleWorkspace } from "../../../../lib/api/prize-schedule";
@@ -22,6 +23,7 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
   const [busy, setBusy] = useState(true), [blocked, setBlocked] = useState(false), [message, setMessage] = useState("Loading prize schedules and recovery state.");
   const [weights, setWeights] = useState(["", "", ""]), [source, setSource] = useState(""), [reason, setReason] = useState(""), [reviewed, setReviewed] = useState(false);
   const [entries, setEntries] = useState(""), [expenses, setExpenses] = useState("");
+  const [chartPercentages, setChartPercentages] = useState(["", "", "", ""]);
   useEffect(() => {
     let active = true;
     async function load() {
@@ -49,9 +51,10 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
     }
     void load(); return () => { active = false; };
   }, [endpoint, key, tournamentId, clientRowId]);
-  useEffect(() => { onBlockingChange?.(busy || blocked || !!pending || (!!workspace && workspace.currentVersion > 0 && !workspace.settingsCurrent) || JSON.stringify({ weights, source, reason, reviewed }) !== baseline.current); }, [busy, blocked, pending, workspace, weights, source, reason, reviewed, onBlockingChange]);
+  useEffect(() => { onBlockingChange?.(busy || blocked || !!pending || chartPercentages.some(value => value !== "") || (!!workspace && workspace.currentVersion > 0 && !workspace.settingsCurrent) || JSON.stringify({ weights, source, reason, reviewed }) !== baseline.current); }, [busy, blocked, pending, workspace, weights, source, reason, reviewed, chartPercentages, onBlockingChange]);
   async function save() {
     if (busy || blocked || flight.current || (!pending && (disabled || !workspace))) return;
+    if (!pending && chartPercentages.some(value => value !== "")) { setMessage("Apply or discard the unapplied chart percentages before saving the schedule."); return; }
     const schedule: DirectorPrizeScheduleV1 = { kind: directorPrizeScheduleVersion, amountBasis: "total_award", expectedQualifierCount: 4, sourceReference: source, roundingRule: "floor_each_weighted_share_then_assign_remainder_to_champion", cohorts: weights.map((weight, i) => ({ bandStart: [1, 2, 3][i], bandEnd: [1, 2, 4][i], weight: Number(weight) })) };
     const request: unknown = pending?.request ?? { expectedVersion: workspace?.currentVersion, schedule, reviewed, reason };
     if (!isPrizeScheduleRequest(request) || (!pending && weights.some(w => !/^[1-9]\d*$/.test(w)))) { setMessage("Enter positive whole weights, source, reason, and review confirmation."); return; }
@@ -69,6 +72,12 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
     finally { flight.current = false; setBusy(false); }
   }
   const locked = busy || blocked || !!pending || disabled || !workspace;
+  const combinedChartWeights = semifinalWeightsFromPercentText(chartPercentages);
+  function applyChartPercentages() {
+    if (locked || flight.current || !combinedChartWeights) return;
+    setWeights(combinedChartWeights.map(String)); setReviewed(false); setChartPercentages(["", "", "", ""]);
+    setMessage("Combined semifinal chart shares into equal per-person weights. Review the source and save explicitly; no schedule was saved.");
+  }
   const nums = weights.map(Number), count = Number(entries), expenseMinor = parseUsdMinor(expenses, { allowZero: true }), gross = count * entryFeeCents, cost = expenseMinor ?? 0, budget = gross - cost;
   const canPreview = entries !== "" && expenses !== "" && /^\d+$/.test(entries) && whole(count) && expenseMinor !== null && whole(gross) && budget > 0 && weights.every(w => /^[1-9]\d*$/.test(w)) && nums.every(n => whole(n, 1));
   let awards: number[] | null = null;
@@ -76,8 +85,10 @@ export default function PrizeScheduleClient({ actorId, tournamentId, clientRowId
   return <section className="policy-settings" aria-labelledby={`prize-schedule-${clientRowId}`}><h3 id={`prize-schedule-${clientRowId}`}>Main prize schedule</h3><p>Choose and post the rule before qualifying ends. A reviewed revision is allowed only before qualification is finalized and before playoff or settlement records exist; later weight changes are blocked.</p>
     <p>For one Main 12-game event with no pools and four qualifiers. Weights are per person; 3rd and 4th receive equal total awards. These are total awards, not round increments.</p><p role="status">{message}</p>
     {workspace && <><p>Current version: {workspace.currentVersion}. {workspace.activated ? "Event activated; the server determines whether revisions remain open." : "Event not yet activated."} {!workspace.settingsCurrent && "Setup settings have changed; review and save a revised schedule before activation."}</p>{workspace.versions.length > 0 && <details><summary>Saved schedule versions</summary>{workspace.versions.map(v => <div key={v.scheduleId}><p>Version {v.version} · {v.recordedAt}</p><p>Weights: {v.schedule.cohorts.map(c => c.weight).join(" / ")}; source: {v.schedule.sourceReference}; reason: {v.reason}</p></div>)}</details>}</>}
-    <p>Schedule source and reason can appear in a player-visible summary. Do not include private information.</p><fieldset disabled={locked}><legend>Director selection</legend>{["1st place weight", "2nd place weight", "3rd–4th per-person weight"].map((label, i) => <label key={label}>{label}<input type="number" min="1" step="1" value={weights[i]} onChange={e => setWeights(weights.map((w, j) => i === j ? e.target.value : w))} /></label>)}<label>Schedule source reference<input maxLength={500} value={source} onChange={e => setSource(e.target.value)} /></label><label>Reason for schedule<input maxLength={500} value={reason} onChange={e => setReason(e.target.value)} /></label><label><input type="checkbox" checked={reviewed} onChange={e => setReviewed(e.target.checked)} />I reviewed this schedule and its source</label></fieldset>
-    <button type="button" className="primary" disabled={busy || blocked || (!pending && (disabled || !workspace))} onClick={() => void save()}>{busy ? "Loading or saving schedule" : pending ? "Retry exact schedule" : "Save prize schedule"}</button>
+    <fieldset disabled={locked}><legend>Optional external chart percentages</legend><p>Enter a director-selected chart&apos;s 1st through 4th percentages, totaling exactly 100%. This is not an automatic chart import or an ACC-mandated split. Third and fourth shares are combined and divided equally between semifinal losers; existing cent-rounding rules remain unchanged.</p>{["1st place chart percentage", "2nd place chart percentage", "3rd place chart percentage", "4th place chart percentage"].map((label, i) => <label key={label}>{label}<input type="text" inputMode="decimal" value={chartPercentages[i]} maxLength={8} aria-invalid={chartPercentages[i] !== "" && parsePrizePercentBasisPoints(chartPercentages[i]) === null} onChange={e => setChartPercentages(chartPercentages.map((value, j) => i === j ? e.target.value : value))}/></label>)}{chartPercentages.some(value => value !== "") && !combinedChartWeights && <p role="alert">Enter four positive percentages with up to two decimal places, totaling exactly 100%.</p>}<button type="button" disabled={!combinedChartWeights} onClick={applyChartPercentages}>Combine semifinal shares into weights</button><button type="button" disabled={chartPercentages.every(value => value === "")} onClick={() => setChartPercentages(["", "", "", ""])}>Discard unapplied chart percentages</button></fieldset>
+    <p>Schedule source and reason can appear in a player-visible summary. Do not include private information.</p><fieldset disabled={locked}><legend>Director selection</legend>{["1st place weight", "2nd place weight", "3rd-4th per-person weight"].map((label, i) => <label key={label}>{label}<input type="number" min="1" step="1" value={weights[i]} onChange={e => { setWeights(weights.map((w, j) => i === j ? e.target.value : w)); setReviewed(false); }} /></label>)}<label>Schedule source reference<input maxLength={500} value={source} onChange={e => { setSource(e.target.value); setReviewed(false); }} /></label><label>Reason for schedule<input maxLength={500} value={reason} onChange={e => { setReason(e.target.value); setReviewed(false); }} /></label><label><input type="checkbox" checked={reviewed} onChange={e => setReviewed(e.target.checked)} />I reviewed this schedule and its source</label></fieldset>
+    {chartPercentages.some(value => value !== "") && <p>Apply or discard the chart percentage draft before saving. Unapplied values block setup completion.</p>}
+    <button type="button" className="primary" disabled={busy || blocked || (!pending && (disabled || !workspace || chartPercentages.some(value => value !== "")))} onClick={() => void save()}>{busy ? "Loading or saving schedule" : pending ? "Retry exact schedule" : "Save prize schedule"}</button>
     <fieldset><legend>Estimated prize budget preview</legend><p>Local assumptions only; this preview is not final or authoritative. Enter estimated entry count and total expenses in dollars.</p><label>Estimated entry count<input type="number" min="0" step="1" value={entries} onChange={e => setEntries(e.target.value)} /></label><label>Estimated total expenses (USD)<input type="text" inputMode="decimal" value={expenses} onChange={e => setExpenses(e.target.value)} aria-invalid={expenses !== "" && expenseMinor === null} /></label>{expenses !== "" && expenseMinor === null && <p role="alert">Enter a valid non-negative dollar amount with up to two decimal places.</p>}{awards && <><p>Estimated gross {formatUsd(gross)}, expenses {formatUsd(cost)}, prize budget {formatUsd(budget)}.</p><p>Estimated total awards: 1st {formatUsd(awards[0])}; 2nd {formatUsd(awards[1])}; 3rd and 4th {formatUsd(awards[2])} each. Each weighted share is rounded down; remaining cents go to the champion.</p></>}</fieldset>
   </section>;
 }

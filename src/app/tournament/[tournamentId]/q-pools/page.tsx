@@ -4,8 +4,10 @@ import { isQPoolMembershipWorkspace } from "../../../../lib/api/q-pool-membershi
 import { isUuid } from "../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
-import QPoolMembershipClient from "./q-pools-client";
-import { isQPreviewSources, type QPolicy } from "../../../../lib/results/q-pool-preview";
+import QPoolMembershipClient, { type QConsentPolicy } from "./q-pools-client";
+import { isQPreviewSources, Q_POLICY_TEXT } from "../../../../lib/results/q-pool-preview";
+import { isQOperatingWorkspaceV2 } from "../../../../lib/api/q-operating-schedules";
+import { qChartSchedules } from "../../../../lib/results/q-chart-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +17,7 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
   let workspace = null;
-  let policies: QPolicy[] = [];
+  let policies: QConsentPolicy[] = [];
   try {
     const { data, error } = await createServerOnlyAdminClient().rpc("get_q_pool_membership_workspace_v1", {
       p_actor_id: access.user.id,
@@ -23,7 +25,16 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
     });
     if (!error && isQPoolMembershipWorkspace(data, tournamentId)) workspace = data;
     const policyRead = await createServerOnlyAdminClient().rpc("get_q_pool_preview_sources_v1", { p_actor_id: access.user.id, p_tournament_id: tournamentId });
-    if (!policyRead.error && isQPreviewSources(policyRead.data, tournamentId)) policies = policyRead.data.policies;
+    if (!policyRead.error && isQPreviewSources(policyRead.data, tournamentId)) policies = policyRead.data.policies.map(p => ({ ...p, disclosureText: Q_POLICY_TEXT }));
+    if (access.role === "director") {
+      const operatingRead = await createServerOnlyAdminClient().rpc("get_q_operating_workspace_v2", { p_actor_id: access.user.id, p_tournament_id: tournamentId });
+      if (!operatingRead.error && isQOperatingWorkspaceV2(operatingRead.data, tournamentId)) {
+        policies = [...policies, ...operatingRead.data.policies.map(p => ({ id: p.id, poolVersionId: p.poolVersionId,
+          disclosureText: p.method === "equal-paid-playoff-qualifiers-v2"
+            ? "Equal Q: fully paid playoff qualifiers share this named pool. If none qualify, contributions become unpaid refund obligations. Remainder cents follow finalized qualification order. No money moves."
+            : `Graduated Q: ${qChartSchedules.find(s => s.id === p.scheduleId)?.label ?? p.scheduleId}. Recipient count is rounded up from paid pool entrants divided by ${p.ratio}; paid nonqualifiers can receive awards by Q card rank. Exact chart amounts apply; unsupported cells require director review. No money moves.` }))];
+      }
+    }
   } catch {
     // RPC availability is a separate status from a supported/unsupported event shape.
   }
@@ -32,6 +43,8 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
     <h1 id="q-pool-title">Q Pool Membership and Payment Allocation</h1>
     <p className="auth-note">Q Pool participation is a separate election for each configured pool. Elections do not create payments. Allocation records only use an existing receipt and obligation; enter the base fee and every Q Pool amount explicitly. Paid entry eligibility is not payout eligibility. Automatic payout and settlement are not part of this screen.</p>
     <p><a href={`/tournament/${tournamentId}/q-pool-policy`}>Disclose a Q Pool policy before collection / review payout preview</a></p>
+    {access.role === "director" && <p><a href={`/tournament/${tournamentId}/q-operating-schedules`}>Select clarified equal or graduated Q operating schedule</a></p>}
+    {access.role === "co_director" && <p className="auth-note">For a clarified v2 Q operating schedule, the primary director must record the policy acknowledgment and election. This screen does not load v2 disclosures for co-directors.</p>}
     <QPoolMembershipClient actorId={access.user.id} tournamentId={tournamentId} canManage={["director", "co_director"].includes(access.role)} workspace={workspace} policies={policies}/>
     <SharedDeviceSignOut />
   </section></main>;

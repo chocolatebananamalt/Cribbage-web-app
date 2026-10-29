@@ -1,5 +1,19 @@
 export const directorPrizeScheduleVersion = "director-selected-prize-schedule-v1" as const;
 
+/** Convert a director-selected four-place chart to equal semifinal-loser weights.
+ * Inputs are exact basis points (100.00% = 10000), not an imported ACC formula.
+ * Multiplying all weights by two preserves half-basis-point combined shares.
+ */
+export function combineSemifinalChartShares(sharesBasisPoints: readonly number[]): [number, number, number] | null {
+  if (!Array.isArray(sharesBasisPoints) || sharesBasisPoints.length !== 4
+    || sharesBasisPoints.some(n => !Number.isSafeInteger(n) || n < 1 || n > 10000)
+    || sharesBasisPoints.reduce((sum, n) => sum + n, 0) !== 10000) return null;
+  const weights: [number, number, number] = [2 * sharesBasisPoints[0], 2 * sharesBasisPoints[1], sharesBasisPoints[2] + sharesBasisPoints[3]];
+  const gcd = (a: number, b: number): number => b === 0 ? a : gcd(b, a % b);
+  const divisor = weights.reduce(gcd);
+  return weights.map(n => n / divisor) as [number, number, number];
+}
+
 export type PrizeScheduleCohortV1 = {
   bandStart: number;
   bandEnd: number;

@@ -1,5 +1,9 @@
 # Product Requirements
 
+## 2026-10-29 clarified selectable Q operating schedules
+
+Use separately disclosed/versioned equal and graduated policies. Graduated recipient count is ceil(paid entrants in the named pool / ratio), including paid nonqualifiers by card rank when necessary; exact friend-supplied chart amounts control, with unsupported/unbalanced cells requiring director review. Equal pays paid playoff qualifiers only and creates unpaid refund obligations if none qualify. Q ranking uses a distinct positive-plus tie path and recorded physical low-card resolution, never net spread or UUID fallback. Main-event semifinal awards combine third/fourth percentages and split equally. Preserve prior immutable disclosures/reviews and keep actual money movement disabled. Source and current incomplete verification: [operating schedule progress](../quality/2026-10-29-q-operating-schedules-progress.md).
+
 ## 2026-10-28 owner correction: money is presented and entered as dollars
 
 All user-facing monetary amounts, including current and historical ledger snapshots, assessments, awards, budgets, setup estimates and human-facing exports, use USD dollars (for example $24.00), not raw minor-unit amounts such as 2400 USD cents. Dollar entry converts exactly to the existing integer-cent contract; do not rescale saved records or silently round malformed/overprecise input. Existing payout/eligibility/authorization and immutable-history rules are unchanged. Evidence: [local currency repair](../quality/2026-10-28-usd-display-local-repair.md). No publication or hosted migration is implied.

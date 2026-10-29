@@ -15,6 +15,7 @@ import {
 } from "../../../../lib/api/q-pool-membership";
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { Q_POLICY_TEXT, qPolicyPrefix, type QPolicy } from "../../../../lib/results/q-pool-preview";
+export type QConsentPolicy = Pick<QPolicy, "id" | "poolVersionId"> & { disclosureText?: string };
 
 type Envelope = { kind: "q-pool-operation"; operationId: string; request: QPoolMutation };
 // Nest under an already shipped financial-recovery prefix so older pages also block account switching.
@@ -34,7 +35,7 @@ export default function QPoolMembershipClient({ actorId, tournamentId, canManage
   tournamentId: string;
   canManage: boolean;
   workspace: QPoolMembershipWorkspace | null;
-  policies?: QPolicy[];
+  policies?: QConsentPolicy[];
 }) {
   const router = useRouter();
   const key = keyFor(actorId, tournamentId);
@@ -149,7 +150,7 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit, policies }: {
   entry: QPoolMembershipEntry;
   editable: boolean;
   busy: boolean;
-  policies: QPolicy[];
+  policies: QConsentPolicy[];
   onSubmit: (request: QPoolMutation) => Promise<void>;
 }) {
   const [membership, setMembership] = useState(() => entry.pools.map((pool) => ({ ...pool })));
@@ -214,7 +215,7 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit, policies }: {
         return <section className="registration-note" key={pool.poolVersionId}>
           <label><input type="checkbox" checked={value.elected} disabled={workspace.started && !entry.pools.find((item) => item.poolVersionId === pool.poolVersionId)?.prePlayElected} onChange={(event) => setMembership((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, elected: event.target.checked } : item))}/>
             Elect into Q Pool {pool.slot}: {pool.name} ({formatUsd(pool.feeMinor)})</label>
-          {policies.filter((p) => p.poolVersionId === pool.poolVersionId).map((p) => <div key={p.id}><p>{Q_POLICY_TEXT}</p><p>Frozen policy {p.id}. The consent reference below records the director&apos;s acknowledgment of this exact policy; it is not proof of personal player consent.</p></div>)}
+          {policies.filter((p) => p.poolVersionId === pool.poolVersionId).map((p) => <div key={p.id}><p>{p.disclosureText ?? Q_POLICY_TEXT}</p><p>Frozen policy {p.id}. The consent reference below records the director&apos;s acknowledgment of this exact policy; it is not proof of personal player consent.</p></div>)}
           {value.elected && <label>Consent reference for {pool.name}<input maxLength={policy && !value.consentReference.startsWith(qPolicyPrefix(policy.id)) ? 450 : 500} value={value.consentReference} onChange={(event) => setMembership((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, consentReference: event.target.value } : item))}/></label>}
           <p>Amount owed: {formatUsd(value.amountOwedMinor)}. Paid entry eligible: {value.paidEntryEligible ? "Yes" : "No"}. This is not payout eligibility.</p>
         </section>;

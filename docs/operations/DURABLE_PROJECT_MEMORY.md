@@ -1,5 +1,9 @@
 # Durable Project Memory
 
+## 2026-10-29 owner clarification: selectable friend-supplied Q schedules
+
+Graduated Q selects ceil(current fully paid entrants in that named pool / selected ratio), descending qualifying-card order, and continues to paid nonqualifiers when needed. Equal Q selects only paid playoff qualifiers; no eligible qualifier creates unpaid contributor refund obligations. These are disclosed selectable operating policies, not a universal ACC formula. Use exact visually verified chart dollars; never scale fee tables or interpolate unsupported counts. Library source: `libfile_3a1e3f4477e481919c5163b368dcd5c2`, eight-page `cribbage pool info.pdf`. Supplied tie sequence is games won, positive plus points, then a physical low-card cut with recorded director outcome. Existing plus_points represents positive winning margins, not net spread. Q ordering must be separately versioned rather than silently changing the existing playoff qualification order, which includes net spread. Regular playoff semifinal losers share the combined third/fourth percentages equally. Preserve earlier immutable policies and unpaid review history. User approved implementation/test Preview publication; any necessary staging migration must be proposed and locally validated before separate application. Parent-supplied visually audited structured chart data resolved the failed PDF transfer dependency (314 supported cells; six blurred rows blocked). Local Docker SQL and browser-readiness verification are access-blocked; see `docs/quality/2026-10-29-q-operating-schedules-progress.md`.
+
 **Last updated:** 2026-09-20
 **Purpose:** Preserve owner corrections and verified source facts across tasks
 so a future worker does not depend on chat recall or ask the owner to repeat
