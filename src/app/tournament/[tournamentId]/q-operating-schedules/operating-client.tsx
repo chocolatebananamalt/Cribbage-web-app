@@ -104,6 +104,7 @@ export default function QOperatingClient({ actorId, tournamentId, source }: { ac
     <p role="status">{message}</p>
     <section className="correction-item"><h2>Director-selected schedule</h2>
       <p>These selectable operating schedules were supplied by a tournament director. They are not a universal ACC formula. Q Pools remain separate from regular playoff prizes.</p>
+      <p>The catalog covers {qChartSchedules.reduce((count, schedule) => count + schedule.cells.length, 0)} fee, ratio and paid-count combinations. Six $10, 1-in-4 rows were clarified by the user and checked for payout count and total; they were not independently readable in the original scan. Combinations outside the supplied coverage still require director review.</p>
       <p>Disclose the named pool cost, method and ratio before players elect or pay. Announce its entrant count before play. A frozen policy cannot be changed retrospectively; older policies and unpaid history remain preserved.</p>
       {!source && <p role="alert">Operating-schedule service unavailable. Recording and previews are blocked; no saved history was changed.</p>}
       {source && <fieldset disabled={locked}><label>Named Q Pool<select value={poolId} onChange={e => { setPoolId(e.target.value); setScheduleId(""); setDisclosed(false); setCutOrder(""); setCutObserved(false); }}>{pools.map(p => <option key={p.poolVersionId} value={p.poolVersionId}>{p.name} ({formatUsd(p.feeMinor)})</option>)}</select></label>

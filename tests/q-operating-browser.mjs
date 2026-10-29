@@ -7,6 +7,7 @@ import {chromium} from 'playwright-core';
 import {operatingSource,id} from './fixtures/q-operating-source.mjs';
 const root=process.cwd(),dir=path.join(root,'test-results/q-operating-browser'),origin='http://127.0.0.1:3247',actor=id(999),key=`payment-obligation:q-operating-v2:${actor}:${id(1)}`;
 const sources={equal:operatingSource(),graduated:operatingSource(16,1000,'graduated-paid-card-rank-v2'),refund:operatingSource(4,501),partial:operatingSource(),stale:operatingSource(),cut:operatingSource(16,1000,'graduated-paid-card-rank-v2'),publish:operatingSource(0,1000),unavailable:null};
+for(const count of [39,60]){const s=operatingSource(count,1000,'graduated-paid-card-rank-v2');s.policies[0].ratio=4;s.policies[0].scheduleId='friend-q-p5-10-4-v1';sources[`clarified${count}`]=s;}
 sources.refund.cards.forEach(c=>{c.qualified=false;c.qualificationRank=null});sources.partial.membership.entries[0].allocationCurrent=false;
 sources.stale.blockers=['qualification_scores_changed'];
 sources.cut.cards[1]={...sources.cut.cards[0],participantId:id(101),qualificationRank:2};
@@ -35,6 +36,12 @@ try{
   await page.setViewportSize({width,height:1050});await go('equal');assert.deepEqual((await page.locator('article li').allTextContents()).map(s=>s.match(/\$[\d.]+/)[0]),['$6.67','$6.67','$6.66']);
   await go('graduated');assert.deepEqual((await page.locator('article li').allTextContents()).map(s=>s.match(/\$[\d.]+/)[0]),['$80.00','$50.00','$30.00']);
   await page.screenshot({path:path.join(root,`test-results/q-operating-${width}.png`),fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`no overflow ${width}`);
+  for(const [count,dollars]of [[39,[80,65,50,40,35,30,25,25,20,20]],[60,[105,85,70,60,50,40,35,30,25,20,20,15,15,15,15]]]){
+   await go(`clarified${count}`);await page.getByText(/catalog covers 320 fee/).waitFor();await page.getByText(/clarified by the user and checked for payout count and total/).waitFor();
+   assert.deepEqual((await page.locator('article li').allTextContents()).map(s=>s.match(/\$[\d.]+/)[0]),dollars.map(n=>`$${n.toFixed(2)}`));
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`clarified no overflow ${count}/${width}`);
+  }
+  checks.push(`clarified 39/60 exact dollars and visible user-read provenance ${width}`);
   await go('refund');assert.equal(await page.locator('article li').count(),4);assert.ok((await page.locator('article li').allTextContents()).every(s=>s.includes('$5.01')));
   await go('partial');await page.getByRole('alert').filter({hasText:/Preview blocked.*unresolved receipt allocation/}).waitFor();assert.equal(await page.locator('article li').count(),0);checks.push(`equal/graduated exact dollars/refund/partial/no overflow ${width}`);
   await go('stale');await page.getByRole('alert').filter({hasText:/Preview blocked.*qualification scores changed/}).waitFor();assert.equal(await page.locator('article li').count(),0);
