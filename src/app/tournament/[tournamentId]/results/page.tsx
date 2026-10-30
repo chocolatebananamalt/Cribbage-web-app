@@ -17,6 +17,8 @@ import { isTeamWorkspace } from "../../../../lib/api/team-operations";
 import { isTeamResults } from "../../../../lib/api/team-results";
 import { isQualificationTieWorkspace, type QualificationTieWorkspace } from "../../../../lib/api/qualification-ties";
 import QualificationTiesClient from "./qualification-ties-client";
+import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
+import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
 
 const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
@@ -47,6 +49,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   const eventWorkspace = await getTournamentResultEventSummary(access.user.id, tournamentId);
   const selectedEvent = eventWorkspace.events.find((item) => item.eventId === event);
   if (!selectedEvent) notFound();
+  const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   if (selectedEvent.eventType === "satellite") return <main className="auth-shell"><section className="auth-card standings-card"><p className="eyebrow">TOURNAMENT RESULTS</p><h1>{selectedEvent.name} Results</h1><p className="card-context">{eventWorkspace.tournamentName}</p><p className="registration-note">Singles and paper-scored doubles Satellites use the same director-reviewed result package: cashing placements, prize amounts, Q-Pool and Side-Pool results, special hands, and cross-check evidence.</p><section className="correction-item"><h2>ACC reporting</h2><p><strong>MRPs: Not applicable—Satellite event</strong></p><p>Satellite results never qualify a player for Main or Consolation.</p><p>Scorecards and payout evidence are retained for at least twelve months. The downloadable report assists the director. Automatic ACC submission remains disabled until an interface is approved.</p></section><Link className="guide-link" href={`/tournament/${tournamentId}/satellite-results?event=${event}`}>Open Satellite Results</Link><Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link><SharedDeviceSignOut/></section></main>;
   if (["doubles", "canadian_doubles"].includes(selectedEvent.format)) {
     const admin = createServerOnlyAdminClient();
@@ -81,6 +84,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   }
 
   if (finalized) return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
+    {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
     <p className="eyebrow">TOURNAMENT RESULTS</p>
     <h1 id="standings-title">{finalReport ? "Final Event Results" : "Finalized Qualification"}</h1>
     <p className="card-context">{finalized.tournamentName} · {finalized.eventName}</p>
@@ -153,6 +157,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     ?? (tiedRows.length > 0 ? `${tiedRows.length === 1 ? `${tiedRows[0].displayName} is` : `${tiedRows.map((row) => row.displayName).join(", ")} are`} tied on the ranking, and a tie has to be resolved before the qualifying ranking can be locked.` : null);
 
   return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
+    {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
     <p className="eyebrow">TOURNAMENT RESULTS</p>
     <h1 id="standings-title">Live Preliminary Standings</h1>
     <p className="card-context">{standings.tournamentName} · {standings.eventName}</p>
@@ -177,7 +182,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     </section> : <p className="registration-note">Enroll players before calculating a qualification preview.</p>}
     {sidePools.length ? <section className="correction-item"><h2>Side Pool Status</h2>{sidePools.map((pool) => <p key={pool.poolId}><strong>{pool.displayName}</strong> · {pool.elections.filter((item) => item.elected).length} elected · collected {formatUsd(pool.collectedMinor)} · payouts {formatUsd(pool.paidMinor)}</p>)}</section> : null}
     {canReviewQualificationTies && standings.rows.some(row => row.tied) ? <QualificationTiesClient
-      actorId={access.user.id} tournamentId={tournamentId} eventId={event} source={tieWorkspace}
+      actorId={access.user.id} tournamentId={tournamentId} eventId={event} source={tieWorkspace} syntheticContext={syntheticContext}
       candidates={standings.rows.map(row => ({ id: row.participantId, displayName: row.displayName }))}
     /> : null}
     {qualification && (access.role === "director" || access.role === "co_director") ? <QualificationFinalizationClient

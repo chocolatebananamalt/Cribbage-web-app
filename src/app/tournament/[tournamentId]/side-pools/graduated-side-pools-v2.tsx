@@ -51,7 +51,7 @@ export function hasGraduatedPolicy(workspace: SideGraduatedWorkspaceV2 | null, p
   return !!workspace?.pools.find((pool) => pool.poolId === poolId)?.policy;
 }
 
-export function GraduatedPool({ actorId, tournamentId, pool, participants = pool.participants }: { actorId: string; tournamentId: string; pool: SideGraduatedPoolV2; participants?: Array<{ participantId: string; displayName: string }> }) {
+export function GraduatedPool({ actorId, tournamentId, pool, participants = pool.participants, syntheticMode = false }: { actorId: string; tournamentId: string; pool: SideGraduatedPoolV2; participants?: Array<{ participantId: string; displayName: string }>; syntheticMode?: boolean }) {
   const router = useRouter();
   const [pending, setPending] = useState<Pending | null>(null);
   const [message, setMessage] = useState("");
@@ -158,7 +158,7 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
     if (!participantId || !Number.isSafeInteger(receivedMinor) || receivedMinor < 0 || receivedMinor > pool.feeMinor) { setMessage("Enter a valid received amount up to the pool fee."); return; }
     const policyId = pool.policy?.id;
     if (!policyId) return;
-    void submit({ eventId: pool.eventId, poolId: pool.poolId, action: "election", request: { policyId, participantId, electionId: entry?.electionId ?? crypto.randomUUID(), expectedVersion: entry?.version ?? 0, elected: true, receivedMinor, paymentMethod, paymentReference, reason: reason.trim() || (entry ? "Director corrected disclosed Side Pool collection" : "Director recorded disclosed Side Pool collection") } });
+    void submit({ eventId: pool.eventId, poolId: pool.poolId, action: "election", request: { policyId, participantId, electionId: entry?.electionId ?? crypto.randomUUID(), expectedVersion: entry?.version ?? 0, elected: true, receivedMinor, paymentMethod, paymentReference: syntheticMode ? `TEST ONLY SYNTHETIC:${paymentReference.trim()}`.slice(0, 100) : paymentReference, reason: reason.trim() || (entry ? "Director corrected disclosed Side Pool collection" : "Director recorded disclosed Side Pool collection") } });
   }
   function publishPolicy() {
     if (!disclosure.trim()) { setMessage("Enter where the policy disclosure was presented before collection."); return; }
@@ -184,12 +184,12 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
     </fieldset> : <>
       <p><strong>Disclosed policy:</strong> {pool.policy?.method}; 1 in {pool.policy?.ratio}; disclosure: {pool.policy?.disclosureReference}. Published {new Date(pool.policy!.publishedAt).toISOString()}.</p>
       <fieldset disabled={!ready || busy || blocked || !!pending || !participantId || pool.started}>
-        <legend>Record fully paid Side Pool entry</legend>
+        <legend>{syntheticMode ? "Record simulated fully paid Side Pool entry" : "Record fully paid Side Pool entry"}</legend>{syntheticMode && <p>No actual cash receipt or personal player consent is claimed.</p>}
         <p>Policy disclosure is already on file. Only fully paid entries count toward the entrant count and amount schedule; recorded collection remains an audited ledger entry.</p>
         <label>Participant<select value={participantId} onChange={(event) => setParticipantId(event.target.value)}><option value="">Select participant</option>{participants.map((item) => <option key={item.participantId} value={item.participantId}>{item.displayName}</option>)}</select></label>
-        <label>Amount received (USD)<input inputMode="decimal" value={received} onChange={(event) => setReceived(event.target.value)} /></label>
+        <label>{syntheticMode ? "Simulated amount received (USD)" : "Amount received (USD)"}<input inputMode="decimal" value={received} onChange={(event) => setReceived(event.target.value)} /></label>
         <label>Method<select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value as "cash" | "check")}><option value="cash">Cash</option><option value="check">Check</option></select></label>
-        <label>Check number or reference (optional)<input maxLength={100} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} /></label>
+        <label>Check number or reference (optional)<input maxLength={syntheticMode ? 79 : 100} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} /></label>
         <label>Audit reason (optional)<input maxLength={400} value={reason} onChange={(event) => setReason(event.target.value)} /></label>
         <button className="secondary" type="button" disabled={busy || !!pending || !participantId || pool.started} onClick={saveElection}>{entry ? "Correct audited entry" : "Record collection"}</button>
       </fieldset>

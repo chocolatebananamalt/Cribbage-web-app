@@ -7,6 +7,8 @@ import { isUuid } from "../../../../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../../lib/supabase/private-admin";
 import SidePoolRecipientsV3Client from "./side-pool-recipient-v3-client";
+import { getSyntheticEventContext } from "../../../../../../../lib/paper-games/synthetic-event-context";
+import { SyntheticEventNotice } from "../../../../../../../components/synthetic-event-notice";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +17,7 @@ export default async function SidePoolRecipientsV3Page({ params }: { params: Pro
   if (![tournamentId, eventId, poolId].every(isUuid)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
+  const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   const admin = createServerOnlyAdminClient();
   const [{ data, error }, graduated] = await Promise.all([
     admin.rpc("get_side_pool_recipient_workspace_v3", {
@@ -29,6 +32,7 @@ export default async function SidePoolRecipientsV3Page({ params }: { params: Pro
   return <main className="auth-shell"><section className="auth-card standings-card">
     <p className="eyebrow">SIDE POOL RECIPIENTS</p>
     <h1>Unpaid recipient review</h1>
+    {syntheticContext && <><SyntheticEventNotice context={syntheticContext}/><p className="auth-note">Recipient rankings and unpaid amounts are simulated fixture calculations; no player has been paid.</p></>}
     <p className="auth-note">This scoped review uses every fully paid entrant’s qualifying scorecard, regardless of playoff qualification. It records unpaid rank amounts only. It does not finalize tournament accounting, mark anyone paid, or move money.</p>
     {workspace
       ? <SidePoolRecipientsV3Client key={`${access.user.id}:${tournamentId}:${eventId}:${poolId}`} actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} poolId={poolId} workspace={workspace} canPublishPolicy={canPublishPolicy} />

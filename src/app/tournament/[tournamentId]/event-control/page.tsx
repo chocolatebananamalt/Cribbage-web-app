@@ -7,6 +7,8 @@ import { isUuid } from "../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import EventControlClient from "./event-control-client";
+import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
+import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
 
 export const dynamic = "force-dynamic";
 
@@ -22,14 +24,16 @@ export default async function EventControlPage({ params }: { params: Promise<{ t
     p_tournament_id: tournamentId,
   });
   if (error || !isEventControlWorkspace(data)) notFound();
+  const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
 
   return <main className="auth-shell"><section className="auth-card schedule-card" aria-labelledby="event-control-title">
     <p className="eyebrow">OPERATIONS</p>
     <h1 id="event-control-title">Event Play Control</h1>
     <p className="card-context">{data.tournamentName}</p>
+    {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
     <p className="auth-note">Pause stops new score entry across an event while play is halted, and resuming puts it back. Close Event ends play for good and hands the event to cross-checking, so it refuses while any scheduled game is still unrecorded or unverified.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
-    <EventControlClient tournamentId={tournamentId} workspace={data} />
+    <EventControlClient actorId={access.user.id} tournamentId={tournamentId} workspace={data} syntheticContext={syntheticContext} />
     <SharedDeviceSignOut />
   </section></main>;
 }

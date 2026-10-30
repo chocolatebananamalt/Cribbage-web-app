@@ -116,11 +116,13 @@ export default function ExpenseClient({
   tournamentId,
   activeExpenseTotalMinor,
   expenses,
+  syntheticMode = false,
 }: {
   actorId: string;
   tournamentId: string;
   activeExpenseTotalMinor: number;
   expenses: ExpenseEntry[];
+  syntheticMode?: boolean;
 }) {
   const router = useRouter();
   const storageKey = `expense-operation:${actorId}:${tournamentId}`;
@@ -182,7 +184,7 @@ export default function ExpenseClient({
   async function submitRecord() {
     const amountMinor = dollarsToMinor(amount);
     const idempotencyKey = locked?.idempotencyKey ?? crypto.randomUUID();
-    const body: ExpenseRecordRequest = { amountMinor: amountMinor ?? 0, description, idempotencyKey };
+    const body: ExpenseRecordRequest = { amountMinor: amountMinor ?? 0, description: syntheticMode ? `TEST ONLY SYNTHETIC:${description.trim() ? ` ${description.trim()}` : ""}` : description, idempotencyKey };
     if (!isExpenseRecordRequest(body)) {
       setMessage("Enter a positive USD amount and a description of 200 characters or fewer.");
       return;
@@ -272,17 +274,17 @@ export default function ExpenseClient({
 
   return <section className="policy-settings" aria-labelledby="expenses-title">
     <h2 id="expenses-title">Tournament expenses</h2>
-    <p>Active expense total: <strong>${(activeExpenseTotalMinor / 100).toFixed(2)} USD</strong>. This ledger is private and not reconciled with payouts, Q-pools, sanctioning fees, or results.</p>
+    <p>{syntheticMode ? "Fixture expenses are simulated evidence only; no actual purchase or disbursement is claimed." : null} Active expense total: <strong>${(activeExpenseTotalMinor / 100).toFixed(2)} USD</strong>. This ledger is private and not reconciled with payouts, Q-pools, sanctioning fees, or results.</p>
     <form onSubmit={(event) => { event.preventDefault(); void submitRecord(); }}>
       <fieldset disabled={!ready || busy || locked?.operationType === "void_tournament_expense"}>
-        <legend>Add expense</legend>
-        <label>Description
-          <textarea required maxLength={200} value={description} onChange={(event) => setDescription(event.target.value)} />
+        <legend>{syntheticMode ? "Add simulated fixture expense" : "Add expense"}</legend>
+        <label>{syntheticMode ? "Expense detail after required synthetic label" : "Description"}
+          <textarea required maxLength={syntheticMode ? 178 : 200} value={description} onChange={(event) => setDescription(event.target.value)} />
         </label>
         <label>Amount in USD
           <input required inputMode="decimal" placeholder="0.00" value={amount} onChange={(event) => setAmount(event.target.value)} />
         </label>
-        <button className="primary" type="submit">Add Expense</button>
+        <button className="primary" type="submit">{syntheticMode ? "Add simulated expense" : "Add Expense"}</button>
       </fieldset>
     </form>
     {expenses.length ? <ul className="correction-list">{expenses.map((expense) => <ExpenseRow

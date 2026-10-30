@@ -7,12 +7,15 @@ import { getAccountingEntry } from '../../../../../../lib/api/accounting-entry';
 import { listPrizeSchedules } from '../../../../../../lib/api/prize-schedule';
 import { SharedDeviceSignOut } from '../../../../../../components/shared-device-sign-out';
 import FiveQualifierPlayoffClient from './playoff-client';
+import { getSyntheticEventContext } from '../../../../../../lib/paper-games/synthetic-event-context';
+import { SyntheticEventNotice } from '../../../../../../components/synthetic-event-notice';
 export const dynamic = 'force-dynamic';
 export default async function FiveQualifierPlayoffPage({ params }: { params: Promise<{ tournamentId: string; eventId: string }> }) {
  const { tournamentId, eventId } = await params;
  if (!isUuid(tournamentId) || !isUuid(eventId)) notFound();
  const access = await requireTournamentAccess(tournamentId);
  if (!['director', 'co_director'].includes(access.role)) notFound();
+ const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
  let workspace: PlayoffV4Workspace | null = null;
  const admin = createServerOnlyAdminClient();
  const schedules = access.role === 'director' ? await listPrizeSchedules(admin, access.user.id, tournamentId) : null;
@@ -24,6 +27,7 @@ export default async function FiveQualifierPlayoffPage({ params }: { params: Pro
  return <main className="auth-shell"><section className="auth-card corrections-card"><p className="eyebrow">SOURCE-BOUND PLAYOFF RESULTS</p><h1>Five qualifiers and first-round byes</h1>
   <p><a href={`/tournament/${tournamentId}`}>Tournament</a> · <a href={`/tournament/${tournamentId}/results`}>Qualifying results</a>{accountingEntry && <> · <a href={`/tournament/${tournamentId}/events/${eventId}/${accountingEntry}`}>Unpaid accounting</a></>}</p>
   {!accountingEntry && <p role="status">The accounting route could not be established from current pool configuration. No legacy or zero-pool fallback was assumed.</p>}
-  <FiveQualifierPlayoffClient actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} initialWorkspace={workspace}/><SharedDeviceSignOut/>
+  {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
+  <FiveQualifierPlayoffClient actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} initialWorkspace={workspace} syntheticContext={syntheticContext}/><SharedDeviceSignOut/>
  </section></main>;
 }

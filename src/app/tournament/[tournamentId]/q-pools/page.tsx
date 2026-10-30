@@ -8,6 +8,8 @@ import QPoolMembershipClient, { type QConsentPolicy } from "./q-pools-client";
 import { isQPreviewSources, Q_POLICY_TEXT } from "../../../../lib/results/q-pool-preview";
 import { isQOperatingWorkspaceV2 } from "../../../../lib/api/q-operating-schedules";
 import { qChartSchedules } from "../../../../lib/results/q-chart-catalog";
+import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
+import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,7 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
+  const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   let workspace = null;
   let policies: QConsentPolicy[] = [];
   try {
@@ -41,6 +44,7 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
   return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="q-pool-title">
     <p className="eyebrow">EVENT MEMBERSHIP</p>
     <h1 id="q-pool-title">Q Pool Membership and Payment Allocation</h1>
+    {syntheticContext && <><SyntheticEventNotice context={syntheticContext}/><p className="auth-note">Membership and acknowledgments for this rehearsal are simulated fictional director-configured choices, not personal player consent.</p></>}
     <p className="auth-note">Q Pool participation is a separate election for each configured pool. Elections do not create payments. Allocation records only use an existing receipt and obligation; enter the base fee and every Q Pool amount explicitly. Paid entry eligibility is not payout eligibility. Automatic payout and settlement are not part of this screen.</p>
     <p><a href={`/tournament/${tournamentId}/q-pool-policy`}>Disclose a Q Pool policy before collection / review payout preview</a></p>
     {access.role === "director" && <p><a href={`/tournament/${tournamentId}/q-operating-schedules`}>Select clarified equal or graduated Q operating schedule</a></p>}

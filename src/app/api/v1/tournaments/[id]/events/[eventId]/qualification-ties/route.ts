@@ -1,3 +1,5 @@
+import { getSyntheticEventContext } from "../../../../../../../../lib/paper-games/synthetic-event-context";
+import { syntheticEventArtifactId } from "../../../../../../../../lib/api/synthetic-event-evidence";
 import { type NextRequest } from "next/server";
 import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../../../lib/api/same-origin";
@@ -25,7 +27,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!isUuid(id) || !isUuid(eventId) || !isUuid(operation) || !isQualificationTieRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 });
     const actor = await requireVerifiedSubject(await createClient());
     if (!actor) return apiJson({ error: "unauthorized" }, { status: 401 });
-    const { data, error } = await createServerOnlyAdminClient().rpc("save_qualification_tie_resolution_v1", { p_actor_id: actor, p_tournament_id: id, p_event_id: eventId, p_request: body, p_operation_id: operation });
+    const synthetic = await getSyntheticEventContext(actor, id);
+    const syntheticEvent = synthetic?.eventIds.includes(eventId) === true;
+    const args = { p_actor_id: actor, p_tournament_id: id, p_event_id: eventId, p_request: body, p_operation_id: operation };
+    const { data, error } = syntheticEvent
+      ? await createServerOnlyAdminClient().rpc("save_synthetic_qualification_tie_v1", {...args,p_artifact_id:syntheticEventArtifactId(body.evidenceReference)})
+      : await createServerOnlyAdminClient().rpc("save_qualification_tie_resolution_v1", args);
     if (error) return apiJson({ error: "tie_service_unavailable" }, { status: 503 });
     if (data === null) return apiJson({ error: "forbidden" }, { status: 403 });
     return isQualificationTieOutcome(data, eventId) && qualificationTieOutcomeMatches(data, body)

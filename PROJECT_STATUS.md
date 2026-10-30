@@ -5174,3 +5174,27 @@ Owner's Side ranking clarification implemented locally in pure calculator, sourc
 
 ### 2026-10-30 final local Side milestone
 Final frozen source passes1,113 application tests plus audit/lint/providers/production build/TypeScript/workspace. Side recipient and combined unpaid accounting are implemented locally, including Side-only (no Q), separate funds, stale/replay/race/source-freeze guards, exact refunds and explicit upward cover. Independent final review found no confirmed P1/P2. No code commit/push, staging migration or feature deployment occurred. Exact264/265 hashes and approval/rollback scope: docs/quality/2026-10-30-side-pool-local-rollout.md. Hosted no-Q remains15/102 after attestation denial; no retry or new credential handling. Production platform resumption alone succeeded under its separate approval, with parent health check1. Physical/hosted acceptance, truthful staging synthetic evidence mode and production rollout remain separate gates.
+
+## 2026-10-30 Side Pool staging release complete; synthetic evidence local only
+
+Side recipient/combined unpaid release562d6e80aa315077cd269437d74f2876a687a3db is on existing draftPR122 branch and READY stable Preview with successful exact-commit GitHub verification. Staging0264/0265 SQL hashes/ACL/RLS/guards and all212 preexisting applicationtable fingerprints verified; five new tables empty. No hosted score or financial smoke writes. Preserved no-Q fixture remains15captures/102scheduled. Synthetic-scorecard feature is local-only authorized work, not enabled/published; original-paper denial is not bypassed. See docs/quality/2026-10-30-side-staging-rollout.md. Productionavailabilityincident alreadyclosed; no productionrelease.
+
+## 2026-10-30 local synthetic evidence milestone verified
+
+The unpublished synthetic evidence feature passed final frozen verification: 1,117 application tests, audit, lint, provider checks, production build and workspace checks. Six handoff tests, 14 focused tests, 11 actual SQL groups and 10 phone/desktop browser groups passed. Independent review found no confirmed P1/P2 issues. The task database, container and server were removed.
+
+Migration 0266 remains local: 22,986 bytes, SHA256 4E2CC81EE51BB6B4FB7B8563E4D09FF175C01E36BA1D01AAE806904E5E613DEA. It adds four private tables and three service-only RPCs, plus a narrow repair aligning director capture-receipt recovery with existing writer permissions. No new human grants, hosted enrollment, scoring retry or publication occurred. The existing 15 hosted captures remain unchanged.
+
+The manual tiebreak checkbox still requires a separately played game; generated qualifying cards do not establish that fact. See docs/quality/2026-10-30-synthetic-evidence-local.md and the curated manifest for the next approval scope. A private source snapshot is prepared at this consistent checkpoint; its confirmed version and hash are recorded in the external receipt. This is not hosted disaster recovery or production certification.
+
+## 2026-10-30 complete synthetic-flow verification in progress
+
+The local-only0267 extension now covers simulated closure, manual tiebreak and playoff evidence, with truthful receipt labels and persistent fixture context. Two full17-player local rehearsals passed through unpaid accounting. Final adverse/recovery/H2H checks and full verification remain pending. No hosted test retry or new publication occurred. See docs/quality/2026-10-30-synthetic-flow-attestation-inventory.md. Backup version19 protects the prior verified milestone; the next version will follow the new consistent checkpoint.
+
+## 2026-10-30 complete truthful synthetic flow verified locally
+
+The full local 0266/0267 design now covers generated paired scorecards, source-bound simulated manual tiebreaks, canonical head-to-head priority, closure, four playoff series/three byes, receipt provenance and unpaid accounting. Qualifying totals and the 15 legacy records remain unchanged. Production physical assertions remain intact, exact staging/private enrollment is mandatory, and actual funding, voids and disbursement are excluded in enrolled mode.
+
+Final verification passed: 1,122 application tests, dependency audit, lint, provider checks, build and eight workspace checks; paper SQL eleven groups; two complete 17-player real local SQL workflows plus adverse/replay/concurrent/revoked-role checks; phone/desktop browser contracts; independent review with no confirmed P1/P2. Task databases, containers and browser test servers were cleaned up. See the synthetic-event-flow quality report and attestation inventory for evidence and limitations.
+
+Current local migrations: 0266 is 23,037 bytes, SHA256 779DBF95973667E32F4BD4FAB7483968AEC40E224553223D5E641973DEA6EE41; 0267 is 30,239 bytes, SHA256 1800E7E8B276F9E318BB0AD47D98688766C988C21393C2965F48BD14A2FEE57B. Together they add six private immutable tables and seven service-only RPCs with no human grants or seeded enrollment. They remain unpublished and unapplied to hosted staging. Side release562d6e8 remains the deployed baseline; no hosted synthetic action or original-paper retry occurred. Separate approval is required for migration, publication, exact fixture enrollment/artifact preparation and the bounded hosted acceptance. Physical field rehearsal, generic print certification, Q monetary ties and hosted disaster recovery remain separate gates.
