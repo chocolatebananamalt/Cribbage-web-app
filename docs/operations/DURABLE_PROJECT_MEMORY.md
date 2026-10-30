@@ -1,3 +1,15 @@
+## 2026-10-30 morning readiness preparation
+
+Current checkpoint: test commit b0005ad6c065640961b01efb3ef3497c5de075f7 deployed; current $5 hosted acceptance remains incomplete. Two fresh17-player fixtures and pending B invitations exist; no financial/scoring records in them yet. Prior cent-based acceptance below is historical only. Whole$5 standing policy is approved, including automatic regular floor/ceil and honest funding requirement. Source backup v13 predates this morning checklist; see2026-10-30-morning-readiness-checkpoint.md for actual pending gates. Additional focused safety tests21/21passed; no new app behavior, hosted mutation or publication. User asleep; personal invitation acceptance remains pending.
+
+## 2026-10-30 recovery barrier diagnostics locally verified
+
+Local diagnostic milestone verified: 1092 application tests and full pnpm verify passed using official pinned pnpm11.19.0; audit clean, lint existing warnings only, provider checks/build/workspace passed. Actual isolated headless component suite passed phone390/desktop1440, competing-tab rejection before deletion with retained IndexedDB, cache/storage/cookie/server/interrupted/recovery/malformed/state failures, uncertain reconciliation and same-account preservation. Independent review: no remaining P1/P2. No hosted retry, storage clearing or publication. Hosted cause still unknown until diagnostic release is separately approved.
+
+## 2026-10-30 $5 policy staging rollout, acceptance pending
+
+Staging nnhcnvksxgxnpvdqjgpg migrations 0256–0263 applied once; 207 existing app-table fingerprints remained identical. Five new private forced-RLS tables are empty; 13 backend service RPCs have expected ownership/search paths/grants, and 21 denomination plus five immutable triggers are enabled. Stored migration SQL is the approved bytes plus a trailing CRLF; removing it reproduces each approved source SHA256. Exact Git commit 0c15806a632c6ae83c197ed426d41d9929d0b216 was normally pushed to codex/director-setup-journey / draft PR122; both CI verify jobs passed and Git-created Preview dpl_BHXS7QyTbD49r56X8NnDeS8mwKXP is READY. Fictional hosted acceptance remains NOT STARTED: automatic review rejected inspection of the existing laptop browser due to the prior browser-control restriction. No password, production, actual payment or business-record write occurred. See docs/quality/2026-10-30-five-dollar-staging-rollout.md.
+
 ## 2026-10-30 legacy monetary compatibility locally verified
 
 Actual isolated SQL passed historical V5, satellite and team accepted replay and new cent-award rejection/rollback, plus a normal $5 team replacement. Local 0263 repairs the pre-existing generated scorer-status insertion defect without rewriting rows; no hosted migration has run. Full pnpm verify passed 1,091 application tests, audit, lint, providers and build. Physical rehearsal, hosted restore, exact-release acceptance and production authorization remain open. See docs/quality/2026-10-30-five-dollar-prize-policy-local.md.
@@ -247,3 +259,15 @@ these:
 - an owner/ACC policy choice where more than one safe interpretation remains.
 
 These dependencies do not justify pausing unrelated implementation or tests.
+
+### 2026-10-30 verified synthetic restore
+See docs/quality/2026-10-30-synthetic-local-restore-rehearsal.md. 239 table fingerprints and selected metadata survived same-cluster synthetic restore; original unchanged, exact task resources removed. 1,095 application tests/full verify passed. No hosted data export or hosted DR claim. Fresh eligible benefits $160 permit $280 awards; earlier $153 benefits require $285 and $4.50 funding. Restricted money is never participant return. Hosted no-Q scoring preserved at 15/102; Side recipient decision and remaining release gates stay open.
+
+### 2026-10-30 owner clarification: Side recipient basis resolved
+Side Pools rank all fully paid entrants' qualifying scorecards in that named pool regardless of playoff qualification; ceil(paid count / configured ratio) recipients, shared approved $5 allocation. Never rank by final playoff placement. This supersedes the earlier missing-information question; monetary ties remain blocked. Source: direct owner message relayed by parent. Local implementation/testing only; no hosted migration/publication. Regular $160 eligible benefits are INCLUDED within $229.50 expenses, not an extra cash pot; return $280 + $160 = $440, restricted $0.50 excluded. See docs/quality/2026-10-30-production-pause-side-ranking.md.
+
+### 2026-10-30 production platform resumption
+Specific user-approved Supabase Resume for ACC Tournament Pilot Integration (fnjkwymxpnsqvxtpronk) completed once. Dashboard explicitly reported successful restoration and back online. Parent owns separate approved SELECT 1 health query. No app/schema publication, billing/settings/credential changes or tournament record writes. This exception does not authorize any broader production rollout.
+
+### 2026-10-30 final Side implementation evidence
+Side recipient basis is resolved and implemented; it is no longer an owner-information blocker. All paid named-pool qualifying cards are ranked regardless playoff qualification, with configured ratio/fee, shared $5 allocation and unresolved cash ties blocked. New264/265 local migration artifacts add five private immutable tables/ten backend-only RPCs, no new human grants. Actual local SQL Q+Side/Side-only finals, $4.50 cover, exact $10.01 legacy refund, ordinaryv8 compatibility and observed locking races passed; final application suite1,113/build/audit/workspace passed; independent final review no confirmedP1/P2. See docs/quality/2026-10-30-side-pool-local-rollout.md for exact hashes/scope/limits. Current hosted15/102 preserved after denied synthetic-original-paper attestation. Do not bypass; truthful staging-only evidence path is proposed, not implemented. No new hosted schema/code/business changes authorized/applied. Production Resume/health incident was separately closed, not a launch approval.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   isSideGraduatedMutationV2,
@@ -171,6 +172,7 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
   const graduated = !!pool.policy;
   return <section className="registration-note" aria-label={`${pool.name} graduated policy`}>
     <h3>{pool.name} · {money(pool.feeMinor)}</h3>
+    {graduated ? <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools/recipients/${pool.eventId}/${pool.poolId}`}>Review unpaid recipients</Link> : null}
     {pending?.mutation.poolId === pool.poolId ? <div className="auth-note" role="status"><p>{message || "A Side Pool request is awaiting recovery."}</p><button className="secondary" type="button" disabled={!ready || busy || blocked} onClick={() => void submit(pending.mutation, pending)}>Retry exact Side Pool request</button></div> : null}
     {!graduated ? <fieldset disabled={!ready || busy || blocked || !!pending || !pool.canPublish}>
       <legend>Disclose and post the new graduated policy before collection</legend>

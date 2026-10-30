@@ -5,7 +5,7 @@ import{isPrizeAccountingWorkspaceV8}from'../../src/lib/api/prize-accounting-v8.t
 import{isPrizeScheduleWorkspace}from'../../src/lib/api/prize-schedule.ts';
 import{rule as historicalRule}from'./no-q-accounting-v7-workspace.mjs';
 export{tid,eid,actor,id,digest};
-export const up=makePrizeAccountingV8Fixture(),down=makePrizeAccountingV8Fixture({down:true});
+export const up=makePrizeAccountingV8Fixture(),down=makePrizeAccountingV8Fixture({down:true}),fresh=makePrizeAccountingV8Fixture({fresh:true});
 export const row=id(90);
 export const setupEmpty={tournamentId:tid,clientRowId:row,currentVersion:0,activated:false,eventId:null,settingsCurrent:true,versions:[]};
 const version=schedule=>({scheduleId:id(91),version:1,schedule,reason:'TEST ONLY previously saved schedule',recordedAt:'2026-10-30T07:00:00.000Z'});
@@ -31,7 +31,7 @@ export function finalize(current){
  assert.ok(isPrizeAccountingWorkspaceV8(next,tid,eid));return next;
 }
 export function validateBrowserFixtures(){
- for(const f of[up,down])for(const w of[f.workspace,f.withDraft,f.funded,f.finalized])assert.ok(isPrizeAccountingWorkspaceV8(w,tid,eid));
+ for(const f of[up,down,fresh])for(const w of[f.workspace,f.withDraft,f.funded,f.finalized])assert.ok(isPrizeAccountingWorkspaceV8(w,tid,eid));
  for(const w of[setupEmpty,setupV3,setupHistorical])assert.ok(isPrizeScheduleWorkspace(w,tid,row));
  const partial=addFunding(up.withDraft,200),funded=addFunding(partial,250),voided=voidFunding(funded,funded.funding.records[0].id);
  assert.equal(partial.funding.shortfallMinor,250);assert.equal(funded.funding.shortfallMinor,0);assert.equal(voided.funding.shortfallMinor,200);finalize(funded);finalize(down.withDraft);

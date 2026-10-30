@@ -187,3 +187,6 @@ Owner-approved app defaults: explicit opt-in to exact configured pool versions; 
 ## Qualification residual ties — owner clarification, 2026-10-29
 
 For exactly two Standard Singles qualifying cards tied after game points, wins, net spread and gross positive winning spreads, derive the unambiguous current qualifying-round head-to-head winner. If there was no qualifying meeting, require a director-recorded separately played one-game playoff winner and remind the players to cut for first deal. Preserve both original qualifying totals. Multiway or repeated/ambiguous meetings remain explicitly unsupported. Record immutable source-bound evidence and actor/time; stale evidence cannot finalize qualification. This qualification rule must not silently replace the independently disclosed Q monetary tie policy. Source and authorization: `../decisions/2026-10-29-qualification-two-player-ties.md`.
+
+## 2026-10-30 Side Pool recipient policy correction
+Owner clarification: each Side Pool ranks its own fully paid scorecards regardless of playoff qualification; no final-playoff-placement filter. Use configured 1-in-N and approved total-preserving $5 amount formula. Keep ties unresolved until supported review. This resolves the prior recipient-basis question; local source-bound implementation is in progress. No historical records may be recalculated silently.
