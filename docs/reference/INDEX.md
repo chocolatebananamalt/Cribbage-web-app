@@ -1,3 +1,6 @@
+## 2026-10-30 owner payout correction — local policy design hold
+
+Owner06:18 requires whole-dollar awards, preferably $5, for regular/Q prizes.06:19 clarifies graduated rank-down (not a blanket equal-pool refund override).06:22 directs the shared ACC-weighted/balanced $5 formula for graduated Q and Side Pools;06:24 rejects recurring director questions for leftover placement. Whole-$5 LR already allocates every $5 unit; a genuine280.50 fund has a distinct50c funding residue. A once-agreed disclosed rounding-cover guarantee is proposed, not approved; no automatic donor, fee/expense change or fund diversion. Preserve immutable historical penny/refund test records; prior acceptance proves accounting behavior, not current denomination-policy correctness. Reference docs/reference/payout-policy-clarification-2026-10-30.md. No application behavior, migration, publication or hosted data changed.
 # Project PDF and extracted-reference index
 
 Use retained reference data before reopening originals. This index identifies actual coverage; it does not claim complete extraction of every PDF. A comprehensive user-facing searchable reference is being prepared separately.

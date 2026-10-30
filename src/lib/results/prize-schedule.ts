@@ -168,7 +168,13 @@ export const directorPrizeScheduleVersionV2 = "director-selected-five-qualifier-
 export type DirectorPrizeScheduleV2 = Omit<DirectorPrizeScheduleV1, "kind" | "expectedQualifierCount"> & {
   kind: typeof directorPrizeScheduleVersionV2; expectedQualifierCount: 5;
 };
-export type DirectorPrizeSchedule = DirectorPrizeScheduleV1 | DirectorPrizeScheduleV2;
+export const directorPrizeScheduleVersionV3 = "regular-prize-cohort-5usd-v3" as const;
+export type DirectorPrizeScheduleV3 = {
+  kind: typeof directorPrizeScheduleVersionV3; amountBasis: "total_award";
+  expectedQualifierCount: 4 | 5; sourceReference: string;
+  roundingRule: "automatic-five-dollar-cohort-v3"; cohorts: PrizeScheduleCohortV1[];
+};
+export type DirectorPrizeSchedule = DirectorPrizeScheduleV1 | DirectorPrizeScheduleV2 | DirectorPrizeScheduleV3;
 export function isDirectorPrizeScheduleV1(value: unknown): value is DirectorPrizeScheduleV1 {
   return isSchedule(value, 4, directorPrizeScheduleVersion);
 }
@@ -176,7 +182,17 @@ export function isDirectorPrizeScheduleV2(value: unknown): value is DirectorPriz
   return isSchedule(value, 5, directorPrizeScheduleVersionV2);
 }
 export function isDirectorPrizeSchedule(value: unknown): value is DirectorPrizeSchedule {
-  return isDirectorPrizeScheduleV1(value) || isDirectorPrizeScheduleV2(value);
+  return isDirectorPrizeScheduleV1(value) || isDirectorPrizeScheduleV2(value) || isDirectorPrizeScheduleV3(value);
+}
+export function isDirectorPrizeScheduleV3(value: unknown): value is DirectorPrizeScheduleV3 {
+  if (!record(value) || !exact(value, scheduleKeys) || value.kind !== directorPrizeScheduleVersionV3
+    || value.roundingRule !== "automatic-five-dollar-cohort-v3" || ![4, 5].includes(value.expectedQualifierCount as number)) return false;
+  const count = value.expectedQualifierCount as 4 | 5;
+  const legacy = { ...value, kind: count === 4 ? directorPrizeScheduleVersion : directorPrizeScheduleVersionV2,
+    roundingRule: "floor_each_weighted_share_then_assign_remainder_to_champion" };
+  if (!isSchedule(legacy, count, legacy.kind)) return false;
+  const cohorts = value.cohorts as PrizeScheduleCohortV1[];
+  return cohorts.every((c, i) => c.bandStart === [1, 2, 3, 5][i] && c.bandEnd === [1, 2, 4, 5][i]);
 }
 export type PrizeScheduleResultV2 = Omit<PrizeScheduleAvailable, "scheduleVersion" | "expectedQualifierCount"> & {
   scheduleVersion: typeof directorPrizeScheduleVersionV2; expectedQualifierCount: 5;

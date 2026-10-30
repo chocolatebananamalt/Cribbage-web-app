@@ -1,3 +1,7 @@
+> Payout-policy hold, 2026-10-30 06:24 UTC: the owner requires whole-dollar prizes, preferably $5, and the shared balanced $5 formula for graduated Q/Side Pools without per-event remainder-placement questions. Historical cent-based regular/equal calculations below prove bookkeeping only, not current product policy. Graduated rank-down remains correct; the separate equal-pool refund edge case is not a graduated refund. Preserve historical records. See docs/reference/payout-policy-clarification-2026-10-30.md for the automatic-policy proposal and unresolved real-funding residue decision. No app/hosted change is authorized here.
+## 2026-10-30 exact-release hosted acceptance complete — unpaid only
+
+Both new 17-player fixtures completed 102 verified games, five-qualifier/three-bye playoffs and one immutable unpaid accounting final each on release72c1c657. No-Q manual seed tiebreak changes ranking only; original totals preserved. Balanced Q records80/55/25 awards plus10 refund owed, all unpaid. Each regular prize schedule totals280.50 and base payback433.50/510=85%. Both reloads show current sources; no duplicate capture games. All9,863 older rows/199tables retain exact fingerprints. No production or disbursement. See docs/quality/2026-10-30-hosted17-terminal-acceptance.md for exact IDs, negative guard evidence and remaining release gates. Earlier in-progress/unpublished notes below are superseded on these specific points.
 # Current release readiness — 2026-10-29
 
 ## Current completion update - 2026-10-30

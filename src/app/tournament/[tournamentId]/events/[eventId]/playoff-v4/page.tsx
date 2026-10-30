@@ -4,6 +4,7 @@ import { createServerOnlyAdminClient } from '../../../../../../lib/supabase/priv
 import { isUuid } from '../../../../../../lib/api/validation';
 import { isPlayoffV4Workspace, type PlayoffV4Workspace } from '../../../../../../lib/api/playoff-outcome-v4';
 import { getAccountingEntry } from '../../../../../../lib/api/accounting-entry';
+import { listPrizeSchedules } from '../../../../../../lib/api/prize-schedule';
 import { SharedDeviceSignOut } from '../../../../../../components/shared-device-sign-out';
 import FiveQualifierPlayoffClient from './playoff-client';
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,8 @@ export default async function FiveQualifierPlayoffPage({ params }: { params: Pro
  if (!['director', 'co_director'].includes(access.role)) notFound();
  let workspace: PlayoffV4Workspace | null = null;
  const admin = createServerOnlyAdminClient();
- const accountingEntry = access.role === 'director' ? await getAccountingEntry(admin, access.user.id, tournamentId, eventId) : null;
+ const schedules = access.role === 'director' ? await listPrizeSchedules(admin, access.user.id, tournamentId) : null;
+ const accountingEntry = access.role === 'director' ? await getAccountingEntry(admin, access.user.id, tournamentId, eventId, schedules) : null;
  try {
   const { data, error } = await admin.rpc('get_standard_singles_playoff_outcome_workspace_v4', { p_actor_id: access.user.id, p_tournament_id: tournamentId, p_event_id: eventId });
   if (!error && isPlayoffV4Workspace(data, tournamentId, eventId)) workspace = data;

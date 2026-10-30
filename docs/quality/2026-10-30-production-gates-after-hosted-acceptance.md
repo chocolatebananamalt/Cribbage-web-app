@@ -1,0 +1,44 @@
+> Payout-policy hold, 2026-10-30 06:24 UTC: the owner requires whole-dollar prizes, preferably $5, and the shared balanced $5 formula for graduated Q/Side Pools without per-event remainder-placement questions. Historical cent-based regular/equal calculations below prove bookkeeping only, not current product policy. Graduated rank-down remains correct; the separate equal-pool refund edge case is not a graduated refund. Preserve historical records. See docs/reference/payout-policy-clarification-2026-10-30.md for the automatic-policy proposal and unresolved real-funding residue decision. No app/hosted change is authorized here.
+# Remaining production gates after hosted acceptance — 2026-10-30
+
+This is a local planning checklist, not production approval. Current tested Preview commit: `72c1c6571e33a53e7a204927e02e9a4dae22f3f9`. No new hosted operation was performed for this checklist. Older September target dates and preflight migration numbers in the pilot checklist are historical; use the eventual approved release candidate and its reviewed schema manifest.
+
+## Verified payout breakdown
+
+Both 17-player events have the same five regular total awards, funded only from their $510 base entries:
+
+| Finishing place / band | No-Q recipient | Balanced-Q recipient | Total regular award |
+| --- | --- | --- | --- |
+| 1 | NoQ02 | Balanced02 | $93.51 |
+| 2 | NoQ01 | Balanced01 | $70.12 |
+| 3–4 | NoQ03 | Balanced03 | $46.75 |
+| 3–4 | NoQ04 | Balanced04 | $46.75 |
+| 5 | NoQ05 | Balanced05 | $23.37 |
+| Total | | | $280.50 |
+
+Each semifinal loser receives $46.75. These are total awards, not additions to an earlier qualifying guarantee. Four expenses total $229.50, so $510 = $229.50 + $280.50. Meals and synthetic sanctioning benefits total $153; $153 + $280.50 = $433.50, exactly 85% of gross base entries. Operating costs $76.50 are excluded from participant return.
+
+The Balanced-Q fixture has **two separate named pools**, not one 17-person pool:
+
+- **Q Pool 1 — Graduated, 1 in 6:** Balanced01–Balanced16 each contributed $10. There are 16 paid entrants, a $160 pot and ceil(16/6) = 3 recipients. The disclosed ACC-weighted/application-balanced method gives Balanced02 **$80**, Balanced01 **$55**, Balanced03 **$25**. Graduated recipient selection ranks paid pool entrants, including paid nonqualifiers below the playoff cutoff if needed. This pool has no refund obligation; its entire $160 is owed as awards.
+- **Q Pool 2 — Equal, paid playoff qualifiers only:** only Balanced17 contributed $10. Balanced17 did not qualify, so this pool has zero eligible recipients. Its separately disclosed equal-pool zero-qualifier convention creates a **$10 unpaid contributor refund obligation** to Balanced17. This is not a graduated-pool refund or failure to rank down.
+
+Thus 17 players contributed $170 across separate pools: **$160 graduated award obligations + $10 equal-pool refund owed = $170**. Combined receipts are $680 = $229.50 expenses + $280.50 regular awards + $160 Q awards + $10 Q refund obligation. The no-Q event has no Q memberships, allocations or reviews. All liabilities and both final accounting records remain **unpaid**. No transfer or refund was executed.
+
+Evidence: [terminal acceptance](2026-10-30-hosted17-terminal-acceptance.md), local generated `test-results/hosted17-terminal-accounting.json`, `hosted17-terminal-supporting-evidence.json`, `hosted17-terminal-dom-observations.json`, `hosted17-final-canonical-scorelines.json`. Independent review compared all 204 canonical games to exact prepared pair/round/winner/margin records and found no unsupported material acceptance claim. Both events have one current unpaid final; all 9,863 older rows across 199 tables remain unchanged.
+
+## Prioritized release checklist
+
+| Priority | Gate / present evidence | Concrete acceptance still required |
+| --- | --- | --- |
+| P0 — protect data | Source snapshot version 8 is verified; GitHub protects published source. Docker disk backup is local on the same computer. September schema parity demonstrated structure only, not current data/Auth/Storage recovery. | Approve the exact protected backup destination, retention and isolated restore scope before any export. Restore current Database rows/schema, required Auth relationships and Storage evidence into an isolated environment; compare counts/content hashes and test access/ownership plus representative recovered scores and accounting. Record recovery point/time and a repeatable restore procedure. No source archive substitutes for this. |
+| P0 — physical independent-user recovery | Current synthetic hosted tests prove integrated Paper scoring, qualification/tie, byes/MRP and unpaid accounting. Local production-built digital/manual/photo recovery suites exist. | Run the applicable [pilot rehearsal](../operations/OCTOBER_PILOT_REHEARSAL.md) with distinct humans/accounts/devices: digital reciprocal entry plus confirmations, paper/hybrid comparison, mismatch/correction, single-device and whole-venue outage, reload/reconnect exactly once, revoked queued write and failed-device reconstruction. Verify no lost/duplicate score and no premature verification. Use fictional data and real device/network actions; do not label automation as two humans. |
+| P0 — explicit supported launch scope | This exact hosted run accepts Standard Singles Main, 12 qualifying games and the 17-player five-qualifier/three-bye path, optional Q and unpaid accounting. Earlier four-qualifier local/historical evidence is separate. | Owner must select the initial supported formats and financial endpoint. For every included doubles, consolation, satellite, Side Pool or larger bracket path, obtain current-version end-to-end role/scoring/report/accounting evidence. Otherwise clearly block/exclude it from the initial release; do not inherit old broad support claims. Decide whether unpaid accounting is the launch endpoint or a separately reviewed paid-state/cash-disbursement recording workflow is required. No automatic payments follow from unpaid finalization. |
+| P0 — unresolved tie policies | Two-person qualification H2H/separate one-game playoff is implemented and tested; the hosted seed tiebreak preserved scores. | Resolve the separate Q-only monetary tie policy with source/director approval or retain explicit blocking. Multiway/cyclic/ambiguous qualification ties must remain blocked unless separately supported. Never substitute UUID/random order or qualification tiebreaks for Q money policy. |
+| P1 — final candidate security and operations | Current Preview CI/READY deployment, staging schema checks, private service RPC boundaries and preservation checks passed. These are not production rollout approval. | On the final approved candidate, rerun affected full verification, independent security review and phone/desktop smoke; verify production schema/app compatibility, monitoring/error visibility, operational owner, stop thresholds and a history-preserving rollback/forward-repair plan. Demonstrate rollback against the changed release in an approved test environment. Obtain explicit production migration/deployment approval only after these gates. |
+| P1 — account delivery and capacity | Shared test accounts and manual sign-ins worked. That does not establish production invitation throughput or callback delivery. | If bulk invitations are in launch scope, verify intended email provider/callback, expiry/replay, rate limits, retries and the documented target of 600 invitations in 45 minutes without sending to real entrants during rehearsal. No provider/security/billing changes are authorized by this checklist. |
+| P1 — official outputs and operating acceptance | Current accounting calculates source-versioned MRPs and preserves actual qualifying totals; this test submitted nothing to ACC. | Director-review final results, member/printable summaries and required export fields on the chosen release scope. Confirm current-effective ACC operational acceptance where the app is intended to replace an official record. Do not claim ACC sanctioning or automated submission approval from synthetic tests. |
+| P2 — optional OCR | Photo upload/review recovery tests exist; automated OCR is deferred/default-off. | Keep OCR as draft assistance until separate privacy/provider and accuracy review plus human verification evidence. It is not a blocker for a release that explicitly excludes automated OCR. |
+
+Recommended next coordinated action: agree the initial release scope and approve a protected staging backup/isolated content-restore rehearsal, while scheduling the physical multi-user/offline rehearsal. Local planning can proceed; exports, new environments/settings, real communications, paid-state design and production rollout require their specific decisions/authorization. The laptop is free; this checklist used no browser control.
+

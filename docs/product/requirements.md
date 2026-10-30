@@ -1,5 +1,9 @@
 # Product Requirements
 
+## Owner-approved denomination and automatic regular budget rule — 2026-10-30
+
+Every new prize award MUST be a multiple of $5. Regular target = available regular budget rounded down to $5 if that target plus verified eligible benefits satisfies required return; otherwise round up. Preserve equal awards for every same-round cohort and select deterministic allocations automatically. Audit original amount, target, direction, signed adjustment, required external funding or restricted retained rounding balance. Missing funding MUST block unpaid finalization; selecting a higher target MUST NOT fabricate receipts. Graduated Q and Side amounts use the same exact ACC-weighted formula with the app's conserving $5 largest-remainder modification. Keep separate pots, eligibility, historical policies and unpaid history. Equal-pool obligations that cannot satisfy equal $5 awards remain blocked pending a separately defined policy. Sources: owner messages8ff5ff575f488191beb2e805eeb63b7b anddef15591c5f88191b374ad15a9b6ebbb; [rounding reference](../reference/regular-prize-rounding-proposal-2026-10-30.md). Local implementation is not rollout approval.
+
 ## Owner-approved current additions - 2026-10-30, local only
 
 Q pools are optional: ordinary Main accounting MUST complete without creating a fictitious Q review. The supported five-qualifier slice MUST preserve actual played wins separately from bye credit, the original twelve qualifying results per person, immutable source-bound ranking resolutions, equal same-round regular awards, explicit director-entered fifth-place weight, independent 85% gross-base return and exact unpaid accounting conservation. The 17-player odd-field solution uses six real makeup matches and per-side original card-line mapping; no phantom game or free score is substituted.

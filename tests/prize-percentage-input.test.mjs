@@ -12,9 +12,9 @@ test('combined semifinal shares become equal per-person weights without changing
 test('invalid/unbalanced/nonfour-place charts fail closed rather than redistribute or interpolate',()=>{
  for(const shares of [[],['50','50'],['40','30','20','9.99'],['40','30','20','10.001'],['40','30','30','0'],['40','30','20','10','1'],['-40','30','60','50']])assert.equal(semifinalWeightsFromPercentText(shares),null);
 });
-test('setup conversion is explicit local draft, blocks unsafe saving, resets review and preserves ordinary rounding',()=>{
+test('setup conversion is explicit local draft, blocks unsafe saving, resets review and uses the new explicit five-dollar rounding policy',()=>{
  const ui=fs.readFileSync('src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx','utf8');
- for(const text of ['Combine semifinal shares into weights','Discard unapplied chart percentages','chartPercentages.some(value => value !== "")','setReviewed(false); setChartPercentages','no schedule was saved','floor_each_weighted_share_then_assign_remainder_to_champion'])assert.ok(ui.includes(text));
- const fn=ui.slice(ui.indexOf('function applyChartPercentages()'),ui.indexOf('const nums ='));
+ for(const text of ['Combine semifinal shares into weights','Discard unapplied chart percentages','chartPercentages.some(value => value !== "")','setReviewed(false); setChartPercentages','no schedule was saved','automatic $5 cohort rounding'])assert.ok(ui.includes(text));
+ const fn=ui.slice(ui.indexOf('function applyChartPercentages()'),ui.indexOf('const expenseMinor ='));
  assert.ok(!fn.includes('fetch('));assert.ok(!fn.includes('save()'));assert.ok(fn.includes('if (locked || flight.current || !combinedChartWeights) return;'));
 });

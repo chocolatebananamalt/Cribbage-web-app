@@ -98,7 +98,7 @@ export function fivePlayoffLocalSqlAdapter(container='cribbage-qaccounting-local
  const prefix=`set role postgres;set request.jwt.claim.role='service_role';set request.jwt.claims='{"role":"service_role"}';`;
  const sql=q=>{const r=spawnSync('docker',args,{input:prefix+q,encoding:'utf8',maxBuffer:32*1024*1024});if(r.status!==0)throw Error(r.stderr+'\n'+r.stdout);return r.stdout.trim();};
  const race=async(statements,eventId,writerName='record_standard_singles_playoff_outcomes_v4')=>{
-  if(!['record_standard_singles_playoff_outcomes_v4','save_q_accounting_draft_v6','finalize_q_accounting_v6','save_no_q_accounting_draft_v7','finalize_no_q_accounting_v7','save_q_operating_policy_v3','record_q_obligation_review_v2'].includes(writerName))throw Error('Explicit reviewed race writer required');
+  if(!['record_standard_singles_playoff_outcomes_v4','save_q_accounting_draft_v6','finalize_q_accounting_v6','save_no_q_accounting_draft_v7','finalize_no_q_accounting_v7','save_q_operating_policy_v3','record_q_obligation_review_v2','save_prize_accounting_draft_v8','finalize_prize_accounting_v8'].includes(writerName))throw Error('Explicit reviewed race writer required');
   if(!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(eventId))throw Error('Explicit fixture event UUID required');
   const run=q=>new Promise((resolve,reject)=>{const p=spawn('docker',args,{stdio:['pipe','pipe','pipe']});let out='',err='';p.stdout.on('data',d=>out+=d);p.stderr.on('data',d=>err+=d);p.on('error',reject);p.on('close',code=>code===0?resolve(out.trim()):reject(Error(err)));p.stdin.end(prefix+q);});
   // An explicit transaction holds the exact shared event mutex until both

@@ -11,7 +11,7 @@ const hash = (v: unknown) => typeof v === "string" && /^[a-f0-9]{64}$/.test(v);
 const text = (v: unknown, max: number) => typeof v === "string" && !!v.trim() && v.length <= max && !/[\u0000-\u001f\u007f]/.test(v);
 export function isQReviewV2Request(v: unknown): v is QReviewV2Request { return obj(v) && exact(v, ["expectedVersion", "sourceDigest", "reason", "reviewed"]) && safe(v.expectedVersion) && (v.expectedVersion as number) < 256 && hash(v.sourceDigest) && text(v.reason, 500) && v.reviewed === true; }
 export function isQReviewV2Result(v: unknown): v is QReviewV2Result {
-  return obj(v) && (v.status === "rejected" ? exact(v, ["status", "code"]) && ["invalid_request", "source_blocked", "source_changed", "stale_version", "already_reviewed", "idempotency_conflict", "q_review_domain_conflict", "settlement_finalized"].includes(v.code as string)
+  return obj(v) && (v.status === "rejected" ? exact(v, ["status", "code"]) && ["invalid_request", "source_blocked", "source_changed", "stale_version", "already_reviewed", "idempotency_conflict", "q_review_domain_conflict", "settlement_finalized", "whole_five_awards_required"].includes(v.code as string)
     : exact(v, ["status", "reviewId", "eventId", "version", "sourceDigest"]) && v.status === "q_obligations_recorded_v2" && isUuid(v.reviewId) && isUuid(v.eventId) && safe(v.version, 1) && (v.version as number) <= 256 && hash(v.sourceDigest));
 }
 export function isQObligationsV2(v: unknown): v is QObligationV2[] {
