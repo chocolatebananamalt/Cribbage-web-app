@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clearAppSessionStorage, countAppSessionStorageRecords } from "../lib/client-session-storage";
 import { clearOfflineScoreStorage, countOfflineSubmissions } from "../lib/offline-score-queue";
-import { recoveryActionGate, safeSwitchMessage, type SafeSwitchStage } from "../lib/safe-device-switch";
+import { recoveryActionGate, safeSwitchMessage, safeRecoveryBarrierMessage, type SafeSwitchStage } from "../lib/safe-device-switch";
 import { beginSafeRecoverySwitch, cancelSafeRecoverySwitch, markRecoveryCleanupStarted, finishSafeRecoverySwitch, failSafeRecoverySwitch, finishPreservingRecoverySignOut } from "../lib/recovery-write-coordinator";
 import { protectUnownedRecovery } from "../lib/auth/recovery-preflight";
 import { clearRecoveryStorageOwner } from "../lib/auth/recovery-owner";
@@ -129,9 +129,9 @@ export function SharedDeviceSignOut() {
       await beginSafeRecoverySwitch();
       finishSafeRecoverySwitch();
       window.location.replace(new URL("/sign-in", window.location.origin).toString());
-    } catch {
+    } catch (error) {
       failSafeRecoverySwitch();
-      setError(safeSwitchMessage(stage, true));
+      setError(stage === "recovery-check" ? safeRecoveryBarrierMessage(error) : safeSwitchMessage(stage, true));
       setSwitchStage(null);
       setBusy(false);
       gate.current.leave();
