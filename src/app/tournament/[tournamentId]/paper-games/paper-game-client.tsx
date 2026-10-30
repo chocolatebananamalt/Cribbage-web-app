@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { PendingPaperCardPhotos } from "../../../../components/pending-paper-card-photos";
 import { PrivatePaperCardPhoto } from "../../../../components/private-paper-card-photo";
 import { PaperCardReviewLinks } from "../../../../components/paper-card-review-links";
+import {MakeupCardLines} from '../../../../components/makeup-card-lines';
+import type {GameScorecardNumbers} from '../../../../lib/api/odd-field-makeup';
 import {
   isAcceptedPaperGameCompletion,
   isAcceptedPaperGameReview,
@@ -95,7 +97,7 @@ function SavedOperationReconciler({ actorId, tournamentId }: { actorId: string; 
   return message ? <p className="auth-note" role="status">{message}</p> : null;
 }
 
-function PaperGameForm({ actorId, tournamentId, game }: { actorId: string; tournamentId: string; game: PaperGameCandidate }) {
+function PaperGameForm({ actorId, tournamentId, game,cardNumbers }: { actorId: string; tournamentId: string; game: PaperGameCandidate;cardNumbers?:GameScorecardNumbers }) {
   const router = useRouter();
   const key = storageKey(actorId, game.gameId);
   const [sideAWinner, setSideAWinner] = useState<"a" | "b">("a");
@@ -176,8 +178,9 @@ function PaperGameForm({ actorId, tournamentId, game }: { actorId: string; tourn
 
   const winnerName = sideAWinner === "a" ? game.sideA.displayName : game.sideB.displayName;
   const gamePoints = numericSideAMargin >= 31 ? 3 : 2;
+  if(game.gameNumber===13&&!cardNumbers)return <li className="correction-item"><p role="alert">Card-line mapping is unavailable for scheduling batch 13. Pending work is preserved. Reload before recording this game.</p></li>;
   return <li className="correction-item">
-    <p><strong>{game.eventName}</strong> · Game {game.gameNumber}</p>
+    <p><strong>{game.eventName}</strong> · {cardNumbers?.isMakeup?'Qualifying makeup':`Game ${game.gameNumber}`}</p><MakeupCardLines numbers={cardNumbers} sideAName={game.sideA.displayName} sideBName={game.sideB.displayName}/>
     <p>{game.sideA.displayName} · ID # {game.sideA.verificationId}<br />{game.sideB.displayName} · ID # {game.sideB.verificationId}</p>
     <form onSubmit={submit}>
       <fieldset disabled={!storageReady || busy || !!locked}><legend>{game.sideA.displayName}&apos;s paper card</legend>
@@ -208,7 +211,7 @@ function PaperGameForm({ actorId, tournamentId, game }: { actorId: string; tourn
 
 function reviewStorageKey(actorId: string, completionId: string) { return `paper-game-review:${actorId}:${completionId}`; }
 
-function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tournamentId: string; item: PaperGameReviewCase }) {
+function ReviewForm({ actorId, tournamentId, item,cardNumbers }: { actorId: string; tournamentId: string; item: PaperGameReviewCase;cardNumbers?:GameScorecardNumbers }) {
   const router = useRouter();
   const key = reviewStorageKey(actorId, item.completionId);
   const [sideAWinner, setSideAWinner] = useState<"a" | "b">("a");
@@ -276,7 +279,8 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
     } catch { setMessage("Connection problem. Retry the same locked decision."); }
     finally { setBusy(false); }
   }
-  return <li className="correction-item"><p><strong>{item.eventName}</strong> · Game {item.gameNumber}</p><p>{item.sideA.displayName} · ID # {item.sideA.verificationId}<br />{item.sideB.displayName} · ID # {item.sideB.verificationId}</p>
+  if(item.gameNumber===13&&!cardNumbers)return <li className="correction-item"><p role="alert">Card-line mapping is unavailable for scheduling batch 13. Pending work is preserved. Reload before reviewing this game.</p></li>;
+  return <li className="correction-item"><p><strong>{item.eventName}</strong> · {cardNumbers?.isMakeup?'Qualifying makeup':`Game ${item.gameNumber}`}</p><MakeupCardLines numbers={cardNumbers} sideAName={item.sideA.displayName} sideBName={item.sideB.displayName}/><p>{item.sideA.displayName} · ID # {item.sideA.verificationId}<br />{item.sideB.displayName} · ID # {item.sideB.verificationId}</p>
     <PaperCardReviewLinks tournamentId={tournamentId} gameId={item.gameId} sides={[{ cardSide: "a", label: item.sideA.displayName }, { cardSide: "b", label: item.sideB.displayName }]} />
     <p className="auth-note">Independently read both original cards. The first official&apos;s entries are intentionally hidden.</p>
     <fieldset disabled={!storageReady || busy || !!locked}><legend>{item.sideA.displayName}&apos;s paper card</legend><PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={item.gameId} cardSide="a" verificationId={item.sideA.verificationId} inputId={`${item.completionId}-review-a-photo`} label={item.sideA.displayName} disabled={!storageReady || busy || !!locked} /><label><input type="radio" name={`${item.completionId}-review-a`} checked={sideAWinner === "a"} onChange={() => setSideAWinner("a")} /> {item.sideA.displayName} won</label><label><input type="radio" name={`${item.completionId}-review-a`} checked={sideAWinner === "b"} onChange={() => setSideAWinner("b")} /> {item.sideB.displayName} won</label><label>Spread Points<input inputMode="numeric" pattern="[0-9]*" maxLength={3} value={sideAMargin} onChange={(event) => setSideAMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} /></label><label>Paper-card reference<input maxLength={200} value={sideAReference} onChange={(event) => setSideAReference(event.target.value)} /></label></fieldset>
@@ -339,6 +343,6 @@ function IdentityBinding({ actorId, tournamentId, officials, roster }: { actorId
   return officials.length ? <form onSubmit={submit}><h2>Confirm or correct official identity</h2><p className="auth-note">Confirm an official, including yourself, as a nonparticipant or bind them to their roster entry. A correction preserves the prior version.</p><label>Official<select value={official} disabled={!storageReady || busy || !!locked} onChange={(event) => setOfficial(event.target.value)}>{officials.map((item) => <option key={item.profileId} value={item.profileId}>{item.displayName} ({item.role}) · version {item.bindingVersion}</option>)}</select></label><label>Identity<select value={choice} disabled={!storageReady || busy || !!locked} onChange={(event) => setChoice(event.target.value)}><option value="nonparticipant">Not a tournament participant</option>{roster.map((item) => <option key={item.rosterEntryId} value={item.rosterEntryId}>Roster: {item.displayName}</option>)}</select></label><button className="primary" disabled={!storageReady || busy}>{!storageReady ? "Checking prior request…" : busy ? "Confirming…" : locked ? "Retry locked request" : "Confirm identity"}</button>{message ? <p role="status">{message}</p> : null}</form> : null;
 }
 
-export default function PaperGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, unboundOfficials, rosterChoices, candidates, reviewCases }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; unboundOfficials: { profileId: string; displayName: string; role: "director" | "co_director" | "cross_checker"; bindingVersion: number }[]; rosterChoices: { rosterEntryId: string; displayName: string }[]; candidates: PaperGameCandidate[]; reviewCases: PaperGameReviewCase[] }) {
-  return <><PendingPaperCardPhotos actorId={actorId} tournamentId={tournamentId} /><SavedOperationReconciler actorId={actorId} tournamentId={tournamentId} />{actorRole !== "cross_checker" ? <IdentityBinding actorId={actorId} tournamentId={tournamentId} officials={unboundOfficials} roster={rosterChoices} /> : null}{!actorIdentityConfirmed ? <p className="error-text" role="status">Confirm your official identity above before recording or reviewing paper games.</p> : null}{actorIdentityConfirmed ? <><h2>Record both paper cards</h2>{candidates.length ? <ul className="correction-list">{candidates.map((game) => <PaperGameForm key={game.gameId} actorId={actorId} tournamentId={tournamentId} game={game} />)}</ul> : <p className="auth-note">No unresolved scheduled games are available for paper-card entry.</p>}</> : null}<h2>Independent confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.completionId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No paper-card confirmations are waiting for you.</p>}</>;
+export default function PaperGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, unboundOfficials, rosterChoices, candidates, reviewCases,cardNumberContexts={} }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; unboundOfficials: { profileId: string; displayName: string; role: "director" | "co_director" | "cross_checker"; bindingVersion: number }[]; rosterChoices: { rosterEntryId: string; displayName: string }[]; candidates: PaperGameCandidate[]; reviewCases: PaperGameReviewCase[];cardNumberContexts?:Record<string,GameScorecardNumbers> }) {
+  return <><PendingPaperCardPhotos actorId={actorId} tournamentId={tournamentId} /><SavedOperationReconciler actorId={actorId} tournamentId={tournamentId} />{actorRole !== "cross_checker" ? <IdentityBinding actorId={actorId} tournamentId={tournamentId} officials={unboundOfficials} roster={rosterChoices} /> : null}{!actorIdentityConfirmed ? <p className="error-text" role="status">Confirm your official identity above before recording or reviewing paper games.</p> : null}{actorIdentityConfirmed ? <><h2>Record both paper cards</h2>{candidates.length ? <ul className="correction-list">{candidates.map((game) => <PaperGameForm key={game.gameId} actorId={actorId} tournamentId={tournamentId} game={game} cardNumbers={cardNumberContexts[game.gameId]} />)}</ul> : <p className="auth-note">No unresolved scheduled games are available for paper-card entry.</p>}</> : null}<h2>Independent confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.completionId} actorId={actorId} tournamentId={tournamentId} item={item} cardNumbers={cardNumberContexts[item.gameId]} />)}</ul> : <p className="auth-note">No paper-card confirmations are waiting for you.</p>}</>;
 }

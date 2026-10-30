@@ -1,6 +1,7 @@
 import { isUuid } from "./validation.ts";
 import { isQPoolMembershipWorkspace, type QPoolMembershipWorkspace } from "./q-pool-membership.ts";
 import type { QCardV2 } from "../results/q-operating-schedule.ts";
+import { accWeightedPoolVersion } from "../results/acc-weighted-pool.ts";
 
 export const equalQMethodV2 = "equal-paid-playoff-qualifiers-v2" as const;
 export const graduatedQMethodV2 = "graduated-paid-card-rank-v2" as const;
@@ -33,7 +34,8 @@ const whole = (v: unknown, minimum = 0): v is number => Number.isSafeInteger(v) 
 const text = (v: unknown, max = 500): v is string => typeof v === "string" && v.trim().length > 0 && v.length <= max && !/[\u0000-\u001f\u007f]/.test(v);
 const digest = (v: unknown): v is string => typeof v === "string" && /^[a-f0-9]{64}$/.test(v);
 const ids = (v: unknown): v is string[] => Array.isArray(v) && v.length >= 2 && v.length <= 256 && v.every(isUuid) && new Set(v).size === v.length;
-function policyFields(v: Record<string, unknown>) {
+function policyFields(v: Record<string, unknown>, allowBalanced = false) {
+  if (allowBalanced && v.method === accWeightedPoolVersion) return (v.ratio === 4 || v.ratio === 6) && v.scheduleId === accWeightedPoolVersion;
   return v.method === equalQMethodV2 ? v.ratio === null && v.scheduleId === null
     : v.method === graduatedQMethodV2 && (v.ratio === 4 || v.ratio === 6)
       && typeof v.scheduleId === "string" && /^[a-z0-9][a-z0-9-]{0,99}$/.test(v.scheduleId);
@@ -57,13 +59,13 @@ export function isQOperatingResultV2(v: unknown): v is QOperatingResultV2 {
 export function qOperatingResultMatchesV2(v: QOperatingResultV2, r: QOperatingRequestV2): boolean {
   return v.status === "rejected" || (v.poolVersionId === r.poolVersionId && (r.action === "publish" ? v.status === "q_policy_published" : v.status === "q_cut_recorded"));
 }
-export function isQOperatingWorkspaceV2(v: unknown, tournamentId: string): v is QOperatingWorkspaceV2 {
+function workspaceFields(v: unknown, tournamentId: string, allowBalanced = false): boolean {
   if (!object(v) || !exact(v, ["tournamentId", "membership", "canPublish", "policies", "cards", "cuts", "sourceDigest", "blockers"])
     || v.tournamentId !== tournamentId || !isUuid(tournamentId) || typeof v.canPublish !== "boolean" || !digest(v.sourceDigest)
     || !(v.membership === null || isQPoolMembershipWorkspace(v.membership, tournamentId))
     || !Array.isArray(v.policies) || v.policies.length > 2 || !v.policies.every(p => object(p)
       && exact(p, ["id", "poolVersionId", "method", "ratio", "scheduleId", "disclosureReference", "publishedAt"])
-      && isUuid(p.id) && isUuid(p.poolVersionId) && policyFields(p) && text(p.disclosureReference)
+      && isUuid(p.id) && isUuid(p.poolVersionId) && policyFields(p, allowBalanced) && text(p.disclosureReference)
       && typeof p.publishedAt === "string" && Number.isFinite(Date.parse(p.publishedAt)))
     || new Set(v.policies.map(p => p.id)).size !== v.policies.length || new Set(v.policies.map(p => p.poolVersionId)).size !== v.policies.length
     || !Array.isArray(v.cards) || v.cards.length > 256 || !v.cards.every(c => object(c)
@@ -82,3 +84,17 @@ export function isQOperatingWorkspaceV2(v: unknown, tournamentId: string): v is 
     && (v.cuts as QOperatingCutRecordV2[]).every(c => w.pools.some(pool => pool.poolVersionId === c.poolVersionId)
       && c.participantIdsLowFirst.every(id => (v.cards as QCardV2[]).some(card => card.participantId === id))));
 }
+export function isQOperatingWorkspaceV2(v: unknown, tournamentId: string): v is QOperatingWorkspaceV2 { return workspaceFields(v, tournamentId); }
+
+export const balancedQMethodV3 = accWeightedPoolVersion;
+export type QOperatingMethodV3 = QOperatingMethodV2 | typeof balancedQMethodV3;
+export type QOperatingPolicyRecordV3 = Omit<QOperatingPolicyRecordV2, 'method'> & { method: QOperatingMethodV3 };
+export type QOperatingWorkspaceV3 = Omit<QOperatingWorkspaceV2, 'policies'> & { policies: QOperatingPolicyRecordV3[] };
+export type QOperatingRequestV3 = { action: 'publish'; poolVersionId: string; method: typeof balancedQMethodV3; ratio: 4 | 6; scheduleId: typeof balancedQMethodV3; disclosureReference: string; disclosed: true };
+export type QOperatingResultV3 = { status: 'q_policy_published'; policyId: string; poolVersionId: string } | { status: 'rejected'; code: string };
+const rejectionCodesV3 = new Set(['invalid_request', 'pool_version_mismatch', 'policy_frozen', 'entries_locked', 'collection_or_consent_already_started', 'setup_method_conflict', 'unsupported_payout_domain', 'idempotency_conflict']);
+export function isQOperatingRequestV3(v: unknown): v is QOperatingRequestV3 { return object(v) && exact(v, ['action', 'poolVersionId', 'method', 'ratio', 'scheduleId', 'disclosureReference', 'disclosed']) && v.action === 'publish' && isUuid(v.poolVersionId) && v.method === balancedQMethodV3 && v.scheduleId === balancedQMethodV3 && (v.ratio === 4 || v.ratio === 6) && text(v.disclosureReference) && v.disclosureReference === v.disclosureReference.trim() && v.disclosed === true; }
+export function isQOperatingWorkspaceV3(v: unknown, tournamentId: string): v is QOperatingWorkspaceV3 { return workspaceFields(v, tournamentId, true); }
+export function isQOperatingResultV3(v: unknown): v is QOperatingResultV3 { return object(v) && (v.status === 'rejected' ? exact(v, ['status', 'code']) && typeof v.code === 'string' && rejectionCodesV3.has(v.code) : v.status === 'q_policy_published' && exact(v, ['status', 'policyId', 'poolVersionId']) && isUuid(v.policyId) && isUuid(v.poolVersionId)); }
+export function qOperatingResultMatchesV3(v: QOperatingResultV3, r: QOperatingRequestV3) { return v.status === 'rejected' || v.poolVersionId.toLowerCase() === r.poolVersionId.toLowerCase(); }
+export function isQOperatingReconciliationRequestV3(v: unknown): v is { operationId: string; request: QOperatingRequestV3 } { return object(v) && exact(v, ['operationId', 'request']) && isUuid(v.operationId) && isQOperatingRequestV3(v.request); }

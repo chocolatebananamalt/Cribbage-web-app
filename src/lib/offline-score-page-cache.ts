@@ -1,5 +1,6 @@
 "use client";
 import { trackAppRecoveryWrite } from "./recovery-write-coordinator";
+import { hasAssignedOfflinePageBinding } from './offline-score-page-binding';
 
 export const offlineScoreCachePrefix = "acc-offline-score-pages-v2:";
 export const offlineScoreOwnerCookie = "acc_offline_score_owner";
@@ -44,8 +45,7 @@ export async function prepareCurrentScorePageForOffline(actorId: string, gameId:
   const contentType = pageResponse.headers.get("content-type") ?? "";
   if (!pageResponse.ok || pageResponse.redirected || pageResponse.url !== pageRequest.url || !contentType.toLowerCase().startsWith("text/html")) return false;
   const html = await withTimeout(pageResponse.text());
-  const binding = `data-offline-score-binding="${actorId}:${gameId}"`;
-  if (!html.includes(binding)) return false;
+  if (!hasAssignedOfflinePageBinding(html, actorId, gameId)) return false;
 
   const assetUrls = [...document.querySelectorAll<HTMLScriptElement | HTMLLinkElement>("script[src], link[rel='stylesheet'][href]")]
     .map((element) => element instanceof HTMLScriptElement ? element.src : element.href)

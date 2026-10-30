@@ -128,7 +128,7 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(pageCache, /cache: "no-store"/);
   assert.match(pageCache, /redirect: "error"/);
   assert.match(pageCache, /pageResponse\.url !== pageRequest\.url/);
-  assert.match(pageCache, /data-offline-score-binding/);
+  assert.match(pageCache, /if \(!hasAssignedOfflinePageBinding\(html, actorId, gameId\)\) return false/);
   assert.match(pageCache, /url\.origin === window\.location\.origin/);
   assert.match(pageCache, /url\.pathname\.startsWith\("\/_next\/static\/"\)/);
   assert.match(pageCache, /cache\.put\(pageRequest/);

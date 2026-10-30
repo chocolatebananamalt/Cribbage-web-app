@@ -13,6 +13,8 @@ Use retained reference data before reopening originals. This index identifies ac
 
 Official sources describe their own scope and dates. Application defaults and director-selected operating policies must not be presented as universally mandated ACC formulas.
 
+- [ACC side-pool web calculator observation, 2026-10-29](acc-side-pool-calculator-observation-2026-10-29.md): reported public client formula and ten chart comparisons, with unsubmitted final-validation limits. This alternative is not enabled and does not replace the selected friend charts.
+
 ## Friend-supplied operating charts — distinct authority
 
 - Source: eight-page **cribbage pool info.pdf**, Library `libfile_3a1e3f4477e481919c5163b368dcd5c2`; original PDF SHA256 `f7549bd181bdfd0c08695547293d32811b5406ef1aa3c171bba221420238924d`.

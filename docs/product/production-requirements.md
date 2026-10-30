@@ -1,5 +1,14 @@
 # ACC Digital Tournament System — Normative Production Requirements
 
+## Owner-approved current additions - 2026-10-30, local only
+
+Q pools are optional: ordinary Main accounting MUST complete without creating a fictitious Q review. The supported five-qualifier slice MUST preserve actual played wins separately from bye credit, the original twelve qualifying results per person, immutable source-bound ranking resolutions, equal same-round regular awards, explicit director-entered fifth-place weight, independent 85% gross-base return and exact unpaid accounting conservation. The 17-player odd-field solution uses six real makeup matches and per-side original card-line mapping; no phantom game or free score is substituted.
+
+The owner also approved a new graduated Q method using observed ACC raw weights with the app's exact largest-remainder $5 rounding, preserving every historical chart/equal policy and reviewed/final liability. This is an app modification, not ACC endorsement. It MUST be explicitly disclosed/frozen before payment and bound to current paid membership, qualification, funding and review evidence. Equal Q and regular shared-band prizes remain separate. Unresolved Q cash ties MUST block; neither a qualification tiebreak nor a previous low-card attestation silently supplies monetary authority. Scope and provenance: `../decisions/2026-10-30-acc-weighted-balanced-q-policy.md`.
+
+Implementation evidence does not waive broader production requirements. See `../quality/2026-10-30-five-qualifier-main-local.md`; no hosted migration, publication or real transaction is authorized by this addendum.
+
+
 ## Owner-approved payback repair addendum — 2026-10-27, local only
 
 Cash conservation does not by itself establish ACC payback compliance. A reviewed settlement must separately classify actual expense evidence and calculate eligible player return against gross entry fees, without deducting sanctioning or other costs twice. Unknown classifications cannot be treated as compliant. The first implemented local slice requires a sourced director-selected schedule, exactly one positive total award per ordinary full-entry cash-eligible qualifier and equal awards within each elimination cohort; it introduces no fixed ACC percentage or cumulative round-payment formula. Each qualifier needs explicit eligibility evidence. Legal-age/sanction-only exceptions in current ACC Policy Manual chapter 6 I.G (printed 6-3/PDF 35) require an unsupported-case blocker rather than automatic cash awards.

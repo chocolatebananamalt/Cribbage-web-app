@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { clearAppSessionStorage, countAppSessionStorageRecords } from "../lib/client-session-storage";
 import { clearOfflineScoreStorage, countOfflineSubmissions } from "../lib/offline-score-queue";
 import { recoveryActionGate, safeSwitchMessage, type SafeSwitchStage } from "../lib/safe-device-switch";
 import { beginSafeRecoverySwitch, cancelSafeRecoverySwitch, markRecoveryCleanupStarted, finishSafeRecoverySwitch, failSafeRecoverySwitch, finishPreservingRecoverySignOut } from "../lib/recovery-write-coordinator";
 import { protectUnownedRecovery } from "../lib/auth/recovery-preflight";
 import { clearRecoveryStorageOwner } from "../lib/auth/recovery-owner";
+
+async function readLocalState() {
+  const offlineCount = await countOfflineSubmissions();
+  const retryCount = countAppSessionStorageRecords(window.sessionStorage);
+  return { status: offlineCount === 0 && retryCount === 0 ? "safe" as const : "unsafe" as const, offlineCount, retryCount };
+}
 
 export function SharedDeviceSignOut() {
   const [busy, setBusy] = useState(false);
@@ -15,33 +21,36 @@ export function SharedDeviceSignOut() {
   const gate = useRef(recoveryActionGate);
   const signOutUncertain = useRef(false);
   const cleanupComplete = useRef(false);
+  const localReadInFlight = useRef(false);
   const [localState, setLocalState] = useState<{ status: "checking" | "safe" | "unsafe" | "unavailable"; offlineCount: number; retryCount: number }>({ status: "checking", offlineCount: 0, retryCount: 0 });
 
-  async function readLocalState() {
-    const [offlineCount] = await Promise.all([countOfflineSubmissions()]);
-    const retryCount = countAppSessionStorageRecords(window.sessionStorage);
-    return { status: offlineCount === 0 && retryCount === 0 ? "safe" as const : "unsafe" as const, offlineCount, retryCount };
-  }
-
-  async function refreshLocalState() {
+  const refreshLocalState = useCallback(async () => {
+    if (localReadInFlight.current) return;
+    localReadInFlight.current = true;
     try {
       setLocalState(await readLocalState());
     } catch {
       setLocalState({ status: "unavailable", offlineCount: 0, retryCount: 0 });
-    }
-  }
+    } finally { localReadInFlight.current = false; }
+  }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => { void refreshLocalState(); }, 0);
+    if (busy) return;
     const onVisible = () => { if (document.visibilityState === "visible") void refreshLocalState(); };
+    const timer = window.setTimeout(onVisible, 0);
+    // Same-document sessionStorage/IndexedDB writes do not fire a storage event.
+    // Refresh descriptive counts only; every switch still rechecks under the
+    // exclusive recovery barrier. Pause these reads during cleanup/sign-out.
+    const interval = window.setInterval(onVisible, 1500);
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("focus", onVisible);
     return () => {
       window.clearTimeout(timer);
+      window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisible);
       window.removeEventListener("focus", onVisible);
     };
-  }, []);
+  }, [busy, refreshLocalState]);
 
   async function requestSignOut() {
     if (signOutUncertain.current) {

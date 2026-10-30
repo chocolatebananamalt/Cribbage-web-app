@@ -1,3 +1,4 @@
+> **Policy re-review hold — 2026-10-29:** Recipient selection restricted to paid playoff qualifiers and the no-eligible refund assumption are disputed pending original ACC formula/example verification. This document records earlier implementation/test evidence, not proof of ACC policy correctness. Preserve all unpaid history; do not execute payouts/refunds or continue settlement integration. See `2026-10-29-q-recipient-policy-dispute-hold.md`.
 # Equal-share Q Pool policy and preview — local implementation checkpoint
 
 Date 2026-10-28. User approved local implementation/testing of the equal-share policy after the read-only architecture review. **Local implementation and verification complete; ready for separate rollout review, not published.** The initial browser access restriction was resolved only after explicit scoped user approval. No push, deployment, hosted migration or business mutation. Published head remains `86a615d3f330f7308acd934d5c8a5ae8dd2bc87a`.

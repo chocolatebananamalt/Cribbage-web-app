@@ -149,40 +149,59 @@ function bandKey(bandStart: number, bandEnd: number) {
   return `${bandStart}:${bandEnd}`;
 }
 
-export function isDirectorPrizeScheduleV1(value: unknown): value is DirectorPrizeScheduleV1 {
-  if (!record(value) || !exact(value, scheduleKeys) || value.kind !== directorPrizeScheduleVersion
-    || value.amountBasis !== "total_award" || value.expectedQualifierCount !== 4
+function isSchedule(value: unknown, count: 4 | 5, kind: string): boolean {
+  if (!record(value) || !exact(value, scheduleKeys) || value.kind !== kind
+    || value.amountBasis !== "total_award" || value.expectedQualifierCount !== count
     || !reference(value.sourceReference)
     || value.roundingRule !== "floor_each_weighted_share_then_assign_remainder_to_champion"
-    || !Array.isArray(value.cohorts) || value.cohorts.length !== 3
+    || !Array.isArray(value.cohorts) || value.cohorts.length !== (count === 4 ? 3 : 4)
     || value.cohorts.some((item) => !record(item) || !exact(item, cohortFieldKeys)
       || !whole(item.bandStart, 1) || !whole(item.bandEnd, item.bandStart as number) || !whole(item.weight, 1))) return false;
   const cohorts = value.cohorts as unknown as PrizeScheduleCohortV1[];
   const bands = cohorts.map((item) => bandKey(item.bandStart, item.bandEnd));
-  if (new Set(bands).size !== cohorts.length || !["1:1", "2:2", "3:4"].every((key) => bands.includes(key))) return false;
+  if (new Set(bands).size !== cohorts.length || !(count === 4 ? ["1:1", "2:2", "3:4"] : ["1:1", "2:2", "3:4", "5:5"]).every((key) => bands.includes(key))) return false;
   const denominator = cohorts.reduce((sum, cohort) => sum + BigInt(cohort.weight) * BigInt(cohort.bandEnd - cohort.bandStart + 1), BigInt(0));
   return denominator > BigInt(0) && denominator <= maximumSafe;
 }
+
+export const directorPrizeScheduleVersionV2 = "director-selected-five-qualifier-prize-schedule-v2" as const;
+export type DirectorPrizeScheduleV2 = Omit<DirectorPrizeScheduleV1, "kind" | "expectedQualifierCount"> & {
+  kind: typeof directorPrizeScheduleVersionV2; expectedQualifierCount: 5;
+};
+export type DirectorPrizeSchedule = DirectorPrizeScheduleV1 | DirectorPrizeScheduleV2;
+export function isDirectorPrizeScheduleV1(value: unknown): value is DirectorPrizeScheduleV1 {
+  return isSchedule(value, 4, directorPrizeScheduleVersion);
+}
+export function isDirectorPrizeScheduleV2(value: unknown): value is DirectorPrizeScheduleV2 {
+  return isSchedule(value, 5, directorPrizeScheduleVersionV2);
+}
+export function isDirectorPrizeSchedule(value: unknown): value is DirectorPrizeSchedule {
+  return isDirectorPrizeScheduleV1(value) || isDirectorPrizeScheduleV2(value);
+}
+export type PrizeScheduleResultV2 = Omit<PrizeScheduleAvailable, "scheduleVersion" | "expectedQualifierCount"> & {
+  scheduleVersion: typeof directorPrizeScheduleVersionV2; expectedQualifierCount: 5;
+} | Extract<PrizeScheduleResult, {status: "blocked"}>;
 
 /**
  * Resolves a director-selected total-award schedule against authoritative,
  * resolved server facts. It does not authenticate evidence, determine who
  * qualified, approve expenses, enforce ACC payback, or persist a settlement.
  */
-export function resolveDirectorPrizeScheduleV1(input: unknown): PrizeScheduleResult {
+function resolveSchedule(input: unknown, count: 4 | 5): PrizeScheduleResult | PrizeScheduleResultV2 {
   if (!record(input) || !exact(input, rootKeys) || !record(input.schedule)
     || !exact(input.schedule, scheduleKeys) || !record(input.scope) || !exact(input.scope, scopeKeys)
     || !record(input.financialBasis) || !Array.isArray(input.canonicalRows)) return blocked("invalid_input");
 
   const schedule = input.schedule;
-  if (!isDirectorPrizeScheduleV1(schedule)) return blocked("invalid_input");
-  const cohorts = schedule.cohorts;
+  if (!(count === 4 ? isDirectorPrizeScheduleV1(schedule) : isDirectorPrizeScheduleV2(schedule))) return blocked("invalid_input");
+  const typedSchedule = schedule as DirectorPrizeSchedule;
+  const cohorts = typedSchedule.cohorts;
   const scheduledBands = cohorts.map((item) => bandKey(item.bandStart, item.bandEnd));
 
   const scope = input.scope;
   if (scope.eventKind !== "main" || scope.styleCode !== "Standard" || scope.format !== "standard_singles"
     || scope.gameCount !== 12 || scope.eventMode !== "single_event"
-    || scope.bracketMode !== "complete_no_bye" || scope.poolMode !== "none") return blocked("unsupported_scope");
+    || scope.bracketMode !== (count === 4 ? "complete_no_bye" : "five_qualifier_three_byes") || scope.poolMode !== "none") return blocked("unsupported_scope");
 
   const rows = input.canonicalRows;
   if (rows.some((item) => !record(item) || !exact(item, canonicalKeys) || !uuid(item.participantId)
@@ -190,13 +209,14 @@ export function resolveDirectorPrizeScheduleV1(input: unknown): PrizeScheduleRes
     return blocked("invalid_input");
   }
   const canonicalRows = rows as unknown as PrizeScheduleCanonicalRow[];
-  if (canonicalRows.some((item) => item.byeWins !== 0)) return blocked("unsupported_scope");
+  if (count === 4 ? canonicalRows.some((item) => item.byeWins !== 0) : canonicalRows.filter(item => item.byeWins === 1).length !== 3 || canonicalRows.some(item => item.byeWins > 1)) return blocked("unsupported_scope");
   const participantIds = canonicalRows.map((item) => item.participantId.toLowerCase());
   const actualBands = canonicalRows.map((item) => bandKey(item.bandStart, item.bandEnd));
-  if (canonicalRows.length !== 4 || new Set(participantIds).size !== canonicalRows.length
+  if (canonicalRows.length !== count || new Set(participantIds).size !== canonicalRows.length
     || actualBands.filter((band) => band === "1:1").length !== 1
     || actualBands.filter((band) => band === "2:2").length !== 1
     || actualBands.filter((band) => band === "3:4").length !== 2
+    || (count === 5 && actualBands.filter(band => band === "5:5").length !== 1)
     || actualBands.some((band) => !scheduledBands.includes(band))) return blocked("schedule_revision_required");
 
   const basis = input.financialBasis;
@@ -251,9 +271,9 @@ export function resolveDirectorPrizeScheduleV1(input: unknown): PrizeScheduleRes
 
   return {
     status: "available",
-    scheduleVersion: directorPrizeScheduleVersion,
+    scheduleVersion: count === 4 ? directorPrizeScheduleVersion : directorPrizeScheduleVersionV2,
     amountBasis: "total_award",
-    expectedQualifierCount: 4,
+    expectedQualifierCount: count,
     grossEntryIncomeMinor: basis.grossEntryIncomeMinor,
     expenseTotalMinor: Number(expenseTotal),
     prizeBudgetMinor: Number(budget),
@@ -261,5 +281,12 @@ export function resolveDirectorPrizeScheduleV1(input: unknown): PrizeScheduleRes
     roundingRemainderMinor: Number(remainder),
     roundingRule: "floor_each_weighted_share_then_assign_remainder_to_champion",
     awards,
-  };
+  } as PrizeScheduleAvailable | Exclude<PrizeScheduleResultV2, {status: "blocked"}>;
+}
+
+export function resolveDirectorPrizeScheduleV1(input: unknown): PrizeScheduleResult {
+  return resolveSchedule(input, 4) as PrizeScheduleResult;
+}
+export function resolveDirectorPrizeScheduleV2(input: unknown): PrizeScheduleResultV2 {
+  return resolveSchedule(input, 5) as PrizeScheduleResultV2;
 }

@@ -1,5 +1,28 @@
 # ACC Tournament Desk — Working Outline
 
+## 2026-10-30 current verified balanced-Q milestone
+
+Balanced ACC-weighted Q policy integration is complete locally through immutable unpaid review and canonical accounting. Final1,046 tests/full checks,14 policy browser groups, actual SQL phone/desktop render and isolated17-player102-game workflow pass; old chart/equal history is preserved. See `docs/quality/2026-10-30-balanced-q-integration-local.md`. Next is separately approved exact-release staging publication/schema/acceptance; production, restore/physical-offline, unresolved Q cash ties, unsupported formats and paid-state gates remain. No new hosted change is authorized or performed by this milestone.
+
+## 2026-10-30 verified local five-qualifier / optional-Q milestone
+
+All three 17-player local cases now pass: Q-funded, genuine no-Q, and a two-card seed tie resolved without altering original qualifying totals. Each has 102 real verified qualifying matches, five qualifiers and three separate bye credits. Regular awards and classified expenses reconcile through one immutable unpaid final; Q and no-Q histories remain separate. Actual authenticated pending/completed scorecard reads retain each player's original lines 1–12. Full verification passes 1,038 application tests, audit/build/types/providers and eight workspace checks; current component and actual-SQL-rendering browser checks pass. Only two pre-existing lint warnings remain. Independent review found no confirmed P1/P2. Migrations 0247–0254 are local/unapplied and nothing has been committed, pushed or deployed.
+
+Evidence: `docs/quality/2026-10-30-five-qualifier-main-local.md`. The source snapshot is being refreshed at this verified checkpoint; authoritative Library version/hash is retained in the verified snapshot receipt outside the archived source tree. It remains a source-only backup, not database/Auth/Storage recovery.
+
+The approved ACC-weighted largest-remainder calculator is separately verified (320 research goldens and all 1,536 supported combinations) and included in the full checks. Connecting its new disclosed policy to existing unpaid review/accounting is the next local implementation step. Existing historical chart/equal policies and hosted fixtures are unchanged. Larger brackets, other formats, unresolved Q cash ties, paid-state/disbursement, physical offline rehearsal, restore and exact-release hosted acceptance remain distinct gates; this is not production approval.
+
+
+## 2026-10-29 current local completion sequence
+
+Qualification-tie recording and the Q v2 canonical unpaid-accounting bridge are implemented and locally verified; a downstream source-validated playoff/MRP bridge is under staged verification. See `docs/quality/2026-10-29-q-v2-canonical-accounting-local.md` and `docs/quality/2026-10-29-release-readiness-current.md` for current evidence rather than the historical dates below. No changes are published or applied to hosted databases.
+
+The owner now prefers the ACC calculator for future pool payouts; largest-remainder balancing is a recommendation awaiting approval, not active policy. Preserve historical chart schedules/reviews. Current canonical accounting supports four qualifiers only; the sourced 17-player Main minimum produces five qualifiers and requires a larger/bye bracket. That supported tournament path is a material production-readiness gap, not merely an optional polish item. Existing16-player rehearsals are software fixtures, not sanctioned-Main acceptance. Physical multi-user/offline proof, database restore, exact-release rollout/rollback and director go/no-go remain gates. Automatic payments/OCR are not silently activated by this work.
+
+## 2026-10-29 local qualification tie repair
+
+Implement source-bound two-player head-to-head / separately played one-game ranking resolution, preserving original scores and all historical finalizations. Independent Q cash tie policy remains separate. Local SQL/race/browser verification and reviewed additive migration are gates before any staging rollout; see `../decisions/2026-10-29-qualification-two-player-ties.md`.
+
 ## 2026-10-28 current local checkpoint
 
 Funded synthetic staging rehearsal is finalized and preserved. Local repair makes money displays/inputs dollar-based without changing integer-cent records, clarifies exact saved schedule references, and routes new structured events to canonical playoff outcomes while preserving legacy history. Verification and separate publication boundary: [currency repair](../quality/2026-10-28-usd-display-local-repair.md). Next proposed bounded development is explicit Q Pool membership/payment allocation, with sourced eligibility/distribution fixtures before automatic payouts; photo/OCR and interrupted multi-device/byes remain separate acceptance gates. Do not infer Q Pool election from recorded dollars or reuse Side Pool payout estimates as Q Pool authority.

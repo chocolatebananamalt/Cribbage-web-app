@@ -45,10 +45,11 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const storageKey = `event-schedule:${actorId}:${tournamentId}`;
   const startStorageKey = `event-start:${actorId}:${tournamentId}`;
   const activeEvent = digitalEvents.find((event) => event.eventId === eventId);
+  const makeupRequired=activeEvent?.participantCount===17&&activeEvent.gameCount===12&&!activeEvent.schedulePublished;
   const participants = workspace.participants.filter((participant) => participant.eventId === eventId);
   const publishedMatches = workspace.matches.filter((match) => match.eventId === eventId && activeEvent?.schedulePublished && match.gameNumber === selectedGame);
   const parsed = useMemo(() => parseScheduleCsv(csv), [csv]);
-  const validationErrors = activeEvent && parsed.errors.length === 0 ? validateScheduleForEvent(
+  const validationErrors = makeupRequired?["Use the seventeen-player makeup workflow to publish 102 real games, including six makeups."]:activeEvent && parsed.errors.length === 0 ? validateScheduleForEvent(
     parsed.matches,
     activeEvent.gameCount,
     participants.map((participant) => participant.verificationId),
@@ -131,6 +132,7 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const pendingTargetMissing = !!pendingStart && !activeEvent;
   if (digitalEvents.length === 0 && !pendingStart) return <section className="correction-item"><h2>Activate a Standard Singles event first</h2><p>Only activated digital Standard Singles events can publish a game schedule for this pilot.</p>{message ? <p className="live-status" role="status">{message}</p> : null}</section>;
   return <section className="policy-settings">
+    {activeEvent?.participantCount===17&&activeEvent.gameCount===12&&<p><a href={`/tournament/${tournamentId}/events/${activeEvent.eventId}/odd-field-makeup`}>Review seventeen-player qualifying makeup games and original card lines</a>. Twelve sit-outs need six real makeup games; sitting out awards no points.</p>}
     <section className="correction-item"><h2>Choose Event</h2><label>Event<select className="check-in-control" value={eventId} disabled={!ready || busy || starting || !!pending || !!pendingStart} onChange={(event) => { setEventId(event.target.value); setReviewed(false); setSelectedGame(1); }}>
       {digitalEvents.map((event) => <option key={event.eventId} value={event.eventId}>{event.name} · {event.gameCount} games · {event.participantCount} players</option>)}</select></label>
       {activeEvent?.schedulePublished ? <p className="success-text">Published · {activeEvent.publishedMatchCount} matchups · {activeEvent.playState.replaceAll("_", " ")}</p> : <p>Not published. Publishing creates the games, but an official must separately start this event before anyone can score.</p>}

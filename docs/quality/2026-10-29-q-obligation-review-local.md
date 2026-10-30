@@ -1,3 +1,4 @@
+> **Policy re-review hold — 2026-10-29:** Recipient selection restricted to paid playoff qualifiers and the no-eligible refund assumption are disputed pending original ACC formula/example verification. This document records earlier implementation/test evidence, not proof of ACC policy correctness. Preserve all unpaid history; do not execute payouts/refunds or continue settlement integration. See `2026-10-29-q-recipient-policy-dispute-hold.md`.
 # Local unpaid Q obligation review — verification checkpoint
 
 2026-10-29. LOCAL ONLY. No push, deployment, hosted SQL, role changes, payments, refund execution, paid flags or tournament business writes. Published HEAD remains `4b424902b0fe274220b84263440067b5143671b2`. Existing director browser session was not touched.

@@ -1,4 +1,46 @@
+## 2026-10-30 Git commit gate after successful schema verification
+
+All0247-0255verifiedonstaging; old199tables/9863rowsunchanged,8newtablesempty.158filesstagedforPR122, withSQLbyte-preserving.gitattributes/excludedgeneratedtsbuildinfo. Commitcommandwasdeniedbeforeexecutionbyautomaticreviewclaimingexplicitnocommitboundary; HEADc8ad2b4/no push ornewPreview/businessfixture. Do notretryoruseAPIcommitwithoutnewmaterialexplicitcommit/pushapproval. CurrenttestPreviewtabatVercellogin. Existinglocalverification1048testsandallbrowsergroupsremainvalid; onlypublicationhygiene/docsmodifiedafterwards.
+
+## 2026-10-30 admitted remaining migrations and verified schema
+
+Owner specifically approved staging0248-0255 at02:52UTC; once-only retry succeeded. All0247-0255 now applied exactly once to staging, latest0255history20261030025536; canonicalbytes/SHA matched. EightemptyforcedRLS tables,23service-onlyRPCs/18enabledtriggers correct; all199oldapptables/9,863rows unchanged. No businessfixture/money/role writes or production change. Existingbranchpublication+twofictionalunpaidfixtures remain authorized; exactcommitCI/READY/privilegedisolation stillrequired. Olddenial/stopnote belowishistoricalresolved,notpermissiontoreapply0247orothers. No credentials handled; stableChromePreview is at Vercellogin.
+
+## 2026-10-30 partial staging state and approval-review stop
+
+Only0247 applied to staging, exact history20261030013509 and canonical checksum verified. All199oldapp tables/9,863rows unchanged; new tie table empty/private/forcedRLS,3serviceRPCs correct. Approval review denied0248 as lacking explicit hosted-schema authority despite the parent-supplied general test-rollout Yes; do not retry/bypass without materially new specific evidence.0249-0255 unattempted; no commit/push/Preview/fixture writes. Remaining scope is0248-0255,7private tables/20backendRPCs/nohuman grants. Source backupversion4 now protects verified connectivity+balanced code,4,440,657bytes/SHA2569c000e728cf3715f5c51ef7777d8f77d74c772d2a423bc46d463fdc8cc2d254b. Later receipt docs excluded; not a DB backup. Chrome stabletab336434384 at Vercellogin, user credentials untouched. Exact stop/preservation/security evidence stored in ignoredtest-results receipt.
+
+## 2026-10-30 authorized staging rollout and connectivity correction
+
+The owner approved test-only publication, staging0247-0255 safety reads and two new unpaid fictional acceptance fixtures at01:24UTC; no production, real money, credential/security changes or merge. Fresh local production digital11/manual20/photo13/safe-signout13groups pass after protected metadata binding and descriptive count refresh repairs; full1,048tests/build/audit/8workspace/6handoff pass, one pre-existing warning. No new migration is needed;0247-0255hashes unchanged. Refresh the old150-file selection and milestone source backup before rollout. Staging preflight now admits authorized reads; baseline199app tables/9,863rows, new objects absent and no active nonidle clients. Existing stable Chrome tab is at Vercel login, so authenticated UI verification may need user action after exact release deployment. Do not infer current app identity from an old tab title/history.
+
+## 2026-10-30 verified balanced-policy integration
+
+Private source snapshot now version3 on the same Library identity;4,420,860bytes/SHA25617f0a13b40f83e26cc3f890c74f31cf4ce4c4e6edddb4997cf80e2a3ff3dc812. Verified1,574source entries/CRC includes0247-0255 balanced integration. The later backup-receipt documentation is outside that snapshot. No DB/Auth/Storage backup or source changes after the manifest are implied. Windows xattrs unsupported; exact identity/version retained in sidecar.
+
+The approved ACC-weighted/application-balanced policy is locally integrated and verified through unpaid v2 review and v6 canonical accounting, preserving old chart/equal policy/source/history bytes. Final 1,046 application tests, full audit/build/workspace, six handoff checks, 14 policy browser groups and actual-SQL phone/desktop rendering pass. Independent review fixed late-election and historical-cut current-preview inconsistencies; current Q monetary ties remain blocked. Migration0255 is 25,042 bytes/SHA25670B806D4FD99E40E6B1D2D9B1D3F58A08F14FFBC7466F50BC65E31222B094726. All0247-0255 remain unapplied/unpublished. Do not equate this with production readiness, actual disbursement or off-device database restore. See the current quality report and source-backup receipt.
+
+## 2026-10-30 approved graduated Q rounding decision
+
+Owner explicitly accepted adopting observed ACC weighted raw awards with exact largest-remainder $5 rounding after reviewing the89-to90 individual-prize tradeoff. This is a new disclosed/versioned app policy, not ACC endorsement; preserve all historical chart/equal policies and reviewed/final unpaid records. Scope is LOCAL implementation/testing only: fees$10/$20/$50, ratios4/6, exact integer/rational arithmetic, higher-place remainder ties, explicit single-recipient whole pot, unsupported domains blocked. Regular shared-band prizes and equal Q remain separate; Q monetary ties stay blocked. See `docs/decisions/2026-10-30-acc-weighted-balanced-q-policy.md`. Parent handles the two requested PDF deliverables; no external messages, app publication or hosted migration is inferred.
+
+## 2026-10-29 recurring milestone source snapshot preference
+
+Owner explicitly approved keeping the same private Library source snapshot updated at verified milestones, preserving versions and prior exclusions. Use existing item `libfile_9c1086d4b68c81919cee2bb1a298d93d`; do not create duplicate identities. This permits source-only replacement, not database/Auth/Storage exports or production publication. Version1 now protects the completed0247-0250 accounting milestone; later in-progress edits are outside that snapshot until another verified update. See local source-snapshot-accounting-20261029 receipt/verification for exact hashes and Windows xattr limitation.
+
 # Durable Project Memory
+
+## 2026-10-29 payout-source preference: ACC calculator
+
+The owner now prefers the ACC web side-pool calculator over the friend-supplied tables as the authoritative payout source. Preserve all table provenance and existing disclosed policies/reviews; do not silently recalculate historical obligations. The observed calculator rounds each suggested amount independently to $5, so rounded totals can differ from the pot although the unrounded linear formula conserves it. Its final Update validation was not tested. A separately versioned calculator policy is planned; director-visible balancing/confirmation remains an unresolved owner choice, not an ACC-mandated correction rule. Do not invent a general-account subsidy or enable unbalanced finalization. Existing accounting invariants remain source/version-bound. See `docs/reference/acc-side-pool-calculator-observation-2026-10-29.md` and `docs/quality/2026-10-29-acc-calculator-policy-v3-plan.md`.
+
+## 2026-10-29 canonical unpaid Q bridge
+
+Local Q review v2 and accounting v6 now preserve distinct base/Q funding, exact saved regular prizes and immutable unpaid liabilities. Finalization records accounting only; it does not move money or mark anybody paid. A later source correction may stale immutable final history but cannot automatically reopen or create another review/final liability. Existing v1/v5 history is not converted. New v2-policy events reject incompatible old-client v5 drafts before they can poison the new domain. Local verification and remaining release scope are in `docs/quality/2026-10-29-q-v2-canonical-accounting-local.md`. No publication/shared migration is implied. Separate qualification-to-playoff bridge verification is required because raw numeric ties intentionally differ from resolved seed order.
+
+## 2026-10-29 qualification tie clarification
+
+Owner approved showing original tied scorecards and recording a separately played one-game tiebreak winner without changing qualifying totals. Apply ACC 2025 Appendix A20 (printed55/PDF56) and Policy6IV.B.2: compare an unambiguous qualifying-round head-to-head first, otherwise one-game playoff with cut for first deal. First supported slice is exactly two tied players; repeated/ambiguous meetings and multiway ties stay blocked. Gross positive winning spreads means sum of positive winning margins, never net spread. Preserve independent Q-only monetary tie policy unchanged. See `docs/decisions/2026-10-29-qualification-two-player-ties.md`. Local implementation/testing is authorized; no hosted fixture changes or migration application is implied.
 
 ## 2026-10-29 owner clarification of six blurred Q chart rows
 

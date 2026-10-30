@@ -1,3 +1,4 @@
+> **Policy re-review hold — 2026-10-29:** Recipient selection restricted to paid playoff qualifiers and the no-eligible refund assumption are disputed pending original ACC formula/example verification. This document records earlier implementation/test evidence, not proof of ACC policy correctness. Preserve all unpaid history; do not execute payouts/refunds or continue settlement integration. See `2026-10-29-q-recipient-policy-dispute-hold.md`.
 # Q Pool payout preview — bounded architecture proposal
 
 2026-10-28. Read-only repository planning after the successful hosted membership/allocation test. No application behavior, policy, migration, permission or hosted record changed. Incorporates the parent's independent ACC research findings; this document does not approve the proposed policy.
