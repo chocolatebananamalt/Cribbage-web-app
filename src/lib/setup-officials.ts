@@ -1,5 +1,5 @@
 import "server-only";
-import { isSetupOfficialsWorkspace, type SetupOfficialRole, type SetupOfficialsWorkspace } from "./api/setup-officials";
+import { isSetupOfficialsWorkspace, type SetupOfficialRole, type SetupOfficialsWorkspace } from "./api/setup-officials.ts";
 
 type RpcClient = { rpc(name: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }> };
 

@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ function readSaved(key: string) {
   } catch { return null; }
 }
 function writeSaved(key: string, request: EventRosterEnrollmentRequest) {
-  try { window.sessionStorage.setItem(key, JSON.stringify({ kind: "event-roster-enrollment", request })); return true; }
+  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-roster-enrollment", request })); return true; }
   catch { return false; }
 }
 function clearSaved(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* server receipt is authoritative */ } }
@@ -82,7 +83,9 @@ export default function ParticipantsClient({ actorId, tournamentId, workspace }:
         router.refresh();
       } else if (response.status === 409 && isRejectedEventRosterEnrollment(data)) {
         clearSaved(storageKey); setPending(null);
-        setMessage("Enrollment was not changed. Refresh the roster and review check-in status before retrying.");
+        setMessage(data.code === "event_already_started"
+          ? "Enrollment was not changed because this event has already started. Review the event's existing correction tools."
+          : "Enrollment was not changed. Refresh the roster and review check-in status before retrying.");
       } else {
         setMessage("The request is unresolved. Retry the same protected request.");
       }
@@ -102,7 +105,7 @@ export default function ParticipantsClient({ actorId, tournamentId, workspace }:
   }
 
   if (workspace.events.length === 0) return <section className="correction-item"><h2>Activate tournament events first</h2><p>Save and activate the tournament setup before assigning players to events.</p></section>;
-  if (digitalEvents.length === 0) return <section className="correction-item"><h2>No digital Standard Singles event</h2><p>Team and doubles events remain paper-scored for the October pilot.</p></section>;
+  if (digitalEvents.length === 0) return <section className="correction-item"><h2>No digital Standard Singles event</h2><p>Manage Doubles enrollment and supported team play in <a href={`/tournament/${tournamentId}/teams`}>Team Scorecards</a>. Review other formats in their existing event controls.</p></section>;
 
   return <section className="policy-settings">
     <section className="correction-item">

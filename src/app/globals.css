@@ -140,3 +140,20 @@ label:has(> select),
 label:has(> textarea) { display:grid; gap:6px; }
 label > textarea,label > input:not([type="checkbox"]):not([type="radio"]),label > select { width:100%; }
 label > textarea { min-height:92px; padding:10px; border:1px solid var(--line); border-radius:8px; color:var(--ink); font:inherit; font-size:16px; resize:vertical; }
+
+.director-checklist { margin-block:24px; padding:20px; border:1px solid var(--line,#ccc); border-radius:12px; }
+.director-checklist ol { padding-left:24px; }
+.director-checklist li { padding:12px 0; overflow-wrap:anywhere; }
+.director-checklist li p { margin-block:8px; }
+.checklist-state { display:inline-block; margin:4px 8px; font-weight:600; }
+@media (max-width:600px) { .director-checklist { padding:12px; } .checklist-state { display:block; margin-left:0; } }
+
+.settlement-evidence-scroll { max-width:100%; overflow-x:auto; }
+.settlement-v5-workspace,.settlement-v5-workspace>* { min-width:0; }
+.settlement-v5-workspace fieldset { min-inline-size:0; }
+.settlement-v5-workspace input,.settlement-v5-workspace select { min-width:0; max-width:100%; }
+.settlement-evidence-scroll table { width:100%; min-width:680px; border-collapse:collapse; }
+.settlement-evidence-scroll th,.settlement-evidence-scroll td { padding:8px; text-align:left; border-bottom:1px solid var(--line); }
+#acc-recovery-frozen-shield { display: none; }
+.acc-recovery-frozen #acc-recovery-live-app { visibility: hidden !important; }
+.acc-recovery-frozen #acc-recovery-frozen-shield { display: block; padding: 1.5rem; background: white; color: black; }

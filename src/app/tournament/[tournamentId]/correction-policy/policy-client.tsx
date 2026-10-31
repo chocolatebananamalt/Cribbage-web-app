@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -24,7 +25,7 @@ function storedEnvelope(storageKey: string) {
 
 function storeEnvelope(storageKey: string, envelope: Envelope) {
   try {
-    window.sessionStorage.setItem(storageKey, JSON.stringify(envelope));
+    setAppRecoveryItem(window.sessionStorage, storageKey, JSON.stringify(envelope));
     return true;
   } catch {
     return false;

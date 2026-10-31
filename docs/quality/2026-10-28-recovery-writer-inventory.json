@@ -1,0 +1,164 @@
+{
+  "status": "integrated locally; full writer census enforced by recovery-writer-inventory.test.mjs",
+  "synchronousWriters": [
+    {
+      "path": "src/lib/score-retry-envelope.ts",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/event-check-in/event-check-in-form.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/director/tournaments/new/new-tournament-client.tsx",
+      "calls": 2,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/corrections/corrections-client.tsx",
+      "calls": 2,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "calls": 3,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/participants/participants-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/expense-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/payment-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/payment-obligation-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/recoveries/recovery-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/results/qualification-finalization-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/roster/roster-client.tsx",
+      "calls": 2,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/schedule/schedule-client.tsx",
+      "calls": 2,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/seating/seating-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/setup-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/disputes/dispute-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-outcomes/playoff-outcome-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/playoff-placement-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-finalization-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement-v5/settlement-v5-client.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx",
+      "calls": 1,
+      "kind": "synchronous retry-envelope storage"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "calls": 1,
+      "kind": "exact Q Pool request envelope"
+    },
+    {
+      "path": "src/lib/paper-games/photo-retry-envelope.ts",
+      "calls": 1,
+      "kind": "exact private photo metadata request; no image bytes"
+    }
+  ],
+  "asynchronousWriters": [
+    "src/lib/offline-score-queue.ts: writeOne and writeOfflineQueueRecordOnce / queueOfflineSubmission",
+    "src/lib/offline-score-page-cache.ts: prepareCurrentScorePageForOffline and markOfflineScoreOwner"
+  ],
+  "requirements": [
+    "Drain all in-flight asynchronous writers before releasing the document lease.",
+    "Block new synchronous and asynchronous writers before entering draining.",
+    "Keep legacy/no-lease tabs fail-closed using exact-version worker window inventory.",
+    "Bridge worker navigation lock through document lease-ready acknowledgement.",
+    "Never use broad Clear-Site-Data storage with tab-local recovery envelopes."
+  ],
+  "excludedNotifications": [
+    "Two localStorage acc-score-result-accepted notification writes in score-entry are not retained request envelopes. They carry a result-update notification; targeted cleanup must not delete unrelated localStorage."
+  ]
+}

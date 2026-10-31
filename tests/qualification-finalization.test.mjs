@@ -69,7 +69,7 @@ test("finalization browser preserves one retry identity across ambiguous outcome
   const client = fs.readFileSync("src/app/tournament/[tournamentId]/results/qualification-finalization-client.tsx", "utf8");
   const route = fs.readFileSync("src/app/api/v1/tournaments/[id]/events/[eventId]/qualification-finalization/route.ts", "utf8");
   assert.match(client, /qualification-finalization:\$\{actorId\}:\$\{eventId\}/);
-  assert.match(client, /window\.sessionStorage\.setItem/);
+  assert.match(client, /setAppRecoveryItem/);
   assert.match(client, /locked \?\? \{ kind: "qualification-finalization" as const, idempotencyKey: crypto\.randomUUID\(\) \}/);
   assert.match(client, /outcome is not yet confirmed/);
   assert.doesNotMatch(client, /Nothing was changed/);

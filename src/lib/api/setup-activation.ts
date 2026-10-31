@@ -44,6 +44,7 @@ const acceptedKeys = [
 const activationEventKeys = ["activationId", "setupEventVersionId", "rulesetVersionId", "eventId", "eventType", "name", "format", "scoringMethod", "gameCount"];
 const activationStateEventKeys = ["eventId", "eventType", "name", "format", "scoringMethod", "gameCount"];
 const rejectedCodes = new Set([
+  "schedule_revision_required",
   "tournament_unavailable",
   "not_director",
   "idempotency_conflict",

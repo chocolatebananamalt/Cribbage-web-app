@@ -36,7 +36,7 @@ export type PlayoffPlacementWorkspace = {
   capabilities: { mrpCalculation: true; qPoolCalculation: false; payoutCalculation: false; publication: false };
 };
 
-const rejectionCodes = new Set(["tournament_unavailable", "not_director", "qualification_result_unavailable", "stale_version", "invalid_placements", "invalid_request", "idempotency_conflict"]);
+const rejectionCodes = new Set(["tournament_unavailable", "not_director", "qualification_result_unavailable", "stale_version", "invalid_placements", "invalid_request", "idempotency_conflict", "playoff_write_domain_conflict"]);
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
 const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).sort().join(",") === [...keys].sort().join(",");
 const whole = (value: unknown, min = 0) => Number.isSafeInteger(value) && (value as number) >= min;
@@ -60,6 +60,12 @@ export function isPlayoffPlacementRequest(value: unknown): value is PlayoffPlace
     || !value.placements.every(placement)) return false;
   return new Set(value.placements.map((item) => item.participantId)).size === value.placements.length
     && value.placements.every((item, index) => item.placement === index + 1);
+}
+
+export function parsePlayoffPlacementEnvelope(value: unknown): PlayoffPlacementRequest | null {
+  if (!record(value) || value.kind !== "playoff-placement") return null;
+  const candidate = "request" in value ? value.request : Object.fromEntries(Object.entries(value).filter(([key]) => key !== "kind"));
+  return isPlayoffPlacementRequest(candidate) ? candidate : null;
 }
 
 export function isPlayoffPlacementOutcome(value: unknown, tournamentId: string, eventId: string): value is PlayoffPlacementOutcome {

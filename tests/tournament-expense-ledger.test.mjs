@@ -90,7 +90,7 @@ test("expense API and page remain protected server boundaries", () => {
   assert.match(workspace, /get_tournament_expense_workspace/);
   assert.match(page, /\["director", "co_director"\]\.includes\(access\.role\)/);
   assert.match(page, /getExpenseWorkspace/);
-  assert.match(client, />Add Expense</);
+  assert.match(client, /syntheticMode \? "Add simulated expense" : "Add Expense"/);
   assert.match(client, /sessionStorage/);
   assert.match(sessionStorage, /"expense-operation:"/);
   assert.match(client, /This ledger is private and not reconciled/);

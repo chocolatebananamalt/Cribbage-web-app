@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ActivationWitness } from "../../components/activation-witness";
 import { isActivationRedemptionResult, type ActivationRedemptionResult } from "../../lib/api/roster-account-activation";
 
 declare global { interface Window { __accActivationCredential?: string } }
@@ -78,5 +79,5 @@ export default function ActivationForm() {
     if (mounted.current) setMessage("This activation link is unavailable. Please contact the tournament director.");
   }
 
-  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}{pending ? <section className="correction-item" aria-labelledby="witness-title"><h2 id="witness-title">Confirm with the tournament director</h2><p>Show the director both values in person. The director must be signed in separately and cannot approve their own request.</p><p><strong>Request ID</strong><br /><code>{pending.requestId}</code></p><p><strong>Witness phrase</strong><br /><code>{pending.confirmationPhrase}</code></p></section> : null}<p className="auth-note" role="status">{message}</p></section>;
+  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}{pending ? <ActivationWitness pending={pending} /> : null}<p className="auth-note" role="status">{message}</p></section>;
 }

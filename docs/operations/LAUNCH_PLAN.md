@@ -1,3 +1,4 @@
+> Current execution notice (2026-10-30): the dated production URLs, target dates and migration numbers below are historical evidence, not a current rollout instruction or authorization. Use [the current release/restore checkpoint](RELEASE_AND_RESTORE_CHECKPOINT_2026_10_30.md) and exact-candidate acceptance before proposing any hosted action. No production deployment or data export is authorized by these documents.
 # Hosting and launch
 
 ## Recommendation

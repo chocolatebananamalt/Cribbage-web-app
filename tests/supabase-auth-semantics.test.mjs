@@ -95,17 +95,19 @@ test('browser CSP allow-list accepts only one exact configured Supabase origin',
   }
 });
 
-test('callback only accepts same-origin relative redirect paths', () => {
+test('callback defers exchange to coordinated POST and validates redirect paths centrally', () => {
   const route = read('src/app/auth/callback/route.ts');
-  assert.match(route, /startsWith\("\/\/"\)/);
-  assert.match(route, /startsWith\("\/"\)/);
-  assert.match(route, /exchangeCodeForSession/);
-  assert.match(route, /response\.headers\.set\("cache-control", "private, no-store"\)/);
+  const core = read('src/lib/auth/recovery-auth.ts');
+  assert.match(route, /safeAuthNext/);
+  assert.match(core, /startsWith\("\/\/"\)/);
+  assert.match(core, /startsWith\("\/"\)/);
+  assert.doesNotMatch(route, /exchangeCodeForSession/);
+  assert.match(read('src/lib/auth/recovery-auth-route.ts'), /exchangeCodeForSession/);
+  assert.match(route, /recoveryAuthPost\(request, "code"\)/);
+  assert.match(route, /target.hash/);
+  assert.match(route, /cache-control", "private, no-store/);
+  assert.match(route, /referrer-policy", "no-referrer/);
   assert.match(route, /error=missing_code/);
-  assert.doesNotMatch(route, /error=missing_code";\s*return NextResponse\.redirect\(destination\)/);
-  assert.doesNotMatch(route, /error=callback_failed";\s*return NextResponse\.redirect\(destination\)/);
-  assert.match(route, /error=missing_code";\s*return privateRedirect\(destination\)/);
-  assert.match(route, /error=callback_failed";\s*return privateRedirect\(destination\)/);
 });
 
 test('sign-in uses publishable browser auth and keeps the prototype route available', () => {
@@ -119,7 +121,8 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   // single point of failure: when mail is throttled or filtered, a director at
   // the desk has no way in at all. Account creation by password stays banned.
   assert.doesNotMatch(form, /signUp\s*\(/);
-  assert.match(form, /signInWithPassword/);
+  assert.match(form, /submitCoordinatedAuthentication/);
+  assert.match(read('src/lib/auth/recovery-auth-route.ts'), /signInWithPassword/);
   assert.match(form, /shouldCreateUser: true/);
   const bootstrap = read('database/migrations/0067_passwordless_profile_bootstrap.sql');
   assert.match(bootstrap, /after insert on auth\.users/);
@@ -135,40 +138,35 @@ test('sign-in uses publishable browser auth and keeps the prototype route availa
   assert.match(read('src/app/page.tsx'), /export default|TournamentDashboard/);
 });
 
-test('the synthetic review dashboard is unavailable from a production deployment while production offers safe sign-in discovery', async () => {
-  const { allowsReviewPrototype } = await import(pathToFileURL(path.join(root, 'src/lib/review-prototype-boundary.ts')).href);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'production' }), false);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-q81o14eoc-cribbage-app.vercel.app' }), true);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'development', host: 'localhost:3000' }), true);
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'cribbage-web-app.vercel.app' }), false, 'promotion must not turn the default production hostname into a review surface');
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production', vercelEnv: 'preview', host: 'tournament.example.org' }), false, 'an unlisted custom production hostname must fail closed');
-  assert.equal(allowsReviewPrototype({ nodeEnv: 'production' }), false);
+test('root always uses verified identity and the sample dashboard stays on explicit demo', () => {
   const page = read('src/app/page.tsx');
-  assert.match(page, /await headers\(\)/);
-  assert.match(page, /requestHeaders\.get\("host"\)/);
-  assert.match(page, /allowsReviewPrototype/);
-  assert.match(page, /return <TournamentDashboard/);
+  const demo = read('src/app/demo/page.tsx');
+  assert.doesNotMatch(page, /allowsReviewPrototype|TournamentDashboard|requestHeaders/);
+  assert.match(page, /const subject = await getCurrentSubject\(\)/);
+  assert.match(page, /if \(subject\)/);
+  assert.match(page, /getAccessibleTournaments\(subject\)/);
   assert.match(page, /href="\/sign-in"/);
-  assert.match(page, /Tournament registration uses the QR code or registration link/);
-  assert.match(page, /getCurrentSubject/);
-  assert.match(page, /You’re signed in/);
-  assert.match(page, /secure email sign-in is complete/);
+  assert.match(page, /href="\/demo"/);
   assert.match(page, /SharedDeviceSignOut/);
-  assert.doesNotMatch(page, /notFound\(/);
+  assert.match(demo, /Demonstration notice/);
+  assert.match(demo, /Sample Data Only/);
+  assert.match(demo, /<TournamentDashboard initialScreen=/);
 });
-
 test('successful magic-link sessions are visible and cannot request another link', () => {
   const subject = read('src/lib/auth/current-subject.ts');
   const signInPage = read('src/app/sign-in/page.tsx');
   const form = read('src/app/sign-in/sign-in-form.tsx');
+  const emailError = read('src/lib/auth/email-sign-in-error.ts');
   assert.match(subject, /server-only/);
   assert.match(subject, /auth\.getClaims\(\)/);
   assert.match(subject, /claims\?\.sub/);
   assert.doesNotMatch(subject, /getSession|getUser/);
   assert.match(signInPage, /getCurrentSubject/);
   assert.match(signInPage, /if \(subject\) redirect\("\/"\)/);
-  assert.match(form, /Too many sign-in emails were requested/);
-  assert.match(form, /wait a few minutes, then request one new link/);
+  assert.match(form, /normalizeEmailSignInError/);
+  assert.match(emailError, /Too many sign-in emails were requested/);
+  assert.match(emailError, /exact reset time is unavailable/);
+  assert.doesNotMatch(form + emailError, /wait a few minutes/i);
 });
 
 test('the public production demonstration is explicit, synthetic-only, and disconnected from tournament writes', () => {
@@ -264,7 +262,7 @@ test('API v1 mutation origin decision rejects only unsafe cross-origin writes', 
   assert.equal(check('/api/v1/games/example/submissions', 'HEAD', null), false);
   assert.equal(check('/api/v1/games/example/submissions', 'OPTIONS', null), false);
   assert.equal(check('/api/v2/games/example/submissions', 'POST', 'https://other.example'), false);
-  const request = (origin, fetchSite = null) => ({ headers: new Headers([["origin", origin], ...(fetchSite ? [["sec-fetch-site", fetchSite]] : [])]), nextUrl: { origin: requestOrigin } });
+  const request = (origin, fetchSite = null) => new Request(requestOrigin + '/api/v1/fixture', { headers: new Headers([["origin", origin], ...(fetchSite ? [["sec-fetch-site", fetchSite]] : [])]) });
   assert.equal(isSameOriginRequest(request(requestOrigin)), true);
   assert.equal(isSameOriginRequest(request(requestOrigin, 'same-origin')), true);
   assert.equal(isSameOriginRequest(request(requestOrigin, 'cross-site')), false);
@@ -319,9 +317,9 @@ test('protected screens offer a recovery-preserving sign-out and a safe clear bo
   assert.match(signOut, /isSameOriginRequest\(request\)/);
   assert.match(signOut, /private, no-store/);
   assert.match(signOut, /auth\.signOut\(\{ scope: "local" \}\)/);
-  assert.match(signOut, /x-acc-clear-safe-app-data/);
-  assert.match(signOut, /Clear-Site-Data/);
-  assert.match(signOut, /"cache", "storage"/);
+  assert.doesNotMatch(signOut, /headers\.set\("Clear-Site-Data"/);
+  assert.match(control, /beginSafeRecoverySwitch/);
+  assert.match(control, /clearRecoveryStorageOwner/);
   assert.match(signOut, /cache-control/);
   assert.doesNotMatch(signOut, /source\.headers\.forEach/);
   assert.match(storage, /"acc-score:"/);
@@ -390,16 +388,18 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
     removeItem(key) { values.delete(key); },
   };
   const envelope = { version: 1, kind: 'submission', actorId: 'actor-1', tournamentId: 'tournament-1', gameId: 'game-1', playerSide: 'a', submissionId: 'submission-1', idempotencyKey: 'operation-1', submissionSlot: 1, winnerSide: 'a', margin: 31 };
-  assert.equal(retry.writePendingScoreSubmission(storage, envelope), true);
+  assert.equal(retry.writePendingScoreSubmission(storage, envelope), false, 'uncoordinated writers fail closed; happy path is exercised in the real browser');
+  assert.equal(values.size, 0);
+  values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify(envelope));
   assert.deepEqual(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), envelope);
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
   values.set(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a'), JSON.stringify(envelope));
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-2', 'tournament-1', 'game-1', 'a'), null);
-  assert.equal(values.has(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a')), false);
+  assert.equal(values.has(retry.scoreSubmissionStorageKey('actor-2', 'tournament-1', 'game-1', 'a')), true, 'unknown ownership is preserved, not erased');
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'b'), null);
   values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), null);
-  assert.equal(values.size, 0);
+  assert.equal(values.size, 2, 'malformed recovery stays retained and blocks switching');
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, 'different-server-submission'), { action: 'clear' });
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, null), { action: 'retry', envelope });
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned' }, 'game-1', 'submission'), true);
@@ -425,10 +425,11 @@ test('route callback propagates refreshed cookies and membership function is nar
   const server = read('src/lib/supabase/server.ts');
   const migration = read('database/migrations/0002_pilot_membership_authorization.sql');
   const envExample = read('.env.example');
-  assert.match(callback, /createRouteClient/);
-  assert.match(callback, /withCookies/);
-  assert.match(callback, /source\.headers\.forEach/);
-  assert.match(callback, /name\.toLowerCase\(\) !== "set-cookie"/);
+  const isolated = read('src/lib/auth/recovery-auth-route.ts');
+  assert.match(callback, /recoveryAuthPost/);
+  assert.match(isolated, /createRouteClient/);
+  assert.match(isolated, /result\.accepted && cookieResponse/);
+  assert.match(isolated, /source\.cookies\.getAll/);
   assert.match(callback, /private, no-store/);
   assert.match(server, /const response = new NextResponse\(null\)/);
   assert.doesNotMatch(server, /NextResponse\.next/);
@@ -741,8 +742,11 @@ test('protected Rulebook reference provides dated cached and online ACC sources 
   assert.match(page, /isUuid/);
   assert.match(page, /ACC Rulebook Cached/);
   assert.match(page, /ACC Rulebook Online/);
-  assert.match(reference, /Each assigned player signs in as themselves/);
-  assert.match(reference, /stays pending for cross-checking or a judge/);
+  assert.match(reference, /Digital player submits their own result/);
+  assert.match(reference, /Paper player keeps the original paper scorecard and does not need an app account/);
+  assert.match(reference, /assigned cross-checker matches the sources/);
+  assert.match(reference, /second distinct authorized non-playing official independently re-enters and confirms both/);
+  assert.match(reference, /Missing evidence or a mismatch stays unresolved/);
   assert.match(page, /acc-rulebook-2025\.pdf/);
   assert.match(page, /DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD/);
   assert.match(page, /rel="noreferrer"/);

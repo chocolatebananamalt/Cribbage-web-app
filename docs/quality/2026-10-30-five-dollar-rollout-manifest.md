@@ -1,0 +1,30 @@
+# Local $5 payout rollout manifest — review only
+
+The inventory records both reviewed working-file SHA256 and staged Git-blob SHA256. Repository attributes normalize CRLF to LF for text: 42 selected files differ only by that line-ending conversion; no other content differs. The staging migration tool recorded the exact reviewed working bytes plus one trailing CRLF, and removing only that extra CRLF reproduces each reviewed hash. Verify both representations before publication.
+
+No publication or hosted migration is authorized by this file. Last recorded staging history ends at 0255; re-read current remote and staging state before any proposed rollout. Curated file hashes are in [inventory](2026-10-30-five-dollar-rollout-inventory.json); generated outputs, secrets, environment configuration, private handoff data and unrelated historical reports are excluded. Inventory itself and this manifest should accompany any reviewed changes. Re-scan and recalculate hashes immediately before publication.
+
+| Local migration | Bytes | SHA256 | Effect |
+|---|---:|---|---|
+| 0256_regular_prize_rounding_math_v3.sql | 9140 | 41C544ED3FAE8585EC443A92FE33CFE01BA117B965B8ED206D3AA9811901399E | Private $5 regular-prize calculator |
+| 0257_regular_prize_accounting_v8.sql | 41076 | 9C0EA761522D74822F1A41E027605716FF106AD362BCD32C094E40CD1500813C | Three private append-only accounting/funding/final tables; six service RPCs, source/domain guards, existing member-summary extension |
+| 0258_graduated_shared_amounts_v2.sql | 4363 | 822626BBC99785C18DD19D7B5718800A9A779F5D99794A739CA988C9F2A387E4 | Private exact graduated amount calculator |
+| 0259_graduated_q_policy_v4.sql | 10455 | CB1C9D439D5E65D17188DE6F07D16F78295F4386CBD4A444CC82B653EF40C2AA | Two service RPCs, new disclosed Q method and award guard |
+| 0260_new_award_denomination_guards_v1.sql | 9169 | B4A5128F903F88B9FEF23D89A94B437CFAED3B2B2EC586FF942E9B9000362DD7 | Private insert guards on 21 award/review/final paths; preserves history and refund/void distinctions |
+| 0261_side_pool_graduated_amounts_v2.sql | 27283 | DDD0C25C1B6A58DBF82228A881D921352E66B5A781CE47900C921D65D9419C8E | Two private append-only Side tables, five service RPCs and disclosure/source/locking guards |
+| 0262_legacy_award_rejection_recovery_v1.sql | 2834 | C1103FD7FF76E94A39EC536F864266ECA80A68967840FA1FDDA02783D82E8F5D | Controlled durable rejection for new legacy cent awards after exact replay |
+| 0263_team_replacement_generated_status_fix.sql | 770 | 5DBC8A283F178F6602C9394B706DD6B1AF8761C0935CBCA86403821765439DB9 | Repairs existing team replacement generated-column insertion; no new table or grant |
+
+The five new private forced-RLS immutable tables are `app.prize_accounting_drafts_v8`, `app.prize_rounding_funding_events_v8`, `app.prize_accounting_finals_v8`, `app.side_pool_graduated_policies_v2`, and `app.side_pool_amount_reviews_v2`. Direct table privileges are revoked from public, anon, authenticated and service_role; private helpers are not directly granted. Thirteen new public RPCs are service-role only; no player/director database privileges are added:
+
+- Accounting: `get_prize_accounting_workspace_v8`, `save_prize_accounting_draft_v8`, `record_prize_rounding_funding_v8`, `void_prize_rounding_funding_v8`, `finalize_prize_accounting_v8`, `reconcile_prize_accounting_v8`.
+- Q policy: `save_q_operating_policy_v4`, `get_q_operating_reconciliation_v4`.
+- Side policy: `get_side_pool_graduated_workspace_v2`, `save_side_pool_graduated_policy_v2`, `save_side_pool_graduated_election_v2`, `record_side_pool_amount_review_v2`, `get_side_pool_graduated_reconciliation_v2`.
+
+0257 replaces existing `list_prize_award_summaries_v1` and retains its existing membership audience; verify its stored definition and grants. 0263 changes an existing private trigger function only, preserving its grants and allowing PostgreSQL to compute the generated scorer status. Local source history is preserved; no migration rewrites historical awards. Exact accepted retries remain ahead of new denomination rejection. New accounting records remain unpaid, and Q/Side rank amount previews do not execute disbursements.
+
+If separately approved for staging, recheck exact remote/base, all file hashes, staging identity/history and inactive writers. Stop on drift or active writes. Apply schema 0256–0263 in numerical order once, checking each transaction outcome before the next; verify function bodies, owners/search paths, forced RLS, ACLs, triggers, migration history and pre-existing business data fingerprints. Then publish the matching reviewed code to the existing test branch, verify exact-commit CI and protected Preview identity against staging, and undertake separately bounded fictional acceptance as authorized. The combined legacy local fixture applied 0263 before creating historical team data to emulate the repaired pre-guard state; a separate clean disposable PostgreSQL run applied 0256–0263 in numeric order and passed both Q and no-Q unpaid accounting lifecycles; exact container cleanup was verified.
+
+There is no safe blanket rollback once new immutable history exists. Pause writers and prefer a reviewed forward repair that preserves source/version/receipt history; do not drop tables or silently reverse recorded work. This is a staging review plan, not production approval. Physical independent-user/offline rehearsal, hosted Database/Auth/Storage restore, unresolved Q cash tie policy and other release gates remain.
+
+Local verification: 1,091 application tests, audit/lint/providers/build/workspace checks; regular math 180 SQL parity cases; shared graduated 1,789 parity cases; Q and Side phone/desktop headless acceptance; 18 real Side SQL groups including two different-actor start/election races; v5/v6/v7 historical cent replay and durable rejection; satellite/team historical replay and rolled-back cent changes; normal team replacement with generated status. All financial events in these tests are fictional and no disbursement occurred. The latest combined test has a synthetic qualification/team foundation, not a physical two-person field rehearsal.

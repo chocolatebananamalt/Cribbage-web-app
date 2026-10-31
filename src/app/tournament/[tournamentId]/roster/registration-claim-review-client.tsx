@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ import type { RegistrationClaimReviewItem } from "../../../../lib/registration-c
 
 type Draft = { reason: string; confirmedDistinct: boolean };
 function read(key: string) { try { const raw = window.sessionStorage.getItem(key); return raw ? JSON.parse(raw) as unknown : null; } catch { return null; } }
-function write(key: string, value: RegistrationClaimReviewRequest) { try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function write(key: string, value: RegistrationClaimReviewRequest) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clear(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* The immutable server receipt remains authoritative. */ } }
 
 export default function RegistrationClaimReviewClient({ actorId, tournamentId, claims }: { actorId: string; tournamentId: string; claims: RegistrationClaimReviewItem[] }) {

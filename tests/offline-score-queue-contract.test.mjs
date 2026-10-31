@@ -128,7 +128,7 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(pageCache, /cache: "no-store"/);
   assert.match(pageCache, /redirect: "error"/);
   assert.match(pageCache, /pageResponse\.url !== pageRequest\.url/);
-  assert.match(pageCache, /data-offline-score-binding/);
+  assert.match(pageCache, /if \(!hasAssignedOfflinePageBinding\(html, actorId, gameId\)\) return false/);
   assert.match(pageCache, /url\.origin === window\.location\.origin/);
   assert.match(pageCache, /url\.pathname\.startsWith\("\/_next\/static\/"\)/);
   assert.match(pageCache, /cache\.put\(pageRequest/);
@@ -162,9 +162,12 @@ test("offline score pages are explicitly prepared, narrowly cached, reusable aft
   assert.match(gamePage, /throw new Error\("game_workspace_temporarily_unavailable"\)/);
   assert.match(gameError, /Game workspace temporarily unavailable/);
   assert.match(gameError, /onClick=\{reset\}/);
-  assert.match(callback, /request\.cookies\.get\("acc_offline_score_owner"\)/);
-  assert.match(callback, /canAcceptOfflineOwnerSession\(offlineOwner, data\.user\?\.id\)/);
-  assert.ok(callback.indexOf("exchangeCodeForSession") < callback.indexOf("canAcceptOfflineOwnerSession(offlineOwner"));
+  const authRoute = await readFile(new URL("../src/lib/auth/recovery-auth-route.ts", import.meta.url), "utf8");
+  const authCore = await readFile(new URL("../src/lib/auth/recovery-auth.ts", import.meta.url), "utf8");
+  assert.match(callback, /recoveryAuthPost/);
+  assert.match(authRoute, /offlineOwnerCookie/);
+  assert.match(authCore, /ownerMarkersAllowActor/);
+  assert.ok(authRoute.indexOf("request.cookies.getAll()") < authRoute.indexOf("createRouteClient(request)"));
   assert.match(blockedPage, /different-account sign-in was not completed/);
   assert.match(blockedPage, /SharedDeviceSignOut/);
   assert.match(config, /source: "\/offline-score-sw\.js"/);
@@ -182,14 +185,16 @@ test("offline navigation falls back only for network and transient server failur
   let networkResult = new Response("server", { status: 500 });
   const cache = { match: async (request) => stored.get(request.url)?.clone() ?? null };
   const context = {
-    URL, Response, Date,
+    URL, Response, Date, crypto: globalThis.crypto, MessageChannel, setTimeout, clearTimeout,
     caches: { open: async () => cache, keys: async () => [], delete: async () => true },
     fetch: async () => {
       if (networkResult instanceof Error) throw networkResult;
       return networkResult;
     },
     self: {
-      location: { origin: "https://example.test" }, clients: { claim: async () => undefined }, skipWaiting: async () => undefined,
+      location: { origin: "https://example.test" },
+      navigator: { locks: { request: async (_name, _options, callback) => callback({ mode: "shared" }) } },
+      clients: { claim: async () => undefined, get: async () => ({ postMessage(data, ports) { ports[0].postMessage({kind:"acc-recovery-navigation-lease-ready-v2",version:data.version,bridgeId:data.bridgeId,controllerScriptURL:data.workerScriptURL}); } }) }, skipWaiting: async () => undefined,
       addEventListener: (name, handler) => { handlers[name] = handler; },
     },
   };
@@ -199,8 +204,11 @@ test("offline navigation falls back only for network and transient server failur
   stored.set(url, new Response("cached", { headers: { "x-acc-offline-expires-at": String(Date.now() + 60_000) } }));
   const respond = async () => {
     let responsePromise;
-    handlers.fetch({ request, respondWith: (value) => { responsePromise = value; } });
-    return await responsePromise;
+    let completion;
+    handlers.fetch({ request, resultingClientId: "fixture-client", respondWith: (value) => { responsePromise = value; }, waitUntil: (value) => { completion = value; } });
+    const response = await responsePromise;
+    await completion;
+    return response;
   };
   assert.equal(await (await respond()).text(), "cached", "5xx must use an unexpired prepared page");
   networkResult = new Response("unauthorized", { status: 401 });
@@ -209,6 +217,10 @@ test("offline navigation falls back only for network and transient server failur
   assert.equal(await (await respond()).text(), "cached", "network failure must use an unexpired prepared page");
   stored.set(url, new Response("expired", { headers: { "x-acc-offline-expires-at": String(Date.now() - 1) } }));
   assert.equal((await respond()).status, 503, "expired private pages must fail closed");
+  const locks = context.self.navigator.locks;
+  context.self.navigator.locks = null;
+  assert.equal((await respond()).status, 503, "missing coordination must not return cached private pages");
+  context.self.navigator.locks = locks;
   let apiResponse;
   handlers.fetch({ request: { method: "POST", mode: "cors", url: "https://example.test/api/v1/offline-score-replay" }, respondWith: (value) => { apiResponse = value; } });
   assert.equal(apiResponse, undefined, "the worker must never intercept score mutations");

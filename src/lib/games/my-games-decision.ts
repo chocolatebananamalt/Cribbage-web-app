@@ -1,9 +1,11 @@
+import {isGameScorecardNumbers,type GameScorecardNumbers} from '../api/odd-field-makeup.ts';
 const states = new Set(["pending", "submitted", "confirmation_pending", "mismatch", "verified", "corrected", "recovered"]);
 const seat = (value: unknown) => typeof value === "string" && /^[A-Z]-[1-9][0-9]*$/.test(value);
 const text = (value: unknown) => typeof value === "string" && value.trim().length > 0;
 const uuid = (value: unknown) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
 export type AssignedGameSummary = {
+  cardNumbers?:GameScorecardNumbers;
   gameId: string;
   eventId: string;
   eventName: string;
@@ -55,7 +57,10 @@ export function isMyGamesWorkspace(value: unknown, tournamentId: string): value 
   return item.games.every((candidate) => {
     if (!candidate || typeof candidate !== "object") return false;
     const game = candidate as Record<string, unknown>;
-    return Object.keys(game).length === 17
+    const hasNumbers=Object.hasOwn(game,'cardNumbers');
+    if(hasNumbers&&(!isGameScorecardNumbers(game.cardNumbers,String(game.gameId))
+      ||game.cardNumbers.eventId!==game.eventId||game.cardNumbers.schedulingBatchNumber!==game.gameNumber))return false;
+    return Object.keys(game).length === (hasNumbers?18:17)
       && uuid(game.gameId) && uuid(game.eventId) && text(game.eventName)
       && Number.isInteger(game.gameNumber) && (game.gameNumber as number) > 0
       && Number.isInteger(game.matchInstance) && (game.matchInstance as number) > 0

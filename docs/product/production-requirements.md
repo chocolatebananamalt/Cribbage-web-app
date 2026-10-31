@@ -1,5 +1,20 @@
 # ACC Digital Tournament System — Normative Production Requirements
 
+## Owner-approved current additions - 2026-10-30, local only
+
+Q pools are optional: ordinary Main accounting MUST complete without creating a fictitious Q review. The supported five-qualifier slice MUST preserve actual played wins separately from bye credit, the original twelve qualifying results per person, immutable source-bound ranking resolutions, equal same-round regular awards, explicit director-entered fifth-place weight, independent 85% gross-base return and exact unpaid accounting conservation. The 17-player odd-field solution uses six real makeup matches and per-side original card-line mapping; no phantom game or free score is substituted.
+
+The owner also approved a new graduated Q method using observed ACC raw weights with the app's exact largest-remainder $5 rounding, preserving every historical chart/equal policy and reviewed/final liability. This is an app modification, not ACC endorsement. It MUST be explicitly disclosed/frozen before payment and bound to current paid membership, qualification, funding and review evidence. Equal Q and regular shared-band prizes remain separate. Unresolved Q cash ties MUST block; neither a qualification tiebreak nor a previous low-card attestation silently supplies monetary authority. Scope and provenance: `../decisions/2026-10-30-acc-weighted-balanced-q-policy.md`.
+
+Implementation evidence does not waive broader production requirements. See `../quality/2026-10-30-five-qualifier-main-local.md`; no hosted migration, publication or real transaction is authorized by this addendum.
+
+
+## Owner-approved payback repair addendum — 2026-10-27, local only
+
+Cash conservation does not by itself establish ACC payback compliance. A reviewed settlement must separately classify actual expense evidence and calculate eligible player return against gross entry fees, without deducting sanctioning or other costs twice. Unknown classifications cannot be treated as compliant. The first implemented local slice requires a sourced director-selected schedule, exactly one positive total award per ordinary full-entry cash-eligible qualifier and equal awards within each elimination cohort; it introduces no fixed ACC percentage or cumulative round-payment formula. Each qualifier needs explicit eligibility evidence. Legal-age/sanction-only exceptions in current ACC Policy Manual chapter 6 I.G (printed 6-3/PDF 35) require an unsupported-case blocker rather than automatic cash awards.
+
+Local migration 0241 binds versioned review evidence to an exact immutable draft and current financial/qualification facts, preserves historical receipt replay, and gates new writes only in its explicit event domain. Legacy records are not retroactively labeled compliant. Supported scope and current execution evidence are in [the local validation report](../quality/2026-10-27-payback-review-local-validation.md); multi-event allocation, pools, refunds, byes and exception handling remain outside this first slice. This addendum is not a production deployment, official sanctioning validation or approval of a particular prize split.
+
 **Document ID:** PRD-001
 
 **Version:** 1.0
@@ -445,3 +460,8 @@ Friendly skunk visuals use informal bands only: 31–60 one icon, 61–90 two ic
 | Correction | append-only old/new/actor/time; immediate default authority | erased history, missing actor/time, correction affecting standings before configured approval |
 | Publication | reconciled/director-approved version becomes public | draft/unreconciled/private finance exposure; unversioned overwrite |
 | Export | validated `acc-results-v1` artifact matching approved results/ledger | unresolved export-specific fixture/schema mapping, invalid score, duplicate identity, unreconciled payout, automatic portal submission |
+
+
+## 2026-10-27 owner-approved director prize schedule (local implementation)
+
+Directors choose and explicitly review a structured setup prize rule, rather than an app-mandated ACC ratio. Version the per-person cohort weights/source/rounding policy, distinguish estimated budget from server-derived actual awards, bind settlement claims to the exact saved schedule, and expose a sanitized printable player summary. Freeze revisions when qualification is finalized; unsupported brackets fail closed. Preserve historical unstructured notes/replays. Initial local slice: one Standard Main12, four no-bye qualifiers, no pools; independent 85%-of-gross review remains required. Verification and rollout boundary: docs/quality/2026-10-27-setup-prize-schedule-local.md. No hosted rollout authorized by this local feature approval.

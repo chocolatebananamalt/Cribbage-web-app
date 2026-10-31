@@ -12,7 +12,7 @@ export type ActivationRedeemRequest = { credential: string; operationId: string 
 export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string };
 export type ActivationCancelRequest = { activationId: string; operationId: string };
 export type ActivationIssueResult = { status: "issued"; credential: string; expiresAt: string };
-export type ActivationRedemptionResult = { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string };
+export type ActivationRedemptionResult = { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string; expiresAt?: string };
 export type ActivationDecisionResult = { status: "approved"; requestId: string; rosterEntryId: string; linkId: string };
 export type ActivationCancellationResult = { status: "cancelled"; activationId: string };
 export type ActivationWorkspace = {
@@ -68,7 +68,8 @@ export function isActivationIssueResult(value: unknown): value is ActivationIssu
 }
 
 export function isActivationRedemptionResult(value: unknown): value is ActivationRedemptionResult {
-  return isRecord(value) && exact(value, ["status", "activationId", "requestId", "confirmationPhrase"])
+  return isRecord(value) && (exact(value, ["status", "activationId", "requestId", "confirmationPhrase"])
+      || (exact(value, ["status", "activationId", "requestId", "confirmationPhrase", "expiresAt"]) && timestamp(value.expiresAt)))
     && value.status === "pending" && isUuid(value.activationId) && isUuid(value.requestId)
     && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
 }

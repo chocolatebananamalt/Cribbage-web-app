@@ -26,7 +26,7 @@ test("an amended setup revision may still bind its side pools", () => {
 // The buttons rendered and the RPC refused across the whole window they exist for:
 // registration closed, play not yet started.
 test("an event may be cancelled after registration closes and before play starts", () => {
-  const latest = latestDefining(/change_event_lifecycle_v1/);
+  const latest = latestDefining(/(?:function public\.change_event_lifecycle_v1\(|pg_get_functiondef\('public\.change_event_lifecycle_v1\(|p\.proname\s*=\s*'change_event_lifecycle_v1')/);
   assert.ok(latest, "no migration touches change_event_lifecycle_v1");
   assert.match(
     latest,

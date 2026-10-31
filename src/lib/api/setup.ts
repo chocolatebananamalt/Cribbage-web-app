@@ -13,6 +13,7 @@ export type SetupEvent = {
   formatCode: "standard_singles" | "team" | "doubles" | "canadian_doubles" | "custom";
   gameCount: number;
   entryFeeCents: number;
+  freeEntry?: boolean;
   feeIncludesNote: string;
   payoutNote: string;
   qualificationNote: string;
@@ -46,11 +47,11 @@ const sanctioningTotal = (v: unknown) => Number.isSafeInteger(v) && (v as number
 const localTime = (v: unknown) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?$/.test(v);
 const contactPhone = (v: unknown) => typeof v === "string" && v.trim().length <= 40 && (!v.trim() || (v.match(/\d/g)?.length ?? 0) >= 7);
 const contactEmail = (v: unknown) => typeof v === "string" && v.trim().length <= 320 && (!v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
-export function isSetupEvent(value: unknown): value is SetupEvent {
-  if (!value || typeof value !== "object" || !own(value, eventKeys)) return false;
-  const e = value as Record<string, unknown>; const pools = e.qPools; const sidePools = e.sidePools;
+export function isHistoricalSetupEvent(value: unknown): value is SetupEvent {
+  if (!value || typeof value !== "object" || !(own(value, eventKeys) || own(value, [...eventKeys, "freeEntry"]))) return false;
+  const e = value as Record<string, unknown>; if ("freeEntry" in e && typeof e.freeEntry !== "boolean") return false; const pools = e.qPools; const sidePools = e.sidePools;
   const validPool = (pool: unknown) => !!pool && typeof pool === "object" && own(pool, poolKeys) && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents) && text((pool as Record<string, unknown>).note, 1000);
-  const normalizedPoolNames = new Set(Array.isArray(sidePools) ? sidePools.map((pool) => (pool as SetupPool).poolTypeCode.trim().toLowerCase()) : []);
+  const normalizedPoolNames = new Set(Array.isArray(sidePools) ? sidePools.map((pool) => pool && typeof pool === "object" && typeof (pool as SetupPool).poolTypeCode === "string" ? (pool as SetupPool).poolTypeCode.trim().toLowerCase() : null) : []);
   return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
     && text(e.displayName, 200, true) && localTime(e.startsAt) && text(e.timezone, 128, true)
     && text(e.styleCode, 160, true) && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(e.formatCode as string)
@@ -62,7 +63,7 @@ export function isSetupEvent(value: unknown): value is SetupEvent {
     && normalizedPoolNames.size === sidePools.length
     && (["main", "consolation", "satellite"].includes(e.eventKind as string) || sidePools.length === 0);
 }
-export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
+export function isRetainedSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   if (!value || typeof value !== "object" || !own(value, ["expectedVersion", "payload", "idempotencyKey"])) return false;
   const b = value as Record<string, unknown>; const p = b.payload;
   if (!Number.isSafeInteger(b.expectedVersion) || (b.expectedVersion as number) < 0 || !isUuid(b.idempotencyKey) || !p || typeof p !== "object" || !own(p, rootKeys)) return false;
@@ -77,7 +78,17 @@ export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   const directorProjection = typeof x.tournamentDirectorFirstName === "string" && typeof x.tournamentDirectorLastName === "string" ? `${x.tournamentDirectorFirstName.trim()} ${x.tournamentDirectorLastName.trim()}` : null;
   return text(x.tournamentName, 200, true) && text(x.city, 160, true) && text(x.venueName, 160, true) && text(x.venueStreet, 240, true) && text(x.venuePostalCode, 20, true) && text(x.venue, 240, true) && x.venue === venueProjection && isTournamentStateTerritory(x.stateTerritory) && localTime(x.startsAt) && localTime(x.endsAt) && text(x.timezone, 128, true) && text(x.tournamentDirectorFirstName, 80, true) && text(x.tournamentDirectorLastName, 80, true) && typeof directorName === "string" && text(directorName, 160, true) && directorName === directorProjection && !["tournament participant", "tournament director", "primary director"].includes(directorName.trim().toLowerCase()) && contactPhone(x.tournamentContactPhone) && contactEmail(x.tournamentContactEmail) && text(x.tournamentMailingAddress, 500) && ratesAreValid
     && Array.isArray(officials) && officials.length >= 1 && officials.length <= 5 && officials.every((o) => !!o && typeof o === "object" && own(o, officialKeys) && isUuid((o as Record<string, unknown>).profileId) && ["director", "co_director"].includes((o as Record<string, unknown>).role as string))
-    && Array.isArray(events) && events.length <= 32 && events.every(isSetupEvent);
+    && Array.isArray(events) && events.length <= 32 && events.every(isHistoricalSetupEvent);
+}
+/** App safeguards; sanctioning obligations are separate from advertised entry prices. */
+export const minimumPaidEntryCents = (kind: SetupEvent["eventKind"]) => kind === "main" ? 300 : 100;
+export const isEnabledPoolFee = (fee: unknown): fee is number => Number.isSafeInteger(fee) && (fee as number) >= 500 && (fee as number) <= 100000000 && (fee as number) % 500 === 0;
+export function isSetupEvent(value: unknown): value is SetupEvent {
+  return isHistoricalSetupEvent(value) && (value.freeEntry === true ? value.entryFeeCents === 0 : value.entryFeeCents >= minimumPaidEntryCents(value.eventKind))
+    && value.qPools.every(p => isEnabledPoolFee(p.entryFeeCents)) && value.sidePools.every(p => isEnabledPoolFee(p.entryFeeCents));
+}
+export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
+  return isRetainedSetupSaveRequest(value) && value.payload.events.every(isSetupEvent);
 }
 export function isSetupRecoveryRequest(value: unknown): value is SetupRecoveryRequest { return !!value && typeof value === "object" && own(value, ["idempotencyKey"]) && isUuid((value as Record<string, unknown>).idempotencyKey); }
 export function isSavedSetup(value: unknown, request: SetupSaveRequest): value is { status: "setup_draft_saved"; revisionId: string; version: number; eventCount: number } { if (!value || typeof value !== "object" || !own(value, ["status", "revisionId", "version", "eventCount", "operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"])) return false; const v = value as Record<string, unknown>; return v.status === "setup_draft_saved" && isUuid(v.revisionId) && v.version === request.expectedVersion + 1 && v.eventCount === (request.payload.events as unknown[]).length && ["operationalEventsCreated", "rulesetApproved", "seatingUpdated", "financeUpdated", "resultsUpdated", "payoutsCalculated", "qualifiersCalculated", "accSubmissionCreated"].every((key) => v[key] === false); }
@@ -90,8 +101,9 @@ const workspacePoolKeys = ["slot", ...poolKeys, "sourceStatus"];
 const historyKeys = ["version", "createdAt", "eventCount"];
 const status = (value: unknown) => value === "director_configured_unverified";
 function workspaceEvent(value: unknown) {
-  if (!value || typeof value !== "object" || !own(value, workspaceEventKeys)) return false;
+  if (!value || typeof value !== "object" || !(own(value, workspaceEventKeys) || own(value, [...workspaceEventKeys, "freeEntry"]))) return false;
   const e = value as Record<string, unknown>;
+  if ("freeEntry" in e && (typeof e.freeEntry !== "boolean" || (e.freeEntry === true && e.entryFeeCents !== 0))) return false;
   return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
     && text(e.displayName, 200, true) && typeof e.startsAt === "string" && text(e.timezone, 128, true)
     && text(e.styleCode, 160, true) && ["standard_singles", "team", "doubles", "canadian_doubles", "custom"].includes(e.formatCode as string)

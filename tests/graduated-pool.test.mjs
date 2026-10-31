@@ -42,7 +42,10 @@ test("protected finance workspace exposes the calculator without claiming persis
   const page = readFileSync("src/app/tournament/[tournamentId]/payments/page.tsx", "utf8");
   const client = readFileSync("src/app/tournament/[tournamentId]/payments/pool-calculator.tsx", "utf8");
   assert.match(page, /<PoolCalculator \/>/);
-  assert.match(client, /nearest-\$5 rounding/);
-  assert.match(client, /Review and adjust the suggested amounts/);
+  assert.match(client, /calculateGraduatedPoolAmountsV2/);
+  assert.match(client, /exact largest-remainder \$5 rounding/);
+  assert.match(client, /Every \$5 is assigned automatically/);
+  assert.match(client, /not ACC endorsement/);
+  assert.doesNotMatch(client, /estimateGraduatedPool|Review and adjust|manualAdjustmentRequired|remains to assign|must be removed/);
   assert.doesNotMatch(client, /saved|official payout|approved payout/i);
 });

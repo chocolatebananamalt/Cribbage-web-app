@@ -1,0 +1,127 @@
+{
+  "status": "LOCAL VERIFIED; HOSTED ROLLOUT AND REPLACEMENT FIXTURES NOT AUTHORIZED",
+  "baseCommit": "69cd920b74d37766dec65831afd2adc79cd25b22",
+  "branch": "codex/director-setup-journey",
+  "draftPr": 122,
+  "contentFileCount": 21,
+  "publicationFileCountIncludingManifest": 22,
+  "manifestPath": "docs/quality/2026-10-30-setup-repair-rollout-manifest.json",
+  "files": [
+    {
+      "path": "database/migrations/0268_setup_prize_side_declaration_v1.sql",
+      "bytes": 5656,
+      "sha256": "0337c8a6e6c0e837a0d95fa39fd458efc8d9a2c66de40f2b6fcc024ea6fc712c"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/setup-client.tsx",
+      "bytes": 70655,
+      "sha256": "92045a82a22cbed8f9098843ae0b58aebb131a814b91ae5d4466d98529206621"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "bytes": 19560,
+      "sha256": "75f5b15c2db530ab48c1f04377383caaa2a6750c223f996049ca16e7d165a15b"
+    },
+    {
+      "path": "src/lib/results/prize-schedule-setup.ts",
+      "bytes": 2960,
+      "sha256": "b1b2f28c3b2aa92643a5bf86d1eb35debacbf0baf1c869110756f014675828d6"
+    },
+    {
+      "path": "src/lib/setup-save-verification.ts",
+      "bytes": 1156,
+      "sha256": "124b136b1aee874fff3c236d8310156b7acd46c07f54dbda7d7c1382e5634aa7"
+    },
+    {
+      "path": "src/lib/setup-save-recovery.ts",
+      "bytes": 2119,
+      "sha256": "acb12ee6035665f35e808bfaa8fb45d4a374a158bff387ccf648a2aafc5161c8"
+    },
+    {
+      "path": "tests/create-setup-flow-ui.test.mjs",
+      "bytes": 3273,
+      "sha256": "91b797dc702a2ff3da74ea5f20a5a5c036667e9e5b712349cd97dd026e8b245d"
+    },
+    {
+      "path": "tests/money.test.mjs",
+      "bytes": 4428,
+      "sha256": "a6f3bfb805994dd42ffa5d7aca0fe56b859325e8728ca905ee1d35eec347b704"
+    },
+    {
+      "path": "tests/prize-schedule-setup.test.mjs",
+      "bytes": 1298,
+      "sha256": "98426e7e7e9a9c4a91a93c034b28979db4f2fcc1aefc0b885a21c419d5b057c6"
+    },
+    {
+      "path": "tests/accounting-entry-schedule.test.mjs",
+      "bytes": 2326,
+      "sha256": "43edde85c5982207d29e03b588c853fa77a77d893c0b12978a00db41216d77c8"
+    },
+    {
+      "path": "tests/setup-fee-persistence-browser.mjs",
+      "bytes": 17935,
+      "sha256": "82678b2bdd55764c210c8ba384f5c15fa534929435b21709c5bf8a2d1c7dfa5f"
+    },
+    {
+      "path": "tests/setup-save-verification.test.mjs",
+      "bytes": 3133,
+      "sha256": "9017cb1d1004aa93be27330171f1099aa139d9ddaba9cc923e628ba6d10753f2"
+    },
+    {
+      "path": "tests/setup-save-recovery.test.mjs",
+      "bytes": 3116,
+      "sha256": "4a2c7ce7062b454b93ddd323dd035ef0c07502d7420c9844c2b2122ffb1f0d16"
+    },
+    {
+      "path": "tests/setup-prize-side-sql-acceptance.mjs",
+      "bytes": 26780,
+      "sha256": "b344451e95815911508537ea5484005c220088c1a700832879934b1943555322"
+    },
+    {
+      "path": "tests/run-setup-prize-side-isolated.mjs",
+      "bytes": 6469,
+      "sha256": "c13649736abc8bc8c0fffae1d04851084bfb31894415b9028b138a02e1b3b132"
+    },
+    {
+      "path": "tests/run-setup-prize-side-container.mjs",
+      "bytes": 3552,
+      "sha256": "55b2343059c1a8b44e0bfb0a8d6d804715959f18666633a6b9ccc160bd18fde4"
+    },
+    {
+      "path": "docs/quality/2026-10-30-setup-fee-and-policy-repair-local.md",
+      "bytes": 9221,
+      "sha256": "066739221702d7da6df6c4ca642a72bb1646115a98dce71e2d9ff63f708380e9"
+    },
+    {
+      "path": "docs/quality/2026-10-30-setup-prize-side-sql-local.md",
+      "bytes": 7220,
+      "sha256": "a19c74437ab85643925898f19b20659d4ec87d8d7d3b9560287a32608719e51e"
+    },
+    {
+      "path": "docs/quality/2026-10-30-synthetic-hosted-rollout.md",
+      "bytes": 16660,
+      "sha256": "3fa9246067e0d64624ca4695bd8290e5eac24505c31fe6b5cb1265ebdf019fdf"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 461446,
+      "sha256": "35619f63e229fe185851067617ad42b504fac696dd600e1ded67dfbb802c0997"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 88253,
+      "sha256": "7a3aa6a79409865c2029c5f6b5505ed6717c3ce621c3585458f372d8052e7bc4"
+    }
+  ],
+  "migrationScope": "0268: five existing functions; no tables, RPC signatures or privilege grants; no records rewritten",
+  "checks": {
+    "applicationTests": 1135,
+    "realSqlGroups": 11,
+    "headlessPhoneDesktopScenarios": 16,
+    "independentReview": "No remaining confirmed P1/P2",
+    "temporaryResources": "Task-owned localhost server and SQL container/database stopped/removed; absence verified"
+  },
+  "secretScan": "No matches in curated file bytes for private key, credential URL, access token or JWT patterns; environment/configuration/private/generated files excluded",
+  "excluded": "All unrelated historical reports, recovery-barrier edits, environment/configuration, credentials, .git, dependencies, caches, builds, test-results, screenshots, raw/private data and Docker backups",
+  "pendingApproval": "Apply exact0268 to staging only; publish curated branch change; exact-commit CI/READY Preview; two NEW fictional17-player unpaid fixtures with preflight readback. No production or actual money."
+}

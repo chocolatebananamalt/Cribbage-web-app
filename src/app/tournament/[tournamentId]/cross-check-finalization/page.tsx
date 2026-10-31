@@ -7,6 +7,8 @@ import { isUuid } from "../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import CrossCheckFinalizationClient from "./cross-check-finalization-client";
+import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
+import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
 
 // Rendered per request for the same reason every other interactive page is:
 // under the proxy's strict-dynamic CSP a prerendered page ships scripts with no
@@ -27,12 +29,14 @@ export default async function CrossCheckFinalizationPage({ params }: { params: P
     p_tournament_id: tournamentId,
   });
   if (error || !isCrossCheckFinalizationWorkspace(data, tournamentId)) notFound();
+  const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
 
   return <main className="auth-shell">
     <section className="auth-card wide-card" aria-labelledby="cross-check-finalization-title">
       <p className="eyebrow">CROSS CHECK</p>
       <h1 id="cross-check-finalization-title">Finalize Cross-Checking</h1>
       <p className="card-context">{data.tournamentName}</p>
+      {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
       <p className="auth-note">Every condition below is read from the tournament server when this page loads. Finalizing records that cross-checking was completed, with a receipt and an audit entry. It changes no score, correction, dispute or result.</p>
       <CrossCheckFinalizationClient tournamentId={tournamentId} workspace={data} />
       <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>

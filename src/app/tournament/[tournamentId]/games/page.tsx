@@ -8,6 +8,8 @@ import { getMyGames, type AssignedGameSummary } from "../../../../lib/games/my-g
 
 export const dynamic = "force-dynamic";
 
+import {MakeupCardLines} from '../../../../components/makeup-card-lines';
+
 const actionLabel: Record<AssignedGameSummary["nextAction"], string> = {
   enter_result: "Enter result",
   wait_opponent_entry: "Waiting for opponent entry",
@@ -21,7 +23,7 @@ const actionLabel: Record<AssignedGameSummary["nextAction"], string> = {
 
 function GameList({ games, tournamentId }: { games: AssignedGameSummary[]; tournamentId: string }) {
   return <ul className="my-games-list">{games.map((game) => <li key={game.gameId}>
-    <div><strong>{game.eventName} · Game {game.gameNumber}</strong><span>You: {game.playerTableSeat} · ID # {game.playerVerificationId}</span><span>{game.opponentName}: {game.opponentTableSeat} · ID # {game.opponentVerificationId}</span></div>
+    <div><strong>{game.eventName} · {game.cardNumbers?.isMakeup?`Makeup for card game ${game.playerSide==='a'?game.cardNumbers.sideACardGameNumber:game.cardNumbers.sideBCardGameNumber}`:`Game ${game.gameNumber}`}</strong><span>You: {game.playerTableSeat} · ID # {game.playerVerificationId}</span><span>{game.opponentName}: {game.opponentTableSeat} · ID # {game.opponentVerificationId}</span><MakeupCardLines numbers={game.cardNumbers} sideAName={game.playerSide==='a'?'You':game.opponentName} sideBName={game.playerSide==='b'?'You':game.opponentName}/></div>
     <div><span className={`game-state game-state-${game.state}`}>{game.state === "corrected" ? "Verified correction" : game.state === "recovered" ? "Verified recovery" : actionLabel[game.nextAction]}</span>{["upcoming_locked", "event_not_started"].includes(game.nextAction) ? <span className="secondary" aria-disabled="true">Locked</span> : <Link className="secondary" href={game.nextAction === "view_scorecard" ? `/tournament/${tournamentId}/scorecard?event=${game.eventId}` : `/tournament/${tournamentId}/game/${game.gameId}`}>{game.nextAction === "view_scorecard" ? "View Scorecard" : "Open Game"}</Link>}</div>
   </li>)}</ul>;
 }

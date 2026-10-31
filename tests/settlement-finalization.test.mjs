@@ -123,7 +123,7 @@ test("protected API and UI preserve an unresolved exact operation and avoid auto
   assert.match(route, /isManualSettlementFinalizationRequest/);
   assert.match(reconciliationRoute, /Object\.keys\(body\)\.length !== 1/);
   assert.match(reconciliationRoute, /get_standard_singles_settlement_finalization_reconciliation_v1/);
-  assert.match(client, /sessionStorage\.setItem\(key, JSON\.stringify\(envelope\)\)/);
+  assert.match(client, /setAppRecoveryItem\(sessionStorage, key, rawAtSend\)/);
   assert.match(client, /The prior finalization is unresolved\. Only its exact protected request may be retried\./);
   assert.match(client, /setSource\(saved\.officialSourceReference\)/);
   assert.match(client, /income must equal expenses, payouts, awards, and retained balance/);

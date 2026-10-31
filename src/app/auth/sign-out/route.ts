@@ -13,14 +13,10 @@ export async function POST(request: NextRequest) {
   try {
     const { supabase, getResponse } = createRouteClient(request);
     const { error } = await supabase.auth.signOut({ scope: "local" });
-    if (error) throw error;
+    if (error && error.name !== "AuthSessionMissingError") throw error;
     const response = NextResponse.json({ status: "signed_out" });
-    // Ordinary sign-out deliberately preserves the app's local recovery copy.
-    // A safe, explicit app-data clear is the only path allowed to ask the
-    // browser to remove site storage.
-    if (request.headers.get("x-acc-clear-safe-app-data") === "1") {
-      response.headers.set("Clear-Site-Data", '"cache", "storage"');
-    }
+    // Targeted cleanup happens only under the browser's recovery barrier.
+    // Never erase another tab's storage through a broad response header.
     return withCookies(response, getResponse());
   } catch {
     return NextResponse.json({ error: "sign_out_unavailable" }, { status: 503, headers: { "cache-control": "private, no-store" } });

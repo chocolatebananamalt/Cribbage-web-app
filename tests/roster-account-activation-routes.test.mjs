@@ -34,15 +34,19 @@ test("activation page preserves the availability boundary and clears the credent
   assert.match(bootstrap, /history\.replaceState/);
   assert.match(bootstrap, /__accActivationCredential/);
   assert.match(client, /account-activations\/redemptions/);
-  assert.match(client, /pending\.requestId/);
-  assert.match(client, /pending\.confirmationPhrase/);
+  const witness = await readFile(path.join(root, "src/components/activation-witness.tsx"), "utf8");
+  assert.match(client, /import \{ ActivationWitness \}/);
+  assert.match(client, /pending \? <ActivationWitness pending=\{pending\}/);
+  assert.match(witness, /pending\.requestId/);
+  assert.match(witness, /pending\.confirmationPhrase/);
+  assert.match(witness, /ActivationDeadline expiresAt=\{pending\.expiresAt\}/);
   assert.match(client, /credentials:\s*"same-origin"/);
   assert.match(client, /window\.addEventListener\("pagehide", onPageHide\)/);
   assert.match(client, /request\.current\?\.abort\(\)/);
   assert.match(proxy, /request\.nextUrl\.pathname === "\/activate"/);
   assert.match(proxy, /request\.nextUrl\.pathname === "\/activate" && !accountActivationEnabled\(\)/);
   assert.match(proxy, /registrationContentSecurityPolicy/);
-  assert.doesNotMatch(bootstrap + client, /localStorage|sessionStorage/);
+  assert.doesNotMatch(bootstrap + client + witness, /localStorage|sessionStorage/);
 });
 
 test("director activation workspace is protected, discoverable, and uses existing audited mutations", async () => {

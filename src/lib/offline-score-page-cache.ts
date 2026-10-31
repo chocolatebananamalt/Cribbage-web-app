@@ -1,4 +1,6 @@
 "use client";
+import { trackAppRecoveryWrite } from "./recovery-write-coordinator";
+import { hasAssignedOfflinePageBinding } from './offline-score-page-binding';
 
 export const offlineScoreCachePrefix = "acc-offline-score-pages-v2:";
 export const offlineScoreOwnerCookie = "acc_offline_score_owner";
@@ -28,6 +30,7 @@ export function markOfflineScoreOwner(actorId: string) {
 }
 
 export async function prepareCurrentScorePageForOffline(actorId: string, gameId: string, expiresAtMs: number) {
+  return trackAppRecoveryWrite(async () => {
   const pathMatch = window.location.pathname.match(gamePath);
   if (!supported() || !pathMatch || pathMatch[1].toLowerCase() !== gameId.toLowerCase() || expiresAtMs <= Date.now()) return false;
 
@@ -42,8 +45,7 @@ export async function prepareCurrentScorePageForOffline(actorId: string, gameId:
   const contentType = pageResponse.headers.get("content-type") ?? "";
   if (!pageResponse.ok || pageResponse.redirected || pageResponse.url !== pageRequest.url || !contentType.toLowerCase().startsWith("text/html")) return false;
   const html = await withTimeout(pageResponse.text());
-  const binding = `data-offline-score-binding="${actorId}:${gameId}"`;
-  if (!html.includes(binding)) return false;
+  if (!hasAssignedOfflinePageBinding(html, actorId, gameId)) return false;
 
   const assetUrls = [...document.querySelectorAll<HTMLScriptElement | HTMLLinkElement>("script[src], link[rel='stylesheet'][href]")]
     .map((element) => element instanceof HTMLScriptElement ? element.src : element.href)
@@ -71,12 +73,20 @@ export async function prepareCurrentScorePageForOffline(actorId: string, gameId:
     throw error;
   }
   return true;
+
+  });
 }
 
 export async function clearOfflineScorePageCache() {
   if ("caches" in window) {
     const names = await caches.keys();
     await Promise.all(names.filter((name) => name.startsWith(offlineScoreCachePrefix) || name === "acc-offline-score-pages-v1").map((name) => caches.delete(name)));
+    if ((await caches.keys()).some((name) => name.startsWith(offlineScoreCachePrefix) || name === "acc-offline-score-pages-v1")) {
+      throw new Error("offline_cache_clear_unconfirmed");
+    }
   }
   document.cookie = `${offlineScoreOwnerCookie}=; Path=/; Max-Age=0; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+  if (document.cookie.split(";").some((part) => part.trim().startsWith(`${offlineScoreOwnerCookie}=`))) {
+    throw new Error("offline_owner_clear_unconfirmed");
+  }
 }

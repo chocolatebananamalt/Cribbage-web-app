@@ -632,7 +632,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(submittedInvariant, /g\.state in \('mismatch', 'confirmation_pending', 'verified', 'corrected'\) and submission_count <> 2/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
-  assert.match(liveScore, /Both assigned players must sign in as themselves/);
+  assert.match(liveScore, /digital player submits their own result in the app/);
+  assert.match(liveScore, /paper player records the same result on the original paper scorecard and does not need an app account/);
+  assert.match(liveScore, /assigned cross-checker to match against the digital entry/);
+  assert.match(liveScore, /second distinct authorized non-playing official must independently re-enter and confirm both sources/);
+  assert.match(liveScore, /missing entry or mismatch stays unresolved/);
   assert.match(liveScore, /navigator\.onLine/);
   assert.match(liveScore, /Saved Offline, Waiting to Sync/);
   assert.match(liveScore, /queueOfflineSubmission/);
@@ -1395,7 +1399,7 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
     assert.match(source, /cache-control.*private, no-store/);
   }
-  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
+  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isRetainedSetupSaveRequest/); assert.match(save, /isSavedSetup/);
   assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
   assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/); assert.match(save, /decideSetupRead/);
   assert.match(validators, /director_configured_unverified/);

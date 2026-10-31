@@ -6,6 +6,8 @@ import { accountActivationEnabled } from "../../../lib/api/account-activation-re
 import { rule12CorrectionEnabled } from "../../../lib/api/rule12-correction-release";
 import { getAccessibleTournaments } from "../../../lib/tournaments/accessible-tournaments";
 import { ArchiveTournamentClient } from "./archive-tournament-client";
+import DirectorChecklist from "./director-checklist";
+import { readDirectorChecklist } from "../../../lib/director-checklist-reader";
 
 const roleLabels: Record<string, string> = {
   director: "Director",
@@ -24,6 +26,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
     ? chooser.tournaments.find((tournament) => tournament.tournamentId === tournamentId)?.tournamentName
     : undefined;
   const isDirector = access.roles.some((role) => ["director", "co_director"].includes(role));
+  const checklist = isDirector ? await readDirectorChecklist(access.user.id, tournamentId) : null;
   const isCrossCheckOfficial = access.roles.some((role) => ["director", "co_director", "cross_checker"].includes(role));
   const canViewResults = access.roles.some((role) => ["viewer", "player", "cross_checker", "director", "co_director"].includes(role));
   return (
@@ -33,6 +36,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <Link className="secondary workspace-chooser-link" href="/">Back to Your Tournaments</Link>
         <h1 id="tournament-title">{tournamentName ?? "Tournament workspace"}</h1>
         <p className="lede">Your role{access.roles.length === 1 ? "" : "s"}: {access.roles.map((role) => roleLabels[role] ?? role).join(", ")}.</p>
+        {checklist ? <DirectorChecklist tournamentId={tournamentId} snapshot={checklist} /> : null}
         <section className="workspace-phase-grid" aria-label="Tournament operations">
           <section className="workspace-phase"><h2>Start here</h2><p>Personal tournament information and player tools.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/how-to`}>How to run this tournament</Link>
@@ -40,6 +44,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/teams`}>Team Scorecards</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/seating-directory`}>Seating Directory</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/rulebook`}>ACC Rulebook</Link>
+            <Link className="guide-link" href={`/tournament/${tournamentId}/prize-schedules`}>Director-selected prize schedules</Link>
             {access.roles.includes("judge") ? <Link className="guide-link" href={`/tournament/${tournamentId}/judge-calls`}>Judge Calls</Link> : null}
           </section>
           {isDirector ? <section className="workspace-phase"><h2>1. Set up</h2><p>Configure the tournament, officials, events, pools, and registration.</p>
@@ -49,6 +54,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
           {isDirector ? <section className="workspace-phase"><h2>2. Registration and payments</h2><p>Review registrations, maintain the roster, and record payment evidence.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/roster`}>Registration and roster</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Payments and expenses</Link>
+              <Link className="guide-link" href={`/tournament/${tournamentId}/q-pools`}>Q Pool membership and receipt allocation</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link>
           </section> : null}
           {isDirector ? <section className="workspace-phase"><h2>3. Check-in and seating</h2><p>Open event check-in, manage desk requests, publish seating, and schedule play.</p>

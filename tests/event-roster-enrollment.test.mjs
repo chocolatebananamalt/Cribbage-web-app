@@ -108,6 +108,17 @@ test("event roster UI supports bulk selection and exact unresolved replay", () =
 
 test("only documented rejection codes are exposed", () => {
   assert.equal(isRejectedEventRosterEnrollment({ status: "rejected", code: "not_checked_in" }), true);
+  assert.equal(isRejectedEventRosterEnrollment({ status: "rejected", code: "event_already_started" }), true);
   assert.equal(isRejectedEventRosterEnrollment({ status: "rejected", code: "made_up" }), false);
   assert.equal(isRejectedEventRosterEnrollment({ status: "rejected", code: "not_director", private: true }), false);
+});
+
+test("started-event enrollment is a terminal rejection with correction guidance", () => {
+  const client = read("src/app/tournament/[tournamentId]/participants/participants-client.tsx");
+  assert.match(client, /response.status === 409 && isRejectedEventRosterEnrollment\(data\)/);
+  assert.match(client, /clearSaved\(storageKey\); setPending\(null\)/);
+  assert.match(client, /data.code === "event_already_started"/);
+  assert.match(client, /already started.*existing correction tools/);
+  assert.match(client, /Manage Doubles enrollment and supported team play/);
+  assert.doesNotMatch(client, /doubles events remain paper-scored/);
 });

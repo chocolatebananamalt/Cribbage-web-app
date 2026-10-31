@@ -65,7 +65,7 @@ test("setup text, date, and money controls are not reduced to checkbox dimension
 
 test("setup saves are recoverable and never presented as operational activation", async () => {
   const client = await readFile(clientPath, "utf8");
-  assert.match(client, /sessionStorage\.setItem/);
+  assert.match(client, /setAppRecoveryItem/);
   assert.match(client, /Retry exact saved request/);
   assert.match(client, /isSavedSetup/);
   assert.match(client, /Save All Events Draft/);

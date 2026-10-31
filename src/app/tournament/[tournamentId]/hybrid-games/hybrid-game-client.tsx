@@ -1,14 +1,18 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PendingPaperCardPhotos } from "../../../../components/pending-paper-card-photos";
 import { PrivatePaperCardPhoto } from "../../../../components/private-paper-card-photo";
 import { PaperCardReviewLinks } from "../../../../components/paper-card-review-links";
+import {MakeupCardLines} from '../../../../components/makeup-card-lines';
+import type {GameScorecardNumbers} from '../../../../lib/api/odd-field-makeup';
 import { isAcceptedHybridCreate, isAcceptedHybridReview, isCreateHybridCaseRequest, isRejectedHybrid, isReviewHybridCaseRequest, type CreateHybridCaseRequest, type ReviewHybridCaseRequest } from "../../../../lib/api/hybrid-game";
 import type { HybridGameItem } from "../../../../lib/hybrid-games/workspace";
 
 const createKey = (actor: string, game: string) => "hybrid-game-create:" + actor + ":" + game;
 const reviewKey = (actor: string, id: string) => "hybrid-game-review:" + actor + ":" + id;
-function save(key: string, value: unknown) { try { sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }
+function save(key: string, value: unknown) { try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clear(key: string) { try { sessionStorage.removeItem(key); } catch { /* Server receipt remains authoritative. */ } }
 async function reconcile(tournamentId: string, operationType: "create_hybrid_digital_paper_case_v1" | "review_hybrid_digital_paper_case_v1", targetId: string, idempotencyKey: string) {
   const response = await fetch("/api/v1/tournaments/" + encodeURIComponent(tournamentId) + "/hybrid-game-operations/reconciliation", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ operationType, targetId, idempotencyKey }) });
@@ -47,11 +51,11 @@ function SavedHybridReconciler({ actorId, tournamentId }: { actorId: string; tou
   return message ? <p className="auth-note" role="status">{message}</p> : null;
 }
 
-function ClaimFields({ item, tournamentId, winner, setWinner, margin, setMargin, reference, setReference, disabled, photoInputId }: { item: HybridGameItem; tournamentId: string; winner: "a" | "b"; setWinner: (v: "a" | "b") => void; margin: string; setMargin: (v: string) => void; reference: string; setReference: (v: string) => void; disabled: boolean; photoInputId: string }) {
+function ClaimFields({ actorId, item, tournamentId, winner, setWinner, margin, setMargin, reference, setReference, disabled, photoInputId }: { actorId: string; item: HybridGameItem; tournamentId: string; winner: "a" | "b"; setWinner: (v: "a" | "b") => void; margin: string; setMargin: (v: string) => void; reference: string; setReference: (v: string) => void; disabled: boolean; photoInputId: string }) {
   const sideA = item.digitalSide === "a" ? item.digitalPlayerName : item.paperPlayerName;
   const sideB = item.digitalSide === "b" ? item.digitalPlayerName : item.paperPlayerName;
   return <fieldset disabled={disabled}><legend>{item.paperPlayerName}&apos;s paper card</legend>
-    <PrivatePaperCardPhoto tournamentId={tournamentId} gameId={item.gameId} cardSide={item.digitalSide === "a" ? "b" : "a"} verificationId={item.paperVerificationId} inputId={photoInputId} label={item.paperPlayerName} disabled={disabled} />
+    <PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={item.gameId} cardSide={item.digitalSide === "a" ? "b" : "a"} verificationId={item.paperVerificationId} inputId={photoInputId} label={item.paperPlayerName} disabled={disabled} />
     <label><input type="radio" checked={winner === "a"} onChange={() => setWinner("a")} />{sideA} won</label>
     <label><input type="radio" checked={winner === "b"} onChange={() => setWinner("b")} />{sideB} won</label>
     <label>Spread Points<input inputMode="numeric" pattern="[0-9]*" maxLength={3} value={margin} onChange={(event) => setMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} /></label>
@@ -59,7 +63,7 @@ function ClaimFields({ item, tournamentId, winner, setWinner, margin, setMargin,
   </fieldset>;
 }
 
-function CreateForm({ actorId, tournamentId, item }: { actorId: string; tournamentId: string; item: HybridGameItem }) {
+function CreateForm({ actorId, tournamentId, item,cardNumbers }: { actorId: string; tournamentId: string; item: HybridGameItem;cardNumbers?:GameScorecardNumbers }) {
   const router = useRouter(); const key = createKey(actorId, item.gameId);
   const [winner, setWinner] = useState<"a" | "b">(item.digitalWinnerSide); const [margin, setMargin] = useState(String(item.digitalMargin)); const [reference, setReference] = useState("");
   const [locked, setLocked] = useState<CreateHybridCaseRequest | null>(null); const [ready, setReady] = useState(false); const [busy, setBusy] = useState(false); const [message, setMessage] = useState("");
@@ -88,14 +92,15 @@ function CreateForm({ actorId, tournamentId, item }: { actorId: string; tourname
       else setMessage("The result is uncertain. Retry the same locked request.");
     } catch { setMessage("Connection problem. Retry the same locked request."); } finally { setBusy(false); }
   }
-  return <li className="correction-item"><p><strong>{item.eventName}</strong> · Game {item.gameNumber}</p><p>Digital: {item.digitalPlayerName}<br />Paper: {item.paperPlayerName} · ID # {item.paperVerificationId}</p>
+  if(item.gameNumber===13&&!cardNumbers)return <li className="correction-item"><p role="alert">Card-line mapping is unavailable for scheduling batch 13. Pending work is preserved. Reload before recording or reviewing this game.</p></li>;
+  return <li className="correction-item"><p><strong>{item.eventName}</strong> · {cardNumbers?.isMakeup?'Qualifying makeup':`Game ${item.gameNumber}`}</p><MakeupCardLines numbers={cardNumbers} sideAName={item.digitalSide==='a'?item.digitalPlayerName:item.paperPlayerName} sideBName={item.digitalSide==='b'?item.digitalPlayerName:item.paperPlayerName}/><p>Digital: {item.digitalPlayerName}<br />Paper: {item.paperPlayerName} · ID # {item.paperVerificationId}</p>
     <p className="auth-note">Saved digital submission: side {item.digitalWinnerSide.toUpperCase()} won by {item.digitalMargin}. Independently enter the paper card below.</p>
-    <ClaimFields item={item} tournamentId={tournamentId} winner={winner} setWinner={setWinner} margin={margin} setMargin={setMargin} reference={reference} setReference={setReference} disabled={!ready || busy || !!locked} photoInputId={`${item.gameId}-hybrid-photo`} />
+    <ClaimFields actorId={actorId} item={item} tournamentId={tournamentId} winner={winner} setWinner={setWinner} margin={margin} setMargin={setMargin} reference={reference} setReference={setReference} disabled={!ready || busy || !!locked} photoInputId={`${item.gameId}-hybrid-photo`} />
     {valid && (winner !== item.digitalWinnerSide || Number(margin) !== item.digitalMargin) ? <p className="error-text" role="alert">The paper card does not exactly match the digital submission.</p> : null}
     <button className="primary full" disabled={!ready || !valid || winner !== item.digitalWinnerSide || Number(margin) !== item.digitalMargin || busy} onClick={submit}>{busy ? "Recording…" : locked ? "Retry locked request" : "Bind matching digital and paper entries"}</button>{message ? <p role="status">{message}</p> : null}</li>;
 }
 
-function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tournamentId: string; item: HybridGameItem }) {
+function ReviewForm({ actorId, tournamentId, item,cardNumbers }: { actorId: string; tournamentId: string; item: HybridGameItem;cardNumbers?:GameScorecardNumbers }) {
   const router = useRouter(); const key = reviewKey(actorId, item.caseId!);
   const [winner, setWinner] = useState<"a" | "b">("a"); const [margin, setMargin] = useState(""); const [reference, setReference] = useState("");
   const [digitalId, setDigitalId] = useState(""); const [digitalWinner, setDigitalWinner] = useState<"a" | "b">("a"); const [digitalMargin, setDigitalMargin] = useState("");
@@ -126,18 +131,19 @@ function ReviewForm({ actorId, tournamentId, item }: { actorId: string; tourname
       else setMessage("The decision is uncertain. Retry the exact locked request.");
     } catch { setMessage("Connection problem. Retry the exact locked request."); } finally { setBusy(false); }
   }
-  return <li className="correction-item"><p><strong>{item.eventName}</strong> · Game {item.gameNumber}</p>
+  if(item.gameNumber===13&&!cardNumbers)return <li className="correction-item"><p role="alert">Card-line mapping is unavailable for scheduling batch 13. Pending work is preserved. Reload before recording or reviewing this game.</p></li>;
+  return <li className="correction-item"><p><strong>{item.eventName}</strong> · {cardNumbers?.isMakeup?'Qualifying makeup':`Game ${item.gameNumber}`}</p><MakeupCardLines numbers={cardNumbers} sideAName={item.digitalSide==='a'?item.digitalPlayerName:item.paperPlayerName} sideBName={item.digitalSide==='b'?item.digitalPlayerName:item.paperPlayerName}/>
     <p>Independently read the immutable digital record, enter its identifier and result, then re-enter the original paper card.</p>
     <PaperCardReviewLinks tournamentId={tournamentId} gameId={item.gameId} sides={[{ cardSide: item.digitalSide === "a" ? "b" : "a", label: item.paperPlayerName }]} />
     <details><summary>Open immutable digital evidence</summary><p>Submission ID: <code>{item.digitalSubmissionId}</code><br />Recorded result: side {item.digitalWinnerSide.toUpperCase()} won by {item.digitalMargin}.</p></details>
     <fieldset disabled={!ready || busy || !!locked}><legend>Digital submission confirmation</legend><label>Submission ID<input value={digitalId} onChange={(event) => setDigitalId(event.target.value.trim())} /></label><label><input type="radio" checked={digitalWinner === "a"} onChange={() => setDigitalWinner("a")} />Side A won</label><label><input type="radio" checked={digitalWinner === "b"} onChange={() => setDigitalWinner("b")} />Side B won</label><label>Spread Points<input inputMode="numeric" maxLength={3} value={digitalMargin} onChange={(event) => setDigitalMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} /></label></fieldset>
-    <ClaimFields item={item} tournamentId={tournamentId} winner={winner} setWinner={setWinner} margin={margin} setMargin={setMargin} reference={reference} setReference={setReference} disabled={!ready || busy || !!locked} photoInputId={`${item.caseId}-hybrid-review-photo`} />
+    <ClaimFields actorId={actorId} item={item} tournamentId={tournamentId} winner={winner} setWinner={setWinner} margin={margin} setMargin={setMargin} reference={reference} setReference={setReference} disabled={!ready || busy || !!locked} photoInputId={`${item.caseId}-hybrid-review-photo`} />
     {valid && !exact ? <p className="error-text" role="alert">The independently entered sources do not exactly match. Approval is blocked; reject for investigation.</p> : null}
     <div className="correction-actions"><button className="primary" disabled={!ready || !exact || busy || (!!locked && locked.decision !== "approve")} onClick={() => decide("approve")}>Confirm exact match</button><button className="secondary" disabled={!ready || !valid || busy || (!!locked && locked.decision !== "reject")} onClick={() => decide("reject")}>Reject / investigate</button></div>{message ? <p role="status">{message}</p> : null}</li>;
 }
 
-export default function HybridGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, candidates, reviewCases }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; candidates: HybridGameItem[]; reviewCases: HybridGameItem[] }) {
-  return <><SavedHybridReconciler actorId={actorId} tournamentId={tournamentId} />{!actorIdentityConfirmed ? <p className="error-text">Confirm your official identity before reviewing these games.</p> : null}
+export default function HybridGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, candidates, reviewCases,cardNumberContexts={} }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; candidates: HybridGameItem[]; reviewCases: HybridGameItem[];cardNumberContexts?:Record<string,GameScorecardNumbers> }) {
+  return <><PendingPaperCardPhotos actorId={actorId} tournamentId={tournamentId} /><SavedHybridReconciler actorId={actorId} tournamentId={tournamentId} />{!actorIdentityConfirmed ? <p className="error-text">Confirm your official identity before reviewing these games.</p> : null}
     {/* Matching a digital entry to a paper card is a cross-checker action, and
         it also needs a confirmed official identity. A director opening this page
         from the hub used to get the explanation and then nothing at all, which
@@ -145,6 +151,6 @@ export default function HybridGameClient({ actorId, tournamentId, actorRole, act
     {actorRole === "cross_checker" && actorIdentityConfirmed ? null : <p className="auth-note">{actorRole === "cross_checker"
       ? "Confirm your official identity on the paper-versus-paper screen before matching a digital entry to a paper card."
       : "Only an assigned cross-checker can match a digital entry to a paper card. Your role can independently confirm one after a cross-checker records it. Add one under Tournament officials on the Set Up Tournament screen if nobody holds that role yet."}</p>}
-    {actorRole === "cross_checker" && actorIdentityConfirmed ? <><h2>Match one digital entry to one paper card</h2>{candidates.length ? <ul className="correction-list">{candidates.map((item) => <CreateForm key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No current mixed-scorecard games are waiting for a paper-card match.</p>}</> : null}
-    <h2>Independent mixed-card confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.caseId} actorId={actorId} tournamentId={tournamentId} item={item} />)}</ul> : <p className="auth-note">No mixed-card confirmations are waiting for you.</p>}</>;
+    {actorRole === "cross_checker" && actorIdentityConfirmed ? <><h2>Match one digital entry to one paper card</h2>{candidates.length ? <ul className="correction-list">{candidates.map((item) => <CreateForm key={item.gameId} actorId={actorId} tournamentId={tournamentId} item={item} cardNumbers={cardNumberContexts[item.gameId]} />)}</ul> : <p className="auth-note">No current mixed-scorecard games are waiting for a paper-card match.</p>}</> : null}
+    <h2>Independent mixed-card confirmations</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => <ReviewForm key={item.caseId} actorId={actorId} tournamentId={tournamentId} item={item} cardNumbers={cardNumberContexts[item.gameId]} />)}</ul> : <p className="auth-note">No mixed-card confirmations are waiting for you.</p>}</>;
 }

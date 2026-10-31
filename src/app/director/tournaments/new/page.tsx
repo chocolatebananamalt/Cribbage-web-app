@@ -17,7 +17,7 @@ export default async function NewTournamentPage() {
     <h1 id="new-tournament-title">Create Tournament</h1>
     <Link className="guide-link" href="/">Back to Your Tournaments</Link>
     <p className="lede">Create a private draft, then complete its events, officials, fees, and capacity in Set Up Tournament.</p>
-    <NewTournamentClient />
+    <NewTournamentClient actorId={actorId} />
     <Link className="guide-link" href="/">Back to Your Tournaments</Link>
     <SharedDeviceSignOut />
   </section></main>;

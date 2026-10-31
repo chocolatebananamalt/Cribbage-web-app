@@ -1,2 +1,7 @@
 allowBuilds:
   unrs-resolver: true
+
+# Security patches within the callers' declared major-version ranges.
+# Keep the audit enabled; these replace vulnerable artifacts, not advisories.
+overrides:
+  'brace-expansion@^5.0.8': 5.0.12

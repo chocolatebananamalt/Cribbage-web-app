@@ -1,5 +1,30 @@
 # Product Requirements
 
+## Owner-approved denomination and automatic regular budget rule — 2026-10-30
+
+Every new prize award MUST be a multiple of $5. Regular target = available regular budget rounded down to $5 if that target plus verified eligible benefits satisfies required return; otherwise round up. Preserve equal awards for every same-round cohort and select deterministic allocations automatically. Audit original amount, target, direction, signed adjustment, required external funding or restricted retained rounding balance. Missing funding MUST block unpaid finalization; selecting a higher target MUST NOT fabricate receipts. Graduated Q and Side amounts use the same exact ACC-weighted formula with the app's conserving $5 largest-remainder modification. Keep separate pots, eligibility, historical policies and unpaid history. Equal-pool obligations that cannot satisfy equal $5 awards remain blocked pending a separately defined policy. Sources: owner messages8ff5ff575f488191beb2e805eeb63b7b anddef15591c5f88191b374ad15a9b6ebbb; [rounding reference](../reference/regular-prize-rounding-proposal-2026-10-30.md). Local implementation is not rollout approval.
+
+## Owner-approved current additions - 2026-10-30, local only
+
+Q pools are optional: ordinary Main accounting MUST complete without creating a fictitious Q review. The supported five-qualifier slice MUST preserve actual played wins separately from bye credit, the original twelve qualifying results per person, immutable source-bound ranking resolutions, equal same-round regular awards, explicit director-entered fifth-place weight, independent 85% gross-base return and exact unpaid accounting conservation. The 17-player odd-field solution uses six real makeup matches and per-side original card-line mapping; no phantom game or free score is substituted.
+
+The owner also approved a new graduated Q method using observed ACC raw weights with the app's exact largest-remainder $5 rounding, preserving every historical chart/equal policy and reviewed/final liability. This is an app modification, not ACC endorsement. It MUST be explicitly disclosed/frozen before payment and bound to current paid membership, qualification, funding and review evidence. Equal Q and regular shared-band prizes remain separate. Unresolved Q cash ties MUST block; neither a qualification tiebreak nor a previous low-card attestation silently supplies monetary authority. Scope and provenance: `../decisions/2026-10-30-acc-weighted-balanced-q-policy.md`.
+
+Implementation evidence does not waive broader production requirements. See `../quality/2026-10-30-five-qualifier-main-local.md`; no hosted migration, publication or real transaction is authorized by this addendum.
+
+
+## 2026-10-29 clarified selectable Q operating schedules
+
+Use separately disclosed/versioned equal and graduated policies. Graduated recipient count is ceil(paid entrants in the named pool / ratio), including paid nonqualifiers by card rank when necessary; exact friend-supplied chart amounts control, with unsupported/unbalanced cells requiring director review. Equal pays paid playoff qualifiers only and creates unpaid refund obligations if none qualify. Q ranking uses a distinct positive-plus tie path and recorded physical low-card resolution, never net spread or UUID fallback. Main-event semifinal awards combine third/fourth percentages and split equally. Preserve prior immutable disclosures/reviews and keep actual money movement disabled. Source and current incomplete verification: [operating schedule progress](../quality/2026-10-29-q-operating-schedules-progress.md).
+
+## 2026-10-28 owner correction: money is presented and entered as dollars
+
+All user-facing monetary amounts, including current and historical ledger snapshots, assessments, awards, budgets, setup estimates and human-facing exports, use USD dollars (for example $24.00), not raw minor-unit amounts such as 2400 USD cents. Dollar entry converts exactly to the existing integer-cent contract; do not rescale saved records or silently round malformed/overprecise input. Existing payout/eligibility/authorization and immutable-history rules are unchanged. Evidence: [local currency repair](../quality/2026-10-28-usd-display-local-repair.md). No publication or hosted migration is implied.
+
+## 2026-10-27 local payback repair — not deployed
+
+Owner-approved local repair separates cash conservation from the ACC 85%-of-gross player-return check, classifies actual expense evidence as eligible benefits or operating costs, and requires one positive total award for each ordinary cash-eligible qualifier. The schedule is explicitly director-selected, not a mandated ACC formula; equal finishing cohorts receive equal awards in the first slice. Eligibility is recorded per qualifier; sanction-only/legal-age exceptions and unknown classifications block this slice. No cumulative round-payment inference or historical rewrite is allowed. Source, compatibility limits, exact local checks and separate rollout boundary: [payback validation](../quality/2026-10-27-payback-review-local-validation.md). This is local verification, not production or sanctioned-event readiness.
+
 > **Normative baseline:** [production-requirements.md](production-requirements.md) is the authoritative, self-contained production requirements document. This file remains the traceability summary and historical source map; when a summary line and the normative document differ, the normative document and its cited decision/source control.
 
 Status: recovered baseline v1.1 plus user-approved product decisions through 2026-09-14. See source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt and matching DOCX/PDF. It retains the v1.0 title and adds sections 31-43. Historical ACC-confirmed labels still need current verification.
@@ -101,6 +126,14 @@ automatic OCR, and ACC portal automation remain default-off post-pilot
 capabilities. The remaining go/no-go
 work is the dated physical rehearsal checklist in
 `docs/operations/OCTOBER_PILOT_REHEARSAL.md`, not another scope decision.
+# Versioned unpaid Q accounting
+
+- Q policy disclosure, membership/payment eligibility, recipient calculation, reviewed liability and actual disbursement are distinct states. V2 unpaid reviews and v6 canonical accounting bind exact server-calculated sources; they never mark a recipient paid or execute a refund.
+- Each current receipt is partitioned once into base entry and named Q allocations. Base 85% return excludes Q income and Q awards/refunds. Per-pool and combined conservation are independent mandatory checks. Regular playoff prizes remain tied to their saved director-selected schedule and cannot be duplicated through manual/legacy claims.
+- Legacy v1/v5 records and replay remain immutable/readable; mixed accounting domains are blocked. Same-source different operation keys cannot duplicate liabilities. New source versions stale prior applicability, with reasoned append-only review; final accounting is once-only/unpaid and cannot automatically reopen.
+- Current first supported accounting scope is one Standard Main,12 qualifying games,four qualifiers,complete no-bye playoffs,fully reconciled entry receipts,zero Side Pools and up to two supported Q pools. Unstructured schedules, unresolved monetary ties and unsupported formats fail closed rather than invent policy. See `../decisions/2026-10-29-q-v2-canonical-unpaid-accounting.md`.
+- The owner prefers the ACC web calculator for future payout policy. Existing chart-policy history is preserved; a new source-versioned calculator and its rounding/balancing review require the unresolved choice recorded in `../quality/2026-10-29-acc-calculator-policy-v3-plan.md`.
+
 # Day-of-play event QR check-in
 
 - Each finalized Main, Consolation, and Satellite event has an independently
@@ -141,3 +174,26 @@ work is the dated physical rehearsal checklist in
   configuration. It is fail-closed until delivery capacity, callbacks,
   duplicate suppression, retries, and 600 invitations in 45 minutes are
   independently tested. SMS and online payments remain disabled.
+
+
+## 2026-10-27 owner-approved director prize schedule (local implementation)
+
+Directors choose and explicitly review a structured setup prize rule, rather than an app-mandated ACC ratio. Version the per-person cohort weights/source/rounding policy, distinguish estimated budget from server-derived actual awards, bind settlement claims to the exact saved schedule, and expose a sanitized printable player summary. Freeze revisions when qualification is finalized; unsupported brackets fail closed. Preserve historical unstructured notes/replays. Initial local slice: one Standard Main12, four no-bye qualifiers, no pools; independent 85%-of-gross review remains required. Verification and rollout boundary: docs/quality/2026-10-27-setup-prize-schedule-local.md. No hosted rollout authorized by this local feature approval.
+
+## 2026-10-28 approved local Q Pool foundation
+
+Owner-approved app defaults: explicit opt-in to exact configured pool versions; named receipt allocation; full base/pool payment for paid-entry status; ordinary entries lock at Start Play; later director corrections require a reason and existing pre-play evidence. Local implementation is bounded to a single activated Standard Main without Side Pool/other-event cash domains. Existing immutable histories stay intact; no payment or payout is created by election/allocation. Automatic Q payouts, canonical Q settlement, late first opt-ins/new payment sources, multi-event allocation and CSV migration remain separate gates. Evidence: docs/quality/2026-10-28-q-pool-membership-local.md. No staging/production rollout authorized by this local milestone.
+
+## Qualification residual ties — owner clarification, 2026-10-29
+
+For exactly two Standard Singles qualifying cards tied after game points, wins, net spread and gross positive winning spreads, derive the unambiguous current qualifying-round head-to-head winner. If there was no qualifying meeting, require a director-recorded separately played one-game playoff winner and remind the players to cut for first deal. Preserve both original qualifying totals. Multiway or repeated/ambiguous meetings remain explicitly unsupported. Record immutable source-bound evidence and actor/time; stale evidence cannot finalize qualification. This qualification rule must not silently replace the independently disclosed Q monetary tie policy. Source and authorization: `../decisions/2026-10-29-qualification-two-player-ties.md`.
+
+## 2026-10-30 Side Pool recipient policy correction
+Owner clarification: each Side Pool ranks its own fully paid scorecards regardless of playoff qualification; no final-playoff-placement filter. Use configured 1-in-N and approved total-preserving $5 amount formula. Keep ties unresolved until supported review. This resolves the prior recipient-basis question; local source-bound implementation is in progress. No historical records may be recalculated silently.
+
+
+## 2026-10-31: explicit fee safeguards (local, unpublished)
+
+User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeguards, not ACC-mandated entry-price floors. New paid amounts must be explicitly supplied; blank, whitespace, missing/null, invalid, negative and zero never mean Free. Free events require an explicit choice. That choice does not waive sanctioning, prove subsidy or fabricate funding; existing accounting/funding reconciliation remains required. Enabled Q and Side Pool fees must be positive $5 increments (minimum $5); disabled pools need no fee. Optional expenses remain independent.
+
+Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.
