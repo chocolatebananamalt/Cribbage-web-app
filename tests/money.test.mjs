@@ -58,11 +58,11 @@ test("calculates Main and Consolation sanctioning fees without using receipts", 
 
 test("tournament setup keeps ordinary money drafts precise and rate changes explicitly gated", () => {
   const client = readFileSync("src/app/tournament/[tournamentId]/setup/setup-client.tsx", "utf8");
-  assert.match(client, /setDraft\(event\.target\.value\)/);
+  assert.match(client, /setState\(\{source:value,text:next\}\); onChange\(parseUsdMinor\(next/);
   assert.match(client, /onBlur=/);
   assert.match(client, /aria-invalid=\{invalid\}/);
-  assert.match(client, /key={`pool-fee-\$\{pool\.entryFeeCents\}`}/);
-  assert.match(client, /key={`event-fee-\$\{event\.entryFeeCents\}`}/);
+  assert.doesNotMatch(client, /key={`(?:pool|side-pool|event)-fee-\$\{/);
+  assert.match(client, /entryFeeCents: entryFeeCents \?\? NaN/);
   assert.match(client, /ACC Sanctioning Fee Running Total/);
   assert.match(client, /Main rate per person/);
   assert.match(client, /Consolation rate per person/);

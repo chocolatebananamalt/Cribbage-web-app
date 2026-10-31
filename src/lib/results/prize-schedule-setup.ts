@@ -17,7 +17,7 @@ export function supportsSetupPrizeSchedule(events: readonly PrizeScheduleSetupEv
   const event = events[0];
   return event.eventKind === "main" && event.gameCount === 12 &&
     event.styleCode === "Standard" && event.formatCode === "standard_singles" &&
-    Number.isSafeInteger(event.entryFeeCents) && event.entryFeeCents > 0 && event.sidePools.length === 0;
+    Number.isSafeInteger(event.entryFeeCents) && event.entryFeeCents > 0 && event.sidePools.length <= 6;
 }
 
 /** New declarations save a formula, never these estimated dollar awards. */

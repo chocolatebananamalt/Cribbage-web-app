@@ -29,7 +29,7 @@ test("setup seeds only authoritative server tournament data and never invents a 
   assert.match(setup, /readCreationSeed\(creationSeedStorageKey, tournamentId\)/);
   assert.match(setup, /isTournamentCreated\(value\) && value\.tournamentId === tournamentId/);
   assert.match(setup, /if \(current\) clearCreationSeed\(creationSeedStorageKey\)/);
-  assert.match(setup, /clearCreationSeed\(creationSeedStorageKey\);(?: setCreationSeedActive\(false\);)? clearPending\(storageKey\)/);
+  assert.match(setup, /clearCreationSeed\(creationSeedStorageKey\); setCreationSeedActive\(false\); setPending\(null\)/);
   assert.match(setup, /startsAt: creationSeed \? creationDateInputValue\(creationSeed\.plannedDate\)/);
   assert.match(setup, /Start date<input required type="date" value=\{payload\.startsAt\.slice\(0, 10\)\}/);
   assert.match(setup, /Start time<input required type="time" value=\{payload\.startsAt\.slice\(11, 16\)\}/);
@@ -38,5 +38,7 @@ test("setup seeds only authoritative server tournament data and never invents a 
   assert.match(setup, /Planned start date carried forward/);
   assert.match(setup, /setPending\(recovered\);(?: setCreationSeedActive\(false\);)? setPayload\(recovered\.request\.payload\)/);
   assert.doesNotMatch(setup, /loaded\.currentVersion > recovered\.request\.expectedVersion/);
-  assert.match(setup, /were saved\. Refresh to load the latest server version/);
+  assert.match(setup, /saved fees and pools could not be verified\. The exact request is retained/);
+  const accepted=setup.slice(setup.indexOf('if (response.ok && isSavedSetup(data, envelope.request))'),setup.indexOf('// Deliberately does NOT reload on a rejection.'));
+  assert.ok(accepted.indexOf('await load({request:envelope.request,receipt:data})') < accepted.indexOf('clearVerifiedSetupRecovery('), 'verify saved financial terms before clearing recovery');
 });

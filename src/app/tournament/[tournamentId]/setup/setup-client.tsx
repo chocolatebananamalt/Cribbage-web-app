@@ -2,7 +2,7 @@
 import { supportsSetupPrizeSchedule } from "../../../../lib/results/prize-schedule-setup";
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   isRejectedSetup, isSavedSetup, isSetupOfficialChoices, isSetupSaveRequest, isSetupWorkspace, setupRejectionMessage,
@@ -37,8 +37,10 @@ import PrizeScheduleClient from "./prize-schedule-client";
 import SetupOfficialSummaries from "./setup-official-summaries";
 import { creationDateInputValue, combineLocalDateTime } from "../../../../lib/setup-dates";
 import { isTournamentCreated } from "../../../../lib/api/director-administration";
+import { setupFinancialTermsMatch } from "../../../../lib/setup-save-verification";
+import { acceptedSetupKey, parseAcceptedSetupReceipt, clearVerifiedSetupRecovery } from "../../../../lib/setup-save-recovery";
 
-type PendingSave = { kind: "tournament-setup"; request: SetupSaveRequest; stage?: "details" | "all" };
+type PendingSave = { kind: "tournament-setup"; request: SetupSaveRequest; stage?: "details" | "all"; accepted?: {revisionId:string;version:number} };
 type PendingActivation = { kind: "tournament-activation"; request: SetupActivationRequest };
 type PendingAmendment = { kind: "tournament-setup-amendment"; request: SetupAmendmentRequest };
 const eventLabels: Record<SetupEvent["eventKind"], string> = { main: "Main Event", consolation: "Consolation Event", satellite: "Satellite Event", custom: "Custom Event" };
@@ -94,7 +96,17 @@ function tournamentDetailIssues(payload: SetupPayload) {
   if (payload.tournamentContactEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.tournamentContactEmail.trim())) issues.push("Tournament contact email");
   return issues;
 }
-function readPending(key: string): PendingSave | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && (value as PendingSave).kind === "tournament-setup" && isSetupSaveRequest((value as PendingSave).request) ? value as PendingSave : null; } catch { return null; } }
+function readPending(key: string): PendingSave | null {
+  try {
+    const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null");
+    if (!value || typeof value !== "object" || (value as PendingSave).kind !== "tournament-setup" || !isSetupSaveRequest((value as PendingSave).request)) return null;
+    const saved = {...value} as PendingSave; delete saved.accepted;
+    let accepted: PendingSave["accepted"] | null = null;
+    try { accepted=parseAcceptedSetupReceipt(sessionStorage.getItem(acceptedSetupKey(key,saved.request.idempotencyKey)),saved.request); } catch { /* keep the original exact request even if acknowledgement storage cannot be read */ }
+    if (accepted) return {...saved,accepted};
+    return saved;
+  } catch { return null; }
+}
 function storePending(key: string, value: PendingSave | PendingActivation | PendingAmendment) { try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; } }
 function clearPending(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted server receipt remains authoritative */ } }
 function readCreationSeed(key: string, tournamentId: string): CreationSeed | undefined { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return isTournamentCreated(value) && value.tournamentId === tournamentId ? { name: value.tournamentName, plannedDate: value.tournamentDate } : undefined; } catch { return undefined; } }
@@ -107,17 +119,24 @@ function editableEvent(event: SetupEvent & { sourceStatus?: string; qPools: Arra
 }
 
 function MoneyInput({ label, value, onChange }: { label: string; value: number | null; onChange: (value: number | null) => void }) {
-  const [draft, setDraft] = useState(() => formatUsdInput(value));
+  const errorId = useId();
+  const [state, setState] = useState(() => ({source:value,text:formatUsdInput(value)}));
+  const draft = state.text;
+  if (!Object.is(state.source, value)) {
+    // Preserve equivalent in-progress text, but reset when a different pool or
+    // authoritative saved value replaces this editor. NaN is local invalid state.
+    const equivalent = parseUsdMinor(draft, {allowZero:true,maxMinor:100_000_000}) === value;
+    setState({source:value,text:Number.isSafeInteger(value) && !equivalent ? formatUsdInput(value) : draft});
+  }
   const parsed = draft === "" ? null : parseUsdMinor(draft, { allowZero: true, maxMinor: 100_000_000 });
-  const invalid = draft !== "" && parsed === null;
+  const invalid = parsed === null;
   return <label>{label}<span className="money-input"><span aria-hidden="true">$</span><input
-    aria-invalid={invalid} inputMode="decimal" placeholder="0.00" value={draft}
-    onChange={(event) => setDraft(event.target.value)}
+    aria-label={label} aria-invalid={invalid} aria-describedby={invalid ? errorId : undefined} inputMode="decimal" placeholder="0.00" value={draft}
+    onChange={(event) => { const next = event.target.value; setState({source:value,text:next}); onChange(parseUsdMinor(next, {allowZero:true,maxMinor:100_000_000})); }}
     onBlur={() => {
-      if (invalid) { setDraft(formatUsdInput(value)); return; }
-      onChange(parsed);
+      if (parsed !== null) setState({source:value,text:formatUsdInput(parsed)});
     }}
-  /></span></label>;
+  /></span>{invalid && <span id={errorId} className="error-text">Enter a dollar amount with up to two decimal places. Enter 0 for a free entry.</span>}</label>;
 }
 function RateInput({ label, value, onChange, disabled = false }: { label: string; value: number; onChange: (value: number) => void; disabled?: boolean }) {
   const [draft, setDraft] = useState(() => formatUsdInput(value));
@@ -138,7 +157,7 @@ function RateInput({ label, value, onChange, disabled = false }: { label: string
   /></span></label>;
 }
 function finalizationEventLine(event: SetupEvent) {
-  return `${eventLabels[event.eventKind]}: ${event.displayName} - ${event.styleCode}`;
+  return `${eventLabels[event.eventKind]}: ${event.displayName} - ${event.styleCode}; base entry $${formatUsdInput(event.entryFeeCents)}; Q Pools ${event.qPools.map((p,i)=>`${i+1}: ${p.poolTypeCode} $${formatUsdInput(p.entryFeeCents)}`).join(", ") || "none"}; Side Pools ${event.sidePools.map((p,i)=>`${i+1}: ${p.poolTypeCode} $${formatUsdInput(p.entryFeeCents)}`).join(", ") || "none"}`;
 }
 type ActivatedEvent = Extract<SetupActivationState, { status: "activated" }>["events"][number];
 function activatedEventLine(event: ActivatedEvent) {
@@ -172,7 +191,7 @@ function SanctioningFeePanel({ mainRateCents: storedMainRateCents, consolationRa
 function PoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: number; update: (value: SetupPool) => void; remove: () => void }) {
   return <fieldset className="setup-subsection"><legend>Q Pool {index + 1}</legend>
     <label>Pool type<select required value={pool.poolTypeCode} onChange={(event) => update({ ...pool, poolTypeCode: event.target.value })}><option value="">Select a Q Pool type</option>{qPoolOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
-    <MoneyInput key={`pool-fee-${pool.entryFeeCents}`} label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? 0 })} />
+    <MoneyInput label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
     <label>Optional note<input maxLength={1000} value={pool.note} onChange={(event) => update({ ...pool, note: event.target.value })} /></label>
     <button type="button" className="secondary" onClick={remove}>Remove Q Pool</button>
   </fieldset>;
@@ -180,7 +199,7 @@ function PoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: n
 function SidePoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: number; update: (value: SetupPool) => void; remove: () => void }) {
   return <fieldset className="setup-subsection"><legend>Side Pool {index + 1}</legend>
     <label>Side Pool type/name<input required maxLength={160} value={pool.poolTypeCode} onChange={(event) => update({ ...pool, poolTypeCode: event.target.value })} placeholder="Example: Early Bird Side Pool" /></label>
-    <MoneyInput key={`side-pool-fee-${pool.entryFeeCents}`} label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? 0 })} />
+    <MoneyInput label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
     <label>Optional note<input maxLength={1000} value={pool.note} onChange={(event) => update({ ...pool, note: event.target.value })} /></label>
     <button type="button" className="secondary" onClick={remove}>Remove Side Pool</button>
   </fieldset>;
@@ -193,7 +212,7 @@ function EventEditor({ event, number, update, remove }: { event: SetupEvent; num
       <label>Event name<input required maxLength={200} value={event.displayName} onChange={(e) => update({ ...event, displayName: e.target.value })} /></label>
       <label>Style<select value={event.styleCode} onChange={(e) => update({ ...event, styleCode: e.target.value, formatCode: formatForStyle(e.target.value) })}>{styleOptions[event.eventKind].map((option) => <option key={option}>{option}</option>)}</select></label>
       <label>Games<select value={event.gameCount} onChange={(e) => update({ ...event, gameCount: Number(e.target.value) })}>{gameOptions[event.eventKind].map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
-      <MoneyInput key={`event-fee-${event.entryFeeCents}`} label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? 0 })} />
+      <MoneyInput label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? NaN })} />
       <label>Start date and time<input required type="datetime-local" value={event.startsAt} onChange={(e) => update({ ...event, startsAt: e.target.value })} /></label>
       <label>Fee includes<input aria-describedby={`${event.clientRowId}-fee-includes-help`} maxLength={1000} value={event.feeIncludesNote} onChange={(e) => update({ ...event, feeIncludesNote: e.target.value })} placeholder="Optional" /><span id={`${event.clientRowId}-fee-includes-help`} className="field-help">Coffee, donuts, lunch, etc.</span></label>
       {event.eventKind === "satellite" ? <label>Payout<select value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })}><option value="">Select a payout</option>{satellitePayoutOptions.map((option) => <option key={option}>{option}</option>)}</select><span className="field-help">Choose the advertised placement ratio. Actual payouts are recorded and reconciled after results.</span></label> : <label className="setup-wide">Payout information<textarea aria-describedby={`${event.clientRowId}-payout-help`} maxLength={2000} value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })} /><span id={`${event.clientRowId}-payout-help`} className="field-help">Optional player-facing event-prize plan. Example: “Paid to posted qualifying and playoff placements; final amounts depend on paid entries.” Q Pools and Side Pools are separate.</span></label>}
@@ -208,10 +227,10 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
   const router = useRouter();
   const storageKey = `tournament-setup:${actorId}:${tournamentId}`, creationSeedStorageKey = `tournament-creation-seed:${actorId}:${tournamentId}`, activationStorageKey = `tournament-activation:${actorId}:${tournamentId}`, amendmentStorageKey = `tournament-setup-amendment:${actorId}:${tournamentId}`, inFlight = useRef(false), sanctioningFeeRefreshInFlight = useRef(false);
   const [payload, setPayload] = useState<SetupPayload | null>(null), [savedFingerprint, setSavedFingerprint] = useState(""), [revisionId, setRevisionId] = useState<string | null>(null), [version, setVersion] = useState(0), [busy, setBusy] = useState(true), [pending, setPending] = useState<PendingSave | null>(null), [pendingActivation, setPendingActivation] = useState<PendingActivation | null>(null), [activationState, setActivationState] = useState<SetupActivationState>({ status: "not_activated" }), [message, setMessage] = useState("Loading tournament setup…");
-  const [scheduleBlocked, setScheduleBlocked] = useState(false);
+  const [scheduleBlocked, setScheduleBlocked] = useState(true);
   const onScheduleBlockingChange = useCallback((value: boolean) => setScheduleBlocked(value), []);
   const [amendmentEvents, setAmendmentEvents] = useState<SetupEvent[]>([]), [pendingAmendment, setPendingAmendment] = useState<PendingAmendment | null>(null), [primaryDirectorName, setPrimaryDirectorName] = useState(""), [isPrimaryDirector, setIsPrimaryDirector] = useState(false), [publicDirectorDraft, setPublicDirectorDraft] = useState(""), [publicContactBusy, setPublicContactBusy] = useState(false), [activationStatusAvailable, setActivationStatusAvailable] = useState(true), [finalizationPromptOpen, setFinalizationPromptOpen] = useState(false), [sanctioningFee, setSanctioningFee] = useState<{ mainRateCents: number; consolationRateCents: number; mainEligibleParticipantCount: number; consolationEligibleParticipantCount: number } | null>(null), [sanctioningFeeLastUpdatedAt, setSanctioningFeeLastUpdatedAt] = useState<number | null>(null), [sanctioningFeeRefreshing, setSanctioningFeeRefreshing] = useState(false), [rateOverrideBusy, setRateOverrideBusy] = useState(false), [teamUpgradeBusy, setTeamUpgradeBusy] = useState(false), [creationSeedActive, setCreationSeedActive] = useState(Boolean(creationSeed));
-  const load = useCallback(async () => {
+  const load = useCallback(async (expected?: {request: SetupSaveRequest; receipt: {revisionId:string;version:number}}) => {
     const [response, activationResponse] = await Promise.all([
       fetch(`/api/v1/tournaments/${tournamentId}/setup`, { credentials: "same-origin", cache: "no-store" }),
       fetch(`/api/v1/tournaments/${tournamentId}/setup/activation`, { credentials: "same-origin", cache: "no-store" }),
@@ -222,6 +241,8 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
     if (!isSetupWorkspace(result.workspace) || !isSetupOfficialChoices(result.officialChoices)) throw new Error("shape");
     const workspace = result.workspace;
     const current = workspace.current;
+    if (expected && current && current.version > expected.receipt.version) throw new Error("newer-setup-revision");
+    if (expected && !setupFinancialTermsMatch(expected.request, expected.receipt, current)) throw new Error("saved-financial-terms-mismatch");
     if (current) clearCreationSeed(creationSeedStorageKey);
     const effectiveCreationSeed = creationSeed ?? (!current ? readCreationSeed(creationSeedStorageKey, tournamentId) : undefined);
     setCreationSeedActive(Boolean(effectiveCreationSeed && !current));
@@ -254,7 +275,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
     setMessage(!nextActivationStatusAvailable ? `Saved setup version ${current?.version ?? 0} is loaded. Event finalization status could not be checked; refresh before finalizing.` : nextActivation.status === "activated" ? `${nextActivation.eventCount} tournament event${nextActivation.eventCount === 1 ? "" : "s"} finalized for use.` : current ? `Saved setup version ${current.version} is loaded.` : "Enter the tournament details, then save the first version.");
     return { activation: nextActivation, currentVersion: current?.version ?? 0 };
   }, [actorId, creationSeed, creationSeedStorageKey, tournamentId]);
-  useEffect(() => { void (async () => { try { const loaded = await load(); const active = loaded.activation; const recoveredActivation = readPendingActivation(activationStorageKey); if (active.status === "activated") clearPending(activationStorageKey); else if (recoveredActivation) { setPendingActivation(recoveredActivation); setMessage("A previous finalization could not be confirmed. Retry the exact request."); } const recovered = readPending(storageKey); if (recovered && active.status !== "activated") { setPending(recovered); setCreationSeedActive(false); setPayload(recovered.request.payload); setVersion(recovered.request.expectedVersion); setMessage("A previous setup save could not be confirmed. Retry the exact saved request before editing."); } const recoveredAmendment = readPendingAmendment(amendmentStorageKey); if (recoveredAmendment && active.status === "activated") { setPendingAmendment(recoveredAmendment); setAmendmentEvents(recoveredAmendment.request.events); setMessage("A previous event addition could not be confirmed. Retry the exact request before making another change."); } } catch { setMessage("Tournament setup is temporarily unavailable. Refresh to retry."); } finally { setBusy(false); } })(); }, [activationStorageKey, amendmentStorageKey, load, storageKey]);
+  useEffect(() => { void (async () => { try { const loaded = await load(); const active = loaded.activation; const recoveredActivation = readPendingActivation(activationStorageKey); if (active.status === "activated") clearPending(activationStorageKey); else if (recoveredActivation) { setPendingActivation(recoveredActivation); setMessage("A previous finalization could not be confirmed. Retry the exact request."); } const recovered = readPending(storageKey); if (recovered && active.status !== "activated") { setPending(recovered); setCreationSeedActive(false); setPayload(recovered.request.payload); setVersion(recovered.request.expectedVersion); setMessage(recovered.accepted && loaded.currentVersion > recovered.accepted.version ? "Another director saved a newer setup revision. The accepted request and its original terms remain retained. Review the conflicting versions before finalizing." : "A previous setup save could not be confirmed. Retry the exact saved request before editing."); } const recoveredAmendment = readPendingAmendment(amendmentStorageKey); if (recoveredAmendment && active.status === "activated") { setPendingAmendment(recoveredAmendment); setAmendmentEvents(recoveredAmendment.request.events); setMessage("A previous event addition could not be confirmed. Retry the exact request before making another change."); } } catch { setMessage("Tournament setup is temporarily unavailable. Refresh to retry."); } finally { setBusy(false); } })(); }, [activationStorageKey, amendmentStorageKey, load, storageKey]);
   const refreshSanctioningFee = useCallback(async () => {
     if (sanctioningFeeRefreshInFlight.current) return;
     sanctioningFeeRefreshInFlight.current = true;
@@ -310,7 +331,28 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
   async function save(envelope: PendingSave) {
     if (inFlight.current) return; inFlight.current = true; setBusy(true); setPending(envelope); setMessage("Saving the tournament setup…");
     try { const response = await fetch(`/api/v1/tournaments/${tournamentId}/setup`, { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "content-type": "application/json" }, body: JSON.stringify(envelope.request) }); const data: unknown = await response.json().catch(() => null);
-      if (response.ok && isSavedSetup(data, envelope.request)) { clearCreationSeed(creationSeedStorageKey); setCreationSeedActive(false); clearPending(storageKey); setPending(null); setRevisionId(data.revisionId); setVersion(data.version); setSavedFingerprint(JSON.stringify(envelope.request.payload)); try { await load(); setMessage(envelope.stage === "details" ? "Tournament details saved. Tournament Events is now available." : `Tournament setup version ${data.version} was saved.`); } catch { setMessage(envelope.stage === "details" ? "Tournament details were saved. Refresh to load the latest server version and continue." : `Tournament setup version ${data.version} was saved. Refresh to load the latest server version.`); } return; }
+      if (response.ok && isSavedSetup(data, envelope.request)) {
+        const acceptedEnvelope: PendingSave = {...envelope,accepted:{revisionId:data.revisionId,version:data.version}};
+        // Recovery envelopes are immutable. Store acknowledgement separately,
+        // rather than overwriting the exact original request or relaxing its guard.
+        try { setAppRecoveryItem(sessionStorage,acceptedSetupKey(storageKey,envelope.request.idempotencyKey),JSON.stringify({kind:"tournament-setup-accepted",operationId:envelope.request.idempotencyKey,revisionId:data.revisionId,version:data.version})); } catch { /* original request and server receipt remain available for exact replay */ }
+        setPending(acceptedEnvelope);
+        try {
+          await load({request:envelope.request,receipt:data});
+          const cleanup=clearVerifiedSetupRecovery(sessionStorage,storageKey,envelope.request,data);
+          if(cleanup!=="cleared"){setPending(acceptedEnvelope);setMessage("Saved financial terms are verified, but local recovery cleanup could not be confirmed. The original operation remains available; do not finalize until this recovery state is resolved.");return;}
+          clearCreationSeed(creationSeedStorageKey); setCreationSeedActive(false); setPending(null);
+          setMessage(envelope.stage === "details" ? "Tournament details saved. Tournament Events is now available." : `Tournament setup version ${data.version} was saved.`);
+        } catch (error) {
+          // Accepted metadata is not proof that the saved financial terms match.
+          // Keep the original operation for exact receipt replay and readback.
+          setPending(acceptedEnvelope);
+          setMessage(error instanceof Error && error.message === "newer-setup-revision"
+            ? "Another director saved a newer setup revision before this readback. The accepted request and its original terms remain retained. Review the conflicting versions before finalizing; no newer values were assumed to match."
+            : `Setup version ${data.version} was accepted, but its saved fees and pools could not be verified. The exact request is retained. Retry it before finalizing; no new request was started.`);
+        }
+        return;
+      }
       // Deliberately does NOT reload on a rejection. load() replaces the form with
       // the last saved version, so a rejected save used to wipe every field the
       // director had typed, including the event cards, leaving them to start over
@@ -403,7 +445,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
     <p role="status" aria-live="polite" className={message.includes("unavailable") || message.includes("unresolved") || message.includes("Complete") ? "error-text" : "auth-note"}>{message}</p>
     {!activationStatusAvailable ? <button type="button" className="secondary" disabled={busy} onClick={() => void load()}>Refresh finalization status</button> : null}
     {!activated && finalizationPromptOpen ? <section className="setup-amendment" role="alertdialog" aria-modal="true" aria-labelledby="finalize-events-title"><h2 id="finalize-events-title">Open registration for all current events?</h2><p>Please confirm you intend to open registration for these events. Event details will no longer be editable.</p><ul>{payload.events.map((event) => <li key={event.clientRowId}>{finalizationEventLine(event)}</li>)}</ul><div className="setup-actions"><button type="button" className="secondary" onClick={() => setFinalizationPromptOpen(false)}>Cancel</button><button type="button" className="primary" onClick={confirmActivation}>Yes, Finalize &amp; Open Registration</button></div></section> : null}
-    {payload.events.filter(() => prizeScheduleApplies).map(event => <PrizeScheduleClient key={`${event.clientRowId}-${version}-${activated}`} actorId={actorId} tournamentId={tournamentId} clientRowId={event.clientRowId} entryFeeCents={event.entryFeeCents} onBlockingChange={onScheduleBlockingChange} disabled={busy || dirty || !!pending || !!pendingActivation || payload.events.length !== 1 || event.gameCount !== 12 || event.formatCode !== "standard_singles" || event.sidePools.length > 0} />)}
+    {payload.events.filter(() => prizeScheduleApplies).map(event => <PrizeScheduleClient key={`${event.clientRowId}-${version}-${activated}`} actorId={actorId} tournamentId={tournamentId} clientRowId={event.clientRowId} entryFeeCents={event.entryFeeCents} onBlockingChange={onScheduleBlockingChange} disabled={busy || dirty || !!pending || !!pendingActivation || payload.events.length !== 1 || event.gameCount !== 12 || event.formatCode !== "standard_singles"} />)}
     <a className="guide-link" href={`/tournament/${tournamentId}/prize-schedules`}>Printable and player-visible prize schedules</a>
     {activated ? <>
       <section className="setup-activation-summary"><h2>All events are finalized; registration is open</h2><p>These events are available for roster enrollment, seating, schedules, financials, and later Start Play. Finalizing opens registration; it does not start play, close registration, assign seats, charge anyone, or publish results.</p><section className="setup-finalized-tournament-summary" aria-label="Saved tournament details"><h3>Saved tournament details</h3><dl><div><dt>Location</dt><dd>{payload.venueName || payload.venue}<br />{payload.venueStreet ? `${payload.venueStreet}, ` : ""}{payload.city}, {payload.stateTerritory} {payload.venuePostalCode}</dd></div><div><dt>Tournament Director</dt><dd>{payload.tournamentDirectorPublicName}</dd></div><div><dt>Time zone</dt><dd>{tournamentTimeZones.find((zone) => zone.value === payload.timezone)?.label ?? payload.timezone}</dd></div><div><dt>Schedule</dt><dd>{payload.startsAt.replace("T", " ")} to {payload.endsAt.replace("T", " ")}</dd></div></dl></section><ul>{activationState.events.map((event) => <li key={event.eventId}><strong>{activatedEventLine(event)}</strong> — {event.gameCount} games, {event.scoringMethod === "digital" ? "digital and paper scoring" : "paper scoring"}{event.scoringMethod === "manual" && ["doubles", "canadian_doubles"].includes(event.format) ? <button type="button" className="secondary" disabled={busy || teamUpgradeBusy} onClick={() => void enableTeamScoring(event.eventId)}>Enable Digital and Paper Team Scoring</button> : null}</li>)}</ul><a className="primary button-link registration-primary" href={`/tournament/${tournamentId}/registration`}>Create or manage registration QR code and URL</a></section>

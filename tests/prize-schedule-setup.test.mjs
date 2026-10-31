@@ -8,5 +8,9 @@ test('base-prize setup supports optional Q fees without consuming Q funds',()=>{
   assert.equal(main.entryFeeCents,3000);
 });
 test('unsupported hidden editors cannot participate in setup blocking',()=>{
-  for(const events of [[],[main,main],[{...main,sidePools:[{}]}],[{...main,eventKind:'consolation'}],[{...main,gameCount:9}],[{...main,styleCode:'Double Elimination'}],[{...main,formatCode:'doubles'}],[{...main,entryFeeCents:0}],[{...main,entryFeeCents:0.1}]]) assert.equal(supportsSetupPrizeSchedule(events),false);
+  for(const events of [[],[main,main],[{...main,sidePools:Array(7).fill({})}],[{...main,eventKind:'consolation'}],[{...main,gameCount:9}],[{...main,styleCode:'Double Elimination'}],[{...main,formatCode:'doubles'}],[{...main,entryFeeCents:0}],[{...main,entryFeeCents:0.1}]]) assert.equal(supportsSetupPrizeSchedule(events),false);
+});
+test('base-prize setup supports up to six separate Side Pools without folding their funds into base fees',()=>{
+ for(const count of [1,6])assert.equal(supportsSetupPrizeSchedule([{...main,sidePools:Array(count).fill({entryFeeCents:1000})}]),true);
+ assert.equal(main.entryFeeCents,3000);
 });
