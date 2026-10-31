@@ -4,6 +4,8 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import assert from "node:assert/strict";
 import { chromium } from "playwright-core";
+import {qMembershipOperatingDisclosures} from "../src/lib/results/q-membership-disclosures.ts";
+import {graduatedQMethodV4 as balancedQMethodV3} from "../src/lib/api/q-graduated-policy-v4.ts";
 
 const root = process.cwd();
 const dir = path.join(root, "test-results/q-pool-membership-browser");
@@ -36,13 +38,13 @@ function makeWorkspace({ started = false, elected = false, prePlayA = elected, h
 
 const writeCapture = [];
 await fs.mkdir(path.join(dir, "app/allocation"), { recursive: true });
-for (const route of ["allocation", "started", "correction", "restore", "longname", "not-director", "unsupported", "unavailable", "mismatch"]) await fs.mkdir(path.join(dir, "app", route), { recursive: true });
+for (const route of ["balanced", "allocation", "started", "correction", "restore", "longname", "not-director", "unsupported", "unavailable", "mismatch"]) await fs.mkdir(path.join(dir, "app", route), { recursive: true });
 await fs.mkdir(path.join(dir, "public"), { recursive: true });
 await fs.writeFile(path.join(dir, "package.json"), '{"private":true,"type":"module"}');
 await fs.writeFile(path.join(dir, "next.config.mjs"), `export default {turbopack:{root:${JSON.stringify(root)}}};`);
 await fs.copyFile(path.join(root, "public/offline-score-sw.js"), path.join(dir, "public/offline-score-sw.js"));
 await fs.writeFile(path.join(dir, "app/layout.tsx"), `import '../../../src/app/globals.css';import {RecoveryDocumentBoundary} from '../../../src/components/recovery-document-boundary';export default function Layout({children}:{children:React.ReactNode}){return <html><body><RecoveryDocumentBoundary actorId="${actor}">{children}</RecoveryDocumentBoundary></body></html>}`);
-const pageSource = (workspace, source = "../../../src") => `import Client from '${source}/app/tournament/[tournamentId]/q-pools/q-pools-client';const workspace=${JSON.stringify(workspace)} as import('${source}/lib/api/q-pool-membership').QPoolMembershipWorkspace | null;export default function Page(){return <main className="auth-shell"><section className="auth-card corrections-card"><h1>Q Pool browser fixture</h1><Client actorId="${actor}" tournamentId="${tournament}" canManage={true} workspace={workspace}/></section></main>}`;
+const pageSource = (workspace, source = "../../../src", policies = []) => `import Client from '${source}/app/tournament/[tournamentId]/q-pools/q-pools-client';const workspace=${JSON.stringify(workspace)} as import('${source}/lib/api/q-pool-membership').QPoolMembershipWorkspace | null;export default function Page(){return <main className="auth-shell"><section className="auth-card corrections-card"><h1>Q Pool browser fixture</h1><Client actorId="${actor}" tournamentId="${tournament}" canManage={true} workspace={workspace} policies={${JSON.stringify(policies)}}/></section></main>}`;
 await fs.writeFile(path.join(dir, "app/page.tsx"), pageSource(makeWorkspace()));
 await fs.writeFile(path.join(dir, "app/allocation/page.tsx"), pageSource(makeWorkspace({ elected: true, hasReceipt: true }), "../../../../src"));
 await fs.writeFile(path.join(dir, "app/started/page.tsx"), pageSource(makeWorkspace({ started: true }), "../../../../src"));
@@ -57,6 +59,11 @@ await fs.writeFile(path.join(dir, "app/unavailable/page.tsx"), pageSource(null, 
 const staleObligation = makeWorkspace({ elected: true });
 staleObligation.entries[0].obligationMinor = 3000;
 await fs.writeFile(path.join(dir, "app/mismatch/page.tsx"), pageSource(staleObligation, "../../../../src"));
+
+const policyId = "40000000-0000-4000-8000-000000000010";
+const policySource = {tournamentId:tournament,membership:makeWorkspace(),canPublish:false,policies:[{id:policyId,poolVersionId:poolA,method:balancedQMethodV3,ratio:6,scheduleId:balancedQMethodV3,disclosureReference:"TEST ONLY balanced policy",publishedAt:"2026-10-31T00:00:00Z"}],cards:[],cuts:[],sourceDigest:"a".repeat(64),blockers:[]};
+const balancedPolicies=qMembershipOperatingDisclosures(policySource,tournament);assert.ok(balancedPolicies);
+await fs.writeFile(path.join(dir,"app/balanced/page.tsx"),pageSource(makeWorkspace(),"../../../../src",balancedPolicies));
 
 const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "dev", dir, "--hostname", "127.0.0.1", "--port", "3240"], { cwd: root, env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" }, stdio: ["ignore", "pipe", "pipe"] });
 let logs = "";
@@ -187,11 +194,29 @@ try {
   await page.getByText(/does not match current base fee and elections/).waitFor();
   assert.equal(await page.getByRole("button", { name: "Save Receipt Allocation" }).isDisabled(), true, "stale obligation blocks allocation while leaving workspace visible");
   assert.equal(writeCapture.length, 5);
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:1050});await page.goto(`${origin}/balanced`);
+    await page.getByText(/Graduated Q: observed ACC raw weights/).waitFor();
+    await page.getByLabel("Elect into Q Pool 1: Q Pool A ($5.00)").check();
+    await page.getByLabel("Consent reference for Q Pool A").fill("TEST ONLY simulated choice");
+    await page.getByLabel("Reason for membership record (required)").fill("TEST ONLY pre-play balanced acknowledgment");
+    const before=writeCapture.length;await page.getByRole("button",{name:"Save Membership",exact:true}).click();
+    await page.getByText(/Q Pool record saved/).waitFor();
+    assert.equal(writeCapture.length,before+1);
+    assert.equal(writeCapture.at(-1).body.pools[0].consentReference,`Q policy ${policyId}: TEST ONLY simulated choice`);
+    assert.equal(writeCapture.at(-1).body.pools[0].poolVersionId,poolA);
+    const layout=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(layout.scroll<=layout.width+1);
+  }
   console.log("PASS local 390/1440px Q Pool UI; exact opt-in coverage; rapid-repeat singleflight; interrupted request reconciles and retries exact body/key; receipt allocation is explicit, complete, fee-capped and exact; first late opt-in blocked; prior elected pool can be restored but a new pool remains blocked; long Unicode pool label wraps; post-play reasoned director correction accepted; stale obligations remain visible but allocation-blocked; unavailable differs from unsupported. API requests intercepted; no backend calls.");
   await context.close();
 } finally {
   await browser?.close();
   child.kill();
+  await new Promise(resolve=>{if(child.exitCode!==null)return resolve();child.once("close",resolve);setTimeout(resolve,1500);});
+  let serverClosed=false;
+  for(let attempt=0;attempt<10;attempt++){try{await fetch(origin,{signal:AbortSignal.timeout(1000)});}catch(error){if(error.cause?.code==='ECONNREFUSED'){serverClosed=true;break;}}await new Promise(resolve=>setTimeout(resolve,100));}
+  await fs.writeFile(path.join(root,"test-results/q-membership-disclosure-browser-cleanup.json"),JSON.stringify({serverPid:child.pid,serverClosed},null,2));
+  assert.ok(serverClosed,"task-owned local server closed");
   await fs.writeFile(path.join(root, "test-results/q-pool-membership-browser-server.log"), logs);
   const fixturePath = path.resolve(dir);
   assert.ok(fixturePath.startsWith(`${path.resolve(root, "test-results")}${path.sep}`), "fixture cleanup stays inside test-results");

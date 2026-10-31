@@ -6,8 +6,7 @@ import { requireTournamentAccess } from "../../../../lib/auth/require-tournament
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import QPoolMembershipClient, { type QConsentPolicy } from "./q-pools-client";
 import { isQPreviewSources, Q_POLICY_TEXT } from "../../../../lib/results/q-pool-preview";
-import { isQOperatingWorkspaceV2 } from "../../../../lib/api/q-operating-schedules";
-import { qChartSchedules } from "../../../../lib/results/q-chart-catalog";
+import { qMembershipOperatingDisclosures } from "../../../../lib/results/q-membership-disclosures";
 import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
 import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
 
@@ -31,12 +30,8 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
     if (!policyRead.error && isQPreviewSources(policyRead.data, tournamentId)) policies = policyRead.data.policies.map(p => ({ ...p, disclosureText: Q_POLICY_TEXT }));
     if (access.role === "director") {
       const operatingRead = await createServerOnlyAdminClient().rpc("get_q_operating_workspace_v2", { p_actor_id: access.user.id, p_tournament_id: tournamentId });
-      if (!operatingRead.error && isQOperatingWorkspaceV2(operatingRead.data, tournamentId)) {
-        policies = [...policies, ...operatingRead.data.policies.map(p => ({ id: p.id, poolVersionId: p.poolVersionId,
-          disclosureText: p.method === "equal-paid-playoff-qualifiers-v2"
-            ? "Equal Q: fully paid playoff qualifiers share this named pool. If none qualify, contributions become unpaid refund obligations. Remainder cents follow finalized qualification order. No money moves."
-            : `Graduated Q: ${qChartSchedules.find(s => s.id === p.scheduleId)?.label ?? p.scheduleId}. Recipient count is rounded up from paid pool entrants divided by ${p.ratio}; paid nonqualifiers can receive awards by Q card rank. Exact chart amounts apply; unsupported cells require director review. No money moves.` }))];
-      }
+      const operatingPolicies = !operatingRead.error ? qMembershipOperatingDisclosures(operatingRead.data,tournamentId) : null;
+      if (operatingPolicies) policies = [...policies,...operatingPolicies];
     }
   } catch {
     // RPC availability is a separate status from a supported/unsupported event shape.
