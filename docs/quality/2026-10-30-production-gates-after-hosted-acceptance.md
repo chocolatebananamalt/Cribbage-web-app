@@ -1,3 +1,29 @@
+> **Current checkpoint, 2026-10-31:** The replacement $5-policy hosted acceptance is complete on test commit `223ec1583f18979fc666cd6a26f03e9428705342`, not production. Both fresh 17-player fixtures have 102 verified games, finalized qualification, four simulated playoff series with three byes, completed cross-checking and one current unpaid accounting final. All 34 original player totals and all 223 older table fingerprints are preserved. Source evidence: `2026-10-31-explicit-fee-hosted-rollout.md`. Older cent-valued and failed-setup examples below are historical and do not define current policy.
+
+## Current verified monetary acceptance
+
+| Source | No-Q replacement | Q + Side replacement |
+| --- | --- | --- |
+| Base receipts | $510 | $510 |
+| Separate graduated Q receipts/obligations | none | $170 / $85 + $55 + $30 |
+| Separate graduated Side receipts/obligations | none | $170 / $85 + $55 + $30 |
+| Regular unpaid awards to players 02, 01, 03, 04, 05 | $95, $70, $45, $45, $25 | $95, $70, $45, $45, $25 |
+| Expenses | $229.50 | $229.50 |
+| Restricted rounding hold, excluded from return | $0.50 | $0.50 |
+| Total conserved | $510 | $850 |
+
+Each regular budget rounds from $280.50 down to $280 because $280 awards plus $160 eligible benefits exceeds the $433.50 minimum return. The benefits are $51 sanctioning plus $109 meals, already within expenses. Same-round semifinal losers receive equal $45 awards. Q and Side each pay all $170 as unpaid obligations to 02/01/03; no refunds or actual disbursements occurred. Side recipients derive all paid qualifying cards, not playoff finish. This fixture's top three happened also to qualify; separate earlier tests cover graduated nonqualifier rank-down.
+
+### Remaining release gates
+
+- **Implementation:** the shared generic accounting link selects V8 for a Side event. V8 correctly blocks it; the supported current Side-review link selects V9 and the combined final passed. Repair and verify that navigation locally, then separately approve its test-preview publication.
+- **Policy/scope:** unresolved Q-only cash ties and unsupported multiway qualification remain blocked. Define supported launch formats explicitly rather than imply all formats are accepted.
+- **Physical verification:** synthetic records do not establish real paper/camera, two-human, physical venue outage or old-device rehearsal.
+- **Recovery/operations:** source snapshots and synthetic restore tests do not establish hosted Database/Auth/Storage disaster recovery. Approved production backup/restore, monitoring, rollback and final exact-release preflight remain required.
+- **External approval:** no production launch, production migration, actual payment or paid-state authorization has been given by this test acceptance.
+
+## Historical checkpoints and evidence
+
 > Current checkpoint: test commit b0005ad6c065640961b01efb3ef3497c5de075f7 deployed; current $5 hosted acceptance remains incomplete. Two fresh17-player fixtures and pending B invitations exist; no financial/scoring records in them yet. Prior cent-based acceptance below is historical only. Whole$5 standing policy is approved, including automatic regular floor/ceil and honest funding requirement. Source backup v13 predates this morning checklist; see2026-10-30-morning-readiness-checkpoint.md for actual pending gates.
 
 > Payout-policy hold, 2026-10-30 06:24 UTC: the owner requires whole-dollar prizes, preferably $5, and the shared balanced $5 formula for graduated Q/Side Pools without per-event remainder-placement questions. Historical cent-based regular/equal calculations below prove bookkeeping only, not current product policy. Graduated rank-down remains correct; the separate equal-pool refund edge case is not a graduated refund. Preserve historical records. See docs/reference/payout-policy-clarification-2026-10-30.md for the automatic-policy proposal and unresolved real-funding residue decision. No app/hosted change is authorized here.
@@ -47,3 +73,9 @@ Recommended next coordinated action: agree the initial release scope and approve
 
 ## Superseding local checkpoint: Side/combined accounting
 The owner settled Side recipient basis: all fully paid scorecards in that named pool, whether or not playoff-qualified. This is implemented and verified locally through new264/265 unpaid accounting, Side-only and Q+Side, with whole-$5 awards and separate exact refund/cost bookkeeping. 1,113 application tests plus full build/audit/workspace passed and independent final review has no confirmed P1/P2. This does not replace exact-release hosted acceptance: no new publication/migration occurred, and hosted no-Q scoring stays15/102 because a synthetic paper-original attestation was rejected. Prior cent-valued historical results remain immutable old-policy evidence. Production project was separately resumed and health-check1 confirmed; no application/schema production rollout. See side-pool-local-rollout report for exact proposal and remaining gates.
+
+Local navigation checkpoint (2026-10-31): selector and settlement-wrapper repair prepared but unpublished; canonical V9 Side history is used, historical routes preserved. Focused tests/review passed. Phone/desktop local navigation attempt stopped by ERR_NETWORK_ACCESS_DENIED and remains unverified; do not treat this as rollout-ready. See 2026-10-31-accounting-navigation-repair.md for current evidence and release gates.
+
+2026-10-31 audit recovery: fresh pnpm production audit succeeded, no known vulnerabilities. Local phone/desktop navigation remains blocked by first-page ERR_NETWORK_ACCESS_DENIED, not a returned approval-review rejection. No Chrome enterprise network policy keys or relevant environment overrides found; underlying sandbox/firewall cause unproven. Need scoped per-command escalation approval for the task-owned headless localhost rehearsal, no security changes. See navigation-repair report.
+
+Navigation local gate completed2026-10-31: supported per-command escalation admitted;14phone/desktopnavigationchecks passed and task-owned browser/server closed. Together with1,145tests/build/types/lint/providers/14workspace-handoff/freshaudit/independentreview, the narrow repair is ready for separately approved test-preview publication. No production readiness claim; external physical/recovery/policy/launch gates above remain.

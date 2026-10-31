@@ -34,7 +34,7 @@ export default async function SettlementPage({ params }: { params: Promise<{ tou
   const currentV3 = schedules?.filter(s => s.eventId === eventId && s.versions[0] && isDirectorPrizeScheduleV3(s.versions[0].schedule));
   if (currentV3?.length) {
     const accountingEntry = access.role === "director" ? await getAccountingEntry(admin, access.user.id, tournamentId, eventId, schedules) : null;
-    if (accountingEntry === "prize-accounting-v8") redirect(`/tournament/${tournamentId}/events/${eventId}/prize-accounting-v8`);
+    if (accountingEntry === "prize-accounting-v8" || accountingEntry === "prize-accounting-v9") redirect(`/tournament/${tournamentId}/events/${eventId}/${accountingEntry}`);
     return <main className="auth-shell"><section className="auth-card corrections-card"><h1>Current prize accounting unavailable</h1><p>The primary director must review the current $5 prize rule and supported source configuration. No legacy accounting fallback was assumed.</p><Link href={`/tournament/${tournamentId}/results?event=${eventId}`}>Review results</Link><SharedDeviceSignOut/></section></main>;
   }
   if (settlementV5?.draft || settlementV5?.sources.some((source) => source.kind === "playoff_outcome_v3")) redirect(`/tournament/${tournamentId}/events/${eventId}/settlement-v5`);
