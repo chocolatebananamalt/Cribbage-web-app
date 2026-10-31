@@ -5,7 +5,7 @@ import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  isRejectedSetup, isSavedSetup, isSetupOfficialChoices, isSetupSaveRequest, isSetupWorkspace, setupRejectionMessage,
+  isRejectedSetup, isSavedSetup, isSetupOfficialChoices, isSetupSaveRequest, isSetupWorkspace, isRetainedSetupSaveRequest, minimumPaidEntryCents, setupRejectionMessage,
   type SetupEvent, type SetupOfficialChoices, type SetupPayload, type SetupPool, type SetupSaveRequest,
 } from "../../../../lib/api/setup";
 import {
@@ -17,7 +17,7 @@ import {
 } from "../../../../lib/api/setup-activation";
 import {
   isRejectedSetupAmendment,
-  isSetupAmendmentRequest,
+  isSetupAmendmentRequest, isRetainedSetupAmendmentRequest,
   isSetupAmendmentResult,
   type SetupAmendmentRequest,
 } from "../../../../lib/api/setup-amendment";
@@ -56,7 +56,7 @@ function formatForStyle(style: string) {
 }
 
 function defaultEvent(kind: SetupEvent["eventKind"], startsAt = "", timezone = "UTC"): SetupEvent {
-  return { clientRowId: crypto.randomUUID(), eventKind: kind, displayName: eventLabels[kind], startsAt, timezone, styleCode: styleOptions[kind][0], formatCode: "standard_singles", gameCount: gameOptions[kind][0], entryFeeCents: 0, feeIncludesNote: "", payoutNote: "", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [], sidePools: [] };
+  return { clientRowId: crypto.randomUUID(), eventKind: kind, displayName: eventLabels[kind], startsAt, timezone, styleCode: styleOptions[kind][0], formatCode: "standard_singles", gameCount: gameOptions[kind][0], entryFeeCents: NaN, freeEntry: false, feeIncludesNote: "", payoutNote: "", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [], sidePools: [] };
 }
 function splitPersonName(displayName: string) {
   const parts = displayName.trim().split(/\s+/).filter(Boolean);
@@ -99,7 +99,7 @@ function tournamentDetailIssues(payload: SetupPayload) {
 function readPending(key: string): PendingSave | null {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null");
-    if (!value || typeof value !== "object" || (value as PendingSave).kind !== "tournament-setup" || !isSetupSaveRequest((value as PendingSave).request)) return null;
+    if (!value || typeof value !== "object" || (value as PendingSave).kind !== "tournament-setup" || !isRetainedSetupSaveRequest((value as PendingSave).request)) return null;
     const saved = {...value} as PendingSave; delete saved.accepted;
     let accepted: PendingSave["accepted"] | null = null;
     try { accepted=parseAcceptedSetupReceipt(sessionStorage.getItem(acceptedSetupKey(key,saved.request.idempotencyKey)),saved.request); } catch { /* keep the original exact request even if acknowledgement storage cannot be read */ }
@@ -112,13 +112,13 @@ function clearPending(key: string) { try { sessionStorage.removeItem(key); } cat
 function readCreationSeed(key: string, tournamentId: string): CreationSeed | undefined { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return isTournamentCreated(value) && value.tournamentId === tournamentId ? { name: value.tournamentName, plannedDate: value.tournamentDate } : undefined; } catch { return undefined; } }
 function clearCreationSeed(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted setup receipt remains authoritative */ } }
 function readPendingActivation(key: string): PendingActivation | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); const request = value && typeof value === "object" ? (value as PendingActivation).request : null; return value && typeof value === "object" && (value as PendingActivation).kind === "tournament-activation" && request && typeof request === "object" && typeof request.setupRevisionId === "string" && Number.isSafeInteger(request.expectedVersion) && request.confirmed === true && typeof request.idempotencyKey === "string" ? value as PendingActivation : null; } catch { return null; } }
-function readPendingAmendment(key: string): PendingAmendment | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && (value as PendingAmendment).kind === "tournament-setup-amendment" && isSetupAmendmentRequest((value as PendingAmendment).request) ? value as PendingAmendment : null; } catch { return null; } }
+function readPendingAmendment(key: string): PendingAmendment | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && (value as PendingAmendment).kind === "tournament-setup-amendment" && isRetainedSetupAmendmentRequest((value as PendingAmendment).request) ? value as PendingAmendment : null; } catch { return null; } }
 function editableEvent(event: SetupEvent & { sourceStatus?: string; qPools: Array<SetupPool & { slot?: number; sourceStatus?: string }>; sidePools: Array<SetupPool & { slot?: number; sourceStatus?: string }> }): SetupEvent {
-  const { clientRowId, eventKind, displayName, startsAt, timezone, styleCode, formatCode, gameCount, entryFeeCents, feeIncludesNote, payoutNote, qualificationNote, eligibilityNote, mugginsStatus } = event;
-  return { clientRowId, eventKind, displayName, startsAt: startsAt.slice(0, 16), timezone, styleCode, formatCode, gameCount, entryFeeCents, feeIncludesNote, payoutNote, qualificationNote, eligibilityNote, mugginsStatus, qPools: event.qPools.map(({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note }) => ({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note })), sidePools: event.sidePools.map(({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note }) => ({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note })) };
+  const { clientRowId, eventKind, displayName, startsAt, timezone, styleCode, formatCode, gameCount, entryFeeCents, freeEntry, feeIncludesNote, payoutNote, qualificationNote, eligibilityNote, mugginsStatus } = event;
+  return { clientRowId, eventKind, displayName, startsAt: startsAt.slice(0, 16), timezone, styleCode, formatCode, gameCount, entryFeeCents, ...(freeEntry === undefined ? {} : {freeEntry}), feeIncludesNote, payoutNote, qualificationNote, eligibilityNote, mugginsStatus, qPools: event.qPools.map(({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note }) => ({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note })), sidePools: event.sidePools.map(({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note }) => ({ poolTypeCode, entryFeeCents: poolEntryFeeCents, note })) };
 }
 
-function MoneyInput({ label, value, onChange }: { label: string; value: number | null; onChange: (value: number | null) => void }) {
+function MoneyInput({ label, value, onChange, minimum = 0, step = 1 }: { label: string; value: number | null; onChange: (value: number | null) => void; minimum?: number; step?: number }) {
   const errorId = useId();
   const [state, setState] = useState(() => ({source:value,text:formatUsdInput(value)}));
   const draft = state.text;
@@ -129,14 +129,14 @@ function MoneyInput({ label, value, onChange }: { label: string; value: number |
     setState({source:value,text:Number.isSafeInteger(value) && !equivalent ? formatUsdInput(value) : draft});
   }
   const parsed = draft === "" ? null : parseUsdMinor(draft, { allowZero: true, maxMinor: 100_000_000 });
-  const invalid = parsed === null;
+  const invalid = parsed === null || parsed < minimum || parsed % step !== 0;
   return <label>{label}<span className="money-input"><span aria-hidden="true">$</span><input
-    aria-label={label} aria-invalid={invalid} aria-describedby={invalid ? errorId : undefined} inputMode="decimal" placeholder="0.00" value={draft}
+    required aria-required="true" aria-label={label} aria-invalid={invalid} aria-describedby={invalid ? errorId : undefined} inputMode="decimal" placeholder="0.00" value={draft}
     onChange={(event) => { const next = event.target.value; setState({source:value,text:next}); onChange(parseUsdMinor(next, {allowZero:true,maxMinor:100_000_000})); }}
     onBlur={() => {
       if (parsed !== null) setState({source:value,text:formatUsdInput(parsed)});
     }}
-  /></span>{invalid && <span id={errorId} className="error-text">Enter a dollar amount with up to two decimal places. Enter 0 for a free entry.</span>}</label>;
+  /></span>{invalid && <span id={errorId} className="error-text">{`Enter an amount of at least $${formatUsdInput(minimum)}, in $${formatUsdInput(step)} increments.`}</span>}</label>;
 }
 function RateInput({ label, value, onChange, disabled = false }: { label: string; value: number; onChange: (value: number) => void; disabled?: boolean }) {
   const [draft, setDraft] = useState(() => formatUsdInput(value));
@@ -191,7 +191,7 @@ function SanctioningFeePanel({ mainRateCents: storedMainRateCents, consolationRa
 function PoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: number; update: (value: SetupPool) => void; remove: () => void }) {
   return <fieldset className="setup-subsection"><legend>Q Pool {index + 1}</legend>
     <label>Pool type<select required value={pool.poolTypeCode} onChange={(event) => update({ ...pool, poolTypeCode: event.target.value })}><option value="">Select a Q Pool type</option>{qPoolOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
-    <MoneyInput label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
+    <MoneyInput minimum={500} step={500} label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
     <label>Optional note<input maxLength={1000} value={pool.note} onChange={(event) => update({ ...pool, note: event.target.value })} /></label>
     <button type="button" className="secondary" onClick={remove}>Remove Q Pool</button>
   </fieldset>;
@@ -199,7 +199,7 @@ function PoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: n
 function SidePoolEditor({ pool, index, update, remove }: { pool: SetupPool; index: number; update: (value: SetupPool) => void; remove: () => void }) {
   return <fieldset className="setup-subsection"><legend>Side Pool {index + 1}</legend>
     <label>Side Pool type/name<input required maxLength={160} value={pool.poolTypeCode} onChange={(event) => update({ ...pool, poolTypeCode: event.target.value })} placeholder="Example: Early Bird Side Pool" /></label>
-    <MoneyInput label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
+    <MoneyInput minimum={500} step={500} label="Entry fee" value={pool.entryFeeCents} onChange={(entryFeeCents) => update({ ...pool, entryFeeCents: entryFeeCents ?? NaN })} />
     <label>Optional note<input maxLength={1000} value={pool.note} onChange={(event) => update({ ...pool, note: event.target.value })} /></label>
     <button type="button" className="secondary" onClick={remove}>Remove Side Pool</button>
   </fieldset>;
@@ -212,13 +212,14 @@ function EventEditor({ event, number, update, remove }: { event: SetupEvent; num
       <label>Event name<input required maxLength={200} value={event.displayName} onChange={(e) => update({ ...event, displayName: e.target.value })} /></label>
       <label>Style<select value={event.styleCode} onChange={(e) => update({ ...event, styleCode: e.target.value, formatCode: formatForStyle(e.target.value) })}>{styleOptions[event.eventKind].map((option) => <option key={option}>{option}</option>)}</select></label>
       <label>Games<select value={event.gameCount} onChange={(e) => update({ ...event, gameCount: Number(e.target.value) })}>{gameOptions[event.eventKind].map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
-      <MoneyInput label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? NaN })} />
+      <label>Entry type<select aria-label="Entry type" value={event.freeEntry === true ? "free" : "paid"} onChange={(e) => update({...event, freeEntry:e.target.value === "free", entryFeeCents:e.target.value === "free" ? 0 : NaN})}><option value="paid">Paid event</option><option value="free">Free event</option></select></label>
+      {event.freeEntry === true ? <p className="field-help">No entry fee is charged. Sanctioning and other costs still require funding; this choice does not waive them or create a receipt.</p> : <MoneyInput minimum={minimumPaidEntryCents(event.eventKind)} label="Entry fee" value={event.entryFeeCents} onChange={(entryFeeCents) => update({ ...event, entryFeeCents: entryFeeCents ?? NaN })} />}
       <label>Start date and time<input required type="datetime-local" value={event.startsAt} onChange={(e) => update({ ...event, startsAt: e.target.value })} /></label>
       <label>Fee includes<input aria-describedby={`${event.clientRowId}-fee-includes-help`} maxLength={1000} value={event.feeIncludesNote} onChange={(e) => update({ ...event, feeIncludesNote: e.target.value })} placeholder="Optional" /><span id={`${event.clientRowId}-fee-includes-help`} className="field-help">Coffee, donuts, lunch, etc.</span></label>
       {event.eventKind === "satellite" ? <label>Payout<select value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })}><option value="">Select a payout</option>{satellitePayoutOptions.map((option) => <option key={option}>{option}</option>)}</select><span className="field-help">Choose the advertised placement ratio. Actual payouts are recorded and reconciled after results.</span></label> : <label className="setup-wide">Payout information<textarea aria-describedby={`${event.clientRowId}-payout-help`} maxLength={2000} value={event.payoutNote} onChange={(e) => update({ ...event, payoutNote: e.target.value })} /><span id={`${event.clientRowId}-payout-help`} className="field-help">Optional player-facing event-prize plan. Example: “Paid to posted qualifying and playoff placements; final amounts depend on paid entries.” Q Pools and Side Pools are separate.</span></label>}
     </div>
-    {canQPool ? <section><h3>Q Pools</h3><p className="field-help">Click Add Q Pool to enter its type, entry fee, and optional note. Main and Consolation events may each have up to two Q Pools.</p>{event.qPools.map((pool, index) => <PoolEditor key={`${event.clientRowId}-q-${index}`} pool={pool} index={index} update={(value) => update({ ...event, qPools: event.qPools.map((item, poolIndex) => poolIndex === index ? value : item) })} remove={() => update({ ...event, qPools: event.qPools.filter((_, poolIndex) => poolIndex !== index) })} />)}<button type="button" className="secondary" disabled={event.qPools.length >= 2} onClick={() => update({ ...event, qPools: [...event.qPools, { poolTypeCode: "", entryFeeCents: 0, note: "" }] })}>{event.qPools.length >= 2 ? "Add Q Pool limit reached" : "Add Q Pool"}</button></section> : null}
-    {canSidePool ? <section><h3>Side Pools</h3><p className="field-help">Click Add Side Pool to enter its type, entry fee, and optional note. Each event may have up to six Side Pools.</p>{event.sidePools.map((pool, index) => <SidePoolEditor key={`${event.clientRowId}-side-${index}`} pool={pool} index={index} update={(value) => update({ ...event, sidePools: event.sidePools.map((item, poolIndex) => poolIndex === index ? value : item) })} remove={() => update({ ...event, sidePools: event.sidePools.filter((_, poolIndex) => poolIndex !== index) })} />)}<button type="button" className="secondary" disabled={event.sidePools.length >= 6} onClick={() => update({ ...event, sidePools: [...event.sidePools, { poolTypeCode: "", entryFeeCents: 0, note: "" }] })}>{event.sidePools.length >= 6 ? "Add Side Pool limit reached" : "Add Side Pool"}</button></section> : null}
+    {canQPool ? <section><h3>Q Pools</h3><p className="field-help">Click Add Q Pool to enter its type, entry fee, and optional note. Main and Consolation events may each have up to two Q Pools.</p>{event.qPools.map((pool, index) => <PoolEditor key={`${event.clientRowId}-q-${index}`} pool={pool} index={index} update={(value) => update({ ...event, qPools: event.qPools.map((item, poolIndex) => poolIndex === index ? value : item) })} remove={() => update({ ...event, qPools: event.qPools.filter((_, poolIndex) => poolIndex !== index) })} />)}<button type="button" className="secondary" disabled={event.qPools.length >= 2} onClick={() => update({ ...event, qPools: [...event.qPools, { poolTypeCode: "", entryFeeCents: NaN, note: "" }] })}>{event.qPools.length >= 2 ? "Add Q Pool limit reached" : "Add Q Pool"}</button></section> : null}
+    {canSidePool ? <section><h3>Side Pools</h3><p className="field-help">Click Add Side Pool to enter its type, entry fee, and optional note. Each event may have up to six Side Pools.</p>{event.sidePools.map((pool, index) => <SidePoolEditor key={`${event.clientRowId}-side-${index}`} pool={pool} index={index} update={(value) => update({ ...event, sidePools: event.sidePools.map((item, poolIndex) => poolIndex === index ? value : item) })} remove={() => update({ ...event, sidePools: event.sidePools.filter((_, poolIndex) => poolIndex !== index) })} />)}<button type="button" className="secondary" disabled={event.sidePools.length >= 6} onClick={() => update({ ...event, sidePools: [...event.sidePools, { poolTypeCode: "", entryFeeCents: NaN, note: "" }] })}>{event.sidePools.length >= 6 ? "Add Side Pool limit reached" : "Add Side Pool"}</button></section> : null}
     <button type="button" className="secondary danger-button" onClick={remove}>Remove event</button>
   </fieldset>;
 }

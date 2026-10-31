@@ -5230,3 +5230,12 @@ Fresh action-specific user approval resolved the prior hosted-scoring denial. Th
 There are exactly87 new synthetic captures and87 reviews over87distinctgames, no pending review and no synthetic provenance for the15legacygames. No financial or qualification writes were performed. Q+Side remains pending director setup; expectations are not saved awards.
 
 The next guarded account-switch click, Clear safe app data and sign out, was rejected before execution by automatic approval review because it treated recovery-data clearing as requiring separate action-time confirmation. B remains signed in; no local storage was cleared. The current results page reports no unsent entries/retry records. Stop the rejected switch; do not bypass it with another route. A user-operated safe sign-out/director sign-in or fresh exact switch approval is required. Tab336434427 remains preserved in the Synthetic scoring continuation group. No credentials or clipboard were accessed.
+
+
+## 2026-10-31: explicit fee safeguards (local, unpublished)
+
+User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeguards, not ACC-mandated entry-price floors. New paid amounts must be explicitly supplied; blank, whitespace, missing/null, invalid, negative and zero never mean Free. Free events require an explicit choice. That choice does not waive sanctioning, prove subsidy or fabricate funding; existing accounting/funding reconciliation remains required. Enabled Q and Side Pool fees must be positive $5 increments (minimum $5); disabled pools need no fee. Optional expenses remain independent.
+
+Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.
+
+Completed previous rollout: staging0268 applied once as20261031000827, exact5656bytes/SHA0337C8A6E6C0E837A0D95FA39FD458EFC8D9A2C66DE40F2B6FCC024EA6FC712C; all223 preexisting tables preserved. Commit a97ced93a124ce41a24dbe62c841fe720eddfaaf on draftPR122 passed both CI runs and READY Preview. No replacement fixtures have been created. Replacement creation is held until this new validation is verified and separately authorized for rollout. Historical zero-fee fixtures remain unchanged and do not prove monetary acceptance.

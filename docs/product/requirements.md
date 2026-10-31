@@ -190,3 +190,10 @@ For exactly two Standard Singles qualifying cards tied after game points, wins, 
 
 ## 2026-10-30 Side Pool recipient policy correction
 Owner clarification: each Side Pool ranks its own fully paid scorecards regardless of playoff qualification; no final-playoff-placement filter. Use configured 1-in-N and approved total-preserving $5 amount formula. Keep ties unresolved until supported review. This resolves the prior recipient-basis question; local source-bound implementation is in progress. No historical records may be recalculated silently.
+
+
+## 2026-10-31: explicit fee safeguards (local, unpublished)
+
+User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeguards, not ACC-mandated entry-price floors. New paid amounts must be explicitly supplied; blank, whitespace, missing/null, invalid, negative and zero never mean Free. Free events require an explicit choice. That choice does not waive sanctioning, prove subsidy or fabricate funding; existing accounting/funding reconciliation remains required. Enabled Q and Side Pool fees must be positive $5 increments (minimum $5); disabled pools need no fee. Optional expenses remain independent.
+
+Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.

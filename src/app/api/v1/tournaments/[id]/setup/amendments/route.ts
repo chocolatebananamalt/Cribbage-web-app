@@ -1,6 +1,7 @@
+import { allowSetupWriteOrAcceptedReplay } from "../../../../../../../lib/setup-write-policy";
 import { NextRequest } from "next/server";
 
-import { isRejectedSetupAmendment, isSetupAmendmentRequest, isSetupAmendmentResult } from "../../../../../../../lib/api/setup-amendment";
+import { isRejectedSetupAmendment, isRetainedSetupAmendmentRequest, isSetupAmendmentRequest, isSetupAmendmentResult } from "../../../../../../../lib/api/setup-amendment";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 import { readLargeJson } from "../../../../../../../lib/api/bounded-json";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
@@ -13,9 +14,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const body = await readLargeJson(request);
-    if (!isUuid(id) || !isSetupAmendmentRequest(body)) return apiJson({ error: "invalid_amendment" }, { status: 400 });
+    if (!isUuid(id) || !isRetainedSetupAmendmentRequest(body)) return apiJson({ error: "invalid_amendment" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    if (!await allowSetupWriteOrAcceptedReplay(isSetupAmendmentRequest(body), async () => {
+      const receipt = await createServerOnlyAdminClient().rpc("has_accepted_setup_amendment_operation_v1", {p_actor_id:subject,p_tournament_id:id,p_operation_type:"append_tournament_setup_events_v1",p_operation_id:body.operationId});
+      if (receipt.error || typeof receipt.data !== "boolean") throw new Error("reconciliation unavailable");
+      return receipt.data;
+    })) return apiJson({error:"invalid_amendment"},{status:400});
     const coreEvents = body.events.map((event) => { const coreEvent = { ...event }; Reflect.deleteProperty(coreEvent, "sidePools"); return coreEvent; });
     const { data, error } = await createServerOnlyAdminClient().rpc("append_tournament_setup_events_v1", {
       p_actor_id: subject,

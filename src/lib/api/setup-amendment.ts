@@ -1,4 +1,4 @@
-import { isSetupEvent, type SetupEvent } from "./setup.ts";
+import { isHistoricalSetupEvent, isSetupEvent, type SetupEvent } from "./setup.ts";
 import { isUuid } from "./validation.ts";
 
 export type SetupAmendmentRequest = {
@@ -35,7 +35,7 @@ const eventKeys = ["activationId", "setupEventVersionId", "rulesetVersionId", "e
 const rejectedCodes = new Set(["tournament_unavailable", "not_director", "idempotency_conflict", "setup_not_activated", "setup_officials_stale", "stale_setup_revision", "event_limit_reached", "duplicate_event", "consolation_exists", "unsupported_event", "invalid_request"]);
 const exact = (value: object, keys: string[]) => Object.keys(value).length === keys.length && keys.every((key) => key in value);
 
-export function isSetupAmendmentRequest(value: unknown): value is SetupAmendmentRequest {
+export function isRetainedSetupAmendmentRequest(value: unknown): value is SetupAmendmentRequest {
   if (!value || typeof value !== "object" || !exact(value, requestKeys)) return false;
   const request = value as Record<string, unknown>;
   return isUuid(request.expectedSetupRevisionId)
@@ -44,8 +44,12 @@ export function isSetupAmendmentRequest(value: unknown): value is SetupAmendment
     && Array.isArray(request.events)
     && request.events.length >= 1
     && request.events.length <= 31
-    && request.events.every((event) => isSetupEvent(event) && event.eventKind !== "main")
+    && request.events.every((event) => isHistoricalSetupEvent(event) && event.eventKind !== "main")
     && isUuid(request.operationId);
+}
+
+export function isSetupAmendmentRequest(value: unknown): value is SetupAmendmentRequest {
+  return isRetainedSetupAmendmentRequest(value) && value.events.every(isSetupEvent);
 }
 
 export function isSetupAmendmentResult(value: unknown, request: SetupAmendmentRequest): value is SetupAmendmentResult {

@@ -50,10 +50,10 @@ try{
   });
   await page.route('**/setup-officials/**',route=>route.fulfill({status:503,json:{}}));
   await page.goto(base);const main=page.getByRole('group',{name:'Main Event 1',exact:true}),fee=main.getByRole('textbox',{name:'Entry fee',exact:true});
-  await fee.waitFor();if(scenario==='free')await main.getByRole('textbox',{name:'Event name',exact:true}).fill('Explicit free rehearsal');else await fee.fill('30.00');
+  await fee.waitFor();if(scenario==='free'){await main.getByRole('textbox',{name:'Event name',exact:true}).fill('Explicit free rehearsal');await main.getByRole('combobox',{name:'Entry type',exact:true}).selectOption('free');await main.getByRole('combobox',{name:'Entry type',exact:true}).selectOption('paid');assert.equal(await fee.inputValue(),'','returning to paid requires an explicit amount');await main.getByRole('combobox',{name:'Entry type',exact:true}).selectOption('free');}else await fee.fill('30.00');
   if(scenario==='normalized-names')await main.getByRole('textbox',{name:'Event name',exact:true}).fill('  Main with padding  ');
   const save=page.getByRole('button',{name:'Save All Events Draft',exact:true});
-  const observed={width,input:await fee.inputValue(),saveDisabled:await save.isDisabled(),prizeEditors:await page.getByRole('region',{name:'Main prize schedule',exact:true}).count()};
+  const observed={width,input:scenario==='free'?'explicit free':await fee.inputValue(),saveDisabled:await save.isDisabled(),prizeEditors:await page.getByRole('region',{name:'Main prize schedule',exact:true}).count()};
   results.push({scenario,phase:'focused base fee before blur',...observed});
   if(probe){assert.equal(observed.saveDisabled,true,'old fee remained parent-zero until blur');assert.equal(observed.prizeEditors,0);await fee.press('Tab');await save.click();await page.getByText('Tournament setup version 2 was saved.',{exact:true}).waitFor();assert.equal(writes.at(-1).payload.events[0].entryFeeCents,3000);results.push({phase:'normal blur then save',persistedMinor:workspace.current.events[0].entryFeeCents});}
   else {
@@ -61,13 +61,13 @@ try{
    if(scenario==='combined'){
     await page.getByRole('button',{name:'Add Q Pool',exact:true}).click();const qp=page.getByRole('group',{name:'Q Pool 1',exact:true});await qp.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Graduated (1-in-6)'});await qp.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
     await page.getByRole('button',{name:'Add Q Pool',exact:true}).click();const q2=page.getByRole('group',{name:'Q Pool 2',exact:true});await q2.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Equal (Pays All Equally)'});await q2.getByRole('textbox',{name:'Entry fee',exact:true}).fill('20.00');await qp.getByRole('button',{name:'Remove Q Pool',exact:true}).click();assert.equal(await qp.getByRole('textbox',{name:'Entry fee',exact:true}).inputValue(),'20.00');await qp.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Graduated (1-in-6)'});await qp.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
-    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();let side=page.getByRole('group',{name:'Side Pool 1',exact:true});await side.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Side 1-in-6');await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
+    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();let side=page.getByRole('group',{name:'Side Pool 1',exact:true});await side.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Side 1-in-6');for(const bad of ['', ' ', '0', '1', '7', 'abc']){await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill(bad);if(!await save.isDisabled())await save.click();assert.equal(writes.length,0,'invalid Side fee never writes');}await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
     // Removing the first indexed pool must not transfer its local fee draft.
     await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();const second=page.getByRole('group',{name:'Side Pool 2',exact:true});await second.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Retained second pool');await second.getByRole('textbox',{name:'Entry fee',exact:true}).fill('20.00');await side.getByRole('button',{name:'Remove Side Pool',exact:true}).click();
     side=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await side.getByRole('textbox',{name:'Entry fee',exact:true}).inputValue(),'20.00');await side.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill(' Side 1-in-6 ');await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
    }
    if(scenario==='no-q'){
-    for(const invalid of ['30.001','']){await fee.fill(invalid);await save.click();assert.equal(writes.length,0,'invalid/blank fee cannot silently submit old value or zero');assert.equal(await fee.inputValue(),invalid);}
+    for(const invalid of ['30.001','',' ','0','-1','0.99','2.99','abc']){await fee.fill(invalid);if(!await save.isDisabled())await save.click();assert.equal(writes.length,0,'invalid/blank fee cannot silently submit old value or zero');assert.equal(await fee.inputValue(),invalid);}
     await fee.fill('');await fee.pressSequentially('30.00');assert.equal(await fee.inputValue(),'30.00','typing decimals keeps focus and does not remount the money editor');
    }
    await save.click();

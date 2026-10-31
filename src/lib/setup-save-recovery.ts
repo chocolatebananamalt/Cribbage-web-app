@@ -1,4 +1,4 @@
-import {isSetupSaveRequest, type SetupSaveRequest} from './api/setup.ts';
+import {isRetainedSetupSaveRequest, type SetupSaveRequest} from './api/setup.ts';
 import {isUuid} from './api/validation.ts';
 type StoragePort=Pick<Storage,'getItem'|'removeItem'>;
 export type AcceptedSetupReceipt={revisionId:string;version:number};
@@ -17,7 +17,7 @@ export function clearVerifiedSetupRecovery(storage:StoragePort,key:string,reques
   const raw=storage.getItem(key);
   if(raw!==null){
    const original:unknown=JSON.parse(raw);
-   if(!original||typeof original!=='object'||!('kind'in original)||original.kind!=='tournament-setup'||!('request'in original)||!isSetupSaveRequest(original.request)||JSON.stringify(original.request)!==JSON.stringify(request))return'conflict';
+   if(!original||typeof original!=='object'||!('kind'in original)||original.kind!=='tournament-setup'||!('request'in original)||!isRetainedSetupSaveRequest(original.request)||JSON.stringify(original.request)!==JSON.stringify(request))return'conflict';
   }
   const ackKey=acceptedSetupKey(key,request.idempotencyKey),ackRaw=storage.getItem(ackKey);
   if(ackRaw!==null){const ack=parseAcceptedSetupReceipt(ackRaw,request);if(!ack||ack.revisionId!==receipt.revisionId||ack.version!==receipt.version)return'conflict';}

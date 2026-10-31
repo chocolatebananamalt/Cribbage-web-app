@@ -1399,7 +1399,7 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
     assert.match(source, /cache-control.*private, no-store/);
   }
-  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
+  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isRetainedSetupSaveRequest/); assert.match(save, /isSavedSetup/);
   assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
   assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/); assert.match(save, /decideSetupRead/);
   assert.match(validators, /director_configured_unverified/);
