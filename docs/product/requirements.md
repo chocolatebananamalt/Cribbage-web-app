@@ -197,3 +197,29 @@ Owner clarification: each Side Pool ranks its own fully paid scorecards regardle
 User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeguards, not ACC-mandated entry-price floors. New paid amounts must be explicitly supplied; blank, whitespace, missing/null, invalid, negative and zero never mean Free. Free events require an explicit choice. That choice does not waive sanctioning, prove subsidy or fabricate funding; existing accounting/funding reconciliation remains required. Enabled Q and Side Pool fees must be positive $5 increments (minimum $5); disabled pools need no fee. Optional expenses remain independent.
 
 Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.
+# 2026-11-01 single-operator simulation requirement
+
+Source: Daron's explicit clarification that he operates both devices and local
+build/test approval. Simulated accounts are allowed for technical rehearsal, with
+visible and immutable **one operator / no independent identity witness** provenance.
+Normal production witness and different-account safeguards remain unchanged. Scope
+is the exact staging rehearsal and two existing test profiles; no general test
+bypass or implicit hosted rollout. Independent-human acceptance remains a separate
+release gate. See the dated decision and local verification report.
+
+## Acceptance sequence clarified by Daron — November 1
+
+Stage 1 is the single-operator, two-device TECHNICAL rehearsal. Daron operates both
+fictional accounts. After separately approved staging rollout/enrollment and normal
+setup, success means the two devices complete matching entries and per-account
+confirmations, offline save/reload/reconnect and reconciliation with no duplicates
+or lost results, with truthful simulation provenance throughout. A separate human
+is NOT a prerequisite or pass criterion for this stage. Local automation is
+supporting evidence; the deployed two-device exercise still needs to be run.
+
+Only AFTER Stage 1 works will Daron recruit another person for Stage 2: whether
+that person can understand and use the app, plus genuine independent-human identity
+and scoring verification. Stage 1 passing is a valid technical result, not a failed
+independence test. It does not by itself complete Stage 2 or production readiness.
+Publication, hosted migration/enrollment/use and user-operated outage approvals
+remain separate; this clarification performs none of those actions.

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { isUuid } from "./api/validation.ts";
+import { simulatedLinkScope } from "./api/simulated-player-links.ts";
 
 type RpcClient = {
   rpc(name: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }>;
@@ -13,6 +14,7 @@ export type RosterAccountActivationDecision = {
   decision: "approve" | "reject";
   confirmationPhrase?: string;
   operationId: string;
+  simulatedSingleOperator?: true;
 };
 
 export type RosterAccountActivationDecisionResult =
@@ -35,7 +37,8 @@ function isRejected(value: unknown, input: RosterAccountActivationDecision): val
 
 /** A server-only director witness decision. Database authorization remains authoritative. */
 export async function decideRosterAccountActivation(admin: RpcClient, input: RosterAccountActivationDecision): Promise<RosterAccountActivationDecisionResult> {
-  const { data, error } = await admin.rpc("decide_roster_account_activation_v1", {
+  if (input.simulatedSingleOperator && (!simulatedLinkScope(input.tournamentId, input.actorId, process.env.NEXT_PUBLIC_SUPABASE_URL) || input.decision !== "approve")) return { status: "rejected" };
+  const { data, error } = await admin.rpc(input.simulatedSingleOperator ? "decide_simulated_player_link_v1" : "decide_roster_account_activation_v1", {
     p_actor_id: input.actorId,
     p_tournament_id: input.tournamentId,
     p_request_id: input.requestId,

@@ -21,6 +21,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const result = await decideRosterAccountActivation(createServerOnlyAdminClient(), {
       actorId: subject, tournamentId: id, requestId, decision: body.decision,
       confirmationPhrase: body.confirmationPhrase, operationId: body.operationId,
+      simulatedSingleOperator: body.simulatedSingleOperator,
     });
     if (result.status === "rejected") return apiJson({ error: "activation_decision_rejected" }, { status: 409 });
     return apiJson(result);

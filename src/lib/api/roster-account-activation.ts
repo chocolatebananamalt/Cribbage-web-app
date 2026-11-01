@@ -9,7 +9,7 @@ const activationMaximumLifetimeMs = 60 * 60 * 1000;
 
 export type ActivationIssueRequest = { rosterEntryId: string; expiresAt: string; operationId: string };
 export type ActivationRedeemRequest = { credential: string; operationId: string };
-export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string };
+export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string; simulatedSingleOperator?: true };
 export type ActivationCancelRequest = { activationId: string; operationId: string };
 export type ActivationIssueResult = { status: "issued"; credential: string; expiresAt: string };
 export type ActivationRedemptionResult = { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string; expiresAt?: string };
@@ -53,7 +53,9 @@ export function isActivationRedeemRequest(value: unknown): value is ActivationRe
 
 export function isActivationDecisionRequest(value: unknown): value is ActivationDecisionRequest {
   if (!isRecord(value) || !isUuid(value.requestId) || !isUuid(value.operationId)) return false;
-  if (value.decision === "approve") return exact(value, ["requestId", "decision", "confirmationPhrase", "operationId"]) && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
+  if (value.decision === "approve") return (exact(value, ["requestId", "decision", "confirmationPhrase", "operationId"])
+    || (exact(value, ["requestId", "decision", "confirmationPhrase", "operationId", "simulatedSingleOperator"]) && value.simulatedSingleOperator === true))
+    && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
   return value.decision === "reject" && exact(value, ["requestId", "decision", "operationId"]);
 }
 

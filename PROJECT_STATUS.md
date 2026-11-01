@@ -5245,3 +5245,53 @@ Completed previous rollout: staging0268 applied once as20261031000827, exact5656
 Published baseline ca85d1cb1ecdf6d2e05d791e45719d081d5fc46d passed PR and push CI; staging 0269 is verified. Both replacement invitations are pending personal B acceptance, with no external delivery. No-Q fixture 45a01b4f-6c5e-4ed7-b8ad-824f1aeb947a now has 102 published qualifying games (96 regular plus six real makeups), 17 checked-in players and unique seating IDs; play has not started. Its $510 synthetic receipts and $229.50 expenses remain separate from prizes.
 
 Local-only Q membership read-layer repair projects current V4 frozen-policy disclosure and exact policy ID instead of rejecting it with the V2 reader. This fixes the rejected first election in combined fixture e257eb44-c32e-4268-a45a-ae306c31ac4a. No migration, writer, security or monetary-policy changes. 1,143 application tests, full verification, 6 handoff checks, phone/desktop membership regression and independent review passed. Publication approval remains pending. No hosted election retry has occurred. See docs/quality/2026-10-31-explicit-fee-hosted-rollout.md for IDs/evidence.
+
+## 2026-10-31 Q disclosure rollout and combined setup milestone
+
+Q disclosure repair published as223ec1583f18979fc666cd6a26f03e9428705342; push41155446835/PR41155450871 both succeeded. READY exact-SHA Preview dpl_67A7pJLpAxD9hGoRp9FKQUjSLqp7, stable alias verified and frozen-policy text visible. No migration. Combined replacement has17 memberships/allocations/obligations/receipts, allversion1; base/Q receipts680 plus separateSide170 =850 syntheticUSD, expenses229.50. Side amount schedule85/55/30 conserves170; no recipients/awards yet. Both replacements have102 published games, neither started/scored. Both existing B nominations pending personal acceptance; guarded switch approval and user sign-in needed. Director session preserved. All223 prior table fingerprints/counts match baseline excluding onlynewfixtures. See hosted rollout report. No production or actualmoney change.
+
+## 2026-10-31 replacement qualifying scoring complete
+
+Both replacement fixtures now102/102verifiedgames,102captures/102approvals each,
+zero pending reviews. All34player totals exactly match reviewedplans, including
+original-card-line makeups and preservednoQseedtie. Combinedtop02/01/03/04/05.
+All223oldertablefingerprints/counts unchanged excludingonlynewfixtures. B session
+retained; nextgatedstep guardedreturntodirector forqualification/playoffs/unpaid
+accounting. No awards recorded yet. See explicit-fee hosted rollout report.
+
+## 2026-10-31: both replacement unpaid finals verified
+
+The no-Q and combined Q + Side replacement tests are complete through persisted,
+current unpaid accounting. Each has 102 verified games, finalized five-qualifier
+ranking, four simulated playoff series, three separately credited byes and a
+completed cross-check finalization. All 34 original player totals and all 223
+older table fingerprints are preserved. Regular awards in each: 02 $95, 01 $70,
+03 $45, 04 $45, 05 $25, totaling $280. Each retains $0.50 separately from return.
+Combined Q and Side each owe 02 $85, 01 $55, 03 $30, totaling $170 per pool.
+No-Q $510 and combined $850 reconcile exactly. All records remain unpaid.
+
+No-Q final 2fef282e-178a-420f-acb3-9bdf976510dc; combined final
+de2b093b-2657-44b2-baf1-f4c230be4ded. No production or money movement occurred.
+One remaining navigation defect: generic accounting selects V8 for Side events;
+V8 blocks safely, while the supported Side-review V9 link completed acceptance.
+Repair locally and verify before separately approved publication. See the updated
+production gates checklist and explicit-fee hosted rollout report. Director
+session remains signed in, with no unsent or retry records.
+# 2026-11-01: local single-operator simulation
+
+Local-only proposed0270 and UI/API consent add truthful single-operator test link
+provenance for the exact existing staging rehearsal/director/B profiles, preserving
+normal account separation and production witness controls. Fullverify passed1148
+application tests, build/types/audit/providers and workspace/handoff checks;
+phone/desktop real-component checks passed. All eight SQL groups plus two race orders and the derived-player label regression
+passed; independent review has no unresolved P1/P2. Source backup receipt is tracked
+separately; see the dated quality report for terminal results.
+No hosted migration/enrollment, publication, activation/linking or session changes.
+
+## November 1 acceptance ordering
+
+First complete Daron's single-operator/two-device technical simulation after the
+separate rollout approval. It requires no second human and can pass on its own
+technical criteria. Only then recruit a helper for usability and genuine
+independent-human validation. Neither hosted stage has been executed by this
+local-only change; all prior evidence and gates remain intact.

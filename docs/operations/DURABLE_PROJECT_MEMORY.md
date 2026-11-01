@@ -344,3 +344,74 @@ Completed previous rollout: staging0268 applied once as20261031000827, exact5656
 ## 2026-10-31 current continuation checkpoint
 
 0269 is staging-applied once; published baseline ca85d1cb passed both CI checks and READY Preview. Replacement no-Q 45a01b4f-6c5e-4ed7-b8ad-824f1aeb947a has 102 scheduled games, not started. Combined e257eb44-c32e-4268-a45a-ae306c31ac4a is held at first Q membership: current frozen V4 policy was omitted by old V2 page reader. Verified local read-layer fix requires no migration, but publication is pending. Preserve all history and current director session. Both B invitations are pending personal acceptance; no duplicate or external invitation. Local repair passed 1,143 tests/full verify, phone/desktop and independent review. Never retry the rejected election before fixed Preview is verified.
+
+## 2026-10-31 Q disclosure repair is now published
+
+Exact223ec1583f18979fc666cd6a26f03e9428705342 has bothCI successful/READYPreview; no migration. Both replacement schedules102games each. Combined synthetic receipts850 (510base+170Q+170Side), all17 version1 records per ledger; expenses229.50. Side85/55/30 is an amount schedule only, not final recorded awards. All223oldtables preserved excludingnewfixtures. Both B invitations pending; no guarded switch has been attempted. Preserve director session until approved handoff. Supersedes prior publication-pending notes.
+
+## 2026-10-31 both replacement scoring runs complete
+
+NoQ45a01b4f andcombinede257eb44 each102verifiedqualifyinggames/102captures/102reviews,
+zero pending. All34totals matchplans. Truthfulsyntheticprovenance408rows, nohuman
+orphysicalclaim. NoQseedtie preserved; combinedrank02/01/03/04/05. Older223tables
+preserved. B session remains; directorhandoffapproval andpersonalpasswordentry
+required beforequalification/playoffs/accounting. Do notresubmitanyscores.
+
+## 2026-10-31: replacement unpaid acceptance is complete
+
+Both 17-player replacements reached current unpaid final accounting with all
+204 games and 34 original player totals preserved. No-Q regular awards total
+$280; combined regular $280 + Q $170 + Side $170. Each has $229.50 expenses and
+$0.50 restricted hold. Return $440 exceeds required $433.50 because eligible
+benefits are $160 within expenses. Every award is a $5 multiple; semifinal
+losers get equal $45. No refunds, paid flags or actual disbursements occurred.
+No-Q final2fef282e-178a-420f-acb3-9bdf976510dc; combined final
+de2b093b-2657-44b2-baf1-f4c230be4ded, both version1/current/unpaid.
+All223 older table fingerprints match. Generic accounting navigation still needs
+local correction to choose V9 for Side events; the supported Side review link
+worked without weakening V8 guards. Physical and hosted recovery/release gates
+remain; this is not production approval or readiness certification.
+
+2026-10-31 local navigation repair: canonical event-scoped V9 Side history now chooses V9; current no-Side chooses V8, stale/malformed sources block, historical V6/V7 preserved. Settlement wrapper accepts V9. Unpublished; 1,145 application tests/build/providers/14 workspace-handoff checks pass; lint zero errors/50 existing warnings. Independent review no P1/P2. Local browser rehearsal stopped at ERR_NETWORK_ACCESS_DENIED; fresh dependency audit not completed. Source backup v31 includes repair code/tests, not later verification notes. No new schema/permissions/hosted change. See docs/quality/2026-10-31-accounting-navigation-repair.md.
+
+Navigation local final gate:14phone/desktopchecks passed after supported scoped escalation; no settings changed. Narrow six-file test-preview publication remains unapproved. All hosted finals/session/history preserved. See navigation-repair report; backup refreshed separately.
+
+2026-10-31 navigation publication complete:1c3cd8ceb150cdc16138267220707c8ddb7e4472,existingdraftPR122;push41163508732/PR41163512973success;READYPreviewdpl_CFuF2QWcsfkYtm1EPXzB3JB9in96. Hosted generic settlement routes verified SideV9/noSideV8 read-only;finalIDs/sourceDigests/completeawardarraysunchanged,onedraft/finaleach;director preserved. No migration/production/moneychange. See2026-10-31-accounting-navigation-preview-rollout.md.
+
+2026-10-31 production-readiness follow-up: current actionable checklist saved at docs/quality/2026-10-31-production-readiness-current.md, superseding older status/domain notes without deleting history. Focused local safety checks passed 44/44; local v34 source archive extracted 1,758 files with matching hashes, metadata readable and temporary directory removed. No browser/hosted/production action. Remaining gates require named physical participants/modes, protected hosted recovery scope/RPO/RTO/target, Q/Side cash-tie policy or explicit blocking scope, and exact production compatibility/rollback/operational approval. No production-ready claim.
+
+2026-10-31 two-person rehearsal prepared only: docs/operations/TWO_PERSON_DEVICE_REHEARSAL_2026_10_31.md. Two human/device digital reciprocal+offline/reload/reconnect pass is feasible; full paper/hybrid/lost-device gate is not covered. Recommended Daron existing director also plays newfixture, helper existing B plays and receives scoped co-director role only if approved, allowing genuinely mutual roster witnessing without director sign-out. Freshfixture, co-director invitation, short-lived roster-activation credentials, human operators/timing and single-device outage approval remain pending; no hosted setup/credential/network/browser action performed. Both completed unpaid fixtures remain unchanged. 13 focused local schedule/start/independence tests pass; no human acceptance claimed.
+
+2026-10-31 two-person staging draft created:3c58ef91-010c-4769-af20-5cfa2ffe98a9, setupv2 Main12/paid$3/freefalse/Q0/Side0 read back. Provisional Hawaii draft windowOct31 09:00-Nov2 18:00; availability unconfirmed. No activation/roster/score/receipt. B's exact no-email co-director Save was denied beforeexecution: action-timeconfirmationrequired for materialaccess. DBnomination0/Broles0; no invite or activationcredential exists. Do not retry without new action-specific confirmation. Current Chrome3 tab336434427/groupTwo-person rehearsal setup retains filled form/director session, handoffmarked. Completed two replacement finals/sourceDigestsunchanged. See docs/quality/2026-10-31-two-person-rehearsal-setup.md.
+
+2026-10-31 04:21 action-time approval resolved exact nomination blocker. Save retried once and succeeded: pending co-director nomination a1cfa8d2-b430-44b1-9fb1-6718e516e002, only new tournament3c58ef91-010c-4769-af20-5cfa2ffe98a9 and exact B email, no email sent. Exactly1nomination, no active B role. Await B's real operator's personal acceptance on separate device; helper/timingunknown. Director tab336434427 browser3 preserved/marked, no activation/rosterlinks/physicalscores/outage. Previous 03:45Yes authorized setup; earlier accounting-publicationYes is NOT helper availability. See updated setup checkpoint.
+# 2026-11-01: one operator, two devices — truthful simulation only
+
+Daron explicitly confirmed he operates both devices and approved local build/test
+of a labelled simulation for rehearsal3c58ef91-010c-4769-af20-5cfa2ffe98a9 and the
+existing director/B test profiles. Do not ask him to assert an independent human
+witness. B's fixture-only co-director invitation a1cfa8d2-b430-44b1-9fb1-6718e516e002
+is accepted, but the draft remains unactivated/unlinked. Proposed0270 adds explicit
+staging enrollment and atomic immutable simulation provenance while retaining
+different-account and all normal authorization/expiry/replay guards. It is LOCAL
+ONLY; no publication, hosted migration/enrollment/use is approved yet. Two devices
+operated by one person can prove technical behavior, never independent-human
+verification. Preserve both sessions, completed finals and historical evidence.
+See docs/quality/2026-11-01-simulated-player-links-local.md.
+
+## Acceptance sequence clarified by Daron — November 1
+
+Stage 1 is the single-operator, two-device TECHNICAL rehearsal. Daron operates both
+fictional accounts. After separately approved staging rollout/enrollment and normal
+setup, success means the two devices complete matching entries and per-account
+confirmations, offline save/reload/reconnect and reconciliation with no duplicates
+or lost results, with truthful simulation provenance throughout. A separate human
+is NOT a prerequisite or pass criterion for this stage. Local automation is
+supporting evidence; the deployed two-device exercise still needs to be run.
+
+Only AFTER Stage 1 works will Daron recruit another person for Stage 2: whether
+that person can understand and use the app, plus genuine independent-human identity
+and scoring verification. Stage 1 passing is a valid technical result, not a failed
+independence test. It does not by itself complete Stage 2 or production readiness.
+Publication, hosted migration/enrollment/use and user-operated outage approvals
+remain separate; this clarification performs none of those actions.
