@@ -5193,7 +5193,7 @@ Final frozen source passes1,113 application tests plus audit/lint/providers/prod
 
 ## 2026-10-30 Side Pool staging release complete; synthetic evidence local only
 
-Side recipient/combined unpaid release562d6e80aa315077cd269437d74f2876a687a3db is on existing draftPR122 branch and READY stable Preview with successful exact-commit GitHub verification. Staging0264/0265 SQL hashes/ACL/RLS/guards and all212 preexisting applicationtable fingerprints verified; five new tables empty. No hosted score or financial smoke writes. Preserved no-Q fixture remains15captures/102scheduled. Synthetic-scorecard feature is local-only authorized work, not enabled/published; original-paper denial is not bypassed. See docs/quality/2026-10-30-side-staging-rollout.md. Productionavailabilityincident alreadyclosed; no productionrelease.
+Side recipient/combined unpaid release562d6e80aa315077cd269437d74f2876a687a3db is on existing draft PR122 branch and READY stable Preview with successful exact-commit GitHub verification. Staging0264/0265 SQL hashes/ACL/RLS/guards and all212 preexisting applicationtable fingerprints verified; five new tables empty. No hosted score or financial smoke writes. Preserved no-Q fixture remains15captures/102scheduled. Synthetic-scorecard feature is local-only authorized work, not enabled/published; original-paper denial is not bypassed. See docs/quality/2026-10-30-side-staging-rollout.md. Productionavailabilityincident alreadyclosed; no productionrelease.
 
 ## 2026-10-30 local synthetic evidence milestone verified
 
@@ -5219,7 +5219,7 @@ Current local migrations: 0266 is 23,037 bytes, SHA256 779DBF95973667E32F4BD4FAB
 
 Read-only reconciliation after the rejected batch confirms 68/102 no-Q games verified: the unchanged 15 legacy results plus 53 new synthetic results. There are 54 distinct synthetic captures and 53 reviews, with exactly one pending capture for game 9595a11b-a9a7-4653-b4a9-284fa150dbaa/completion 027d28b2-075d-4bc0-8ad9-b7673fa58c76. No legacy result has synthetic provenance. No qualification version, playoff or unpaid accounting final has been created for either fixture. Q+Side remains enrolled but not financially/scoring initialized.
 
-The next browser batch (review the saved pending result, then two capture/review pairs) was rejected before execution by automatic approval review: it considered authorization local-only and said hosted scoring had no explicit approval. This conflicts with the supplied latest user approval, but the action was stopped without a workaround or retry. The exact saved state was reconciled afterward. B test tab336434427 is marked for handoff, with no sign-out or credential action. A fresh action-specific hosted synthetic-scoring approval is required before resuming.
+The next browser batch (review the saved pending result, then two capture/review pairs) was rejected before execution by automatic approval review: it considered authorization local-only and said hosted scoring had no explicit approval. This conflicts with the supplied latest user approval, but the action was stopped without a workaround or retry. The exact saved state was reconciled afterward. B test tab 336434427 is marked for handoff, with no sign-out or credential action. A fresh action-specific hosted synthetic-scoring approval is required before resuming.
 
 209 of the 217 preexisting tables still have exactly unchanged whole-table counts/fingerprints. The eight changed tables are the intended scoring/audit/receipt tables: audit_events, canonical_games, card_scorelines, operation_receipts, paper_game_completion_evidence, paper_game_completion_reviews, paper_game_completion_state_events and paper_game_completions. All preexisting financial, policy, role, setup and qualification tables are unchanged. No actual money moved. Remaining hosted monetary outputs are unverified, not inferred from local expected amounts.
 
@@ -5238,7 +5238,7 @@ User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeg
 
 Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.
 
-Completed previous rollout: staging0268 applied once as20261031000827, exact5656bytes/SHA0337C8A6E6C0E837A0D95FA39FD458EFC8D9A2C66DE40F2B6FCC024EA6FC712C; all223 preexisting tables preserved. Commit a97ced93a124ce41a24dbe62c841fe720eddfaaf on draftPR122 passed both CI runs and READY Preview. No replacement fixtures have been created. Replacement creation is held until this new validation is verified and separately authorized for rollout. Historical zero-fee fixtures remain unchanged and do not prove monetary acceptance.
+Completed previous rollout: staging0268 applied once as20261031000827, exact5656bytes/SHA0337C8A6E6C0E837A0D95FA39FD458EFC8D9A2C66DE40F2B6FCC024EA6FC712C; all223 preexisting tables preserved. Commit a97ced93a124ce41a24dbe62c841fe720eddfaaf on draft PR122 passed both CI runs and READY Preview. No replacement fixtures have been created. Replacement creation is held until this new validation is verified and separately authorized for rollout. Historical zero-fee fixtures remain unchanged and do not prove monetary acceptance.
 
 ## 2026-10-31 Q membership compatibility and replacement checkpoint
 
@@ -5295,3 +5295,30 @@ separate rollout approval. It requires no second human and can pass on its own
 technical criteria. Only then recruit a helper for usability and genuine
 independent-human validation. Neither hosted stage has been executed by this
 local-only change; all prior evidence and gates remain intact.
+# November 1: simulated-link staging rollout verified
+
+Approved0270 applied once to staging as20261101075403, exact9773bytes/hash retained.
+Commitf183d395bf75df9648871d6eb870ffdd6ce4fb9e is on existing draft PR122; both exact
+CI runs succeed and stable Preview is READY. Exactly one named rehearsal/operator
+scope enrolled; no new links/provenance/roles/scores. All223 old tables/21258rows
+unchanged. Laptop Director session and phone B session preserved. Technical stage
+still needs normal draft/prize/roster/link/schedule/start preparation and actual
+two-device actions; it needs no helper. See dated staging-rollout report.
+# November 1: exact two-device setup gap identified
+
+Simulation links are deployed/enrolled, but normal paid-Main setup still requires
+a four/five-qualifier prize declaration. The two-player no-prize technical draft
+cannot truthfully supply one. Actual UI blocks activation and roster intake;
+no writes or bypass were attempted. Attendance also needs explicit settled
+obligation treatment, never a fabricated receipt. A narrow technical-only
+declaration/activation extension needs local review and separate staging rollout.
+No helper is required; no repeat phone login/acceptance is needed. See
+docs/quality/2026-11-01-two-device-setup-boundary.md.
+
+## 2026-11-01: seventeen-entry technical setup reaches phone-link handoff
+
+Normal five-qualifier declaration saved, registration opened, 17 fictional Digital entries explicitly comped to zero owed, zero receipts. All 17 simulated tournament attendance records saved. B's short-lived private link is visible on the preserved director laptop; user phone redemption and simulated consent are pending. No enrollment/seating/schedule/start/scoring/outage yet. Exact evidence and next steps: docs/quality/2026-11-01-seventeen-entry-technical-setup.md. All 225 non-target table fingerprints/21,228 rows preserved. No new app/migration/deployment.
+
+## 2026-11-01 activation startup repair locally verified, unpublished
+
+Real production-boundary reproduction proves a valid activation fragment was unavailable because the page-level beforeInteractive script appeared only after recovery readiness. Root-layout placement outside the unchanged guard fixes startup; route-limited capture, hash/SPA handling, early pagehide clear and StrictMode-safe memory lifecycle preserve security. Final verification: 1,151 app tests/full verify, production and development nine-case browser regressions, independent no P1/P2. No hosted writes, new links, migration or publication in this repair. Curated narrow publication approval remains required. See docs/quality/2026-11-01-activation-startup-repair.md.

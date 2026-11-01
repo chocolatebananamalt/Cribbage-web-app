@@ -28,9 +28,12 @@ test("activation page preserves the availability boundary and clears the credent
   const client = await readFile(path.join(root, "src/app/activate/activation-form.tsx"), "utf8");
   const bootstrap = await readFile(path.join(root, "public/activation-bootstrap.js"), "utf8");
   const proxy = await readFile(path.join(root, "src/proxy.ts"), "utf8");
+  const layout = await readFile(path.join(root, "src/app/layout.tsx"), "utf8");
   assert.match(page, /accountActivationEnabled\(\).*notFound/s);
-  assert.match(page, /activation-bootstrap\.js/);
-  assert.match(page, /strategy="beforeInteractive"/);
+  assert.doesNotMatch(page, /activation-bootstrap\.js/);
+  assert.match(layout, /activation-bootstrap\.js.*strategy="beforeInteractive"/);
+  assert.ok(layout.indexOf('<Script src="/activation-bootstrap.js"') < layout.indexOf('<RecoveryDocumentBoundary'));
+  assert.match(bootstrap, /window\.location\.pathname !== "\/activate"/);
   assert.match(bootstrap, /history\.replaceState/);
   assert.match(bootstrap, /__accActivationCredential/);
   assert.match(client, /account-activations\/redemptions/);
