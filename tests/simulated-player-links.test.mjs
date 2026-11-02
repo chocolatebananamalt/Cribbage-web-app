@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {SIMULATED_LINK_TOURNAMENT as tid,SIMULATED_LINK_PROFILES as profiles,simulatedLinkScope} from '../src/lib/api/simulated-player-links.ts';
+import {SIMULATED_LINK_TOURNAMENT as tid,SIMULATED_LINK_REPLACEMENT as replacement,SIMULATED_LINK_PROFILES as profiles,simulatedLinkScope} from '../src/lib/api/simulated-player-links.ts';
 import {isActivationDecisionRequest} from '../src/lib/api/roster-account-activation.ts';
 import {decideRosterAccountActivation} from '../src/lib/roster-account-activation-decision.ts';
 import {hasSimulatedPlayerLinks} from '../src/lib/simulated-player-links.ts';
@@ -10,6 +10,9 @@ const input={actorId:profiles[0],tournamentId:tid,requestId:id,decision:'approve
 test('simulation requires exact fixture, profile and staging origin',()=>{
  assert.equal(simulatedLinkScope(tid,profiles[0],stage),true);
  assert.equal(simulatedLinkScope(tid,profiles[1],stage),true);
+ for(const profile of profiles)assert.equal(simulatedLinkScope(replacement,profile,stage),true);
+ assert.equal(simulatedLinkScope(replacement,profiles[0],'https://fnjkwymxpnsqvxtpronk.supabase.co'),false);
+ assert.equal(simulatedLinkScope(replacement,id,stage),false);
  for(const args of [[id,profiles[0],stage],[tid,id,stage],[tid,profiles[0],'https://fnjkwymxpnsqvxtpronk.supabase.co'],[tid,profiles[0],undefined],[tid,profiles[0],stage+'.evil']])assert.equal(simulatedLinkScope(...args),false);
 });
 test('simulation consent is explicit, exact and approval-only',()=>{

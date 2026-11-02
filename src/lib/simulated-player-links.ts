@@ -1,6 +1,6 @@
 import "server-only";
 import { simulatedLinkScope } from "./api/simulated-player-links.ts";
-import { SIMULATED_LINK_PROJECT, SIMULATED_LINK_TOURNAMENT } from "./api/simulated-player-links.ts";
+import { SIMULATED_LINK_PROJECT, isSimulatedLinkTournament } from "./api/simulated-player-links.ts";
 
 type Client = { rpc(name: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: unknown }> };
 /** Read-only, fail closed. The URL gate never substitutes for DB enrollment/authority. */
@@ -12,7 +12,7 @@ export async function hasSimulatedPlayerLinks(admin: Client, tournamentId: strin
 }
 
 export async function hasSimulatedPlayerLinkLabel(admin: Client, tournamentId: string, actorId: string): Promise<boolean> {
-  if (tournamentId !== SIMULATED_LINK_TOURNAMENT || process.env.NEXT_PUBLIC_SUPABASE_URL !== `https://${SIMULATED_LINK_PROJECT}.supabase.co`) return false;
+  if (!isSimulatedLinkTournament(tournamentId) || process.env.NEXT_PUBLIC_SUPABASE_URL !== `https://${SIMULATED_LINK_PROJECT}.supabase.co`) return false;
   const { data, error } = await admin.rpc("get_simulated_player_link_label_v1", { p_actor_id: actorId, p_tournament_id: tournamentId });
   if (error) throw new Error("Simulation label is unavailable.");
   return data === true;
