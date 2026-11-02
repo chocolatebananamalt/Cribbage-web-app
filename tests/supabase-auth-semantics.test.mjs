@@ -307,6 +307,7 @@ test('protected screens offer a recovery-preserving sign-out and a safe clear bo
     'src/app/tournament/[tournamentId]/corrections/page.tsx',
     'src/app/tournament/[tournamentId]/how-to/page.tsx',
   ].map(read).join('\n');
+  assert.match(protectedScreens, /SharedDeviceSignOut/);
   assert.match(control, /countAppSessionStorageRecords/);
   assert.match(control, /fetch\("\/auth\/sign-out"/);
   assert.match(control, /window\.location\.replace\(destination\.toString\(\)\)/);
@@ -332,9 +333,8 @@ test('protected screens offer a recovery-preserving sign-out and a safe clear bo
   assert.match(storage, /"tournament-activation:"/);
   assert.match(storage, /"device-recovery:"/);
   assert.match(storage, /storage\.removeItem\(key\)/);
-  // The score-entry component has distinct entry and review render paths; both
-  // must preserve the clear-and-sign-out control for a shared device.
-  assert.equal((protectedScreens.match(/SharedDeviceSignOut/g) ?? []).length, 9);
+  // Inline review has one render path; every protected screen retains its own sign-out.
+  for (const file of ["src/app/tournament/[tournamentId]/page.tsx", "src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx", "src/app/tournament/[tournamentId]/corrections/page.tsx", "src/app/tournament/[tournamentId]/how-to/page.tsx"]) assert.match(read(file), /<SharedDeviceSignOut \/>/);
 });
 
 test('shared-device cleanup recognizes the actual registration key and propagates storage failures', async () => {

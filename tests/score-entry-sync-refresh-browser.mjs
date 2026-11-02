@@ -7,7 +7,7 @@ import {chromium} from 'playwright-core';
 const root=process.cwd(),dir=path.join(root,'test-results/score-sync-refresh'),origin='http://127.0.0.1:3285';
 const id=n=>`62730000-0000-4000-8000-${String(n).padStart(12,'0')}`;
 const base={actorId:id(1),tournamentId:id(2),eventId:id(3),gameId:id(4),roundNumber:1,matchInstance:1,state:'pending',eventName:'TEST ONLY sync transition',ownSubmission:null,ownConfirmed:false,canConfirm:false,progressionStatus:'current',canEnter:true,player:{displayName:'Synthetic A',side:'a',tableSeat:'A-1',verificationId:'A-1'},opponent:{displayName:'Synthetic B',side:'b',tableSeat:'A-2',verificationId:'A-2'}};
-await fs.mkdir(path.join(dir,'app'),{recursive:true});await fs.mkdir(path.join(dir,'public'),{recursive:true});await fs.copyFile('public/offline-score-sw.js',path.join(dir,'public/offline-score-sw.js'));
+await fs.mkdir(path.join(dir,'app'),{recursive:true});await fs.mkdir(path.join(dir,'public'),{recursive:true});await fs.copyFile('public/offline-score-sw.js',path.join(dir,'public/offline-score-sw.js'));await fs.mkdir(path.join(dir,'public/branding'),{recursive:true});await fs.copyFile('public/branding/acc-logo.jpg',path.join(dir,'public/branding/acc-logo.jpg'));
 await fs.writeFile(path.join(dir,'package.json'),'{"private":true,"type":"module"}');
 await fs.writeFile(path.join(dir,'next.config.mjs'),`export default{turbopack:{root:${JSON.stringify(root)}}};`);
 await fs.writeFile(path.join(dir,'app/layout.tsx'),`import '../../../src/app/globals.css';export default function Layout({children}:{children:React.ReactNode}){return <html><body><div id="acc-recovery-frozen-shield" role="alert">This saved page is paused to protect recovery work.</div><div id="acc-recovery-live-app">{children}</div></body></html>}`);
@@ -40,12 +40,12 @@ try{
    }
    return route.abort();
   });
-  await page.goto(origin+'/'+mode);await page.getByRole('heading',{name:'Current Game Results',exact:true}).waitFor();
+  await page.goto(origin+'/'+mode);await page.getByRole('heading',{name:mode==='baseline'?'Current Game Results':'Game 1',exact:true}).waitFor();
   // Wait for the capability using the real browser IndexedDB controller.
   await page.waitForFunction(async({actor,game})=>!!(await window.fixtureQueue?.readPreparedOfflineSubmissionCapability(actor,game)),{actor:base.actorId,game:base.gameId});
-  await context.setOffline(true);await page.getByRole('button',{name:'Synthetic A won',exact:true}).click();await page.getByRole('button',{name:'2',exact:true}).click();await page.getByRole('button',{name:'0',exact:true}).click();await page.getByRole('button',{name:'Review Result',exact:true}).click();await page.getByRole('button',{name:'Submit My Independent Entry',exact:true}).click();
+  await context.setOffline(true);await page.getByRole('button',{name:mode==='baseline'?'Synthetic A won':'Synthetic A WON',exact:true}).click();await page.getByRole('button',{name:'2',exact:true}).click();await page.getByRole('button',{name:'0',exact:true}).click();if(mode==='baseline')await page.getByRole('button',{name:'Review Result',exact:true}).click();await page.getByRole('button',{name:mode==='baseline'?'Submit My Independent Entry':'Submit result',exact:true}).click();
   console.log('OFFLINE SUBMITTED',mode,width,await page.getByRole('status').allTextContents());await page.getByRole('status').filter({hasText:'Saved Offline, Waiting to Sync'}).waitFor();assert.equal(posts.filter(p=>p==='/api/v1/offline-score-replay').length,0);
-  await context.setOffline(false);await page.getByRole('button',{name:'Sync Saved Entry',exact:true}).waitFor();await page.getByRole('button',{name:'Sync Saved Entry',exact:true}).click();await page.getByRole('status').filter({hasText:/Offline entry synchronized|Required verification is still pending/}).waitFor({timeout:15000});assert.ok(submitted);await page.getByTestId('server-state').filter({hasText:'submitted'}).waitFor();
+  await context.setOffline(false);await page.getByRole('button',{name:'Sync Saved Entry',exact:true}).waitFor();await page.getByRole('button',{name:'Sync Saved Entry',exact:true}).click();await page.getByRole('status').filter({hasText:/Offline entry synchronized|Waiting for required verification/}).waitFor({timeout:15000});assert.ok(submitted);await page.getByTestId('server-state').filter({hasText:'submitted'}).waitFor();
   contextState={...contextState,state:'confirmation_pending',canConfirm:true};await fs.writeFile(stateFile,JSON.stringify(contextState));
   if(mode==='baseline'){
    await page.waitForTimeout(11500);assert.equal(await page.getByRole('button',{name:'Confirm My Entry',exact:true}).count(),0);checks.push('Baseline reproduced: accepted offline score and fresh server match do not expose confirmation without manual reload');
@@ -53,7 +53,7 @@ try{
    await page.getByRole('button',{name:'Confirm My Entry',exact:true}).waitFor({timeout:16000});assert.equal(posts.filter(p=>p==='/api/v1/offline-score-replay').length,1);assert.equal(posts.filter(p=>p.endsWith('/confirmations')).length,0);
    await page.getByRole('button',{name:'Confirm My Entry',exact:true}).click();await page.getByRole('status').filter({hasText:'Your confirmation is saved.'}).waitFor();assert.equal(posts.filter(p=>p.endsWith('/confirmations')).length,1);
    contextState={...contextState,state:'verified',canConfirm:false,ownConfirmed:true,progressionStatus:'completed'};await fs.writeFile(stateFile,JSON.stringify(contextState));
-   await page.getByRole('status').filter({hasText:'Game verified. The authoritative scorecard is updated.'}).waitFor({timeout:16000});assert.equal(await page.getByRole('button',{name:'Confirm My Entry',exact:true}).count(),0);assert.equal(posts.filter(p=>p.endsWith('/confirmations')).length,1);
+   await page.getByRole('status').filter({hasText:'Game complete. Your scorecard is updated.'}).waitFor({timeout:16000});assert.equal(await page.getByRole('button',{name:'Confirm My Entry',exact:true}).count(),0);assert.equal(posts.filter(p=>p.endsWith('/confirmations')).length,1);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);checks.push(`Fixed ${width}: accepted offline replay, automatic confirmation, explicit own confirmation and final server verification; no duplicate POST or manual reload`);
   }
   await context.close();

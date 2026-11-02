@@ -50,7 +50,7 @@ test('a discarded offline entry tells the player it is gone and must be re-enter
 });
 
 test('status polling reads server state and never sends a score or confirmation', () => {
- const poll=source.slice(source.indexOf('  useEffect(() => {'),source.indexOf('  const margin ='));
+ const poll=source.slice(source.indexOf('  useEffect(() => {'),source.indexOf('  const draftIdentity ='));
  assert.match(poll, /navigator.onLine && document.visibilityState === "visible"/);
  assert.match(poll, /router.refresh\(\)/);
  assert.doesNotMatch(poll, /syncOffline\(|fetch\(|submit\(|confirm\(|deleteOfflineSubmission\(/);

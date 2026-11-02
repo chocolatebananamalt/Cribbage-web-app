@@ -1,0 +1,151 @@
+{
+  "scope": "LOCAL reviewed player entry/card restoration, no publication authorized",
+  "baseCommit": "acfbd9156619443aaa5d094bca343fde9e99bef1",
+  "branch": "codex/director-setup-journey",
+  "migrations": [],
+  "codeAndTestFiles": 21,
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 484060,
+      "sha256": "8839b325d06729f6e32f5489cc7c4d8925455e677dd2939477a04d9c82ec4d5b"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 121089,
+      "sha256": "284ad5ccd44754153096421d32999ed91295c11a96c356981223e693541154d2"
+    },
+    {
+      "path": "docs/product/2026-11-02-selected-scorecard-restoration-plan.md",
+      "bytes": 11718,
+      "sha256": "848cac9eae96ace38ca7582f0a0c9016957d4477fa04d4e28057a77b68c9294a"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 53548,
+      "sha256": "156cfe6c9768f861b6395f9365c350281df6ce79411a2145f776fcd76185cd68"
+    },
+    {
+      "path": "docs/quality/2026-11-02-approved-player-restoration-local.md",
+      "bytes": 6467,
+      "sha256": "323bbd41a7e81d2a845bd3c3a0c4d8bbdaa2d6157e8958cbe375b8d7e0256b36"
+    },
+    {
+      "path": "docs/quality/2026-11-02-functional-registration-walkthrough-plan.md",
+      "bytes": 5497,
+      "sha256": "7bc5c13845b4e963664f25eac3bca1f4e551e4053dd2e7a33af9018b87bf8e17"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/game/[gameId]/page.tsx",
+      "bytes": 4836,
+      "sha256": "5dd0eb2a5ff766be7d498eca35aeb86a28b875c1831c0b14ebf44b18c132c885"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx",
+      "bytes": 28267,
+      "sha256": "e7e1ab5f7ced8e734c6cba1bf3ec026991dd1c157d6b5602a65d568b5287494c"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/scorecard/page.tsx",
+      "bytes": 1436,
+      "sha256": "031ebb9467f9e7cde3bfc9cbd94562724a73d3004442c57c6dcb409a8d49a7f9"
+    },
+    {
+      "path": "src/components/game-player-location.tsx",
+      "bytes": 417,
+      "sha256": "6344cad86b8846f4802845a959b82ab3e0d6a7d4c253c23fea5cf5ab0cdd5ba1"
+    },
+    {
+      "path": "src/components/player-page-frame.tsx",
+      "bytes": 2827,
+      "sha256": "42a081a06e9debeaaeb70857ee6574dbf43e450e1e54084390f6c06b7bd1bc55"
+    },
+    {
+      "path": "src/components/player-page.css",
+      "bytes": 7600,
+      "sha256": "6201ec3c00f4e9b6af7e56de1b9e9b997f86d977fff7d1f8fee8264af356d108"
+    },
+    {
+      "path": "src/components/player-scorecard-view.tsx",
+      "bytes": 5065,
+      "sha256": "76ba1e4973f217d25a758c1be9ac2e6d2c5ed274c386320cd77b9af522942e4b"
+    },
+    {
+      "path": "src/lib/games/player-status-copy.ts",
+      "bytes": 1001,
+      "sha256": "7a6f0e80909cfde04a94bd4fe7f183e3bc699f6335aa19bd2eb57defa8e38924"
+    },
+    {
+      "path": "src/lib/games/score-entry-draft.ts",
+      "bytes": 2372,
+      "sha256": "b9cec108164beff500a4638afa6f0a7d4351f2bb2a0aaabf57c9702c0c7deba6"
+    },
+    {
+      "path": "src/lib/games/scorecard-presentation.ts",
+      "bytes": 3481,
+      "sha256": "f01715f2986af6bc48e5a295dfb9a5f7c4888491db6c2c3928cf3fe693e643ea"
+    },
+    {
+      "path": "tests/dashboard-semantics.test.mjs",
+      "bytes": 12521,
+      "sha256": "3aabfc94b2915728d3e8a8b14c495ca2e766560fa43c2c95d9b5785ab02682ca"
+    },
+    {
+      "path": "tests/game-api-semantics.test.mjs",
+      "bytes": 118584,
+      "sha256": "9f1f50eae9f71adee65cf9636016e7040a0bf30a18d6ff0c06435424697b2173"
+    },
+    {
+      "path": "tests/live-score-connectivity-browser.mjs",
+      "bytes": 21424,
+      "sha256": "91cb9ac2ae73f434fa010f3b09071cb1d2c75965581d6cc735d50c2d30332ae9"
+    },
+    {
+      "path": "tests/odd-field-makeup-browser.mjs",
+      "bytes": 17471,
+      "sha256": "a54e67df709a1ce7eae7c785ee46ee17ed85dd60b5ccab012159fbb66869d935"
+    },
+    {
+      "path": "tests/player-restoration-browser.mjs",
+      "bytes": 12307,
+      "sha256": "d8f2e85c835f74690a0b308d5642350fc6ac8e66a169d944cfd05090553bad19"
+    },
+    {
+      "path": "tests/player-status-copy.test.mjs",
+      "bytes": 1066,
+      "sha256": "3e935adbc8819991311454b0317631d0c1e409223f9b3ed3c248578d3abbcce4"
+    },
+    {
+      "path": "tests/score-entry-confirm-state.test.mjs",
+      "bytes": 3403,
+      "sha256": "8644acacaf7d304f70da61f8e7622805e3a5fdf1cb8e6ccf6855eb4ce70468d9"
+    },
+    {
+      "path": "tests/score-entry-draft.test.mjs",
+      "bytes": 2387,
+      "sha256": "5c850749b86a829e48b864c9d3123468f5bce57df6f83db3f8a41692dfb28271"
+    },
+    {
+      "path": "tests/score-entry-sync-refresh-browser.mjs",
+      "bytes": 9549,
+      "sha256": "84d362028e881e0b9a81e041c7079d9dc50b09b079e1bf983a2fe8157470973c"
+    },
+    {
+      "path": "tests/scorecard-presentation.test.mjs",
+      "bytes": 6390,
+      "sha256": "37ab2594666c8b522f6fba017c0a824f13c0ef568f5830ed95d197b2738afe58"
+    },
+    {
+      "path": "tests/supabase-auth-semantics.test.mjs",
+      "bytes": 51378,
+      "sha256": "172908527dfbb75392f32576d23524727f97d9b5e0f88d84f69fdc7db5cdf2ee"
+    }
+  ],
+  "checks": "pnpm verify1173app/8workspace/audit/lint/build; handoff6; localbrowser8; sync3; connectivity23; makeup10; independentreviewclear",
+  "limitations": [
+    "No hosted acceptance or actual Safari/independent-human validation",
+    "No live ACC-number source expansion",
+    "Profile is readonly own tournament identity only",
+    "Source backup receipt separate; no deployment/commit"
+  ]
+}

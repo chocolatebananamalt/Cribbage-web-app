@@ -9,7 +9,7 @@ const base={actorId:actor,tournamentId:tid,eventId:eid,gameId:game,roundNumber:1
 await fs.mkdir(path.join(dir,'app',gamePath),{recursive:true});await fs.mkdir(path.join(dir,'app/confirm'),{recursive:true});await fs.mkdir(path.join(dir,'public'),{recursive:true});
 await fs.writeFile(path.join(dir,'package.json'),'{"private":true,"type":"module"}');await fs.writeFile(path.join(dir,'next.config.mjs'),`export default{turbopack:{root:${JSON.stringify(root)}}};`);
 await fs.writeFile(path.join(dir,'tsconfig.json'),JSON.stringify({extends:'../../tsconfig.json',compilerOptions:{incremental:false},include:['next-env.d.ts','app/**/*.tsx','.next/types/**/*.ts'],exclude:['node_modules']}));
-await fs.copyFile('public/offline-score-sw.js',path.join(dir,'public/offline-score-sw.js'));
+await fs.copyFile('public/offline-score-sw.js',path.join(dir,'public/offline-score-sw.js'));await fs.mkdir(path.join(dir,'public/branding'),{recursive:true});await fs.copyFile('public/branding/acc-logo.jpg',path.join(dir,'public/branding/acc-logo.jpg'));
 await fs.writeFile(path.join(dir,'app/layout.tsx'),`import '../../../src/app/globals.css';export default function Layout({children}:{children:React.ReactNode}){return <html><body><div id="acc-recovery-frozen-shield" role="alert">This saved page is paused to protect recovery work.</div><div id="acc-recovery-live-app">{children}</div></body></html>}`);
 const client=prefix=>`"use client";import{useEffect}from'react';import{LiveScoreEntry}from'${prefix}src/app/tournament/[tournamentId]/game/[gameId]/score-entry';import*as queue from'${prefix}src/lib/offline-score-queue';import*as binding from'${prefix}src/lib/offline-score-page-binding';export default function Client({context}:{context:import('${prefix}src/lib/games/assigned-game-context-decision').AssignedGameContext}){useEffect(()=>{Object.assign(window,{fixtureQueue:queue,fixtureBinding:binding})},[]);return <LiveScoreEntry context={context}/>}`;
 const component=(prefix,context)=>`import{RecoveryDocumentBoundary}from'${prefix}src/components/recovery-document-boundary';import{assignedOfflinePageMetadata}from'${prefix}src/lib/offline-score-page-binding';import Client from'./score-client';const context:import('${prefix}src/lib/games/assigned-game-context-decision').AssignedGameContext=${JSON.stringify(context)};export const dynamic='force-dynamic';export function generateMetadata(){return assignedOfflinePageMetadata(context);}export default function Page(){return <RecoveryDocumentBoundary actorId="${actor}"><div data-offline-score-binding="${actor}:${game}"><Client context={context}/></div></RecoveryDocumentBoundary>}`;
@@ -52,9 +52,9 @@ try{
    return [check(`<html><head>${meta}</head><body>Waiting</body></html>`,actor,game),check(`<html><body>Waiting${meta}</body></html>`,actor,game),!check(`<script>${JSON.stringify({'data-offline-score-binding':value})}</script>`,actor,game),!check(meta+meta,actor,game),!check(meta,actor,'60000000-0000-4000-8000-000000000099'),!check(meta,'60000000-0000-4000-8000-000000000099',game),!check(meta+`<div data-offline-score-binding="wrong"></div>`,actor,game)];
   },{actor,game});assert.ok(markerChecks.every(Boolean));
   checks.push(`protected metadata parser ${width}: streamed/body marker accepted; escaped text, duplicate, wrong actor/game and conflicting marker block`);
-  await context.setOffline(true);await page.getByRole('button',{name:'Synthetic A won',exact:true}).click();await page.getByRole('button',{name:'1',exact:true}).click();await page.getByRole('button',{name:'5',exact:true}).click();await page.getByRole('button',{name:'Review Result',exact:true}).click();await page.getByRole('button',{name:'Submit My Independent Entry',exact:true}).click();await status('Saved Offline, Waiting to Sync').waitFor();
+  await context.setOffline(true);await page.getByRole('button',{name:'Synthetic A WON',exact:true}).click();await page.getByRole('button',{name:'1',exact:true}).click();await page.getByRole('button',{name:'5',exact:true}).click();await page.getByRole('button',{name:'Submit result',exact:true}).click();await status('Saved Offline, Waiting to Sync').waitFor();
   const saved=await page.evaluate(async({actor,game})=>window.fixtureQueue.readOfflineSubmission(actor,game),{actor,game});assert.equal(saved.intent.margin,15);assert.equal(saved.intent.winnerSide,'a');assert.equal(attempts.length,0);
-  await status('1 offline score entry is').waitFor();assert.equal(await page.getByRole('button',{name:'Clear safe app data and sign out',exact:true}).count(),0);
+  await page.getByText('Help and account options',{exact:true}).click();await status('1 offline score entry is').waitFor();assert.equal(await page.getByRole('button',{name:'Clear safe app data and sign out',exact:true}).count(),0);
   checks.push(`actual digital offline save ${width}: durable signed intent, no send/verification and pending work blocks switch`);
   await page.reload();await status('Saved Offline, Waiting to Sync').waitFor({timeout:30000});await page.waitForFunction(()=>window.fixtureQueue);
   assert.deepEqual(await page.evaluate(async({actor,game})=>window.fixtureQueue.readOfflineSubmission(actor,game),{actor,game}),saved);
@@ -68,14 +68,15 @@ try{
   mode='success';await page.getByRole('button',{name:'Sync Saved Entry',exact:true}).evaluate(b=>{b.click();b.click();});await status('Offline entry synchronized').waitFor();
   assert.equal(applied.size,1);assert.ok(attempts.length>=4);assert.ok(attempts.every(r=>JSON.stringify(r)===JSON.stringify(saved.intent)));
   assert.equal(await page.evaluate(async({actor,game})=>await window.fixtureQueue.readOfflineSubmission(actor,game)??null,{actor,game}),null);
-  assert.equal(await status('Game verified. The authoritative scorecard is updated.').count(),0);
+  assert.equal(await status('Game complete. Your scorecard is updated.').count(),0);
+  if(!await page.locator('.player-help').evaluate(e=>e.open))await page.getByText('Help and account options',{exact:true}).click();
   await page.getByRole('button',{name:'Clear safe app data and sign out',exact:true}).waitFor({timeout:5000});
   checks.push(`lost successful response/exact repeated retry ${width}: one simulated application, exact terminal receipt clears own queue; no local verification claim`);
   await page.screenshot({path:`test-results/live-score-connectivity-${width}.png`,fullPage:true});await context.close();
  }
  // Confirmation is intentionally online-only in the current controller.
  if(process.env.LIVE_SCORE_TRUE_OUTAGE_ONLY!=='1'){
- const context=await browser.newContext();page=await context.newPage();await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());await page.goto(origin+'/confirm');await page.getByRole('button',{name:'Confirm My Entry',exact:true}).waitFor();await context.setOffline(true);await page.getByRole('button',{name:'Confirm My Entry',exact:true}).click();await status('Reconnect before confirming').waitFor();checks.push('offline confirmation explicitly blocks: no locally invented matching challenge or verified result');await context.close();
+ const context=await browser.newContext();page=await context.newPage();await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());await page.goto(origin+'/confirm');await page.getByRole('button',{name:'Confirm My Entry',exact:true}).waitFor();await context.setOffline(true);await status('Reconnect before confirming').waitFor();assert.equal(await page.getByRole('button',{name:'Confirm My Entry',exact:true}).isDisabled(),true);checks.push('offline confirmation explicitly blocks: no locally invented matching challenge or verified result');await context.close();
  }
  // Browser offline emulation does not stop worker update fetches. Prepare
  // real cached pages, then stop the task-owned origin before reloading them.
@@ -104,7 +105,7 @@ try{
   });
   page=await context.newPage();page.setDefaultTimeout(20000);await page.goto(origin+gamePath);await status('Offline Ready').waitFor({timeout:30000});await page.waitForFunction(()=>window.fixtureQueue);
   await context.setOffline(true);let saved=null;
-  if(pending){await page.getByRole('button',{name:'Synthetic A won',exact:true}).click();await page.getByRole('button',{name:'1',exact:true}).click();await page.getByRole('button',{name:'5',exact:true}).click();await page.getByRole('button',{name:'Review Result',exact:true}).click();await page.getByRole('button',{name:'Submit My Independent Entry',exact:true}).click();await status('Saved Offline, Waiting to Sync').waitFor();saved=await page.evaluate(async({actor,game})=>window.fixtureQueue.readOfflineSubmission(actor,game),{actor,game});}
+  if(pending){await page.getByRole('button',{name:'Synthetic A WON',exact:true}).click();await page.getByRole('button',{name:'1',exact:true}).click();await page.getByRole('button',{name:'5',exact:true}).click();await page.getByRole('button',{name:'Submit result',exact:true}).click();await status('Saved Offline, Waiting to Sync').waitFor();saved=await page.evaluate(async({actor,game})=>window.fixtureQueue.readOfflineSubmission(actor,game),{actor,game});}
   const stored=await page.evaluate(()=>({local:Object.fromEntries(Object.entries(localStorage)),session:Object.fromEntries(Object.entries(sessionStorage))}));
   await page.evaluate(failure=>{sessionStorage.setItem('outage-fixture-failure',failure);if(failure==='owner')document.cookie='acc_recovery_owner_v1=60000000-0000-4000-8000-000000000099; Path=/; SameSite=Lax';},failure);
   if(!emulatedOffline)await context.setOffline(false);
@@ -115,8 +116,8 @@ try{
  for(const fixture of outageCases){
   page=fixture.page;await page.reload({waitUntil:'domcontentloaded'});
   const succeeds=fixture.failure==='none'||fixture.failure==='register-network';
-  if(succeeds){await page.getByRole('heading',{name:'Current Game Results',exact:true}).waitFor();await page.waitForFunction(()=>window.fixtureQueue);assert.equal(await page.evaluate(()=>navigator.onLine),!fixture.emulatedOffline);if(fixture.emulatedOffline)await status(fixture.saved?'Saved Offline, Waiting to Sync':'Offline Ready').waitFor();else if(fixture.saved)await status('Tap Sync Saved Entry to try again').waitFor();}
-  else{await page.getByRole('heading',{name:fixture.failure==='owner'?'Recovery account mismatch':'Tournament recovery safety',exact:true}).waitFor();if(fixture.failure!=='owner')await page.getByText(/^Diagnostic:/).waitFor();assert.equal(await page.getByRole('heading',{name:'Current Game Results',exact:true}).count(),0);}
+  if(succeeds){await page.getByRole('heading',{name:'Game 1',exact:true}).waitFor();await page.waitForFunction(()=>window.fixtureQueue);assert.equal(await page.evaluate(()=>navigator.onLine),!fixture.emulatedOffline);if(fixture.emulatedOffline)await status(fixture.saved?'Saved Offline, Waiting to Sync':'Offline Ready').waitFor();else if(fixture.saved)await status('Tap Sync Saved Entry to try again').waitFor();}
+  else{await page.getByRole('heading',{name:fixture.failure==='owner'?'Recovery account mismatch':'Tournament recovery safety',exact:true}).waitFor();if(fixture.failure!=='owner')await page.getByText(/^Diagnostic:/).waitFor();assert.equal(await page.getByRole('heading',{name:'Game 1',exact:true}).count(),0);}
   const db=await page.evaluate(async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('acc-offline-score-v1');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});const stores=[...db.objectStoreNames];db.close();return stores;});
   assert.ok(db.length,'Existing IndexedDB must not be deleted');
   const after=await page.evaluate(()=>({local:Object.fromEntries(Object.entries(localStorage)),session:Object.fromEntries(Object.entries(sessionStorage))}));
@@ -124,7 +125,7 @@ try{
   for(const [key,value]of Object.entries(fixture.stored.session))assert.equal(after.session[key],value);
   // Read IndexedDB directly on blocked pages; their protected client is not mounted.
   if(fixture.saved){const record=await page.evaluate(async key=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('acc-offline-score-v1');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});const names=[...db.objectStoreNames];const found=[];for(const name of names){const rows=await new Promise((resolve,reject)=>{const r=db.transaction(name).objectStore(name).getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});found.push(...rows);}db.close();return found.find(row=>row.queueId===key||row.intent?.queueId===key)??null;},fixture.saved.intent.queueId);assert.deepEqual(record,fixture.saved);}
-  assert.equal(await status('Game verified. The authoritative scorecard is updated.').count(),0);
+  assert.equal(await status('Game complete. Your scorecard is updated.').count(),0);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   checks.push(`genuine origin-down reload ${fixture.width}: ${fixture.failure}, online=${!fixture.emulatedOffline}, ${succeeds?'safe existing worker accepted':'blocked'}, pending/local data preserved`);await fixture.context.close();
  }

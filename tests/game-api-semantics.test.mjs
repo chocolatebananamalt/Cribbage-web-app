@@ -591,7 +591,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(gameError, /Game workspace temporarily unavailable/);
   assert.match(gameError, /No result can be recorded/);
   assert.doesNotMatch(contextSql, /profileId|participantId/);
-  assert.match(liveScore, /Submit My Independent Entry/);
+  assert.match(liveScore, /Submit result/);
   assert.match(liveScore, /Confirm My Entry/);
   assert.match(liveScore, /crypto\.randomUUID\(\)/);
   assert.match(liveScore, /window\.sessionStorage/);
@@ -612,15 +612,10 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /\"Triple skunk\"/);
   assert.match(liveScore, /<SkunkAid level=\{derived\?\.skunkLevel \?\? 0\} \/>/);
   assert.match(liveScore, /function ResultPreview/);
-  assert.match(liveScore, /won\" : \"lost\"\} by \{score\.margin\}/);
-  assert.match(liveScore, /Game Points/);
+
+  assert.match(liveScore, /Your Result:/);
   assert.match(liveScore, /Spread Points/);
-  assert.match(liveScore, /<ResultPreview context=\{context\} score=\{derived\} \/>/);
-  assert.match(liveScore, /Review Current Game Result/);
-  assert.match(liveScore, /Review Result/);
-  assert.match(liveScore, /Edit Result/);
-  assert.match(liveScore, /setReviewing\(true\)/);
-  assert.match(liveScore, /setReviewing\(false\)/);
+  assert.match(liveScore, /<ResultPreview score=\{derived\} \/>/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];
@@ -654,7 +649,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
 test('player scorecard read is own-card scoped and excludes unverified totals', () => {
   const sql = read('database/migrations/0088_player_scorecard_reader.sql');
   const reader = read('src/lib/games/player-scorecard.ts');
-  const page = read('src/app/tournament/[tournamentId]/scorecard/page.tsx');
+  const page = read('src/app/tournament/[tournamentId]/scorecard/page.tsx') + read('src/components/player-scorecard-view.tsx');
   assert.match(sql, /create or replace function public\.get_player_scorecard/);
   assert.match(sql, /stable\s+security definer\s+set search_path = ''/);
   assert.match(sql, /player_participant\.profile_id = auth\.uid\(\)/);

@@ -223,3 +223,12 @@ and scoring verification. Stage 1 passing is a valid technical result, not a fai
 independence test. It does not by itself complete Stage 2 or production readiness.
 Publication, hosted migration/enrollment/use and user-operated outage approvals
 remain separate; this clarification performs none of those actions.
+
+
+## November 2 approved player restoration and functions-first continuation
+
+The selected September review dashboard is the presentation baseline, confirmed in Sentinel_dff44d53fddc81918752560105d14615 and final local implementation approval Sentinel_f0c0f48ffc408191844b29921a786240. Later owner refinements supersede earlier prototype selection ambiguity. Own-name WON/LOST, positive spread keypad, centered value/right skunk indicators, large type, inline Your Result: review and truthful Submit result; visible summary uses Points once. Scorecard is one line per game, no initials, readable game/spread columns with rules; Total then merged Net Spread/signed centered value. Display label is Tournament ID#, distinct from ACC member number and current Table/Seat. Only real valid ACC metadata may be displayed, never invented or obtained through broader roster permissions.
+
+Shared black header uses approved authentic logo size/crop; preserve artwork and proportion. Keep Home/Scorecard/Profile fixed navigation; entry selects only top Score Entry and no bottom item, card selects Scorecard. Returning to play uses current authorized progression and remains useful after completion; final card has no invented next game. Retain explicit independent submission/confirmation, pending status, offline durability, owner/worker/lock boundaries, corrections/audit and account separation. Do not copy demo scoring authority. In-progress choices survive navigation without becoming results.
+
+Global Tournament Desk should omit Game 3, not Gear/Year3; a particular scoring page still identifies its game. Functions-first registration and director-creation walkthrough takes priority over further Home/Desk/Profile formatting (Sentinel_916897c0d798819196b2681433a6adbe, Sentinel_76852bf890448191bd24f12d584d348e). Future global sections reuse the verified prototype labels Score Entry, Scorecard, Operations, Results, Rulebook, filtered by actual assigned access. No role grant follows from a tab. Current implementation is local only; publication requires separately approved reviewed scope. See quality milestone and functional walkthrough plan.

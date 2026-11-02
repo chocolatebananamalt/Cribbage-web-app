@@ -71,9 +71,9 @@ test("scorecard has grouped paper-card headers and touch scrolling", () => {
 });
 
 test("scorecard remains readable and keyboard-scrollable on narrow phones", () => {
-  const scorecardPage = readFileSync("src/app/tournament/[tournamentId]/scorecard/page.tsx", "utf8");
+  const scorecardPage = readFileSync("src/components/player-scorecard-view.tsx", "utf8");
   assert.match(source, /scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex=\{0\}/);
-  assert.match(scorecardPage, /scorecard-frame" role="region" aria-label="Scorecard table; scroll horizontally on small screens" tabIndex=\{0\}/);
+  assert.match(scorecardPage, /player-scorecard-scroll" role="region" aria-label="Scorecard table; scroll right for opponent name and Tournament ID" tabIndex=\{0\}/);
   assert.match(styles, /\.scorecard-frame \{ overflow-x:auto; overflow-y:hidden; \}/);
   assert.match(styles, /\.scorecard-header,\.scorecard-body,\.scorecard-footer \{ min-width:560px; \}/);
 });

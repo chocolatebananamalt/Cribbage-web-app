@@ -1,0 +1,64 @@
+/* Approved player presentation; intentionally scoped away from the historical demo. */
+.player-page{display:block;min-height:100dvh;margin:0;background:#f0f3f7;color:#162c42;font:1rem/1.4 Arial,sans-serif;padding:0 0 10rem}
+.player-page-content{max-width:48rem;margin:0 auto;background:white;min-height:80dvh;padding:16px}
+.player-page h1{font-size:1.5rem;margin:16px 0 10px;line-height:1.3}
+.player-event-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#141615;color:white;padding:16px;margin:-16px -16px 12px;min-height:92px}
+.player-event-header p{flex:1;min-width:0;margin:0;color:white;font-size:1.125rem;font-weight:bold;line-height:1.35;overflow-wrap:anywhere}
+.player-logo-window{width:min(40vw,168px);aspect-ratio:681/267;position:relative;overflow:hidden;flex:none;margin-right:-8px}
+.player-logo-window img{position:absolute;width:158.59030837%;height:auto;max-width:none;left:-29.36857562%;top:-61.42322097%}
+.player-tabs{display:flex;gap:8px;border-bottom:1px solid #a5b5c4;margin:0 0 16px}
+.player-tabs a{flex:1;display:flex;align-items:center;justify-content:center;min-height:56px;padding:12px 4px;text-align:center;font-size:1.25rem;font-weight:bold;text-decoration:none;color:#173e68;line-height:1.3;overflow-wrap:anywhere}
+.player-tabs a[aria-current]{background:#e8eff7;border:2px solid #173e68;border-bottom:5px solid #173e68;border-radius:8px 8px 0 0;font-weight:800}
+.player-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:white;border-top:2px solid #8b9eb0;display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:8px;padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.player-bottom-nav a,.player-bottom-nav button{font:700 1.125rem/1.2 Arial,sans-serif;min-height:56px;display:flex;align-items:center;justify-content:center;padding:8px 4px;border:2px solid #71879b;border-radius:8px;color:#162c42;background:white;text-align:center;text-decoration:none;min-width:0}
+.player-bottom-nav a[aria-current]{border-color:#173e68;border-bottom-width:5px;background:#e8eff7;font-weight:800}
+.player-page a:focus-visible,.player-page button:focus-visible,.player-page summary:focus-visible,.player-scorecard-scroll:focus-visible{outline:3px solid #8a5200;outline-offset:3px}
+.player-profile-dialog{max-width:min(92vw,34rem);max-height:85dvh;overflow:auto;border:2px solid #71879b;border-radius:12px;padding:24px;color:#162c42;font-size:1.125rem}
+.player-profile-dialog::backdrop{background:#162c4270}
+.player-matchup{display:grid;gap:8px;margin:12px 0 18px}
+.player-matchup>span:first-child{font-size:1.25rem;font-weight:bold}
+.player-matchup>span{font-size:1rem;overflow-wrap:anywhere}
+.player-matchup strong{display:block;font-size:1rem;margin-top:4px}
+.player-result-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr));gap:12px;margin:18px 0;padding:0;border:0}
+.player-result-choices button{font:700 1.25rem/1.4 Arial,sans-serif;min-height:56px;padding:12px 8px;border-radius:9px;overflow-wrap:anywhere;min-width:0}
+.player-won{background:#17633b;color:white;border:2px solid #17633b}
+.player-lost{background:#fff3f3;color:#8a2028;border:2px solid #8a2028}
+.player-result-choices button.selected{outline:3px solid #162c42;outline-offset:3px}
+.player-result-choices button.selected span{display:block}
+.player-result-choices button:disabled,.player-keypad button:disabled{cursor:not-allowed;opacity:.75}
+.player-spread-entry{border:1px solid #71879b;padding:12px;border-radius:9px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px}
+.player-spread-entry label{grid-column:1/-1;font-size:1.25rem;font-weight:bold}
+.player-spread-entry output{grid-column:2;grid-row:2;font-size:2.5rem;font-weight:bold;text-align:center;font-variant-numeric:tabular-nums}
+.player-spread-entry .skunk{grid-column:3;grid-row:2;text-align:center;font-size:.875rem;color:#174b32;align-self:center;line-height:1.3}
+.player-spread-entry .skunk b{display:block;font-size:1.5rem;white-space:nowrap}
+.player-keypad{background:white;padding:10px 0;gap:8px}
+.player-keypad button{font-size:1.5rem;min-height:56px;border:2px solid #516b81}
+.player-keypad button:nth-child(10),.player-keypad button:nth-child(12){font-size:1.125rem;color:#162c42}
+.player-result-summary{background:#edf3fa;color:#173e68;padding:10px 8px;margin:8px 0 12px}
+.player-result-summary h2{font-size:1.125rem;text-align:center;margin:0 0 5px}
+.player-result-summary p{font-size:1.125rem;font-weight:bold;line-height:1.4;margin:0}
+.player-entry>.primary,.player-current-game{display:flex;align-items:center;justify-content:center;min-height:56px;padding:12px;font:700 1.25rem/1.4 Arial,sans-serif;border-radius:9px;text-align:center;text-decoration:none;background:#173e68;color:white;white-space:normal;margin:12px 0;width:100%;height:auto}
+.player-entry>.primary:disabled{background:#b5c0ce;color:#34485c}
+.player-entry-status{border-top:1px solid #c3ccd5;padding-top:12px;text-align:left;color:#162c42;font-size:1rem;overflow-wrap:anywhere}
+.player-offline-status{font-size:1rem;color:#43576a;margin:8px 0}
+.player-help{font-size:1rem;margin:18px 0}
+.player-help>summary{padding:10px 0;min-height:44px}
+.player-card-name{overflow-wrap:anywhere}
+.player-card-id{font-size:1.25rem;margin:10px 0}
+.player-card-state{font-size:1rem;border-top:1px solid #c3ccd5;padding:10px 0;margin:10px 0;color:#162c42}
+.player-scorecard-scroll{overflow:auto;border:1px solid #a5b5c4;border-radius:9px;margin:14px 0;max-width:100%}
+.player-scorecard-table{width:30.5rem;table-layout:fixed;border-collapse:collapse;font-size:1.25rem;font-variant-numeric:tabular-nums;color:#162c42}
+.player-scorecard-table .game-number{width:3.5rem}.player-scorecard-table .game-points,.player-scorecard-table .spread-plus,.player-scorecard-table .spread-minus{width:4rem}.player-scorecard-table .opponent-name{width:9rem}.player-scorecard-table .verification-id{width:6rem}
+.player-scorecard-table th,.player-scorecard-table td{height:42px;padding:6px 5px;border-bottom:1px solid #c3ccd5;text-align:center;white-space:nowrap;line-height:1.4}
+.player-scorecard-table thead th{font-size:1rem;background:#eaf0f6;padding:8px 4px}
+.player-scorecard-table thead tr:first-child th:first-child,.player-scorecard-table thead tr:first-child th:nth-child(2),.player-scorecard-table thead tr:first-child th:nth-child(3),.player-scorecard-table thead tr:nth-child(2) th{border-right:2px solid #8b9eb0}
+.player-scorecard-table tbody th,.player-scorecard-table tbody td:nth-child(2),.player-scorecard-table tbody td:nth-child(3),.player-scorecard-table tbody td:nth-child(4){border-right:2px solid #8b9eb0}
+.player-scorecard-table tbody tr:nth-child(even){background:#f2f6fa}
+.player-scorecard-table .player-card-opponent{font-size:1rem;text-align:left;overflow:hidden;text-overflow:ellipsis}
+.player-card-opponent-id{font-weight:bold}
+.player-scorecard-table tfoot th,.player-scorecard-table tfoot td{font-size:1.25rem;font-weight:bold;background:#e8eff7;border-top:2px solid #8b9eb0}
+.player-scorecard-table tfoot th,.player-scorecard-table tfoot td:nth-child(2),.player-scorecard-table tfoot td:nth-child(3),.player-scorecard-table tfoot td:nth-child(4){border-right:2px solid #8b9eb0}
+.player-scorecard-table .player-card-net-row th{font-size:1rem;white-space:nowrap}
+.player-scorecard-table .player-card-net-value{text-align:center;font-size:1.25rem;border-left:2px solid #8b9eb0;border-right:2px solid #8b9eb0}
+.player-card-hint{font-size:.875rem;color:#43576a}
+@media(prefers-reduced-motion:reduce){.player-page *{scroll-behavior:auto}}
