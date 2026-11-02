@@ -1,4 +1,6 @@
 "use client";
+import { validateInitialGameSeats } from "../../../../lib/initial-game-seats";
+import { GamePlayerLocation } from "../../../../components/game-player-location";
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -49,13 +51,13 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const participants = workspace.participants.filter((participant) => participant.eventId === eventId);
   const publishedMatches = workspace.matches.filter((match) => match.eventId === eventId && activeEvent?.schedulePublished && match.gameNumber === selectedGame);
   const parsed = useMemo(() => parseScheduleCsv(csv), [csv]);
-  const validationErrors = makeupRequired?["Use the seventeen-player makeup workflow to publish 102 real games, including six makeups."]:activeEvent && parsed.errors.length === 0 ? validateScheduleForEvent(
+  const validationErrors = makeupRequired?["Use the seventeen-player makeup workflow to publish 102 real games, including six makeups."]:activeEvent && parsed.errors.length === 0 ? [...validateInitialGameSeats(parsed.matches), ...validateScheduleForEvent(
     parsed.matches,
     activeEvent.gameCount,
     participants.map((participant) => participant.verificationId),
     workspace.tableCount ?? undefined,
     workspace.seatsPerTable ?? undefined,
-  ) : parsed.errors;
+  )] : parsed.errors;
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -139,7 +141,7 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
     </section>
     {pendingTargetMissing ? <section className="correction-item"><h2>Retry Event Start</h2><p>The saved event is no longer listed. Retry the exact request to confirm whether it was accepted.</p><button className="primary" type="button" disabled={starting || !ready} onClick={() => void startEvent()}>{starting ? "Starting…" : "Retry Exact Event Start"}</button></section> : activeEvent?.schedulePublished ? <section className="correction-item"><h2>Published Schedule</h2><label>Game<select className="check-in-control" value={selectedGame} onChange={(event) => setSelectedGame(Number(event.target.value))}>
       {Array.from({ length: activeEvent.gameCount }, (_, index) => <option key={index + 1} value={index + 1}>Game {index + 1}</option>)}</select></label>
-      <ul className="schedule-match-list">{publishedMatches.map((match) => <li key={match.canonicalGameId}><span><strong>{match.sideADisplayName}</strong><small>ID # {match.sideAVerificationId} · {match.sideATableSeat}</small></span><b>vs.</b><span><strong>{match.sideBDisplayName}</strong><small>ID # {match.sideBVerificationId} · {match.sideBTableSeat}</small></span></li>)}</ul>
+      <ul className="schedule-match-list">{publishedMatches.map((match) => <li key={match.canonicalGameId}><span><GamePlayerLocation label={match.sideADisplayName} playerId={match.sideAVerificationId} tableSeat={match.sideATableSeat} /></span><b>vs.</b><span><GamePlayerLocation label={match.sideBDisplayName} playerId={match.sideBVerificationId} tableSeat={match.sideBTableSeat} /></span></li>)}</ul>
       {(pendingStart || activeEvent.playState === "ready_to_start") ? <section className="event-start-confirmation" aria-labelledby="event-start-title"><h3 id="event-start-title">Final Start Confirmation</h3>
         <p><strong>{activeEvent.name}</strong> · {activeEvent.participantCount} players · {activeEvent.gameCount} games</p>
         <label className="publication-confirmation"><input type="checkbox" checked={startConfirmed} disabled={starting || !!pendingStart} onChange={(event) => setStartConfirmed(event.target.checked)} />I confirm registration is closed and this event roster, attendance, seating, and schedule are ready for play.</label>

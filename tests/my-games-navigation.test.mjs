@@ -29,6 +29,8 @@ const game = {
 test("my-games response validator is exact and tournament bound", () => {
   const workspace = { tournamentId, tournamentName: "October Trial", tournamentDate: "10-03-2026", games: [game] };
   assert.equal(isMyGamesWorkspace(workspace, tournamentId), true);
+  assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, playerName: "Sample Self" }] }, tournamentId), true);
+  for (const playerName of ["", "   ", null, 5]) assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, playerName }] }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, tournamentId: game.gameId }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, state: "invented" }] }, tournamentId), false);
   assert.equal(isMyGamesWorkspace({ ...workspace, games: [{ ...game, extra: true }] }, tournamentId), false);

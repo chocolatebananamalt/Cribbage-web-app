@@ -13,6 +13,7 @@ export type AssignedGameSummary = {
   matchInstance: number;
   state: "pending" | "submitted" | "confirmation_pending" | "mismatch" | "verified" | "corrected" | "recovered";
   playerSide: "a" | "b";
+  playerName?: string;
   playerTableSeat: string;
   playerVerificationId: string;
   opponentName: string;
@@ -60,7 +61,9 @@ export function isMyGamesWorkspace(value: unknown, tournamentId: string): value 
     const hasNumbers=Object.hasOwn(game,'cardNumbers');
     if(hasNumbers&&(!isGameScorecardNumbers(game.cardNumbers,String(game.gameId))
       ||game.cardNumbers.eventId!==game.eventId||game.cardNumbers.schedulingBatchNumber!==game.gameNumber))return false;
-    return Object.keys(game).length === (hasNumbers?18:17)
+    const hasPlayerName=Object.hasOwn(game,'playerName');
+    if(hasPlayerName&&!text(game.playerName))return false;
+    return Object.keys(game).length === (hasNumbers?18:17)+(hasPlayerName?1:0)
       && uuid(game.gameId) && uuid(game.eventId) && text(game.eventName)
       && Number.isInteger(game.gameNumber) && (game.gameNumber as number) > 0
       && Number.isInteger(game.matchInstance) && (game.matchInstance as number) > 0

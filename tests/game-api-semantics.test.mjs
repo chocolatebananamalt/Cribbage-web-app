@@ -602,8 +602,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /isDefinitiveScoreMutationFailure/);
   assert.match(liveScore, /server response was incomplete/);
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
-  assert.match(liveScore, /ID#: \{context\.player\.verificationId\}/);
-  assert.match(liveScore, /ID#: \{context\.opponent\.verificationId\}/);
+  assert.match(liveScore, /playerId=\{context\.player\.verificationId\} tableSeat=\{context\.player\.tableSeat\}/);
+  assert.match(liveScore, /playerId=\{context\.opponent\.verificationId\} tableSeat=\{context\.opponent\.tableSeat\}/);
   assert.match(liveScore, /Game \{context\.roundNumber\}/);
   assert.doesNotMatch(liveScore, /Game \{context\.matchInstance\}/);
   assert.match(liveScore, /function SkunkAid/);

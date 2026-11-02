@@ -20,3 +20,20 @@ export function oddFieldFixture() {
     sideBTableSeat:`${String.fromCharCode(65+Math.floor(i/2))}-${i%2*2+2}`}));
   return {regularMatches,verificationIds,makeupSeats};
 }
+
+// New initial publications align round-one seats. Keep oddFieldFixture intact
+// above as the historical replay/currentness regression fixture.
+export function startingSeatAlignedOddFieldFixture() {
+  const fixture = oddFieldFixture();
+  const mapping = new Map();
+  for (const m of fixture.regularMatches.filter(m => m.gameNumber === 1)) {
+    mapping.set(m.sideAVerificationId, m.sideATableSeat);
+    mapping.set(m.sideBVerificationId, m.sideBTableSeat);
+  }
+  const sitout = fixture.verificationIds.find(id => !mapping.has(id));
+  const freeSeat = fixture.verificationIds.find(id => ![...mapping.values()].includes(id));
+  mapping.set(sitout, freeSeat);
+  return {...fixture, regularMatches: fixture.regularMatches.map(m => ({...m,
+    sideAVerificationId: mapping.get(m.sideAVerificationId),
+    sideBVerificationId: mapping.get(m.sideBVerificationId)}))};
+}

@@ -1,7 +1,7 @@
 // LOCAL isolated Chrome contexts and fictional intercepted APIs only.
 import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
 import {spawn}from'node:child_process';import{chromium}from'playwright-core';
-import{oddFieldFixture}from'./fixtures/odd-field-makeup.mjs';
+import{startingSeatAlignedOddFieldFixture as oddFieldFixture}from'./fixtures/odd-field-makeup.mjs';
 const root=process.cwd(),dir=path.join(root,'test-results/odd-field-makeup-browser'),origin='http://127.0.0.1:3254';
 const id=n=>`20000000-0000-4000-8000-${String(n).padStart(12,'0')}`,actor=id(90),tid=id(80),eid=id(81),f=oddFieldFixture();
 const workspace={tournamentName:'TEST ONLY seventeen-player Main',registrationClosed:true,tableCount:5,seatsPerTable:4,
@@ -30,6 +30,11 @@ const markup={
  paper:`import Client from'../../../../src/app/tournament/[tournamentId]/paper-games/paper-game-client';const game=${JSON.stringify(paper)} as import('../../../../src/lib/paper-games/workspace').PaperGameCandidate;export default function Page(){return <main className="auth-shell"><section className="auth-card corrections-card"><Client actorId="${actor}" tournamentId="${tid}" actorRole="cross_checker" actorIdentityConfirmed={true} unboundOfficials={[]} rosterChoices={[]} candidates={[game]} reviewCases={[]} cardNumberContexts={{'${id(30)}':${JSON.stringify(numbers)}}}/></section></main>}`,
  hybrid:`import Client from'../../../../src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client';const game=${JSON.stringify(hybrid)} as import('../../../../src/lib/hybrid-games/workspace').HybridGameItem;export default function Page(){return <main className="auth-shell"><section className="auth-card corrections-card"><Client actorId="${actor}" tournamentId="${tid}" actorRole="cross_checker" actorIdentityConfirmed={true} candidates={[game]} reviewCases={[]} cardNumberContexts={{'${id(30)}':${JSON.stringify(numbers)}}}/></section></main>}`,
 };
+const evenWorkspace={...workspace,tableCount:1,participants:workspace.participants.slice(0,4).map((p,i)=>({...p,verificationId:'A-'+(i+1)})),events:[{...workspace.events[0],gameCount:1,participantCount:4}]};
+const evenRows=[{gameNumber:1,sideAVerificationId:'A-1',sideBVerificationId:'A-2',sideATableSeat:'A-1',sideBTableSeat:'A-2'},{gameNumber:1,sideAVerificationId:'A-3',sideBVerificationId:'A-4',sideATableSeat:'A-3',sideBTableSeat:'A-4'}];
+const evenCsv=rows=>['Game,Player A ID,Player B ID,Player A Table/Seat,Player B Table/Seat',...rows.map(m=>[m.gameNumber,m.sideAVerificationId,m.sideBVerificationId,m.sideATableSeat,m.sideBTableSeat].join(','))].join('\n');
+const historicalWorkspace={...evenWorkspace,events:[{...evenWorkspace.events[0],schedulePublished:true,playState:'in_progress'}],matches:[{...evenRows[0],eventId:eid,canonicalGameId:id(98),sideADisplayName:'Player A',sideBDisplayName:'Player B',sideATableSeat:'B-1',sideBTableSeat:'B-2'}]};
+for(const [screen,w]of[['even',evenWorkspace],['historical',historicalWorkspace]])markup[screen]=`import Client from '../../../../src/app/tournament/[tournamentId]/schedule/schedule-client';const workspace=${JSON.stringify(w)} as import('../../../../src/lib/api/event-schedule').EventScheduleWorkspace;export default function Page(){return <main className="auth-shell"><Client actorId="${actor}" tournamentId="${tid}" workspace={workspace}/></main>}`;
 for(const[name,source]of Object.entries(markup)){await fs.mkdir(path.join(dir,'app',name),{recursive:true});await fs.writeFile(path.join(dir,'app',name,'page.tsx'),source);}
 const child=spawn(process.execPath,['node_modules/next/dist/bin/next','dev',dir,'--hostname','127.0.0.1','--port','3254'],{cwd:root,env:{...process.env,NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});
 child.stdout.on('data',b=>logs+=b);child.stderr.on('data',b=>logs+=b);
@@ -61,11 +66,17 @@ try{
  for(const width of[390,1440]){await open();await page.setViewportSize({width,height:1000});
   for(const screen of['digital','paper','hybrid']){await page.goto(origin+'/'+screen);await page.getByText('Qualifying makeup, scheduling batch 13.',{exact:true}).waitFor();
    const body=await page.locator('body').innerText();assert.ok(body.includes('Player A: original card game 1'));assert.ok(body.includes('Player B: original card game 12'));
-   assert.ok(!body.includes('Game 13'));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   if(screen==='digital'){await page.getByText(/Player A: ID# B-1;/).waitFor();await page.getByText('Table A, Seat 1',{exact:true}).waitFor();await page.getByText(/Player B: ID# D-1;/).waitFor();await page.getByRole('button',{name:'Player A won',exact:true}).click();await page.getByRole('button',{name:'1',exact:true}).click();await page.getByRole('button',{name:'0',exact:true}).click();await page.getByRole('button',{name:'Review Result',exact:true}).click();await page.getByRole('heading',{name:'Review Current Game Result',exact:true}).waitFor();await page.getByText(/Player A: ID# B-1;/).waitFor();await page.getByText('Table A, Seat 1',{exact:true}).waitFor();}assert.ok(!body.includes('Game 13'));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
    await page.screenshot({path:`test-results/odd-field-${screen}-${width}.png`,fullPage:true});
   }
   checks.push(`actual digital, paper and hybrid entry components show original 1/12 card lines and scheduling batch, no thirteen-game claim or overflow ${width}`);await context.close();
  }
+ for(const width of[390,1440]){await open();await page.setViewportSize({width,height:1000});await page.goto(origin+'/even');
+  await page.getByLabel('Or paste CSV').fill(evenCsv([{...evenRows[0],sideATableSeat:'A-2',sideBTableSeat:'A-1'},evenRows[1]]));
+  await page.getByRole('alert').getByText(/Game 1: each playing participant/).waitFor();assert.ok(await page.getByRole('button',{name:'Publish Game Schedule',exact:true}).isDisabled());
+  await page.getByLabel('Or paste CSV').fill(evenCsv(evenRows));await page.getByText('Complete schedule ready for final review.',{exact:true}).waitFor();await page.getByRole('checkbox',{name:/I reviewed the complete schedule/}).check();assert.ok(await page.getByRole('button',{name:'Publish Game Schedule',exact:true}).isEnabled());
+  await page.goto(origin+'/historical');await page.getByText(/Player A: ID# A-1;/).waitFor();await page.getByText('Table B, Seat 1',{exact:true}).waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  checks.push(`actual standard publisher blocks mismatched game1 and admits aligned schedule; historical reseated identity/location readable ${width}`);await context.close();}
  await open();current=initial;receipt=null;mode='abort';await go();await fill();await publish().click();await status('Publication could not be confirmed');const raw=await page.evaluate(k=>sessionStorage.getItem(k),key);assert.ok(raw);
  await page.reload();await status('No completed receipt');assert.equal(await page.evaluate(k=>sessionStorage.getItem(k),key),raw);mode='success';await retry().click();await status('Published 102 real qualifying games');assert.deepEqual(writes.at(-1),writes.at(-2));checks.push('interruption/reload retains full exact schedule and operation; explicit reconciled retry');
  receipt=saved;await page.evaluate(({key,raw})=>sessionStorage.setItem(key,raw),{key,raw});const before=writes.length;await page.reload();await status('Published 102 real qualifying games');assert.equal(writes.length,before);assert.equal(await page.evaluate(k=>sessionStorage.getItem(k),key),null);checks.push('lost-response success reconciles without another publication');

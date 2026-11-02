@@ -5322,3 +5322,18 @@ Normal five-qualifier declaration saved, registration opened, 17 fictional Digit
 ## 2026-11-01 activation startup repair locally verified, unpublished
 
 Real production-boundary reproduction proves a valid activation fragment was unavailable because the page-level beforeInteractive script appeared only after recovery readiness. Root-layout placement outside the unchanged guard fixes startup; route-limited capture, hash/SPA handling, early pagehide clear and StrictMode-safe memory lifecycle preserve security. Final verification: 1,151 app tests/full verify, production and development nine-case browser regressions, independent no P1/P2. No hosted writes, new links, migration or publication in this repair. Curated narrow publication approval remains required. See docs/quality/2026-11-01-activation-startup-repair.md.
+
+## 2026-11-01 activation repair deployed; B link approved, overnight safe checkpoint
+
+Repair255ffc8 exactremote/CI/READY stablePreview verified; no migration/production. User's B redemption and explicit simulated approval persisted as link1e4f2b95-3eb0-47be-b898-59d23283972b, oneoperator/noindependenthumanprovenance. Only B linked. Director playerlink and schedule/start remain tomorrow; starts0/games0/receipts0. Completed final IDs/source digests preserved. No further human action must occur tonight. See docs/quality/2026-11-01-activation-startup-preview-rollout.md.
+
+## 2026-11-02 technical rehearsal seating and schedule prepared
+
+Both Director/B permanentlinks verified with truthfulsimulationprovenance.17compedplayers enrolled, registrationclosed, permanentIDsDirectorA-2/B E-1,102technicalscheduledgameswithfirsttwo paired. No starts/submissions/receipts. Eventattendanceclosed17unresolved; Begincheckin automaticallycreatesQRcredential, so leftpending currentno-newcredentials restriction. No tool denial. See docs/quality/2026-11-02-two-device-seating-checkpoint.md for exactsavedIDs and nextsteps. No publication/migration/production.
+
+
+## November 2: initial-seat correction local checkpoint
+
+User approved local implementation. Fresh game1 publication must match permanent starting IDs, except an odd-field first-game sit-out; later audited rotation amendments remain separate. Existing September14 decision is recovered at docs/decisions/2026-09-14-event-play-and-operations-boundary.md:22–28. Player ID/current Table and Seat labels now separated, with explicit Event headings. Current rehearsal remains unchanged and paused; do not claim fixed or alter immutable IDs. See docs/quality/2026-11-02-starting-seat-consistency-local.md for implementation, verification and exact correction boundary. Full final verification remains pending at this checkpoint. No hosted changes/publication.
+
+Final local checkpoint:1155 app tests/full verify/build/audit,6 handoff tests,10 browser scenarios and isolated standard/odd SQL replay cases passed; independent review no P1/P2. Revised owner layout: event/game bold, actual name: ID#, current Table/Seat bold.0271 adds own-name field only to authorized assigned-game reader, so compatible app/parser must deploy BEFORE0271. No hosted correction/publication authorized/executed. See starting-seat local report and20-file manifest.

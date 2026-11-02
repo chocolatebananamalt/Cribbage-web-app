@@ -1,4 +1,5 @@
 'use client';
+import {validateInitialGameSeats} from "../../../../../../lib/initial-game-seats";
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {parseScheduleCsv,type EventScheduleWorkspace} from '../../../../../../lib/api/event-schedule';
 import {isUuid} from '../../../../../../lib/api/validation';
@@ -32,6 +33,8 @@ export default function OddFieldMakeupClient({actorId,tournamentId,eventId,works
   const preview=useMemo(()=>{
     try {
       if(parsed.errors.length)throw Error(parsed.errors.join(' '));
+      const initialErrors=validateInitialGameSeats(parsed.matches);
+      if(initialErrors.length)throw Error(initialErrors.join(' '));
       const makeupSeats=parseMakeupSeats(seats);
       return{plan:deriveOddFieldMakeupPlan(parsed.matches,participants.map(p=>p.verificationId),makeupSeats,workspace.tableCount??0,workspace.seatsPerTable??0),makeupSeats,error:null};
     }catch(e){return{plan:null,makeupSeats:[],error:e instanceof Error?e.message:'Schedule unavailable.'};}
