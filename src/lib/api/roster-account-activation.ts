@@ -17,6 +17,7 @@ export type ActivationDecisionResult = { status: "approved"; requestId: string; 
 export type ActivationCancellationResult = { status: "cancelled"; activationId: string };
 export type ActivationWorkspace = {
   tournamentName: string;
+  eventBindingIssues?: Array<{participantId: string; playerName: string; eventName: string; reason: string}>;
   rosterEntries: Array<{
     rosterEntryId: string;
     displayName: string;
@@ -88,9 +89,13 @@ export function isActivationCancellationResult(value: unknown, activationId: str
 }
 
 export function isActivationWorkspace(value: unknown): value is ActivationWorkspace {
-  if (!isRecord(value) || !exact(value, ["tournamentName", "rosterEntries", "pendingRequests"])
+  if (!isRecord(value) || !(exact(value, ["tournamentName", "rosterEntries", "pendingRequests"]) || exact(value, ["tournamentName", "rosterEntries", "pendingRequests", "eventBindingIssues"]))
       || typeof value.tournamentName !== "string" || !value.tournamentName.trim()
       || !Array.isArray(value.rosterEntries) || !Array.isArray(value.pendingRequests)) return false;
+  if (value.eventBindingIssues !== undefined && (!Array.isArray(value.eventBindingIssues) || !value.eventBindingIssues.every(item => isRecord(item)
+    && exact(item, ["participantId", "playerName", "eventName", "reason"]) && isUuid(item.participantId)
+    && typeof item.playerName === "string" && !!item.playerName.trim() && typeof item.eventName === "string" && !!item.eventName.trim()
+    && item.reason === "Event account assignment needs director review"))) return false;
   const rosterEntries = value.rosterEntries;
   const pendingRequests = value.pendingRequests;
   if (!rosterEntries.every((item) => {
