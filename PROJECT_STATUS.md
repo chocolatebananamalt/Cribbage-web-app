@@ -1,3 +1,15 @@
+## 2026-11-02 offline recovery startup locally verified, unpublished
+
+Actual network loss exposed a mandatory worker-update startup defect. The local fix permits only the same pre-existing exact-path activated worker after a TypeError and fresh protocol verification, retaining locks, ownership and pending-work guards. Full verify (1,160 tests/build/audit), handoff, 23 connectivity groups plus strengthened 12 genuine origin-down cases, auth browser checks and independent review passed. No migration or hosted change; publication and physical-phone retest remain pending. The separate status-sync fix is preserved, also unpublished. See docs/quality/2026-11-02-offline-recovery-startup.md.
+
+## 2026-11-02 score confirmation refresh locally verified, unpublished
+
+The narrow read-only refresh repair passed pnpm verify (1,160 app tests, audit/lint/build/provider/workspace checks), six private handoff checks, actual phone/desktop RSC regressions and eleven connectivity groups. Independent review found no P1/P2 issue. No migration or hosted mutation; publication remains unapproved. Both user-entered rehearsal games are verified, with Director 2 points/+5 and B 2 points/-5. Deferred controls/navigation/latest-prototype comparison remain deferred. See docs/quality/2026-11-02-score-confirmation-refresh.md.
+
+## 2026-11-02 late-link repair published and applied to staging
+
+Verified test commit2abf66823a6d135041edb5e093e05ca29d5e75df, bothCIchecks andREADYPreview. Staging0273history20261102040931 matches reviewed16953bytes/SHA25665ed12880e4a5562dfeb4660877b54b5eb6254630bbed7bf67227086df8d2487. All225oldtables/22383rows unchanged bymigration. Exactlytwoapprovedreplacementeventaccountbindingsreconciled throughauditedRPC; unchangedstarts/schedule/seats/games andoldrows. LaptopMyGames/Game1nowworks, Bactor-scopedreaderconfirmsassignment; phoneUIunobserved. No scoreentered, no production/money orcredentials. Existinguserstartedrehearsalretained. See docs/quality/2026-11-02-late-links-staging-rollout.md. Earlier local-only/pending notes are historical superseded for this exact reviewed rollout.
+
 ## 2026-11-02 late roster link integration defect and local repair
 
 The replacement rehearsal's permanent roster links are correct, but enrollment/schedule creation preceded activation and event_participants.profile_id stayed null. User activation succeeded. No repeat activation or new fixture is needed. Existing enrollment skips old rows; the scheduled-identity guard must not be bypassed with direct SQL. Local 0273 adds audited null-to-exact-existing-roster-account assignment on pristine events, with private RPC, ordered locks, immutable history, and explicit blocked state once evidence exists. The app accepts backward-compatible optional review metadata and displays Event access needs review. Hosted migration, branch publication and the two exact fixture reconciliations still need explicit approval. Production untouched. See docs/quality/2026-11-02-late-roster-account-binding.md for executed evidence and exact scope. The first technical test remains one operator/two devices; independent-human usability follows later.

@@ -12,23 +12,14 @@ const source = fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
 
 test('the source really is the score entry component', () => {
   assert.match(source, /export function LiveScoreEntry/);
-  assert.match(source, /const \[canConfirm, setCanConfirm\] = useState\(context\.canConfirm\)/);
+  assert.match(source, /const \[canConfirm, setCanConfirm\] = useState\(serverState\.canConfirm\)/);
 });
 
-test('canConfirm follows the server instead of the value captured at first mount', () => {
-  // router.refresh() re-renders with fresh props but does not remount, so a
-  // useState initializer alone leaves the second submitter without a Confirm
-  // button and the game never reaches verified. An effect keyed on
-  // context.canConfirm is what keeps the button in step with the server.
-  // Adjusted during render rather than in an effect, which is what React
-  // documents for a changed prop and what react-hooks/set-state-in-effect
-  // requires here. Either mechanism is acceptable; what must not happen is
-  // canConfirm being left at its first-mount value.
-  assert.match(source, /if \(lastServerCanConfirm !== context\.canConfirm\) \{/,
-    'the component must notice when the server changes canConfirm');
-  const adjust = source.slice(source.indexOf('if (lastServerCanConfirm !== context.canConfirm) {'));
-  assert.match(adjust.slice(0, 300), /setCanConfirm\(context\.canConfirm\)/,
-    'noticing the change must actually update canConfirm');
+test('a protected saved-state change reconciles confirmation and status without a remount', () => {
+  assert.match(source, /lastServerStateKey !== serverState.key && !busy && !offlineRecord && !pendingSubmission/);
+  assert.match(source, /setCanConfirm\(serverState.canConfirm\)/);
+  assert.match(source, /setStatus\(serverState.status\)/);
+  assert.match(source, /setSubmissionId\(context.ownSubmission.id\)/);
 });
 
 test('offline sync copy does not promise a retry that never happens', () => {
@@ -39,7 +30,7 @@ test('offline sync copy does not promise a retry that never happens', () => {
     'the offline failure message must not promise an automatic retry');
   assert.match(source, /Tap Sync Saved Entry to try again/,
     'the offline failure message must name the action that actually works');
-  assert.doesNotMatch(source, /setInterval|setTimeout\([^)]*syncOffline/,
+  assert.doesNotMatch(source, /setInterval\([^,]*(?:syncOffline|submit|confirm)|setTimeout\([^)]*syncOffline/,
     'if an automatic retry is ever added, update this test and the copy together');
 });
 
@@ -58,17 +49,10 @@ test('a discarded offline entry tells the player it is gone and must be re-enter
   }
 });
 
-test('saved pending entries do not assume an opponent mode or official review stage', () => {
-  const message = 'Your entry is saved. Required verification is still pending.';
-  assert.equal(source.split(message).length - 1, 2,
-    'server-restored and newly accepted pending submissions must use neutral copy');
-  assert.doesNotMatch(source, /Your entry is saved and waiting for your opponent/);
-  const initial = source.slice(source.indexOf('const [status, setStatus]'), source.indexOf('const [busy, setBusy]'));
-  assert.match(initial, /context\.state === "verified"[\s\S]*Game verified/);
-  assert.match(initial, /context\.state === "mismatch"[\s\S]*needs cross-checking/);
-  assert.match(initial, /context\.canConfirm[\s\S]*Confirm your own entry/);
-  const accepted = source.slice(source.indexOf('setCanConfirm(result.status === "confirmation_pending")'), source.indexOf('const confirm = async'));
-  assert.match(accepted, /result\.status === "confirmation_pending"[\s\S]*Confirm your own entry/);
-  assert.match(accepted, /result\.status === "mismatch"[\s\S]*needs cross-checking/);
-  assert.ok(accepted.includes(message));
+test('status polling reads server state and never sends a score or confirmation', () => {
+ const poll=source.slice(source.indexOf('  useEffect(() => {'),source.indexOf('  const margin ='));
+ assert.match(poll, /navigator.onLine && document.visibilityState === "visible"/);
+ assert.match(poll, /router.refresh\(\)/);
+ assert.doesNotMatch(poll, /syncOffline\(|fetch\(|submit\(|confirm\(|deleteOfflineSubmission\(/);
+ assert.match(poll, /busy \|\| offlineRecord \|\| pendingSubmission/);
 });

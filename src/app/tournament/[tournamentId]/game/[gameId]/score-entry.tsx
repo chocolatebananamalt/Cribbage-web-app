@@ -13,6 +13,7 @@ import { canDeleteOfflineQueueRecord, type OfflineQueueRecord, type OfflineSubmi
 import { deleteOfflineSubmission, provisionOfflineSubmission, queueOfflineSubmission, readOfflineSubmission, readPreparedOfflineSubmissionCapability, replayOfflineSubmission } from "../../../../../lib/offline-score-queue";
 import { prepareCurrentScorePageForOffline } from "../../../../../lib/offline-score-page-cache";
 import { JudgeCallButton } from "./judge-call-button";
+import { scoreEntryServerState } from "../../../../../lib/games/score-entry-server-state";
 import type {GameScorecardNumbers} from '../../../../../lib/games/scorecard-number-context';
 import {MakeupCardLines} from '../../../../../components/makeup-card-lines';
 
@@ -53,6 +54,7 @@ export function LiveScoreEntry({ context,cardNumbers }: { context: AssignedGameC
   const displayedGame=cardNumbers?.isMakeup?(context.player.side==='a'?cardNumbers.sideACardGameNumber:cardNumbers.sideBCardGameNumber):context.roundNumber;
   const makeupNotice=<MakeupCardLines numbers={cardNumbers} sideAName={context.player.side==='a'?context.player.displayName:context.opponent.displayName} sideBName={context.player.side==='b'?context.player.displayName:context.opponent.displayName}/>;
   const router = useRouter();
+  const serverState = scoreEntryServerState(context);
   const [winner, setWinner] = useState<Winner>(() => context.ownSubmission ? context.ownSubmission.winnerSide === context.player.side ? "player" : "opponent" : null);
   const [marginText, setMarginText] = useState(() => context.ownSubmission ? String(context.ownSubmission.margin) : "");
   const [submissionId, setSubmissionId] = useState<string | null>(context.ownSubmission?.id ?? null);
@@ -61,42 +63,47 @@ export function LiveScoreEntry({ context,cardNumbers }: { context: AssignedGameC
   const [offlineRecord, setOfflineRecord] = useState<OfflineQueueRecord | null>(null);
   const [offlineReplayClosed, setOfflineReplayClosed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [canConfirm, setCanConfirm] = useState(context.canConfirm);
+  const [canConfirm, setCanConfirm] = useState(serverState.canConfirm);
   const [reviewing, setReviewing] = useState(false);
-  const [status, setStatus] = useState(() => context.canConfirm
-    ? "Both entries match. Confirm your own entry to continue."
-    : context.ownSubmission
-      ? context.state === "mismatch"
-        ? "The entries do not match. This game needs cross-checking."
-        : context.state === "verified"
-          ? "Game verified. The authoritative scorecard is updated."
-          : context.ownConfirmed
-            ? "Your confirmation is saved. The game will verify after the other player confirms their own entry."
-        : "Your entry is saved. Required verification is still pending."
-      : "Enter your independent result. It is not verified until both players submit and confirm.");
+  const [status, setStatus] = useState(serverState.status);
   const [busy, setBusy] = useState(false);
   const [online, setOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [offlinePageReady, setOfflinePageReady] = useState(false);
   const offlineSyncInFlight = useRef(false);
 
-  // router.refresh() re-renders this component with fresh server props but does
-  // not remount it, so the useState initializer above never runs again and
-  // canConfirm keeps whatever the server said when the page first loaded. The
-  // player whose submission completes the match is the one this hurts: their
-  // entry flips the game to confirmation_pending, but their Confirm button
-  // never appears, and the game cannot reach verified until they happen to
-  // reload the page by hand. Follow the server's answer instead of a snapshot.
-  //
-  // Adjusted during render rather than in an effect. An effect would work but
-  // cascades an extra render, which is what react-hooks/set-state-in-effect
-  // objects to; this is the pattern React documents for reacting to a changed
-  // prop, and the re-render happens before anything is shown to the player.
-  const [lastServerCanConfirm, setLastServerCanConfirm] = useState(context.canConfirm);
-  if (lastServerCanConfirm !== context.canConfirm) {
-    setLastServerCanConfirm(context.canConfirm);
-    setCanConfirm(context.canConfirm);
-    if (context.canConfirm) setStatus("Both entries match. Confirm your own entry to continue.");
+  // RSC refresh preserves client state. Follow the complete saved-state
+  // snapshot, including accepted offline submission and other-player progress,
+  // rather than only the canConfirm boolean captured at first mount.
+  const [lastServerStateKey, setLastServerStateKey] = useState(serverState.key);
+  if (lastServerStateKey !== serverState.key && !busy && !offlineRecord && !pendingSubmission) {
+    setLastServerStateKey(serverState.key);
+    setCanConfirm(serverState.canConfirm);
+    setStatus(serverState.status);
+    if (context.ownSubmission) {
+      setSubmissionId(context.ownSubmission.id);
+      setWinner(context.ownSubmission.winnerSide === context.player.side ? "player" : "opponent");
+      setMarginText(String(context.ownSubmission.margin));
+    }
   }
+
+  useEffect(() => {
+    if (!submissionId || busy || offlineRecord || pendingSubmission || context.state === "verified") return;
+    // Read-only refresh: never submits, replays, confirms, or deletes a queue.
+    const refresh = () => { if (navigator.onLine && document.visibilityState === "visible") router.refresh(); };
+    const storage = (event: StorageEvent) => { if (event.key === "acc-score-result-accepted") refresh(); };
+    const timer = window.setInterval(refresh, 10_000);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("online", refresh);
+    window.addEventListener("storage", storage);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("online", refresh);
+      window.removeEventListener("storage", storage);
+    };
+  }, [submissionId, busy, offlineRecord, pendingSubmission, context.state, router]);
   const margin = Number(marginText);
   const derived = isScoreEntryReady(margin, winner) ? deriveScore(margin, winner) : null;
   const winnerSide = winner === "player" ? context.player.side : context.opponent.side;
@@ -171,6 +178,7 @@ export function LiveScoreEntry({ context,cardNumbers }: { context: AssignedGameC
       const recovery = pendingSubmissionRecovery(pending, context.ownSubmission?.id ?? null);
       if (recovery.action === "clear" && pending) {
         clearPendingScoreSubmission(window.sessionStorage, pending);
+        setPendingSubmission(null);
       } else if (recovery.action === "retry") {
         setPendingSubmission(recovery.envelope);
         setWinner(recovery.envelope.winnerSide === context.player.side ? "player" : "opponent");

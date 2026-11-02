@@ -1,3 +1,7 @@
+## 2026-11-02 late-link repair published and applied to staging
+
+Verified test commit2abf66823a6d135041edb5e093e05ca29d5e75df, bothCIchecks andREADYPreview. Staging0273history20261102040931 matches reviewed16953bytes/SHA25665ed12880e4a5562dfeb4660877b54b5eb6254630bbed7bf67227086df8d2487. All225oldtables/22383rows unchanged bymigration. Exactlytwoapprovedreplacementeventaccountbindingsreconciled throughauditedRPC; unchangedstarts/schedule/seats/games andoldrows. LaptopMyGames/Game1nowworks, Bactor-scopedreaderconfirmsassignment; phoneUIunobserved. No scoreentered, no production/money orcredentials. Existinguserstartedrehearsalretained. See docs/quality/2026-11-02-late-links-staging-rollout.md. Earlier local-only/pending notes are historical superseded for this exact reviewed rollout.
+
 ## 2026-11-02 late roster link integration defect and local repair
 
 The replacement rehearsal's permanent roster links are correct, but enrollment/schedule creation preceded activation and event_participants.profile_id stayed null. User activation succeeded. No repeat activation or new fixture is needed. Existing enrollment skips old rows; the scheduled-identity guard must not be bypassed with direct SQL. Local 0273 adds audited null-to-exact-existing-roster-account assignment on pristine events, with private RPC, ordered locks, immutable history, and explicit blocked state once evidence exists. The app accepts backward-compatible optional review metadata and displays Event access needs review. Hosted migration, branch publication and the two exact fixture reconciliations still need explicit approval. Production untouched. See docs/quality/2026-11-02-late-roster-account-binding.md for executed evidence and exact scope. The first technical test remains one operator/two devices; independent-human usability follows later.
@@ -483,3 +487,25 @@ Replacement draft fd0589d0-31e7-4921-b793-1beec2431337 created under explicitpre
 
 
 Replacement simulation published adfb70cbe78ad41033c680b777a6a8c5ea042a65, push41375301079/PR41375305836 pass, READYdpl_DJZy6oR5tvAR83TbQ7M8RH9dFPkX. Staging0272history20261102020133 preserved225tables21836rows; approved replacement enrollment added one row only, other224tables unchanged. Live truthfulbanner verified. B coDirector Save rejected beforeexecution as notfreshactiontimeconfirmation; nominations0/Brole0/link0/activationcredential0. No retry/workaround. Exact form remains filled Chrome336434442/groupReplacement rehearsal setup. Need new actiontimeSave approval; no acceptanceURL exists. No production, money, scoring or newactivationlinks. See replacement-simulation-preview-rollout report.
+
+## Deferred owner request — own-player Won/Lost controls
+
+On 2026-11-02, Daron requested that the score-entry buttons show the current device player's own name with Won and Lost, using green for Won and red for Lost while keeping explicit text labels. Map these to the correct game winner independently of side A/B and retain positive winning-margin entry. This follows the paper scorecard convention. He explicitly deferred implementation until AFTER the current rehearsal tournament; do not bundle it into the offline-sync confirmation repair or change the live scoring controls now. Source: user message Sentinel_051eb600ace48191a37e8375f88e0daf, 2026-11-02 05:07:49 UTC.
+
+## 2026-11-02 deferred return-to-play navigation
+
+The current scorecard's normal path is Back to tournament -> My Games -> Open Game; completed-game page only links View Scorecard. Daron requested an obvious way back to playing (Sentinel_ca82bd1622a481919c8667625eaf0e69). Record direct Back to My Games / eligible next-game navigation for after the current run. Do not implement or bundle it into the offline-sync confirmation fix now. No special assistant URL is required; current normal route is indirect.
+
+## 2026-11-02 deferred original scorecard-flow recovery
+
+Daron explicitly wants the original saved scorecard flow recovered and compared after the current tournament, not redesigned during this run (Sentinel_c69014e118748191be85990a278c296c). Use existing prototypes/spec/history to identify concrete navigation regressions and propose restoration without losing integrated rules/data. Do not ask him to recreate the original design from memory. Preserve current live controls and prioritize functional test continuation; this does not authorize new publication.
+
+Owner refined the deferred scorecard recovery at 05:13 UTC: find the MOST RECENT scorecard-only functional prototype plus screenshots, show it and the current version for his verification and selection before major changes. Do not assume earliest prototype or current code is the desired baseline. No final selection yet; keep deferred until after this run. Source Sentinel_04599ed6953c81919f9854ea1bedb939.
+
+## 2026-11-02 local confirmation refresh verification
+
+Both user-entered rehearsal games are authoritative; first-confirmer stale waiting copy is a client refresh defect, not missing scores. Local narrow repair passed 1,160 app tests/full verify, handoff, phone/desktop actual component regression, eleven offline connectivity groups and independent review. No publication or migration authorized yet. Both saved card modes are digital; generic paper/digital help is unconditionally displayed and misleading, deferred for after run. Preserve current live controls. See docs/quality/2026-11-02-score-confirmation-refresh.md.
+
+## 2026-11-02 physical offline reload failure and local repair
+
+User's phone truly disconnected and reloaded Game 3 after Offline Ready, then recovery safety blocked. Reconnect restored the form; no score entered. Do not count this as offline acceptance. Root cause established locally: worker update requires network; browser emulation did not stop that fetch. Local coordinator fallback pins the exact existing activated worker and freshly verifies protocol before unchanged lock/owner/pending guards. Full verify, 1,160 tests, genuine origin-down cases in both online states, auth checks and independent review passed. No publication, migration or hosted changes. Keep phone online until approved rollout/retest. Existing unpublished status-sync fix remains intact; deferred UI/prototype work stays deferred. Details: docs/quality/2026-11-02-offline-recovery-startup.md.

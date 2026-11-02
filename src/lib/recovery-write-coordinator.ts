@@ -51,8 +51,34 @@ async function ensureRecoveryWorker() {
   workerSetup = (async () => {
     expectedControllerChange = true;
     try {
-      const registration = await recoveryStage("worker-register", () => navigator.serviceWorker.register(recoveryWorkerPath, { scope: "/", updateViaCache: "none" }));
-      await recoveryStage("worker-update", () => registration.update());
+      const existing = currentController();
+      // A cached page must not require a network update to use its existing
+      // worker. A network TypeError is recoverable only with the same exact
+      // activated controller and a fresh protocol probe. Locks and ownership
+      // are still established below by acquireRecoveryDocument.
+      const retainExistingWorker = async (error: unknown) => {
+        if (!(error instanceof TypeError) || !existing || existing.state !== "activated" ||
+            existing.scriptURL !== workerScriptUrl() || currentController() !== existing) throw error;
+        await recoveryStage("protocol", async () => {
+          assertCurrentController(existing);
+          const verified = await verifyControllerProtocol();
+          assertCurrentController(existing);
+          if (verified !== existing) throw new Error("recovery_controller_changed_or_unknown");
+        });
+      };
+      const registration = await recoveryStage("worker-register", async () => {
+        try {
+          return await navigator.serviceWorker.register(recoveryWorkerPath, { scope: "/", updateViaCache: "none" });
+        } catch (error) {
+          await retainExistingWorker(error);
+          return null;
+        }
+      });
+      if (!registration) { workerPrepared = true; return; }
+      await recoveryStage("worker-update", async () => {
+        try { await registration.update(); }
+        catch (error) { await retainExistingWorker(error); }
+      });
       await recoveryStage("worker-ready", () => navigator.serviceWorker.ready);
       if (!currentController()) {
         await recoveryStage("controller", () => new Promise<void>((resolve, reject) => {
