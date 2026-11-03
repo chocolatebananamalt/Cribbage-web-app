@@ -19,6 +19,7 @@ import { isQualificationTieWorkspace, type QualificationTieWorkspace } from "../
 import QualificationTiesClient from "./qualification-ties-client";
 import { getSyntheticEventContext } from "../../../../lib/paper-games/synthetic-event-context";
 import { SyntheticEventNotice } from "../../../../components/synthetic-event-notice";
+import { consolationPlayoffEntry } from "../../../../lib/results/consolation-playoff-navigation";
 
 const formatUsd = (minor: number) => `$${(minor / 100).toFixed(2)}`;
 
@@ -69,6 +70,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
   const sidePools = sidePoolWorkspace?.events.find((item) => item.eventId === event)?.pools ?? [];
   const finalized = await getQualificationResult(admin, access.user.id, tournamentId, event);
   const finalReport = finalized ? await getFinalizedEventReport(admin, access.user.id, tournamentId, event) : null;
+  const consolationPlayoffHref = finalized ? consolationPlayoffEntry({tournamentId,eventId:event,role:access.role,eventType:selectedEvent.eventType,format:selectedEvent.format,qualifierCount:finalized.qualifierCount,syntheticEventIds:syntheticContext?.eventIds ?? []}) : null;
   let tieWorkspace: QualificationTieWorkspace | null = null;
   const canReviewQualificationTies = access.role === "director" || access.role === "co_director";
   if (canReviewQualificationTies && qualification?.preview.unresolvedTies.length) {
@@ -125,7 +127,8 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     {sidePools.length ? <section className="correction-item"><h2>Side Pools</h2>{sidePools.map((pool) => <section key={pool.poolId}><strong>{pool.displayName}</strong><p>Collected {formatUsd(pool.collectedMinor)} · paid {formatUsd(pool.paidMinor)} · {pool.finalized ? "finalized" : "open"}</p><ol>{pool.payouts.map((payout) => <li key={payout.payoutId}>{payout.displayName} · place {payout.placement} · {formatUsd(payout.amountMinor)}</li>)}</ol></section>)}</section> : null}
     {finalReport ? <a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${event}/final-results.pdf`}>Download Final Event Results PDF</a> : null}
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
-    {(access.role === "director" || access.role === "co_director") && finalized.qualifierCount === 5 ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/playoff-v4`}>Record Five-qualifier Playoff and Byes</Link> : null}
+    {(access.role === "director" || access.role === "co_director") && selectedEvent.eventType === "main" && finalized.qualifierCount === 5 ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/playoff-v4`}>Record Five-qualifier Playoff and Byes</Link> : null}
+    {consolationPlayoffHref ? <Link className="guide-link" href={consolationPlayoffHref}>Review Simulated Consolation Playoff</Link> : null}
     {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
     {canViewResults ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link> : null}

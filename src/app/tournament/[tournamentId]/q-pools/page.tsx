@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../lib/api/require-legacy-finance-mode";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
 import { isQPoolMembershipWorkspace } from "../../../../lib/api/q-pool-membership";
@@ -17,6 +18,7 @@ export default async function QPoolMembershipPage({ params }: { params: Promise<
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   let workspace = null;
   let policies: QConsentPolicy[] = [];

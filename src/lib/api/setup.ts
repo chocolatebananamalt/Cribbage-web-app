@@ -1,6 +1,7 @@
 import { isUuid } from "./validation.ts";
 import { DEFAULT_CONSOLATION_SANCTIONING_FEE_RATE_CENTS, DEFAULT_MAIN_SANCTIONING_FEE_RATE_CENTS, MAX_SANCTIONING_FEE_RATE_CENTS } from "../sanctioning-fee.ts";
 import { isTournamentStateTerritory } from "../tournament-timezones.ts";
+import { isGraduatedSidePoolSetupType, type SidePoolSetupSelection } from "./side-pool-setup-selection.ts";
 
 export type SetupPool = { poolTypeCode: string; entryFeeCents: number; note: string };
 export type SetupEvent = {
@@ -20,7 +21,7 @@ export type SetupEvent = {
   eligibilityNote: string;
   mugginsStatus: "unset" | "in_effect" | "not_in_effect";
   qPools: SetupPool[];
-  sidePools: SetupPool[];
+  sidePools: SidePoolSetupSelection[];
 };
 export type SetupOfficial = { profileId: string; role: "director" | "co_director" };
 export type SetupPayload = { tournamentName: string; city: string; venue: string; venueName: string; venueStreet: string; venuePostalCode: string; stateTerritory: string; startsAt: string; endsAt: string; timezone: string; tournamentDirectorPublicName: string; tournamentDirectorFirstName: string; tournamentDirectorLastName: string; tournamentContactPhone: string; tournamentContactEmail: string; tournamentMailingAddress: string; mainSanctioningFeeRateCents: number; consolationSanctioningFeeRateCents: number; mainSanctioningFeeOverrideReason: string; mainSanctioningFeeOverrideReference: string; consolationSanctioningFeeOverrideReason: string; consolationSanctioningFeeOverrideReference: string; officials: SetupOfficial[]; events: SetupEvent[] };
@@ -51,6 +52,7 @@ export function isHistoricalSetupEvent(value: unknown): value is SetupEvent {
   if (!value || typeof value !== "object" || !(own(value, eventKeys) || own(value, [...eventKeys, "freeEntry"]))) return false;
   const e = value as Record<string, unknown>; if ("freeEntry" in e && typeof e.freeEntry !== "boolean") return false; const pools = e.qPools; const sidePools = e.sidePools;
   const validPool = (pool: unknown) => !!pool && typeof pool === "object" && own(pool, poolKeys) && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents) && text((pool as Record<string, unknown>).note, 1000);
+  const validSidePool = (pool: unknown) => !!pool && typeof pool === "object" && (own(pool, poolKeys) || (own(pool, [...poolKeys, "payoutType"]) && isGraduatedSidePoolSetupType((pool as Record<string, unknown>).payoutType))) && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents) && text((pool as Record<string, unknown>).note, 1000);
   const normalizedPoolNames = new Set(Array.isArray(sidePools) ? sidePools.map((pool) => pool && typeof pool === "object" && typeof (pool as SetupPool).poolTypeCode === "string" ? (pool as SetupPool).poolTypeCode.trim().toLowerCase() : null) : []);
   return isUuid(e.clientRowId) && ["main", "consolation", "satellite", "custom"].includes(e.eventKind as string)
     && text(e.displayName, 200, true) && localTime(e.startsAt) && text(e.timezone, 128, true)
@@ -59,7 +61,7 @@ export function isHistoricalSetupEvent(value: unknown): value is SetupEvent {
     && text(e.feeIncludesNote, 1000) && text(e.payoutNote, 2000) && text(e.qualificationNote, 2000) && text(e.eligibilityNote, 2000)
     && ["unset", "in_effect", "not_in_effect"].includes(e.mugginsStatus as string) && Array.isArray(pools) && pools.length <= 2
     && pools.every(validPool) && (["main", "consolation"].includes(e.eventKind as string) || pools.length === 0)
-    && Array.isArray(sidePools) && sidePools.length <= 6 && sidePools.every(validPool)
+    && Array.isArray(sidePools) && sidePools.length <= 6 && sidePools.every(validSidePool)
     && normalizedPoolNames.size === sidePools.length
     && (["main", "consolation", "satellite"].includes(e.eventKind as string) || sidePools.length === 0);
 }
@@ -85,7 +87,15 @@ export const minimumPaidEntryCents = (kind: SetupEvent["eventKind"]) => kind ===
 export const isEnabledPoolFee = (fee: unknown): fee is number => Number.isSafeInteger(fee) && (fee as number) >= 500 && (fee as number) <= 100000000 && (fee as number) % 500 === 0;
 export function isSetupEvent(value: unknown): value is SetupEvent {
   return isHistoricalSetupEvent(value) && (value.freeEntry === true ? value.entryFeeCents === 0 : value.entryFeeCents >= minimumPaidEntryCents(value.eventKind))
-    && value.qPools.every(p => isEnabledPoolFee(p.entryFeeCents)) && value.sidePools.every(p => isEnabledPoolFee(p.entryFeeCents));
+    && value.qPools.every(p => isEnabledPoolFee(p.entryFeeCents)) && value.sidePools.every(p => value.formatCode === 'standard_singles' && isEnabledPoolFee(p.entryFeeCents) && isGraduatedSidePoolSetupType(p.payoutType));
+}
+/** Compatibility during app-first deployment before the Side intent migration. */
+export function isLegacySideSetupEvent(value: unknown): value is SetupEvent {
+  return isHistoricalSetupEvent(value) && (value.freeEntry === true ? value.entryFeeCents === 0 : value.entryFeeCents >= minimumPaidEntryCents(value.eventKind))
+    && value.qPools.every(p => isEnabledPoolFee(p.entryFeeCents)) && value.sidePools.every(p => p.payoutType === undefined && isEnabledPoolFee(p.entryFeeCents));
+}
+export function isLegacySideSetupSaveRequest(value: unknown): value is SetupSaveRequest {
+  return isRetainedSetupSaveRequest(value) && value.payload.events.every(isLegacySideSetupEvent);
 }
 export function isSetupSaveRequest(value: unknown): value is SetupSaveRequest {
   return isRetainedSetupSaveRequest(value) && value.payload.events.every(isSetupEvent);
@@ -119,7 +129,7 @@ function workspaceEvent(value: unknown) {
     && Array.isArray(e.sidePools) && e.sidePools.length <= 6 && (["main", "consolation", "satellite"].includes(e.eventKind as string) || e.sidePools.length === 0)
     && new Set(e.sidePools.map((pool) => pool && typeof pool === "object" ? (pool as Record<string, unknown>).slot : null)).size === e.sidePools.length
     && new Set(e.sidePools.map((pool) => pool && typeof pool === "object" ? String((pool as Record<string, unknown>).poolTypeCode).trim().toLowerCase() : "")).size === e.sidePools.length
-    && e.sidePools.every((pool) => !!pool && typeof pool === "object" && own(pool, workspacePoolKeys)
+    && e.sidePools.every((pool) => !!pool && typeof pool === "object" && (own(pool, workspacePoolKeys) || (own(pool, [...workspacePoolKeys, "payoutType"]) && isGraduatedSidePoolSetupType((pool as Record<string, unknown>).payoutType)))
       && Number.isSafeInteger((pool as Record<string, unknown>).slot) && ([1, 2, 3, 4, 5, 6] as unknown[]).includes((pool as Record<string, unknown>).slot)
       && text((pool as Record<string, unknown>).poolTypeCode, 160, true) && money((pool as Record<string, unknown>).entryFeeCents)
       && text((pool as Record<string, unknown>).note, 1000) && status((pool as Record<string, unknown>).sourceStatus));

@@ -1,4 +1,5 @@
 "use client";
+import { sidePoolSetupRatio } from "../../../../lib/api/side-pool-setup-selection";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -59,7 +60,7 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
   const [ready, setReady] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const flight = useRef(false);
-  const [ratio, setRatio] = useState("6");
+  const [ratio, setRatio] = useState(String(sidePoolSetupRatio(pool.setupPayoutType) ?? 6));
   const [disclosure, setDisclosure] = useState("");
   const [participantId, setParticipantId] = useState(participants[0]?.participantId ?? "");
   const [received, setReceived] = useState(String((pool.feeMinor / 100).toFixed(2)));
@@ -177,7 +178,8 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
     {!graduated ? <fieldset disabled={!ready || busy || blocked || !!pending || !pool.canPublish}>
       <legend>Disclose and post the new graduated policy before collection</legend>
       <p>Observed ACC weighted amounts use this app’s exact balanced $5 rounding, so all rank amounts add to the collected pot. This is not an ACC-endorsed rule. Directors select and disclose the policy before collecting entry fees. Later review records unpaid rank amounts only.</p>
-      <label>Pay approximately 1 in <input aria-label="Paid-entry ratio" inputMode="numeric" min="2" max="100" value={ratio} onChange={(event) => setRatio(event.target.value)} /></label>
+      <label>Pay approximately 1 in <input aria-label="Paid-entry ratio" inputMode="numeric" min="2" max="100" readOnly={!!pool.setupPayoutType} value={ratio} onChange={(event) => setRatio(event.target.value)} /></label>
+      {pool.setupPayoutType && <p className="field-help">The ratio comes from the saved setup choice. Disclose it before recording entries.</p>}
       <label>Disclosure reference (where players saw this policy)<input aria-label="Disclosure reference" maxLength={500} value={disclosure} onChange={(event) => setDisclosure(event.target.value)} placeholder="Posted event rules / registration notice" /></label>
       {!pool.canPublish ? <p className="auth-note">This Side Pool cannot adopt the new policy. Existing fixed-schedule policy and history are preserved.</p> : null}
       <button className="secondary" type="button" disabled={busy || !!pending || !pool.canPublish || !/^\d+$/.test(ratio) || Number(ratio) < 2 || Number(ratio) > 100 || !disclosure.trim()} onClick={publishPolicy}>Disclose and freeze graduated policy</button>

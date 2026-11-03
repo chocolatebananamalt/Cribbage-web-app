@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../../../lib/api/require-legacy-finance-mode";
 import { notFound } from "next/navigation";
 import { requireTournamentAccess } from "../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
@@ -13,6 +14,7 @@ export default async function PrizeAccountingPage({ params }: { params: Promise<
   if (!isUuid(tournamentId) || !isUuid(eventId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (access.role !== "director") notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   let workspace: PrizeAccountingWorkspaceV9 | null = null;
   try {

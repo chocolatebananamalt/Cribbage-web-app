@@ -6,7 +6,7 @@ export function setupFinancialTermsMatch(request: SetupSaveRequest, receipt: {re
  const terms = (events: SetupSaveRequest['payload']['events']) => [...events].sort((a,b)=>a.clientRowId.localeCompare(b.clientRowId)).map(e=>({
   row:e.clientRowId,name:e.displayName.trim(),kind:e.eventKind,style:e.styleCode,format:e.formatCode,games:e.gameCount,fee:e.entryFeeCents,free:e.freeEntry === true,
   q:e.qPools.map((p,index)=>({slot:'slot' in p?p.slot:index+1,name:p.poolTypeCode.trim(),fee:p.entryFeeCents})),
-  side:e.sidePools.map((p,index)=>({slot:'slot' in p?p.slot:index+1,name:p.poolTypeCode.trim(),fee:p.entryFeeCents})),
+  side:e.sidePools.map((p,index)=>({slot:'slot' in p?p.slot:index+1,name:p.poolTypeCode.trim(),fee:p.entryFeeCents,payoutType:p.payoutType ?? null})),
  }));
  return JSON.stringify(terms(request.payload.events)) === JSON.stringify(terms(current.events));
 }

@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../lib/api/require-legacy-finance-mode";
 import PrizeScheduleSummary from "./prize-schedule-summary";
 import { notFound } from "next/navigation";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
@@ -9,6 +10,7 @@ export default async function PrizeSchedulesPage({ params }: { params: Promise<{
   const { tournamentId } = await params;
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
+  if (["director", "co_director"].includes(access.role)) await requireLegacyFinanceMode(access.user.id, tournamentId);
   const admin = createServerOnlyAdminClient();
   const [schedules, resolved] = await Promise.all([
     listPrizeSchedules(admin, access.user.id, tournamentId),

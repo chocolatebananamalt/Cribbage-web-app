@@ -1,10 +1,12 @@
 import { isUuid } from "./validation.ts";
 
+export type DeclarationActivationPin = { clientRowId: string; declarationId: string; settingsFingerprint: string };
 export type SetupActivationRequest = {
   setupRevisionId: string;
   expectedVersion: number;
   confirmed: true;
   idempotencyKey: string;
+  declarationPins?: DeclarationActivationPin[];
 };
 export type SetupActivationResult = {
   status: "tournament_setup_activated";
@@ -57,6 +59,8 @@ const rejectedCodes = new Set([
   "missing_state_territory",
   "confirmation_required",
   "invalid_request",
+  "declaration_pins_changed",
+  "declaration_pins_required",
 ]);
 
 function hasExactKeys(value: object, keys: string[]) {
@@ -65,13 +69,19 @@ function hasExactKeys(value: object, keys: string[]) {
 }
 
 export function isSetupActivationRequest(value: unknown): value is SetupActivationRequest {
-  if (!value || typeof value !== "object" || !hasExactKeys(value, requestKeys)) return false;
+  if (!value || typeof value !== "object" || !(hasExactKeys(value, requestKeys) || hasExactKeys(value, [...requestKeys, "declarationPins"]))) return false;
   const request = value as Record<string, unknown>;
   return isUuid(request.setupRevisionId)
     && Number.isSafeInteger(request.expectedVersion)
     && (request.expectedVersion as number) >= 1
     && request.confirmed === true
-    && isUuid(request.idempotencyKey);
+    && isUuid(request.idempotencyKey)
+    && (request.declarationPins === undefined || (Array.isArray(request.declarationPins) && request.declarationPins.length > 0 && request.declarationPins.length <= 32
+      && request.declarationPins.every((pin, i, all) => !!pin && typeof pin === "object" && !Array.isArray(pin)
+        && hasExactKeys(pin, ["clientRowId", "declarationId", "settingsFingerprint"]) && isUuid(pin.clientRowId) && isUuid(pin.declarationId)
+        && typeof pin.settingsFingerprint === "string" && /^[a-f0-9]{64}$/.test(pin.settingsFingerprint)
+        && (i === 0 || all[i - 1].clientRowId < pin.clientRowId))
+      && new Set(request.declarationPins.map(pin => pin.declarationId)).size === request.declarationPins.length));
 }
 
 export function isSetupActivationResult(value: unknown, request: SetupActivationRequest): value is SetupActivationResult {

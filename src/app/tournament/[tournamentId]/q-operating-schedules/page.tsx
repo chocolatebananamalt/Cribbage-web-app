@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../lib/api/require-legacy-finance-mode";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
@@ -13,6 +14,7 @@ export default async function QOperatingPage({ params }: { params: Promise<{ tou
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (access.role !== "director") notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   let source: QOperatingWorkspaceV4 | null = null;
   try {

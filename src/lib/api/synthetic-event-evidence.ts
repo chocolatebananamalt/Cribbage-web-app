@@ -9,14 +9,14 @@ export function syntheticEventArtifactId(reference: unknown): string | null {
   const match = /SYNTHETIC-EVENT-v1:([a-f0-9-]{36}):[a-f0-9]{64}(?::[1-4])?/.exec(reference);
   return match && isUuid(match[1]) ? match[1] : null;
 }
-function artifactPayload(value: Record<string, unknown>, kind: string, sourceDigest: string) {
+function artifactPayload(value: Record<string, unknown>, kind: string, sourceDigest: string, artifactText: string) {
   const keys=Object.keys(value).sort().join();
   if(kind==="qualification_tie")return keys==="expectedSourceFingerprint,method,participantIds,winnerId"&&value.expectedSourceFingerprint===sourceDigest
     &&["head_to_head","one_game_playoff"].includes(value.method as string)&&Array.isArray(value.participantIds)&&value.participantIds.length===2
     &&value.participantIds.every(isUuid)&&new Set(value.participantIds).size===2&&isUuid(value.winnerId)&&value.participantIds.includes(value.winnerId);
   if(kind==="playoff")return keys==="expectedVersion,qualificationResultVersionId,series,sourceDigest"&&value.sourceDigest===sourceDigest
     &&isUuid(value.qualificationResultVersionId)&&Number.isSafeInteger(value.expectedVersion)&&Number(value.expectedVersion)>=0&&Number(value.expectedVersion)<256
-    &&Array.isArray(value.series)&&value.series.length===4&&value.series.every(s=>!!s&&typeof s==="object"&&!Array.isArray(s)
+    &&Array.isArray(value.series)&&((value.series.length===4&&artifactText.startsWith("SYNTHETIC EVENT EVIDENCE\n"))||(value.series.length===3&&artifactText.startsWith("SYNTHETIC CONSOLATION PLAYOFF EVIDENCE\n")))&&value.series.every(s=>!!s&&typeof s==="object"&&!Array.isArray(s)
       &&Object.keys(s).sort().join()==="loserId,winnerId"&&isUuid(s.winnerId)&&isUuid(s.loserId)&&s.winnerId!==s.loserId);
   return keys==="legacyVerifiedGamesWithoutStructuredProof,scheduledGames,structuredSyntheticGames,verifiedGames"
     &&Object.values(value).every(n=>Number.isSafeInteger(n)&&Number(n)>=0)&&Number(value.verifiedGames)>0&&value.scheduledGames===value.verifiedGames
@@ -38,7 +38,7 @@ export function isSyntheticEventContext(value: unknown, tournamentId: string): v
         && typeof x.sourceDigest === "string" && /^[a-f0-9]{64}$/.test(x.sourceDigest)
         && typeof x.sha256 === "string" && /^[a-f0-9]{64}$/.test(x.sha256)
         && x.reference === `SYNTHETIC-EVENT-v1:${x.artifactId}:${x.sha256}`
-        && typeof x.text === "string" && x.text.startsWith("SYNTHETIC EVENT EVIDENCE\n") && x.text.length < 16000
-        && !!x.payload && typeof x.payload === "object" && !Array.isArray(x.payload)&&artifactPayload(x.payload as Record<string,unknown>,x.kind as string,x.sourceDigest);
+        && typeof x.text === "string" && (x.text.startsWith("SYNTHETIC EVENT EVIDENCE\n") || x.kind === "playoff" && x.text.startsWith("SYNTHETIC CONSOLATION PLAYOFF EVIDENCE\n")) && x.text.length < 16000
+        && !!x.payload && typeof x.payload === "object" && !Array.isArray(x.payload)&&artifactPayload(x.payload as Record<string,unknown>,x.kind as string,x.sourceDigest,x.text);
     })&&new Set(w.artifacts.map(a=>a.artifactId)).size===w.artifacts.length;
 }

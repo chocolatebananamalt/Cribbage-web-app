@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../../../lib/api/require-legacy-finance-mode";
 import { notFound } from "next/navigation";
 import { requireTournamentAccess } from "../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
@@ -11,6 +12,7 @@ export default async function NoQAccountingPage({ params }: { params: Promise<{ 
   if (!isUuid(tournamentId) || !isUuid(eventId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (access.role !== "director") notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   let workspace: NoQAccountingWorkspace | null = null;
   try {
     const { data, error } = await createServerOnlyAdminClient().rpc("get_no_q_accounting_workspace_v7", { p_actor_id: access.user.id, p_tournament_id: tournamentId, p_event_id: eventId });

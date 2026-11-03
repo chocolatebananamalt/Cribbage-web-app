@@ -15,7 +15,7 @@ test('free entry requires explicit boolean intent and exact zero, not a blank or
  e.entryFeeCents=0;e.freeEntry='true';assert.equal(isSetupEvent(e),false);
 });
 test('enabled Q and Side pools require positive explicit five-dollar increments; disabled arrays need no fee',()=>{
- for(const key of ['qPools','sidePools'])for(const fee of [undefined,null,'',' ',NaN,-500,0,100,499,501,700,500,1000]){const e=fixture().request.payload.events[0];e[key]=[{poolTypeCode:'Test',entryFeeCents:fee,note:''}];assert.equal(isSetupEvent(e),fee===500||fee===1000,`${key}:${String(fee)}`);}
+ for(const key of ['qPools','sidePools'])for(const fee of [undefined,null,'',' ',NaN,-500,0,100,499,501,700,500,1000]){const e=fixture().request.payload.events[0];e[key]=[{poolTypeCode:'Test',entryFeeCents:fee,note:'',...(key==='sidePools'?{payoutType:'graduated-1-in-4'}:{})}];assert.equal(isSetupEvent(e),fee===500||fee===1000,`${key}:${String(fee)}`);}
  assert.equal(isSetupEvent(fixture().request.payload.events[0]),true);
 });
 test('legacy retained zero and nonlattice terms remain readable but cannot become a new valid save',()=>{

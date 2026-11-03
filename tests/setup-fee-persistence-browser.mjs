@@ -5,7 +5,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright-core';
 import {qSetupPrizeWorkspace} from './fixtures/q-setup-prize-workspace.mjs';
-import {isSetupSaveRequest} from '../src/lib/api/setup.ts';
+import {isSetupSaveRequest,isLegacySideSetupSaveRequest} from '../src/lib/api/setup.ts';
 const root=process.cwd(),folder=path.join(root,'test-results/setup-fee-persistence-browser'),base='http://127.0.0.1:3262';
 const id='10000000-0000-4000-8000-000000000001',probe=process.argv.includes('--probe-current');
 await mkdir(path.join(folder,'app'),{recursive:true});await mkdir(path.join(folder,'public'),{recursive:true});
@@ -24,14 +24,14 @@ let logs='',browser,page;child.stdout.on('data',b=>logs+=b);child.stderr.on('dat
 try{
  const until=Date.now()+60000;let ready=false;while(Date.now()<until){try{if((await fetch(base)).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,250));}assert.ok(ready,'task-owned local server became ready');
  browser=await chromium.launch({channel:'chrome',headless:true});
- for(const width of(probe?[390]:[390,1440]))for(const scenario of(probe?['no-q']:['no-q','combined','free','normalized-names','readback-mismatch','lost-response','newer-revision','corrupt-sidecar'])){
+ for(const width of(probe?[390]:[390,1440]))for(const scenario of(probe?['no-q']:['no-q','combined','legacy-side','legacy-unbound','side-conflict','free','normalized-names','readback-mismatch','lost-response','newer-revision','corrupt-sidecar'])){
   const context=await browser.newContext({viewport:{width,height:1100}});page=await context.newPage();
   let workspace=qSetupPrizeWorkspace(id),writes=[],activationWrites=[],prizeVersions=[],mismatch=['readback-mismatch','corrupt-sidecar'].includes(scenario),loseResponse=scenario==='lost-response';const receipts=new Map();
   workspace.current.events[0].gameCount=12;workspace.current.events[0].entryFeeCents=0;
   await context.route('**/*',async route=>{if(!route.request().url().startsWith(base))return route.abort();return route.continue();});
   await page.route('**/api/v1/tournaments/*/setup',async route=>{
    if(route.request().method()==='POST'){
-    const request=route.request().postDataJSON();assert.ok(isSetupSaveRequest(request));writes.push(request);
+    const request=route.request().postDataJSON();assert.ok(scenario==='legacy-side'?isLegacySideSetupSaveRequest(request):isSetupSaveRequest(request));writes.push(request);if(['legacy-unbound','side-conflict'].includes(scenario))return route.fulfill({status:409,json:{error:scenario==='legacy-unbound'?'legacy_side_request_unbound':'side_pool_request_conflict'}});
     if(receipts.has(request.idempotencyKey))return route.fulfill({json:receipts.get(request.idempotencyKey)});
     const version=workspace.current.version+1;
     workspace={...workspace,current:{...request.payload,revisionId:id,version,createdAt:'2026-10-30T00:00:00Z',events:request.payload.events.map(e=>({...e,displayName:e.displayName.trim(),sourceStatus:'director_configured_unverified',qPools:e.qPools.map((p,i)=>({...p,poolTypeCode:p.poolTypeCode.trim(),slot:i+1,sourceStatus:'director_configured_unverified'})),sidePools:e.sidePools.map((p,i)=>({...p,poolTypeCode:p.poolTypeCode.trim(),slot:i+1,sourceStatus:'director_configured_unverified'}))}))},history:[{version,createdAt:'2026-10-30T00:00:00Z',eventCount:request.payload.events.length},...workspace.history]};
@@ -40,7 +40,7 @@ try{
    }
    const shown=structuredClone(workspace);if(mismatch&&receipts.size)shown.current.events[0].entryFeeCents=0;
    if(scenario==='newer-revision'&&receipts.size){shown.current.version=3;shown.current.revisionId='10000000-0000-4000-8000-000000000003';shown.history.unshift({version:3,createdAt:'2026-10-30T00:01:00Z',eventCount:1});}
-   return route.fulfill({json:{workspace:shown,officialChoices:{directorProfileId:id,directorDisplayName:'Fictional Director',coDirectorProfileIds:[]}}});
+   return route.fulfill({json:{workspace:shown,officialChoices:{directorProfileId:id,directorDisplayName:'Fictional Director',coDirectorProfileIds:[]},sidePoolTypesReady:scenario!=='legacy-side'}});
   });
   await page.route('**/setup/activation',async route=>{if(route.request().method()==='POST'){activationWrites.push(route.request().postDataJSON());return route.fulfill({status:409,json:{status:'rejected',code:'schedule_revision_required'}});}return route.fulfill({json:{status:'not_activated'}});});
   await page.route('**/setup/prize-schedules/*',async route=>{
@@ -61,16 +61,27 @@ try{
    if(scenario==='combined'){
     await page.getByRole('button',{name:'Add Q Pool',exact:true}).click();const qp=page.getByRole('group',{name:'Q Pool 1',exact:true});await qp.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Graduated (1-in-6)'});await qp.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
     await page.getByRole('button',{name:'Add Q Pool',exact:true}).click();const q2=page.getByRole('group',{name:'Q Pool 2',exact:true});await q2.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Equal (Pays All Equally)'});await q2.getByRole('textbox',{name:'Entry fee',exact:true}).fill('20.00');await qp.getByRole('button',{name:'Remove Q Pool',exact:true}).click();assert.equal(await qp.getByRole('textbox',{name:'Entry fee',exact:true}).inputValue(),'20.00');await qp.getByRole('combobox',{name:'Pool type',exact:true}).selectOption({label:'Graduated (1-in-6)'});await qp.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
-    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();let side=page.getByRole('group',{name:'Side Pool 1',exact:true});await side.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Side 1-in-6');for(const bad of ['', ' ', '0', '1', '7', 'abc']){await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill(bad);if(!await save.isDisabled())await save.click();assert.equal(writes.length,0,'invalid Side fee never writes');}await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
+    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();let side=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await side.getByRole('textbox',{name:'Pool name (optional)',exact:true}).inputValue(),'');await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');await save.click();assert.equal(writes.length,0,'missing Side payout type cannot save');assert.equal(await side.locator('option[value=equal]').evaluate(option=>option.disabled),true);assert.equal(await side.locator('option[value=equal-double]').evaluate(option=>option.disabled),true);await side.getByRole('combobox',{name:'Payout type',exact:true}).selectOption('graduated-1-in-6');await side.getByRole('textbox',{name:'Pool name (optional)',exact:true}).fill('Side 1-in-6');for(const bad of ['', ' ', '0', '1', '7', 'abc']){await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill(bad);if(!await save.isDisabled())await save.click();assert.equal(writes.length,0,'invalid Side fee never writes');}await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
     // Removing the first indexed pool must not transfer its local fee draft.
-    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();const second=page.getByRole('group',{name:'Side Pool 2',exact:true});await second.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Retained second pool');await second.getByRole('textbox',{name:'Entry fee',exact:true}).fill('20.00');await side.getByRole('button',{name:'Remove Side Pool',exact:true}).click();
-    side=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await side.getByRole('textbox',{name:'Entry fee',exact:true}).inputValue(),'20.00');await side.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill(' Side 1-in-6 ');await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
+    await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();const second=page.getByRole('group',{name:'Side Pool 2',exact:true});await second.getByRole('combobox',{name:'Payout type',exact:true}).selectOption('graduated-1-in-6');await second.getByRole('textbox',{name:'Pool name (optional)',exact:true}).fill('Retained second pool');await second.getByRole('textbox',{name:'Entry fee',exact:true}).fill('20.00');await side.getByRole('button',{name:'Remove Side Pool',exact:true}).click();
+    side=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await side.getByRole('textbox',{name:'Entry fee',exact:true}).inputValue(),'20.00');await side.getByRole('textbox',{name:'Pool name (optional)',exact:true}).fill(' Side 1-in-6 ');await side.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');
    }
+   if(scenario==='legacy-side'){await page.getByRole('button',{name:'Add Side Pool',exact:true}).click();const legacy=page.getByRole('group',{name:'Side Pool 1',exact:true});await legacy.getByRole('textbox',{name:'Side Pool type/name',exact:true}).fill('Legacy compatible Side');await legacy.getByRole('textbox',{name:'Entry fee',exact:true}).fill('10.00');assert.equal(await legacy.getByRole('combobox',{name:'Payout type',exact:true}).count(),0);}
    if(scenario==='no-q'){
     for(const invalid of ['30.001','',' ','0','-1','0.99','2.99','abc']){await fee.fill(invalid);if(!await save.isDisabled())await save.click();assert.equal(writes.length,0,'invalid/blank fee cannot silently submit old value or zero');assert.equal(await fee.inputValue(),invalid);}
     await fee.fill('');await fee.pressSequentially('30.00');assert.equal(await fee.inputValue(),'30.00','typing decimals keeps focus and does not remount the money editor');
    }
    await save.click();
+   if(['legacy-unbound','side-conflict'].includes(scenario)){
+    const warning=scenario==='legacy-unbound'?/This earlier save cannot verify its original Side Pool choices/:/This saved request no longer matches the original Side Pool choices/;await page.getByText(warning).waitFor();
+    const retry=page.getByRole('button',{name:'Retry exact saved request',exact:true});assert.equal(await retry.isDisabled(),true);
+    const key='tournament-setup:10000000-0000-4000-8000-000000000001:10000000-0000-4000-8000-000000000001';
+    const original=await page.evaluate(k=>sessionStorage.getItem(k),key);assert.ok(original,'original pending request remains');
+    await page.reload();await page.getByText(warning).waitFor();
+    assert.equal(await page.getByRole('button',{name:'Retry exact saved request',exact:true}).isDisabled(),true);
+    assert.equal(await page.evaluate(k=>sessionStorage.getItem(k),key),original,'reload preserves original request');
+    assert.equal(writes.length,1);assert.equal(activationWrites.length,0);results.push({scenario,width,phase:'unbound warning and original request persist across reload'});await context.close();continue;
+   }
    if(['readback-mismatch','lost-response','newer-revision','corrupt-sidecar'].includes(scenario)){
     await page.getByText(scenario==='newer-revision'?/Another director saved a newer setup revision before this readback/:scenario==='lost-response'?/The save is unresolved\. Retry the exact saved version/:/Setup version 2 was accepted, but its saved fees and pools could not be verified/).waitFor();
     await page.getByRole('button',{name:'Retry exact saved request',exact:true}).waitFor();
@@ -93,7 +104,7 @@ try{
    }
    await page.getByText('Tournament setup version 2 was saved.',{exact:true}).waitFor();
    assert.equal(workspace.current.events[0].entryFeeCents,scenario==='free'?0:3000);assert.equal(receipts.size,1,'retry reconciles exactly one accepted saved revision');
-   if(scenario==='combined'){assert.deepEqual(workspace.current.events[0].qPools.map(p=>p.entryFeeCents),[1000]);assert.deepEqual(workspace.current.events[0].sidePools.map(p=>p.entryFeeCents),[1000]);}
+   if(scenario==='combined'){assert.deepEqual(workspace.current.events[0].qPools.map(p=>p.entryFeeCents),[1000]);assert.deepEqual(workspace.current.events[0].sidePools.map(p=>p.entryFeeCents),[1000]);assert.deepEqual(workspace.current.events[0].sidePools.map(p=>p.payoutType),['graduated-1-in-6']);}
    if(scenario!=='free'){
     const finalize=page.getByRole('button',{name:'Finalize All Events / Open Registration',exact:true});assert.equal(await finalize.isDisabled(),true,'missing regular declaration blocks new supported activation');
     await page.getByRole('combobox',{name:'Expected playoff qualifiers',exact:true}).selectOption('5');
@@ -102,6 +113,8 @@ try{
     for(const [i,value] of ['4','3','2','1'].entries())await weights.nth(i).fill(value);
     await page.getByRole('textbox',{name:'Schedule source reference',exact:true}).fill('TEST ONLY approved standing rule');await page.getByRole('textbox',{name:'Reason for schedule',exact:true}).fill('TEST ONLY declare before payment');await page.getByRole('checkbox',{name:'I reviewed this schedule and its source',exact:true}).check();await page.getByRole('button',{name:'Save prize schedule',exact:true}).click();await page.getByText('Schedule saved. Reload to see authoritative versions.',{exact:true}).waitFor();await page.reload();
    }
+   if(scenario==='legacy-side'){const loaded=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await loaded.getByRole('textbox',{name:'Side Pool type/name',exact:true}).inputValue(),'Legacy compatible Side');assert.equal(Object.hasOwn(workspace.current.events[0].sidePools[0],'payoutType'),false);}
+   if(scenario==='combined'){const loaded=page.getByRole('group',{name:'Side Pool 1',exact:true});assert.equal(await loaded.getByRole('combobox',{name:'Payout type',exact:true}).inputValue(),'graduated-1-in-6','saved type survives reload');}
    const finalize=page.getByRole('button',{name:'Finalize All Events / Open Registration',exact:true});await finalize.waitFor();
    await finalize.click();const dialog=page.getByRole('alertdialog');await dialog.waitFor();const summary=await dialog.innerText();assert.ok(summary.includes(scenario==='free'?'base entry $0.00':'base entry $30.00'));if(scenario==='combined'){assert.ok(summary.includes('Graduated (1-in-6) $10.00'));assert.ok(summary.includes('Side 1-in-6 $10.00'));}await dialog.getByRole('button',{name:'Cancel',exact:true}).click();
    const dimensions=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(dimensions.scroll<=dimensions.width+1);results.push({scenario,width,phase:'saved terms and declaration read back before activation',fee:workspace.current.events[0].entryFeeCents,q:workspace.current.events[0].qPools.map(p=>p.entryFeeCents),side:workspace.current.events[0].sidePools.map(p=>p.entryFeeCents),acceptedRevisions:receipts.size});

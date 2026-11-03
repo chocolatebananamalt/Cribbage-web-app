@@ -26,3 +26,12 @@ test('readback honors existing server name trimming without relaxing money or id
  assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),true);
  f.current.events[0].sidePools[0].entryFeeCents=999;assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),false);
 });
+test('new side payout intent must match saved authoritative terms; old untyped history remains readable',()=>{
+ const f=fixture(true);assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),true);
+ f.request.payload.events[0].sidePools[0].payoutType='graduated-1-in-4';
+ assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),false);
+ f.current.events[0].sidePools[0].payoutType='graduated-1-in-6';
+ assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),false);
+ f.current.events[0].sidePools[0].payoutType='graduated-1-in-4';
+ assert.equal(setupFinancialTermsMatch(f.request,f.receipt,f.current),true);
+});

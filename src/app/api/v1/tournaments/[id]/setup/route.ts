@@ -1,7 +1,9 @@
 import { allowSetupWriteOrAcceptedReplay } from "../../../../../../lib/setup-write-policy";
+import { isSetupSaveWithUnchangedLegacySides } from "../../../../../../lib/setup-legacy-side-validation";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../../../../lib/supabase/server";
-import { isSetupOfficialChoices, isRetainedSetupSaveRequest, isSetupSaveRequest, isSavedSetup, isRejectedSetup, isSetupWorkspace } from "../../../../../../lib/api/setup";
+import { isSetupOfficialChoices, isRetainedSetupSaveRequest, isSetupSaveRequest, isLegacySideSetupSaveRequest, isSavedSetup, isRejectedSetup, isSetupWorkspace } from "../../../../../../lib/api/setup";
+import { sideSetupCapabilityState } from "../../../../../../lib/api/side-pool-setup-capability";
 import { isUuid } from "../../../../../../lib/api/validation";
 import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
 import { decideSetupRead } from "../../../../../../lib/api/setup-read-decision";
@@ -22,7 +24,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     ]);
     const decision = decideSetupRead({ rpcFailure: !!workspaceResult.error || !!choicesResult.error, workspace: workspaceResult.data, officialChoices: choicesResult.data, valid: isSetupWorkspace(workspaceResult.data) && isSetupOfficialChoices(choicesResult.data) });
     if (decision.status !== 200) return NextResponse.json({ error: decision.error }, { status: decision.status, headers: privateNoStore });
-    return NextResponse.json({ workspace: workspaceResult.data, officialChoices: choicesResult.data }, { headers: privateNoStore });
+    const capability = sideSetupCapabilityState(await createServerOnlyAdminClient().rpc("get_side_pool_setup_type_capability_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id }));
+    if (capability === "unavailable") return NextResponse.json({error:"operation_unavailable"},{status:503,headers:privateNoStore});
+    return NextResponse.json({ workspace: workspaceResult.data, officialChoices: choicesResult.data, sidePoolTypesReady: capability === "ready" }, { headers: privateNoStore });
   } catch {
     return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
   }
@@ -37,11 +41,27 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const supabase = await createClient(); const { data: claims, error: claimsError } = await supabase.auth.getClaims();
     if (claimsError) return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
     if (!claims?.claims?.sub) return NextResponse.json({ error: "unauthorized" }, { status: 401, headers: privateNoStore });
-    if (!await allowSetupWriteOrAcceptedReplay(isSetupSaveRequest(body), async () => {
+    const admin = createServerOnlyAdminClient();
+    const capability = sideSetupCapabilityState(await admin.rpc("get_side_pool_setup_type_capability_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id }));
+    if (capability === "unavailable") return NextResponse.json({error:"operation_unavailable"},{status:503,headers:privateNoStore});
+    if (capability === "legacy" && body.payload.events.some(event => event.sidePools.some(pool => pool.payoutType !== undefined))) return NextResponse.json({error:"side_pool_types_unavailable"},{status:503,headers:privateNoStore});
+    let allowed = await allowSetupWriteOrAcceptedReplay(capability === "ready" ? isSetupSaveRequest(body) : isLegacySideSetupSaveRequest(body), async () => {
       const receipt = await supabase.rpc("get_tournament_setup_operation_reconciliation", {p_tournament_id:id,p_idempotency_key:body.idempotencyKey});
       if (receipt.error || !receipt.data || typeof receipt.data !== "object" || receipt.data.authorized !== true) throw new Error("reconciliation unavailable");
       return isSavedSetup(receipt.data.result,body);
-    })) return NextResponse.json({error:"invalid_setup"},{status:400,headers:privateNoStore});
+    });
+    if (!allowed && capability === "ready") {
+      const existing = await supabase.rpc("get_tournament_setup_workspace", { p_tournament_id: id });
+      if (existing.error || !isSetupWorkspace(existing.data)) return NextResponse.json({error:"operation_unavailable"},{status:503,headers:privateNoStore});
+      allowed = isSetupSaveWithUnchangedLegacySides(body, existing.data.current);
+    }
+    if (!allowed) return NextResponse.json({error:"invalid_setup"},{status:400,headers:privateNoStore});
+    if (capability === "ready") {
+      const binding = await admin.rpc("bind_side_pool_setup_request_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_operation_id: body.idempotencyKey, p_kind: "setup", p_request: body });
+      if (binding.error || !binding.data || typeof binding.data !== "object") return NextResponse.json({error:"operation_unavailable"},{status:503,headers:privateNoStore});
+      if ((binding.data as Record<string, unknown>).code === "unbound_prior_operation") return NextResponse.json({error:"legacy_side_request_unbound"},{status:409,headers:privateNoStore});
+      if (!["bound", "legacy_unbound"].includes(String((binding.data as Record<string, unknown>).status))) return NextResponse.json({error:"side_pool_request_conflict"},{status:409,headers:privateNoStore});
+    }
     // Legacy setup storage deliberately owns the core event fields. Side Pool
     // definitions are versioned separately and are materialized only once an
     // event becomes active, so they cannot be mistaken for Q Pools.
@@ -55,9 +75,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const { data, error } = await supabase.rpc("save_tournament_setup_version", { p_tournament_id: id, p_expected_version: body.expectedVersion, p_payload: corePayload, p_idempotency_key: body.idempotencyKey });
     if (error) return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
     if (isSavedSetup(data, body)) {
-      const sidePools = await createServerOnlyAdminClient().rpc("configure_tournament_setup_side_pools_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_events: body.payload.events });
+      const sidePools = await admin.rpc("configure_tournament_setup_side_pools_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_events: body.payload.events });
+      if (!sidePools.error && sidePools.data && typeof sidePools.data === "object" && (sidePools.data as Record<string, unknown>).code === "unbound_prior_operation") return NextResponse.json({error:"legacy_side_request_unbound"},{status:409,headers:privateNoStore});
       if (sidePools.error || !sidePools.data || typeof sidePools.data !== "object" || (sidePools.data as Record<string, unknown>).status !== "setup_side_pools_configured") return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
-      const publicContact = await createServerOnlyAdminClient().rpc("configure_tournament_public_contact_from_setup_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_director_name: body.payload.tournamentDirectorPublicName });
+      const publicContact = await admin.rpc("configure_tournament_public_contact_from_setup_v1", { p_actor_id: claims.claims.sub, p_tournament_id: id, p_setup_revision_id: data.revisionId, p_director_name: body.payload.tournamentDirectorPublicName });
       if (publicContact.error || !publicContact.data || typeof publicContact.data !== "object" || (publicContact.data as Record<string, unknown>).status !== "public_contact_configured") return NextResponse.json({ error: "operation_unavailable" }, { status: 503, headers: privateNoStore });
       return NextResponse.json(data, { headers: privateNoStore });
     }

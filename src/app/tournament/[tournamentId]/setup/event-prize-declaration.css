@@ -1,0 +1,6 @@
+.event-prize-declaration fieldset { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; min-width:0; }
+.event-prize-declaration label { min-width:0; }
+.event-prize-declaration input,.event-prize-declaration select { min-width:0; width:100%; font-size:1rem; }
+.event-prize-declaration .event-prize-review { grid-column:1/-1; display:flex; align-items:flex-start; gap:.6rem; }
+.event-prize-declaration .event-prize-review input { width:1.4rem; height:1.4rem; flex:0 0 1.4rem; margin-top:.1rem; }
+@media(max-width:600px) { .event-prize-declaration fieldset { grid-template-columns:minmax(0,1fr); } }

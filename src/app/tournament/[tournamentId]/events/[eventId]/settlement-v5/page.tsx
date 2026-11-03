@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../../../lib/api/require-legacy-finance-mode";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../../../components/shared-device-sign-out";
@@ -18,6 +19,7 @@ export default async function SettlementV5Page({ params }: { params: Promise<{ t
   if (!isUuid(tournamentId) || !isUuid(eventId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   const admin = createServerOnlyAdminClient();
   const [workspace, payback, schedules] = await Promise.all([
     getSettlementV5Workspace(admin, access.user.id, tournamentId, eventId),

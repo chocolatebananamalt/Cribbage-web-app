@@ -1,3 +1,4 @@
+import { requireLegacyFinanceMode } from "../../../../../../../lib/api/require-legacy-finance-mode";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../../../../components/shared-device-sign-out";
@@ -17,6 +18,7 @@ export default async function SidePoolRecipientsV3Page({ params }: { params: Pro
   if (![tournamentId, eventId, poolId].every(isUuid)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   if (!["director", "co_director"].includes(access.role)) notFound();
+  await requireLegacyFinanceMode(access.user.id, tournamentId);
   const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
   const admin = createServerOnlyAdminClient();
   const [{ data, error }, graduated] = await Promise.all([

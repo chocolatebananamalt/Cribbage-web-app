@@ -26,6 +26,9 @@ test("setup activation accepts only a revision-bound exact request", () => {
   assert.equal(isSetupActivationRequest({ ...request, setupRevisionId: "not-a-uuid" }), false);
   assert.equal(isSetupActivationRequest({ ...request, eventId: revisionId }), false);
   assert.equal(isSetupActivationRequest({ ...request, format: "team" }), false);
+  const a={clientRowId:revisionId,declarationId:operationId,settingsFingerprint:'a'.repeat(64)},b={clientRowId:operationId,declarationId:'30000000-0000-4000-8000-000000000003',settingsFingerprint:'b'.repeat(64)};
+  assert.equal(isSetupActivationRequest({...request,declarationPins:[a,b]}),true);
+  for(const bad of [[],[b,a],[a,a],[{...a,settingsFingerprint:'bad'}],[{...a,extra:true}],[a,{...b,declarationId:a.declarationId}]]) assert.equal(isSetupActivationRequest({...request,declarationPins:bad}),false);
 });
 
 test("setup activation validates the exact server-derived result and safe exclusions", () => {
@@ -125,10 +128,11 @@ test("activation route is released, same-origin, subject-bound, and server-only"
   const route = read("src/app/api/v1/tournaments/[id]/setup/activation/route.ts");
   assert.doesNotMatch(route, /tournamentSetupActivationEnabled|ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED/);
   assert.match(route, /isSameOriginRequest/);
-  assert.match(route, /readSmallJson/);
+  assert.match(route, /readMediumJson/);
   assert.match(route, /requireVerifiedSubject/);
   assert.match(route, /createServerOnlyAdminClient/);
   assert.match(route, /finalize_tournament_setup_and_open_registration_v1/);
+  assert.match(route, /finalize_tournament_setup_pinned_v2/);
   assert.match(route, /get_tournament_setup_activation_state_v3/);
   assert.match(route, /p_actor_id: subject/);
   assert.match(route, /p_setup_revision_id: body\.setupRevisionId/);
@@ -168,7 +172,9 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.match(client, /fetch\(`\/api\/v1\/tournaments\/\$\{tournamentId\}\/setup\/activation`/);
   assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
   assert.match(client, /const scheduleBlocksActivation = prizeScheduleApplies && scheduleBlocked/);
-  assert.match(client, /disabled=\{busy \|\| dirty \|\| scheduleBlocksActivation \|\| !activationStatusAvailable\}/);
+  assert.match(client, /disabled=\{busy \|\| activationRecoveryBlocked \|\| declarationChecking \|\| dirty \|\| \(multiEventDeclarationPath && !declarationsReady\)/);
+  assert.match(client, /function startActivation\(\) \{ if \(\(multiEventDeclarationPath && !declarationsReady\)/);
+  assert.match(client, /JSON\.stringify\(fresh\) !== JSON\.stringify\(reviewedDeclarationPins\)/);
   assert.match(client, /Finalize All Events \/ Open Registration/);
   assert.match(client, /All events are finalized; registration is open/);
   assert.match(client, /Traditional Doubles and Canadian Doubles support shared Digital or Paper team scorecards/);

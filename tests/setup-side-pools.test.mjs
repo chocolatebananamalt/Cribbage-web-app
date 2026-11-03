@@ -2,16 +2,21 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { isSetupEvent } from "../src/lib/api/setup.ts";
+import { isHistoricalSetupEvent, isSetupEvent } from "../src/lib/api/setup.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const event = (sidePools = []) => ({ clientRowId: "30000000-0000-4000-8000-000000000003", eventKind: "satellite", displayName: "Practice", startsAt: "2026-10-03T18:00", timezone: "Pacific/Honolulu", styleCode: "Canadian Doubles", formatCode: "canadian_doubles", gameCount: 3, entryFeeCents: 2000, feeIncludesNote: "", payoutNote: "Top 4", qualificationNote: "", eligibilityNote: "", mugginsStatus: "unset", qPools: [], sidePools });
 
 test("setup validates zero through six named Side Pools and rejects a seventh or normalized duplicate", () => {
   const pools = Array.from({ length: 6 }, (_, index) => ({ poolTypeCode: `Pool ${index + 1}`, entryFeeCents: 1000, note: "" }));
-  assert.equal(isSetupEvent(event(pools)), true);
-  assert.equal(isSetupEvent(event([...pools, { poolTypeCode: "Pool 7", entryFeeCents: 1000, note: "" }])), false);
-  assert.equal(isSetupEvent(event([{ poolTypeCode: "Early Bird", entryFeeCents: 1000, note: "" }, { poolTypeCode: " early bird ", entryFeeCents: 2000, note: "" }])), false);
+  const typed = pools.map(pool => ({...pool,payoutType:'graduated-1-in-6'}));
+  const singles = value => ({...event(value),styleCode:'Standard',formatCode:'standard_singles'});
+  assert.equal(isHistoricalSetupEvent(event(pools)), true, 'historical untyped Canadian Doubles remains readable');
+  assert.equal(isSetupEvent(event(pools)), false, 'new untyped definitions are rejected');
+  assert.equal(isSetupEvent(event(typed)), false, 'new graduated team definitions are unsupported');
+  assert.equal(isSetupEvent(singles(typed)), true, 'six typed Standard Singles pools are supported');
+  assert.equal(isSetupEvent(singles([...typed, { poolTypeCode: "Pool 7", entryFeeCents: 1000, note: "", payoutType:'graduated-1-in-6' }])), false);
+  assert.equal(isSetupEvent(singles([{ poolTypeCode: "Early Bird", entryFeeCents: 1000, note: "", payoutType:'graduated-1-in-4' }, { poolTypeCode: " early bird ", entryFeeCents: 2000, note: "", payoutType:'graduated-1-in-6' }])), false);
 });
 
 test("side-pool setup definitions are private, versioned, materialized after activation, and never confuse Q Pools", () => {
