@@ -19,3 +19,10 @@ test('pending, corrupt, missing, failed, duplicate, and in-flight recovery chang
  assert.equal(await check({...args,events:[{...events[0],entryFeeCents:0},events[1]]}),false);
  let changed=false;assert.equal(await check({...args,readRecovery:()=>changed?'pending':null,fetchWorkspace:async row=>{changed=true;return workspace(events.find(e=>e.clientRowId===row));}}),false);
 });
+test('linked setup checks every paid Main and Consolation without imposing legacy caps',async()=>{
+ const more=[events[0],events[1],{...events[0],clientRowId:id(7)},{clientRowId:id(8),eventKind:'satellite',entryFeeCents:500}];
+ const fetchWorkspace=async row=>{const e=more.find(item=>item.clientRowId===row);return {...workspace(e),scheduleId:row};};
+ assert.equal(await pins({...args,events:more,fetchWorkspace}),null);
+ assert.deepEqual((await pins({...args,events:more,fetchWorkspace,allowLinkedEvents:true})).map(pin=>pin.clientRowId),[main,con,id(7)]);
+ assert.deepEqual(await pins({...args,events:[{...events[0],entryFeeCents:0}],allowLinkedEvents:true}),[]);
+});

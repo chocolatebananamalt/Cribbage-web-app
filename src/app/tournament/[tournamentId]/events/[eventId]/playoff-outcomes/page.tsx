@@ -7,6 +7,7 @@ import { isUuid } from "../../../../../../lib/api/validation";
 import { requireTournamentAccess } from "../../../../../../lib/auth/require-tournament-access";
 import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
 import PlayoffOutcomeClient from "./playoff-outcome-client";
+import LinkedMainSeriesClient from "./linked-main-series-client";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,9 @@ export default async function PlayoffOutcomesPage({ params }: { params: Promise<
     <p className="eyebrow">PRIVATE RESULTS</p>
     <h1 id="playoff-outcome-page-title">Playoff outcomes</h1>
     <Link className="guide-link" href={`/tournament/${tournamentId}/events/${eventId}/settlement-v5`}>Settlement review</Link>
+    <LinkedMainSeriesClient actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} />
     <PlayoffOutcomeClient key={`${workspace?.currentVersion ?? "unavailable"}-${workspace?.result?.resultId ?? "none"}`} actorId={access.user.id} tournamentId={tournamentId} eventId={eventId} workspace={workspace} />
     <SharedDeviceSignOut />
   </section></main>;
 }
+

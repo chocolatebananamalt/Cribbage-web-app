@@ -54,7 +54,7 @@ export type PlayoffOutcomeWorkspace = {
 };
 export type RejectedPlayoffOutcome = { status: "rejected"; code: string; eventId: string };
 
-const rejectionCodes = new Set([
+const rejectionCodes = new Set(['linked_series_correction_conflict', 
   "not_director", "tournament_unavailable", "unsupported_format", "qualification_unavailable",
   "stale_version", "legacy_conflict", "invalid_series", "idempotency_conflict",
 ]);

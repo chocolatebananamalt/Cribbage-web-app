@@ -36,7 +36,7 @@ export type PlayoffPlacementWorkspace = {
   capabilities: { mrpCalculation: true; qPoolCalculation: false; payoutCalculation: false; publication: false };
 };
 
-const rejectionCodes = new Set(["tournament_unavailable", "not_director", "qualification_result_unavailable", "stale_version", "invalid_placements", "invalid_request", "idempotency_conflict", "playoff_write_domain_conflict"]);
+const rejectionCodes = new Set(['linked_series_correction_conflict', "tournament_unavailable", "not_director", "qualification_result_unavailable", "stale_version", "invalid_placements", "invalid_request", "idempotency_conflict", "playoff_write_domain_conflict"]);
 const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
 const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).sort().join(",") === [...keys].sort().join(",");
 const whole = (value: unknown, min = 0) => Number.isSafeInteger(value) && (value as number) >= min;
