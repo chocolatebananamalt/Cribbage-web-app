@@ -83,8 +83,8 @@ test("tournament details must be saved before event setup unlocks", async () => 
   assert.match(client, /Tournament Events is locked until the tournament details are saved/);
   assert.match(client, /payload: revisionId \? payload : \{ \.\.\.payload, events: \[\] \}/);
   assert.match(client, /stage: "details"/);
-  assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| busy \|\| !!pending/);
-  assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| pending \|\| activated\) return/);
+  assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| draftEditingDisabled/);
+  assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| draftEditingDisabled\) return/);
   assert.match(client, /Tournament details saved\. Tournament Events is now available\./);
   for (const label of ["Tournament name", "Venue name", "Venue street address", "Venue city", "Venue State", "Venue ZIP", "Time Zone", "First name", "Last name"]) {
     assert.match(client, new RegExp(label));

@@ -74,6 +74,6 @@ export function isRejectedLinkedSetup(value: unknown): value is {status:'rejecte
  return exact(value,['status','code']) && value.status==='rejected' && typeof value.code==='string' && linkedRejectionCodes.has(value.code);
 }
 export function linkedSetupRejectionMessage(code: string): string {
- const messages: Record<string,string> = {association_changed:'The saved event associations changed. Reload and review them before finalizing.',association_pin_required:'Save and review the event associations before finalizing.',association_incomplete:'Choose a Consolation answer for each Main and assign every Consolation before finalizing.',invalid_event_sequence:'Add a Main before adding other events.',dependent_event_removal:'Delete or reassign dependent Consolation events before removing a Main.'};
+ const messages: Record<string,string> = {association_changed:'The saved event setup changed. Reload and review it before finalizing.',association_pin_required:'Save and review the event draft before finalizing.',association_incomplete:'Answer the Consolation Yes/No question for each Main before finalizing.',invalid_event_sequence:'Add a Main before adding other events.',dependent_event_removal:'Remove its Consolation event before removing a Main.'};
  return messages[code] ?? 'The setup was not accepted. Review the draft and try again.';
 }

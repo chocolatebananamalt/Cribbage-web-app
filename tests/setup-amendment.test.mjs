@@ -75,7 +75,8 @@ test("activated setup UI can append events but cannot edit active ones", () => {
   assert.match(client, /Retry Exact Event Addition/);
   assert.match(client, /isSetupAmendmentRequest/);
   assert.match(client, /tournament-setup-amendment:/);
-  assert.match(client, /<fieldset disabled=\{busy \|\| declarationChecking \|\| !!pending \|\| activated\}>/);
+  assert.match(client, /const draftEditingDisabled = busy \|\| declarationChecking \|\| !!pending \|\| activated \|\| activationDraftLocked/);
+  assert.match(client, /<fieldset disabled=\{draftEditingDisabled\}>/);
 });
 
 test("rollback fixture covers accepted, replay, rejection, and serialized contention outcomes", () => {
