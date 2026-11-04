@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../../../lib/recovery-write-coordinator";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ function readStored<T extends OpenEnvelope | ResolveEnvelope>(key: string, kind:
 }
 
 function store(key: string, value: OpenEnvelope | ResolveEnvelope) {
-  try { sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; }
+  try { setAppRecoveryItem(sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; }
 }
 function clear(key: string) { try { sessionStorage.removeItem(key); } catch { /* Server remains authoritative. */ } }
 

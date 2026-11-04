@@ -14,7 +14,15 @@ const latestDefining = (pattern) => migrations.map(sql).map(stripComments).filte
 test("an amended setup revision may still bind its side pools", () => {
   const latest = latestDefining(/function public\.configure_tournament_setup_side_pools_v1\(/);
   assert.ok(latest, "no migration defines configure_tournament_setup_side_pools_v1");
-  const guard = /if exists\(select 1 from app\.tournament_setup_activations[\s\S]*?setup_lifecycle_closed/.exec(latest);
+  // The 0275 wrapper delegates lifecycle enforcement to the preserved 0226
+  // writer after its binding and exact replay checks. Assert both links.
+  const delegated = latest.includes('configure_tournament_setup_side_pools_before_type_v1');
+  if (delegated) {
+    assert.match(latest, /result:=public\.configure_tournament_setup_side_pools_before_type_v1\(actor,tid,rid,clean_events\)/);
+    assert.match(latest, /return result;/);
+  }
+  const lifecycleSource = delegated ? stripComments(sql('0226_a_later_event_can_actually_be_added.sql')) : latest;
+  const guard = /if exists\(select 1 from app\.tournament_setup_activations[\s\S]*?setup_lifecycle_closed/.exec(lifecycleSource);
   assert.ok(guard, "the lifecycle guard must still exist for finalized revisions");
   assert.match(
     guard[0],
@@ -26,7 +34,7 @@ test("an amended setup revision may still bind its side pools", () => {
 // The buttons rendered and the RPC refused across the whole window they exist for:
 // registration closed, play not yet started.
 test("an event may be cancelled after registration closes and before play starts", () => {
-  const latest = latestDefining(/change_event_lifecycle_v1/);
+  const latest = latestDefining(/(?:function public\.change_event_lifecycle_v1\(|pg_get_functiondef\('public\.change_event_lifecycle_v1\(|p\.proname\s*=\s*'change_event_lifecycle_v1')/);
   assert.ok(latest, "no migration touches change_event_lifecycle_v1");
   assert.match(
     latest,

@@ -1,3 +1,5 @@
+import { getSyntheticEventContext } from "../../../../../../../../lib/paper-games/synthetic-event-context";
+import { syntheticEventArtifactId } from "../../../../../../../../lib/api/synthetic-event-evidence";
 import { NextRequest } from "next/server";
 
 import { isEventPlayCloseRequest, isEventPlayCloseResult } from "../../../../../../../../lib/api/event-control";
@@ -19,11 +21,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
 
     const admin = createServerOnlyAdminClient();
+    const synthetic = await getSyntheticEventContext(subject,id);
+    const syntheticEvent = synthetic?.eventIds.includes(eventId) === true;
     // Close and reopen share one route because they are one decision with two
     // directions, and splitting them would let a client hold a stale idea of
     // which one is currently available. The database decides that, not the page.
     const { data, error } = body.action === "close"
-      ? await admin.rpc("close_event_play_v1", {
+      ? await admin.rpc(syntheticEvent ? "close_synthetic_event_v1" : "close_event_play_v1", {
+        ...(syntheticEvent ? {p_artifact_id:syntheticEventArtifactId(body.reason)} : {}),
         p_actor_id: subject,
         p_tournament_id: id,
         p_event_id: eventId,

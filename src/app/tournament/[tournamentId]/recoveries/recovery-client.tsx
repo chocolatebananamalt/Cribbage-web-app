@@ -1,4 +1,5 @@
 "use client";
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,7 @@ function readEnvelope<T>(key: string, kind: "proposal" | "review"): T | null {
   } catch { return null; }
 }
 function saveEnvelope(key: string, value: ProposalEnvelope | ReviewEnvelope) {
-  try { window.sessionStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; }
+  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; } catch { return false; }
 }
 function clearEnvelope(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* Server state remains authoritative. */ } }
 

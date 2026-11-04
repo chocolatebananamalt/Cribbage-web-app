@@ -1,0 +1,8 @@
+export function qSetupPrizeWorkspace(id) {
+  const event = {clientRowId:'20000000-0000-4000-8000-000000000002',eventKind:'main',displayName:'Synthetic Main',startsAt:'2027-02-03T09:00',timezone:'Pacific/Honolulu',styleCode:'Standard',formatCode:'standard_singles',gameCount:9,entryFeeCents:3000,feeIncludesNote:'',payoutNote:'',qualificationNote:'',eligibilityNote:'',mugginsStatus:'unset',qPools:[],sidePools:[],sourceStatus:'director_configured_unverified'};
+  return {
+    current:{revisionId:id,version:1,createdAt:'2027-01-01T00:00:00.000Z',tournamentName:'Synthetic Q setup',city:'Honolulu',venue:'Fictional Hall — 1 Test Lane · 96801',venueName:'Fictional Hall',venueStreet:'1 Test Lane',venuePostalCode:'96801',stateTerritory:'Hawaii',startsAt:'2027-02-03T09:00',endsAt:'2027-02-03T18:00',timezone:'Pacific/Honolulu',tournamentDirectorPublicName:'Fictional Director',tournamentDirectorFirstName:'Fictional',tournamentDirectorLastName:'Director',tournamentContactPhone:'',tournamentContactEmail:'',tournamentMailingAddress:'',mainSanctioningFeeRateCents:300,consolationSanctioningFeeRateCents:100,mainSanctioningFeeOverrideReason:'',mainSanctioningFeeOverrideReference:'',consolationSanctioningFeeOverrideReason:'',consolationSanctioningFeeOverrideReference:'',officials:[{profileId:id,role:'director'}],events:[event]},
+    history:[{version:1,createdAt:'2027-01-01T00:00:00.000Z',eventCount:1}],
+    sanctioningFee:{mainRateCents:300,consolationRateCents:100,mainEligibleParticipantCount:0,consolationEligibleParticipantCount:0,runningTotalCents:0,mainRateSource:'setup',consolationRateSource:'setup'}
+  };
+}

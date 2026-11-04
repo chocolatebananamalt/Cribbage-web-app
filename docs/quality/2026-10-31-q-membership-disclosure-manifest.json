@@ -1,0 +1,43 @@
+{
+  "baseline": "ca85d1cb1ecdf6d2e05d791e45719d081d5fc46d",
+  "scope": "Q membership frozen disclosure compatibility only; no migration or privilege change",
+  "files": [
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pools/page.tsx",
+      "bytes": 4216,
+      "sha256": "33e72e82614e7a20e50308ff116d1a0e225baee055681c43da83af8938fc8285"
+    },
+    {
+      "path": "src/lib/results/q-membership-disclosures.ts",
+      "bytes": 1671,
+      "sha256": "580e87fafaeb5fb7dd2d72f974f3df64550bd69d691a6eada0fd3a79010f3e04"
+    },
+    {
+      "path": "tests/q-membership-disclosures.test.mjs",
+      "bytes": 2057,
+      "sha256": "69bad10d71a192f4e71ae7f49b0b5b117b1b13ed60bd88e19ff7376fe41abdcc"
+    },
+    {
+      "path": "tests/q-pool-membership-browser.mjs",
+      "bytes": 18440,
+      "sha256": "0e1db0d83488a6ed6823c10ed990b2f4602f048e0b227e2fac4da1edddefeb47"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 464208,
+      "sha256": "7e438213ffb8a0bced6f1c71b16985c340def9ea244496aca63ed5cb0cb63669"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 90633,
+      "sha256": "bdd3b5b4482599164ef2cc1369267b3540c8237bda033884e594ebbb6b9d8490"
+    },
+    {
+      "path": "docs/quality/2026-10-31-explicit-fee-hosted-rollout.md",
+      "bytes": 7520,
+      "sha256": "31ff01f142d1c9aecbc1aaa0465ed328aed53aa3db1f45009b8b9f4d732a3d73"
+    }
+  ],
+  "verification": "1143 app tests/full verify;6handoff;390/1440 membership regression;independent review no remaining P1/P2",
+  "publication": "pending approval"
+}

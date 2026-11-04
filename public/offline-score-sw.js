@@ -1,5 +1,132 @@
 const OFFLINE_SCORE_CACHE_PREFIX = "acc-offline-score-pages-v2:";
 const GAME_PATH = /^\/tournament\/[0-9a-f-]{36}\/game\/([0-9a-f-]{36})\/?$/i;
+const RECOVERY_PROTOCOL_VERSION = "acc-recovery-coordination-v2";
+const RECOVERY_DOCUMENT_LOCK = "acc-recovery-document-v2";
+const RECOVERY_WORKER_PATH = "/offline-score-sw.js";
+
+const recoveryDelay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function recoveryClient(clientId) {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const client = clientId ? await self.clients.get(clientId) : null;
+    if (client) return client;
+    await recoveryDelay(50);
+  }
+  return null;
+}
+
+async function bridgeRecoveryNavigation(clientId, bridgeId) {
+  const client = await recoveryClient(clientId);
+  if (!client) throw new Error("recovery_bridge_client_unavailable");
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    // A closed destination no longer needs a navigation lease. Never keep its
+    // bridge alive solely because an earlier Client object was retained.
+    if (!await self.clients.get(clientId)) return;
+    const channel = new MessageChannel();
+    const reply = new Promise((resolve) => {
+      const timer = setTimeout(() => { channel.port1.close(); resolve(null); }, 2500);
+      channel.port1.onmessage = (event) => {
+        clearTimeout(timer);
+        channel.port1.close();
+        resolve(event.data);
+      };
+    });
+    client.postMessage({
+      kind: "acc-recovery-navigation-lease-v2",
+      version: RECOVERY_PROTOCOL_VERSION,
+      bridgeId,
+      workerScriptURL: self.location.origin + RECOVERY_WORKER_PATH,
+    }, [channel.port2]);
+    const message = await reply;
+    if (message?.kind === "acc-recovery-navigation-lease-ready-v2" &&
+        message.version === RECOVERY_PROTOCOL_VERSION && message.bridgeId === bridgeId &&
+        message.controllerScriptURL === self.location.origin + RECOVERY_WORKER_PATH) return;
+  }
+  throw new Error("recovery_bridge_ack_unavailable");
+}
+
+async function recoveryClientHasLease(client) {
+  const requestId = crypto.randomUUID();
+  const channel = new MessageChannel();
+  const reply = new Promise((resolve) => {
+    const timer = setTimeout(() => { channel.port1.close(); resolve(null); }, 350);
+    channel.port1.onmessage = (event) => {
+      clearTimeout(timer);
+      channel.port1.close();
+      resolve(event.data);
+    };
+  });
+  client.postMessage({ kind: "acc-recovery-lease-challenge-v2", version: RECOVERY_PROTOCOL_VERSION, requestId }, [channel.port2]);
+  const message = await reply;
+  return message?.kind === "acc-recovery-lease-status-v2" && message.version === RECOVERY_PROTOCOL_VERSION &&
+    message.requestId === requestId && message.state === "lease_ready" &&
+    message.controllerScriptURL === self.location.origin + RECOVERY_WORKER_PATH;
+}
+
+function respondWithRecoveryNavigationLease(event, operation) {
+  if (!self.navigator?.locks) {
+    event.respondWith(Promise.resolve(new Response("Recovery coordination is unavailable.", {
+      status: 503,
+      headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" },
+    })));
+    return;
+  }
+  let resolveResponse;
+  let rejectResponse;
+  const response = new Promise((resolve, reject) => { resolveResponse = resolve; rejectResponse = reject; });
+  const bridgeId = crypto.randomUUID();
+  const lease = self.navigator.locks.request(RECOVERY_DOCUMENT_LOCK, { mode: "shared" }, async () => {
+    try {
+      resolveResponse(await operation());
+      await bridgeRecoveryNavigation(event.resultingClientId, bridgeId);
+    } catch (error) {
+      rejectResponse(error);
+      throw error;
+    }
+  });
+  void lease.catch(rejectResponse);
+  event.respondWith(response);
+  event.waitUntil(lease);
+}
+
+self.addEventListener("message", (event) => {
+  const data = event.data;
+  const port = event.ports[0];
+  if (!data || !port || !event.source?.id) return;
+  if (data.kind === "acc-recovery-protocol-probe-v2") {
+    port.postMessage({
+      kind: "acc-recovery-protocol-ready-v2",
+      version: RECOVERY_PROTOCOL_VERSION,
+      requestId: data.requestId,
+      workerScriptURL: self.location.origin + RECOVERY_WORKER_PATH,
+    });
+    return;
+  }
+  if (data.kind !== "acc-recovery-window-inventory-v2") return;
+  event.waitUntil((async () => {
+    if (data.version !== RECOVERY_PROTOCOL_VERSION) {
+      port.postMessage({ kind: data.kind, version: RECOVERY_PROTOCOL_VERSION, requestId: data.requestId, status: "unsupported_version" });
+      return;
+    }
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    if (!windows.some((client) => client.id === event.source.id)) {
+      port.postMessage({ kind: data.kind, version: RECOVERY_PROTOCOL_VERSION, requestId: data.requestId, status: "unknown_requester" });
+      return;
+    }
+    const others = windows.filter((client) => client.id !== event.source.id);
+    const statuses = await Promise.all(others.map(recoveryClientHasLease));
+    const leaseReadyOther = statuses.filter(Boolean).length;
+    port.postMessage({
+      kind: data.kind,
+      version: RECOVERY_PROTOCOL_VERSION,
+      requestId: data.requestId,
+      status: "ok",
+      otherWindows: others.length,
+      leaseReadyOther,
+      legacyOther: others.length - leaseReadyOther,
+    });
+  })());
+});
 
 const cacheNameForGame = (gameId) => `${OFFLINE_SCORE_CACHE_PREFIX}${gameId.toLowerCase()}`;
 
@@ -35,7 +162,7 @@ self.addEventListener("fetch", (event) => {
 
   const gameMatch = request.mode === "navigate" ? url.pathname.match(GAME_PATH) : null;
   if (gameMatch) {
-    event.respondWith((async () => {
+    respondWithRecoveryNavigationLease(event, async () => {
       try {
         const network = await fetch(request);
         if (!network.redirected && network.status >= 500) {
@@ -48,7 +175,12 @@ self.addEventListener("fetch", (event) => {
           { status: 503, headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } },
         );
       }
-    })());
+    });
+    return;
+  }
+
+  if (request.mode === "navigate") {
+    respondWithRecoveryNavigationLease(event, () => fetch(request));
     return;
   }
 

@@ -1,4 +1,6 @@
+import {isGameScorecardNumbers,type GameScorecardNumbers} from '../api/odd-field-makeup.ts';
 export type AssignedGameContext = {
+  cardNumbers?:GameScorecardNumbers;
   actorId: string;
   gameId: string;
   tournamentId: string;
@@ -19,6 +21,8 @@ export type AssignedGameContext = {
 function isContext(value: unknown): value is AssignedGameContext {
   if (!value || typeof value !== "object") return false;
   const item = value as Record<string, unknown>;
+  if(Object.hasOwn(item,'cardNumbers')&&(!isGameScorecardNumbers(item.cardNumbers,String(item.gameId))
+    ||item.cardNumbers.eventId!==item.eventId||item.cardNumbers.schedulingBatchNumber!==item.roundNumber))return false;
   const person = (candidate: unknown) => {
     if (!candidate || typeof candidate !== "object") return false;
     const item = candidate as Record<string, unknown>;

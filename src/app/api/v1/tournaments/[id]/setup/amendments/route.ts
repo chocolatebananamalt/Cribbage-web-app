@@ -1,6 +1,9 @@
+import { allowSetupWriteOrAcceptedReplay } from "../../../../../../../lib/setup-write-policy";
 import { NextRequest } from "next/server";
 
-import { isRejectedSetupAmendment, isSetupAmendmentRequest, isSetupAmendmentResult } from "../../../../../../../lib/api/setup-amendment";
+import { isRejectedSetupAmendment, isRetainedSetupAmendmentRequest, isSetupAmendmentRequest, isSetupAmendmentResult } from "../../../../../../../lib/api/setup-amendment";
+import { isLegacySideSetupEvent } from "../../../../../../../lib/api/setup";
+import { sideSetupCapabilityState } from "../../../../../../../lib/api/side-pool-setup-capability";
 import { apiJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../../lib/api/route-boundary";
 import { readLargeJson } from "../../../../../../../lib/api/bounded-json";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
@@ -13,9 +16,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
     const body = await readLargeJson(request);
-    if (!isUuid(id) || !isSetupAmendmentRequest(body)) return apiJson({ error: "invalid_amendment" }, { status: 400 });
+    if (!isUuid(id) || !isRetainedSetupAmendmentRequest(body)) return apiJson({ error: "invalid_amendment" }, { status: 400 });
     const subject = await requireVerifiedSubject(await createClient());
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
+    const admin = createServerOnlyAdminClient();
+    const capability = sideSetupCapabilityState(await admin.rpc("get_side_pool_setup_type_capability_v1", {p_actor_id:subject,p_tournament_id:id}));
+    if (capability === "unavailable") return apiJson({error:"operation_unavailable"},{status:503});
+    if (capability === "legacy" && body.events.some(event=>event.sidePools.some(pool=>pool.payoutType !== undefined))) return apiJson({error:"side_pool_types_unavailable"},{status:503});
+    if (!await allowSetupWriteOrAcceptedReplay(capability === "ready" ? isSetupAmendmentRequest(body) : body.events.every(isLegacySideSetupEvent), async () => {
+      const receipt = await createServerOnlyAdminClient().rpc("has_accepted_setup_amendment_operation_v1", {p_actor_id:subject,p_tournament_id:id,p_operation_type:"append_tournament_setup_events_v1",p_operation_id:body.operationId});
+      if (receipt.error || typeof receipt.data !== "boolean") throw new Error("reconciliation unavailable");
+      return receipt.data;
+    })) return apiJson({error:"invalid_amendment"},{status:400});
+    if (capability === "ready") {
+      const binding = await admin.rpc("bind_side_pool_setup_request_v1", { p_actor_id:subject,p_tournament_id:id,p_operation_id:body.operationId,p_kind:"amendment",p_request:body });
+      if (binding.error || !binding.data || typeof binding.data !== "object") return apiJson({error:"operation_unavailable"},{status:503});
+      if ((binding.data as Record<string,unknown>).code === "unbound_prior_operation") return apiJson({error:"legacy_side_request_unbound"},{status:409});
+      if (!["bound","legacy_unbound"].includes(String((binding.data as Record<string, unknown>).status))) return apiJson({error:"side_pool_request_conflict"},{status:409});
+    }
     const coreEvents = body.events.map((event) => { const coreEvent = { ...event }; Reflect.deleteProperty(coreEvent, "sidePools"); return coreEvent; });
     const { data, error } = await createServerOnlyAdminClient().rpc("append_tournament_setup_events_v1", {
       p_actor_id: subject,
@@ -26,11 +44,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       p_operation_id: body.operationId,
     });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
-    const admin = createServerOnlyAdminClient();
     const setupRevisionId = data && typeof data === "object" && !Array.isArray(data) && typeof (data as Record<string, unknown>).setupRevisionId === "string"
       ? (data as Record<string, unknown>).setupRevisionId : null;
     if (setupRevisionId && data && typeof data === "object" && (data as Record<string, unknown>).status === "tournament_setup_amended") {
       const configured = await admin.rpc("configure_tournament_setup_side_pools_v1", { p_actor_id: subject, p_tournament_id: id, p_setup_revision_id: setupRevisionId, p_events: body.events });
+      if (!configured.error && configured.data && typeof configured.data === "object" && (configured.data as Record<string,unknown>).code === "unbound_prior_operation") return apiJson({error:"legacy_side_request_unbound"},{status:409});
       if (configured.error || !configured.data || typeof configured.data !== "object" || (configured.data as Record<string, unknown>).status !== "setup_side_pools_configured") return apiJson({ error: "operation_unavailable" }, { status: 503 });
       const materialized = await admin.rpc("materialize_tournament_setup_side_pools_v1", { p_actor_id: subject, p_tournament_id: id, p_setup_revision_id: setupRevisionId });
       if (materialized.error || !materialized.data || typeof materialized.data !== "object" || (materialized.data as Record<string, unknown>).status !== "setup_side_pools_materialized") return apiJson({ error: "operation_unavailable" }, { status: 503 });

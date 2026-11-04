@@ -1,0 +1,727 @@
+{
+  "baseCommit": "72c1c6571e33a53e7a204927e02e9a4dae22f3f9",
+  "purpose": "Local review inventory; not publication authorization",
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 444172,
+      "sha256": "dd1d8ddada67bc235d666e772eab6e1c874b05c7788e3e2ae2020c40f39cd46b",
+      "gitBlobSha256": "237876d4b3d442db73ecededd00a67a4a1b9733b5ad00c06db7c00389433b224",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "database/migrations/0256_regular_prize_rounding_math_v3.sql",
+      "bytes": 9140,
+      "sha256": "41c544ed3fae8585ec443a92fe33cfe01ba117b965b8ed206d3aa9811901399e",
+      "gitBlobSha256": "41c544ed3fae8585ec443a92fe33cfe01ba117b965b8ed206d3aa9811901399e",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "database/migrations/0257_regular_prize_accounting_v8.sql",
+      "bytes": 41076,
+      "sha256": "9c0ea761522d74822f1a41e027605716ff106ad362bcd32c094e40cd1500813c",
+      "gitBlobSha256": "0fb703edf1c5c4ed2e7371c0d5eb407c23b21543012a0f52cf5729b5c1b33282",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "database/migrations/0258_graduated_shared_amounts_v2.sql",
+      "bytes": 4363,
+      "sha256": "822626bbc99785c18dd19d7b5718800a9a779f5d99794a739ca988c9f2a387e4",
+      "gitBlobSha256": "822626bbc99785c18dd19d7b5718800a9a779f5d99794a739ca988c9f2a387e4",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "database/migrations/0259_graduated_q_policy_v4.sql",
+      "bytes": 10455,
+      "sha256": "cb1c9d439d5e65d17188de6f07d16f78295f4386cbd4a444cc82b653ef40c2aa",
+      "gitBlobSha256": "26eba4cbe46c43c3c25e4648a9c679f4d4bb282ae03c8279cb4d0bb912901bca",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "database/migrations/0260_new_award_denomination_guards_v1.sql",
+      "bytes": 9169,
+      "sha256": "b4a5128f903f88b9fef23d89a94b437cfaed3b2b2ec586ff942e9b9000362dd7",
+      "gitBlobSha256": "b4a5128f903f88b9fef23d89a94b437cfaed3b2b2ec586ff942e9b9000362dd7",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "database/migrations/0261_side_pool_graduated_amounts_v2.sql",
+      "bytes": 27283,
+      "sha256": "ddd0c25c1b6a58dbf82228a881d921352e66b5a781ce47900c921d65d9419c8e",
+      "gitBlobSha256": "4f357d21a59cc9071c845d719d62cc1f1fb1821d078f0b5fd5ecbee8376affe3",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "database/migrations/0262_legacy_award_rejection_recovery_v1.sql",
+      "bytes": 2834,
+      "sha256": "c1103fd7ff76e94a39ec536f864266eca80a68967840fa1fdda02783d82e8f5d",
+      "gitBlobSha256": "a14833676cae3fd4d10a4eafe88442f5d105f04cbd23ce3a122fd04127f85845",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "database/migrations/0263_team_replacement_generated_status_fix.sql",
+      "bytes": 770,
+      "sha256": "5dbc8a283f178f6602c9394b706dd6b1af8761c0935cbca86403821765439db9",
+      "gitBlobSha256": "4cab4d905034c368c31896b82590bf87409f28dc48211cae4204e8153e0e3bf5",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 69393,
+      "sha256": "406df85c6d7ed4d631731cbf6c09fab086a5d11ce042e246b2a32fa481db32bd",
+      "gitBlobSha256": "987b905261475d34c56eccc3d9a289e0715847b9193a1ccc3f5cb7f19e640f2d",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/operations/LAUNCH_PLAN.md",
+      "bytes": 6572,
+      "sha256": "4a3b3880aa2098b73be307a3f4d929cf779c02fba6b4b8cf66095a5fb8d44eac",
+      "gitBlobSha256": "4a3b3880aa2098b73be307a3f4d929cf779c02fba6b4b8cf66095a5fb8d44eac",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/operations/OCTOBER_PILOT_REHEARSAL.md",
+      "bytes": 10530,
+      "sha256": "dfd0a57867503e54f9719ac9be5aa54b6ff641afa2c02ce16daca16ec323d8ce",
+      "gitBlobSha256": "dfd0a57867503e54f9719ac9be5aa54b6ff641afa2c02ce16daca16ec323d8ce",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/operations/PILOT_MIGRATION_CHANGE_CONTROL.md",
+      "bytes": 4695,
+      "sha256": "a2146a4749831533e6f06df3d7fbc92cc68f0a7a856d568369aa505eac0c184a",
+      "gitBlobSha256": "a2146a4749831533e6f06df3d7fbc92cc68f0a7a856d568369aa505eac0c184a",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/operations/RELEASE_AND_RESTORE_CHECKPOINT_2026_10_30.md",
+      "bytes": 10754,
+      "sha256": "81fc3a49fb5ce381af2bb614cd1b9e9c480aae54035e306d39acf4dfd25531df",
+      "gitBlobSha256": "81fc3a49fb5ce381af2bb614cd1b9e9c480aae54035e306d39acf4dfd25531df",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 48125,
+      "sha256": "987f65425914a62c86e33ecb2a958f734004583b38c03744cc3a43119ada4dd0",
+      "gitBlobSha256": "620541683febec1cdefaa555a084c3daf4b960b3bcc7b254a9f5af9a5b13b8e8",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/quality/2026-10-29-release-readiness-current.md",
+      "bytes": 9793,
+      "sha256": "950bc0f94e1fa2eb7f8f50b8f59febb192dbdd6bae71e259fe0e2c986f4d9d46",
+      "gitBlobSha256": "e70193f67051cc8c586bc8d65545ce1609b650397d41546b4f8e3933032c40c6",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/quality/2026-10-30-five-dollar-prize-policy-local.md",
+      "bytes": 8973,
+      "sha256": "4091d53ba5bca1b1bf7281b69c2b4abc5bcdc62c2e9964e3d6813d64493eb108",
+      "gitBlobSha256": "5d5ea405a7300588f86745226c8e71d32d4e5c03a2f9cfc7200d19d2d29518af",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/quality/2026-10-30-five-dollar-rollout-manifest.md",
+      "bytes": 6167,
+      "sha256": "c6dee549232bf10a2e35dd1dfbe06ef340856848accbbd037e9971fe63b92ccd",
+      "gitBlobSha256": "4b81702f976d038b37d7e2fa233ce9ca72850127880194325cfc539a1265d649",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "docs/quality/2026-10-30-hosted17-terminal-acceptance.md",
+      "bytes": 4882,
+      "sha256": "d9208d204dadf4acfe14c53a5e382268eb906fc2f39bc52898b5ca04be6c1f16",
+      "gitBlobSha256": "d9208d204dadf4acfe14c53a5e382268eb906fc2f39bc52898b5ca04be6c1f16",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/quality/2026-10-30-local-release-operations-audit.md",
+      "bytes": 3280,
+      "sha256": "aa46cf2205a89c81f960b7876e833abd3d0d68991cda0b6fecd1edf1704aae0d",
+      "gitBlobSha256": "aa46cf2205a89c81f960b7876e833abd3d0d68991cda0b6fecd1edf1704aae0d",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/quality/2026-10-30-production-gates-after-hosted-acceptance.md",
+      "bytes": 8869,
+      "sha256": "f06fdad72791652830ca34fa0d6dae33de90ee9a060416e80972c406bf808979",
+      "gitBlobSha256": "f06fdad72791652830ca34fa0d6dae33de90ee9a060416e80972c406bf808979",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/quality/2026-10-30-v5-legacy-cent-runtime.md",
+      "bytes": 5853,
+      "sha256": "b2eff18da19c67986fd15bc633d8af5be23009f4c3d2b22e1ed509fd921ed528",
+      "gitBlobSha256": "b2eff18da19c67986fd15bc633d8af5be23009f4c3d2b22e1ed509fd921ed528",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/reference/INDEX.md",
+      "bytes": 5793,
+      "sha256": "6d7c19977910fe8822f478c8e82c8e9297a7a4e5e10ebbe7ece47b33af43bf1c",
+      "gitBlobSha256": "6d7c19977910fe8822f478c8e82c8e9297a7a4e5e10ebbe7ece47b33af43bf1c",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/reference/payout-policy-clarification-2026-10-30.md",
+      "bytes": 12009,
+      "sha256": "880b1def7496f0ab4ee0ef2ceed1282b257c8f43709211bf8e2fe52b8e6d2f00",
+      "gitBlobSha256": "880b1def7496f0ab4ee0ef2ceed1282b257c8f43709211bf8e2fe52b8e6d2f00",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "docs/reference/regular-prize-rounding-proposal-2026-10-30.md",
+      "bytes": 8668,
+      "sha256": "9faeb46499d1538ee5449a2660c29a2b49d461de043f80d07708201c9459706e",
+      "gitBlobSha256": "d701fa2e8359f3639706b0789fd77668d7e0f1eaee19ace16d94955cf47805c6",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/draft/route.ts",
+      "bytes": 2109,
+      "sha256": "7617c78de065cd87a27339261c8585e189f48921119f1f959779720c6debe9e0",
+      "gitBlobSha256": "7617c78de065cd87a27339261c8585e189f48921119f1f959779720c6debe9e0",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/finalize/route.ts",
+      "bytes": 2112,
+      "sha256": "ede51a1a80f7d73e09135f0cd6d74eb3efef3bc9de2e06f40f9a5b6766c2d686",
+      "gitBlobSha256": "ede51a1a80f7d73e09135f0cd6d74eb3efef3bc9de2e06f40f9a5b6766c2d686",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/funding/route.ts",
+      "bytes": 2120,
+      "sha256": "a8f4fcdeea311da29aa9f218abae03438faa5ac017860d4723d5daa69332bfbb",
+      "gitBlobSha256": "a8f4fcdeea311da29aa9f218abae03438faa5ac017860d4723d5daa69332bfbb",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/reconciliation/route.ts",
+      "bytes": 2105,
+      "sha256": "925a66aab66f3bd8c3c0f9eb6fa7a11ea91420f0b36eea9a80bb933a6a7a3c92",
+      "gitBlobSha256": "925a66aab66f3bd8c3c0f9eb6fa7a11ea91420f0b36eea9a80bb933a6a7a3c92",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/route.ts",
+      "bytes": 1448,
+      "sha256": "cf19cd618f2fc880009e7550af4876889da93a35c6a2b6f5a31cf5614d075bfd",
+      "gitBlobSha256": "cf19cd618f2fc880009e7550af4876889da93a35c6a2b6f5a31cf5614d075bfd",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v8/void-funding/route.ts",
+      "bytes": 2131,
+      "sha256": "051fad1ea1b1c0395c5621d42577b7a0b3bd409f1b9bef62989a9d86c5632877",
+      "gitBlobSha256": "051fad1ea1b1c0395c5621d42577b7a0b3bd409f1b9bef62989a9d86c5632877",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/q-graduated-policy-v4/reconciliation/route.ts",
+      "bytes": 1774,
+      "sha256": "66e56cb3173a4bc0de8885457a2b7f4bad7e1a15b5304ab14ddd62da4f17d611",
+      "gitBlobSha256": "66e56cb3173a4bc0de8885457a2b7f4bad7e1a15b5304ab14ddd62da4f17d611",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/q-graduated-policy-v4/route.ts",
+      "bytes": 2418,
+      "sha256": "c73db2bc2220db0d878bdfd8d2d597693ca09babe1e1dad484a33f0131c41d7d",
+      "gitBlobSha256": "c73db2bc2220db0d878bdfd8d2d597693ca09babe1e1dad484a33f0131c41d7d",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/satellite-results/route.ts",
+      "bytes": 2598,
+      "sha256": "d3ec51cf60979d6f676b15b3ba8be916785b65e2bf9562ce01ec149e909698db",
+      "gitBlobSha256": "d3ec51cf60979d6f676b15b3ba8be916785b65e2bf9562ce01ec149e909698db",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/side-pool-graduated-v2/reconciliation/route.ts",
+      "bytes": 2045,
+      "sha256": "dd0d983dc005df21840d54f649197c0885c31c8a31181d02aef660580cb5cf20",
+      "gitBlobSha256": "dd0d983dc005df21840d54f649197c0885c31c8a31181d02aef660580cb5cf20",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/side-pool-graduated-v2/route.ts",
+      "bytes": 2596,
+      "sha256": "ccb6e435351b4db48fa741de8e470bcae2bb8513e6f4976aa5881a61837a240a",
+      "gitBlobSha256": "ccb6e435351b4db48fa741de8e470bcae2bb8513e6f4976aa5881a61837a240a",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/side-pools/route.ts",
+      "bytes": 5522,
+      "sha256": "45879ba6a85a2918adc8542234a32a65f199217c6049409736e44e0ee580e5f1",
+      "gitBlobSha256": "05886a0d7f75a8ba46ff64a2753b79f633a2d304d94acfda5e5fa45fe7b75ec6",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/page.tsx",
+      "bytes": 2631,
+      "sha256": "de90693e788cfee115be48a191408d14bd28447e16427883550fc79293d4fc3a",
+      "gitBlobSha256": "de90693e788cfee115be48a191408d14bd28447e16427883550fc79293d4fc3a",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "bytes": 21270,
+      "sha256": "1b2279fe7920f168c46c15d5f1c52c1c791c4f4b9942494da515f69d89e004f4",
+      "gitBlobSha256": "1b2279fe7920f168c46c15d5f1c52c1c791c4f4b9942494da515f69d89e004f4",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/page.tsx",
+      "bytes": 1915,
+      "sha256": "2120cb49399575b9ffcedd419fb2e9d508efcd56f6665a970eb99e6064e58a4c",
+      "gitBlobSha256": "2120cb49399575b9ffcedd419fb2e9d508efcd56f6665a970eb99e6064e58a4c",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/page.tsx",
+      "bytes": 7258,
+      "sha256": "e804a1e4b2c9472c826b1b4a39a0bfcafe1a0fa57e833511dc97f965832d8026",
+      "gitBlobSha256": "e804a1e4b2c9472c826b1b4a39a0bfcafe1a0fa57e833511dc97f965832d8026",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/pool-calculator.tsx",
+      "bytes": 3058,
+      "sha256": "8229ee0b5d261e84063d9a93f67a8731277b364cef93fbdeeeeb70448f8e3448",
+      "gitBlobSha256": "8229ee0b5d261e84063d9a93f67a8731277b364cef93fbdeeeeb70448f8e3448",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/prize-schedules/prize-schedule-summary.tsx",
+      "bytes": 3924,
+      "sha256": "9cb7407bf09c5f3f68a80c0aa2cc0a6afb403b9ff1f458b9af7dd82f2b478919",
+      "gitBlobSha256": "e890dd90616ada89899b732feda03c5d8c5e53b8f03af0a0c4412c1354496a68",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-operating-schedules/operating-client.tsx",
+      "bytes": 19611,
+      "sha256": "b28bddbc23764f22d3068edb600a1a00a3f00f69269e46318578286be2ddd573",
+      "gitBlobSha256": "b28bddbc23764f22d3068edb600a1a00a3f00f69269e46318578286be2ddd573",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-operating-schedules/page.tsx",
+      "bytes": 1952,
+      "sha256": "5aeda6c87d6d1dcf9adada1766e593561edb0721211a2af0f2853741ddf4c8b1",
+      "gitBlobSha256": "5aeda6c87d6d1dcf9adada1766e593561edb0721211a2af0f2853741ddf4c8b1",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/satellite-results/satellite-results-client.tsx",
+      "bytes": 8758,
+      "sha256": "f1e3dba8c7687997e6bf466dc6ca0e263af6fff6291021eed72fbf8692178b01",
+      "gitBlobSha256": "f1e3dba8c7687997e6bf466dc6ca0e263af6fff6291021eed72fbf8692178b01",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "bytes": 19461,
+      "sha256": "0d9f520ccf1cfea30305f754e38f1374942e782f0e7d3029275d3e98afae23a9",
+      "gitBlobSha256": "a52fc4b9e159b8593e3c6e21b3457904dabc99fc6e5de226115625481ee5577f",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/graduated-side-pools-v2.tsx",
+      "bytes": 21326,
+      "sha256": "618b84e7bc224ab564d399ef5fe567a9bed678d11d3c2c16a7cda7aa22046275",
+      "gitBlobSha256": "618b84e7bc224ab564d399ef5fe567a9bed678d11d3c2c16a7cda7aa22046275",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/page.tsx",
+      "bytes": 2662,
+      "sha256": "36f69b4e7cb488e6d23ba9e88f6c688665c04deee54d771bc506b1a8ee5707fc",
+      "gitBlobSha256": "36f69b4e7cb488e6d23ba9e88f6c688665c04deee54d771bc506b1a8ee5707fc",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx",
+      "bytes": 25014,
+      "sha256": "58cee80a7da0f76c5a30e4528f8cdbc8b161c0a1846056b433776da1ae35b2c9",
+      "gitBlobSha256": "595c426ae2e589c55e044211736e9d917489f97d1bb2d4efa5f294832812d486",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/api/accounting-entry.ts",
+      "bytes": 2307,
+      "sha256": "6d48bfdc6ce3fd001dffc9b3792832ab45cc2a046865f41b29fa4bd3e28aa587",
+      "gitBlobSha256": "6d48bfdc6ce3fd001dffc9b3792832ab45cc2a046865f41b29fa4bd3e28aa587",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/api/no-q-accounting-v7.ts",
+      "bytes": 8368,
+      "sha256": "1b8c22817af4c38e8ef00fe752886aa7826c25723a4f9423d18db28d1af52b56",
+      "gitBlobSha256": "1b8c22817af4c38e8ef00fe752886aa7826c25723a4f9423d18db28d1af52b56",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/api/prize-accounting-v8.ts",
+      "bytes": 17904,
+      "sha256": "1da53ae47e2134723083c27545c3b78fec1f96267fc5581900fc8ef02f6ddbbd",
+      "gitBlobSha256": "1da53ae47e2134723083c27545c3b78fec1f96267fc5581900fc8ef02f6ddbbd",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/api/q-accounting-v6.ts",
+      "bytes": 18994,
+      "sha256": "8f6d298e5e7aad932bfaf0626c0629cdcff1429b7b95d21daaaaa21a5074af92",
+      "gitBlobSha256": "15206b8289864af62e4054e59f88f7a1c1f89c7f571164a92cff81479dec5913",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/api/q-graduated-policy-v4.ts",
+      "bytes": 2665,
+      "sha256": "d2a351a8bcddacfbe0c2127cb3e68ca1644a157d97387c6d8aa55b67de29bd58",
+      "gitBlobSha256": "d2a351a8bcddacfbe0c2127cb3e68ca1644a157d97387c6d8aa55b67de29bd58",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/api/q-obligation-review-v2.ts",
+      "bytes": 5510,
+      "sha256": "e1e556fb1c0eb4e8ebc3584bdb06a27d0af37abbaefe3babf39def38602cdd68",
+      "gitBlobSha256": "a6c77b1a6e8f49b043442753eb3628ddd8d33841254a0d9a8e01d5724d0627cd",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/api/settlement-v5.ts",
+      "bytes": 14467,
+      "sha256": "7d0a4d87de9b32da014d4d20179c418b84fdfa7a8df2ac93df1333be3bf20200",
+      "gitBlobSha256": "8029f287705380b221374b06fb18c08647f234e2b10a4b32f444cc240a8af572",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/api/side-pool-graduated-v2.ts",
+      "bytes": 10041,
+      "sha256": "e3d6df9f68249e7236541cef90fa84236621a2d22587d5bf6d2cd0a1f8cab702",
+      "gitBlobSha256": "c5b3386befcb601e0f61a9bfc138a353e356012a7b73989ea7f2d3ba36a89b89",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/results/graduated-pool-amounts-v2.ts",
+      "bytes": 5175,
+      "sha256": "49c7f5f5c60c3e7dbd82c56d07706baa92b35cf3ac7a7b7f45f4cb545ee12c35",
+      "gitBlobSha256": "49c7f5f5c60c3e7dbd82c56d07706baa92b35cf3ac7a7b7f45f4cb545ee12c35",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/results/prize-schedule-setup.ts",
+      "bytes": 2961,
+      "sha256": "5c8818f1cd8a927d5a708abc34bc1abca49b6963cbdcd62653e3efe4ffd13d50",
+      "gitBlobSha256": "5c8818f1cd8a927d5a708abc34bc1abca49b6963cbdcd62653e3efe4ffd13d50",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/results/prize-schedule.ts",
+      "bytes": 15692,
+      "sha256": "12694a76fdf4fcad0eeda4893290ae79566a50ce01f345cc71b600674b6bc8e8",
+      "gitBlobSha256": "b9aab4c51753aed68f27940c009da069d8f18f4285ae3aa91b8e66c4618997d1",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "src/lib/results/q-graduated-operating-preview-v4.ts",
+      "bytes": 3103,
+      "sha256": "6add8006bf686c6237ec4263184404e76d86b81e4e882d5bcecf20e17f43daa6",
+      "gitBlobSha256": "6add8006bf686c6237ec4263184404e76d86b81e4e882d5bcecf20e17f43daa6",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "src/lib/results/regular-prize-rounding-v3.ts",
+      "bytes": 10254,
+      "sha256": "4f48318037cb44577780ba06529ae2ebca88ef8318810421f143d6ed167ead27",
+      "gitBlobSha256": "4f48318037cb44577780ba06529ae2ebca88ef8318810421f143d6ed167ead27",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/five-qualifier-playoff-sql-acceptance.mjs",
+      "bytes": 15228,
+      "sha256": "f4588323417b72a455b0e44c58a34b1d721e84ddd36ff88cb8f2787cc163b692",
+      "gitBlobSha256": "e4d7aea39037daa51d52219b58240fbe89ea041818c8befb87a07d1d59d37e3d",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/fixtures/prize-accounting-v8-browser-fixture.mjs",
+      "bytes": 3973,
+      "sha256": "c7804ff9f859dd96f8b17b05df28e0f50d9f4c2991d0c23a57cbf6660d78f405",
+      "gitBlobSha256": "c7804ff9f859dd96f8b17b05df28e0f50d9f4c2991d0c23a57cbf6660d78f405",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/fixtures/prize-accounting-v8-workspace.mjs",
+      "bytes": 3624,
+      "sha256": "145c50f89688001d3cf19b60dbcd275057eab4fe47ef7a9c5a087fe79bec6e3e",
+      "gitBlobSha256": "145c50f89688001d3cf19b60dbcd275057eab4fe47ef7a9c5a087fe79bec6e3e",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/graduated-pool-amounts-v2-sql-acceptance.mjs",
+      "bytes": 2733,
+      "sha256": "e390f2a41350450ed30a374aeb94f90c1bdfa1b669c834a53b5b80b07db088a7",
+      "gitBlobSha256": "29ad29e2c7fb7ddcc96c17be7174c1391ad9db44cdc733de35dd7494f4f7aee7",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/graduated-pool-amounts-v2.test.mjs",
+      "bytes": 5819,
+      "sha256": "e4cc7ec5ed1ff083777d44a1d47559c02a4dbd48043f4c308d001ad44d425405",
+      "gitBlobSha256": "e4cc7ec5ed1ff083777d44a1d47559c02a4dbd48043f4c308d001ad44d425405",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/graduated-pool.test.mjs",
+      "bytes": 2780,
+      "sha256": "559284cd81b4c06bd44fc7825b79dbed34ef2f55eca2941753b8ae69dbadaa7c",
+      "gitBlobSha256": "559284cd81b4c06bd44fc7825b79dbed34ef2f55eca2941753b8ae69dbadaa7c",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/graduated-q-v4-sql-acceptance.mjs",
+      "bytes": 4826,
+      "sha256": "e5f014815e4338e82cc0e25c508098cbd85907d3fb0b5e00da4449c4f1386887",
+      "gitBlobSha256": "e5f014815e4338e82cc0e25c508098cbd85907d3fb0b5e00da4449c4f1386887",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/legacy-award-recovery-sql-acceptance.mjs",
+      "bytes": 13212,
+      "sha256": "6b3d228b0059b0d54832cc16b64b8760699d51c42783c87f714bc05639cba82d",
+      "gitBlobSha256": "6b3d228b0059b0d54832cc16b64b8760699d51c42783c87f714bc05639cba82d",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/legacy-award-rejection-recovery-sql-acceptance.mjs",
+      "bytes": 4715,
+      "sha256": "7aef2b58239dc8cb13ad7143ed2e635b2d55da697b38a62741e2d722ef274158",
+      "gitBlobSha256": "a516ee4b16fb1d4ab7a90a4c4ace8bccdfcda0b8463f06586c07dec22b3aeb50",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/legacy-award-rejection-recovery.test.mjs",
+      "bytes": 2157,
+      "sha256": "7b904d88e6213755d1337500e6659dd9bc7c725779dfbe67c85c9e404a703ba4",
+      "gitBlobSha256": "b7278f538db25c1bb37ac486f33374c7f49088e586c6f4d903c9b223aafe112e",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/legacy-satellite-rejection-browser.mjs",
+      "bytes": 6182,
+      "sha256": "8af0e8622088e7007efa70dc4a0dce78051a47f42df5f683ad6a7972a4ca3e06",
+      "gitBlobSha256": "ef4011f6dfd86980dc9edb37ad015a7c4b99fb5c3f520721be3a68357a2d26b7",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/legacy-satellite-team-rejection.test.mjs",
+      "bytes": 4319,
+      "sha256": "76111cdcd04d121d5c159097a614af4d189710bb898616feb337a150eb31670b",
+      "gitBlobSha256": "76111cdcd04d121d5c159097a614af4d189710bb898616feb337a150eb31670b",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/legacy-satellite-team-sql-acceptance.mjs",
+      "bytes": 6903,
+      "sha256": "7109a31df325cc48c1ba056112cbf65777d15fbd0df7a9fc0e7f4e251944ecf1",
+      "gitBlobSha256": "7109a31df325cc48c1ba056112cbf65777d15fbd0df7a9fc0e7f4e251944ecf1",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/legacy-side-award-rejection.test.mjs",
+      "bytes": 705,
+      "sha256": "c167a88025594a29f041c79b3948bf230d9780d49ea371a7b0b8aceecd167441",
+      "gitBlobSha256": "4590c1f3a9ba0a401c2056f59e2be85c8a76a8f8b90967edca22ea4227e4d1af",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/new-award-denomination-guards.test.mjs",
+      "bytes": 2327,
+      "sha256": "d93b0337dc1aa7316c6f53188839b528d5c730afff7baafc13e6523ddf159520",
+      "gitBlobSha256": "d93b0337dc1aa7316c6f53188839b528d5c730afff7baafc13e6523ddf159520",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/new-award-denomination-sql-acceptance.mjs",
+      "bytes": 5876,
+      "sha256": "cf29c56100bf309944d6873dbd7533809901299bec15805de64f9a734a084477",
+      "gitBlobSha256": "f52085c3fb52f3aef8c399b0e10fe88935a17d7344fe55e927e4f79642e20dee",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/other-money-browser.mjs",
+      "bytes": 9548,
+      "sha256": "860b73eaaf73359a0ba6b34b900659678969ab87a2196a3fc526c4c29b1c1625",
+      "gitBlobSha256": "860b73eaaf73359a0ba6b34b900659678969ab87a2196a3fc526c4c29b1c1625",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/prize-accounting-v8-browser.mjs",
+      "bytes": 21815,
+      "sha256": "dd2bb26dc351cb426d07d933546a4aadfd8a0f2d5dc82cab266c7b171d81cab9",
+      "gitBlobSha256": "c1b299947c1039bae95cd89b5c2dda97894eb91f070bcd43baa3ada41c37f6aa",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/prize-accounting-v8-sql-acceptance.mjs",
+      "bytes": 19742,
+      "sha256": "b96804872ea572caa2898a4609646d71a54ba38833d6477d45583fa63ab0017f",
+      "gitBlobSha256": "bd216bd525cd28b3be1f8831c34a5a1adf7896a2a4fde03876d07cd46f5a6d5b",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/prize-accounting-v8.test.mjs",
+      "bytes": 6827,
+      "sha256": "699de22eeb2bd2c6a290c0d7fd8b32cb7b2618a07a1abb252f2978a224cb6c0d",
+      "gitBlobSha256": "699de22eeb2bd2c6a290c0d7fd8b32cb7b2618a07a1abb252f2978a224cb6c0d",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/prize-percentage-input.test.mjs",
+      "bytes": 2211,
+      "sha256": "6edc0f1bb7c0879df83824c61e80df83def3b9074f591b72172b20356e7203b1",
+      "gitBlobSha256": "76ad667065f907d69aaa30b71b8e2903eefda6b839a871fcc9fe9e04f4f66766",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/prize-schedule-five-dollar-setup.test.mjs",
+      "bytes": 1866,
+      "sha256": "226280898ab49e8c22be4c01037d217aadf25a45dfad85866ff1c13888084880",
+      "gitBlobSha256": "226280898ab49e8c22be4c01037d217aadf25a45dfad85866ff1c13888084880",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/q-graduated-policy-v4.test.mjs",
+      "bytes": 5229,
+      "sha256": "1084e1937cad0f26a986bb98cc2224e7d45e6b96beeca6e4ecf286dda6fa5c6b",
+      "gitBlobSha256": "1084e1937cad0f26a986bb98cc2224e7d45e6b96beeca6e4ecf286dda6fa5c6b",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/q-graduated-v4-browser.mjs",
+      "bytes": 18333,
+      "sha256": "943d2582f72ac68ecd4a9e33eb15a2c78ec7b77361535ddc32df5a0e31a02c9f",
+      "gitBlobSha256": "0ebc647a7735189bb2b8d32ef97d07a07a771c8313058a6c0209077347fdb517",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/regular-prize-rounding-v3-sql-acceptance.mjs",
+      "bytes": 3130,
+      "sha256": "8917bb4397d60615b1b6bc8fa0b48e9ea9d767037027b8324acfe961ecea4cc9",
+      "gitBlobSha256": "8917bb4397d60615b1b6bc8fa0b48e9ea9d767037027b8324acfe961ecea4cc9",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/regular-prize-rounding-v3.test.mjs",
+      "bytes": 7888,
+      "sha256": "b36ffb8bd0d07f2e420978e30ac38a4f369d82db42023e5fd78e3eb893261a25",
+      "gitBlobSha256": "b36ffb8bd0d07f2e420978e30ac38a4f369d82db42023e5fd78e3eb893261a25",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/run-five-dollar-container.mjs",
+      "bytes": 3537,
+      "sha256": "9b6d4f578d604f84a7d9f28018d3bc111f853026c474e97b26b82ffb13182635",
+      "gitBlobSha256": "60cb3761c21189cf489dc150605530b8aecf51778465b0779b535b75805a65aa",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-five-dollar-isolated.mjs",
+      "bytes": 5328,
+      "sha256": "2fb8395031f4db0150dd4986ad33a6db8b160437464ab193fd4f3eabaa89bdd0",
+      "gitBlobSha256": "26712c53bd163bf869468542cc87830b2047ed9881d7a3b0242c73be91063a4e",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-legacy-award-container.mjs",
+      "bytes": 3540,
+      "sha256": "cc5f23c3c11b564f88a584ce62ad28be0f7e37a8e366028e6de6a594b98938ba",
+      "gitBlobSha256": "fb34fd4ea0cbc12934ae49604f76d89eed3a76250bd57e362f95c381c3e0be7d",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-legacy-award-isolated.mjs",
+      "bytes": 7268,
+      "sha256": "841f3fdcd346ba3736b7dc6130254108987e9e8ac8be7652f4310c2833f60c69",
+      "gitBlobSha256": "00cae0ee34cbd6c5e72e671e63428867952dafd5e74c3ace956e6a5accac3613",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-side-graduated-container.mjs",
+      "bytes": 3546,
+      "sha256": "4e2cadfe08281ab1ada1f6b74c1c0c5a931b3e923541f2c814a47b089bdc8f8e",
+      "gitBlobSha256": "0b0819048e309efa9860ad12ee5a53f0a3ac7da66197bc0fc803bfcd0823af39",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-side-graduated-isolated.mjs",
+      "bytes": 5600,
+      "sha256": "a8dbccdc3412b9f06b821a449d92df82889cfd05f9131964f723471ad0a1a56a",
+      "gitBlobSha256": "96c5162e4e40364fa25dc1ee3d489959a75914de6aa77908b1709ae7319e8797",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-v5-legacy-cent-container.mjs",
+      "bytes": 3551,
+      "sha256": "165f021d9b5ffe883c950c95aeeb4ecf6fa7186a822b808e950cd965a1e2f6aa",
+      "gitBlobSha256": "5da27421cd84753989e3916d27f09156c52a573e87150d456ed9841294889dcd",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/run-v5-legacy-cent-isolated.mjs",
+      "bytes": 5356,
+      "sha256": "a3b1977f462f7a05e7621d58029818a97e7497f6b514e0e6d3f87e4d2f32a575",
+      "gitBlobSha256": "a3b1977f462f7a05e7621d58029818a97e7497f6b514e0e6d3f87e4d2f32a575",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/side-graduated-source-binding.test.mjs",
+      "bytes": 1933,
+      "sha256": "58ff61e3ebbf6a98f427724e91f63390bae9a61eb06a7d8fdd850a5047ec0c97",
+      "gitBlobSha256": "8561cb66991ad5fb59c6dc5e804fca03a094ca965c82d52b6da4508fe76713da",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/side-graduated-v2-sql-acceptance.mjs",
+      "bytes": 25843,
+      "sha256": "62030de1a82efd98075eb7d1bc2ba54a68d50c506719018c84889abff889b03a",
+      "gitBlobSha256": "4aa3ef60255ee8e4673e39cccd52f24de222dab96bc717b17f4e2e3dc73578f7",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/side-pool-graduated-v2-browser.mjs",
+      "bytes": 14986,
+      "sha256": "d57a8b1455b6a3ebeff646d3bbc047230647f8bc68fe1e3940e95b775b70cfb8",
+      "gitBlobSha256": "d57a8b1455b6a3ebeff646d3bbc047230647f8bc68fe1e3940e95b775b70cfb8",
+      "gitNormalization": "identical"
+    },
+    {
+      "path": "tests/team-replacement-generated-status-fix.test.mjs",
+      "bytes": 648,
+      "sha256": "da996d9ba1f7056db37c8b397427bf38ebdcbd546b4eaf7f3ba21ce4c4b1e894",
+      "gitBlobSha256": "90b9f9fd165f081ca87223d196fedd5ed23e48bda34c5aa9890941b691026307",
+      "gitNormalization": "CRLF to LF only"
+    },
+    {
+      "path": "tests/v5-legacy-cent-sql-acceptance.mjs",
+      "bytes": 10301,
+      "sha256": "c6d5b1a2435313acdd5aa7d4830ddcbea076bab6a1d071596e90fd5a60ba1d50",
+      "gitBlobSha256": "c6d5b1a2435313acdd5aa7d4830ddcbea076bab6a1d071596e90fd5a60ba1d50",
+      "gitNormalization": "identical"
+    }
+  ],
+  "secretPatternScan": "No private key, live key or GitHub token patterns found; excluded ignored environment files, dependencies, test-results, generated evidence and private handoff",
+  "verification": "Full local pnpm verify; SQL legacy v5/v6/v7 and satellite/team replay; separate physical and hosted acceptance gates remain",
+  "lineEndingReview": {
+    "crlfOnlyFiles": 42,
+    "otherDifferences": 0,
+    "stagingSql": "Reviewed working bytes plus an extra trailing CRLF; removing those two bytes matches each reviewed SHA256."
+  }
+}

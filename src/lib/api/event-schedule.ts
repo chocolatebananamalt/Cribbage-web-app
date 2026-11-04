@@ -147,8 +147,8 @@ export function isEventStartResult(value: unknown, request: EventStartRequest): 
     && positiveInt(value.scheduleMatchCount, 5000) && value.playState === "in_progress";
 }
 
-const eventStartRejectedCodes = new Set(["invalid_start_request", "tournament_unavailable", "not_director", "idempotency_conflict",
-  "event_already_started", "registration_open", "schedule_unavailable", "stale_roster_or_schedule",
+const eventStartRejectedCodes = new Set(["linked_consy_eligibility_pending", "invalid_start_request", "tournament_unavailable", "not_director", "idempotency_conflict",
+  "event_already_started", "event_retired", "registration_open", "schedule_unavailable", "stale_roster_or_schedule",
   "attendance_or_seating_incomplete", "unexpected_scoring_activity"]);
 export function isRejectedEventStart(value: unknown): value is { status: "rejected"; code: string } {
   return record(value) && exact(value, ["status", "code"]) && value.status === "rejected"

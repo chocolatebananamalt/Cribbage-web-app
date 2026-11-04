@@ -1,3 +1,18 @@
-"use client";
-import { useState } from "react";
-export default function OfficialInvitationPage({ params }: { params: Promise<{ secret: string }> }) { const [message,setMessage]=useState("Confirm only if you were invited as a tournament official."); const [busy,setBusy]=useState(false); async function accept(){const {secret}=await params;setBusy(true);try{const r=await fetch(`/api/v1/official-invitations/${encodeURIComponent(secret)}`,{method:"POST",headers:{"content-type":"application/json"},body:"{}"});const d=await r.json() as {tournamentId?:string;error?:string};setMessage(r.ok&&d.tournamentId?"You are now an approved tournament official. Open Your Tournaments to continue.":d.error??"This invitation is unavailable or does not match your signed-in email.");}catch{setMessage("The result is uncertain. Refresh before trying again.");}finally{setBusy(false);}}return <main className="auth-shell"><section className="auth-card"><p className="eyebrow">TOURNAMENT OFFICIALS</p><h1>Accept official invitation</h1><p role="status" className="auth-note">{message}</p><button className="primary" disabled={busy} onClick={()=>void accept()}>Accept invitation</button></section></main>; }
+import { isUuid } from "../../../lib/api/validation";
+import { getCurrentSubject } from "../../../lib/auth/current-subject";
+import { createServerOnlyAdminClient } from "../../../lib/supabase/private-admin";
+import { getOfficialInvitationContext } from "../../../lib/official-invitation-context";
+import OfficialInvitationClient from "./official-invitation-client";
+
+export const dynamic = "force-dynamic";
+export default async function OfficialInvitationPage({ params }: { params: Promise<{ secret: string }> }) {
+  const { secret } = await params;
+  const actorId = await getCurrentSubject();
+  const legacy = secret.length >= 32 && !isUuid(secret);
+  let context = null;
+  if (actorId && isUuid(secret)) {
+    // An unavailable reader/migration fails closed; never infer context from URL.
+    try { context = await getOfficialInvitationContext(createServerOnlyAdminClient(), actorId, secret); } catch { context = null; }
+  }
+  return <main className="auth-shell"><section className="auth-card"><OfficialInvitationClient invitationId={secret} initial={context} legacy={legacy} signedIn={!!actorId} /></section></main>;
+}

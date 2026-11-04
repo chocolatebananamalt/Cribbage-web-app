@@ -12,23 +12,14 @@ const source = fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
 
 test('the source really is the score entry component', () => {
   assert.match(source, /export function LiveScoreEntry/);
-  assert.match(source, /const \[canConfirm, setCanConfirm\] = useState\(context\.canConfirm\)/);
+  assert.match(source, /const \[canConfirm, setCanConfirm\] = useState\(serverState\.canConfirm\)/);
 });
 
-test('canConfirm follows the server instead of the value captured at first mount', () => {
-  // router.refresh() re-renders with fresh props but does not remount, so a
-  // useState initializer alone leaves the second submitter without a Confirm
-  // button and the game never reaches verified. An effect keyed on
-  // context.canConfirm is what keeps the button in step with the server.
-  // Adjusted during render rather than in an effect, which is what React
-  // documents for a changed prop and what react-hooks/set-state-in-effect
-  // requires here. Either mechanism is acceptable; what must not happen is
-  // canConfirm being left at its first-mount value.
-  assert.match(source, /if \(lastServerCanConfirm !== context\.canConfirm\) \{/,
-    'the component must notice when the server changes canConfirm');
-  const adjust = source.slice(source.indexOf('if (lastServerCanConfirm !== context.canConfirm) {'));
-  assert.match(adjust.slice(0, 300), /setCanConfirm\(context\.canConfirm\)/,
-    'noticing the change must actually update canConfirm');
+test('a protected saved-state change reconciles confirmation and status without a remount', () => {
+  assert.match(source, /lastServerStateKey !== serverState.key && !busy && !offlineRecord && !pendingSubmission/);
+  assert.match(source, /setCanConfirm\(serverState.canConfirm\)/);
+  assert.match(source, /setStatus\(serverState.status\)/);
+  assert.match(source, /setSubmissionId\(context.ownSubmission.id\)/);
 });
 
 test('offline sync copy does not promise a retry that never happens', () => {
@@ -39,7 +30,7 @@ test('offline sync copy does not promise a retry that never happens', () => {
     'the offline failure message must not promise an automatic retry');
   assert.match(source, /Tap Sync Saved Entry to try again/,
     'the offline failure message must name the action that actually works');
-  assert.doesNotMatch(source, /setInterval|setTimeout\([^)]*syncOffline/,
+  assert.doesNotMatch(source, /setInterval\([^,]*(?:syncOffline|submit|confirm)|setTimeout\([^)]*syncOffline/,
     'if an automatic retry is ever added, update this test and the copy together');
 });
 
@@ -56,4 +47,12 @@ test('a discarded offline entry tells the player it is gone and must be re-enter
     assert.match(message, /Re-enter the result from the paper card/,
       `the ${outcome} message must tell the player how to recover`);
   }
+});
+
+test('status polling reads server state and never sends a score or confirmation', () => {
+ const poll=source.slice(source.indexOf('  useEffect(() => {'),source.indexOf('  const draftIdentity ='));
+ assert.match(poll, /navigator.onLine && document.visibilityState === "visible"/);
+ assert.match(poll, /router.refresh\(\)/);
+ assert.doesNotMatch(poll, /syncOffline\(|fetch\(|submit\(|confirm\(|deleteOfflineSubmission\(/);
+ assert.match(poll, /busy \|\| offlineRecord \|\| pendingSubmission/);
 });

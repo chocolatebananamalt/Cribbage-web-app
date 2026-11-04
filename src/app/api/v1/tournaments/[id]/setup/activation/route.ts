@@ -8,7 +8,7 @@ import {
 } from "../../../../../../../lib/api/setup-activation";
 import {
   apiJson,
-  readSmallJson,
+  readMediumJson,
   requireVerifiedSubject,
   withApiFailureBoundary,
 } from "../../../../../../../lib/api/route-boundary";
@@ -45,7 +45,7 @@ export async function POST(
   return withApiFailureBoundary(async () => {
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
     const { id } = await params;
-    const body = await readSmallJson(request);
+    const body = await readMediumJson(request);
     if (!isUuid(id) || !isSetupActivationRequest(body)) {
       return apiJson({ error: "invalid_activation" }, { status: 400 });
     }
@@ -53,17 +53,19 @@ export async function POST(
     if (!subject) return apiJson({ error: "unauthorized" }, { status: 401 });
 
     const admin = createServerOnlyAdminClient();
-    const { data, error } = await admin.rpc(
-      "finalize_tournament_setup_and_open_registration_v1",
-      {
+    const { data, error } = body.declarationPins ? await admin.rpc(
+      "finalize_tournament_setup_pinned_v2", {
+        actor: subject, tid: id, rid: body.setupRevisionId, expected: body.expectedVersion,
+        confirmed: body.confirmed, pins: body.declarationPins, op: body.idempotencyKey,
+      },
+    ) : await admin.rpc("finalize_tournament_setup_and_open_registration_v1", {
         p_actor_id: subject,
         p_tournament_id: id,
         p_setup_revision_id: body.setupRevisionId,
         p_expected_version: body.expectedVersion,
         p_confirmed: body.confirmed,
         p_idempotency_key: body.idempotencyKey,
-      },
-    );
+      });
     if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
     if (data && typeof data === "object" && !Array.isArray(data) && (data as Record<string, unknown>).status === "tournament_setup_activated") {
       const materialized = await admin.rpc("materialize_tournament_setup_side_pools_v1", { p_actor_id: subject, p_tournament_id: id, p_setup_revision_id: body.setupRevisionId });

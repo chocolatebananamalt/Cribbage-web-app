@@ -96,7 +96,7 @@ test("recovery browser preserves proposal and review identities across interrupt
   const client = readFileSync(new URL("../src/app/tournament/[tournamentId]/recoveries/recovery-client.tsx", import.meta.url), "utf8");
   assert.match(client, /device-recovery:proposal:\$\{actorId\}:\$\{item\.gameId\}/);
   assert.match(client, /device-recovery:review:\$\{actorId\}:\$\{item\.recoveryId\}/);
-  assert.match(client, /window\.sessionStorage\.setItem/);
+  assert.match(client, /setAppRecoveryItem/);
   assert.match(client, /Retry sends the exact same protected request/);
   assert.match(client, /Retry sends the exact same protected decision/);
 });

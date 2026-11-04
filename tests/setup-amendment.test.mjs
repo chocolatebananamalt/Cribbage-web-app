@@ -60,7 +60,7 @@ test("amendment route is same-origin, session-bound, strict, and server-only", (
   assert.doesNotMatch(route, /tournamentSetupActivationEnabled|ACC_TOURNAMENT_SETUP_ACTIVATION_ENABLED/);
   assert.match(route, /isSameOriginRequest\(request\)/);
   assert.match(route, /readLargeJson\(request\)/);
-  assert.match(route, /isSetupAmendmentRequest\(body\)/);
+  assert.match(route, /isRetainedSetupAmendmentRequest\(body\)/);
   assert.match(route, /requireVerifiedSubject\(await createClient\(\)\)/);
   assert.match(route, /createServerOnlyAdminClient\(\)\.rpc\("append_tournament_setup_events_v1"/);
   assert.match(route, /p_actor_id: subject/);
@@ -75,7 +75,8 @@ test("activated setup UI can append events but cannot edit active ones", () => {
   assert.match(client, /Retry Exact Event Addition/);
   assert.match(client, /isSetupAmendmentRequest/);
   assert.match(client, /tournament-setup-amendment:/);
-  assert.match(client, /<fieldset disabled=\{busy \|\| !!pending \|\| activated\}>/);
+  assert.match(client, /const draftEditingDisabled = busy \|\| declarationChecking \|\| !!pending \|\| activated \|\| activationDraftLocked/);
+  assert.match(client, /<fieldset disabled=\{draftEditingDisabled\}>/);
 });
 
 test("rollback fixture covers accepted, replay, rejection, and serialized contention outcomes", () => {

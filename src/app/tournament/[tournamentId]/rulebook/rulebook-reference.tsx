@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 const topics = [
   ["Score entry and verification", "Both assigned players submit matching results and each confirms before a digital result is official."],
-  ["Paper and digital card", "Keep the paper card as the shared reference. Each assigned player signs in as themselves, independently enters and confirms the same result; a missing entry, mismatch, or player who cannot sign in stays pending for cross-checking or a judge."],
+  ["Paper and digital card", "The Digital player submits their own result; the Paper player keeps the original paper scorecard and does not need an app account. An assigned cross-checker matches the sources, then a second distinct authorized non-playing official independently re-enters and confirms both. Missing evidence or a mismatch stays unresolved."],
   ["Cross-checking and judges", "Use the dated ACC Rulebook for the rule text. An unresolved game stays pending for the authorized cross-check or judge process."],
   ["Corrections", "A permitted correction preserves the original value and audit history. A pending correction does not change standings or exports."],
   ["Table/Seat and verification ID", "The starting Table/Seat becomes the player’s permanent verification ID. Current game seating may change as the tournament rotates."],

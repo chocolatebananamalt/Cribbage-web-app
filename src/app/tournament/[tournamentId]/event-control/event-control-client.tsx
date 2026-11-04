@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -11,7 +11,19 @@ import {
   type EventControlWorkspace,
 } from "../../../../lib/api/event-control";
 import { formatUtcDateTime } from "../../../../lib/date-time";
+import type { SyntheticEventContext } from "../../../../lib/api/synthetic-event-evidence";
+import { SyntheticEventArtifactView } from "../../../../components/synthetic-event-notice";
 
+import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
+import { isUuid } from "../../../../lib/api/validation";
+
+type SyntheticCloseEnvelope = { action: "close"; reason: string; confirmed: true; idempotencyKey: string };
+function validCloseEnvelope(v: unknown): v is SyntheticCloseEnvelope {
+  return !!v && typeof v === "object" && Object.keys(v).sort().join() === "action,confirmed,idempotencyKey,reason"
+    && "action" in v && v.action === "close" && "confirmed" in v && v.confirmed === true
+    && "idempotencyKey" in v && isUuid(v.idempotencyKey) && "reason" in v && typeof v.reason === "string"
+    && /^TEST ONLY SYNTHETIC: SYNTHETIC-EVENT-v1:[a-f0-9-]{36}:[a-f0-9]{64} /.test(v.reason);
+}
 type ConfirmKind = "close" | "reopen" | null;
 
 function playStateLabel(value: string) {
@@ -45,8 +57,13 @@ function readinessLine(event: EventControlEvent) {
   return `${resolvedGames} of ${scheduledGames} scheduled games are recorded and verified. ${unresolvedGames} still unresolved, so Close Event is refused.`;
 }
 
-export default function EventControlClient({ tournamentId, workspace }: { tournamentId: string; workspace: EventControlWorkspace }) {
+export default function EventControlClient({ actorId, tournamentId, workspace, syntheticContext: tournamentSyntheticContext }: { actorId?: string; tournamentId: string; workspace: EventControlWorkspace; syntheticContext?: SyntheticEventContext | null }) {
   const router = useRouter();
+  const flight = useRef(false);
+  const [retained, setRetained] = useState<SyntheticCloseEnvelope | null>(null);
+  const [recoveryReady, setRecoveryReady] = useState(false);
+  const [recoveryScope, setRecoveryScope] = useState<string | null>(null);
+  const [recoveryBlocked, setRecoveryBlocked] = useState(false);
   const events = workspace.events;
   const [selectedId, setSelectedId] = useState(events[0]?.eventId ?? "");
   const [reason, setReason] = useState("");
@@ -65,12 +82,55 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
   const resolvedId = events.some((item) => item.eventId === selectedId) ? selectedId : fallbackId;
   if (resolvedId !== selectedId) setSelectedId(resolvedId);
 
+  const syntheticContext = tournamentSyntheticContext?.eventIds.includes(resolvedId) ? tournamentSyntheticContext : null;
   const selected = events.find((item) => item.eventId === resolvedId) ?? null;
+  const closeArtifact = syntheticContext?.artifacts.find(item => item.kind === "close" && item.eventId === resolvedId);
   const trimmedReason = reason.trim();
   const reasonUsable = trimmedReason.length > 0 && trimmedReason.length <= 1000;
+  const closeReason = syntheticContext && closeArtifact ? `TEST ONLY SYNTHETIC: ${closeArtifact.reference} ${trimmedReason}` : trimmedReason;
   const controllable = !!selected && selected.started && !selected.teamEvent;
   const canClose = !!selected && controllable && selected.closeState === "open"
     && selected.readiness.scheduledGames > 0 && selected.readiness.unresolvedGames === 0;
+
+  const recoveryKey = `qualification-finalization:synthetic-close:${actorId}:${tournamentId}:${resolvedId}`;
+  const scopedRetained = recoveryScope === recoveryKey ? retained : null;
+  const scopedReady = recoveryReady && recoveryScope === recoveryKey;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+    setRecoveryScope(recoveryKey);
+    if (!syntheticContext) { setRecoveryReady(true); setRetained(null); setRecoveryBlocked(false); return; }
+    setRecoveryReady(false); setRetained(null); setRecoveryBlocked(false);
+    if (!actorId) { setRecoveryBlocked(true); setMessage("Current actor is unavailable; synthetic closure is blocked."); setRecoveryReady(true); return; }
+    try {
+      const raw = sessionStorage.getItem(recoveryKey);
+      if (raw) { const value: unknown = JSON.parse(raw); if (!validCloseEnvelope(value)) throw Error("invalid retained envelope"); setRetained(value); setMessage("An uncertain synthetic close request is retained. Retry the exact request to recover its outcome."); }
+    } catch { setRecoveryBlocked(true); setMessage("Retained closure could not be read safely. It was not cleared or overwritten."); }
+    setRecoveryReady(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [actorId, recoveryKey, syntheticContext]);
+  async function syntheticClose(envelope: SyntheticCloseEnvelope) {
+    if (flight.current || recoveryBlocked || !scopedReady || !actorId || !syntheticContext) return;
+    flight.current = true; setBusy(true);
+    const raw = JSON.stringify(envelope);
+    try {
+      const existing = sessionStorage.getItem(recoveryKey);
+      if (existing !== null && existing !== raw) throw Error("retained identity conflict");
+      if (!existing) setAppRecoveryItem(sessionStorage, recoveryKey, raw);
+      setRetained(envelope);
+      const result = await send("play-close", envelope);
+      if (!isEventPlayCloseResult(result.body)
+        || (result.body.status === "rejected" ? result.status !== 409 || result.body.code === "idempotency_conflict"
+          : result.status < 200 || result.status >= 300 || result.body.eventId !== resolvedId || !["event_play_closed", "already_closed"].includes(result.body.status))) {
+        setMessage("Closure outcome remains uncertain or conflicted. The exact request is retained."); return;
+      }
+      if (sessionStorage.getItem(recoveryKey) !== raw) throw Error("retained identity changed");
+      sessionStorage.removeItem(recoveryKey); setRetained(null);
+      if (result.body.status === "rejected") setMessage(eventControlRejectionMessage(result.body));
+      else finish("Simulated event closure confirmed. No physical table check is claimed.");
+    } catch { setMessage("Closure could not be confirmed. Retained work stays intact; retry uses the same operation and evidence."); }
+    finally { flight.current = false; setBusy(false); }
+  }
 
   async function send(path: "play-pause" | "play-close", body: Record<string, unknown>) {
     const response = await fetch(`/api/v1/tournaments/${tournamentId}/events/${resolvedId}/${path}`, {
@@ -117,14 +177,18 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
   }
 
   async function closeOrReopen(action: "close" | "reopen") {
-    if (busy || !controllable) return;
+    if (busy || !controllable || scopedRetained || recoveryBlocked) return;
+    if (action === "reopen" && syntheticContext) { setMessage("Reopening is unavailable for the synthetic fixture."); return; }
     if (!reasonUsable) { setMessage("Enter a reason of 1 to 1000 characters. Nothing was recorded."); return; }
     if (action === "close" && (!closeTicked || !canClose)) return;
+    if (action === "close" && syntheticContext) {
+      await syntheticClose({ action: "close", reason: closeReason, confirmed: true, idempotencyKey: crypto.randomUUID() }); return;
+    }
     setBusy(true);
     setMessage(action === "close" ? "Closing this event…" : "Reopening this event…");
     try {
       const body = action === "close"
-        ? { action, reason: trimmedReason, confirmed: true, idempotencyKey: crypto.randomUUID() }
+        ? { action, reason: closeReason, confirmed: true, idempotencyKey: crypto.randomUUID() }
         : { action, reason: trimmedReason, idempotencyKey: crypto.randomUUID() };
       const result = await send("play-close", body);
       if (!isEventPlayCloseResult(result.body)) {
@@ -148,10 +212,12 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
   }
 
   if (!events.length) {
-    return <section className="event-control"><p className="auth-note">No events are set up for this tournament yet, so there is no play to pause or close.</p></section>;
+    return <section className="event-control">
+    {scopedRetained && <aside role="alert"><p>An uncertain synthetic close request is retained.</p><button type="button" disabled={busy || !scopedReady || recoveryBlocked} onClick={() => void syntheticClose(scopedRetained)}>Recover exact synthetic close</button></aside>}<p className="auth-note">No events are set up for this tournament yet, so there is no play to pause or close.</p></section>;
   }
 
   return <section className="event-control">
+    {scopedRetained && <aside role="alert"><p>An uncertain synthetic close request is retained.</p><button type="button" disabled={busy || !scopedReady || recoveryBlocked} onClick={() => void syntheticClose(scopedRetained)}>Recover exact synthetic close</button></aside>}
     <section aria-label="Event play status">
       <h2>Every event right now</h2>
       <ul className="event-control-summary">
@@ -176,7 +242,7 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
 
       {!selected.started ? <p className="auth-note">Play has not started for this event, so there is nothing to pause or close yet.</p>
         : selected.teamEvent ? <p className="auth-note">Team events record scores through a separate path that these controls do not reach, so Pause and Close Event are not offered for them.</p>
-        : <>
+    : <>
           <label>Reason (<span className="required-field">*</span>required), kept with the record
             <input value={reason} onChange={(changed) => setReason(changed.target.value)} disabled={busy} maxLength={1000} aria-label="Reason for this change" />
           </label>
@@ -206,11 +272,12 @@ export default function EventControlClient({ tournamentId, workspace }: { tourna
                 : "This event can no longer be reopened. Qualification, a settlement draft, a playoff result or a final settlement already reads from the closed scorecard."}</p>
               : <>
                 <p>Closing ends play for this event and hands it to cross-checking. No new score is accepted afterwards.</p>
-                <label className="tick"><input type="checkbox" checked={closeTicked} onChange={(changed) => setCloseTicked(changed.target.checked)} disabled={!canClose} /> I have checked every table and play is finished for this event.</label>
+                {syntheticContext && closeArtifact && <SyntheticEventArtifactView artifact={closeArtifact}/>}
+                <label className="tick"><input type="checkbox" checked={closeTicked} onChange={(changed) => setCloseTicked(changed.target.checked)} disabled={!canClose || !!scopedRetained || recoveryBlocked || (!!syntheticContext && (!closeArtifact || !scopedReady))} /> {syntheticContext ? "I confirm the server verified simulated games are complete; no physical table check is claimed." : "I have checked every table and play is finished for this event."}</label>
               </>}
             <div className="registration-link-actions">
               {selected.closeState === "closed"
-                ? <button className="secondary" type="button" onClick={() => setConfirming("reopen")} disabled={!selected.canReopen}>Reopen Event</button>
+                ? <button className="secondary" type="button" onClick={() => setConfirming("reopen")} disabled={!selected.canReopen || !!syntheticContext}>Reopen Event</button>
                 : <button className="secondary" type="button" onClick={() => setConfirming("close")} disabled={!canClose || !closeTicked}>Close Event</button>}
             </div>
           </fieldset>

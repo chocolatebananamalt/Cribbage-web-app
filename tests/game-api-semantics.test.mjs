@@ -591,7 +591,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(gameError, /Game workspace temporarily unavailable/);
   assert.match(gameError, /No result can be recorded/);
   assert.doesNotMatch(contextSql, /profileId|participantId/);
-  assert.match(liveScore, /Submit My Independent Entry/);
+  assert.match(liveScore, /Submit result/);
   assert.match(liveScore, /Confirm My Entry/);
   assert.match(liveScore, /crypto\.randomUUID\(\)/);
   assert.match(liveScore, /window\.sessionStorage/);
@@ -602,8 +602,8 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /isDefinitiveScoreMutationFailure/);
   assert.match(liveScore, /server response was incomplete/);
   assert.match(liveScore, /context\.ownSubmission\.winnerSide/);
-  assert.match(liveScore, /ID#: \{context\.player\.verificationId\}/);
-  assert.match(liveScore, /ID#: \{context\.opponent\.verificationId\}/);
+  assert.match(liveScore, /playerId=\{context\.player\.verificationId\} tableSeat=\{context\.player\.tableSeat\}/);
+  assert.match(liveScore, /playerId=\{context\.opponent\.verificationId\} tableSeat=\{context\.opponent\.tableSeat\}/);
   assert.match(liveScore, /Game \{context\.roundNumber\}/);
   assert.doesNotMatch(liveScore, /Game \{context\.matchInstance\}/);
   assert.match(liveScore, /function SkunkAid/);
@@ -612,15 +612,10 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(liveScore, /\"Triple skunk\"/);
   assert.match(liveScore, /<SkunkAid level=\{derived\?\.skunkLevel \?\? 0\} \/>/);
   assert.match(liveScore, /function ResultPreview/);
-  assert.match(liveScore, /won\" : \"lost\"\} by \{score\.margin\}/);
-  assert.match(liveScore, /Game Points/);
+
+  assert.match(liveScore, /Your Result:/);
   assert.match(liveScore, /Spread Points/);
-  assert.match(liveScore, /<ResultPreview context=\{context\} score=\{derived\} \/>/);
-  assert.match(liveScore, /Review Current Game Result/);
-  assert.match(liveScore, /Review Result/);
-  assert.match(liveScore, /Edit Result/);
-  assert.match(liveScore, /setReviewing\(true\)/);
-  assert.match(liveScore, /setReviewing\(false\)/);
+  assert.match(liveScore, /<ResultPreview score=\{derived\} \/>/);
   assert.match(confirmationHardening, /before insert on app\.score_confirmations/);
   assert.match(confirmationHardening, /e\.scoring_method = 'digital'/);
   const confirmationSource = read('database/migrations/0003_game_submission_confirmation_rpc.sql').split('create or replace function public.confirm_game_score')[1];
@@ -632,7 +627,11 @@ test('assigned game context and live score entry stay server-authoritative', () 
   assert.match(submittedInvariant, /g\.state in \('mismatch', 'confirmation_pending', 'verified', 'corrected'\) and submission_count <> 2/);
   assert.match(liveScore, /canConfirm/);
   assert.match(liveScore, /Playing with one paper card and one digital card/);
-  assert.match(liveScore, /Both assigned players must sign in as themselves/);
+  assert.match(liveScore, /digital player submits their own result in the app/);
+  assert.match(liveScore, /paper player records the same result on the original paper scorecard and does not need an app account/);
+  assert.match(liveScore, /assigned cross-checker to match against the digital entry/);
+  assert.match(liveScore, /second distinct authorized non-playing official must independently re-enter and confirm both sources/);
+  assert.match(liveScore, /missing entry or mismatch stays unresolved/);
   assert.match(liveScore, /navigator\.onLine/);
   assert.match(liveScore, /Saved Offline, Waiting to Sync/);
   assert.match(liveScore, /queueOfflineSubmission/);
@@ -650,7 +649,7 @@ test('assigned game context and live score entry stay server-authoritative', () 
 test('player scorecard read is own-card scoped and excludes unverified totals', () => {
   const sql = read('database/migrations/0088_player_scorecard_reader.sql');
   const reader = read('src/lib/games/player-scorecard.ts');
-  const page = read('src/app/tournament/[tournamentId]/scorecard/page.tsx');
+  const page = read('src/app/tournament/[tournamentId]/scorecard/page.tsx') + read('src/components/player-scorecard-view.tsx');
   assert.match(sql, /create or replace function public\.get_player_scorecard/);
   assert.match(sql, /stable\s+security definer\s+set search_path = ''/);
   assert.match(sql, /player_participant\.profile_id = auth\.uid\(\)/);
@@ -1395,7 +1394,7 @@ test('setup routes are same-origin mutations and private, claim-checked RPC boun
     assert.doesNotMatch(source, /\.from\(|\.insert\(|\.update\(|service_role/);
     assert.match(source, /cache-control.*private, no-store/);
   }
-  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isSetupSaveRequest/); assert.match(save, /isSavedSetup/);
+  assert.match(save, /save_tournament_setup_version/); assert.match(save, /isRetainedSetupSaveRequest/); assert.match(save, /isSavedSetup/);
   assert.match(save, /get_tournament_setup_workspace/); assert.match(save, /get_tournament_setup_official_choices/);
   assert.match(save, /isSetupWorkspace/); assert.match(save, /isSetupOfficialChoices/); assert.match(save, /Promise\.all/); assert.match(save, /decideSetupRead/);
   assert.match(validators, /director_configured_unverified/);

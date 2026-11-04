@@ -1,7 +1,7 @@
 import { previewQualification } from "../qualification.ts";
 import type { PreliminaryStanding } from "./preliminary-standings-contract.ts";
 
-export function buildPreliminaryQualification(rows: PreliminaryStanding[]) {
+export function buildPreliminaryQualification(rows: PreliminaryStanding[], resolutions: Array<{ candidateIds: string[]; winnerId: string }> = []) {
   if (rows.length === 0) return null;
   const preview = previewQualification(rows.map((row) => ({
     id: row.participantId,
@@ -10,7 +10,7 @@ export function buildPreliminaryQualification(rows: PreliminaryStanding[]) {
     gamesWon: row.gamesWon,
     netSpreadPoints: row.netSpreadPoints,
     positiveSpreadPoints: row.plusPoints,
-  })));
+  })), resolutions);
   const provisionalQualifiers = preview.ranked.filter((row) => row.qualificationStatus === "qualified");
   const cutoffTie = preview.unresolvedTies.find((tie) => tie.affectsQualificationCut) ?? null;
   const firstNonQualifier = preview.ranked.find((row) => row.qualificationStatus === "not_qualified") ?? null;

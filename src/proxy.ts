@@ -6,6 +6,7 @@ import {
 import { accountActivationEnabled } from "./lib/api/account-activation-release";
 import { configuredSupabaseConnectSources } from "./lib/browser-connect-policy";
 import { updateSession } from "./lib/supabase/proxy";
+import { expectedRequestOrigin } from "./lib/api/same-origin";
 
 function registrationContentSecurityPolicy(nonce: string) {
   const development = process.env.NODE_ENV === "development";
@@ -44,7 +45,7 @@ export async function proxy(request: NextRequest) {
     method: request.method,
     origin: request.headers.get("origin"),
     fetchSite: request.headers.get("sec-fetch-site"),
-    requestOrigin: request.nextUrl.origin,
+    requestOrigin: expectedRequestOrigin(request),
   })) {
     const response = NextResponse.json(apiMutationOriginRejection.body, apiMutationOriginRejection.init);
     response.headers.set("Content-Security-Policy", policy);
@@ -77,6 +78,10 @@ export async function proxy(request: NextRequest) {
 
     const response = await updateSession(request, requestHeaders);
     response.headers.set("Content-Security-Policy", policy);
+    if (request.nextUrl.pathname.startsWith("/auth/") || request.nextUrl.pathname === "/sign-in") {
+      response.headers.set("cache-control", "private, no-store");
+      response.headers.set("referrer-policy", "no-referrer");
+    }
     return response;
   } catch {
     const response = NextResponse.json(
