@@ -1,0 +1,10 @@
+.setup-heading.setup-events-heading { display:block; }
+.setup-event-heading-row { display:flex; align-items:center; flex-wrap:wrap; gap:12px 18px; }
+.setup-event-heading-row h2 { min-width:0; overflow-wrap:anywhere; }
+.setup-event-heading-row .setup-actions { flex:1 1 0; min-width:0; justify-content:flex-start; }
+.setup-event-add-actions-below { justify-content:flex-start; padding:12px 0; }
+.setup-event-add-actions button { white-space:normal; }
+@media (max-width:700px) {
+  .setup-event-heading-row { align-items:stretch; }
+  .setup-event-heading-row .setup-actions { flex-basis:100%; width:100%; }
+}

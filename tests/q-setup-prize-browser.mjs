@@ -95,8 +95,8 @@ try {
     await page.getByRole('combobox',{name:/^Games/}).selectOption('12');
     await page.getByRole('textbox',{name:/^Entry fee/}).fill('30.00');
     await page.getByRole('region',{name:'Main prize schedule',exact:true}).waitFor();
-    await page.getByRole('button',{name:'Add Q Pool',exact:true}).click();
-    const pool=page.getByRole('group',{name:'Q Pool 1',exact:true});
+    await page.getByRole('button',{name:'Add Q-Pool',exact:true}).click();
+    const pool=page.getByRole('group',{name:'Q-Pool 1',exact:true});
     await pool.getByRole('combobox',{name:/^Pool type/}).selectOption({label:'Graduated (1-in-6)'});
     await pool.getByRole('textbox',{name:/^Entry fee/}).fill('10.00');
     assert.equal(await page.getByRole('region',{name:'Main prize schedule',exact:true}).count(),1,'Q does not hide regular prizes');
@@ -106,7 +106,8 @@ try {
     for(const [name,value]of[['1st place weight','4'],['2nd place weight','3'],['3rd–4th per-person weight','2'],['5th place weight','1']])await page.getByRole('spinbutton',{name,exact:true}).fill(value);
     await page.getByLabel('Estimated entry count',{exact:true}).fill('17');
     await page.getByLabel('Estimated total expenses (USD)',{exact:true}).fill('229.50');
-    await page.getByText('Estimated gross $510.00, expenses $229.50, prize budget $280.50.',{exact:true}).waitFor();
+    await page.getByLabel('Estimated player-benefit expenses (USD)',{exact:true}).fill('200.00');
+    await page.getByText('Estimated gross $510.00, total expenses $229.50, raw cash prize budget after expenses $280.50.',{exact:true}).waitFor();
     assert.equal(await page.getByRole('button',{name:'Finalize All Events / Open Registration',exact:true}).isDisabled(),true,'visible unresolved prize schedule blocks');
     const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(size.scroll<=size.width+1);
     await page.screenshot({path:path.join(fixture,`q-base-prizes-${width}.png`),fullPage:true});
