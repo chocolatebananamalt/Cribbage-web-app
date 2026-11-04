@@ -6,6 +6,7 @@ const read = (path) => fs.readFileSync(path, "utf8");
 const create = read("src/app/director/tournaments/new/new-tournament-client.tsx");
 const createPage = read("src/app/director/tournaments/new/page.tsx");
 const setup = read("src/app/tournament/[tournamentId]/setup/setup-client.tsx");
+const dateFields = read("src/components/tournament-date-fields.tsx");
 const page = read("src/app/tournament/[tournamentId]/setup/page.tsx");
 
 test("new tournament preserves the exact request across uncertain outcomes", () => {
@@ -31,11 +32,12 @@ test("setup seeds only authoritative server tournament data and never invents a 
   assert.match(setup, /if \(current\) clearCreationSeed\(creationSeedStorageKey\)/);
   assert.match(setup, /clearCreationSeed\(creationSeedStorageKey\); setCreationSeedActive\(false\); setPending\(null\)/);
   assert.match(setup, /startsAt: creationSeed \? creationDateInputValue\(creationSeed\.plannedDate\)/);
-  assert.match(setup, /Start date<input required type="date" value=\{payload\.startsAt\.slice\(0, 10\)\}/);
-  assert.match(setup, /Start time<input required type="time" value=\{payload\.startsAt\.slice\(11, 16\)\}/);
+  assert.match(setup, /<TournamentDateFields startsAt=\{payload.startsAt\} endsAt=\{payload.endsAt\}/);
+  assert.match(dateFields, /Start date<input required type="date" value=\{startsAt\.slice\(0, 10\)\}/);
+  assert.match(dateFields, /Start time<input required type="time" value=\{startsAt\.slice\(11, 16\)\}/);
   assert.match(setup, /creationSeedActive && !revisionId/);
   assert.match(setup, /setCreationSeedActive\(Boolean\(effectiveCreationSeed && !current\)\)/);
-  assert.match(setup, /Planned start date carried forward/);
+  assert.match(dateFields, /Planned start date carried forward/);
   assert.match(setup, /setPending\(recovered\);(?: setCreationSeedActive\(false\);)? setPayload\(recovered\.request\.payload\)/);
   assert.doesNotMatch(setup, /loaded\.currentVersion > recovered\.request\.expectedVersion/);
   assert.match(setup, /saved fees and pools could not be verified\. The exact request is retained/);
