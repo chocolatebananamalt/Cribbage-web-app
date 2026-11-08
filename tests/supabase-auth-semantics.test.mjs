@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
+import ts from 'typescript';
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -11,6 +12,37 @@ const collectRoutes = (directory) => fs.readdirSync(directory, { withFileTypes: 
   if (entry.isDirectory()) return collectRoutes(fullPath);
   return entry.name === 'route.ts' ? [fullPath] : [];
 });
+
+function usesSharedMixedNoStore(route,source,productionSource,settings){
+ const tree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const imported=tree.statements.find(n=>ts.isImportDeclaration(n)&&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)
+  &&n.importClause.namedBindings.elements.some(e=>e.name.text===settings.factory));
+ if(!imported||!ts.isStringLiteral(imported.moduleSpecifier)||path.resolve(path.dirname(route),imported.moduleSpecifier.text+'.ts')!==path.join(root,settings.file))return false;
+ let binding;const exported=[];
+ for(const statement of tree.statements){
+  if(!ts.isVariableStatement(statement))continue;
+  for(const d of statement.declarationList.declarations){
+   if(ts.isIdentifier(d.name)&&d.initializer&&ts.isCallExpression(d.initializer)&&d.initializer.expression.getText(tree)===settings.factory&&d.initializer.arguments.length===0)binding=d.name.text;
+   if(statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)){if(ts.isIdentifier(d.name)&&d.name.text==='dynamic'&&d.initializer&&ts.isStringLiteral(d.initializer)&&d.initializer.text==='force-dynamic')continue;exported.push(d);}
+  }
+ }
+ if(!binding||!exported.length||!exported.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isPropertyAccessExpression(d.initializer)
+  &&d.initializer.expression.getText(tree)===binding&&settings.methods.includes(d.initializer.name.text)))return false;
+ const factory=ts.createSourceFile('production.ts',productionSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const boundaryImport=factory.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&n.moduleSpecifier.text==='./route-boundary');
+ if(!boundaryImport?.importClause?.namedBindings||!ts.isNamedImports(boundaryImport.importClause.namedBindings))return false;
+ const names=boundaryImport.importClause.namedBindings.elements.map(n=>n.name.text);if(!names.includes('apiJson')||!names.includes('withApiFailureBoundary'))return false;
+ const definition=factory.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===settings.factory);
+ if(!definition?.body||definition.parameters.length)return false;
+ const returned=definition.body.statements.find(ts.isReturnStatement)?.expression;
+ if(!returned||!ts.isCallExpression(returned)||returned.expression.getText(factory)!==settings.handler||returned.arguments.length!==1||!ts.isObjectLiteralExpression(returned.arguments[0]))return false;
+ const properties=returned.arguments[0].properties;
+ return [['json','apiJson'],['boundary','withApiFailureBoundary']].every(([name,value])=>properties.some(p=>ts.isPropertyAssignment(p)&&p.name.getText(factory)===name&&ts.isIdentifier(p.initializer)&&p.initializer.text===value));
+}
+
+function usesSharedBootstrapWorkflowNoStore(route,source,production=read('src/lib/api/native-mixed-bootstrap-production-v1.ts')){
+ return usesSharedMixedNoStore(route,source,production,{factory:'createNativeMixedBootstrapProductionHandlersV1',file:'src/lib/api/native-mixed-bootstrap-production-v1.ts',handler:'createNativeMixedBootstrapHandlersV1',methods:['sourceGET','writePOST','operationPOST']});
+}
 
 test('Supabase auth scaffolding fails closed and does not expose server secrets', () => {
   const env = read('src/lib/env.ts');
@@ -274,9 +306,8 @@ test('every API v1 route uses a private no-store response boundary', () => {
   assert.ok(routes.length > 0);
   for (const route of routes) {
     const source = fs.readFileSync(route, 'utf8');
-    assert.match(
-      source,
-      /apiJson|privateNoStore/,
+    assert.ok(
+      /apiJson|privateNoStore/.test(source)||usesSharedBootstrapWorkflowNoStore(route,source),
       `${path.relative(root, route)} must use the private no-store response boundary`,
     );
   }
@@ -754,4 +785,15 @@ test('protected Rulebook reference provides dated cached and online ACC sources 
   assert.match(reference, /does not replace the dated ACC Rulebook/);
   assert.match(workspace, /\/rulebook/);
   assert.match(guide, /Open ACC Rulebook/);
+});
+
+
+test('bootstrap privacy follows actual factory wiring and rejects unsafe substitutions',()=>{
+ const relative='src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/bootstrap/[mode]/route.ts';
+ const route=path.join(root,relative),source=read(relative),production=read('src/lib/api/native-mixed-bootstrap-production-v1.ts');
+ assert.equal(usesSharedBootstrapWorkflowNoStore(route,source),true);
+ assert.equal(usesSharedBootstrapWorkflowNoStore(route,source.replace('handlers.sourceGET','unsafeHandler')),false);
+ assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,production.replace('json:apiJson','json:unsafeJson')),false);
+ assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,production.replace('boundary:withApiFailureBoundary','boundary:unsafeBoundary')),false);
+ assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,'// apiJson withApiFailureBoundary createNativeMixedBootstrapProductionHandlersV1'),false);
 });

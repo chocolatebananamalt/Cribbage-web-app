@@ -11,6 +11,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
+import crypto from 'node:crypto';
 
 const root = process.cwd();
 
@@ -42,7 +43,9 @@ function parameterNames(sql, openIndex) {
 // is how superseded versions are retired here.
 function declaredFunctions() {
   const declared = new Map();
-  for (const file of walk('database/migrations', (name) => name.endsWith('.sql')).sort()) {
+  const preparation='database/release-packages/native-preparation51/supabase/migrations/20261107090229_native_preparation51_closed_install.sql';
+  assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,preparation))).digest('hex'),'22f9145694802d79d13d50ab36d52e8dc030b1f86649b9cb8a5f2fe733187f58');
+  for (const file of [...walk('database/migrations', (name) => name.endsWith('.sql')),preparation].sort()) {
     const sql = fs.readFileSync(path.join(root, file), 'utf8');
     const events = [];
     for (const m of sql.matchAll(/create\s+(?:or\s+replace\s+)?function\s+public\.([a-z0-9_]+)\s*\(/gi)) {
