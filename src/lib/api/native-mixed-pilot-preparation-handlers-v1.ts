@@ -1,0 +1,24 @@
+import{nativeMixedPlayActivationEnabledV1}from'../seating/native-mixed-play-activation-v1.ts';
+import{readNativeMixedBootstrapStatusV1}from'../seating/native-mixed-bootstrap-status-v1.ts';
+import 'server-only';
+import{readNativeMixedDirectorSessionV1,type NativeMixedSimulationAuthenticatedClientV1}from'./native-mixed-simulation-provider-v1.ts';
+import{readNativeMixedPreparationV1}from'../seating/native-mixed-pilot-preparation-v1.ts';
+export const nativeMixedPreparationApiEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
+type Admin={rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};
+const uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);
+export function createNativeMixedPreparationHandlersV1<Reply>(d:{enabled?:()=>boolean;projectUrl:string;projectRef:string;authenticated:()=>Promise<NativeMixedSimulationAuthenticatedClientV1>;privileged:()=>Promise<Admin>;json:(body:unknown,init?:ResponseInit)=>Reply;boundary:(run:()=>Promise<Reply>)=>Promise<Reply>;now?:()=>number}){
+ const reader=(rpc:'get_native_mixed_pilot_preparation_v1'|'get_native_mixed_pilot_bootstrap_v1',validate:(v:unknown,s:{actorId:string;tournamentId:string;eventId:string},now:number)=>unknown)=>(request:Request,context:{params:Promise<{id:string;eventId:string}>})=>d.boundary(async()=>{
+  const enabled=d.enabled??nativeMixedPreparationApiEnabledV1,fail=(status:number,error:string)=>d.json({error},{status}),now=d.now??Date.now;
+  if(!enabled())return fail(404,'not_found');const{id,eventId}=await context.params,expected=request.headers.get('x-expected-actor-id');
+  if(d.projectRef!=='nnhcnvksxgxnpvdqjgpg'||d.projectUrl!=='https://nnhcnvksxgxnpvdqjgpg.supabase.co'||!uuid(id)||!uuid(eventId)||!uuid(expected))return fail(403,'invalid_target');
+  const client=await d.authenticated();
+  async function identity(){const u=await client.auth.getUser(),c=await client.auth.getClaims(),v=c.data?.claims as {sub?:unknown;session_id?:unknown;exp?:unknown}|undefined;return !u.error&&!c.error&&u.data.user?.id===expected&&v?.sub===expected&&uuid(v.session_id)&&typeof v.exp==='number'&&Number.isFinite(v.exp)&&v.exp*1000>now()?{subjectId:expected,sessionId:v.session_id}:null;}
+  const own=await identity();if(!own)return fail(403,'identity_changed');
+  async function lease(){const r=await client.rpc('get_native_mixed_pilot_director_session_v1',{p_tournament_id:id,p_event_id:eventId,p_action:'source'});return r.error?null:readNativeMixedDirectorSessionV1(r.data,{...own!,tournamentId:id,eventId,projectUrl:d.projectUrl,projectRef:d.projectRef,action:'source',now:now()});}
+  if(!await lease())return fail(403,'permission_required');const before=await identity();if(!before||before.sessionId!==own.sessionId||!enabled())return fail(403,'identity_changed');
+  const admin=await d.privileged(),response=await(rpc==='get_native_mixed_pilot_preparation_v1'?admin.rpc('get_native_mixed_pilot_preparation_v1',{p_actor_id:own.subjectId,p_session_id:own.sessionId,p_tournament_id:id,p_event_id:eventId}):admin.rpc('get_native_mixed_pilot_bootstrap_v1',{p_actor_id:own.subjectId,p_session_id:own.sessionId,p_tournament_id:id,p_event_id:eventId}));
+  const captured=structuredClone(response.data),hasError=!!response.error,after=await identity();if(!after||after.sessionId!==own.sessionId||!enabled()||!await lease())return fail(403,'identity_changed');
+  const data=hasError?null:validate(captured,{actorId:own.subjectId,tournamentId:id,eventId},now());return data?d.json(data):fail(409,'preparation_unavailable');
+ });
+ return{GET:reader('get_native_mixed_pilot_preparation_v1',readNativeMixedPreparationV1),bootstrapGET:reader('get_native_mixed_pilot_bootstrap_v1',readNativeMixedBootstrapStatusV1)};
+}

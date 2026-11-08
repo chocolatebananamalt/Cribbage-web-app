@@ -1,0 +1,38 @@
+import{nativeMixedPlayActivationEnabledV1}from'../seating/native-mixed-play-activation-v1.ts';
+import 'server-only';
+import {createNativeMixedSimulationHandlersV1}from'./native-mixed-simulation-handlers-v1.ts';
+import {createNativeMixedSimulationProviderV1,type NativeMixedSimulationAuthenticatedClientV1}from'./native-mixed-simulation-provider-v1.ts';
+import {createNativeMixedPilotDirectorExecutorV1}from'./native-mixed-pilot-director-executor-v1.ts';
+export const nativeMixedPilotDirectorHandlersEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
+type Rpc={rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};
+/** Construct per request. No client/credential is constructed behind a false gate.
+ * This does not enroll a cohort, forge consent or prepare simulated funds. */
+export function createNativeMixedPilotDirectorHandlersV1<Reply,Req extends Request=Request>(d:{
+ enabled?:()=>boolean;projectUrl:string;projectRef:string;now?:()=>number;
+ authenticated:()=>Promise<NativeMixedSimulationAuthenticatedClientV1>;privileged:()=>Promise<Rpc>;
+ readJson:(request:Req,maxBytes:number)=>Promise<unknown>;sameOrigin:(request:Req)=>boolean;
+ json:(body:unknown,init?:ResponseInit)=>Reply;boundary:(run:()=>Promise<Reply>)=>Promise<Reply>;
+}){
+ const enabled=d.enabled??nativeMixedPilotDirectorHandlersEnabledV1,now=d.now??Date.now;
+ function perRequest(){
+ let client:NativeMixedSimulationAuthenticatedClientV1|null=null,authorized:{actor:string;session:string;tid:string;eid:string}|null=null;
+ async function own(){
+  if(enabled()!==true||d.projectRef!=='nnhcnvksxgxnpvdqjgpg'||d.projectUrl!=='https://nnhcnvksxgxnpvdqjgpg.supabase.co')return null;
+  client??=await d.authenticated();const user=await client.auth.getUser(),claims=await client.auth.getClaims(),c=claims.data?.claims as {sub?:unknown;session_id?:unknown;exp?:unknown}|undefined;
+  return !user.error&&!claims.error&&user.data.user&&c?.sub===user.data.user.id&&typeof c.session_id==='string'&&typeof c.exp==='number'&&Number.isFinite(c.exp)&&c.exp*1000>now()?{subjectId:user.data.user.id,sessionId:c.session_id}:null;
+ }
+ return createNativeMixedSimulationHandlersV1<Reply,Req>({enabled,projectUrl:d.projectUrl,projectRef:d.projectRef,now,simulatedStartEnabled:enabled,simulatedStartRecoveryEnabled:enabled,
+  verifiedIdentity:own,
+  authorizeTarget:async input=>{authorized=null;const current=await own();if(!current||current.subjectId!==input.subjectId||current.sessionId!==input.sessionId||!client)return null;
+   const lease=await client.rpc('get_native_mixed_pilot_director_session_v1',{p_tournament_id:input.tournamentId,p_event_id:input.eventId,p_action:input.action});if(lease.error||!lease.data)return null;
+   // Handler validates the strict lease before port construction.
+   authorized={actor:input.actorId,session:input.sessionId,tid:input.tournamentId,eid:input.eventId};return lease.data;},
+  port:async()=>{if(!authorized||!client)throw Error('pilot_not_authorized');const current=await own();if(!current||current.subjectId!==authorized.actor||current.sessionId!==authorized.session)throw Error('identity_changed');
+   const admin=await d.privileged(),executor=createNativeMixedPilotDirectorExecutorV1({authenticated:client,admin,projectUrl:d.projectUrl,projectRef:d.projectRef,tournamentId:authorized.tid,eventId:authorized.eid,enabled});
+   return createNativeMixedSimulationProviderV1({authenticated:client,executor,enabled,now,simulatedStartEnabled:enabled,simulatedStartRecoveryEnabled:enabled});},
+  readJson:d.readJson,sameOrigin:d.sameOrigin,json:d.json,boundary:d.boundary});
+ }
+ type Handlers=ReturnType<typeof perRequest>;
+ const invoke=(method:keyof Handlers)=>(...args:Parameters<Handlers['sourceGET']>)=>perRequest()[method](...args);
+ return {sourceGET:invoke('sourceGET'),operationGET:invoke('operationGET'),operationPOST:invoke('operationPOST'),cancelPOST:invoke('cancelPOST'),cancellationPOST:invoke('cancellationPOST'),transitionPOST:invoke('transitionPOST'),simulatedStartPOST:invoke('simulatedStartPOST'),simulatedStartOperationPOST:invoke('simulatedStartOperationPOST'),simulatedStartedSourcePOST:invoke('simulatedStartedSourcePOST')};
+}

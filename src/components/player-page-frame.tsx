@@ -13,14 +13,15 @@ export type PlayerPageFrameProps = {
   activeTab: "entry" | "card";
   player: { displayName: string; verificationId: string; accNumber?: string };
   beforeNavigate?: () => boolean;
+  navigation?: { entryHref: string; cardHref: string };
   children: ReactNode;
 };
 
 /** Presentation only: every destination retains its own server authorization. */
-export function PlayerPageFrame({ tournamentId, tournamentName, eventId, eventName, activeTab, player, beforeNavigate, children }: PlayerPageFrameProps) {
+export function PlayerPageFrame({ tournamentId, tournamentName, eventId, eventName, activeTab, player, beforeNavigate, navigation, children }: PlayerPageFrameProps) {
   const profile = useRef<HTMLDialogElement>(null);
-  const cardHref = `/tournament/${tournamentId}/scorecard?event=${eventId}`;
-  const gamesHref = `/tournament/${tournamentId}/games`;
+  const cardHref = navigation?.cardHref ?? `/tournament/${tournamentId}/scorecard?event=${eventId}`;
+  const gamesHref = navigation?.entryHref ?? `/tournament/${tournamentId}/games`;
   const guard = (event: MouseEvent<HTMLAnchorElement>) => {
     if (beforeNavigate && !beforeNavigate()) event.preventDefault();
   };

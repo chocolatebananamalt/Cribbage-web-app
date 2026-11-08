@@ -1,7 +1,8 @@
+import{nativeMixedPlayActivationEnabledV1}from'../seating/native-mixed-play-activation-v1.ts';
 import type {NativeMixedReviewContextV1} from '../finance/native-mixed-review-read-v1.ts';
 import 'server-only';
 import {readNativeMixedReviewEnvelopeV1} from '../finance/native-mixed-review-read-v1.ts';
-export const nativeMixedReviewReadEnabledV1=()=>false;
+export const nativeMixedReviewReadEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
 type Client={auth:{getUser:()=>Promise<{data:{user:{id:string}|null}|null;error:unknown}>;getClaims:()=>Promise<{data:{claims?:{sub?:unknown;session_id?:unknown;exp?:unknown;iss?:unknown}}|null;error:unknown}>};rpc:(name:string,args:Record<string,string>)=>PromiseLike<{data:unknown;error:unknown}>};
 type Context={params:Promise<{id:string;eventId:string}>};
 const ref='nnhcnvksxgxnpvdqjgpg',url=`https://${ref}.supabase.co`,uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);

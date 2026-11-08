@@ -47,7 +47,9 @@ function declaredFunctions() {
   assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,preparation))).digest('hex'),'22f9145694802d79d13d50ab36d52e8dc030b1f86649b9cb8a5f2fe733187f58');
   const review='database/release-packages/native-mixed-qualifying-review/supabase/migrations/20261108111139_native_mixed_qualifying_review_closed_install.sql';
   assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,review))).digest('hex'),'1952a5c212e82eee126cdc7c9529b89833acc45a6bf1af2ed408f45cf4786c91');
-  for (const file of [...walk('database/migrations', (name) => name.endsWith('.sql')),preparation,review].sort()) {
+  const play='database/release-packages/native-play/supabase/migrations/20261108201030_native_play_closed_install.sql';
+  assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,play))).digest('hex'),'c0d63d7f9f33dd545861631def4f003818377884461d4b7df59ef33ee3408777');
+  for (const file of [...walk('database/migrations', (name) => name.endsWith('.sql')),preparation,review,play].sort()) {
     const sql = fs.readFileSync(path.join(root, file), 'utf8');
     const events = [];
     for (const m of sql.matchAll(/create\s+(?:or\s+replace\s+)?function\s+public\.([a-z0-9_]+)\s*\(/gi)) {

@@ -44,6 +44,13 @@ function usesSharedBootstrapWorkflowNoStore(route,source,production=read('src/li
  return usesSharedMixedNoStore(route,source,production,{factory:'createNativeMixedBootstrapProductionHandlersV1',file:'src/lib/api/native-mixed-bootstrap-production-v1.ts',handler:'createNativeMixedBootstrapHandlersV1',methods:['sourceGET','writePOST','operationPOST']});
 }
 
+function usesSharedNativePlayNoStore(route,source,production=read('src/lib/api/native-mixed-pilot-director-production-v1.ts')){
+ return [
+ {factory:'createNativeMixedPilotDirectorProductionHandlersV1',file:'src/lib/api/native-mixed-pilot-director-production-v1.ts',handler:'createNativeMixedPilotDirectorHandlersV1',methods:['sourceGET','operationGET','operationPOST','cancelPOST','cancellationPOST','transitionPOST','simulatedStartPOST','simulatedStartOperationPOST','simulatedStartedSourcePOST']},
+ {factory:'createNativeMixedPilotPreparationProductionHandlersV1',file:'src/lib/api/native-mixed-pilot-director-production-v1.ts',handler:'createNativeMixedPreparationHandlersV1',methods:['GET','bootstrapGET']}
+ ].some(settings=>usesSharedMixedNoStore(route,source,production,settings));
+}
+
 test('Supabase auth scaffolding fails closed and does not expose server secrets', () => {
   const env = read('src/lib/env.ts');
   const browser = read('src/lib/supabase/client.ts');
@@ -307,7 +314,7 @@ test('every API v1 route uses a private no-store response boundary', () => {
   for (const route of routes) {
     const source = fs.readFileSync(route, 'utf8');
     assert.ok(
-      /apiJson|privateNoStore/.test(source)||usesSharedBootstrapWorkflowNoStore(route,source),
+      /apiJson|privateNoStore/.test(source)||usesSharedBootstrapWorkflowNoStore(route,source)||usesSharedNativePlayNoStore(route,source),
       `${path.relative(root, route)} must use the private no-store response boundary`,
     );
   }
@@ -796,4 +803,15 @@ test('bootstrap privacy follows actual factory wiring and rejects unsafe substit
  assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,production.replace('json:apiJson','json:unsafeJson')),false);
  assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,production.replace('boundary:withApiFailureBoundary','boundary:unsafeBoundary')),false);
  assert.equal(usesSharedBootstrapWorkflowNoStore(route,source,'// apiJson withApiFailureBoundary createNativeMixedBootstrapProductionHandlersV1'),false);
+});
+
+test('native play privacy follows real factory wiring and rejects unsafe substitutions',()=>{
+ for(const relative of ['src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/route.ts','src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/preparation/route.ts']){
+ const route=path.join(root,relative),source=read(relative),production=read('src/lib/api/native-mixed-pilot-director-production-v1.ts');
+ assert(usesSharedNativePlayNoStore(route,source));
+ assert.equal(usesSharedNativePlayNoStore(route,source,production.replaceAll('json:apiJson','json:unsafeJson')),false);
+ assert.equal(usesSharedNativePlayNoStore(route,source,production.replaceAll('boundary:withApiFailureBoundary','boundary:unsafeBoundary')),false);
+ assert.equal(usesSharedNativePlayNoStore(route,source.replaceAll('handlers.','unsafe.')),false);
+ assert.equal(usesSharedNativePlayNoStore(route,source,'// apiJson withApiFailureBoundary'),false);
+ }
 });

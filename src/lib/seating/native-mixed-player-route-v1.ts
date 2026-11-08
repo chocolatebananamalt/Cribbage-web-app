@@ -1,0 +1,22 @@
+import{nativeMixedPlayActivationEnabledV1}from'./native-mixed-play-activation-v1.ts';
+import {isNativeMixedGameTargetV1,type NativeMixedGameTargetV1}from'./native-mixed-game-evidence-v1.ts';
+import {readNativeMixedOwnBindingsV1}from'./native-mixed-digital-entry-view-v1.ts';
+import type {NativeMixedOwnClientV1}from'../api/native-mixed-game-evidence-transport-v1.ts';
+/** Code gate, deliberately not user input or an environment switch. A reviewed
+ * release must change this only after provider/browser acceptance and grants. */
+export const nativeMixedPlayerRouteEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
+const uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);
+export async function prepareNativeMixedPlayerRouteV1(o:{enabled?:boolean;params:{tournamentId:string;eventId:string;startId:string;gameId:string};page:'entry'|'card';projectUrl:string;projectRef:string;createAuthenticated:()=>Promise<NativeMixedOwnClientV1>;now?:()=>number}):Promise<{target:NativeMixedGameTargetV1;page:'entry'|'card'}|null>{
+ if(o.enabled!==true)return null;const p=structuredClone(o.params),page=o.page,url=o.projectUrl,ref=o.projectRef;
+ if(Object.keys(p).sort().join()!=='eventId,gameId,startId,tournamentId'||!Object.values(p).every(uuid)||!['entry','card'].includes(page))return null;
+ try{
+  const client=await o.createAuthenticated();
+  async function subject(){const u=await client.auth.getUser(),c=await client.auth.getClaims(),claims=c.data?.claims;if(u.error||c.error||!uuid(u.data.user?.id)||claims?.sub!==u.data.user.id||!uuid(claims?.session_id)||typeof claims.exp!=='number'||!Number.isSafeInteger(claims.exp)||claims.exp*1000<=(o.now?.()??Date.now()))return null;return{actorId:u.data.user.id,sessionId:claims.session_id};}
+  const before=await subject();if(!before)return null;
+  const response=await client.rpc('get_native_mixed_own_player_bindings_v1',{p_tournament_id:p.tournamentId,p_event_id:p.eventId,p_start_id:p.startId});
+  const after=await subject();if(!after||JSON.stringify(after)!==JSON.stringify(before)||response.error||!response.data||typeof response.data!=='object')return null;
+  const raw=response.data as Record<string,unknown>,target={...before,projectUrl:url,projectRef:ref,...p,startSourceDigest:raw.startSourceDigest};
+  if(!isNativeMixedGameTargetV1(target)||!readNativeMixedOwnBindingsV1(raw,target))return null;
+  return{target,page};
+ }catch{return null;}
+}

@@ -1,6 +1,7 @@
 'use client';
 import{useEffect,useRef,useState}from'react';
 import Link from'next/link';
+import{nativeMixedPlayActivationEnabledV1}from'../lib/seating/native-mixed-play-activation-v1';
 import{NativeMixedBootstrapSessionV1,type BootstrapSnapshot}from'../lib/seating/native-mixed-bootstrap-session-v1';
 import type{BootstrapContext,BootstrapAction}from'../lib/seating/native-mixed-bootstrap-workflow-v1';
 import styles from'./native-mixed-director-panel-v1.module.css';
@@ -26,6 +27,7 @@ export function NativeMixedBootstrapViewV1({enabled,context,snapshot,online,busy
  {snapshot.status==='pending'&&['not_sent','retryable'].includes(snapshot.phase??'')&&<button type="button" disabled={busy||!online} onClick={retry}>Retry Same Saved Operation</button>}
  {!online&&<p>Offline. Saved operations are kept; reconnect to check them.</p>}
  {context.mode==='director'&&<p>Each player must use their own <Link href={`/tournament/${context.scope.tournamentId}/rehearsal-participation/${context.scope.eventId}/consent`}>Test Consent screen</Link>. A different authorized cross-checker must use the <Link href={`/tournament/${context.scope.tournamentId}/rehearsal-participation/${context.scope.eventId}/paper-review`}>Independent Review screen</Link>.</p>}
+ {context.mode==='director'&&offer?.state==='complete'&&nativeMixedPlayActivationEnabledV1()&&<p><Link href={`/tournament/${context.scope.tournamentId}/rehearsal-prepare/${context.scope.eventId}`}>Continue to Random Seating</Link></p>}
  {context.mode!=='director'&&<p><Link href={`/tournament/${context.scope.tournamentId}`}>Back to Tournament</Link></p>}
  </section>;
 }
