@@ -1,3 +1,4 @@
+import {nativeMixedReviewUiEnabledV1} from '../src/lib/finance/native-mixed-review-read-v1.ts';
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -50,6 +51,15 @@ test("every tournament page is linked from somewhere a director can reach", () =
   const orphans = [];
   for (const segment of segments) {
     if (INTERNAL.has(segment)) continue;
+    // Keep only this exact default-disabled candidate unadvertised.
+    // Enabling it restores the ordinary navigation requirement.
+    if(segment==='rehearsal-review'&&!nativeMixedReviewUiEnabledV1()){
+      const file=`${BASE}/rehearsal-review/[eventId]/page.tsx`;
+      assert.deepEqual(sourceFiles(`${BASE}/rehearsal-review`).filter(p=>p.endsWith('/page.tsx')),[file]);
+      const page=readFileSync(file,'utf8'),gate=page.indexOf('if(!nativeMixedReviewUiEnabledV1())notFound()');
+      assert(gate>=0&&gate<page.indexOf('await params'));
+      continue;
+    }
     const owned = `${BASE}/${segment}/`;
     const linked = files.some((file) => !file.split("\\").join("/").startsWith(owned) && linksTo(readFileSync(file, "utf8"), segment));
     if (!linked) orphans.push(segment);
