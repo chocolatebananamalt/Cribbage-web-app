@@ -13,7 +13,7 @@ const BLOCKERS = [
 const REJECTIONS = new Set([
   "tournament_unavailable", "not_director", "qualification_result_unavailable",
   "activated_setup_unavailable", "stale_version", "invalid_claims", "invalid_request",
-  "playoff_result_unavailable", "playoff_placement_mismatch", "idempotency_conflict",
+  "playoff_result_unavailable", "playoff_placement_mismatch", "idempotency_conflict", "settlement_domain_conflict",
   "mrp_claim_scope_unavailable", "invalid_mrp_claims", "automatic_mrp_unavailable", "automatic_mrp_mismatch",
 ]);
 

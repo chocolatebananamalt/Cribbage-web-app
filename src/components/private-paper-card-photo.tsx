@@ -15,6 +15,7 @@ import {
 } from "../lib/api/paper-card-upload";
 import { validateLocalCardPhoto } from "../lib/paper-games/local-card-photo";
 import { createClient } from "../lib/supabase/client";
+import { clearConfirmedPhoto, photoMatchesPending, photoRejectionIsTerminal, readPendingPhoto, retainPendingPhoto } from "../lib/paper-games/photo-retry-envelope";
 
 const bucket = "paper-scorecards-private";
 
@@ -24,6 +25,8 @@ async function sha256Hex(file: File) {
 }
 
 export function PrivatePaperCardPhoto({
+  actorId,
+  recoveryOnly = false,
   cardSide,
   disabled = false,
   gameId,
@@ -32,6 +35,8 @@ export function PrivatePaperCardPhoto({
   tournamentId,
   verificationId,
 }: {
+  actorId: string;
+  recoveryOnly?: boolean;
   cardSide: "a" | "b";
   disabled?: boolean;
   gameId: string;
@@ -47,43 +52,79 @@ export function PrivatePaperCardPhoto({
   const [busy, setBusy] = useState(false);
   const [stored, setStored] = useState(false);
   const [message, setMessage] = useState("");
+  const [readyScope, setReadyScope] = useState("");
+  const busyRef = useRef(false);
+  const selectionRef = useRef(0);
+  const scope = { actorId, tournamentId, gameId, cardSide, verificationId };
+  const scopeIdentity = JSON.stringify(scope);
+  const recoveryReady = readyScope === scopeIdentity;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const pending = readPendingPhoto(window.sessionStorage, { actorId, tournamentId, gameId, cardSide, verificationId });
+        if (recoveryOnly && !pending) { setMessage("This retained photo request was already resolved. No replacement upload will be started here."); return; }
+        setCaptureRequest(pending?.request ?? null);
+        setReadyScope(JSON.stringify({ actorId, tournamentId, gameId, cardSide, verificationId }));
+        if (pending) setMessage("An earlier photo upload is unresolved. Reselect the same image to retry its original request. No image is saved on this device.");
+      } catch {
+        setMessage("The retained photo request cannot be safely read. Keep this account and recovery work intact; do not attach a replacement photo.");
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [actorId, tournamentId, gameId, cardSide, verificationId, recoveryOnly]);
 
   useEffect(() => () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
 
-  function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
+  async function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
     const selected = event.target.files?.[0];
-    if (!selected) return;
+    if (!selected || !recoveryReady || busyRef.current) return;
+    const selection = ++selectionRef.current;
     const validation = validateLocalCardPhoto(selected);
     if (!validation.accepted) {
       event.target.value = "";
       setMessage(validation.message);
       return;
     }
-    setPreviewUrl(URL.createObjectURL(selected));
-    setFile(selected);
-    setCaptureRequest(null);
-    setStored(false);
-    setMessage("Photo selected. Store it privately before leaving this screen.");
+    try {
+      const pending = readPendingPhoto(window.sessionStorage, scope);
+      if (pending && !photoMatchesPending(pending.request, selected, await sha256Hex(selected))) {
+        event.target.value = "";
+        setMessage("This is a different image. Reselect the original image; its unresolved upload must be reconciled before attaching another photo.");
+        return;
+      }
+      if (selection !== selectionRef.current) return;
+      setPreviewUrl(URL.createObjectURL(selected));
+      setFile(selected);
+      setCaptureRequest(pending?.request ?? null);
+      setStored(false);
+      setMessage(pending ? "Original image matched. Press Store private photo to retry the retained request." : "Photo selected. Store it privately before leaving this screen.");
+    } catch {
+      setMessage("Photo recovery is unavailable. Keep this screen and account open; no new upload was sent.");
+    }
   }
 
   function clearPreview() {
     const wasStored = stored;
     setPreviewUrl("");
     setFile(null);
-    setCaptureRequest(null);
+    // Removing a preview must never discard unresolved server work.
     setStored(false);
-    setMessage(wasStored ? "The stored evidence remains in the private tournament record. You may attach another photo if needed." : "");
+    setMessage(wasStored ? "The stored evidence remains in the private tournament record. You may attach another photo if needed." : captureRequest ? "The upload request is still retained. Reselect the original image to retry; no image bytes are saved locally." : "");
     if (inputRef.current) inputRef.current.value = "";
   }
 
   async function storePhoto() {
-    if (!file || busy || stored) return;
+    if (!file || busyRef.current || stored || !recoveryReady) return;
+    busyRef.current = true;
     setBusy(true);
     setMessage("Securing photo…");
     try {
-      const envelope = captureRequest ?? {
+      const retained = readPendingPhoto(window.sessionStorage, scope);
+      if (recoveryOnly && !retained) throw new Error("This retained photo request is already resolved. No replacement upload was sent.");
+      const envelope = retained?.request ?? captureRequest ?? {
         gameId,
         cardSide,
         verificationId,
@@ -95,6 +136,8 @@ export function PrivatePaperCardPhoto({
         clientCapturedAt: null,
         idempotencyKey: crypto.randomUUID(),
       } satisfies PaperCardCaptureRequest;
+      if (!photoMatchesPending(envelope, file, await sha256Hex(file))) throw new Error("Reselect the original image to reconcile this upload; a different photo cannot replace an unresolved request.");
+      retainPendingPhoto(window.sessionStorage, scope, envelope);
       setCaptureRequest(envelope);
 
       const captureResponse = await fetch(`/api/v1/tournaments/${encodeURIComponent(tournamentId)}/paper-card-captures`, {
@@ -104,8 +147,13 @@ export function PrivatePaperCardPhoto({
       });
       const capture: unknown = await captureResponse.json().catch(() => null);
       if (!captureResponse.ok || !isPaperCardCaptureResult(capture, envelope)) {
-        if (captureResponse.status === 409 && isRejectedPaperCardCapture(capture)) {
+        if (captureResponse.status === 409 && isRejectedPaperCardCapture(capture) && photoRejectionIsTerminal(capture)) {
+          clearConfirmedPhoto(window.sessionStorage, scope, envelope);
           setCaptureRequest(null);
+          setFile(null);
+          setPreviewUrl("");
+          if (inputRef.current) inputRef.current.value = "";
+          if (recoveryOnly) setReadyScope("");
           throw new Error("This photo cannot be attached to that card. Refresh the game and verify the player ID.");
         }
         throw new Error("The private capture request is unresolved. Retry with this same photo.");
@@ -122,7 +170,19 @@ export function PrivatePaperCardPhoto({
       });
       const authorization: unknown = await uploadResponse.json().catch(() => null);
       if (!uploadResponse.ok || !isPaperCardUploadAuthorization(authorization, capture.captureId, uploadRequest)) {
-        throw new Error("A private upload could not be authorized. Retry with this same photo.");
+        // Existing storage receipts deliberately prevent issuing a new signed
+        // upload. A prior successful completion with a lost response must still
+        // reconcile through the supported integrity-checked completion route.
+        const response = await fetch(`/api/v1/tournaments/${encodeURIComponent(tournamentId)}/paper-card-captures/${encodeURIComponent(capture.captureId)}/complete`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(uploadRequest) });
+        const completion: unknown = await response.json().catch(() => null);
+        if (response.ok && isPaperCardUploadCompletion(completion, capture.captureId)) {
+          clearConfirmedPhoto(window.sessionStorage, scope, envelope);
+          setCaptureRequest(null); setStored(true);
+          if (recoveryOnly) setReadyScope("");
+          setMessage("Private photo stored. Human review is still required; this photo cannot change scores or verify a game.");
+          return;
+        }
+        throw new Error("The private upload is not confirmed. Keep this account open and retry the same image; its original request is retained.");
       }
 
       const supabase = createClient();
@@ -147,11 +207,15 @@ export function PrivatePaperCardPhoto({
       if (!completeResponse.ok || !isPaperCardUploadCompletion(completion, capture.captureId)) {
         throw new Error("The stored photo is not yet confirmed. Keep this screen open and retry with the same photo.");
       }
+      clearConfirmedPhoto(window.sessionStorage, scope, envelope);
       setStored(true);
+      setCaptureRequest(null);
+      if (recoveryOnly) setReadyScope("");
       setMessage("Private photo stored. Human review is still required; this photo cannot change scores or verify a game.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "The private upload is unresolved. Retry with this same photo.");
+      setMessage(error instanceof TypeError ? "The private photo upload is not confirmed. Keep this account open and retry the same image. If you reload, reselect that image to reuse the retained request." : error instanceof Error ? error.message : "The private upload is unresolved. Retry with this same photo.");
     } finally {
+      busyRef.current = false;
       setBusy(false);
     }
   }
@@ -164,7 +228,7 @@ export function PrivatePaperCardPhoto({
       type="file"
       accept="image/jpeg,image/png,image/webp"
       capture="environment"
-      disabled={disabled || busy || stored}
+      disabled={disabled || busy || stored || !recoveryReady}
       onChange={selectPhoto}
     />
     <p className="auth-note">Optional evidence. JPEG, PNG, or WebP up to 10 MB. Stored privately with the tournament record.</p>

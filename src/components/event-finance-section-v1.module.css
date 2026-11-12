@@ -1,0 +1,16 @@
+.section{font-size:19px;line-height:1.5;max-width:76rem;margin:1rem auto;padding:1rem;border:1px solid #aebbc5;border-radius:.5rem;background:#fff;color:#172936;box-sizing:border-box}
+.section *{box-sizing:border-box}
+.section h2,.section h3{line-height:1.25}.section h2{font-size:1.65rem}.section h3{font-size:1.3rem}
+.section label{display:flex;flex-direction:column;gap:.35rem;min-width:0;font-weight:600}
+.section input,.section textarea,.section select,.section button{font:inherit;min-height:56px;max-width:100%;min-width:0;border:1px solid #526979;border-radius:.3rem;padding:.65rem;background:#fff;color:#172936}
+.section button{cursor:pointer;font-weight:600}.section button:disabled{cursor:default;opacity:.65}
+.section :focus-visible{outline:3px solid #145fb0;outline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.row{padding:1rem 0;border-top:1px solid #d7dfe5;min-width:0}.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.75rem}
+.details{border-top:1px solid #aebbc5;margin-top:1.25rem;padding-top:.75rem}.details summary{cursor:pointer;font-weight:700;min-height:56px;padding:.6rem 0;overflow-wrap:anywhere}
+.figures{display:grid;grid-template-columns:minmax(0,1fr) minmax(6rem,auto);gap:.5rem 1rem}.figures dt{overflow-wrap:anywhere}.figures dd{font-size:20px;font-weight:700;margin:0;text-align:right}
+.notice{padding:.75rem;border-left:5px solid #1965a3;background:#edf5fc;overflow-wrap:anywhere}.alert{padding:.75rem;border-left:5px solid #9c4300;background:#fff4e8;overflow-wrap:anywhere}
+.scroll{overflow-x:auto;max-width:100%}.table{border-collapse:collapse;width:100%;font-size:20px}.table caption{text-align:left;font-weight:700;padding:.65rem 0}.table th,.table td{text-align:left;padding:.7rem;border-bottom:1px solid #c7d2da;vertical-align:top}.table th{font-size:19px}.table input{width:10rem}.muted{font-size:19px;color:#405566}.required{color:#9a260a}
+@media(max-width:640px){.section{padding:.75rem}.grid{grid-template-columns:1fr}.figures{grid-template-columns:minmax(0,1fr)}.figures dd{text-align:left}.actions{flex-direction:column}.actions button{width:100%}}
+
+.section fieldset{min-inline-size:0;max-width:100%;margin-inline:0}.section h4{overflow-wrap:anywhere}
+.section dd{min-width:0;overflow-wrap:anywhere}

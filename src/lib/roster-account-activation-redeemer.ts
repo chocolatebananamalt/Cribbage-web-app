@@ -16,7 +16,7 @@ export type RosterAccountActivationRedemption = {
 };
 
 export type RosterAccountActivationRedemptionResult =
-  | { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string }
+  | { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string; expiresAt?: string }
   | { status: "rejected" };
 
 const saltPattern = /^[A-Za-z0-9+/]{43}=$/;
@@ -28,8 +28,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
 }
 
-function isReadySalt(value: unknown, activationId: string): value is { saltBase64: string } {
-  return isRecord(value) && Object.keys(value).length === 3 && value.status === "ready"
+function isReadySalt(value: unknown, activationId: string): value is { saltBase64: string; expiresAt?: string } {
+  return isRecord(value) && (Object.keys(value).length === 3
+      || (Object.keys(value).length === 4 && typeof value.expiresAt === "string" && Number.isFinite(Date.parse(value.expiresAt)))) && value.status === "ready"
     && value.activationId === activationId && typeof value.saltBase64 === "string"
     && saltPattern.test(value.saltBase64);
 }
@@ -66,6 +67,9 @@ export async function redeemRosterAccountActivation(
     p_operation_id: input.operationId,
   });
   if (redemption.error) throw new Error("Account activation redemption is unavailable.");
-  if (isPending(redemption.data, credential.activationId)) return redemption.data;
+  if (isPending(redemption.data, credential.activationId)) {
+    // Immutable metadata is disclosed only after successful redemption.
+    return saltResult.data.expiresAt ? { ...redemption.data, expiresAt: saltResult.data.expiresAt } : redemption.data;
+  }
   return { status: "rejected" };
 }

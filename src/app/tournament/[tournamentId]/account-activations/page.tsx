@@ -7,6 +7,8 @@ import { requireTournamentAccess } from "../../../../lib/auth/require-tournament
 import { getRosterAccountActivationWorkspace } from "../../../../lib/roster-account-activation-workspace";
 import { createServerOnlyAdminClient } from "../../../../lib/supabase/private-admin";
 import ActivationWorkspaceClient from "./activation-workspace-client";
+import { hasSimulatedPlayerLinks } from "../../../../lib/simulated-player-links";
+import { SIMULATED_LINK_NOTICE } from "../../../../lib/api/simulated-player-links";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +19,7 @@ export default async function AccountActivationsPage({ params }: { params: Promi
   if (!["director", "co_director"].includes(access.role)) notFound();
   const workspace = await getRosterAccountActivationWorkspace(createServerOnlyAdminClient(), access.user.id, tournamentId);
   if (!workspace) notFound();
+  const simulated = await hasSimulatedPlayerLinks(createServerOnlyAdminClient(), tournamentId, access.user.id);
 
-  return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="activation-workspace-title"><p className="eyebrow">PLAYER ACCESS</p><h1 id="activation-workspace-title">Player Account Activation</h1><p className="auth-note">Issue a private link to one unlinked roster entry. A different signed-in director must compare the player&apos;s request ID and witness phrase in person before approving it.</p><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link><ActivationWorkspaceClient tournamentId={tournamentId} workspace={workspace} /><SharedDeviceSignOut /></section></main>;
+  return <main className="auth-shell"><section className="auth-card corrections-card" aria-labelledby="activation-workspace-title"><p className="eyebrow">PLAYER ACCESS</p><h1 id="activation-workspace-title">Player Account Activation</h1><p className="auth-note">{simulated ? SIMULATED_LINK_NOTICE : <>Issue a private link to one unlinked roster entry. A director or co-director signed in separately from the player must compare the request ID and witness phrase in person before approving it. The director who issued the link may approve it; nobody may approve their own player request.</>}</p><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link><ActivationWorkspaceClient tournamentId={tournamentId} workspace={workspace} simulated={simulated} /><SharedDeviceSignOut /></section></main>;
 }

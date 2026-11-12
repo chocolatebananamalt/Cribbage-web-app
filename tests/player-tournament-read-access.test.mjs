@@ -147,7 +147,7 @@ for (const name of PLAYER_READ_GATES) {
 }
 
 test("a voided payment does not satisfy the QR check-in money gate", () => {
-  const latest = latestDefinitionOf("event_qr_player_is_paid_and_enrolled")
+  let latest = latestDefinitionOf("event_qr_player_is_paid_and_enrolled")
     ?? (() => {
       // The function lives in the app schema, so the public-qualified matcher
       // above misses it; fall back to an app-qualified scan.
@@ -164,13 +164,24 @@ test("a voided payment does not satisfy the QR check-in money gate", () => {
           const start = match.index + tagMatch.index + tagMatch[0].length;
           const end = sql.indexOf(tag, start);
           if (end === -1) continue;
-          found = { file, body: sql.slice(start, end) };
+          found = { file, body: sql.slice(start, end), previous: found };
         }
       }
       return found;
     })();
 
   assert.ok(latest, "no migration defines app.event_qr_player_is_paid_and_enrolled");
+  if (/return app\.event_qr_player_is_paid_and_enrolled_legacy_0286\(/.test(latest.body)) {
+    // Synthetic finance has a separate source domain. Ordinary entrants must
+    // still delegate unchanged arguments to an exact clone of the prior gate.
+    assert.match(latest.body, /if not found then return app\.event_qr_player_is_paid_and_enrolled_legacy_0286\(p_tournament_id,p_event_id,p_roster_entry_id\);end if/);
+    const extension = codeOnly(fs.readFileSync(path.join(migrationsDir, latest.file), "utf8"));
+    assert.match(extension, /pg_get_functiondef\('app\.event_qr_player_is_paid_and_enrolled\(uuid,uuid,uuid\)'::regprocedure\)/);
+    assert.match(extension, /copy:=replace\(definition,'FUNCTION app\.event_qr_player_is_paid_and_enrolled\(','FUNCTION app\.event_qr_player_is_paid_and_enrolled_legacy_0286\('\)/);
+    assert.match(extension, /execute copy/);
+    latest = latest.previous;
+    assert.ok(latest, "the delegated legacy payment predicate must be present");
+  }
   // A void carries the full amount of the payment it reverses, so comparing the
   // newest row's amount to the amount owed without checking its type let a
   // voided payment read as settled.

@@ -37,7 +37,10 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /eventLabels\[event\.eventKind\].*event\.displayName.*event\.styleCode/s);
   assert.match(client, /Satellite Event/);
   assert.match(client, /Tournament Director Information \(shown to players\)/);
-  assert.match(client, />Phone<input type="tel"/);
+  assert.match(client, />Phone<TournamentPhoneInput/);
+  const phoneInput = readFileSync("src/components/tournament-phone-input.tsx", "utf8");
+  assert.match(phoneInput, /type=["']tel["']/);
+  assert.match(phoneInput, /autoComplete=["']tel["']/);
   assert.match(client, />Email<input type="email"/);
   assert.match(client, /Mailing Address for Correspondence.*Note: This address will be visible to players/s);
   assert.match(client, /Yes, Finalize &amp; Open Registration/);
@@ -58,7 +61,7 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(css, /@media \(max-width:700px\) \{ \.setup-event \.setup-grid \{ width:100%; max-width:100%; grid-template-columns:minmax\(0,1fr\); min-width:0; \}\.setup-event \.setup-grid>\*,\.setup-event \.setup-subsection,\.setup-event \.setup-subsection>\* \{ min-width:0; max-width:100%; \}\.setup-event \.setup-subsection,\.setup-event \.setup-subsection label \{ grid-template-columns:minmax\(0,1fr\); \} \}/);
   assert.match(css, /\.registration-primary \{ display:grid; width:100%/);
   assert.match(css, /\.setup-post-finalization \{ display:grid/);
-  assert.match(css, /setup-workspace:has\(\[role="alertdialog"\]\)/);
+  assert.match(css, /setup-workspace:has\(> \[role="alertdialog"\]\)/);
 });
 
 test("the ACC sanctioning fee rate editor is typeable and never saves silently", () => {

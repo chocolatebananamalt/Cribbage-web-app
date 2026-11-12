@@ -1,0 +1,23 @@
+> Historical checkpoint. The subsequent app-wide implementation and final evidence are recorded in 2026-10-28-recovery-integration-local.md. Earlier limitations below describe the state at that checkpoint, not a current rollout authorization.
+
+# Authentication boundary proposal - not implemented
+
+Existing local approval covers cross-tab recovery coordination. Independent review found that the goal 'block unsafe account switching' also crosses authentication paths not protected by safe-clear UI. Do not publish the coordinator as complete protection until this boundary is explicitly reviewed.
+
+Current exact-source findings:
+- src/app/sign-in/sign-in-form.tsx submitPassword directly calls the browser Supabase client's signInWithPassword, then navigates. That client can establish a new session before the app inspects recovery ownership.
+- src/app/auth/callback/route.ts GET exchanges the email code server-side, then checks only acc_offline_score_owner. It does not see per-tab retry envelopes or browser window coordination.
+- Existing server/public RPC authorization must remain unchanged. Recovery-owner metadata must never become authority for tournament roles or access.
+
+Recommended conservative local design within the approved safe-account-switching outcome; obtain independent security design review before integration:
+1. Every recovery envelope and async offline writer establishes a plain recovery-owner marker before persistence. Use the verified actor from the established session; unknown ownership fails closed. The marker is write-once for the same owner: an existing malformed or different-owner marker blocks the write and must never be overwritten with the current subject. Preserve every retained record and same-actor recovery. Do not infer ownership merely from the current account if historical envelopes cannot be proven bound.
+2. Email callback GET is a private no-store preflight page, without consuming/exchanging the code. The browser obtains the exact-version coordinated exclusive lease and inventories/rechecks recovery before an explicit same-origin POST performs the existing one-time exchange. Apply response cookies only after returned actor matches the recovery-owner safety predicate.
+3. Password fallback similarly uses a same-origin no-store server POST, instead of directly publishing browser Supabase session cookies. The app server would receive the password transiently and forward it to the already configured Supabase auth service. This is a changed credential data-flow to disclose in the separately approved rollout; local implementation and fictional/mock tests are within existing approval; never log, retain, put it in URLs, artifacts, files or telemetry.
+4. Keep exclusive ownership through the authentication response. Same-actor reauthentication preserves pending work; different actor requires zero recovery, targeted cleanup and a successful explicit switch. Unknown/stale/controller/version state blocks rather than deleting or guessing.
+5. Remove broad Clear-Site-Data storage. Preserve immutable server history, exact retry envelopes, existing role checks, account permissions and all original Supabase authentication validation. No token extraction, custom session bypass, password saving or weakened security setting.
+
+Required negative tests: exact Origin/Fetch-Metadata, body/type/size limits, private no-store/referrer policy and no credential logging/telemetry/artifacts; malformed/missing/untrusted/conflicting owner; same versus different returned actor; unknown legacy envelope ownership; pending work in any tab; concurrent write/auth/switch; stale/no-lease tabs and controller replacement; rate/error behavior, password/code failure and lost response; one-time code consumption/replay and suppression of every Supabase Set-Cookie on rejection. Use fictional credentials/mocked transports locally. No real user credential or new account needed for implementation tests.
+
+Scope clarification: no additional user approval is needed to implement and test these checks locally under the already approved safe-account-switching outcome. Independent security review is required, and tests must use fictional values and mocked transports. Publication, hosted authentication or actual credential transmission remain separate later decisions. No password, policy, permission or hosted-setting change is required by the design.
+
+Until integration and its negative tests are complete, keep the result explicitly limited to the safe-clear protocol and local proof. Do not claim that ordinary sign-out followed by another login is fully protected.

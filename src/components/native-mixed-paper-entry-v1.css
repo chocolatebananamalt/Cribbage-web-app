@@ -1,0 +1,8 @@
+.native-mixed-paper-entry{max-width:48rem;padding:16px;color:#162c42;font:1.25rem/1.4 Arial,sans-serif;overflow-wrap:anywhere}
+.native-mixed-paper-entry h2{font-size:1.5rem}.native-mixed-paper-entry .practice{background:#fff3d6;padding:12px}
+.native-mixed-paper-entry .identities{display:grid;gap:12px}.native-mixed-paper-entry .identities strong{display:block}
+.native-mixed-paper-entry fieldset{display:grid;gap:10px;min-width:0;margin:20px 0;padding:12px;border:2px solid #71879b}
+.native-mixed-paper-entry legend{font-weight:bold}.native-mixed-paper-entry input,.native-mixed-paper-entry select,.native-mixed-paper-entry button{font:inherit;min-width:0;max-width:100%;min-height:56px;padding:10px}
+.native-mixed-paper-entry button{display:block;margin:12px 0;white-space:normal;overflow-wrap:anywhere;background:#173e68;color:white;border:2px solid #173e68;border-radius:8px}
+.native-mixed-paper-entry button:disabled{background:#e8eff7;color:#43576a}.native-mixed-paper-entry .ack{display:flex;align-items:flex-start;gap:12px}.native-mixed-paper-entry .ack input{flex:none;width:28px;height:28px}
+.native-mixed-paper-entry :focus-visible{outline:3px solid #8a5200;outline-offset:3px}

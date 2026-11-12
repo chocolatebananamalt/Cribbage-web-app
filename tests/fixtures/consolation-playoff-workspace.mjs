@@ -1,0 +1,12 @@
+export const id=n=>`b2780000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+export const actor=id(1),tid=id(2),eid=id(3),qid=id(4),artifactId=id(5),digest='a'.repeat(64),sha='b'.repeat(64),reference=`SYNTHETIC-EVENT-v1:${artifactId}:${sha}`;
+export const qualifiers=Array.from({length:4},(_,i)=>({participantId:id(10+i),displayName:`TEST Qualifier ${i+1}`,qualificationRank:i+1,gamePoints:16-i*2}));
+export const decisions=[{winnerId:id(10),loserId:id(13)},{winnerId:id(11),loserId:id(12)},{winnerId:id(10),loserId:id(11)}];
+export const series=decisions.map((s,i)=>({...s,evidenceNote:`${reference}:${i+1}`}));
+export const artifact={artifactId,eventId:eid,kind:'playoff',sourceDigest:digest,payload:{qualificationResultVersionId:qid,expectedVersion:0,sourceDigest:digest,series:decisions},text:'SYNTHETIC CONSOLATION PLAYOFF EVIDENCE\nTEST ONLY; no physical play; no human review.',sha256:sha,reference};
+export const context={tournamentId:tid,projectRef:'nnhcnvksxgxnpvdqjgpg',eventIds:[eid],artifacts:[artifact],actualMoneyReceived:false,physicalPlay:false,humanReviewClaimed:false};
+export const workspace={tournamentId:tid,eventId:eid,qualificationResultVersionId:qid,sourceDigest:digest,currentVersion:0,canRecord:true,blocker:null,qualifiers,result:null,automaticPayment:false};
+export const request={qualificationResultVersionId:qid,expectedVersion:0,sourceDigest:digest,series,reason:'TEST ONLY SYNTHETIC: checked',reviewed:true,physicalPlayAttested:false,artifactId};
+export const receipt={status:'consolation_playoff_recorded_v1',tournamentId:tid,eventId:eid,resultId:id(20),version:1,sourceDigest:digest,recordedAt:'2026-11-03T00:00:00Z'};
+export const outcomes=qualifiers.map((q,i)=>({participantId:q.participantId,playedMatchWins:[2,1,0,0][i],byeWins:0,eliminatedInRound:[null,2,1,1][i],champion:i===0,bandStart:[1,2,3,3][i],bandEnd:[1,2,4,4][i],qualifyingMrp:[18,12,3,3][i],playoffMrp:[24,12,4,4][i],totalMrp:[42,24,7,7][i]}));
+export const recorded={...workspace,currentVersion:1,result:{resultId:receipt.resultId,version:1,sourceDigest:digest,current:true,series,outcomes,physicalPlayAttested:false,syntheticArtifactId:artifactId,bracketSourceVersion:'acc-rulebook-2025-effective-2025-08-01',mrpSourceVersion:'acc-published-mrp-2016-08-01',recordedAt:receipt.recordedAt}};

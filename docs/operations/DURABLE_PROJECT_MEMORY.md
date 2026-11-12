@@ -1,4 +1,169 @@
+## 2026-11-03 optional multi-event local verification COMPLETE; unpublished
+
+Local paid Main + optional paid Consolation support passed the full public-service synthetic lifecycle: 120 Main + 56 Consolation generated captures/reviews, six distinct pools, current 5/4 qualification/playoffs, source-bound cross-checks/drafts and atomic joint UNPAID accounting. Actual SQL responses passed API/UI codecs. Both UI recovery/review defects are fixed and phone/iPad/desktop + 200% text checks pass. Final pnpm verify: 1,227 application tests, audit/lint/providers/build and eight workspace checks; handoff six passed. Independent Sol found no outstanding P1/P2. Exact evidence and limitations: docs/quality/2026-11-03-multi-event-local-completion.md.
+
+This is LOCAL ONLY at base 5f04a2fc. No push, deployment, hosted migration/enrollment, user draft/fixture mutation, credential/role creation or actual money movement. Saved walkthrough c029953d-7402-40bd-ac8c-c45b94e26921 remains at last verified v2. New domain is exactly one paid Standard Singles Main plus one paid Standard Singles Consolation; Main-only legacy remains valid, Consolation is not mandatory. Joint finance closes only after both events are ready. Equal Side policy stays unresolved/disabled; later V2 event amendments and member-facing V2 simulation prize publication are outside this slice. A one-of-two pending correction cannot be created through the supported synthetic path and is not claimed tested. Production/human/offline/disaster-recovery launch gates remain separate.
+
+Migrations 0274–0289 are local files requiring explicit staging application approval. 0289 also narrows service execution on historical unguarded activation helpers and adds an exact-declaration-pin row backstop; disclose this in the next approval scope. All current code/tests and hash-bound migration scope will be frozen in the local publication manifest; no automatic publication permission is inferred. Private source backup evidence is tracked separately at the task level; never claim a database/Auth/Storage backup from a source ZIP.
+
+## 2026-11-03 optional multi-event and typed Side Pool work LOCAL, incomplete
+
+Owner approved local build/test only. Main does not require Consolation; support it when selected. Side payout type must be separate from optional name, paid entrants ranked by event scorecards. Equal Side variants remain a policy decision. New event-scoped financial/declaration groundwork preserves V1-V9 and fails closed on unsupported money/results domains; full multi-event accounting is not ready. No hosted changes or publication. Saved walkthrough draft c029953d-7402-40bd-ac8c-c45b94e26921 v2 retained: Main Standard, 12 games, $50; Q graduated 1-in-4 $10 and equal $20; no Side Pools; Nov 2 08:08 through Nov 6 23:59 Hawaii. User save/reopen passed. End time requirement is editable 23:59 default; phone auto-hyphens and whole-dollar base-entry increments recorded separately, not silently included. See docs/quality/2026-11-03-multi-event-local-work.md.
+
+## 2026-11-02 player restoration test Preview publication verified
+
+Commit 5f04a2fc61b1293362d121480a3f1c20c0d667b9 passed push 41544320902 and PR 41544330490 CI. READY Preview dpl_36NTWEpJFByV4h4B5jpYyLbBxheS and stable alias verified. All 135 scoped event-table counts/hashes across four preserved fixtures unchanged. Private source backup version 59 verified; no DB/Auth/Storage backup claimed. No migration or production change. See docs/quality/2026-11-02-player-restoration-preview-rollout.md.
+
+## 2026-11-02 approved player restoration locally verified, unpublished
+
+Owner selected September demo and approved final Entry/Card design. Local implementation preserves canonical scoring, explicit confirmations, actor-bound offline recovery and unchanged API/database/worker permissions. Full verify passed 1,173 app tests, audit/lint/build/provider checks and 8 workspace checks; direct handoff6 passed. Actual component browser8 groups, status refresh3 groups, production connectivity23 groups including genuine origin-down12, odd-field browser10, independent Sol review no outstanding P1/P2. Review-found draft/back/empty-state and makeup-label issues resolved. Working local screenshots privately saved; no commit/push/deploy/migration/hosted writes. Existing demo/logo bytes unchanged. ACC omitted if own-card reader lacks it; no staff-roster access. Profile currently readonly own tournament dialog, broader Home/Profile later. See docs/quality/2026-11-02-approved-player-restoration-local.md. Functions-first creation/registration walkthrough prepared separately; new fixtures/access/links/fees still need exact approval.
+
+## 2026-11-02 later scorecard prototype recovered after owner correction
+
+Augustflow/v1.3 are not latestdesignbaseline. September7reviewdashboard survives in src/app/tournament-dashboard.tsx and existing /demo (browserverified): digitkeypad,noplus-minusstepper,separateplus/minuscardcolumns,noinitials,VerificationID#. Latestcomponentcommit19bfec7 September18UTC. Exactkeyboard-editableinput/literalOpponentID# variant notyetlocated. Usermustconfirmbaselinebeforechanges. No redesign/deployment/data/authchanges. See docs/quality/2026-11-02-later-scorecard-prototype-recovered.md.
+
+## 2026-11-02 synthetic continuation COMPLETED through technical final cross-check
+
+Exact B invitation personally accepted; fixture-onlycrosschecker verified. Finalcrosscheck4a944552-21a5-445c-bdd1-16bbb1e4217f saved18:44:57UTC viaDirectorUI with allconditionsmet and explicit syntheticprovenance.102games/102reviews/204scorelines,17totals,qualification,4seriesplayoffandclosureverified. Originaldeviceall4fullrowhashesidentical. Zero receipts/payments/financialfinals; simulated51assessmentunpaid. This completes accepted technicalsimulation, not financialfinalization/independent-human/productionacceptance. See docs/quality/2026-11-02-synthetic-continuation-completed.md. B role remains assigned untilremoved.
+
+## 2026-11-02 synthetic continuation: playoffs and closure saved, final cross-check blocked
+
+Approved owner preparation succeeded once; playoffc1d3937f-f020-4e39-ad3c-91209d58fe80 and closure9eaf393d-5744-4bb3-9a91-ee12ffb55af6 persisted via normalDirectorUI.01champion,02runnerup,05/03equal3-4,04fifth. Finalcrosscheck requires cross_checker role absent from soleDirector fixture; disabled,notbypassed,no newrolegranted. Alloriginaldevicefullrowfingerprints now verified identical. Zero receipts/payments/financialfinals; simulated51assessmentunpaid. See docs/quality/2026-11-02-synthetic-continuation-playoff-milestone.md. Not fully finalized.
+
+## 2026-11-02 synthetic continuation: qualification complete, playoff source access denied
+
+All102games now verified through separate synthetic capture/re-entry,204scorelines,all17totals reconciled; qualification316c8ca8-c39b-4a18-93b2-3666d1a97880 finalized. New automatic-review denial rejected a read-only source query setting service_role claim before execution; no retry/bypass. Playoff artifact/outcomes and final cross-check remain pending. No payments or production changes; original device remains2verified+1pending. See docs/quality/2026-11-02-synthetic-continuation-qualification-milestone.md. Backupv57 predates milestone; no refresh claimed.
+
+## 2026-11-02 overnight read-only review prepared
+
+Prototype comparison is saved locally with fifteen panels and phone/desktop offline QA. Source investigation distinguishes selectable short formats from unsupported small-field full prize workflows. No-money V8 finalization remains unsupported; proposed technical reconciliation must be explicitly agreed. Exact morning seating/continuation approval scope is in docs/quality/2026-11-02-overnight-review-and-continuation-scope.md. No seating retry, app patch or hosted mutation. Source backup v57 predates these new notes; comparison remains local-only.
+
+## 2026-11-02 late-link repair published and applied to staging
+
+Verified test commit2abf66823a6d135041edb5e093e05ca29d5e75df, bothCIchecks andREADYPreview. Staging0273history20261102040931 matches reviewed16953bytes/SHA25665ed12880e4a5562dfeb4660877b54b5eb6254630bbed7bf67227086df8d2487. All225oldtables/22383rows unchanged bymigration. Exactlytwoapprovedreplacementeventaccountbindingsreconciled throughauditedRPC; unchangedstarts/schedule/seats/games andoldrows. LaptopMyGames/Game1nowworks, Bactor-scopedreaderconfirmsassignment; phoneUIunobserved. No scoreentered, no production/money orcredentials. Existinguserstartedrehearsalretained. See docs/quality/2026-11-02-late-links-staging-rollout.md. Earlier local-only/pending notes are historical superseded for this exact reviewed rollout.
+
+## 2026-11-02 late roster link integration defect and local repair
+
+The replacement rehearsal's permanent roster links are correct, but enrollment/schedule creation preceded activation and event_participants.profile_id stayed null. User activation succeeded. No repeat activation or new fixture is needed. Existing enrollment skips old rows; the scheduled-identity guard must not be bypassed with direct SQL. Local 0273 adds audited null-to-exact-existing-roster-account assignment on pristine events, with private RPC, ordered locks, immutable history, and explicit blocked state once evidence exists. The app accepts backward-compatible optional review metadata and displays Event access needs review. Hosted migration, branch publication and the two exact fixture reconciliations still need explicit approval. Production untouched. See docs/quality/2026-11-02-late-roster-account-binding.md for executed evidence and exact scope. The first technical test remains one operator/two devices; independent-human usability follows later.
+
+## 2026-10-30 setup fee and prize declaration repair locally verified
+
+Both failed hosted fixtures remain preserved. Their saved revision 2 fees were $0. The no-Q fixture's 102 verified games, qualification, playoffs and synthetic ledger were not changed by this local repair. Setup was saved, but intended financial terms were not verified. The published-form reproduction proves delayed blur-only fee commitment; normal blur and save correctly submits and persists 3000 cents. Historical request bodies are unavailable, so API corruption is not proven.
+
+The local repair updates valid amounts immediately, retains invalid drafts, verifies exact saved financial terms before clearing immutable recovery, supports combined Q/Side regular declarations, and requires a current V3 policy at initial supported paid activation. Genuine free events and historical replay/replacement remain compatible. Migration 0268 changes five existing functions only: 5,656 bytes, SHA256 0337C8A6E6C0E837A0D95FA39FD458EFC8D9A2C66DE40F2B6FCC024EA6FC712C. No new tables, RPC signatures or human grants. Full verification passed 1,135 tests; eleven actual SQL groups and sixteen phone/desktop scenarios passed. Independent review found no remaining P1/P2. Local seventeen-player receipt totals are $510 for no-Q and $850 for combined Q/Side, with zero scoring records. Task server, database and container cleanup was verified.
+
+See docs/quality/2026-10-30-setup-fee-and-policy-repair-local.md and the curated rollout manifest. The published test commit remains 69cd920b74d37766dec65831afd2adc79cd25b22. No new hosted migration, publication or replacement fixture is authorized yet. Source backup version 23 predates this repair; the next confirmed Library receipt is authoritative when saved. Production and real payments remain excluded.
+## 2026-10-30 prize-schedule prerequisite and navigation diagnosis verified
+
+The missing record is the structured regular PRIZE schedule and event binding, not the102-game schedule. Existing activation intentionally allows absent opt-in prize policy; zero configured fees hide the editor and remain valid for free events. Both test activations saved fee0, so $30 receipts cannot reconcile them. No safe ordinary correction of activated Main fees or late no-Q declaration exists. Preserve both failed-setup fixtures; separate replacement authorization follows a locally verified combined setup repair. Navigation already usesv8 for current boundV3 andv7 for unstructured legacy compatibility; do not forcev8 to conceal missing policy. Added3 regression cases,19focusedtests and fullverification1125tests/audit/lint/build/providers/workspace allpassed; independentreviewconfirmed. No app behavior/migration/hostedwrites/publication in this follow-up. Exact plan and evidence in docs/quality/2026-10-30-synthetic-hosted-rollout.md.
+## 2026-10-30 authoritative fixture setup correction
+
+Read-only database evidence supersedes the provisional recovery assessment below: BOTH fresh activated events actually saved base fee0, and the Q+Side configured Q/Side fees are0. No-Q's17 current $30 obligations/receipts total$510, with$229.50 expenses, so funding_unreconciled correctly rejects a zero-fee event. This is a test-setup verification failure, not evidence of bad rounding. Preserve both fixtures and all102 no-Q scores/qualification/playoffs; no retrospective configuration rewrite or legacy bypass. Neither fixture is monetary acceptance-complete and no prizes are recorded. Separate fresh-fixture authorization is needed after the independently confirmed combined schedule setup gap is repaired locally and reviewed for rollout. No new credentials, production, real money or hosted repair performed. See the latest section of docs/quality/2026-10-30-synthetic-hosted-rollout.md.
+## 2026-10-30 synthetic director continuation: accounting prerequisite failure
+
+Director authentication verified. No-Q retains all 102 verified games; truthful synthetic closure, unchanged-scorecard tiebreak, qualification version 1a751f43-3a2c-4947-98e1-b7b7029b707f and playoff version f1686b36-6e32-455e-91c7-c63701ea1e13 are persisted. FiveN01 first, FiveN02 second, FiveN03/FiveN04 equal third-fourth, FiveN05 fifth. No prize awards or final unpaid accounting recorded. Both fixtures lack a structured regular schedule; no-Q is now revision-closed after qualification, so do not invent retrospective disclosure or use legacy compatibility as current-policy acceptance. Q+Side remains unpaid/unstarted and revision-open, but its supported schedule editor/workspace/writer still exclude Side Pools. Local setup repair plus a reviewed rollout is required; a replacement no-Q fixture needs explicit approval. The previous 102-game source backup is version22 and predates this note. See docs/quality/2026-10-30-synthetic-hosted-rollout.md for exact IDs, evidence and safe repair scope. Production and actual money remain untouched.
+## 2026-10-30 morning readiness preparation
+
+Current checkpoint: test commit b0005ad6c065640961b01efb3ef3497c5de075f7 deployed; current $5 hosted acceptance remains incomplete. Two fresh17-player fixtures and pending B invitations exist; no financial/scoring records in them yet. Prior cent-based acceptance below is historical only. Whole$5 standing policy is approved, including automatic regular floor/ceil and honest funding requirement. Source backup v13 predates this morning checklist; see2026-10-30-morning-readiness-checkpoint.md for actual pending gates. Additional focused safety tests21/21passed; no new app behavior, hosted mutation or publication. User asleep; personal invitation acceptance remains pending.
+
+## 2026-10-30 recovery barrier diagnostics locally verified
+
+Local diagnostic milestone verified: 1092 application tests and full pnpm verify passed using official pinned pnpm11.19.0; audit clean, lint existing warnings only, provider checks/build/workspace passed. Actual isolated headless component suite passed phone390/desktop1440, competing-tab rejection before deletion with retained IndexedDB, cache/storage/cookie/server/interrupted/recovery/malformed/state failures, uncertain reconciliation and same-account preservation. Independent review: no remaining P1/P2. No hosted retry, storage clearing or publication. Hosted cause still unknown until diagnostic release is separately approved.
+
+## 2026-10-30 $5 policy staging rollout, acceptance pending
+
+Staging nnhcnvksxgxnpvdqjgpg migrations 0256–0263 applied once; 207 existing app-table fingerprints remained identical. Five new private forced-RLS tables are empty; 13 backend service RPCs have expected ownership/search paths/grants, and 21 denomination plus five immutable triggers are enabled. Stored migration SQL is the approved bytes plus a trailing CRLF; removing it reproduces each approved source SHA256. Exact Git commit 0c15806a632c6ae83c197ed426d41d9929d0b216 was normally pushed to codex/director-setup-journey / draft PR122; both CI verify jobs passed and Git-created Preview dpl_BHXS7QyTbD49r56X8NnDeS8mwKXP is READY. Fictional hosted acceptance remains NOT STARTED: automatic review rejected inspection of the existing laptop browser due to the prior browser-control restriction. No password, production, actual payment or business-record write occurred. See docs/quality/2026-10-30-five-dollar-staging-rollout.md.
+
+## 2026-10-30 legacy monetary compatibility locally verified
+
+Actual isolated SQL passed historical V5, satellite and team accepted replay and new cent-award rejection/rollback, plus a normal $5 team replacement. Local 0263 repairs the pre-existing generated scorer-status insertion defect without rewriting rows; no hosted migration has run. Full pnpm verify passed 1,091 application tests, audit, lint, providers and build. Physical rehearsal, hosted restore, exact-release acceptance and production authorization remain open. See docs/quality/2026-10-30-five-dollar-prize-policy-local.md.
+
+## 2026-10-30 local team replacement correction under test
+
+Real synthetic legacy team testing exposed an existing generated-column insertion failure during event replacement. Local additive migration 0263 removes the attempted scorer-resolution generated-column copy so the database derives it; no historical rows are changed. Runtime proof and independent review are pending. Migrations 0256–0263 remain local/unapplied; do not treat the source as rollout-ready.
+
+## 2026-10-30 local $5 Side Pool milestone verified
+
+Local regular/Q/Side $5 allocation and unpaid review passed 1,086 application tests and full pnpm verification, 18 actual Side SQL groups including two distinct-actor event-start races, and phone/desktop recovery checks. Independent review found no P1/P2 in corrected Side sections. Migrations 0256-0262 remain unapplied to hosted databases. No payment or production action occurred. V5 historical-cent runtime replay and legacy satellite/team rejection usability remain unverified; physical rehearsal, hosted restore and production launch remain open. See docs/quality/2026-10-30-five-dollar-prize-policy-local.md.
+
+## 2026-10-30 approved standing all-$5 award rule — local integration
+
+The owner approved every new prize award as a multiple of $5, including regular, Q and Side Pool awards. No whole-dollar fallback. Regular prizes use the available base-entry budget rounded down to $5 when eligible benefits plus that target still satisfy the exact required return; otherwise round up. Allocate automatically while preserving equal same-round awards. Record original/rounded budgets, direction, delta, required funding or restricted rounding balance. A positive delta is a funding requirement, never an invented receipt; unpaid finalization must reject missing funding. Graduated Q/Side amounts share exact ACC weights with the app's total-preserving $5 largest-remainder modification; eligibility remains separate. Historical immutable penny-denominated tests remain old-policy evidence. Implementation and verification are in progress locally; no new migration or publication has been applied. This supersedes earlier “proposed/not approved” wording below only on this standing rule.
+
+## 2026-10-30 owner payout correction — local policy design hold
+
+Owner06:18 requires whole-dollar awards, preferably $5, for regular/Q prizes.06:19 clarifies graduated rank-down (not a blanket equal-pool refund override).06:22 directs the shared ACC-weighted/balanced $5 formula for graduated Q and Side Pools;06:24 rejects recurring director questions for leftover placement. Whole-$5 LR already allocates every $5 unit; a genuine280.50 fund has a distinct50c funding residue. A once-agreed disclosed rounding-cover guarantee is proposed, not approved; no automatic donor, fee/expense change or fund diversion. Preserve immutable historical penny/refund test records; prior acceptance proves accounting behavior, not current denomination-policy correctness. Reference docs/reference/payout-policy-clarification-2026-10-30.md. No application behavior, migration, publication or hosted data changed.
+## 2026-10-30 local operational release audit
+
+Local-only audit passed 35 focused safety/domain tests. Current Q cash ties fail closed in client and SQL, and CI toolchain is pinned; live required-check settings remain unverified. Added current release/restore compatibility and protected-backup plan, and warnings on historical launch preflights. No browser control, hosted changes, exports, credentials or application behavior changes. See docs/quality/2026-10-30-local-release-operations-audit.md and docs/operations/RELEASE_AND_RESTORE_CHECKPOINT_2026_10_30.md. Owner decisions remain launch scope, protected restore destination/retention/target, physical rehearsal and Q monetary tie policy or explicit exclusion.
+## 2026-10-30 exact-release hosted acceptance complete — unpaid only
+
+Both new 17-player fixtures completed 102 verified games, five-qualifier/three-bye playoffs and one immutable unpaid accounting final each on release72c1c657. No-Q manual seed tiebreak changes ranking only; original totals preserved. Balanced Q records80/55/25 awards plus10 refund owed, all unpaid. Each regular prize schedule totals280.50 and base payback433.50/510=85%. Both reloads show current sources; no duplicate capture games. All9,863 older rows/199tables retain exact fingerprints. No production or disbursement. See docs/quality/2026-10-30-hosted17-terminal-acceptance.md for exact IDs, negative guard evidence and remaining release gates. Earlier in-progress/unpublished notes below are superseded on these specific points.
+## 2026-10-30 setup correction rollout completed; scoring handoff
+
+Current test release is `72c1c6571e33a53e7a204927e02e9a4dae22f3f9`: nine reviewed files, normal push, bothCIpassed, READY Git deployment `dpl_8KvoH2PfpWBagXHUGoZz8NsBxeqm` and stable alias. No new migration. Actual staged tournament saved the Q-compatible regular-prize schedule before collection. Both existing new fixtures now have17enrolled/checked-in players and102published games, InProgress/zero scores. Balanced-Q ledger680receipts/229.50expenses separates510base+170Q with17memberships/allocations; no-Q ledger510/229.50 has zero Q records. All9,863older rows remain unchanged by exact count/content comparisons excluding only the two new IDs.
+
+B's two memberships and nonplayer bindingsv1 are active. Director was already authenticated when a director-only clipboard permission arrived, so no clipboard read/paste/submission occurred. After all setup/start writes, safe director sign-out completed with zero pending and no competing writable app tab. Current tab336434390 in “🔎 Cribbage Preview access” is B password fallback with `pr122-player-b@test.invalid` filled. User enters existing password; no acceptance step remains. Do not reuse the expired/unused director-only clipboard permission for B. Prepared synthetic102-game plans are under test-results; compare paired synthetic records, never claim physical original cards/human review. No scores, playoffs, Q obligations or final accounting yet for these two fixtures. Source backupversion7 protects the verified repair commit, not subsequent hosted database content.
+
+## 2026-10-30 published release and hosted acceptance continuity
+
+The owner explicitly authorized the commit/non-force push after the prior denial. Release `fa0b6f529a80b0865bc095815be8f868825d9e8d` is published to the test branch, both CI runs passed and exact Preview is READY. Production remains untouched. Current Chrome extension is browser3, prepared app tab336434390 in “🔎 Cribbage Preview access”; stale browser2 control caused earlier timeouts. Vercel and director sessions were subsequently verified before new writes.
+
+Fresh Balanced-Q tournament `7f72d233-8243-411d-a9a6-2c83e1c33a71` / event `ed664ccf-fcfa-4c6a-aabe-b0402d510222` has 17 synthetic paper players and two frozen disclosed Q policies, no receipts. Fresh no-Q tournament `2a7da48f-b230-423c-bee4-026323de0745` / event `62dfb296-0be5-457b-8d3e-c45724b15e4e` has 17 checked-in/enrolled paper players, $510 synthetic receipts, $229.50 synthetic expenses and 102 published games, not started. No-Q regular prize rule is explicit five-qualifier 4:3:2:2:1. Both B nominations are pending personal acceptance; private links are retained only in the browser session. Safe director sign-out completed after zero pending work; B email prepared, password blank. Do not repeat creation, ledger writes, seats or schedule publication.
+
+Hosted acceptance exposed the parent setup filter still excluding regular prize schedules with Q pools. The narrow local repair permits the existing supported separate base-prize editor and ignores a hidden editor's stale blocking callback; backend guards and accounting are unchanged. Ten focused tests and independent review passed. Full checks passed 1,050 application tests/build/audit/eight workspace plus six private handoff checks; owner supplied explicit04:30 approval for corrections/reruns, and actual setup/recovery browser acceptance now passes at390/1440. No safeguards were weakened. Independent final review found no P1/P2; narrow publication remains conditional on terminal checks. No repair publication yet. See `docs/quality/2026-10-30-hosted17-setup-gap.md`. Source backup version5 predates this local repair.
+
+## 2026-10-30 Git commit gate after successful schema verification
+
+All0247-0255verifiedonstaging; old199tables/9863rowsunchanged,8newtablesempty.158filesstagedforPR122, withSQLbyte-preserving.gitattributes/excludedgeneratedtsbuildinfo. Commitcommandwasdeniedbeforeexecutionbyautomaticreviewclaimingexplicitnocommitboundary; HEADc8ad2b4/no push ornewPreview/businessfixture. Do notretryoruseAPIcommitwithoutnewmaterialexplicitcommit/pushapproval. CurrenttestPreviewtabatVercellogin. Existinglocalverification1048testsandallbrowsergroupsremainvalid; onlypublicationhygiene/docsmodifiedafterwards.
+
+## 2026-10-30 admitted remaining migrations and verified schema
+
+Owner specifically approved staging0248-0255 at02:52UTC; once-only retry succeeded. All0247-0255 now applied exactly once to staging, latest0255history20261030025536; canonicalbytes/SHA matched. EightemptyforcedRLS tables,23service-onlyRPCs/18enabledtriggers correct; all199oldapptables/9,863rows unchanged. No businessfixture/money/role writes or production change. Existingbranchpublication+twofictionalunpaidfixtures remain authorized; exactcommitCI/READY/privilegedisolation stillrequired. Olddenial/stopnote belowishistoricalresolved,notpermissiontoreapply0247orothers. No credentials handled; stableChromePreview is at Vercellogin.
+
+## 2026-10-30 partial staging state and approval-review stop
+
+Only0247 applied to staging, exact history20261030013509 and canonical checksum verified. All199oldapp tables/9,863rows unchanged; new tie table empty/private/forcedRLS,3serviceRPCs correct. Approval review denied0248 as lacking explicit hosted-schema authority despite the parent-supplied general test-rollout Yes; do not retry/bypass without materially new specific evidence.0249-0255 unattempted; no commit/push/Preview/fixture writes. Remaining scope is0248-0255,7private tables/20backendRPCs/nohuman grants. Source backupversion4 now protects verified connectivity+balanced code,4,440,657bytes/SHA2569c000e728cf3715f5c51ef7777d8f77d74c772d2a423bc46d463fdc8cc2d254b. Later receipt docs excluded; not a DB backup. Chrome stabletab336434384 at Vercellogin, user credentials untouched. Exact stop/preservation/security evidence stored in ignoredtest-results receipt.
+
+## 2026-10-30 authorized staging rollout and connectivity correction
+
+The owner approved test-only publication, staging0247-0255 safety reads and two new unpaid fictional acceptance fixtures at01:24UTC; no production, real money, credential/security changes or merge. Fresh local production digital11/manual20/photo13/safe-signout13groups pass after protected metadata binding and descriptive count refresh repairs; full1,048tests/build/audit/8workspace/6handoff pass, one pre-existing warning. No new migration is needed;0247-0255hashes unchanged. Refresh the old150-file selection and milestone source backup before rollout. Staging preflight now admits authorized reads; baseline199app tables/9,863rows, new objects absent and no active nonidle clients. Existing stable Chrome tab is at Vercel login, so authenticated UI verification may need user action after exact release deployment. Do not infer current app identity from an old tab title/history.
+
+## 2026-10-30 verified balanced-policy integration
+
+Private source snapshot now version3 on the same Library identity;4,420,860bytes/SHA25617f0a13b40f83e26cc3f890c74f31cf4ce4c4e6edddb4997cf80e2a3ff3dc812. Verified1,574source entries/CRC includes0247-0255 balanced integration. The later backup-receipt documentation is outside that snapshot. No DB/Auth/Storage backup or source changes after the manifest are implied. Windows xattrs unsupported; exact identity/version retained in sidecar.
+
+The approved ACC-weighted/application-balanced policy is locally integrated and verified through unpaid v2 review and v6 canonical accounting, preserving old chart/equal policy/source/history bytes. Final 1,046 application tests, full audit/build/workspace, six handoff checks, 14 policy browser groups and actual-SQL phone/desktop rendering pass. Independent review fixed late-election and historical-cut current-preview inconsistencies; current Q monetary ties remain blocked. Migration0255 is 25,042 bytes/SHA25670B806D4FD99E40E6B1D2D9B1D3F58A08F14FFBC7466F50BC65E31222B094726. All0247-0255 remain unapplied/unpublished. Do not equate this with production readiness, actual disbursement or off-device database restore. See the current quality report and source-backup receipt.
+
+## 2026-10-30 approved graduated Q rounding decision
+
+Owner explicitly accepted adopting observed ACC weighted raw awards with exact largest-remainder $5 rounding after reviewing the89-to90 individual-prize tradeoff. This is a new disclosed/versioned app policy, not ACC endorsement; preserve all historical chart/equal policies and reviewed/final unpaid records. Scope is LOCAL implementation/testing only: fees$10/$20/$50, ratios4/6, exact integer/rational arithmetic, higher-place remainder ties, explicit single-recipient whole pot, unsupported domains blocked. Regular shared-band prizes and equal Q remain separate; Q monetary ties stay blocked. See `docs/decisions/2026-10-30-acc-weighted-balanced-q-policy.md`. Parent handles the two requested PDF deliverables; no external messages, app publication or hosted migration is inferred.
+
+## 2026-10-29 recurring milestone source snapshot preference
+
+Owner explicitly approved keeping the same private Library source snapshot updated at verified milestones, preserving versions and prior exclusions. Use existing item `libfile_9c1086d4b68c81919cee2bb1a298d93d`; do not create duplicate identities. This permits source-only replacement, not database/Auth/Storage exports or production publication. Version1 now protects the completed0247-0250 accounting milestone; later in-progress edits are outside that snapshot until another verified update. See local source-snapshot-accounting-20261029 receipt/verification for exact hashes and Windows xattr limitation.
+
 # Durable Project Memory
+
+## 2026-10-29 payout-source preference: ACC calculator
+
+The owner now prefers the ACC web side-pool calculator over the friend-supplied tables as the authoritative payout source. Preserve all table provenance and existing disclosed policies/reviews; do not silently recalculate historical obligations. The observed calculator rounds each suggested amount independently to $5, so rounded totals can differ from the pot although the unrounded linear formula conserves it. Its final Update validation was not tested. A separately versioned calculator policy is planned; director-visible balancing/confirmation remains an unresolved owner choice, not an ACC-mandated correction rule. Do not invent a general-account subsidy or enable unbalanced finalization. Existing accounting invariants remain source/version-bound. See `docs/reference/acc-side-pool-calculator-observation-2026-10-29.md` and `docs/quality/2026-10-29-acc-calculator-policy-v3-plan.md`.
+
+## 2026-10-29 canonical unpaid Q bridge
+
+Local Q review v2 and accounting v6 now preserve distinct base/Q funding, exact saved regular prizes and immutable unpaid liabilities. Finalization records accounting only; it does not move money or mark anybody paid. A later source correction may stale immutable final history but cannot automatically reopen or create another review/final liability. Existing v1/v5 history is not converted. New v2-policy events reject incompatible old-client v5 drafts before they can poison the new domain. Local verification and remaining release scope are in `docs/quality/2026-10-29-q-v2-canonical-accounting-local.md`. No publication/shared migration is implied. Separate qualification-to-playoff bridge verification is required because raw numeric ties intentionally differ from resolved seed order.
+
+## 2026-10-29 qualification tie clarification
+
+Owner approved showing original tied scorecards and recording a separately played one-game tiebreak winner without changing qualifying totals. Apply ACC 2025 Appendix A20 (printed55/PDF56) and Policy6IV.B.2: compare an unambiguous qualifying-round head-to-head first, otherwise one-game playoff with cut for first deal. First supported slice is exactly two tied players; repeated/ambiguous meetings and multiway ties stay blocked. Gross positive winning spreads means sum of positive winning margins, never net spread. Preserve independent Q-only monetary tie policy unchanged. See `docs/decisions/2026-10-29-qualification-two-player-ties.md`. Local implementation/testing is authorized; no hosted fixture changes or migration application is implied.
+
+## 2026-10-29 owner clarification of six blurred Q chart rows
+
+The owner approved specific readings for page-5 $10 / 1-in-4 paid counts 39 and 56–60. All six arrays conserve the pot and ceil(count/4) recipients, but are user-read clarifications, not independent visual extractions. Preserve row 56's qualified reading and the fourth-place ambiguity resolved by total in rows 57–59. The reusable catalog now supports 320 combinations within the supplied ranges; all other 314 amounts stay unchanged and outside-coverage combinations remain blocked. Preserve original PDF hash/page/version plus per-cell clarification provenance. Use `docs/reference/INDEX.md` for existing extracted notes/data; it explicitly does not represent full Director Manual extraction. No tie-policy or schema change is implied. See `docs/quality/2026-10-29-q-chart-six-row-clarification.md`.
+
+## 2026-10-29 owner clarification: selectable friend-supplied Q schedules
+
+Graduated Q selects ceil(current fully paid entrants in that named pool / selected ratio), descending qualifying-card order, and continues to paid nonqualifiers when needed. Equal Q selects only paid playoff qualifiers; no eligible qualifier creates unpaid contributor refund obligations. These are disclosed selectable operating policies, not a universal ACC formula. Use exact visually verified chart dollars; never scale fee tables or interpolate unsupported counts. Library source: `libfile_3a1e3f4477e481919c5163b368dcd5c2`, eight-page `cribbage pool info.pdf`. Supplied tie sequence is games won, positive plus points, then a physical low-card cut with recorded director outcome. Existing plus_points represents positive winning margins, not net spread. Q ordering must be separately versioned rather than silently changing the existing playoff qualification order, which includes net spread. Regular playoff semifinal losers share the combined third/fourth percentages equally. Preserve earlier immutable policies and unpaid review history. User approved implementation/test Preview publication; any necessary staging migration must be proposed and locally validated before separate application. Parent-supplied visually audited structured chart data resolved the failed PDF transfer dependency (314 supported cells; six blurred rows blocked). Scoped retries passed all local SQL/browser checks; tested commit be7d7e6 is on the test Preview and checksum-verified 0246 applied once to staging (history 20261029071013), with existing app data/unpaid history unchanged; see `docs/quality/2026-10-29-q-operating-schedules-progress.md`.
 
 **Last updated:** 2026-09-20
 **Purpose:** Preserve owner corrections and verified source facts across tasks
@@ -158,3 +323,241 @@ these:
 - an owner/ACC policy choice where more than one safe interpretation remains.
 
 These dependencies do not justify pausing unrelated implementation or tests.
+
+### 2026-10-30 verified synthetic restore
+See docs/quality/2026-10-30-synthetic-local-restore-rehearsal.md. 239 table fingerprints and selected metadata survived same-cluster synthetic restore; original unchanged, exact task resources removed. 1,095 application tests/full verify passed. No hosted data export or hosted DR claim. Fresh eligible benefits $160 permit $280 awards; earlier $153 benefits require $285 and $4.50 funding. Restricted money is never participant return. Hosted no-Q scoring preserved at 15/102; Side recipient decision and remaining release gates stay open.
+
+### 2026-10-30 owner clarification: Side recipient basis resolved
+Side Pools rank all fully paid entrants' qualifying scorecards in that named pool regardless of playoff qualification; ceil(paid count / configured ratio) recipients, shared approved $5 allocation. Never rank by final playoff placement. This supersedes the earlier missing-information question; monetary ties remain blocked. Source: direct owner message relayed by parent. Local implementation/testing only; no hosted migration/publication. Regular $160 eligible benefits are INCLUDED within $229.50 expenses, not an extra cash pot; return $280 + $160 = $440, restricted $0.50 excluded. See docs/quality/2026-10-30-production-pause-side-ranking.md.
+
+### 2026-10-30 production platform resumption
+Specific user-approved Supabase Resume for ACC Tournament Pilot Integration (fnjkwymxpnsqvxtpronk) completed once. Dashboard explicitly reported successful restoration and back online. Parent owns separate approved SELECT 1 health query. No app/schema publication, billing/settings/credential changes or tournament record writes. This exception does not authorize any broader production rollout.
+
+### 2026-10-30 final Side implementation evidence
+Side recipient basis is resolved and implemented; it is no longer an owner-information blocker. All paid named-pool qualifying cards are ranked regardless playoff qualification, with configured ratio/fee, shared $5 allocation and unresolved cash ties blocked. New264/265 local migration artifacts add five private immutable tables/ten backend-only RPCs, no new human grants. Actual local SQL Q+Side/Side-only finals, $4.50 cover, exact $10.01 legacy refund, ordinaryv8 compatibility and observed locking races passed; final application suite1,113/build/audit/workspace passed; independent final review no confirmedP1/P2. See docs/quality/2026-10-30-side-pool-local-rollout.md for exact hashes/scope/limits. Current hosted15/102 preserved after denied synthetic-original-paper attestation. Do not bypass; truthful staging-only evidence path is proposed, not implemented. No new hosted schema/code/business changes authorized/applied. Production Resume/health incident was separately closed, not a launch approval.
+
+## 2026-10-30 Side Pool staging rollout verified
+
+Approved49-file commit562d6e80aa315077cd269437d74f2876a687a3db non-force pushed to draft PR122 test branch. Staging0264/0265 applied once with exact approved SQL hashes; all212 existing app/public table fingerprints unchanged, five new tables empty, forcedRLS/private ACLs and ten service-only RPCs verified. GitHub Verify41121887284 success and Vercel dpl_EaDBdAYRWKJkjR8V1ct5qz2Npvog READY stable Preview exactcommit. Read-only directorworkspace accepted/Bdenied. No hosted score/financial writes; existing no-Q15captures preserved. New synthetic evidence feature is separately approved LOCAL ONLY, under development; no hosted retry/enrollment/schema/publication authorization. Physical original-paper attestation denial remains in force. Working-tree versus GitLF hash representation documented. Report:docs/quality/2026-10-30-side-staging-rollout.md. No productionapp/schema or realpayment changes.
+
+## 2026-10-30 truthful synthetic evidence verified locally
+
+The local-only synthetic feature uses paired generated UTF-8 cards, immutable hashes and explicit statements that no physical originals or human review are claimed. It requires an exact staging runtime and private fixture enrollment. Protected capture, separate re-entry, reconciliation, missing-artifact rejection and alternate-write guards preserve existing history.
+
+Final frozen verification passed: 1,117 application tests, audit, lint, providers, build and workspace checks; six handoff tests; 14 focused tests; 11 actual SQL groups including observed enrollment races; and 10 headless phone/desktop groups including downloaded artifact hashes. Independent review found no confirmed P1/P2 issues. All task resources were cleaned up.
+
+Migration 0266 is unpublished and unapplied: 22,986 bytes, SHA256 4E2CC81EE51BB6B4FB7B8563E4D09FF175C01E36BA1D01AAE806904E5E613DEA. It adds four private tables and three service-only RPCs, and narrowly aligns existing capture-receipt reader roles with migration 0223. No human permissions were granted. No hosted synthetic enrollment or scoring retry occurred; the existing 15 captures are preserved.
+
+The manual qualification-tie checkbox still asserts a separately played one-game playoff. That needs actual evidence or a separately reviewed truthful simulation path; generated qualifying cards do not prove it. Source backup is prepared at this consistent checkpoint, with its exact Library version and hash kept in the external receipt. Earlier version 18 does not cover later work. No production release, real payment or hosted disaster-recovery claim. See docs/quality/2026-10-30-synthetic-evidence-local.md.
+
+## 2026-10-30 complete synthetic-flow extension in progress
+
+The parent requested that the remaining fictional flow be inventoried before publication. The inventory identified explicit physical-table closure, played tiebreak and playoff-series statements, plus actual-received receipt wording. Local migration0267 extends the same owner-enrolled staging design with source-bound simulated stage evidence and atomic new-row financial provenance. Actual funding/disbursement remains blocked. No production checks are weakened and old history is not relabeled.
+
+Both complete local17-player workflows have passed through unpaid finalization. Final negative, recovery, H2H and concurrency checks are still in progress, so0267 is not rollout-ready yet. No hosted synthetic operation, enrollment, migration or publication is authorized. Source backup version19 covers the preceding verified0266 milestone, not these later edits. The existing hosted15/102 and previous fixtures remain untouched.
+
+## 2026-10-30 complete truthful synthetic flow verified locally
+
+The full local 0266/0267 design now covers generated paired scorecards, source-bound simulated manual tiebreaks, canonical head-to-head priority, closure, four playoff series/three byes, receipt provenance and unpaid accounting. Qualifying totals and the 15 legacy records remain unchanged. Production physical assertions remain intact, exact staging/private enrollment is mandatory, and actual funding, voids and disbursement are excluded in enrolled mode.
+
+Final verification passed: 1,122 application tests, dependency audit, lint, provider checks, build and eight workspace checks; paper SQL eleven groups; two complete 17-player real local SQL workflows plus adverse/replay/concurrent/revoked-role checks; phone/desktop browser contracts; independent review with no confirmed P1/P2. Task databases, containers and browser test servers were cleaned up. See the synthetic-event-flow quality report and attestation inventory for evidence and limitations.
+
+Current local migrations: 0266 is 23,037 bytes, SHA256 779DBF95973667E32F4BD4FAB7483968AEC40E224553223D5E641973DEA6EE41; 0267 is 30,239 bytes, SHA256 1800E7E8B276F9E318BB0AD47D98688766C988C21393C2965F48BD14A2FEE57B. Together they add six private immutable tables and seven service-only RPCs with no human grants or seeded enrollment. They remain unpublished and unapplied to hosted staging. Side release562d6e8 remains the deployed baseline; no hosted synthetic action or original-paper retry occurred. Separate approval is required for migration, publication, exact fixture enrollment/artifact preparation and the bounded hosted acceptance. Physical field rehearsal, generic print certification, Q monetary ties and hosted disaster recovery remain separate gates.
+
+## Hosted checkpoint and exact approval blocker
+
+Read-only reconciliation after the rejected batch confirms 68/102 no-Q games verified: the unchanged 15 legacy results plus 53 new synthetic results. There are 54 distinct synthetic captures and 53 reviews, with exactly one pending capture for game 9595a11b-a9a7-4653-b4a9-284fa150dbaa/completion 027d28b2-075d-4bc0-8ad9-b7673fa58c76. No legacy result has synthetic provenance. No qualification version, playoff or unpaid accounting final has been created for either fixture. Q+Side remains enrolled but not financially/scoring initialized.
+
+The next browser batch (review the saved pending result, then two capture/review pairs) was rejected before execution by automatic approval review: it considered authorization local-only and said hosted scoring had no explicit approval. This conflicts with the supplied latest user approval, but the action was stopped without a workaround or retry. The exact saved state was reconciled afterward. B test tab 336434427 is marked for handoff, with no sign-out or credential action. A fresh action-specific hosted synthetic-scoring approval is required before resuming.
+
+209 of the 217 preexisting tables still have exactly unchanged whole-table counts/fingerprints. The eight changed tables are the intended scoring/audit/receipt tables: audit_events, canonical_games, card_scorelines, operation_receipts, paper_game_completion_evidence, paper_game_completion_reviews, paper_game_completion_state_events and paper_game_completions. All preexisting financial, policy, role, setup and qualification tables are unchanged. No actual money moved. Remaining hosted monetary outputs are unverified, not inferred from local expected amounts.
+
+## No-Q scoring complete; director handoff blocked
+
+Fresh action-specific user approval resolved the prior hosted-scoring denial. The saved pending review was reconciled and approved without repeating capture. No-Q now has all102 scheduled games verified, all102 exact results match the saved plan, and all17 rendered player totals match the prepared expected standings. Each player has12 verified card games. FiveN01 and FiveN02 retain the intended24points/12wins/+120net/+120plus tie; no ranking decision has been made. The server preview correctly shows5qualifiers,8-bracket/3byes and1unresolved tie.
+
+There are exactly87 new synthetic captures and87 reviews over87distinctgames, no pending review and no synthetic provenance for the15legacygames. No financial or qualification writes were performed. Q+Side remains pending director setup; expectations are not saved awards.
+
+The next guarded account-switch click, Clear safe app data and sign out, was rejected before execution by automatic approval review because it treated recovery-data clearing as requiring separate action-time confirmation. B remains signed in; no local storage was cleared. The current results page reports no unsent entries/retry records. Stop the rejected switch; do not bypass it with another route. A user-operated safe sign-out/director sign-in or fresh exact switch approval is required. Tab336434427 remains preserved in the Synthetic scoring continuation group. No credentials or clipboard were accessed.
+
+
+## 2026-10-31: explicit fee safeguards (local, unpublished)
+
+User confirmed paid Main minimum $3 and paid Consolation minimum $1 as APP safeguards, not ACC-mandated entry-price floors. New paid amounts must be explicitly supplied; blank, whitespace, missing/null, invalid, negative and zero never mean Free. Free events require an explicit choice. That choice does not waive sanctioning, prove subsidy or fabricate funding; existing accounting/funding reconciliation remains required. Enabled Q and Side Pool fees must be positive $5 increments (minimum $5); disabled pools need no fee. Optional expenses remain independent.
+
+Source distinction: official Policy Manual Chapter6 I.E.10 printed6-2/PDF34 and IV.A.6.b printed6-4/PDF36 establish $3 Main/$1 Consolation sanction obligations. Optional Side Pools are distinct from Consolation events (Director Manual8.A–B pages12–13). No general retail minimum or blanket subsidy permission was established by these provisions. Numeric entry-price safeguards are Daron's product decision of 2026-10-31.
+
+Completed previous rollout: staging0268 applied once as20261031000827, exact5656bytes/SHA0337C8A6E6C0E837A0D95FA39FD458EFC8D9A2C66DE40F2B6FCC024EA6FC712C; all223 preexisting tables preserved. Commit a97ced93a124ce41a24dbe62c841fe720eddfaaf on draft PR122 passed both CI runs and READY Preview. No replacement fixtures have been created. Replacement creation is held until this new validation is verified and separately authorized for rollout. Historical zero-fee fixtures remain unchanged and do not prove monetary acceptance.
+
+## 2026-10-31 current continuation checkpoint
+
+0269 is staging-applied once; published baseline ca85d1cb passed both CI checks and READY Preview. Replacement no-Q 45a01b4f-6c5e-4ed7-b8ad-824f1aeb947a has 102 scheduled games, not started. Combined e257eb44-c32e-4268-a45a-ae306c31ac4a is held at first Q membership: current frozen V4 policy was omitted by old V2 page reader. Verified local read-layer fix requires no migration, but publication is pending. Preserve all history and current director session. Both B invitations are pending personal acceptance; no duplicate or external invitation. Local repair passed 1,143 tests/full verify, phone/desktop and independent review. Never retry the rejected election before fixed Preview is verified.
+
+## 2026-10-31 Q disclosure repair is now published
+
+Exact223ec1583f18979fc666cd6a26f03e9428705342 has bothCI successful/READYPreview; no migration. Both replacement schedules102games each. Combined synthetic receipts850 (510base+170Q+170Side), all17 version1 records per ledger; expenses229.50. Side85/55/30 is an amount schedule only, not final recorded awards. All 223 old tables preserved excludingnewfixtures. Both B invitations pending; no guarded switch has been attempted. Preserve director session until approved handoff. Supersedes prior publication-pending notes.
+
+## 2026-10-31 both replacement scoring runs complete
+
+NoQ45a01b4f andcombinede257eb44 each102verifiedqualifyinggames/102captures/102reviews,
+zero pending. All34totals matchplans. Truthfulsyntheticprovenance408rows, nohuman
+orphysicalclaim. NoQseedtie preserved; combinedrank02/01/03/04/05. Older223tables
+preserved. B session remains; directorhandoffapproval andpersonalpasswordentry
+required beforequalification/playoffs/accounting. Do notresubmitanyscores.
+
+## 2026-10-31: replacement unpaid acceptance is complete
+
+Both 17-player replacements reached current unpaid final accounting with all
+204 games and 34 original player totals preserved. No-Q regular awards total
+$280; combined regular $280 + Q $170 + Side $170. Each has $229.50 expenses and
+$0.50 restricted hold. Return $440 exceeds required $433.50 because eligible
+benefits are $160 within expenses. Every award is a $5 multiple; semifinal
+losers get equal $45. No refunds, paid flags or actual disbursements occurred.
+No-Q final2fef282e-178a-420f-acb3-9bdf976510dc; combined final
+de2b093b-2657-44b2-baf1-f4c230be4ded, both version1/current/unpaid.
+All223 older table fingerprints match. Generic accounting navigation still needs
+local correction to choose V9 for Side events; the supported Side review link
+worked without weakening V8 guards. Physical and hosted recovery/release gates
+remain; this is not production approval or readiness certification.
+
+2026-10-31 local navigation repair: canonical event-scoped V9 Side history now chooses V9; current no-Side chooses V8, stale/malformed sources block, historical V6/V7 preserved. Settlement wrapper accepts V9. Unpublished; 1,145 application tests/build/providers/14 workspace-handoff checks pass; lint zero errors/50 existing warnings. Independent review no P1/P2. Local browser rehearsal stopped at ERR_NETWORK_ACCESS_DENIED; fresh dependency audit not completed. Source backup v31 includes repair code/tests, not later verification notes. No new schema/permissions/hosted change. See docs/quality/2026-10-31-accounting-navigation-repair.md.
+
+Navigation local final gate:14phone/desktopchecks passed after supported scoped escalation; no settings changed. Narrow six-file test-preview publication remains unapproved. All hosted finals/session/history preserved. See navigation-repair report; backup refreshed separately.
+
+2026-10-31 navigation publication complete:1c3cd8ceb150cdc16138267220707c8ddb7e4472,existingdraft PR122;push41163508732/PR41163512973success;READY Preview dpl_CFuF2QWcsfkYtm1EPXzB3JB9in96. Hosted generic settlement routes verified SideV9/noSideV8 read-only;finalIDs/sourceDigests/completeawardarraysunchanged,onedraft/finaleach;director preserved. No migration/production/moneychange. See2026-10-31-accounting-navigation-preview-rollout.md.
+
+2026-10-31 production-readiness follow-up: current actionable checklist saved at docs/quality/2026-10-31-production-readiness-current.md, superseding older status/domain notes without deleting history. Focused local safety checks passed 44/44; local v34 source archive extracted 1,758 files with matching hashes, metadata readable and temporary directory removed. No browser/hosted/production action. Remaining gates require named physical participants/modes, protected hosted recovery scope/RPO/RTO/target, Q/Side cash-tie policy or explicit blocking scope, and exact production compatibility/rollback/operational approval. No production-ready claim.
+
+2026-10-31 two-person rehearsal prepared only: docs/operations/TWO_PERSON_DEVICE_REHEARSAL_2026_10_31.md. Two human/device digital reciprocal+offline/reload/reconnect pass is feasible; full paper/hybrid/lost-device gate is not covered. Recommended Daron existing director also plays newfixture, helper existing B plays and receives scoped co-director role only if approved, allowing genuinely mutual roster witnessing without director sign-out. Freshfixture, co-director invitation, short-lived roster-activation credentials, human operators/timing and single-device outage approval remain pending; no hosted setup/credential/network/browser action performed. Both completed unpaid fixtures remain unchanged. 13 focused local schedule/start/independence tests pass; no human acceptance claimed.
+
+2026-10-31 two-person staging draft created:3c58ef91-010c-4769-af20-5cfa2ffe98a9, setupv2 Main12/paid$3/freefalse/Q0/Side0 read back. Provisional Hawaii draft windowOct31 09:00-Nov2 18:00; availability unconfirmed. No activation/roster/score/receipt. B's exact no-email co-director Save was denied beforeexecution: action-timeconfirmationrequired for materialaccess. DBnomination0/Broles0; no invite or activationcredential exists. Do not retry without new action-specific confirmation. Current Chrome3 tab 336434427/groupTwo-person rehearsal setup retains filled form/director session, handoffmarked. Completed two replacement finals/sourceDigestsunchanged. See docs/quality/2026-10-31-two-person-rehearsal-setup.md.
+
+2026-10-31 04:21 action-time approval resolved exact nomination blocker. Save retried once and succeeded: pending co-director nomination a1cfa8d2-b430-44b1-9fb1-6718e516e002, only new tournament3c58ef91-010c-4769-af20-5cfa2ffe98a9 and exact B email, no email sent. Exactly1nomination, no active B role. Await B's real operator's personal acceptance on separate device; helper/timingunknown. Director tab 336434427 browser3 preserved/marked, no activation/rosterlinks/physicalscores/outage. Previous 03:45Yes authorized setup; earlier accounting-publicationYes is NOT helper availability. See updated setup checkpoint.
+# 2026-11-01: one operator, two devices — truthful simulation only
+
+Daron explicitly confirmed he operates both devices and approved local build/test
+of a labelled simulation for rehearsal3c58ef91-010c-4769-af20-5cfa2ffe98a9 and the
+existing director/B test profiles. Do not ask him to assert an independent human
+witness. B's fixture-only co-director invitation a1cfa8d2-b430-44b1-9fb1-6718e516e002
+is accepted, but the draft remains unactivated/unlinked. Proposed0270 adds explicit
+staging enrollment and atomic immutable simulation provenance while retaining
+different-account and all normal authorization/expiry/replay guards. It is LOCAL
+ONLY; no publication, hosted migration/enrollment/use is approved yet. Two devices
+operated by one person can prove technical behavior, never independent-human
+verification. Preserve both sessions, completed finals and historical evidence.
+See docs/quality/2026-11-01-simulated-player-links-local.md.
+
+## Acceptance sequence clarified by Daron — November 1
+
+Stage 1 is the single-operator, two-device TECHNICAL rehearsal. Daron operates both
+fictional accounts. After separately approved staging rollout/enrollment and normal
+setup, success means the two devices complete matching entries and per-account
+confirmations, offline save/reload/reconnect and reconciliation with no duplicates
+or lost results, with truthful simulation provenance throughout. A separate human
+is NOT a prerequisite or pass criterion for this stage. Local automation is
+supporting evidence; the deployed two-device exercise still needs to be run.
+
+Only AFTER Stage 1 works will Daron recruit another person for Stage 2: whether
+that person can understand and use the app, plus genuine independent-human identity
+and scoring verification. Stage 1 passing is a valid technical result, not a failed
+independence test. It does not by itself complete Stage 2 or production readiness.
+Publication, hosted migration/enrollment/use and user-operated outage approvals
+remain separate; this clarification performs none of those actions.
+# November 1: approved simulation rollout supersedes local-only hold
+
+Staging0270 applied once20261101075403 with approved9773bytes/SHA733536D1A495373564C5F5A63A0992DAE77583B5AF94932681A3943B06BFEA19.
+Exactf183d395bf75df9648871d6eb870ffdd6ce4fb9e passed push41286681074 andPR41286684365;
+READYPreviewdpl_AAaxz56N7Z9iDSbLypYWo2BP4Hmk/stable alias verified. Only rehearsal
+3c58ef91-010c-4769-af20-5cfa2ffe98a9/operator scope enrolled. No links/provenance,
+roster or event yet; B's prior co-director is accepted. All223oldtables unchanged.
+Hosted notice/unchecked consent and Director identity observed without signout.
+Next is ordinary draft/prize/roster/link/start preparation, then single-operator
+two-device test (no helper prerequisite), then separate-human usability later.
+Do not claim either rehearsal stage completed. See dated staging-rollout report.
+# November 1: technical rehearsal setup boundary, not a human blocker
+
+Actual setup/roster UI confirmed the enrolled $3 Main/12-game/no-pool draft
+requires a structured four/five-qualifier prize schedule before registration.
+Its intended scope is two players/no prizes; do not invent extra qualifiers or
+change fee/format to evade this guard. Roster intake is disabled until activation.
+Attendance later requires explicit settled obligation; a zero-owed comp path
+exists, but no waiver/receipt has been assumed or recorded. Need a reviewed exact
+fixture technical-no-prizes declaration/activation path and truthful no-charge
+attendance treatment. No current phone action, new login or helper is necessary.
+All sessions, finals and fixture data preserved; no business writes in this
+investigation. See docs/quality/2026-11-01-two-device-setup-boundary.md.
+
+## November 1: normal 17-entry technical route approved and prepared
+
+The prior two-roster boundary is superseded by explicit user approval of 17 fictional entries with all entries comped. Ordinary five-qualifier 4:3:2:2:1 declaration saved and registration opened; 17 Digital identities, 17 simulated attendance notes and 17 zero-owed obligations verified, with zero receipts. No event start or scores. Stop at B's phone redemption/consent before account links and enrollment/seating/schedule; laptop director session and private link remain open. The 15 additional fictional entries have no accounts. Technical repeat pairing is planned only, never ACC-compliance evidence. All 225 non-target table fingerprints/21,228 rows unchanged. See docs/quality/2026-11-01-seventeen-entry-technical-setup.md. No independent-human or physical rehearsal claimed.
+
+## November 1: activation unavailable is a reproduced app startup defect
+
+Do not blame email transfer: owner confirmed full matching URL and direct paste still failed. The valid unused B activation was checked before expiry. Production local reproduction with actual RecoveryDocumentBoundary showed page-level beforeInteractive bootstrap never executes because its children appear after startup. Move Script to root outside the unchanged boundary, route-limit fragment capture, retain memory-only lifecycle, support same-document full-link retry and StrictMode replay. Local repair/verification ongoing; no publication/new link/hosted mutation. Preserve both sessions, completed finals and 17 comp records. See docs/quality/2026-11-01-activation-startup-repair.md.
+
+Activation repair final local gates passed:1151app/fullverify;9production+9StrictMode real-component scenarios;independentreview noP1/P2. Malformed new hash clears prior validref. Rootrecoveryguard unchanged. Narrow test-preview publication remains unapproved; no hostednewlink/migration/write. Do not ask owner to keep retrying known broken deployment. See activation-startup-repair report.
+
+## November 1: published activation repair and approved B simulation link
+
+Exact255ffc8334af9c6eb9dd7a2787cb42fde430ae88, push41292517294/PR41292522965 success, READYdpl_5UtHoMuVSSrcd7tQF4d73xbEQkPR stable aliasverified. Disposable hosted startup showed Confirm activation without submit. No migration/production. User personally completed B redemption and simulated approval; request5398d5ff-1afd-43d3-8146-7ddd3c7a8ce3 approved, permanentlink1e4f2b95-3eb0-47be-b898-59d23283972b, immutable single_operator_two_accounts_v1/independent_human_witness=false. Only B linked, Director playerlink pending. Starts0/games0/receipts0; completedfinalIDs/digests preserved. Nothing else required tonight; future login expiry does not undo accepted roster link. Tomorrow complete remaining ordinary setup and user-run technical play, not independent-human acceptance. See2026-11-01-activation-startup-preview-rollout.md. Preserve both sessions; no more credential or gameplay actions authorized by this checkpoint.
+
+## November 2: both simulation links, roster seating and technical schedule saved
+
+Director link660d48d2-9466-4519-8b8e-ad5a2fbda2ba and B link preserved; both explicit oneoperator/noindependenthuman provenance.17enrolled;registrationclosed;permanent5x4seating DirectorA-2/B E-1. Technicalrepeatfirsttwo schedulepublication6701098f-8d0a-44c4-b62a-7e68a25780c5 has102scheduledgames/12cardlines each. Zero scores/starts/receipts. Eventattendance remains17unresolved. Begincheckin autogeneratesQRcredential; pausedbeforeit under current no-new-credentials instruction, not a denial. Need narrow authorization/clarification, then normaldeskcheckinswithoutappaccess and closecheckin. No start/outage/scoring yet. See2026-11-02-two-device-seating-checkpoint.md.
+
+## November 2: starting-ID correction design, implementation pending
+
+Daron clarified the intended rule: an active participant in scheduled game1 must sit at the Table/Seat encoded by their permanent starting ID. The exception is a first-game sit-out in an odd field. That player retains their permanent ID; this statement does NOT establish a requirement that their first later played game use the original seat. Do not implement first-actual-played-game equality or treat makeup as the starting draw without further source support. Current DirectorA-2 and BE-1 both appear in game1, atA-1/A-2, so their mismatch remains invalid under this clarified rule.
+
+Pending correction proposal: generate/review initial draw and game1schedule together; enforce equality for game1activeplayers, preserve legitimate missing game1player and permanentID. Add tests for valid active first-round seats, mismatched active seats rejected, valid odd-field game1sit-out accepted and laterreturn notincorrectlyconstrained. Keep UI PlayerID versus ThisGame Table/Seat explicitly labelled. Assess audited pre-score correction capability before recommending existingfixture amendment; otherwise replacement requires authorization. No code, hosted changes, fixture correction, publication or implementation approval has occurred. Preserve startedonce/zerosubmission history. Trusted source: user Sentinel_700463d8bbc8819191fcc2890c70cbbd,2026-11-02 00:52:17UTC. The previous synthetic fixture should not be treated as ACC rotation authority.
+
+
+## November 2: initial-seat correction local checkpoint
+
+User approved local implementation. Fresh game1 publication must match permanent starting IDs, except an odd-field first-game sit-out; later audited rotation amendments remain separate. Existing September14 decision is recovered at docs/decisions/2026-09-14-event-play-and-operations-boundary.md:22–28. Player ID/current Table and Seat labels now separated, with explicit Event headings. Current rehearsal remains unchanged and paused; do not claim fixed or alter immutable IDs. See docs/quality/2026-11-02-starting-seat-consistency-local.md for implementation, verification and exact correction boundary. Full final verification remains pending at this checkpoint. No hosted changes/publication.
+
+Final local checkpoint:1155 app tests/full verify/build/audit,6 handoff tests,10 browser scenarios and isolated standard/odd SQL replay cases passed; independent review no P1/P2. Revised owner layout: event/game bold, actual name: ID#, current Table/Seat bold.0271 adds own-name field only to authorized assigned-game reader, so compatible app/parser must deploy BEFORE0271. No hosted correction/publication authorized/executed. See starting-seat local report and20-file manifest.
+
+
+## November2 starting-seat patch published to staging
+
+Commit2358d56471007f3e7c57baa729ac992805ccf4c2; bothCI passed; READYdpl_B5zmKqZA8u2hKgPYD7WDWUbzsd1L. Compatibleparser first, then0271 history20261102012910.225tables/21808rows unchanged; same functionOID/ACL; original rehearsalstarts1/scores0, bothlinks preserved. Actual playername/fixedID/boldTableSeat layout verified live. No production or money. See starting-seat-preview-rollout report. New replacement/simulation prep separately authorized; no new access/enrollment/publication authorized yet.
+
+Replacement draft fd0589d0-31e7-4921-b793-1beec2431337 created under explicitprepapproval. Revision2fee300cents/12games/0pools verified; V3fivequalifierdeclaration98f150a7-a3f8-459f-98ec-fe6e62bcb982v1 saved. No activation/roster/Brole/links/enrollment. Exact B no-emailcoDirectorformreadyatChrome336434442; Save NOT clicked, actiontimepermissionpending. Local0272exactsecondfixtureextension verified1155/full/SQLraces/history/thirdscope/profile/phone&desktop; unpublished/unapplied. See replacement-rehearsal-preparation report andninefilemanifest. Prepared17roster/zeroowed/schedule existsLOCALLYonly.
+
+
+Replacement simulation published adfb70cbe78ad41033c680b777a6a8c5ea042a65, push41375301079/PR41375305836 pass, READYdpl_DJZy6oR5tvAR83TbQ7M8RH9dFPkX. Staging0272history20261102020133 preserved225tables21836rows; approved replacement enrollment added one row only, other224tables unchanged. Live truthfulbanner verified. B coDirector Save rejected beforeexecution as notfreshactiontimeconfirmation; nominations0/Brole0/link0/activationcredential0. No retry/workaround. Exact form remains filled Chrome336434442/groupReplacement rehearsal setup. Need new actiontimeSave approval; no acceptanceURL exists. No production, money, scoring or newactivationlinks. See replacement-simulation-preview-rollout report.
+
+## Deferred owner request — own-player Won/Lost controls
+
+On 2026-11-02, Daron requested that the score-entry buttons show the current device player's own name with Won and Lost, using green for Won and red for Lost while keeping explicit text labels. Map these to the correct game winner independently of side A/B and retain positive winning-margin entry. This follows the paper scorecard convention. He explicitly deferred implementation until AFTER the current rehearsal tournament; do not bundle it into the offline-sync confirmation repair or change the live scoring controls now. Source: user message Sentinel_051eb600ace48191a37e8375f88e0daf, 2026-11-02 05:07:49 UTC.
+
+## 2026-11-02 deferred return-to-play navigation
+
+The current scorecard's normal path is Back to tournament -> My Games -> Open Game; completed-game page only links View Scorecard. Daron requested an obvious way back to playing (Sentinel_ca82bd1622a481919c8667625eaf0e69). Record direct Back to My Games / eligible next-game navigation for after the current run. Do not implement or bundle it into the offline-sync confirmation fix now. No special assistant URL is required; current normal route is indirect.
+
+## 2026-11-02 deferred original scorecard-flow recovery
+
+Daron explicitly wants the original saved scorecard flow recovered and compared after the current tournament, not redesigned during this run (Sentinel_c69014e118748191be85990a278c296c). Use existing prototypes/spec/history to identify concrete navigation regressions and propose restoration without losing integrated rules/data. Do not ask him to recreate the original design from memory. Preserve current live controls and prioritize functional test continuation; this does not authorize new publication.
+
+Owner refined the deferred scorecard recovery at 05:13 UTC: find the MOST RECENT scorecard-only functional prototype plus screenshots, show it and the current version for his verification and selection before major changes. Do not assume earliest prototype or current code is the desired baseline. No final selection yet; keep deferred until after this run. Source Sentinel_04599ed6953c81919f9854ea1bedb939.
+
+## 2026-11-02 local confirmation refresh verification
+
+Both user-entered rehearsal games are authoritative; first-confirmer stale waiting copy is a client refresh defect, not missing scores. Local narrow repair passed 1,160 app tests/full verify, handoff, phone/desktop actual component regression, eleven offline connectivity groups and independent review. No publication or migration authorized yet. Both saved card modes are digital; generic paper/digital help is unconditionally displayed and misleading, deferred for after run. Preserve current live controls. See docs/quality/2026-11-02-score-confirmation-refresh.md.
+
+## 2026-11-02 physical offline reload failure and local repair
+
+User's phone truly disconnected and reloaded Game 3 after Offline Ready, then recovery safety blocked. Reconnect restored the form; no score entered. Do not count this as offline acceptance. Root cause established locally: worker update requires network; browser emulation did not stop that fetch. Local coordinator fallback pins the exact existing activated worker and freshly verifies protocol before unchanged lock/owner/pending guards. Full verify, 1,160 tests, genuine origin-down cases in both online states, auth checks and independent review passed. No publication, migration or hosted changes. Keep phone online until approved rollout/retest. Existing unpublished status-sync fix remains intact; deferred UI/prototype work stays deferred. Details: docs/quality/2026-11-02-offline-recovery-startup.md.
+
+## 2026-11-02 approved combined Preview rollout complete
+
+Commit acfbd9156619443aaa5d094bca343fde9e99bef1, exact12reviewedfiles, normal push to existing testbranch/PR122. Both CI checks passed, exact READY Preview and stable alias verified. No migration/production/scores/redesign. Rehearsal score fingerprints unchanged. Parent coordinates user phone refresh online -> Offline Ready before new bounded offline reload. Physical acceptance remains pending. Preserve current sessions and links; never clear storage for this issue. See docs/quality/2026-11-02-score-sync-offline-preview-rollout.md.
+
+## 2026-11-02 phone reload/reconnect passed; save/sync not yet tested
+
+User observed Game3 survive repeated actual airplane-mode/Wi-Fi-off refreshes after the approved release, explicitly still disconnected. Reconnection and refresh returned Offline Ready. This is a narrow physical-phone reload/reconnect pass, not offline scoring/sync or independent-person acceptance. BGame3 remains serverpending/version1, no entries. The two linked accounts meet only in games1and2; later games have unlinked fictional opponents. Do not impersonate those opponents or mark a single offline entry verified. Existing synthetic-paper fixture enrollment requires all Paper rosters and cannot simply be applied to this all-Digital rehearsal. No mode conversions/history rewrites authorized.
+
+## 2026-11-02 synthetic continuation actual stop checkpoint
+
+Staging e735a592-ea9a-4702-abf8-e616bd721740 has17 Paper roster entries,zero owed/received via17 explicit waivers,no receipts,17 synthetic check-ins,registration closed. Permanent ID/seating publication was denied before execution despite general run approval; do not retry without fresh exact approval. Five-table draft prepared only. Zero participants/games/starts. Deployed regular prize math rejects gross0, so do not promise existing-code no-money final or invent receipts to pass it. No money/sanction override. Original device event's102games/5submissions/4confirmations/4scorelines fingerprints unchanged. See checkpoint report; no simulation completion claimed.

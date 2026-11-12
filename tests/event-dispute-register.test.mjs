@@ -133,7 +133,7 @@ test("protected staff UI lists published games, preserves retries, and exposes n
   assert.match(disputesPage, /\["director", "co_director", "cross_checker", "judge"\]\.includes\(access\.role\)/);
   assert.match(disputesPage, /getEventDisputeWorkspace[\s\S]*DisputeClient/);
   assert.match(disputesClient, /workspace\.games\.filter/);
-  assert.match(disputesClient, /sessionStorage\.setItem/);
+  assert.match(disputesClient, /setAppRecoveryItem/);
   assert.match(disputesClient, /Retry locked request/);
   assert.match(disputesClient, /const \{ kind: _kind, \.\.\.request \} = envelope;[\s\S]*isResolveEventDisputeRequest\(request\)/);
   assert.match(disputesClient, /async function open[\s\S]*const \{ kind: _kind, \.\.\.request \} = envelope;[\s\S]*isOpenEventDisputeRequest\(request\)/);

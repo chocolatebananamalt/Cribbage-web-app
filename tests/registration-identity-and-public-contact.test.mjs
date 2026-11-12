@@ -36,8 +36,8 @@ test("all new roster paths use name parts and the requested scorecard wording", 
     assert.match(source, />Digital</);
     assert.match(source, />Paper</);
   }
-  assert.match(rosterClient, /First name/);
-  assert.match(rosterClient, /Last name/);
+  assert.match(rosterClient, /First Name/);
+  assert.match(rosterClient, /Last Name/);
   assert.doesNotMatch(rosterClient, /label>Player name/);
   assert.match(rosterApi, /firstName: string; lastName: string/);
 });
@@ -65,6 +65,6 @@ test("the public contact is tournament-scoped, primary-director-only, and does n
   assert.doesNotMatch(setupRoute, /deleteProperty\(\s*corePayload\s*,\s*"tournamentDirectorPublicName"\s*\)/);
   assert.match(setupRoute, /configure_tournament_public_contact_from_setup_v1/);
   assert.match(contactRoute, /correct_tournament_public_contact_v1/);
-  assert.match(setupClient, /Tournament Director name \(shown to players\)/);
+  assert.match(setupClient, /Tournament Director Name \(Shown to Players\)/);
   assert.match(setupClient, /Update public Director name/);
 });

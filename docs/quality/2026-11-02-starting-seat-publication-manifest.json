@@ -1,0 +1,115 @@
+{
+  "baseCommit": "255ffc8334af9c6eb9dd7a2787cb42fde430ae88",
+  "scope": "local only; publication and staging migration not authorized",
+  "rolloutOrder": [
+    "compatible app/parser first",
+    "exact release CI and READY Preview",
+    "quiet staging0271 only; preserve rows/ACLs",
+    "approved fixture correction separately"
+  ],
+  "files": [
+    {
+      "path": "database/migrations/0271_initial_game_starting_seats.sql",
+      "bytes": 3524,
+      "sha256": "70897be4b89bdf3ef13c1d59818940ea66d447e2fb2aff7d41d3b3451d1a257f"
+    },
+    {
+      "path": "src/components/game-player-location.tsx",
+      "bytes": 358,
+      "sha256": "42730ee3661968a6b81caa99cb298caf34c13d3d0698c886df520e2c11c52c5a"
+    },
+    {
+      "path": "src/lib/initial-game-seats.ts",
+      "bytes": 615,
+      "sha256": "ad6b33f0fa8634670add2770b9916e9f1c63f02cc88d19b4bccecc55b2e91623"
+    },
+    {
+      "path": "src/lib/games/my-games-decision.ts",
+      "bytes": 5060,
+      "sha256": "3167bd1b9891300af3e3515793935e20cd285bc8ceac98b6c2af24eeaeb38a90"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/games/page.tsx",
+      "bytes": 5260,
+      "sha256": "b39e820dd6a6c659b9b1399a57d82d84fcd38458fb6debf5afc58f5e6ababbd9"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/game/[gameId]/score-entry.tsx",
+      "bytes": 26482,
+      "sha256": "9210d3269f88cc14bc38460b61f66c74eb4cad642f06d5d87ab37cb5b08d7ab1"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/schedule/schedule-client.tsx",
+      "bytes": 17865,
+      "sha256": "94b99e085af57cf5b8153cb911a5539c14063fe98a1733376e5235ef8d53c537"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/odd-field-makeup/makeup-client.tsx",
+      "bytes": 11463,
+      "sha256": "20d3ef52a4c03e757732fa73e9f4646cc0eca4fb0c93540ec1b988e69637ac21"
+    },
+    {
+      "path": "tests/fixtures/odd-field-makeup.mjs",
+      "bytes": 2167,
+      "sha256": "075b26e5afbf1991b82dbead0ccecccbf1bede89f5fabdedacc8f692e4d0d024"
+    },
+    {
+      "path": "tests/initial-game-seats.test.mjs",
+      "bytes": 2896,
+      "sha256": "fe26246b5bd259975cbb530e065213b41512d77cfe078b408a117b6df17fedde"
+    },
+    {
+      "path": "tests/game-api-semantics.test.mjs",
+      "bytes": 118887,
+      "sha256": "18432498fa3b87e8fbe8fd188bc19545b58a43de524059da329312bed0c24b67"
+    },
+    {
+      "path": "tests/my-games-navigation.test.mjs",
+      "bytes": 5559,
+      "sha256": "c95acc66939c2f53ba457089c6d27d2d9a8251bcfad3ce701dfc7459d48eff3b"
+    },
+    {
+      "path": "tests/odd-field-makeup-browser.mjs",
+      "bytes": 17504,
+      "sha256": "1795b02d4b3b3e970b3bd0417f11c6eb6932c14240fa3ec33c3ffc41cc3d26ca"
+    },
+    {
+      "path": "tests/run-starting-seats-container.mjs",
+      "bytes": 3549,
+      "sha256": "b9977ea86ea933e4e9ff39b3c990ccfeff9295fdd6453743aa1d2731ecad9aaa"
+    },
+    {
+      "path": "tests/run-starting-seats-isolated.mjs",
+      "bytes": 12181,
+      "sha256": "762d3d8ca971ffe84c6f51a841c5dca7867f9759b44274f7892134d3cf6953a9"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 473120,
+      "sha256": "12b4810e5b3aeeb19f23af0305c39b3728749095a35d6bd16d163ac685fe7afa"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 107188,
+      "sha256": "bb6270db2f87db41415255ecaa15f869bb95c8d50cbcfbecce882b111797a6d2"
+    },
+    {
+      "path": "docs/quality/2026-11-02-two-device-seating-checkpoint.md",
+      "bytes": 5490,
+      "sha256": "771b2213ed174773c8db9115c666351be000e522daafa9ac06775c0aaf5f0c68"
+    },
+    {
+      "path": "docs/quality/2026-11-02-starting-seat-consistency-local.md",
+      "bytes": 7827,
+      "sha256": "4cd5e2d8caa3582b9bcf78eae13eda5e7c60c58291c3d95e5b8158bd2c089f76"
+    }
+  ],
+  "verification": {
+    "applicationTests": 1155,
+    "fullVerify": "passed",
+    "handoffTests": 6,
+    "localBrowserScenarios": 10,
+    "isolatedSql": "passed",
+    "independentReview": "no remaining P1/P2"
+  }
+}

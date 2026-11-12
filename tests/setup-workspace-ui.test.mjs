@@ -15,7 +15,7 @@ test("directors can reach the protected tournament setup workspace", async () =>
   assert.match(landing, /\/setup/);
 });
 
-test("setup workspace exposes the October pilot event and Q Pool menus", async () => {
+test("setup workspace exposes the October pilot event and Q-Pool menus", async () => {
   const client = await readFile(clientPath, "utf8");
   for (const required of [
     "Add Main Event", "Add Consolation Event", "Add Satellite Event",
@@ -25,12 +25,12 @@ test("setup workspace exposes the October pilot event and Q Pool menus", async (
   assert.match(client, /formatForStyle/);
   assert.match(client, /event\.qPools\.length >= 2/);
   assert.match(client, /event\.sidePools\.length >= 6/);
-  assert.match(client, /Click Add Main Event to enter its event name, fees, date and time, included items, and Q Pools/);
-  assert.match(client, /Click Add Q Pool to enter its type, entry fee, and optional note/);
+  assert.match(client, /Click Add Main Event to enter its event name, fees, date and time, included items, and Q-Pools/);
+  assert.match(client, /Click Add Q-Pool to enter its type, entry fee, and optional note/);
   assert.match(client, /Click Add Side Pool to enter its type, entry fee, and optional note\. Each event may have up to six Side Pools\./);
-  assert.match(client, /Add Q Pool limit reached/);
+  assert.match(client, /Add Q-Pool limit reached/);
   assert.match(client, /Add Side Pool limit reached/);
-  assert.match(client, /Remove Q Pool/);
+  assert.match(client, /Remove Q-Pool/);
   assert.match(client, /Remove Side Pool/);
   assert.match(client, /Coffee, donuts, lunch, etc\./);
   assert.match(client, /aria-describedby=\{`\$\{event\.clientRowId\}-fee-includes-help`\}/);
@@ -65,7 +65,7 @@ test("setup text, date, and money controls are not reduced to checkbox dimension
 
 test("setup saves are recoverable and never presented as operational activation", async () => {
   const client = await readFile(clientPath, "utf8");
-  assert.match(client, /sessionStorage\.setItem/);
+  assert.match(client, /setAppRecoveryItem/);
   assert.match(client, /Retry exact saved request/);
   assert.match(client, /isSavedSetup/);
   assert.match(client, /Save All Events Draft/);
@@ -83,12 +83,16 @@ test("tournament details must be saved before event setup unlocks", async () => 
   assert.match(client, /Tournament Events is locked until the tournament details are saved/);
   assert.match(client, /payload: revisionId \? payload : \{ \.\.\.payload, events: \[\] \}/);
   assert.match(client, /stage: "details"/);
-  assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| busy \|\| !!pending/);
-  assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| pending \|\| activated\) return/);
+  assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| draftEditingDisabled/);
+  assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| draftEditingDisabled\) return/);
   assert.match(client, /Tournament details saved\. Tournament Events is now available\./);
-  for (const label of ["Tournament name", "Venue name", "Venue street address", "Venue city", "Venue State", "Venue ZIP", "Start date", "End date", "Time Zone", "First name", "Last name"]) {
+  for (const label of ["Tournament Name", "Venue Name", "Venue Street Address", "Venue City", "Venue State", "Venue ZIP", "Time Zone", "First Name", "Last Name"]) {
     assert.match(client, new RegExp(label));
   }
+  assert.match(client, /<TournamentDateFields startsAt=\{payload.startsAt\} endsAt=\{payload.endsAt\}/);
+  const dateFields = await readFile(new URL("../src/components/tournament-date-fields.tsx", import.meta.url), "utf8");
+  for (const label of ["Start Date", "Start Time", "Number of Days", "Ends on"]) assert.match(dateFields, new RegExp(label));
+  assert.doesNotMatch(dateFields, /type="datetime-local"/);
   assert.match(client, /setup-span-4/);
   assert.match(client, /setup-span-6/);
   assert.match(client, /setup-span-2/);
@@ -122,4 +126,24 @@ test("structured venue and Director name values are versioned without rewriting 
   assert.match(migration, /save_tournament_setup_version_before_structured_details/);
   assert.match(migration, /get_tournament_setup_workspace_before_structured_details/);
   assert.match(migration, /p_payload-array\['venueName','venueStreet','venuePostalCode','tournamentDirectorFirstName','tournamentDirectorLastName'\]/);
+});
+
+
+test("setup keeps policy tools out of the heading and repeats safe event actions", async () => {
+  const [client,page,dates,css] = await Promise.all([
+    readFile(clientPath,"utf8"),readFile(pagePath,"utf8"),
+    readFile(new URL("../src/components/tournament-date-fields.tsx",import.meta.url),"utf8"),
+    readFile(new URL("../src/app/tournament/[tournamentId]/setup/setup-event-actions.css",import.meta.url),"utf8"),
+  ]);
+  assert.doesNotMatch(page,/q-pool-policy/);
+  const policyPage = await readFile(new URL("../src/app/tournament/[tournamentId]/q-pool-policy/page.tsx",import.meta.url),"utf8");
+  assert.match(policyPage,/QPolicyClient/);
+  assert.match(dates,/\(Includes the start day\.\)/);
+  assert.doesNotMatch(dates,/11:59|23:59/);
+  assert.match(client,/<h2>Tournament Events<\/h2>/);
+  assert.match(client,/<EventAddActions position="above"/);
+  assert.match(client,/<EventAddActions position="below"/);
+  assert.match(client,/position === "above" \|\| !counts.consolation/);
+  assert.match(css,/setup-event-heading-row.*display:flex/);
+  assert.match(client,/configured events/);
 });

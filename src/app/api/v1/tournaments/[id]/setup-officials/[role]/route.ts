@@ -5,7 +5,8 @@ import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { createServerOnlyAdminClient } from "../../../../../../../lib/supabase/private-admin";
 import { createClient } from "../../../../../../../lib/supabase/server";
-import { getSetupOfficialsWorkspace, manageSetupOfficial, markSetupOfficialInvitationDelivery, nominateSetupOfficial } from "../../../../../../../lib/setup-officials";
+import { getSetupOfficialsWorkspace, manageSetupOfficial } from "../../../../../../../lib/setup-officials";
+import { saveSetupOfficialInvitation } from "../../../../../../../lib/setup-official-delivery";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,20 @@ async function context(params: Promise<{ id: string; role: string }>) { const { 
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string; role: string }> }) { return withApiFailureBoundary(async () => { const item = await context(params); if (!item) return apiJson({ error: "unauthorized" }, { status: 401 }); const workspace = await getSetupOfficialsWorkspace(createServerOnlyAdminClient(), item.actorId, item.id, item.role); return workspace && isSetupOfficialsWorkspace(workspace) ? apiJson(workspace) : apiJson({ error: "not_found" }, { status: 404 }); }); }
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string; role: string }> }) { return withApiFailureBoundary(async () => { if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 }); const item = await context(params); const body = await readSmallJson(request); if (!item || !isSetupOfficialNominationRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 }); const secret = crypto.randomUUID() + crypto.randomUUID(); const admin = createServerOnlyAdminClient(); const result = await nominateSetupOfficial(admin, { actorId: item.actorId, tournamentId: item.id, role: item.role, firstName: body.firstName, lastName: body.lastName, email: body.email, accNumber: body.accNumber, secret, operationId: body.operationId }); if (result.status !== "official_pending_email") return apiJson(result, result.status === "registered_approved" ? undefined : { status: 409 }); const nominationId = result.nominationId; if (typeof nominationId !== "string" || !isUuid(nominationId)) return apiJson({ error: "operation_unavailable" }, { status: 503 }); const next = `/official-invitations/${encodeURIComponent(nominationId)}`; const redirectTo = `${new URL(request.url).origin}/auth/callback?next=${encodeURIComponent(next)}`; const delivery = await admin.auth.signInWithOtp({ email: body.email.trim(), options: { emailRedirectTo: redirectTo, shouldCreateUser: true } }); const delivered = !delivery.error; await markSetupOfficialInvitationDelivery(admin, { actorId: item.actorId, tournamentId: item.id, nominationId, operationId: crypto.randomUUID(), delivered }); return apiJson({ status: delivered ? "invitation_email_sent" : "delivery_unavailable", nominationId }); }); }
-
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string; role: string }> }) {
+  return withApiFailureBoundary(async () => {
+    if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
+    const item = await context(params);
+    const body = await readSmallJson(request);
+    if (!item || !isSetupOfficialNominationRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 });
+    const admin = createServerOnlyAdminClient();
+    const result = await saveSetupOfficialInvitation(admin, { ...body, actorId: item.actorId, tournamentId: item.id, role: item.role }, async (path) => {
+      const redirectTo = `${new URL(request.url).origin}/auth/callback?next=${encodeURIComponent(path)}`;
+      const delivery = await admin.auth.signInWithOtp({ email: body.email.trim(), options: { emailRedirectTo: redirectTo, shouldCreateUser: true } });
+      return !delivery.error;
+    });
+    const accepted = ["registered_approved", "invitation_link_ready", "invitation_email_sent", "delivery_unavailable"].includes(String(result.status));
+    return apiJson(result, accepted ? undefined : { status: 409 });
+  });
+}
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string; role: string }> }) { return withApiFailureBoundary(async () => { if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 }); const item = await context(params); const body = await readSmallJson(request); if (!item || !isSetupOfficialManageRequest(body)) return apiJson({ error: "invalid_request" }, { status: 400 }); const result = await manageSetupOfficial(createServerOnlyAdminClient(), { actorId: item.actorId, tournamentId: item.id, ...body }); return result.status === "rejected" ? apiJson(result, { status: 409 }) : apiJson(result); }); }

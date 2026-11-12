@@ -58,7 +58,7 @@ export function nextFullBracketSize(qualifiers: number) {
  * receives a fabricated final ordering; a tie crossing the qualification cut
  * is visibly unresolved and blocks finalization.
  */
-export function previewQualification(candidates: QualificationCandidate[]): QualificationPreview {
+export function previewQualification(candidates: QualificationCandidate[], resolutions: Array<{ candidateIds: string[]; winnerId: string }> = []): QualificationPreview {
   if (!Array.isArray(candidates) || candidates.length < 1) throw new RangeError("At least one candidate is required.");
   const ids = new Set<string>();
   for (const candidate of candidates) {
@@ -74,20 +74,34 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
   }
 
   const qualifierCountValue = qualificationCount(candidates.length);
+  const resolved = new Map<string, string>();
+  for (const resolution of resolutions) {
+    if (resolution.candidateIds.length !== 2 || new Set(resolution.candidateIds).size !== 2
+      || !resolution.candidateIds.includes(resolution.winnerId) || resolution.candidateIds.some(id => !ids.has(id))) {
+      throw new TypeError("A tie resolution must identify exactly two current candidates and their winner.");
+    }
+    const pair = [...resolution.candidateIds].sort().join(":");
+    if (resolved.has(pair)) throw new TypeError("Duplicate tie resolution.");
+    resolved.set(pair, resolution.winnerId);
+  }
   const ranked = [...candidates].sort(compare);
   let hasTie = false;
   let index = 0;
+  const applied = new Set<string>();
   const output: QualificationPreview["ranked"] = [];
   const unresolvedTies: QualificationPreview["unresolvedTies"] = [];
   while (index < ranked.length) {
     let end = index + 1;
     while (end < ranked.length && sameNumericStanding(ranked[index], ranked[end])) end += 1;
     const tied = end - index > 1;
-    hasTie ||= tied;
+    const pair = ranked.slice(index, end).map(row => row.id).sort().join(":");
+    const winner = tied && end - index === 2 ? resolved.get(pair) : undefined;
+    if (winner) { applied.add(pair); ranked.splice(index, 2, ...ranked.slice(index, end).sort((a, b) => a.id === b.id ? 0 : a.id === winner ? -1 : 1)); }
+    hasTie ||= tied && !winner;
     const qualificationStatus: QualificationStatus = index < qualifierCountValue && end > qualifierCountValue
       ? "cutoff_tie"
       : end <= qualifierCountValue ? "qualified" : "not_qualified";
-    if (tied) {
+    if (tied && !winner) {
       unresolvedTies.push({
         numericRank: index + 1,
         candidateIds: ranked.slice(index, end).map((candidate) => candidate.id),
@@ -96,10 +110,12 @@ export function previewQualification(candidates: QualificationCandidate[]): Qual
       });
     }
     for (let item = index; item < end; item += 1) {
-      output.push({ ...ranked[item], numericRank: index + 1, qualificationStatus });
+      output.push({ ...ranked[item], numericRank: index + 1, qualificationStatus: winner
+        ? item < qualifierCountValue ? "qualified" : "not_qualified" : qualificationStatus });
     }
     index = end;
   }
+  if (applied.size !== resolved.size) throw new TypeError("Resolution does not match an exact current two-player numeric tie.");
 
   const bracketSize = nextFullBracketSize(qualifierCountValue);
   const firstRoundByes = bracketSize - qualifierCountValue;

@@ -1,0 +1,2 @@
+.form form,.form fieldset{min-width:0;max-width:100%}.form fieldset{display:grid;gap:1rem;margin:1rem 0;padding:1rem}.form input:not([type=checkbox]),.form textarea{width:100%;min-width:0;max-width:100%}.form textarea{resize:vertical;min-height:6rem}.form .check{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:.65rem}.form .check input{min-height:28px;width:28px;height:28px}.form p,.form span,.form button{overflow-wrap:anywhere}.form button{white-space:normal}
+@media(max-width:32rem){.form fieldset{padding:.65rem}.form button{width:100%}}

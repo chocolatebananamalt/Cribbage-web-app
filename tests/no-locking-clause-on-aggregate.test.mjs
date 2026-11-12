@@ -31,9 +31,24 @@ function effectiveDefinitions() {
   const effective = new Map();
   for (const file of files) {
     const sql = fs.readFileSync(path.join(dir, file), 'utf8');
-    for (const m of sql.matchAll(/create\s+(?:or\s+replace\s+)?function\s+public\.([a-z0-9_]+)\s*\(/gi)) {
-      const body = sql.slice(m.index, sql.indexOf('$$;', m.index) + 3);
-      effective.set(m[1].toLowerCase(), { file, body });
+    const operations = [
+      ...[...sql.matchAll(/create\s+(?:or\s+replace\s+)?function\s+public\.([a-z0-9_]+)\s*\(/gi)]
+        .map((match) => ({ kind: 'create', match })),
+      ...[...sql.matchAll(/alter\s+function\s+public\.([a-z0-9_]+)\s*\([^;]*?\)\s+rename\s+to\s+([a-z0-9_]+)\s*;/gi)]
+        .map((match) => ({ kind: 'rename', match })),
+    ].sort((left, right) => left.match.index - right.match.index);
+    for (const operation of operations) {
+      const { match } = operation;
+      if (operation.kind === 'rename') {
+        const prior = effective.get(match[1].toLowerCase());
+        if (prior) {
+          effective.delete(match[1].toLowerCase());
+          effective.set(match[2].toLowerCase(), prior);
+        }
+        continue;
+      }
+      const body = sql.slice(match.index, sql.indexOf('$$;', match.index) + 3);
+      effective.set(match[1].toLowerCase(), { file, body });
     }
   }
   return effective;
@@ -64,11 +79,16 @@ test('no live function locks a row set it reads with an aggregate', () => {
 });
 
 test('the desk check-in repair keeps the write serialized on its target', () => {
-  const { body } = effective.get('desk_check_in_event_v1');
+  const { body: wrapper } = effective.get('desk_check_in_event_v1');
+  const { body } = effective.get('desk_check_in_event_v1_before_start_guard');
   // Removing the locking clause alone would trade a hard error for a silent
   // lost update: the checked_in guard and the version read are a
   // read-check-write, and the pre-existing advisory lock keys on
   // actor + idempotency key, which only dedupes one caller's own retry.
+  assert.match(wrapper, /lock_event_attendance_lifecycle_v1\(p_event_id\)/,
+    'the public wrapper must share the event lifecycle lock');
+  assert.match(wrapper, /desk_check_in_event_v1_before_start_guard\(/,
+    'the public wrapper must delegate to the target-serialized implementation');
   assert.match(body, /pg_advisory_xact_lock\(pg_catalog\.hashtextextended\('desk-check-in:'/,
     'the repair must take a target-keyed advisory lock');
   const lockAt = body.indexOf("'desk-check-in:'");

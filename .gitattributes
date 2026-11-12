@@ -2,3 +2,14 @@
 *.pdf binary
 *.jpg binary
 *.png binary
+
+# Preserve reviewed canonical migration bytes already verified in staging.
+database/migrations/0247_qualification_tie_resolution_v1.sql -text
+database/migrations/0248_q_obligation_review_v2.sql -text
+database/migrations/0249_q_accounting_v6.sql -text
+database/migrations/0250_qualification_playoff_source_bridge_v1.sql -text
+database/migrations/0251_five_qualifier_playoff_v4.sql -text
+database/migrations/0252_odd_field_qualifying_makeup_v1.sql -text
+database/migrations/0253_five_qualifier_prize_accounting_v1.sql -text
+database/migrations/0254_no_q_accounting_v7.sql -text
+database/migrations/0255_acc_weighted_q_policy_v3.sql -text

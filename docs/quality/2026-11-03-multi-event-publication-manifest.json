@@ -1,0 +1,938 @@
+{
+  "createdUtc": "2026-11-03T06:02:34.791738+00:00",
+  "status": "locally verified; publication and hosted application NOT authorized",
+  "baseCommit": "5f04a2fc61b1293362d121480a3f1c20c0d667b9",
+  "branch": "codex/director-setup-journey",
+  "targetIfSeparatelyApproved": {
+    "stagingProject": "nnhcnvksxgxnpvdqjgpg",
+    "productionExcluded": "fnjkwymxpnsqvxtpronk",
+    "pullRequest": 122,
+    "order": "Verify current hosted migration baseline and preservation evidence; apply exact 0274-0289 to staging in order before exposing new app; publish exact reviewed branch commit non-force; verify CI and READY stable preview. Do not enroll or write a hosted fixture without its own explicit scope."
+  },
+  "scope": {
+    "codeAndTestFiles": 134,
+    "migrationFiles": 16,
+    "documentationFiles": 14,
+    "totalFiles": 164,
+    "permissions": "0289 narrows direct service execution of old unguarded activation helpers and guards V2 activation inserts; no new credentials, accounts or human role grants",
+    "domain": "Joint simulation is exactly one paid Standard Singles Main plus one paid Standard Singles Consolation. Consolation remains optional globally; Main-only uses its preserved legacy path. Graduated Side supported; joint final is UNPAID with false money/human claims.",
+    "excluded": "Equal Side policy, V2 later-event amendments, member-facing V2 simulation prize publication, real-money production finance, deferred end-time/phone/currency UX changes, unrelated historical documentation edits, generated results and private handoff material",
+    "sourceFiles": 59,
+    "testFiles": 75,
+    "publicationFilesIncludingManifest": 165
+  },
+  "verification": {
+    "applicationTests": 1227,
+    "workspaceTests": 8,
+    "handoffTests": 6,
+    "fullVerifyLog": "test-results/multi-event-resumed-final-verify.log",
+    "handoffLog": "test-results/multi-event-resumed-final-handoff.log",
+    "publicLifecycle": "test-results/structured-multievent-7e753d34b44a5013ef01083990da6fcd9f2ef16cff87c6f0a325d399ede5cc23.json",
+    "independentReview": "docs/quality/2026-11-03-multi-event-independent-review.md"
+  },
+  "migrationHashes": [
+    {
+      "path": "database/migrations/0274_multi_event_allocation_arithmetic_v1.sql",
+      "bytes": 31806,
+      "sha256": "9e637c2b420342540909622e002c9fbd8f775e409b91042608d034d3019bb617"
+    },
+    {
+      "path": "database/migrations/0275_side_pool_setup_payout_intent_v1.sql",
+      "bytes": 23434,
+      "sha256": "7296e30b361deaf8d0334e0adaac442626c5ab7eef25a3fea70c45e5c10af2b0"
+    },
+    {
+      "path": "database/migrations/0276_event_prize_declarations_v2.sql",
+      "bytes": 10672,
+      "sha256": "d65d5cf454b93381d915606b60fcf0b557841bb8e64a043b59cff761d4d6f347"
+    },
+    {
+      "path": "database/migrations/0277_multi_event_synthetic_pool_evidence_v1.sql",
+      "bytes": 48124,
+      "sha256": "1810725737d16fae5b5061a8d69670212c03c78817f334660171cdb2f07e2fe8"
+    },
+    {
+      "path": "database/migrations/0278_consolation_four_qualifier_source_v1.sql",
+      "bytes": 35064,
+      "sha256": "11ab7aad8f9bf41cbe0827c2b1145d310e824ac05496d99d1950e2371a20307c"
+    },
+    {
+      "path": "database/migrations/0279_multi_event_expense_classification_v1.sql",
+      "bytes": 12467,
+      "sha256": "ecdc6205e5e4981f0cc4089eecadf5f36daa33e93752b11d8fbf9e1b3419f56d"
+    },
+    {
+      "path": "database/migrations/0280_event_prize_activation_binding_v2.sql",
+      "bytes": 5395,
+      "sha256": "32884902a8927056c7c2df11e7a823cbfecf9f6f826c04cf90e83ee1399a78e9"
+    },
+    {
+      "path": "database/migrations/0281_multi_event_award_preview_v1.sql",
+      "bytes": 15415,
+      "sha256": "1e20b92909826052fa254f5a6c4683b47d2de716efa34816ea1f0616b2142d5b"
+    },
+    {
+      "path": "database/migrations/0282_multi_event_unpaid_draft_candidate_v1.sql",
+      "bytes": 7186,
+      "sha256": "81281e6cb8f82c2a2f502a7433a323150232bf130ba0b833e891f846e0a2a5f4"
+    },
+    {
+      "path": "database/migrations/0283_simulated_finance_selector_workspace_v1.sql",
+      "bytes": 8497,
+      "sha256": "d12586d441f088fddb43a30736720d7928124591a495e35bc9adc04a1ec63807"
+    },
+    {
+      "path": "database/migrations/0284_synthetic_event_crosscheck_readiness_candidate_v1.sql",
+      "bytes": 7245,
+      "sha256": "9c3d256c321309933a099ed4f0770227dd2dd96179ec7d1186c0b1195aa25a79"
+    },
+    {
+      "path": "database/migrations/0285_synthetic_crosscheck_closure_candidate_v1.sql",
+      "bytes": 7816,
+      "sha256": "bb6a14675d6b682c0ca25bc96204b93d76daff9153e6b0be0a1fd80bb485f7e5"
+    },
+    {
+      "path": "database/migrations/0286_synthetic_event_paid_enrollment_v1.sql",
+      "bytes": 6295,
+      "sha256": "5ab17b099a2d4b96d732cc2aa2d87166f033c5e64f13c55ed0ba94295e6ca21a"
+    },
+    {
+      "path": "database/migrations/0287_multi_event_unpaid_final_candidate_v1.sql",
+      "bytes": 28862,
+      "sha256": "452e829088d885d445f40bf513783133381e6044a0b541abe266fb0bf6af0fa3"
+    },
+    {
+      "path": "database/migrations/0288_synthetic_joint_unpaid_public_v1.sql",
+      "bytes": 3473,
+      "sha256": "64968a9fb60ceb79c4ef702c7ca58f13791d4b5b645270cd0e4b426d6608f6b7"
+    },
+    {
+      "path": "database/migrations/0289_pinned_event_prize_activation_v2.sql",
+      "bytes": 14393,
+      "sha256": "28c438d5e2ddc96e9eca9a99ab78a6102a25f4965bc289e0ef634fab90052dfb"
+    }
+  ],
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 487611,
+      "sha256": "dff50b744067ed96042db51543b57b4a7a08f66a6c3b300214a6d0e21a39804d"
+    },
+    {
+      "path": "database/migrations/0274_multi_event_allocation_arithmetic_v1.sql",
+      "bytes": 31806,
+      "sha256": "9e637c2b420342540909622e002c9fbd8f775e409b91042608d034d3019bb617"
+    },
+    {
+      "path": "database/migrations/0275_side_pool_setup_payout_intent_v1.sql",
+      "bytes": 23434,
+      "sha256": "7296e30b361deaf8d0334e0adaac442626c5ab7eef25a3fea70c45e5c10af2b0"
+    },
+    {
+      "path": "database/migrations/0276_event_prize_declarations_v2.sql",
+      "bytes": 10672,
+      "sha256": "d65d5cf454b93381d915606b60fcf0b557841bb8e64a043b59cff761d4d6f347"
+    },
+    {
+      "path": "database/migrations/0277_multi_event_synthetic_pool_evidence_v1.sql",
+      "bytes": 48124,
+      "sha256": "1810725737d16fae5b5061a8d69670212c03c78817f334660171cdb2f07e2fe8"
+    },
+    {
+      "path": "database/migrations/0278_consolation_four_qualifier_source_v1.sql",
+      "bytes": 35064,
+      "sha256": "11ab7aad8f9bf41cbe0827c2b1145d310e824ac05496d99d1950e2371a20307c"
+    },
+    {
+      "path": "database/migrations/0279_multi_event_expense_classification_v1.sql",
+      "bytes": 12467,
+      "sha256": "ecdc6205e5e4981f0cc4089eecadf5f36daa33e93752b11d8fbf9e1b3419f56d"
+    },
+    {
+      "path": "database/migrations/0280_event_prize_activation_binding_v2.sql",
+      "bytes": 5395,
+      "sha256": "32884902a8927056c7c2df11e7a823cbfecf9f6f826c04cf90e83ee1399a78e9"
+    },
+    {
+      "path": "database/migrations/0281_multi_event_award_preview_v1.sql",
+      "bytes": 15415,
+      "sha256": "1e20b92909826052fa254f5a6c4683b47d2de716efa34816ea1f0616b2142d5b"
+    },
+    {
+      "path": "database/migrations/0282_multi_event_unpaid_draft_candidate_v1.sql",
+      "bytes": 7186,
+      "sha256": "81281e6cb8f82c2a2f502a7433a323150232bf130ba0b833e891f846e0a2a5f4"
+    },
+    {
+      "path": "database/migrations/0283_simulated_finance_selector_workspace_v1.sql",
+      "bytes": 8497,
+      "sha256": "d12586d441f088fddb43a30736720d7928124591a495e35bc9adc04a1ec63807"
+    },
+    {
+      "path": "database/migrations/0284_synthetic_event_crosscheck_readiness_candidate_v1.sql",
+      "bytes": 7245,
+      "sha256": "9c3d256c321309933a099ed4f0770227dd2dd96179ec7d1186c0b1195aa25a79"
+    },
+    {
+      "path": "database/migrations/0285_synthetic_crosscheck_closure_candidate_v1.sql",
+      "bytes": 7816,
+      "sha256": "bb6a14675d6b682c0ca25bc96204b93d76daff9153e6b0be0a1fd80bb485f7e5"
+    },
+    {
+      "path": "database/migrations/0286_synthetic_event_paid_enrollment_v1.sql",
+      "bytes": 6295,
+      "sha256": "5ab17b099a2d4b96d732cc2aa2d87166f033c5e64f13c55ed0ba94295e6ca21a"
+    },
+    {
+      "path": "database/migrations/0287_multi_event_unpaid_final_candidate_v1.sql",
+      "bytes": 28862,
+      "sha256": "452e829088d885d445f40bf513783133381e6044a0b541abe266fb0bf6af0fa3"
+    },
+    {
+      "path": "database/migrations/0288_synthetic_joint_unpaid_public_v1.sql",
+      "bytes": 3473,
+      "sha256": "64968a9fb60ceb79c4ef702c7ca58f13791d4b5b645270cd0e4b426d6608f6b7"
+    },
+    {
+      "path": "database/migrations/0289_pinned_event_prize_activation_v2.sql",
+      "bytes": 14393,
+      "sha256": "28c438d5e2ddc96e9eca9a99ab78a6102a25f4965bc289e0ef634fab90052dfb"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 124643,
+      "sha256": "4ec59c5a9591214229b088c42472f274aa636a4d4ecf8259910e1312bdafbdda"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 55058,
+      "sha256": "3c86ce56ecd5c17c761b581d142598b0377c70f866ce0e3512cef2b46f5acfa8"
+    },
+    {
+      "path": "docs/quality/2026-10-28-recovery-writer-inventory.json",
+      "bytes": 6321,
+      "sha256": "0635c5b4ea0eefabc81e7479fc865fcccda076a1515902f8e6538132994da6e2"
+    },
+    {
+      "path": "docs/quality/2026-11-02-functional-registration-walkthrough-plan.md",
+      "bytes": 10743,
+      "sha256": "6b776f695061e2b060a7f8b03bac4e637fbb2322bea45a7fc6beab509ee65188"
+    },
+    {
+      "path": "docs/quality/2026-11-03-consolation-playoff-0278-local.md",
+      "bytes": 3610,
+      "sha256": "6300a56487f70c5708dc8db9059a0a99ed974dddca8204888150bd890559b021"
+    },
+    {
+      "path": "docs/quality/2026-11-03-consolation-playoff-ui-local.md",
+      "bytes": 2919,
+      "sha256": "71850423fd5f912a1d3142ac9c664a88135e94b4bc1a15332583bb1f61293d06"
+    },
+    {
+      "path": "docs/quality/2026-11-03-event-declaration-advisory-local.md",
+      "bytes": 3027,
+      "sha256": "fe50275a2ff3fc6e4d70c688ee020eeb3b5b527e8a09486ef37ed03cd52b9a54"
+    },
+    {
+      "path": "docs/quality/2026-11-03-legacy-finance-mode-navigation-local.md",
+      "bytes": 3059,
+      "sha256": "75f12000e6612b489d1d76f8ed95c53e13193dc574af36b261282f8c2a82bd72"
+    },
+    {
+      "path": "docs/quality/2026-11-03-multi-event-independent-review.md",
+      "bytes": 4862,
+      "sha256": "a0d736064aa249ff40d040811c1dd585386d45b465e8e81b93f49663c58cbaca"
+    },
+    {
+      "path": "docs/quality/2026-11-03-multi-event-local-completion.md",
+      "bytes": 7591,
+      "sha256": "484bcbc391a0fa589e21a99b23ff23d82cd39f7ba599bc3da314b4f43b8d6862"
+    },
+    {
+      "path": "docs/quality/2026-11-03-multi-event-local-work.md",
+      "bytes": 9765,
+      "sha256": "694fe352a6d222eca3d5002ec4b650e1f911b4752ea5c7ed93852e5e01c05769"
+    },
+    {
+      "path": "docs/quality/2026-11-03-side-setup-intent-local.md",
+      "bytes": 4432,
+      "sha256": "ab8595ff5b84580ddf498dae57b3361c838b38d811e6921bb18f18120dcf52b0"
+    },
+    {
+      "path": "docs/quality/2026-11-03-simulated-finance-workspace-local.md",
+      "bytes": 3733,
+      "sha256": "190d8972234662e9a4a0b2b45a03ef469688916d25e76ac5e6188cf50a8f9436"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/consolation-playoffs/reconciliation/route.ts",
+      "bytes": 1590,
+      "sha256": "b3192f2789932b67f97f05ca4bbd5616c16cfab7f9952463dee4b325511411cb"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/consolation-playoffs/route.ts",
+      "bytes": 3240,
+      "sha256": "2044325ae699f934f8782e8fdfa72ede0019b2d27357719818b17b1f0f1b1157"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/simulated-accounting/route.ts",
+      "bytes": 2610,
+      "sha256": "575d30c534290bf443546f70f3c7f12c4c0cc91c54f3dbf701e753f2f33f9c2d"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/activation/capability/route.ts",
+      "bytes": 1371,
+      "sha256": "4e0b89814035b1a8d5b016d14787245ebb05701390358eed8ebf82425a81b0f4"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/activation/route.ts",
+      "bytes": 5503,
+      "sha256": "7fdaa98642166691003c3f678b7919bf681957feb368795e5d33fad7c620e010"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/amendments/route.ts",
+      "bytes": 7269,
+      "sha256": "b87f797e03d7cd016913f7e09244ed5d956d149767e172ddfbdd171c87cb0995"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/event-prize-declarations/[rowId]/route.ts",
+      "bytes": 2428,
+      "sha256": "18ecb44c2fda46773e01866840891ab341ce9e2c34acb2dc99ab49bd7c2511a5"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/route.ts",
+      "bytes": 9270,
+      "sha256": "1960e122daac4cbaae35e88c314bcb8c64f9df48491847baeeb148cb85df5843"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/simulation-accounting/route.ts",
+      "bytes": 3717,
+      "sha256": "ba53b424a94746f483362708be42cb52aabd8bd1005566930f40d60f253fa8c9"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/simulation-finance/route.ts",
+      "bytes": 4537,
+      "sha256": "ccc36ee92d90bd3b7c04dd3a844a310c353fa25dce4258dc1679ab372e05198d"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/consolation-playoffs/page.tsx",
+      "bytes": 2079,
+      "sha256": "0e64dacab981ad0baa5328f14dc5a3cafdb0b20c35f6272c9a6340e56e533433"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/consolation-playoffs/playoff-client.tsx",
+      "bytes": 12454,
+      "sha256": "6b675b364a88629e62bb5d6224681141957ffacc2ac9c8e6f35b05aa00840fcd"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/page.tsx",
+      "bytes": 2054,
+      "sha256": "9598b5df95ce9992d848ded5766a257ca0a9711cdb887ad29b0fb01469f02a04"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/page.tsx",
+      "bytes": 2468,
+      "sha256": "685725b6db35029d4a6f40f8f54b27d8d5134c26f4c44502adbaee7a6a2f490e"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/page.tsx",
+      "bytes": 2469,
+      "sha256": "d7eab787d265a37cf2587606f48f3cd1ed43860842a1530f1de38b52f0233887"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/page.tsx",
+      "bytes": 2039,
+      "sha256": "a9c8fac6866bfdcd32c8599fd72b4d7a0a837ff5c897fe6ed5d965ae7b310f58"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement-v5/page.tsx",
+      "bytes": 4451,
+      "sha256": "b01d9b2d35dfb23a54a271826446d204e84f214fd0e4bbb5c6741fbcda736afc"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/page.tsx",
+      "bytes": 7543,
+      "sha256": "5e9d5813cd9e1efd659ee3d43fd3b1596a5843acd24f6db6982114a67388a6e1"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/simulated-accounting/accounting-client.tsx",
+      "bytes": 9511,
+      "sha256": "d2fa3d2bbefcabf8a2738a5d2c652715c0e575ff00348478aec5c43190885161"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/simulated-accounting/page.tsx",
+      "bytes": 2880,
+      "sha256": "bcf8af41b75f37238fbcae1f9684dff20c09155820520e0e6ba9dba53bab2861"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/simulated-accounting/preview-view.tsx",
+      "bytes": 2246,
+      "sha256": "e5cf57aba1db8c2a7225e5042aa787d3c98f35128b299cb251a5744610d16545"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/page.tsx",
+      "bytes": 5731,
+      "sha256": "1220ba97cf511a9942b22c7551d4c3c676fbf5858a8bd37ccd268b2614be518f"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "bytes": 21591,
+      "sha256": "1c120176d32d034950710d11836bdacf707dd63ec1bc94ca8367cabae5e23992"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/prize-schedules/page.tsx",
+      "bytes": 1297,
+      "sha256": "8d8de8e3482fdb2fadf51f64b63e11d8cc794068848ebeeaf806a023c37477df"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-obligation-reviews-v2/page.tsx",
+      "bytes": 2207,
+      "sha256": "f125bac936f0ed32d68a8ee65605db1bf794a256ec5c86cef582b2fbefd5a86e"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-obligation-reviews/page.tsx",
+      "bytes": 1804,
+      "sha256": "1bd59d255e8502acb21d638c93d095176f7631a3af2f53f9130a031d3bbfecdc"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-operating-schedules/page.tsx",
+      "bytes": 2610,
+      "sha256": "eb64240e10fb0fb4d3f5f53a66968d469b14da9c429590b8b0a00ca966a2d9b9"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pool-policy/page.tsx",
+      "bytes": 2750,
+      "sha256": "f2ac1a097b7287e223ad6df7c92d6f1b0600be15f90fe7b91dd3e15a504c77db"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pools/page.tsx",
+      "bytes": 4372,
+      "sha256": "0eeb38a95c8b6776d1c49c871155e6b85d8fa41756fdc865840e31f884580670"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/results/page.tsx",
+      "bytes": 25447,
+      "sha256": "e369a8c4a01a632744196b5b41767e7b360d03677396c4779467d021d01d1635"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/event-prize-declaration-client.tsx",
+      "bytes": 9730,
+      "sha256": "790891435b85af12529560bc09d21405627d18f6a1e3dc59df503c8d6a661f0c"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/event-prize-declaration.css",
+      "bytes": 616,
+      "sha256": "83f509e08d5693bcc7718f54ede0a5b82bc98dc8cded099be6fbc33a9e4f01ce"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/setup-client.tsx",
+      "bytes": 87986,
+      "sha256": "ca1187b3b6530b860d7b328ae2b204cad09682678c6e944db1cb0499d3ed96ec"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/graduated-side-pools-v2.tsx",
+      "bytes": 22224,
+      "sha256": "07ff172ca41fc5c485f47f036541cdb512166d3f801033e517cd9780608e49af"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/page.tsx",
+      "bytes": 3188,
+      "sha256": "24e4aed0708696f83cbeaab6dcf6986183cab1996b8971b099a647be6b825c5d"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/recipients/[eventId]/[poolId]/page.tsx",
+      "bytes": 3895,
+      "sha256": "b8a1443578a9caa526dc619c1f828123e1058b83a0378835c6c2239378afde1e"
+    },
+    {
+      "path": "src/components/setup-side-pool-editor.tsx",
+      "bytes": 2518,
+      "sha256": "2260e23186a0e2ca00f57f1b8480ad58f66cf5913c5142374b1fa9f80b5a36de"
+    },
+    {
+      "path": "src/lib/api/consolation-playoff.ts",
+      "bytes": 8297,
+      "sha256": "c6d5a90adfe3e09cb4cea00973fb2de5983f530b0fc8d8c98c29567d3fe560bc"
+    },
+    {
+      "path": "src/lib/api/event-prize-declaration.ts",
+      "bytes": 3215,
+      "sha256": "7094cf8b0c40b722dc0fa473326155f1697fe50ca66c0ba5d8797e255cf20bcd"
+    },
+    {
+      "path": "src/lib/api/multi-event-accounting-action.ts",
+      "bytes": 3606,
+      "sha256": "02212d2e7957ec38d07c40f1eefe7e90ad4643e9409c43588ff0cfefb0e828c5"
+    },
+    {
+      "path": "src/lib/api/multi-event-accounting-workspace.ts",
+      "bytes": 10269,
+      "sha256": "262d3aa6bc0aa7f1cfdffcfd3203999444a190136b450427be148711fd405ac5"
+    },
+    {
+      "path": "src/lib/api/multi-event-award-preview.ts",
+      "bytes": 8927,
+      "sha256": "dd8d7c6e549887fc9a42f28e1be0d90d468c1f9f7b7aeb97a7f73c99265b620b"
+    },
+    {
+      "path": "src/lib/api/multi-event-simulation-action.ts",
+      "bytes": 6873,
+      "sha256": "392485cbcdac1c26d72ad4009efc3aca4352a4e68f7030a92eb615d3c8a1e95a"
+    },
+    {
+      "path": "src/lib/api/require-legacy-finance-mode.ts",
+      "bytes": 1223,
+      "sha256": "e85f289bbc9057857abe35ea25c85f93660e1261a793c5f575222532cefb6754"
+    },
+    {
+      "path": "src/lib/api/setup-activation.ts",
+      "bytes": 7431,
+      "sha256": "1b46f3881b0667444f4273d50c952bb6a90668c3a515fa1f4d859dab2bd3677b"
+    },
+    {
+      "path": "src/lib/api/setup.ts",
+      "bytes": 25770,
+      "sha256": "f3b1442d8f385b31dbe518eac42864b0223b0703ecb4c8772a2953ced07cbad6"
+    },
+    {
+      "path": "src/lib/api/side-pool-graduated-v2.ts",
+      "bytes": 10622,
+      "sha256": "3943a37cfed7812d0bc9317926d9a8af546443d60c49e5176aecbacb25713801"
+    },
+    {
+      "path": "src/lib/api/side-pool-setup-capability.ts",
+      "bytes": 1509,
+      "sha256": "d33f1cdcc1bf66e25bf2ec6b183d291055a57edff33e0fdae5003eda6030fc88"
+    },
+    {
+      "path": "src/lib/api/side-pool-setup-selection.ts",
+      "bytes": 2064,
+      "sha256": "7cb800f53324575d266f13cac1982a2cca7cacf342a4a8b5d07954d8bdde59ec"
+    },
+    {
+      "path": "src/lib/api/simulated-finance-expense.ts",
+      "bytes": 2566,
+      "sha256": "3269f2e2c26316c5a386c27742e6aa8a77f8e6af01e3c5ffbd959d28c514fff9"
+    },
+    {
+      "path": "src/lib/api/simulated-finance-receipt.ts",
+      "bytes": 2957,
+      "sha256": "a71a2f4177eb328be06e2f411cfd494b728f4b72b43ffda52e91a14734449307"
+    },
+    {
+      "path": "src/lib/api/simulated-finance-recovery.ts",
+      "bytes": 803,
+      "sha256": "2908cb85bd408bc01a0b234de1c704c295302a1db4a9e963eadaaf6d566b8d99"
+    },
+    {
+      "path": "src/lib/api/simulated-finance-selector.ts",
+      "bytes": 6884,
+      "sha256": "e265ea388440ee28ea13080e4d319df9620bea9e6ed6f01fb8817216b9f381d9"
+    },
+    {
+      "path": "src/lib/api/simulation-finance-dispatch.ts",
+      "bytes": 647,
+      "sha256": "a5dfbe9313398907cb43c2be284002afc7279caf4a81bf462eb1028a13cfb09c"
+    },
+    {
+      "path": "src/lib/api/synthetic-event-evidence.ts",
+      "bytes": 4662,
+      "sha256": "ea1e3764f6326a85ec711b7c38d058deaa5e2d7d0dc73361942649d7af839caa"
+    },
+    {
+      "path": "src/lib/results/consolation-playoff-navigation.ts",
+      "bytes": 688,
+      "sha256": "fbb54b96a7d3c94f4f19adfca79e25a67306487cd44caf4d9616c92801b95c44"
+    },
+    {
+      "path": "src/lib/setup-event-declaration-readiness.ts",
+      "bytes": 2871,
+      "sha256": "09aaa2d67d6353d2e7b97bc2b3a2aace01082b53557be0a23d14c70a30bc9525"
+    },
+    {
+      "path": "src/lib/setup-legacy-side-validation.ts",
+      "bytes": 1682,
+      "sha256": "7824d32926b892c37e7104a7592edb470cd5759234d1127252482ff4e16be309"
+    },
+    {
+      "path": "src/lib/setup-save-verification.ts",
+      "bytes": 1242,
+      "sha256": "e512693ffd8cbf8286a98b1f721c372fff8f8368d49938d60102bee54ad71a91"
+    },
+    {
+      "path": "tests/consolation-playoff-api.test.mjs",
+      "bytes": 5964,
+      "sha256": "90c48c35cee3337ce279dda94daf82f38f9cfe7fbf31b74143657e35f6bf5e79"
+    },
+    {
+      "path": "tests/consolation-playoff-browser.mjs",
+      "bytes": 10277,
+      "sha256": "ae82a4bc3e8030bcc370b19caf4e1f57076a77e869c7ce9e8edd3f2e29713b1c"
+    },
+    {
+      "path": "tests/consolation-playoff-navigation.test.mjs",
+      "bytes": 965,
+      "sha256": "1e5c0598074cf20bcdad318078c6e24513ef3d7f9666681cb9b65c73a1c0f275"
+    },
+    {
+      "path": "tests/event-prize-declaration-api.test.mjs",
+      "bytes": 2854,
+      "sha256": "f803fdc14a2bbd37231bbff348bfc4dcf5a40265cc9b3c8d4aba5c4feb42c91e"
+    },
+    {
+      "path": "tests/event-prize-declaration-browser.mjs",
+      "bytes": 9383,
+      "sha256": "edf4c175d6d8307bf1675aff2a6d63ae1e06ee0603bf94d391ad37d77df3ab2f"
+    },
+    {
+      "path": "tests/event-prize-declarations-v2.sql",
+      "bytes": 12579,
+      "sha256": "317699633020c8d20f0cea8799e8b2279a2ea9a94ce635f0e779024d6e616fd5"
+    },
+    {
+      "path": "tests/fixtures/consolation-playoff-workspace.mjs",
+      "bytes": 2291,
+      "sha256": "d7b5835b8e9d082021536d8344693b0a006f54fd1da613724978cf36d017e72d"
+    },
+    {
+      "path": "tests/fixtures/consolation-qualification-0278.mjs",
+      "bytes": 8195,
+      "sha256": "7a4b44772ed039938ef4479d049370db400a9c819f3063285a074e727bcbd7b4"
+    },
+    {
+      "path": "tests/fixtures/structured-multi-event-lifecycle.mjs",
+      "bytes": 5171,
+      "sha256": "6747610a51bc9d922287618cb22445207754df3b39c35fa500e74c800bbcbfc6"
+    },
+    {
+      "path": "tests/fixtures/structured-multi-event-schedule-start.mjs",
+      "bytes": 2659,
+      "sha256": "be6f58d6639261d30f273a5d2147cc5e1328041862f188d47deba8be26c71011"
+    },
+    {
+      "path": "tests/fixtures/structured-multi-event-source-race.mjs",
+      "bytes": 6760,
+      "sha256": "cc2c240430a63f66dcc3adbf7c4c8f35fd5dd39d938073ac4559ea8c7754e44d"
+    },
+    {
+      "path": "tests/fixtures/twenty-player-multi-pool-plan.mjs",
+      "bytes": 2953,
+      "sha256": "e4a67dcf4935eaa985734bf3ed476294216ea1a50f360c025298a4552c0123fb"
+    },
+    {
+      "path": "tests/multi-event-accounting-action.test.mjs",
+      "bytes": 1985,
+      "sha256": "57ceeb4ddaafd44e0cdd28cabb228572f30a7370b5b68d0e5f00deaf908d4bf6"
+    },
+    {
+      "path": "tests/multi-event-accounting-browser.mjs",
+      "bytes": 9893,
+      "sha256": "23a31de7e605e0feaa352233e61355ad502f241ec41f7adc366df18cf6b89a03"
+    },
+    {
+      "path": "tests/multi-event-accounting-route.test.mjs",
+      "bytes": 5198,
+      "sha256": "ef9fcdf39639792b3000fa4bdaf391d723398ecb151cb2a9f47cdfa22861b094"
+    },
+    {
+      "path": "tests/multi-event-accounting-workspace.test.mjs",
+      "bytes": 3366,
+      "sha256": "a84cac86282d1d11f23afeb1bd45ac83acbfbfdb2b9f6a2ae81fc9e24a545d20"
+    },
+    {
+      "path": "tests/multi-event-allocation-arithmetic.sql",
+      "bytes": 3882,
+      "sha256": "a12147121b9044bf62f7466bdd0b615b0d6606de3b0f8d9dd785cf41671bfa0d"
+    },
+    {
+      "path": "tests/multi-event-award-preview-blocked.sql",
+      "bytes": 827,
+      "sha256": "1c8e1da64bed013146d7cc24022c5d4c7d63293d4b43d1f01f6400a0797109e2"
+    },
+    {
+      "path": "tests/multi-event-award-preview-browser.mjs",
+      "bytes": 4450,
+      "sha256": "e09fa057fef70162e126794152b8a582c892c607b9881ad00323d76242bb76d6"
+    },
+    {
+      "path": "tests/multi-event-award-preview.sql",
+      "bytes": 2485,
+      "sha256": "6e55da2a6467ef5207a91ef993ace6b8f7a3e9b12832c6a17e7a4c4af1ff28a8"
+    },
+    {
+      "path": "tests/multi-event-award-preview.test.mjs",
+      "bytes": 4588,
+      "sha256": "011de9365fd55847d19fdd13083ea823b62aa08f820545e30a76d6d0f132b160"
+    },
+    {
+      "path": "tests/multi-event-expense-classification.sql",
+      "bytes": 3784,
+      "sha256": "731b87c723af12ffb92dbe23231153f38de756fdcbcde33df0e9e86ce006bb67"
+    },
+    {
+      "path": "tests/multi-event-expense-review-fullschema.sql",
+      "bytes": 3960,
+      "sha256": "60f7e6a16188fca200864be0adf78a2f1d824a76eca877ebdfcd14ea1a9175e1"
+    },
+    {
+      "path": "tests/multi-event-finance-fullschema.sql",
+      "bytes": 8762,
+      "sha256": "655c26a39b336c9353b9452eb4149cfa4c19a812dbc6e15518da8ad3cc8b608b"
+    },
+    {
+      "path": "tests/multi-event-finance-groundwork.sql",
+      "bytes": 9048,
+      "sha256": "80ebe564fd95165107981b67c636ffabedf5bd45a18eea48956646a5909a06e1"
+    },
+    {
+      "path": "tests/multi-event-joint-final-candidate.sql",
+      "bytes": 2901,
+      "sha256": "c0f76479207c66919e963abcf046e63a0a553a8164bd5ffaea7063b7b81bf596"
+    },
+    {
+      "path": "tests/multi-event-pool-fullschema-tail.sql",
+      "bytes": 8130,
+      "sha256": "f56df916825d515c2c29d6d937affa6ef67177311488615e1f1a5190cd86063f"
+    },
+    {
+      "path": "tests/multi-event-simulation-action.test.mjs",
+      "bytes": 3547,
+      "sha256": "36e534147a3cfcba65bf05d93f977083abc85b491c2c0ebb95bba8daa12839ab"
+    },
+    {
+      "path": "tests/multi-event-synthetic-pools.sql",
+      "bytes": 16862,
+      "sha256": "1229720ecb8cf29aafb69094c00ac8905f32ba2100d6924cb4a617d5f1c0bab4"
+    },
+    {
+      "path": "tests/multi-event-unpaid-draft-candidate.sql",
+      "bytes": 877,
+      "sha256": "33ea834816df2d8aac08fc1b2368555d447c06a3ba7e068e8ece4c1cd3c76de3"
+    },
+    {
+      "path": "tests/operational-guard-scope.test.mjs",
+      "bytes": 5128,
+      "sha256": "3a268e75ae26ae66e1672d3d18ed9ea9384dbaa0e73546361e18c89d49521a86"
+    },
+    {
+      "path": "tests/pinned-event-prize-activation-0289.sql",
+      "bytes": 5921,
+      "sha256": "54d9e33da9a6bb9ccd3b9ee20fc87bebbdeae0a392db07b58ed3070861601193"
+    },
+    {
+      "path": "tests/pinned-single-event-backstop-0289.sql",
+      "bytes": 3663,
+      "sha256": "70c6ceaa85d343540f2b5c125f5e15b0b46231ea2e30e740dc16a12a8eaaa23a"
+    },
+    {
+      "path": "tests/player-tournament-read-access.test.mjs",
+      "bytes": 11240,
+      "sha256": "2008d49d727dd896ee8abb2400fca98fa341c34ab5ba50090145c401528c9e85"
+    },
+    {
+      "path": "tests/require-legacy-finance-mode.test.mjs",
+      "bytes": 8482,
+      "sha256": "23819070221a1f00d45ece02cf5df117ce82a1968330de712f3abaa97d8cd167"
+    },
+    {
+      "path": "tests/run-consolation-0278-container.mjs",
+      "bytes": 3531,
+      "sha256": "41455c8e01e239458319faaa5cb44db7bd3e60636da5ed608cec66915cfe299e"
+    },
+    {
+      "path": "tests/run-consolation-0278-isolated.mjs",
+      "bytes": 31190,
+      "sha256": "215bdef386a6e85a2fffbf5c06fde0e6fba4fc16c33830a4bae119aac86729c1"
+    },
+    {
+      "path": "tests/run-joint-final-0287-container.mjs",
+      "bytes": 3531,
+      "sha256": "b4cf6d9c59dca8cbdae8dee466cd106d3093b76107c95de990b46028a1247a0e"
+    },
+    {
+      "path": "tests/run-joint-final-0287-isolated.mjs",
+      "bytes": 4561,
+      "sha256": "7276999634afdb881166f9f247e49fa023c3566ab527df73dc3771f6d0b31d85"
+    },
+    {
+      "path": "tests/run-multi-event-allocation-arithmetic.mjs",
+      "bytes": 12216,
+      "sha256": "9cb4f6b64b06394cefb9a3f3e20f0347af90cbb5c119213619b8c1fb6f3ca679"
+    },
+    {
+      "path": "tests/run-multi-event-fullschema-container.mjs",
+      "bytes": 3554,
+      "sha256": "816514579b5e1ba57e8340317786b5005b3758a60929ea6c874a42a6354a43c5"
+    },
+    {
+      "path": "tests/run-multi-event-fullschema-isolated.mjs",
+      "bytes": 26491,
+      "sha256": "d127fcf7fe64e61d1291706facc0e834dd2cb3bd52c8ac5a98d32408df8d433d"
+    },
+    {
+      "path": "tests/run-side-intent-0275-container.mjs",
+      "bytes": 3517,
+      "sha256": "df404e4670975f65453d15b0214f4d9fa5e044995ad45bfedbc2d377c66ee288"
+    },
+    {
+      "path": "tests/run-side-intent-0275-isolated.mjs",
+      "bytes": 4720,
+      "sha256": "6ebce9226ab1de8db017a93872d3eeb1775590ccdd029daa7c96daf488392a1c"
+    },
+    {
+      "path": "tests/run-structured-multi-event-container.mjs",
+      "bytes": 5045,
+      "sha256": "e520366631d4b6ae275cb1ceb8369063dc7d2dfeea794d3950ba7321a9d7e51d"
+    },
+    {
+      "path": "tests/run-structured-multi-event-isolated.mjs",
+      "bytes": 57844,
+      "sha256": "d51fb385d332b5d9c3e7af10683cc5d588141a8da17ec82b6b998e08ef020198"
+    },
+    {
+      "path": "tests/setup-activation.test.mjs",
+      "bytes": 13111,
+      "sha256": "b3394903ce40fa2b26ca627068dae8180f43cc35bbbab15950a36442fba04cb8"
+    },
+    {
+      "path": "tests/setup-amendment.test.mjs",
+      "bytes": 6919,
+      "sha256": "fd4af441c3e8bfd1daf37bac8ad90b3e2478c7a1acee370991292f31cc4f1212"
+    },
+    {
+      "path": "tests/setup-event-declaration-readiness-browser.mjs",
+      "bytes": 11363,
+      "sha256": "455fe8440c269cd0c35b36fa48a3e0c3083414ce95f5ff4db677160638404d02"
+    },
+    {
+      "path": "tests/setup-event-declaration-readiness.test.mjs",
+      "bytes": 2759,
+      "sha256": "5dee2a838148312c32c252e954b482bf04e3425415bfbe53e571f8c9aec7b92a"
+    },
+    {
+      "path": "tests/setup-explicit-fees.test.mjs",
+      "bytes": 2983,
+      "sha256": "0dd72a7d660546f9578b1839b9c37e176dfa22a1f51890ef2e490aa2af00fa5c"
+    },
+    {
+      "path": "tests/setup-fee-persistence-browser.mjs",
+      "bytes": 21914,
+      "sha256": "d179585d13a6222ef12a91fe6bbd22c4d4ce61391af988b61de2405a4de81c28"
+    },
+    {
+      "path": "tests/setup-legacy-side-validation.test.mjs",
+      "bytes": 2540,
+      "sha256": "8325b7f5aa16a7555c7377ad2b5738ee0a68555dbd18bd0a54f87adfe112f222"
+    },
+    {
+      "path": "tests/setup-save-verification.test.mjs",
+      "bytes": 3783,
+      "sha256": "aeecdd328abd9df955d968d2fc5d5dd2c468652d928ac6498fee03e5c28cf697"
+    },
+    {
+      "path": "tests/setup-side-pools.test.mjs",
+      "bytes": 4916,
+      "sha256": "f17f43993ae976fdb38dc12478c11089ac94edbbf8a3a70e8695294dc4131017"
+    },
+    {
+      "path": "tests/side-graduated-source-binding.test.mjs",
+      "bytes": 2402,
+      "sha256": "6b50b14da0ff81cf49c1efe4f703bf9058dc4932d8533130aded67cad3b75542"
+    },
+    {
+      "path": "tests/side-pool-setup-capability.test.mjs",
+      "bytes": 2917,
+      "sha256": "5d69791b24c209bdad3f66740d31a00e0cc4d9ce5ac648dad27ff9790d89aefb"
+    },
+    {
+      "path": "tests/side-pool-setup-intent-sql-acceptance.mjs",
+      "bytes": 19945,
+      "sha256": "9c645d32e49e2b35f1d7282338104fdde2d33770c64aeb6e86aedcc922f88152"
+    },
+    {
+      "path": "tests/side-pool-setup-selection.test.mjs",
+      "bytes": 1546,
+      "sha256": "f42c18bc2d598a2b3f774706237855725b34188e2f403c943d89533b804e30ab"
+    },
+    {
+      "path": "tests/simulated-finance-expense.test.mjs",
+      "bytes": 1365,
+      "sha256": "f56cd1cb7e3ceab35706590d8ae98c7a2d798220e80ee819e5fad8a89eecfeff"
+    },
+    {
+      "path": "tests/simulated-finance-receipt.test.mjs",
+      "bytes": 1809,
+      "sha256": "a6ac5440c43ea5493ba63538164c12af92a0ca513796c775b60d32843e2e3311"
+    },
+    {
+      "path": "tests/simulated-finance-selector-0283.sql",
+      "bytes": 2753,
+      "sha256": "b77966df6645b28d6412309764a0810072e671df9c5442514e081390ed4270bd"
+    },
+    {
+      "path": "tests/simulated-finance-selector-collected-0283.sql",
+      "bytes": 537,
+      "sha256": "4f860054632ee8d6185a06463120406423ec40d8c483065e3258e7c50785a76c"
+    },
+    {
+      "path": "tests/simulated-finance-selector-no-final-capability-0283.sql",
+      "bytes": 589,
+      "sha256": "54d41417f252806a23ed7995d319b3e89cef911c9fe80ecd5726699e78b4896d"
+    },
+    {
+      "path": "tests/simulated-finance-selector-started-0283.sql",
+      "bytes": 445,
+      "sha256": "82b18629a193e471b3c1377a1e403bd6af8bc8660c6e5cbf3d28b38c1de1095d"
+    },
+    {
+      "path": "tests/simulated-finance-selector.test.mjs",
+      "bytes": 2868,
+      "sha256": "1115214f19ad869c7a2a00e20e3ba7bc703a391de666956ad8db4ca09702708a"
+    },
+    {
+      "path": "tests/simulation-finance-browser.mjs",
+      "bytes": 12927,
+      "sha256": "6031cc5e7f7186734c4a3b1bc27badedb57184b589136c07fd65fa169a020167"
+    },
+    {
+      "path": "tests/simulation-finance-dispatch.test.mjs",
+      "bytes": 839,
+      "sha256": "336c4942cd723d852411bd31d77bcc3737a15c2f9bf0a849dbaf925f3c55fe28"
+    },
+    {
+      "path": "tests/structured-multi-event-lifecycle.test.mjs",
+      "bytes": 2834,
+      "sha256": "8ece5d8fca1e137818af5af3338386bff3bb4fc0273cabe62d7a07c4283f2d56"
+    },
+    {
+      "path": "tests/synthetic-crosscheck-closure-candidate.sql",
+      "bytes": 1257,
+      "sha256": "5f79c462af75fa9fbeecd498cf957dd92d2cb4aac1e74bf5b4d558772907a551"
+    },
+    {
+      "path": "tests/synthetic-event-crosscheck-readiness-candidate.sql",
+      "bytes": 1346,
+      "sha256": "b5275854af143b45835d3a46b17ba6ffe3a380641c8046a9bb333c12ce72d51e"
+    },
+    {
+      "path": "tests/synthetic-paid-enrollment-base-0286.sql",
+      "bytes": 2512,
+      "sha256": "1bf5cd75073595d10551b3fc69b3e4ae493d3c58a1ffe24a89f024dc94d807ad"
+    },
+    {
+      "path": "tests/synthetic-paid-enrollment-legacy-0286.sql",
+      "bytes": 967,
+      "sha256": "aa1ff002c907592415f2f1963cf78b3f7cf717642ab586471daddd7865fa9b9f"
+    },
+    {
+      "path": "tests/synthetic-paid-enrollment-pool-0286.sql",
+      "bytes": 1404,
+      "sha256": "a7e61866de72dda6ca809f4d3d4c604be9de7c2a9d421e51c1b94ad1a852145a"
+    },
+    {
+      "path": "tests/twenty-player-multi-pool-plan.test.mjs",
+      "bytes": 2989,
+      "sha256": "84a56eb9b2790c1bab3fd005374699eaf4f416f4f3121db30ea5a7db4f09c45a"
+    }
+  ],
+  "selfExcluded": true
+}

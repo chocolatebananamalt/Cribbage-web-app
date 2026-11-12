@@ -1,0 +1,14 @@
+export const screenId=n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+export function nativeMixedDigitalScreenExample(mode='digital'){
+ const id=screenId,hash='a'.repeat(64),target={actorId:id(1),sessionId:id(2),projectUrl:'https://example.supabase.co',projectRef:'example',tournamentId:id(3),eventId:id(4),startId:id(5),gameId:id(6),startSourceDigest:hash};
+ const binding={target,tournamentName:'Sample Cribbage Classic',eventName:'Main',gameNumber:3,ownSide:'b',player:{participantId:id(7),profileId:target.actorId,displayName:'Jamie Sample',fixedTournamentId:'A-3',currentSeat:'A-9',mode:'digital'},opponent:{participantId:id(8),profileId:mode==='digital'?id(9):null,displayName:mode==='digital'?'Morgan Example':'Fictional Paper 12',fixedTournamentId:'A-8',currentSeat:'A-10',mode}};
+ const flags=Object.fromEntries(['ordinaryScoreWritten','normalStartAuthorized','scoringAuthorized','officialResultVerified','humanPlayVerified','moneyMoved','payoutAuthorized'].map(k=>[k,false]));
+ const state={kind:'native-mixed-simulation-game-state-v1',playOrder:'current',actorId:target.actorId,tournamentId:target.tournamentId,eventId:target.eventId,startId:target.startId,gameId:target.gameId,startSourceDigest:hash,revision:0,historyDigest:hash,evidenceVisibility:'metadata-only',entries:[],currentSourceVerified:true,simulationOnly:true,...flags};
+ const result={winnerSide:'b',margin:40};let sequence=0;
+ const add=(actorId,action,payload)=>{const n=++sequence;const e={id:id(100+n),operationId:id(200+n),receiptId:id(300+n),payloadDigest:hash,sequence:n,actorId,tournamentId:target.tournamentId,eventId:target.eventId,startId:target.startId,gameId:target.gameId,startSourceDigest:hash,action,...structuredClone(payload)};state.entries.push(e);state.revision=n;state.evidenceVisibility='evidence';return e;};
+ const submit=(p=binding.player,r=result)=>add(p.profileId,'digital-submit',{participantId:p.participantId,result:r,statement:'simulation-own-result-v1'});
+ const capture=()=>add(id(50),'paper-capture',{artifactId:id(60),artifactDigest:hash,claims:[{side:'a',result}],physicalOriginal:false,fictionalOpponentPlayed:false,independentHumanPlayClaimed:false,statement:'fictional-paper-capture-v1'});
+ const review=()=>{const c=state.entries.find(e=>e.action==='paper-capture');return add(id(51),'paper-review',{captureId:c.id,artifactId:c.artifactId,artifactDigest:c.artifactDigest,reenteredClaims:structuredClone(c.claims),decision:'accepted-simulation-only',statement:'fictional-paper-review-v1'});};
+ const confirm=(p=binding.player)=>{const e=add(p.profileId,'digital-confirm',{participantId:p.participantId,result,references:state.entries.filter(e=>e.action!=='digital-confirm').map(e=>e.id),statement:'simulation-own-confirmation-v1'});if(state.entries.filter(e=>e.action==='digital-confirm').length===(mode==='digital'?2:1))state.playOrder='complete';return e;};
+ return{binding,state,result,submit,capture,review,confirm};
+}

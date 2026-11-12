@@ -22,7 +22,10 @@ test("finalization opens registration only after explicit primary-director confi
   ]) assert.match(sql, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(client, /Please confirm you intend to open registration for these events/);
   assert.match(client, /Yes, Finalize & Open Registration|Finalize All Events \/ Open Registration/);
-  assert.match(client, /router\.push\(`\/tournament\/\$\{tournamentId\}\/registration`\)/);
+  assert.match(client, /registrationLinkManagementEnabled/);
+  assert.match(client, /router\.push\(\(registrationLinkManagementEnabled \?\? false\) \?/);
+  assert.match(client, /`\/tournament\/\$\{tournamentId\}\/registration`/);
+  assert.match(client, /`\/tournament\/\$\{tournamentId\}`/);
   assert.match(route, /p_confirmed: body\.confirmed/);
 });
 

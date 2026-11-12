@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ActivationWitness } from "../../components/activation-witness";
 import { isActivationRedemptionResult, type ActivationRedemptionResult } from "../../lib/api/roster-account-activation";
 
 declare global { interface Window { __accActivationCredential?: string } }
@@ -9,6 +10,7 @@ export default function ActivationForm() {
   const credential = useRef<string | null>(null);
   const request = useRef<AbortController | null>(null);
   const mounted = useRef(false);
+  const consumed = useRef(false);
   const [message, setMessage] = useState("Checking activation link…");
   const [ready, setReady] = useState(false);
   const [pending, setPending] = useState<ActivationRedemptionResult | null>(null);
@@ -21,17 +23,29 @@ export default function ActivationForm() {
 
   useEffect(() => {
     mounted.current = true;
-    const timer = window.setTimeout(() => {
+    let timer: number | undefined;
+    const claim = (event?: Event) => {
       const value = window.__accActivationCredential;
       delete window.__accActivationCredential;
-      if (!value) {
-        setMessage("This activation link is unavailable.");
-        return;
-      }
-      credential.current = value;
-      setReady(true);
-      setMessage("Confirm this activation while signed in on this device.");
-    }, 0);
+      if (consumed.current) return;
+      // Effect replay keeps the ref; a newly pasted full link replaces it.
+      if (event?.type === "hashchange") credential.current = value ?? null;
+      else if (value) credential.current = value;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        if (!credential.current) {
+          setReady(false);
+          setMessage("This activation link is unavailable.");
+          return;
+        }
+        setReady(true);
+        setMessage("Confirm this activation while signed in on this device.");
+      }, 0);
+    };
+    window.addEventListener("hashchange", claim);
+    // Handles client navigation from another route as well as initial load.
+    window.dispatchEvent(new Event("acc-activation-capture"));
+    claim();
     const onPageHide = () => {
       request.current?.abort();
       request.current = null;
@@ -42,9 +56,9 @@ export default function ActivationForm() {
       mounted.current = false;
       window.clearTimeout(timer);
       window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("hashchange", claim);
       request.current?.abort();
       request.current = null;
-      credential.current = null;
       delete window.__accActivationCredential;
     };
   }, []);
@@ -52,6 +66,7 @@ export default function ActivationForm() {
   async function redeem() {
     const value = credential.current;
     if (!value || request.current) return;
+    consumed.current = true;
     setReady(false);
     setMessage("Confirming activation…");
     const controller = new AbortController();
@@ -78,5 +93,5 @@ export default function ActivationForm() {
     if (mounted.current) setMessage("This activation link is unavailable. Please contact the tournament director.");
   }
 
-  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}{pending ? <section className="correction-item" aria-labelledby="witness-title"><h2 id="witness-title">Confirm with the tournament director</h2><p>Show the director both values in person. The director must be signed in separately and cannot approve their own request.</p><p><strong>Request ID</strong><br /><code>{pending.requestId}</code></p><p><strong>Witness phrase</strong><br /><code>{pending.confirmationPhrase}</code></p></section> : null}<p className="auth-note" role="status">{message}</p></section>;
+  return <section className="auth-card" aria-labelledby="activation-title"><p className="eyebrow">TOURNAMENT ACCESS</p><h1 id="activation-title">Activate tournament account</h1><p className="lede">Open this after signing in by email. Your activation value is removed from the browser address immediately.</p>{ready ? <button className="primary-action" type="button" onClick={redeem}>Confirm activation</button> : null}{pending ? <ActivationWitness pending={pending} /> : null}<p className="auth-note" role="status">{message}</p></section>;
 }

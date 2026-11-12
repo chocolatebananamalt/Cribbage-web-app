@@ -1,59 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteClient } from "../../../lib/supabase/server";
-import { canAcceptOfflineOwnerSession } from "../../../lib/auth/offline-account-switch";
+import { recoveryAuthPost } from "../../../lib/auth/recovery-auth-route";
+import { safeAuthNext } from "../../../lib/auth/recovery-auth";
 
-function safeRedirectPath(value: string | null): string {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return "/";
-  return value;
-}
-
+/** GET never consumes a one-time code or publishes a candidate session. */
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
-  const destination = new URL(safeRedirectPath(request.nextUrl.searchParams.get("next")), request.url);
-
-  if (!code) {
-    destination.pathname = "/sign-in";
-    destination.search = "error=missing_code";
-    return privateRedirect(destination);
+  const target = new URL("/auth/complete-sign-in", request.url);
+  if (!code || !/^[A-Za-z0-9_-]{8,2048}$/.test(code)) {
+    target.pathname = "/sign-in"; target.search = "error=missing_code";
+  } else {
+    // Fragment stays browser-local rather than becoming another server URL query.
+    target.hash = new URLSearchParams({ code, next: safeAuthNext(request.nextUrl.searchParams.get("next")) }).toString();
   }
-
-  try {
-    const { supabase, getResponse } = createRouteClient(request);
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) throw error;
-    const offlineOwner = request.cookies.get("acc_offline_score_owner")?.value;
-    if (!canAcceptOfflineOwnerSession(offlineOwner, data.user?.id)) {
-      // Discard the new session cookies, preserving the previous browser
-      // identity if it is still valid. The one-time code is consumed, but no
-      // different account can inherit the prior player's private offline page.
-      return privateRedirect(new URL("/auth/offline-data-blocked", request.url));
-    }
-    return withCookies(NextResponse.redirect(destination), getResponse());
-  } catch {
-    destination.pathname = "/sign-in";
-    destination.search = "error=callback_failed";
-    return privateRedirect(destination);
-  }
-}
-
-function privateRedirect(destination: URL): NextResponse {
-  const response = NextResponse.redirect(destination);
+  // A relative redirect preserves the browser-visible origin even when a
+  // development proxy normalizes request.url to localhost.
+  const response = new NextResponse(null, { status: 307, headers: { location: target.pathname + target.search + target.hash } });
   response.headers.set("cache-control", "private, no-store");
+  response.headers.set("referrer-policy", "no-referrer");
   return response;
 }
-
-function withCookies(response: NextResponse, source: NextResponse): NextResponse {
-  source.headers.forEach((value, name) => {
-    if (name.toLowerCase() !== "set-cookie") response.headers.set(name, value);
-  });
-  const cookies = source.cookies.getAll();
-  cookies.forEach(({ name, value, ...options }) => response.cookies.set(name, value, options));
-  // This route receives a one-time exchange code in its request URL. Even an
-  // unsuccessful redirect must never be eligible for a shared cache.
-  return privateRedirectResponse(response);
-}
-
-function privateRedirectResponse(response: NextResponse): NextResponse {
-  response.headers.set("cache-control", "private, no-store");
-  return response;
-}
+export async function POST(request: NextRequest) { return recoveryAuthPost(request, "code"); }

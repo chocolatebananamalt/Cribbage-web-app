@@ -70,10 +70,14 @@ test("director UI visibly separates playoff finish from qualifying rank and with
   assert.match(page, /director.*co_director/);
   assert.match(client, /Supervised playoff placements/);
   assert.match(client, /Qualifying-round rank remains unchanged/);
-  assert.match(client, /ACC published MRP schedule effective August 1, 2016/);
+  assert.match(client, /legacy MRP calculation and champion playoff credit are under review/);
   assert.match(client, /MRP playoff exit round/);
+  assert.match(client, /Legacy recorded place/);
   assert.match(client, /playoff-placement:\$\{actorId\}:\$\{eventId\}/);
   assert.match(client, /reconciliation/);
+  assert.match(client, /No server receipt is available yet/);
+  assert.match(client, /locked \? "Retry exact placement request"/);
+  assert.match(client, /sessionStorage\.getItem\(key\) !== originalRaw/);
   assert.match(client, /const request = requestFromEnvelope\(envelope\);[\s\S]*isPlayoffPlacementRequest\(request\)/);
   assert.match(client, /body: JSON\.stringify\(request\)/);
   assert.doesNotMatch(client, /isPlayoffPlacementRequest\(candidate\)/);

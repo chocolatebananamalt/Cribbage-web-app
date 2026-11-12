@@ -9,14 +9,15 @@ const activationMaximumLifetimeMs = 60 * 60 * 1000;
 
 export type ActivationIssueRequest = { rosterEntryId: string; expiresAt: string; operationId: string };
 export type ActivationRedeemRequest = { credential: string; operationId: string };
-export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string };
+export type ActivationDecisionRequest = { requestId: string; decision: "approve" | "reject"; confirmationPhrase?: string; operationId: string; simulatedSingleOperator?: true };
 export type ActivationCancelRequest = { activationId: string; operationId: string };
 export type ActivationIssueResult = { status: "issued"; credential: string; expiresAt: string };
-export type ActivationRedemptionResult = { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string };
+export type ActivationRedemptionResult = { status: "pending"; activationId: string; requestId: string; confirmationPhrase: string; expiresAt?: string };
 export type ActivationDecisionResult = { status: "approved"; requestId: string; rosterEntryId: string; linkId: string };
 export type ActivationCancellationResult = { status: "cancelled"; activationId: string };
 export type ActivationWorkspace = {
   tournamentName: string;
+  eventBindingIssues?: Array<{participantId: string; playerName: string; eventName: string; reason: string}>;
   rosterEntries: Array<{
     rosterEntryId: string;
     displayName: string;
@@ -53,7 +54,9 @@ export function isActivationRedeemRequest(value: unknown): value is ActivationRe
 
 export function isActivationDecisionRequest(value: unknown): value is ActivationDecisionRequest {
   if (!isRecord(value) || !isUuid(value.requestId) || !isUuid(value.operationId)) return false;
-  if (value.decision === "approve") return exact(value, ["requestId", "decision", "confirmationPhrase", "operationId"]) && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
+  if (value.decision === "approve") return (exact(value, ["requestId", "decision", "confirmationPhrase", "operationId"])
+    || (exact(value, ["requestId", "decision", "confirmationPhrase", "operationId", "simulatedSingleOperator"]) && value.simulatedSingleOperator === true))
+    && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
   return value.decision === "reject" && exact(value, ["requestId", "decision", "operationId"]);
 }
 
@@ -68,7 +71,8 @@ export function isActivationIssueResult(value: unknown): value is ActivationIssu
 }
 
 export function isActivationRedemptionResult(value: unknown): value is ActivationRedemptionResult {
-  return isRecord(value) && exact(value, ["status", "activationId", "requestId", "confirmationPhrase"])
+  return isRecord(value) && (exact(value, ["status", "activationId", "requestId", "confirmationPhrase"])
+      || (exact(value, ["status", "activationId", "requestId", "confirmationPhrase", "expiresAt"]) && timestamp(value.expiresAt)))
     && value.status === "pending" && isUuid(value.activationId) && isUuid(value.requestId)
     && typeof value.confirmationPhrase === "string" && phrase.test(value.confirmationPhrase);
 }
@@ -85,9 +89,13 @@ export function isActivationCancellationResult(value: unknown, activationId: str
 }
 
 export function isActivationWorkspace(value: unknown): value is ActivationWorkspace {
-  if (!isRecord(value) || !exact(value, ["tournamentName", "rosterEntries", "pendingRequests"])
+  if (!isRecord(value) || !(exact(value, ["tournamentName", "rosterEntries", "pendingRequests"]) || exact(value, ["tournamentName", "rosterEntries", "pendingRequests", "eventBindingIssues"]))
       || typeof value.tournamentName !== "string" || !value.tournamentName.trim()
       || !Array.isArray(value.rosterEntries) || !Array.isArray(value.pendingRequests)) return false;
+  if (value.eventBindingIssues !== undefined && (!Array.isArray(value.eventBindingIssues) || !value.eventBindingIssues.every(item => isRecord(item)
+    && exact(item, ["participantId", "playerName", "eventName", "reason"]) && isUuid(item.participantId)
+    && typeof item.playerName === "string" && !!item.playerName.trim() && typeof item.eventName === "string" && !!item.eventName.trim()
+    && item.reason === "Event account assignment needs director review"))) return false;
   const rosterEntries = value.rosterEntries;
   const pendingRequests = value.pendingRequests;
   if (!rosterEntries.every((item) => {

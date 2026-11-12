@@ -1,3 +1,6 @@
+import{nativeMixedPreparationPageEnabledV1}from'../src/lib/seating/native-mixed-pilot-preparation-v1.ts';
+import{nativeMixedPaperRouteEnabledV1}from'../src/lib/seating/native-mixed-paper-route-v1.ts';
+import {nativeMixedReviewUiEnabledV1} from '../src/lib/finance/native-mixed-review-read-v1.ts';
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -50,6 +53,24 @@ test("every tournament page is linked from somewhere a director can reach", () =
   const orphans = [];
   for (const segment of segments) {
     if (INTERNAL.has(segment)) continue;
+    // Keep only this exact default-disabled candidate unadvertised.
+    // Enabling it restores the ordinary navigation requirement.
+    if(segment==='rehearsal-review'&&!nativeMixedReviewUiEnabledV1()){
+      const file=`${BASE}/rehearsal-review/[eventId]/page.tsx`;
+      assert.deepEqual(sourceFiles(`${BASE}/rehearsal-review`).filter(p=>p.endsWith('/page.tsx')),[file]);
+      const page=readFileSync(file,'utf8'),gate=page.indexOf('if(!nativeMixedReviewUiEnabledV1())notFound()');
+      assert(gate>=0&&gate<page.indexOf('await params'));
+      continue;
+    }
+    for(const candidate of [
+      {segment:'rehearsal-prepare',enabled:nativeMixedPreparationPageEnabledV1,tail:'[eventId]/page.tsx',guard:'if(!nativeMixedPreparationPageEnabledV1())notFound()',before:'await params'},
+      {segment:'rehearsal-paper',enabled:nativeMixedPaperRouteEnabledV1,tail:'[eventId]/[startId]/[gameId]/page.tsx',guard:'if(!nativeMixedPaperRouteEnabledV1())notFound()',before:'const env=getPublicSupabaseEnv()'}
+    ])if(segment===candidate.segment&&!candidate.enabled()){
+      const file=BASE+'/'+candidate.segment+'/'+candidate.tail;
+      assert.deepEqual(sourceFiles(BASE+'/'+candidate.segment).filter(p=>p.endsWith('/page.tsx')),[file]);
+      const page=readFileSync(file,'utf8'),gate=page.indexOf(candidate.guard),before=page.indexOf(candidate.before);assert(gate>=0&&before>gate);
+    }
+    if(segment==='rehearsal-prepare'&&!nativeMixedPreparationPageEnabledV1()||segment==='rehearsal-paper'&&!nativeMixedPaperRouteEnabledV1())continue;
     const owned = `${BASE}/${segment}/`;
     const linked = files.some((file) => !file.split("\\").join("/").startsWith(owned) && linksTo(readFileSync(file, "utf8"), segment));
     if (!linked) orphans.push(segment);
