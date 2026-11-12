@@ -64,8 +64,8 @@ test("tournament setup keeps ordinary money drafts precise and rate changes expl
   assert.doesNotMatch(client, /key={`(?:pool|side-pool|event)-fee-\$\{/);
   assert.match(client, /entryFeeCents: entryFeeCents \?\? NaN/);
   assert.match(client, /ACC Sanctioning Fee Running Total/);
-  assert.match(client, /Main rate per person/);
-  assert.match(client, /Consolation rate per person/);
+  assert.match(client, /Main Rate per Person/);
+  assert.match(client, /Consolation Rate per Person/);
   assert.match(client, /Adjust Main rate/);
   assert.match(client, /Save Adjusted Main Rate/);
   assert.match(client, /Reason \(<span className="required-field"/);

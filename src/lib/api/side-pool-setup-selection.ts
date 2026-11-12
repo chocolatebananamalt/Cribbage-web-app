@@ -49,3 +49,16 @@ export function sidePoolOptionalName(value: string, index: number): string {
 export function sidePoolNameFromInput(value: string, index: number): string {
   return value.trim() ? value : sidePoolDefaultName(index);
 }
+
+/** UI draft parser only. No new ratio policy/range is established here. */
+export function sidePoolPayoutTypeFromRatioDraft(value: string): GraduatedSidePoolSetupType | null {
+  if (!/^[0-9]+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) <= 0) return null;
+  const candidate = `graduated-1-in-${Number(value)}`;
+  return isGraduatedSidePoolSetupType(candidate) ? candidate : null;
+}
+export function sidePoolRatioDraftMessage(value: string): string | null {
+  if (sidePoolPayoutTypeFromRatioDraft(value)) return null;
+  if (!value) return 'Enter the required payout ratio.';
+  if (!/^[0-9]+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) <= 0) return 'Enter a positive whole number.';
+  return 'This test version can currently save 1-in-4, 1-in-6, 1-in-8, or 1-in-10. Other ratios need setup and accounting integration; this draft cannot be saved with that ratio.';
+}

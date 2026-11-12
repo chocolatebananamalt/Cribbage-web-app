@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import {eventSettingsActivationBlockedV3} from "../src/lib/setup-event-settings-recovery-v3.ts";
 
 import {
   isRejectedSetupActivation,
@@ -171,9 +172,11 @@ test("setup UI activates only a saved unchanged revision and locks activated set
   assert.doesNotMatch(client, /activationEnabled/);
   assert.match(client, /fetch\(`\/api\/v1\/tournaments\/\$\{tournamentId\}\/setup\/activation`/);
   assert.match(client, /JSON\.stringify\(payload\) !== savedFingerprint/);
-  assert.match(client, /const scheduleBlocksActivation = prizeScheduleApplies && scheduleBlocked/);
+  assert.match(client, /const scheduleBlocksActivation = eventSettingsActivationBlockedV3\(eventSettingsV3Enabled,prizeScheduleApplies,scheduleBlocked\)/);
+  for(const applies of [false,true])for(const blocked of [false,true]){assert.equal(eventSettingsActivationBlockedV3(true,applies,blocked),true,"V3 remains blocked regardless of legacy declaration applicability");assert.equal(eventSettingsActivationBlockedV3(false,applies,blocked),applies&&blocked,"default-off preserves the legacy schedule guard");}
   assert.match(client, /disabled=\{busy \|\| activationRecoveryBlocked \|\| declarationChecking \|\| dirty \|\| \(multiEventDeclarationPath && !declarationsReady\)/);
-  assert.match(client, /function startActivation\(\) \{ if \(\(multiEventDeclarationPath && !declarationsReady\)/);
+  assert.match(client, /function startActivation\(\) \{ if\(eventPrizeSettingsV1Enabled&&!prizeConfigured\)/);
+  assert.match(client, /if \(\(multiEventDeclarationPath && !declarationsReady\) \|\| scheduleBlocksActivation \|\| !revisionId \|\| version < 1 \|\| dirty/);
   assert.match(client, /JSON\.stringify\(fresh\) !== JSON\.stringify\(reviewedDeclarationPins\)/);
   assert.match(client, /Finalize All Events \/ Open Registration/);
   assert.match(client, /All events are finalized; registration is open/);

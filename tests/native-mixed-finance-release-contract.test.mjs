@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';import fs from'node:fs';import{createHash}from'node:crypto';
+const root='database/release-packages/native-mixed-finance',m=JSON.parse(fs.readFileSync(root+'/manifest.json')),sql=fs.readFileSync(m.file,'utf8'),sha=b=>createHash('sha256').update(b).digest('hex');
+test('closed reduced Finance package freezes sixteen reviewed bodies without access enablement',()=>{
+ assert.equal(m.units.length,16);assert.equal(sha(sql),m.sha256);assert.equal(m.applicationGrants,0);assert.equal(m.cohortWrites,0);assert.equal(m.defaultDisabled,true);assert.equal(m.existingFunctionsReplaced,8);
+ for(const u of m.units){assert.equal(sha(fs.readFileSync(u.file)),u.sourceSha256);const start=`-- BEGIN ${u.file} source SHA256 ${u.sourceSha256}\n`,end=`\n-- END ${u.file}\n`;assert.equal(sql.split(start).length,2);assert.equal(sha(sql.split(start)[1].split(end)[0]),u.unitSha256);}
+ assert.doesNotMatch(sql,/^\s*(begin;|commit;|grant\b)/gim);assert.doesNotMatch(sql,/create function public\.(?:save_event_settings_custom_pool_draft_provider_v4|get_event_settings_custom_pool_operation_provider_v4)/i);
+});
+test('normal Setup activation plan is explicit and separate from native cohort and money access',()=>{const p=JSON.parse(fs.readFileSync(root+'/stage1-normal-setup-plan.json'));assert.equal(p.status,'PROPOSED_NOT_EXECUTED');assert.equal(p.projectRef,'nnhcnvksxgxnpvdqjgpg');assert.equal(p.applicationSwitch.default,'deny');assert.equal(p.applicationSwitch.publicClientFlag,false);assert.equal(p.actorEventOrCohortConfinementClaimed,false);assert.equal(p.sqlGates.length,10);});

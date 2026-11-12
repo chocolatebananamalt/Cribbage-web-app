@@ -28,3 +28,4 @@ test('all retained prefixes block switching and targeted cleanup leaves unrelate
   const storage={get length(){return data.size},key:i=>[...data.keys()][i]??null,removeItem:key=>data.delete(key)};
   assert.equal(countAppSessionStorageRecords(storage),5);clearAppSessionStorage(storage);assert.deepEqual([...data],[['unrelated-site-preference','keep']]);assert.equal(isAppRecoveryStorageKey('unregistered:new'),false);
 });
+

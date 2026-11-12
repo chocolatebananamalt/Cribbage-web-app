@@ -277,6 +277,20 @@ export function setAppRecoveryItem(storage: Storage, key: string, value: string)
   storage.setItem(key, value);
 }
 
+export function compareAndReplaceAppRecoveryItem(
+  storage: Storage,
+  key: string,
+  expectedValue: string,
+  replacementValue: string,
+) {
+  assertRecoveryWriteAllowed();
+  if (!isAppRecoveryStorageKey(key)) throw new Error("recovery_storage_key_unsupported");
+  if (storage.getItem(key) !== expectedValue) return false;
+  claimRecoveryStorageOwner(actorId);
+  storage.setItem(key, replacementValue);
+  return storage.getItem(key) === replacementValue;
+}
+
 export function setPublicCheckInRecoveryItem(storage: Storage, key: string, value: string) {
   if (key !== "acc:event-check-in:completion") throw new Error("recovery_storage_key_unsupported");
   if (actorId) {

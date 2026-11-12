@@ -1,0 +1,73 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "scope": "LATEST_NORMAL_SETUP_STAGE1_STAGING_PREVIEW_ONLY",
+  "projectRef": "nnhcnvksxgxnpvdqjgpg",
+  "projectUrl": "https://nnhcnvksxgxnpvdqjgpg.supabase.co",
+  "applicationSwitch": {
+    "name": "EVENT_PRIZE_SETUP_TEST_PROJECT_ENABLED_V1",
+    "enabledValue": "true",
+    "default": "deny",
+    "assignment": "reviewed preview branch's branch-scoped preview environment only",
+    "branchRestrictionEnforcedByCode": false,
+    "projectRestrictionEnforcedByCode": true,
+    "publicClientFlag": false
+  },
+  "admittedActors": "all currently authorized staging tournament Directors/co-Directors under existing checks",
+  "actorEventOrCohortConfinementClaimed": false,
+  "sqlGates": [
+    "app.event_prize_write_enabled_source_v1()",
+    "app.event_prize_recovery_enabled_source_v1()",
+    "app.event_settings_custom_pool_transaction_enabled_v4()",
+    "app.event_prize_activation_read_enabled_v1()",
+    "app.event_prize_activation_write_enabled_v1()",
+    "app.event_prize_activation_recovery_enabled_v1()",
+    "app.event_prize_rule_context_read_enabled_v1()",
+    "app.event_prize_rule_context_write_enabled_v1()",
+    "app.event_prize_rule_context_recovery_enabled_v1()",
+    "app.event_settings_operational_activation_enabled_v1()"
+  ],
+  "publicSchemaExecute": {
+    "authenticated": [
+      "public.get_event_prize_workspace_provider_v1(uuid)",
+      "public.save_event_prize_settings_provider_v1(uuid,text)",
+      "public.get_event_prize_operation_provider_v1(uuid,text)",
+      "public.get_event_prize_rule_context_source_provider_v1(uuid)",
+      "public.save_event_prize_rule_context_provider_v1(uuid,jsonb)",
+      "public.get_event_prize_rule_context_operation_provider_v1(uuid,jsonb)",
+      "public.get_event_prize_activation_source_provider_v1(uuid)",
+      "public.prepare_event_prize_activation_provider_v1(uuid,text)",
+      "public.get_event_prize_activation_operation_provider_v1(uuid,text)"
+    ],
+    "service_role": [
+      "public.finalize_event_prize_activation_provider_v1(uuid,uuid,text)"
+    ],
+    "PUBLIC": [],
+    "anon": [],
+    "privateAppExecuteOrSchemaUsage": []
+  },
+  "nativeAndFinanceGates": "remain false; no changes authorized by this plan",
+  "serverSecret": {
+    "existingConfigurationUsedOnly": true,
+    "presenceVerified": true,
+    "currentValueVerified": false,
+    "newCredentialCreationAuthorized": false,
+    "missingConfigurationAction": "stop and report; no credential creation or client exposure",
+    "presenceEvidence": "preview-environment-metadata.json (read-only, decrypt=false); value and validity unverified"
+  },
+  "evidenceLimits": {
+    "rollbackOnlyMainConSqlAcceptancePassed": true,
+    "realSignedProviderAcceptanceClaimed": false,
+    "realBrowserAcceptanceClaimed": false,
+    "financialAuthorityEnabled": false,
+    "rolloutExecuted": false
+  },
+  "disable": {
+    "firstAction": "disable/remove branch-scoped server switch",
+    "inFlightCancellationClaimed": false,
+    "preserveExactPendingOperations": true,
+    "sqlRestoration": "restore exact captured definitions/owners/ACL/effective grants only if separately authorized",
+    "deleteOrRewriteLatestHistory": false,
+    "oldPreviewMayLeaveConvertedDraftsReadOnly": true,
+    "repair": "reviewed forward repair preserving latest heads, immutable history and retained requests"
+  }
+}

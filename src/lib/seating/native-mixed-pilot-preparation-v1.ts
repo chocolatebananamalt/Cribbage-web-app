@@ -1,4 +1,3 @@
-import{nativeMixedPlayActivationEnabledV1}from'./native-mixed-play-activation-v1.ts';
 import{readNativeMixedDirectorReviewMaterialsV1}from'./native-mixed-director-review-materials-v1.ts';
 import{readNativeMixedSimulationOperationV1,isNativeMixedSimulationOperationV1,type NativeMixedSimulationOperationV1,type NativeMixedSimulationOperationReadV1,type NativeMixedSimulationScopeV1}from'./native-mixed-simulation-operation-v1.ts';
 import{readNativeMixedDirectorTransitionV1,type NativeMixedDirectorTransitionV1}from'./native-mixed-director-transition-v1.ts';
@@ -28,4 +27,4 @@ export function authorNativeMixedPreparationOperationV1(source:NativeMixedPrepar
  const operation={action:s.phase,operationId:ids.operationId,request};if(!isNativeMixedSimulationOperationV1(operation))return null;if(['review','publish'].includes(operation.action)&&!readNativeMixedDirectorReviewMaterialsV1(s.history,scope,operation))return null;return operation;
 }
 
-export const nativeMixedPreparationPageEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
+export const nativeMixedPreparationPageEnabledV1=()=>false;

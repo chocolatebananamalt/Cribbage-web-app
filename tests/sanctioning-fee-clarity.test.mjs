@@ -37,7 +37,10 @@ test("setup confirmation and protected controls match the clarity requirements",
   assert.match(client, /eventLabels\[event\.eventKind\].*event\.displayName.*event\.styleCode/s);
   assert.match(client, /Satellite Event/);
   assert.match(client, /Tournament Director Information \(shown to players\)/);
-  assert.match(client, />Phone<input type="tel"/);
+  assert.match(client, />Phone<TournamentPhoneInput/);
+  const phoneInput = readFileSync("src/components/tournament-phone-input.tsx", "utf8");
+  assert.match(phoneInput, /type=["']tel["']/);
+  assert.match(phoneInput, /autoComplete=["']tel["']/);
   assert.match(client, />Email<input type="email"/);
   assert.match(client, /Mailing Address for Correspondence.*Note: This address will be visible to players/s);
   assert.match(client, /Yes, Finalize &amp; Open Registration/);

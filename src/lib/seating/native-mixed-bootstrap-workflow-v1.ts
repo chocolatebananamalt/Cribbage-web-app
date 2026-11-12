@@ -47,4 +47,4 @@ export function readBootstrapResult(v:unknown,c:BootstrapContext,w:BootstrapWire
  else if(!((v.status==='retry_exact'&&v.code==='source_busy'||v.status==='blocked'&&v.code==='step_not_accepted')&&v.receiptDigest===null&&v.historicalReceipt===false))return null;
  return structuredClone(v)as BootstrapResult;
 }
-export const bootstrapWorkflowEnabled=()=>true;
+export const bootstrapWorkflowEnabled=()=>false;

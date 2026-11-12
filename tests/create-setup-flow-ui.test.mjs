@@ -33,8 +33,8 @@ test("setup seeds only authoritative server tournament data and never invents a 
   assert.match(setup, /clearCreationSeed\(creationSeedStorageKey\); setCreationSeedActive\(false\); setPending\(null\)/);
   assert.match(setup, /startsAt: creationSeed \? creationDateInputValue\(creationSeed\.plannedDate\)/);
   assert.match(setup, /<TournamentDateFields startsAt=\{payload.startsAt\} endsAt=\{payload.endsAt\}/);
-  assert.match(dateFields, /Start date<input required type="date" value=\{startsAt\.slice\(0, 10\)\}/);
-  assert.match(dateFields, /Start time<input required type="time" value=\{startsAt\.slice\(11, 16\)\}/);
+  assert.match(dateFields, /Start Date<input required type="date" value=\{startsAt\.slice\(0, 10\)\}/);
+  assert.match(dateFields, /Start Time<input required type="time" value=\{startsAt\.slice\(11, 16\)\}/);
   assert.match(setup, /creationSeedActive && !revisionId/);
   assert.match(setup, /setCreationSeedActive\(Boolean\(effectiveCreationSeed && !current\)\)/);
   assert.match(dateFields, /Planned start date carried forward/);

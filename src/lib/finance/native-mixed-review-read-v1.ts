@@ -1,7 +1,6 @@
-import{nativeMixedPlayActivationEnabledV1}from'../seating/native-mixed-play-activation-v1.ts';
 import {readPracticeQualificationFinanceReviewV1,type PracticeQualificationFinanceReviewV1} from './native-mixed-qualification-review-v1.ts';
 export type NativeMixedReviewContextV1={projectRef:string;scope:{actorId:string;tournamentId:string;eventId:string};sessionId:string};
-export const nativeMixedReviewUiEnabledV1=()=>nativeMixedPlayActivationEnabledV1();
+export const nativeMixedReviewUiEnabledV1=()=>false;
 export const nativeMixedReviewBytesV1=131072;
 export type NativeMixedReviewEnvelopeV1={kind:'native-mixed-review-provider-v1';actorId:string;sessionId:string;tournamentId:string;eventId:string;review:PracticeQualificationFinanceReviewV1};
 const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.getPrototypeOf(v)===Object.prototype;

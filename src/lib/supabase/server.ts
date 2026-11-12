@@ -3,12 +3,15 @@ import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { getPublicSupabaseEnv } from "../env";
 
-export async function createClient() {
+export async function createClient(expectedProjectUrl?: string) {
   const cookieStore = await cookies();
   const { url, publishableKey } = getPublicSupabaseEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   });
+  if (expectedProjectUrl !== undefined && url !== expectedProjectUrl) {
+    throw new Error("Supabase project does not match this request.");
+  }
 
   return createServerClient(url, publishableKey, {
     cookies: {

@@ -59,13 +59,13 @@ export default function EventPrizeDeclarationClient({actorId,tournamentId,client
  return <section className="setup-subsection event-prize-declaration" aria-label={`${eventName} prize declaration`}><h3>{eventName}: regular prize declaration</h3>
   <p>Each event has its own formula. Q and Side Pool contributions remain separate. This declaration does not record receipts, assign results or finalize accounting.</p>
   <fieldset disabled={locked}><legend>Director-selected formula</legend>
-   <label>Expected playoff qualifiers<select value={count} onChange={e=>{onDraftChange?.(true);const n=Number(e.target.value) as 4|5;setCount(n);setWeights(n===5?[...weights.slice(0,3),weights[3]??'']:weights.slice(0,3));setReviewed(false);}}><option value={4}>4 qualifiers</option><option value={5}>5 qualifiers</option></select></label>
+   <label>Expected Playoff Qualifiers<select value={count} onChange={e=>{onDraftChange?.(true);const n=Number(e.target.value) as 4|5;setCount(n);setWeights(n===5?[...weights.slice(0,3),weights[3]??'']:weights.slice(0,3));setReviewed(false);}}><option value={4}>4 qualifiers</option><option value={5}>5 qualifiers</option></select></label>
    {(count===5?['1st place weight','2nd place weight','3rd-4th per-person weight','5th place weight']:['1st place weight','2nd place weight','3rd-4th per-person weight']).map((label,i)=><label key={label}>{label}<input type="number" min="1" step="1" value={weights[i]} onChange={e=>{onDraftChange?.(true);setWeights(weights.map((v,j)=>j===i?e.target.value:v));setReviewed(false);}}/></label>)}
-   <label>Schedule source reference<input value={source} maxLength={500} onChange={e=>{onDraftChange?.(true);setSource(e.target.value);setReviewed(false);}}/></label>
-   <label>Reason for schedule<input value={reason} maxLength={500} onChange={e=>{onDraftChange?.(true);setReason(e.target.value);}}/></label>
+   <label>Schedule Source Reference<input value={source} maxLength={500} onChange={e=>{onDraftChange?.(true);setSource(e.target.value);setReviewed(false);}}/></label>
+   <label>Reason for Schedule<input value={reason} maxLength={500} onChange={e=>{onDraftChange?.(true);setReason(e.target.value);}}/></label>
    <label className="event-prize-review"><input type="checkbox" checked={reviewed} onChange={e=>{onDraftChange?.(true);setReviewed(e.target.checked);}}/>I reviewed this event&apos;s formula and source</label>
   </fieldset>
   <p role="status">{message}</p><button type="button" className="primary" disabled={busy||blocked||(!pending&&(disabled||!workspace?.supported))} onClick={()=>void save()}>{pending?'Retry exact event declaration':'Save event prize declaration'}</button>
-  <p>Multi-event financial accounting remains unavailable until event allocations, pool consent and supported playoff results are integrated. Registration finalization remains blocked for this incomplete path.</p>
+  <p>These are the current required payout parameters before registration opens. Final payout amounts are reviewed later using entries, expenses and results. Saving this formula does not record a payment or finalize accounting.</p>
  </section>;
 }

@@ -86,12 +86,12 @@ test("tournament details must be saved before event setup unlocks", async () => 
   assert.match(client, /disabled=\{!tournamentDetailsSaved \|\| draftEditingDisabled/);
   assert.match(client, /if \(!payload \|\| !tournamentDetailsSaved \|\| draftEditingDisabled\) return/);
   assert.match(client, /Tournament details saved\. Tournament Events is now available\./);
-  for (const label of ["Tournament name", "Venue name", "Venue street address", "Venue city", "Venue State", "Venue ZIP", "Time Zone", "First name", "Last name"]) {
+  for (const label of ["Tournament Name", "Venue Name", "Venue Street Address", "Venue City", "Venue State", "Venue ZIP", "Time Zone", "First Name", "Last Name"]) {
     assert.match(client, new RegExp(label));
   }
   assert.match(client, /<TournamentDateFields startsAt=\{payload.startsAt\} endsAt=\{payload.endsAt\}/);
   const dateFields = await readFile(new URL("../src/components/tournament-date-fields.tsx", import.meta.url), "utf8");
-  for (const label of ["Start date", "Start time", "Number of days", "Ends on"]) assert.match(dateFields, new RegExp(label));
+  for (const label of ["Start Date", "Start Time", "Number of Days", "Ends on"]) assert.match(dateFields, new RegExp(label));
   assert.doesNotMatch(dateFields, /type="datetime-local"/);
   assert.match(client, /setup-span-4/);
   assert.match(client, /setup-span-6/);

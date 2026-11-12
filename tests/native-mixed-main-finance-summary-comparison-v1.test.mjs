@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{spawnSync}from'node:child_process';
+test('Finance summary renders all four actual JSX comparison and balance cases in client React',()=>{const r=spawnSync(process.execPath,['--experimental-strip-types','--test','tests/helpers/native-mixed-main-finance-summary-comparison-cases.mjs'],{encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);});

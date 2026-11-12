@@ -1,0 +1,116 @@
+{
+  "status": "CLOSED_TEST_RELEASE_CANDIDATE_NOT_INSTALLED",
+  "baselineCommit": "2686815e8a28a7baf31beb08d9ffc81fa7161c34",
+  "lastVerifiedBaselineMigration": "20261108201030",
+  "version": "20261109120000",
+  "file": "database/release-packages/native-mixed-finance/supabase/migrations/20261109120000_native_mixed_finance_closed_install.sql",
+  "sha256": "30423f05331266cc72ae769e4bd4514290927e1b6b7f85f2ad8fe6afe22c942c",
+  "bytes": 285469,
+  "testedAtomicBodySha256": "0d79b616670a910133e8a94c236166dd9129302222570978b89bab761bdf8c97",
+  "units": [
+    {
+      "file": "database/proposals/event-settings-custom-pool-transaction-v4.sql",
+      "sourceSha256": "0c366e7cec63498b1c08437d8dcf3ccb21e6713260e2a5a8d9b4b9d8764a00b9",
+      "unitSha256": "a5d4b65cbb5c5b742b082e2812ba274c94f3e9047bd2c1856fa030df12c3a7b7",
+      "extraction": "private V4 gate/save clone/reconcile only; omit two unused public wrappers and authenticated grants"
+    },
+    {
+      "file": "database/proposals/event-prize-guard-source-v1.sql",
+      "sourceSha256": "0d0efe0a4f969adac9016f18a2da5f3863b35eac4507d65db68fecfed23d9352",
+      "unitSha256": "08fa27925de7113efbea3f8f559972f0872bd7f993e9294c16a2f5eabd9c3117",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/event-prize-transaction-source-v1.sql",
+      "sourceSha256": "0634eb8f7f147c1bfbc2f46fcacf69e612d6e629463cb4d49be7e7833586adfc",
+      "unitSha256": "9bec03c8afc2a2d5fe77b50b1b75fba00b69314ecd3f93189b26e1299c8ade6f",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/event-prize-workspace-source-v1.sql",
+      "sourceSha256": "b079d2ba8ff8479ef487f4e1a975c97b6eb4070b5529e837b1b1468b84b2987c",
+      "unitSha256": "d3b11db4bb9f53b78a64c6ed0a61c78b9042062e2d19685484814fed20c413a5",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/event-prize-activation-source-v1.sql",
+      "sourceSha256": "c1d414088b13fb35e6e962b626c5ae67b38ba2517cac69c4d3ce2129f59d8573",
+      "unitSha256": "a5cd19afca1776fdd49acd3e3110f589fd959be2585b904c6ba523f1decd72aa",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/event-prize-rule-context-source-v1.sql",
+      "sourceSha256": "33b0fc2914752d92aac17b874f7ddf22fb929b96393552671156a40304ff6495",
+      "unitSha256": "6a24d1f9ff9c1a16b3720e6613dca2cc64ef2df5a70ccb4430b3233baaa11042",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-pool-amounts-v1.sql",
+      "sourceSha256": "c916aba5f4e08c1e424aa9034fb9dca1f273f09ee77a497002a3162aecdf4707",
+      "unitSha256": "c916aba5f4e08c1e424aa9034fb9dca1f273f09ee77a497002a3162aecdf4707",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-pool-finance-v1.sql",
+      "sourceSha256": "6b3f51e33a809dddd14173d14af75c4ba109163c82760e7aef475bde50d9bf4c",
+      "unitSha256": "48a47fe1300f3066ce8cf6eb4af93cf31ff820dd14e75c2a0457b7776844e801",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-playoff-v1.sql",
+      "sourceSha256": "db6c616cfb841c02f22fed8144715e8d3e4e5b5e589b4d7b6258af866f4aa52d",
+      "unitSha256": "fde4a68c948b8c8c6f4727bea6935509416a315f3c32960fda18ced1138aea3c",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-playoff-own-read-v1.sql",
+      "sourceSha256": "d6f550b4e6bd9b77b5f3248c4c4ad250c344cf23d91d47fd1f6615c1246f50bf",
+      "unitSha256": "d0f6375c4eddfa558833c753c9be1e13be2c1397ed447c034b3be37d9e932909",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-latest-prize-admission-v1.sql",
+      "sourceSha256": "83c1f647d1dbea821e80e205bbcc3628551a56fceffc09cbeaa5cd5a7d1ea672",
+      "unitSha256": "b0f50fabc633fd7d1b28d199064d8d5b27db382deee2974934b836faca570f9f",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-pool-preparation-read-v1.sql",
+      "sourceSha256": "5e2e62723af0e1d463047083bbbbacc018bdc9cb324b7f3633c6b62e27e11bf7",
+      "unitSha256": "6926fc2932275122c6cb16cbe3a071cddf5e3da573faa5614f16a3c54c8c78fc",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-pool-operation-read-v1.sql",
+      "sourceSha256": "f1abdbe0ced37ca57f98853510f9f3c535ff76e99afe379aff3975d83dfc19c9",
+      "unitSha256": "43515dc4b333e5b54eafc67c7dcac21a082f53a7f696ead2a23da0b695f50b60",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-main-finance-v1.sql",
+      "sourceSha256": "ab9d4efdf58ec7ea7f83830549627f9b43305dea37bca4437902ec229319fce2",
+      "unitSha256": "c1e4184c46aa55658882adbfce17695709cc5c8db6806dbfa74339ac905bb654",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-main-operation-read-v1.sql",
+      "sourceSha256": "1919691ae0206b170cf3c7c936bb02f927d923b42e223fa24f14c7d5a2e09333",
+      "unitSha256": "e278ef4ade48c191e0466b9d084ee4bffbfad5795e54ee6bb7e9706780ce1348",
+      "extraction": "complete reviewed source, outer transaction removed"
+    },
+    {
+      "file": "database/proposals/native-mixed-playoff-finance-transport-v1.sql",
+      "sourceSha256": "dd4fa8d4ab5fc35d9ccbad13d90ced232b9dfc11972a8942f35a28295ec38c7e",
+      "unitSha256": "a4b38ddf03113d26ae19b9e4914e5e7f41cc0cb9277a1c227797e0085916bea4",
+      "extraction": "complete reviewed source, outer transaction removed"
+    }
+  ],
+  "addedFunctions": 105,
+  "addedTables": 15,
+  "existingFunctionsReplaced": 8,
+  "applicationGrants": 0,
+  "cohortWrites": 0,
+  "defaultDisabled": true,
+  "historyRunnerReusedFromPriorRelease": true,
+  "officialManagedRoleAcceptanceNotYetExecuted": true
+}
