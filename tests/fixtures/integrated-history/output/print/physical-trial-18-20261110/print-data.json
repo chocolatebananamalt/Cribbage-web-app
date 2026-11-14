@@ -1,0 +1,1940 @@
+{
+  "kind": "fictional-18-physical-print-data-v1",
+  "fictionalOnly": true,
+  "tableId": "A",
+  "chairs": [
+    "A-1",
+    "A-2",
+    "A-3",
+    "A-4",
+    "A-5",
+    "A-6",
+    "A-7",
+    "A-8",
+    "A-9",
+    "A-10",
+    "A-11",
+    "A-12",
+    "A-13",
+    "A-14",
+    "A-15",
+    "A-16",
+    "A-17",
+    "A-18"
+  ],
+  "stationaryChair": "A-1",
+  "cards": [
+    {
+      "tournamentId": "A-1",
+      "displayName": "TEST ONLY Person 12",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-1",
+      "rows": [
+        {
+          "gameId": "e49f16cb-9e46-409b-8931-81b95515fa90",
+          "gameNumber": 1,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "b778952e-b721-47bb-8a8b-f910435d68ae",
+          "gameNumber": 2,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "9e72d112-f895-46d3-9931-eddf061e3da7",
+          "gameNumber": 3,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "d4425cf0-2420-493a-b7ae-35640bc921e2",
+          "gameNumber": 4,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "e9e3da3c-9a1b-446e-9ea5-43f39bbeefe3",
+          "gameNumber": 5,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "6757e6d0-a697-4015-9dc7-1dba34e1bfbb",
+          "gameNumber": 6,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "36562250-f99c-4d40-a841-7bd82d07f7bb",
+          "gameNumber": 7,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "7512b6d1-62e9-46be-acca-a9686abae6e6",
+          "gameNumber": 8,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "aaf21f38-21b2-443d-a408-1fd1cba3f8d3",
+          "gameNumber": 9,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "0b241cf8-0e4a-438d-88ac-1f4b14159ea6",
+          "gameNumber": 10,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "40b6d990-b49e-480c-8e80-4234276aebb4",
+          "gameNumber": 11,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "c5d23417-bd50-4ac2-8126-d849f826c604",
+          "gameNumber": 12,
+          "currentSeat": "A-1",
+          "opponentCurrentSeat": "A-2",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-2",
+      "displayName": "TEST ONLY Person 10",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-2",
+      "rows": [
+        {
+          "gameId": "e49f16cb-9e46-409b-8931-81b95515fa90",
+          "gameNumber": 1,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "03b7a2d0-30f4-438b-a4dd-eaf59405d759",
+          "gameNumber": 2,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "eaf2a111-3002-4969-9033-6a20a98adb95",
+          "gameNumber": 3,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "c07f4dce-2957-46af-874e-5290532ee370",
+          "gameNumber": 4,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "770c5874-756d-4e9a-9c32-2e7be762f98b",
+          "gameNumber": 5,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "61ae5dbe-1220-43c4-9a05-8013754a37c0",
+          "gameNumber": 6,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "377e251a-1212-4cc8-a03f-d65c7dc1b4d0",
+          "gameNumber": 7,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "95a15f95-00be-4108-b44f-23a401ebbb36",
+          "gameNumber": 8,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "466f5570-0839-41a1-8c89-79c6a203c351",
+          "gameNumber": 9,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "ebd51afe-4ee1-4cfc-9eb0-f9aa6b84a8b2",
+          "gameNumber": 10,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "9bce19ed-7fa8-49ed-b721-c7e50b7cb45b",
+          "gameNumber": 11,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "041bf2d9-fc83-4570-a9a0-22c0977dba88",
+          "gameNumber": 12,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-3",
+      "displayName": "TEST ONLY Person 6",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-3",
+      "rows": [
+        {
+          "gameId": "81a5d6db-060b-43eb-83d5-10934fc3c044",
+          "gameNumber": 1,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "62c3589d-5bcf-46ef-aa35-9038809ce153",
+          "gameNumber": 2,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "5093a089-7846-4703-af00-a2ebb715c514",
+          "gameNumber": 3,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "dd6e657d-6def-43d7-8acf-8851230c88bd",
+          "gameNumber": 4,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "167ca2d8-b8ee-490d-8c48-41f477bd003a",
+          "gameNumber": 5,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "cff3ae5d-fea3-4a8a-9b3a-24339416fbe9",
+          "gameNumber": 6,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "1d464fc7-c689-42a2-89bf-4b7918d4f020",
+          "gameNumber": 7,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "43133bc3-68bd-403b-9ae5-d19ef92879ed",
+          "gameNumber": 8,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "466f5570-0839-41a1-8c89-79c6a203c351",
+          "gameNumber": 9,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "1a0ea1d0-eff9-4f56-9699-8dbffa62a0a9",
+          "gameNumber": 10,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "b624c2b7-fbed-4e46-aeb1-4411decfffe0",
+          "gameNumber": 11,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "c0dc0a23-4f13-4e13-b05c-499d049ad761",
+          "gameNumber": 12,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-4",
+      "displayName": "TEST ONLY Person 2",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-4",
+      "rows": [
+        {
+          "gameId": "81a5d6db-060b-43eb-83d5-10934fc3c044",
+          "gameNumber": 1,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "b778952e-b721-47bb-8a8b-f910435d68ae",
+          "gameNumber": 2,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "3c207f87-d608-4e23-85f2-e23ec4a8cb95",
+          "gameNumber": 3,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "5692a20e-fa11-4f69-97e2-564ea2909093",
+          "gameNumber": 4,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "87bda8b7-3687-4029-b6fa-9542edac403e",
+          "gameNumber": 5,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "1f899fcc-ab38-4b73-9de6-f62fb9feb19c",
+          "gameNumber": 6,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "436144bd-49a7-4a16-a5d1-6e1b2f02d992",
+          "gameNumber": 7,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "008d14ec-26a1-472b-8fb6-de218a996966",
+          "gameNumber": 8,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "872bd5fb-ec2e-4c8d-94a7-e96105a57ac4",
+          "gameNumber": 9,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "ebd51afe-4ee1-4cfc-9eb0-f9aa6b84a8b2",
+          "gameNumber": 10,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "db2d7c45-a6ce-4c57-95b7-286a0430e175",
+          "gameNumber": 11,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "ddf90abc-f767-45fd-9db1-35e9489ad9b7",
+          "gameNumber": 12,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-5",
+      "displayName": "TEST ONLY Person 16",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-5",
+      "rows": [
+        {
+          "gameId": "159cd4c3-efb7-49c0-b6e0-fb36dca3cc4c",
+          "gameNumber": 1,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "05e7153e-3e77-4709-b032-3e15e3bf491a",
+          "gameNumber": 2,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "c762c655-74e1-4544-a013-b07092ca084c",
+          "gameNumber": 3,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "ae2780e3-d785-414a-9db7-238fdc371396",
+          "gameNumber": 4,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "b42ff56c-c1dc-4ebe-ba2c-682a12dbc49a",
+          "gameNumber": 5,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "f49bce05-f173-4a83-80c7-2db77516af9d",
+          "gameNumber": 6,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "2019ccdb-a3f4-4485-b6d4-971ad1f64ec7",
+          "gameNumber": 7,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "43133bc3-68bd-403b-9ae5-d19ef92879ed",
+          "gameNumber": 8,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "872bd5fb-ec2e-4c8d-94a7-e96105a57ac4",
+          "gameNumber": 9,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "91031ca0-783d-4e0d-a5b4-0cd342bbb23c",
+          "gameNumber": 10,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "c74ea72d-9d6d-40a2-a023-eebe4fa3868d",
+          "gameNumber": 11,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "943a161f-a66f-440f-ac38-6a3dfb675e97",
+          "gameNumber": 12,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-6",
+      "displayName": "TEST ONLY Person 14",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-6",
+      "rows": [
+        {
+          "gameId": "159cd4c3-efb7-49c0-b6e0-fb36dca3cc4c",
+          "gameNumber": 1,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "03b7a2d0-30f4-438b-a4dd-eaf59405d759",
+          "gameNumber": 2,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "9e72d112-f895-46d3-9931-eddf061e3da7",
+          "gameNumber": 3,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "59a5dd37-a427-4878-83e1-a5ff638d0b57",
+          "gameNumber": 4,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "29ff7c50-9e52-456c-87c3-a09a642bb174",
+          "gameNumber": 5,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "4cac92c8-073c-4ddc-b33b-f1dcf017b8f3",
+          "gameNumber": 6,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "5e5bb84b-910f-46b5-bbc7-153473229c68",
+          "gameNumber": 7,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "a04fc7b8-0214-4d41-a9af-008af5f2a404",
+          "gameNumber": 8,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "e9ba9a71-e111-4665-9020-00004c5f2e3a",
+          "gameNumber": 9,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "1a0ea1d0-eff9-4f56-9699-8dbffa62a0a9",
+          "gameNumber": 10,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "db2d7c45-a6ce-4c57-95b7-286a0430e175",
+          "gameNumber": 11,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "4743ce4b-f876-4499-8cc7-5fefc87c38bf",
+          "gameNumber": 12,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-7",
+      "displayName": "TEST ONLY Person 1",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-7",
+      "rows": [
+        {
+          "gameId": "a4c1bebb-deff-46c6-951a-488d7534bbb5",
+          "gameNumber": 1,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "173ccb22-2906-4cbb-9577-17e88e2e127e",
+          "gameNumber": 2,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "7f7c73d6-66bb-444a-b1a4-d9419d742499",
+          "gameNumber": 3,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "1bf51e5b-2c12-41e0-b76d-ffe86434dd46",
+          "gameNumber": 4,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "1fb67ca8-4fdc-4588-a6d1-3d17e3c2b5af",
+          "gameNumber": 5,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "2d33e8dc-5aa6-4907-b237-c533e67b8373",
+          "gameNumber": 6,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "2019ccdb-a3f4-4485-b6d4-971ad1f64ec7",
+          "gameNumber": 7,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "95a15f95-00be-4108-b44f-23a401ebbb36",
+          "gameNumber": 8,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "e9ba9a71-e111-4665-9020-00004c5f2e3a",
+          "gameNumber": 9,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "6598a2fc-b912-4191-8578-1877a02ac461",
+          "gameNumber": 10,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "d6f4430f-553a-41dd-962b-3353c130d8d7",
+          "gameNumber": 11,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "b38461f0-f9e8-4fd6-a805-b97c392f8000",
+          "gameNumber": 12,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-8",
+      "displayName": "TEST ONLY Person 5",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-8",
+      "rows": [
+        {
+          "gameId": "a4c1bebb-deff-46c6-951a-488d7534bbb5",
+          "gameNumber": 1,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "62c3589d-5bcf-46ef-aa35-9038809ce153",
+          "gameNumber": 2,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "3c207f87-d608-4e23-85f2-e23ec4a8cb95",
+          "gameNumber": 3,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "d4425cf0-2420-493a-b7ae-35640bc921e2",
+          "gameNumber": 4,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "a766bf01-b45a-4c5e-b0b7-8500ad7e314f",
+          "gameNumber": 5,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "0c272ffe-7f4f-4f62-9f78-832f0f9f5fb3",
+          "gameNumber": 6,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "ec11a7e5-ca41-4d14-99ea-c4dc53837e24",
+          "gameNumber": 7,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "ec9931b3-994c-4131-a033-7878837871ae",
+          "gameNumber": 8,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "897d809c-444d-43f1-98ab-6db7e4e7c928",
+          "gameNumber": 9,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "91031ca0-783d-4e0d-a5b4-0cd342bbb23c",
+          "gameNumber": 10,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "9bce19ed-7fa8-49ed-b721-c7e50b7cb45b",
+          "gameNumber": 11,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "4743ce4b-f876-4499-8cc7-5fefc87c38bf",
+          "gameNumber": 12,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-9",
+      "displayName": "TEST ONLY Person 9",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-9",
+      "rows": [
+        {
+          "gameId": "66687bf7-2964-47c0-9a16-9be209f2a1c6",
+          "gameNumber": 1,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "760ca5d1-5f27-4122-b026-f29058eef0d1",
+          "gameNumber": 2,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "257a79be-a5fb-4215-a0e0-f7c24634a81a",
+          "gameNumber": 3,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "678d5499-3810-42f9-bd76-2d3f73e02536",
+          "gameNumber": 4,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "22aaf831-5a97-4486-a9d4-64162efb1636",
+          "gameNumber": 5,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "2d33e8dc-5aa6-4907-b237-c533e67b8373",
+          "gameNumber": 6,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "1d464fc7-c689-42a2-89bf-4b7918d4f020",
+          "gameNumber": 7,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "008d14ec-26a1-472b-8fb6-de218a996966",
+          "gameNumber": 8,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "897d809c-444d-43f1-98ab-6db7e4e7c928",
+          "gameNumber": 9,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "fb1be607-178c-4d0c-8cd8-ab970964895a",
+          "gameNumber": 10,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "4de3b1dd-136c-4487-a68b-a8c4d879c276",
+          "gameNumber": 11,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "34f17f12-5b66-466f-aa1b-6f7cc6b7ba71",
+          "gameNumber": 12,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-10",
+      "displayName": "TEST ONLY Person 11",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-10",
+      "rows": [
+        {
+          "gameId": "66687bf7-2964-47c0-9a16-9be209f2a1c6",
+          "gameNumber": 1,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "05e7153e-3e77-4709-b032-3e15e3bf491a",
+          "gameNumber": 2,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "eaf2a111-3002-4969-9033-6a20a98adb95",
+          "gameNumber": 3,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "59a5dd37-a427-4878-83e1-a5ff638d0b57",
+          "gameNumber": 4,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "e9e3da3c-9a1b-446e-9ea5-43f39bbeefe3",
+          "gameNumber": 5,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "d3d3ec5a-182c-485c-87b7-ca80ebff4c71",
+          "gameNumber": 6,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "f5f3662f-88ad-4197-8477-fb31e64db7dd",
+          "gameNumber": 7,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "b73243fa-85fb-4d99-a0c3-91af6cc851c7",
+          "gameNumber": 8,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "255a1090-622c-4037-8db5-659b49204c83",
+          "gameNumber": 9,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "6598a2fc-b912-4191-8578-1877a02ac461",
+          "gameNumber": 10,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "b624c2b7-fbed-4e46-aeb1-4411decfffe0",
+          "gameNumber": 11,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "ddf90abc-f767-45fd-9db1-35e9489ad9b7",
+          "gameNumber": 12,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-11",
+      "displayName": "TEST ONLY Person 3",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-11",
+      "rows": [
+        {
+          "gameId": "672523e4-6c80-4fb8-b8b7-1b6fd8e32112",
+          "gameNumber": 1,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "0aad88cc-c823-4509-a2d2-e3913cd21140",
+          "gameNumber": 2,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "9431a594-4081-4bcb-8eae-179af726250d",
+          "gameNumber": 3,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "e1a1d128-90aa-41b5-98dd-7c3d1c4dd009",
+          "gameNumber": 4,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "22aaf831-5a97-4486-a9d4-64162efb1636",
+          "gameNumber": 5,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "f49bce05-f173-4a83-80c7-2db77516af9d",
+          "gameNumber": 6,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "377e251a-1212-4cc8-a03f-d65c7dc1b4d0",
+          "gameNumber": 7,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "a04fc7b8-0214-4d41-a9af-008af5f2a404",
+          "gameNumber": 8,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "255a1090-622c-4037-8db5-659b49204c83",
+          "gameNumber": 9,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "03d50f5e-af1d-4729-9a1b-cad5e438652c",
+          "gameNumber": 10,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "cfe0fbbd-73bd-4950-8ba7-7254fa0ed4e1",
+          "gameNumber": 11,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "bdbea172-d070-4f95-aa2e-77a8f7441d9e",
+          "gameNumber": 12,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-12",
+      "displayName": "TEST ONLY Person 7",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-12",
+      "rows": [
+        {
+          "gameId": "672523e4-6c80-4fb8-b8b7-1b6fd8e32112",
+          "gameNumber": 1,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "173ccb22-2906-4cbb-9577-17e88e2e127e",
+          "gameNumber": 2,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "5093a089-7846-4703-af00-a2ebb715c514",
+          "gameNumber": 3,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "5692a20e-fa11-4f69-97e2-564ea2909093",
+          "gameNumber": 4,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "a766bf01-b45a-4c5e-b0b7-8500ad7e314f",
+          "gameNumber": 5,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "6757e6d0-a697-4015-9dc7-1dba34e1bfbb",
+          "gameNumber": 6,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "ece7b194-17ee-48b8-98d9-b9858afc1bd1",
+          "gameNumber": 7,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "9a1db54b-bfb6-4e42-aca2-7890ad2d19e2",
+          "gameNumber": 8,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "62e7b2ec-6b5a-4049-91aa-d9e94ff9e9c5",
+          "gameNumber": 9,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "fb1be607-178c-4d0c-8cd8-ab970964895a",
+          "gameNumber": 10,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "c74ea72d-9d6d-40a2-a023-eebe4fa3868d",
+          "gameNumber": 11,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "041bf2d9-fc83-4570-a9a0-22c0977dba88",
+          "gameNumber": 12,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-13",
+      "displayName": "TEST ONLY Person 8",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-13",
+      "rows": [
+        {
+          "gameId": "b02a0434-fe27-419f-9e48-fa6338b3dc93",
+          "gameNumber": 1,
+          "currentSeat": "A-13",
+          "opponentCurrentSeat": "A-14",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "0a319ccd-172b-40bb-830d-527416325bcc",
+          "gameNumber": 2,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "291e8419-2720-4323-824d-684ae04801a2",
+          "gameNumber": 3,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "e1a1d128-90aa-41b5-98dd-7c3d1c4dd009",
+          "gameNumber": 4,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "1fb67ca8-4fdc-4588-a6d1-3d17e3c2b5af",
+          "gameNumber": 5,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "cff3ae5d-fea3-4a8a-9b3a-24339416fbe9",
+          "gameNumber": 6,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "436144bd-49a7-4a16-a5d1-6e1b2f02d992",
+          "gameNumber": 7,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "ec9931b3-994c-4131-a033-7878837871ae",
+          "gameNumber": 8,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "62e7b2ec-6b5a-4049-91aa-d9e94ff9e9c5",
+          "gameNumber": 9,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "dd91a8b0-6f7a-4ed7-8b2a-60cc855248ae",
+          "gameNumber": 10,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "6186bf92-fbad-43ec-ae8a-fcdfa1535759",
+          "gameNumber": 11,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "c5d23417-bd50-4ac2-8126-d849f826c604",
+          "gameNumber": 12,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-14",
+      "displayName": "TEST ONLY Person 17",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-14",
+      "rows": [
+        {
+          "gameId": "b02a0434-fe27-419f-9e48-fa6338b3dc93",
+          "gameNumber": 1,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "760ca5d1-5f27-4122-b026-f29058eef0d1",
+          "gameNumber": 2,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "c762c655-74e1-4544-a013-b07092ca084c",
+          "gameNumber": 3,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "c07f4dce-2957-46af-874e-5290532ee370",
+          "gameNumber": 4,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "29ff7c50-9e52-456c-87c3-a09a642bb174",
+          "gameNumber": 5,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "d3d3ec5a-182c-485c-87b7-ca80ebff4c71",
+          "gameNumber": 6,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "36562250-f99c-4d40-a841-7bd82d07f7bb",
+          "gameNumber": 7,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "e0daa65c-e64d-4ee0-825a-bfe7f9ddeff9",
+          "gameNumber": 8,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "deb08502-b755-4eff-8bba-86071a95ab13",
+          "gameNumber": 9,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "03d50f5e-af1d-4729-9a1b-cad5e438652c",
+          "gameNumber": 10,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "d6f4430f-553a-41dd-962b-3353c130d8d7",
+          "gameNumber": 11,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "c0dc0a23-4f13-4e13-b05c-499d049ad761",
+          "gameNumber": 12,
+          "currentSeat": "A-11",
+          "opponentCurrentSeat": "A-12",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-15",
+      "displayName": "TEST ONLY Person 13",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-15",
+      "rows": [
+        {
+          "gameId": "de821b9b-15a8-47e4-8a1a-352f92d73f65",
+          "gameNumber": 1,
+          "currentSeat": "A-15",
+          "opponentCurrentSeat": "A-16",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "35ddaf92-edee-4b2b-9592-00380341f2e0",
+          "gameNumber": 2,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "291e8419-2720-4323-824d-684ae04801a2",
+          "gameNumber": 3,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "678d5499-3810-42f9-bd76-2d3f73e02536",
+          "gameNumber": 4,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "b42ff56c-c1dc-4ebe-ba2c-682a12dbc49a",
+          "gameNumber": 5,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "61ae5dbe-1220-43c4-9a05-8013754a37c0",
+          "gameNumber": 6,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "5e5bb84b-910f-46b5-bbc7-153473229c68",
+          "gameNumber": 7,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "b73243fa-85fb-4d99-a0c3-91af6cc851c7",
+          "gameNumber": 8,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "deb08502-b755-4eff-8bba-86071a95ab13",
+          "gameNumber": 9,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "bdfbdeaf-dbb2-491b-9360-385557a0909d",
+          "gameNumber": 10,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "40b6d990-b49e-480c-8e80-4234276aebb4",
+          "gameNumber": 11,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "bdbea172-d070-4f95-aa2e-77a8f7441d9e",
+          "gameNumber": 12,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-16",
+      "displayName": "TEST ONLY Person 15",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-16",
+      "rows": [
+        {
+          "gameId": "de821b9b-15a8-47e4-8a1a-352f92d73f65",
+          "gameNumber": 1,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "0aad88cc-c823-4509-a2d2-e3913cd21140",
+          "gameNumber": 2,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "7f7c73d6-66bb-444a-b1a4-d9419d742499",
+          "gameNumber": 3,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "dd6e657d-6def-43d7-8acf-8851230c88bd",
+          "gameNumber": 4,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "87bda8b7-3687-4029-b6fa-9542edac403e",
+          "gameNumber": 5,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "0c272ffe-7f4f-4f62-9f78-832f0f9f5fb3",
+          "gameNumber": 6,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "ece7b194-17ee-48b8-98d9-b9858afc1bd1",
+          "gameNumber": 7,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "7512b6d1-62e9-46be-acca-a9686abae6e6",
+          "gameNumber": 8,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "c5db5896-7473-4007-9dc8-a13ff3843f5e",
+          "gameNumber": 9,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "dd91a8b0-6f7a-4ed7-8b2a-60cc855248ae",
+          "gameNumber": 10,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "4de3b1dd-136c-4487-a68b-a8c4d879c276",
+          "gameNumber": 11,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "943a161f-a66f-440f-ac38-6a3dfb675e97",
+          "gameNumber": 12,
+          "currentSeat": "A-9",
+          "opponentCurrentSeat": "A-10",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-17",
+      "displayName": "TEST ONLY Person 4",
+      "mode": "digital",
+      "fictional": true,
+      "startingChair": "A-17",
+      "rows": [
+        {
+          "gameId": "8a69ae8a-1fc7-4cf6-a10f-72a1a8069d66",
+          "gameNumber": 1,
+          "currentSeat": "A-17",
+          "opponentCurrentSeat": "A-18",
+          "opponentTournamentId": "A-18",
+          "opponentName": "TEST ONLY Person 18"
+        },
+        {
+          "gameId": "35ddaf92-edee-4b2b-9592-00380341f2e0",
+          "gameNumber": 2,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "9431a594-4081-4bcb-8eae-179af726250d",
+          "gameNumber": 3,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "1bf51e5b-2c12-41e0-b76d-ffe86434dd46",
+          "gameNumber": 4,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        },
+        {
+          "gameId": "167ca2d8-b8ee-490d-8c48-41f477bd003a",
+          "gameNumber": 5,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-3",
+          "opponentName": "TEST ONLY Person 6"
+        },
+        {
+          "gameId": "1f899fcc-ab38-4b73-9de6-f62fb9feb19c",
+          "gameNumber": 6,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-4",
+          "opponentName": "TEST ONLY Person 2"
+        },
+        {
+          "gameId": "ec11a7e5-ca41-4d14-99ea-c4dc53837e24",
+          "gameNumber": 7,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-8",
+          "opponentName": "TEST ONLY Person 5"
+        },
+        {
+          "gameId": "9a1db54b-bfb6-4e42-aca2-7890ad2d19e2",
+          "gameNumber": 8,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-12",
+          "opponentName": "TEST ONLY Person 7"
+        },
+        {
+          "gameId": "c5db5896-7473-4007-9dc8-a13ff3843f5e",
+          "gameNumber": 9,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-16",
+          "opponentName": "TEST ONLY Person 15"
+        },
+        {
+          "gameId": "0b241cf8-0e4a-438d-88ac-1f4b14159ea6",
+          "gameNumber": 10,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "6186bf92-fbad-43ec-ae8a-fcdfa1535759",
+          "gameNumber": 11,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "34f17f12-5b66-466f-aa1b-6f7cc6b7ba71",
+          "gameNumber": 12,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        }
+      ]
+    },
+    {
+      "tournamentId": "A-18",
+      "displayName": "TEST ONLY Person 18",
+      "mode": "paper",
+      "fictional": true,
+      "startingChair": "A-18",
+      "rows": [
+        {
+          "gameId": "8a69ae8a-1fc7-4cf6-a10f-72a1a8069d66",
+          "gameNumber": 1,
+          "currentSeat": "A-18",
+          "opponentCurrentSeat": "A-17",
+          "opponentTournamentId": "A-17",
+          "opponentName": "TEST ONLY Person 4"
+        },
+        {
+          "gameId": "0a319ccd-172b-40bb-830d-527416325bcc",
+          "gameNumber": 2,
+          "currentSeat": "A-16",
+          "opponentCurrentSeat": "A-15",
+          "opponentTournamentId": "A-13",
+          "opponentName": "TEST ONLY Person 8"
+        },
+        {
+          "gameId": "257a79be-a5fb-4215-a0e0-f7c24634a81a",
+          "gameNumber": 3,
+          "currentSeat": "A-14",
+          "opponentCurrentSeat": "A-13",
+          "opponentTournamentId": "A-9",
+          "opponentName": "TEST ONLY Person 9"
+        },
+        {
+          "gameId": "ae2780e3-d785-414a-9db7-238fdc371396",
+          "gameNumber": 4,
+          "currentSeat": "A-12",
+          "opponentCurrentSeat": "A-11",
+          "opponentTournamentId": "A-5",
+          "opponentName": "TEST ONLY Person 16"
+        },
+        {
+          "gameId": "770c5874-756d-4e9a-9c32-2e7be762f98b",
+          "gameNumber": 5,
+          "currentSeat": "A-10",
+          "opponentCurrentSeat": "A-9",
+          "opponentTournamentId": "A-2",
+          "opponentName": "TEST ONLY Person 10"
+        },
+        {
+          "gameId": "4cac92c8-073c-4ddc-b33b-f1dcf017b8f3",
+          "gameNumber": 6,
+          "currentSeat": "A-8",
+          "opponentCurrentSeat": "A-7",
+          "opponentTournamentId": "A-6",
+          "opponentName": "TEST ONLY Person 14"
+        },
+        {
+          "gameId": "f5f3662f-88ad-4197-8477-fb31e64db7dd",
+          "gameNumber": 7,
+          "currentSeat": "A-6",
+          "opponentCurrentSeat": "A-5",
+          "opponentTournamentId": "A-10",
+          "opponentName": "TEST ONLY Person 11"
+        },
+        {
+          "gameId": "e0daa65c-e64d-4ee0-825a-bfe7f9ddeff9",
+          "gameNumber": 8,
+          "currentSeat": "A-4",
+          "opponentCurrentSeat": "A-3",
+          "opponentTournamentId": "A-14",
+          "opponentName": "TEST ONLY Person 17"
+        },
+        {
+          "gameId": "aaf21f38-21b2-443d-a408-1fd1cba3f8d3",
+          "gameNumber": 9,
+          "currentSeat": "A-2",
+          "opponentCurrentSeat": "A-1",
+          "opponentTournamentId": "A-1",
+          "opponentName": "TEST ONLY Person 12"
+        },
+        {
+          "gameId": "bdfbdeaf-dbb2-491b-9360-385557a0909d",
+          "gameNumber": 10,
+          "currentSeat": "A-3",
+          "opponentCurrentSeat": "A-4",
+          "opponentTournamentId": "A-15",
+          "opponentName": "TEST ONLY Person 13"
+        },
+        {
+          "gameId": "cfe0fbbd-73bd-4950-8ba7-7254fa0ed4e1",
+          "gameNumber": 11,
+          "currentSeat": "A-5",
+          "opponentCurrentSeat": "A-6",
+          "opponentTournamentId": "A-11",
+          "opponentName": "TEST ONLY Person 3"
+        },
+        {
+          "gameId": "b38461f0-f9e8-4fd6-a805-b97c392f8000",
+          "gameNumber": 12,
+          "currentSeat": "A-7",
+          "opponentCurrentSeat": "A-8",
+          "opponentTournamentId": "A-7",
+          "opponentName": "TEST ONLY Person 1"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "startingAssignments": 18,
+    "cardAssignmentRows": 216,
+    "nativeDigitalMetadataProjectionRows": 72,
+    "canonicalMatches": 108,
+    "rounds": 12,
+    "distinctOpponentsEach": 12,
+    "pairings": {
+      "DD": 9,
+      "PD": 54,
+      "PP": 45
+    },
+    "rosterToParticipantJoin": true,
+    "candidateCanonicalAgreement": true,
+    "independentDrawValidation": true,
+    "actualOwnPlayerRpcCaptured": false,
+    "constructedMetadataOnly": true,
+    "physicalRoomVerified": false,
+    "voluntaryAnchorApproved": false,
+    "providerAcceptance": false,
+    "moneyMoved": false
+  }
+}
