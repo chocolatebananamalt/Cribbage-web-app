@@ -1,0 +1,41 @@
+import{isModernPrizeScopeV2,modernPrizeSameV2,type ModernPrizeScopeV2}from'./modern-prize-journal-contract-v2.ts';
+export type SelectedStepPoolRequestV3={kind:'selected-step-pool-save-v3';expectedVersion:number;expectedSourceDigest:string;reason:string;reviewed:true}|{kind:'selected-step-pool-finalize-v3';proposalRevisionId:string;expectedSourceDigest:string;reason:string;reviewed:true};
+const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&Object.getPrototypeOf(v)===Object.prototype;
+const exact=(v:unknown,keys:string[]):v is Record<string,unknown>=>object(v)&&Reflect.ownKeys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k));
+const uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);
+const hash=(v:unknown)=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+const whole=(v:unknown):v is number=>typeof v==='number'&&Number.isSafeInteger(v)&&v>=0&&!Object.is(v,-0);
+export function isSelectedStepPoolRequestV3(v:unknown):v is SelectedStepPoolRequestV3{
+ if(!object(v)||!hash(v.expectedSourceDigest)||v.reviewed!==true||typeof v.reason!=='string'||!v.reason.trim()||v.reason!==v.reason.trim()||v.reason.length>2000||/[\u0000-\u001f\u007f]/.test(v.reason))return false;
+ return v.kind==='selected-step-pool-save-v3'?exact(v,['kind','expectedVersion','expectedSourceDigest','reason','reviewed'])&&whole(v.expectedVersion)&&v.expectedVersion<2147483647:v.kind==='selected-step-pool-finalize-v3'&&exact(v,['kind','proposalRevisionId','expectedSourceDigest','reason','reviewed'])&&uuid(v.proposalRevisionId);
+}
+export function readSelectedStepPoolReceiptV3(v:unknown,s:ModernPrizeScopeV2,operationId:string,request:SelectedStepPoolRequestV3){
+ if(!isModernPrizeScopeV2(s)||!uuid(operationId)||!isSelectedStepPoolRequestV3(request)||!exact(v,['kind','status','actorId','tournamentId','eventId','operationId','request','requestHash','revisionId','version','finalId','sourceDigest','qMinor','sideMinor','totalMinor','liabilityScope','historicalReceipt','currentSourceVerified','moneyMoved','payoutAuthorized'])||v.kind!=='selected-step-pool-receipt-v3'||!Object.entries(s).every(([k,x])=>v[k]===x)||v.operationId!==operationId||!modernPrizeSameV2(v.request,request)||!hash(v.requestHash)||v.sourceDigest!==request.expectedSourceDigest||!uuid(v.revisionId)||!whole(v.version)||v.version<1||![v.qMinor,v.sideMinor,v.totalMinor].every(whole)||BigInt(v.qMinor as number)+BigInt(v.sideMinor as number)!==BigInt(v.totalMinor as number)||v.liabilityScope!=='optional_pools_only'||v.historicalReceipt!==true||v.currentSourceVerified!==false||v.moneyMoved!==false||v.payoutAuthorized!==false)return null;
+ if(request.kind==='selected-step-pool-save-v3'?(v.status!=='proposal_saved'||v.finalId!==null||v.version!==request.expectedVersion+1):(v.status!=='awards_recorded_unpaid'||!uuid(v.finalId)||v.revisionId!==request.proposalRevisionId))return null;
+ return structuredClone(v);
+}
+export type SelectedStepPoolReviewV3={kind:'selected-step-pool-review-v3';sourceDigest:string;ownershipRevisionId:string;qualificationResultVersionId:string;prizeSnapshotId:string;pools:Array<{poolId:string;label:string;kind:'q'|'side';method:'q-equal'|'q-graduated'|'side-sheet';ratio:number|null;fundMinor:number;roundingUnitMinor:100|500|1000;recipients:Array<{name:string;tournamentPlayerId:string;amountMinor:number}>}>;qMinor:number;sideMinor:number;totalMinor:number;directorReviewRequired:true;moneyMoved:false;payoutAuthorized:false};
+export function readSelectedStepPoolReviewV3(v:unknown):SelectedStepPoolReviewV3|null{try{
+ if(!exact(v,['kind','sourceDigest','ownershipRevisionId','qualificationResultVersionId','prizeSnapshotId','pools','qMinor','sideMinor','totalMinor','directorReviewRequired','moneyMoved','payoutAuthorized'])||v.kind!=='selected-step-pool-review-v3'||!hash(v.sourceDigest)||![v.ownershipRevisionId,v.qualificationResultVersionId,v.prizeSnapshotId].every(uuid)||v.directorReviewRequired!==true||v.moneyMoved!==false||v.payoutAuthorized!==false||![v.qMinor,v.sideMinor,v.totalMinor].every(whole)||!Array.isArray(v.pools)||!v.pools.length||v.pools.length>10000)return null;
+ let q=BigInt(0),side=BigInt(0),count=0;const pools=new Set<string>();
+ for(const p of v.pools){if(!exact(p,['poolId','label','kind','method','ratio','fundMinor','roundingUnitMinor','recipients'])||!uuid(p.poolId)||pools.has(p.poolId)||typeof p.label!=='string'||!p.label.trim()||p.label!==p.label.trim()||p.label.length>200||/[\u0000-\u001f\u007f]/.test(p.label)||!['q','side'].includes(p.kind as string)||(p.kind==='q'?!['q-equal','q-graduated'].includes(p.method as string):p.method!=='side-sheet')||(p.method==='q-equal'?p.ratio!==null:!whole(p.ratio)||p.ratio<1||p.ratio>2147483647)||!whole(p.fundMinor)||!p.fundMinor||![100,500,1000].includes(p.roundingUnitMinor as number)||!Array.isArray(p.recipients)||!p.recipients.length)return null;pools.add(p.poolId);let sum=BigInt(0);const people=new Set<string>();
+  for(const r of p.recipients){if(++count>10000||!exact(r,['name','tournamentPlayerId','amountMinor'])||typeof r.name!=='string'||!r.name.trim()||r.name!==r.name.trim()||r.name.length>200||/[\u0000-\u001f\u007f]/.test(r.name)||typeof r.tournamentPlayerId!=='string'||!/^[A-Z]-[1-9][0-9]{0,3}$/.test(r.tournamentPlayerId)||people.has(r.tournamentPlayerId)||!whole(r.amountMinor)||!r.amountMinor||r.amountMinor%(p.roundingUnitMinor as number)!==0)return null;people.add(r.tournamentPlayerId);sum+=BigInt(r.amountMinor);}
+  if(sum!==BigInt(p.fundMinor))return null;if(p.kind==='q')q+=sum;else side+=sum;
+ }
+ if(q!==BigInt(v.qMinor as number)||side!==BigInt(v.sideMinor as number)||q+side!==BigInt(v.totalMinor as number))return null;
+ return structuredClone(v)as SelectedStepPoolReviewV3;
+}catch{return null;}}
+export type SelectedStepPoolWorkspaceV3={status:'review';review:SelectedStepPoolReviewV3;version:number;proposalRevisionId:string|null}|{status:'recorded';review:SelectedStepPoolReviewV3;finalId:string}|{status:'held';code:string};
+export function readSelectedStepPoolWorkspaceV3(v:unknown):SelectedStepPoolWorkspaceV3|null{
+ if(exact(v,['status','code'])&&v.status==='held'&&typeof v.code==='string'&&/^[a-z0-9_]{1,100}$/.test(v.code))return structuredClone(v)as SelectedStepPoolWorkspaceV3;
+ if(exact(v,['status','review','version','proposalRevisionId'])&&v.status==='review'&&readSelectedStepPoolReviewV3(v.review)&&whole(v.version)&&v.version<2147483647&&(v.proposalRevisionId===null||v.version>0&&uuid(v.proposalRevisionId)))return structuredClone(v)as SelectedStepPoolWorkspaceV3;
+ if(exact(v,['status','review','finalId'])&&v.status==='recorded'&&uuid(v.finalId)&&readSelectedStepPoolReviewV3(v.review))return structuredClone(v)as SelectedStepPoolWorkspaceV3;return null;
+}
+export type SelectedStepPoolAttemptV3={scope:ModernPrizeScopeV2;operationId:string;request:SelectedStepPoolRequestV3;review:SelectedStepPoolReviewV3};
+export function readSelectedStepPoolAttemptV3(v:unknown,s:ModernPrizeScopeV2):SelectedStepPoolAttemptV3|null{try{
+ if(!exact(v,['scope','operationId','request','review'])||!isModernPrizeScopeV2(s)||!modernPrizeSameV2(v.scope,s)||!uuid(v.operationId)||!isSelectedStepPoolRequestV3(v.request)||!readSelectedStepPoolReviewV3(v.review)||(v.review as SelectedStepPoolReviewV3).sourceDigest!==v.request.expectedSourceDigest||new TextEncoder().encode(JSON.stringify(v)).byteLength>2*1024*1024)return null;return structuredClone(v)as SelectedStepPoolAttemptV3;
+}catch{return null;}}
+export function readSelectedStepPoolReplyV3(v:unknown,a:SelectedStepPoolAttemptV3){
+ if(exact(v,['status','attempt','receipt','reviewedSource'])&&v.status==='accepted'&&modernPrizeSameV2(v.attempt,a)&&readSelectedStepPoolReviewV3(v.reviewedSource)&&modernPrizeSameV2(v.reviewedSource,a.review)){const r=readSelectedStepPoolReceiptV3(v.receipt,a.scope,a.operationId,a.request);if(r&&r.qMinor===a.review.qMinor&&r.sideMinor===a.review.sideMinor&&r.totalMinor===a.review.totalMinor)return structuredClone(v);}
+ if(exact(v,['status','attempt','code'])&&['rejected','retry_exact','unknown'].includes(v.status as string)&&modernPrizeSameV2(v.attempt,a)&&typeof v.code==='string'&&/^[a-z0-9_]{1,100}$/.test(v.code))return structuredClone(v);return null;
+}

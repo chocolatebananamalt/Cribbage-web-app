@@ -12,6 +12,8 @@ const page = read("src/app/tournament/[tournamentId]/payments/page.tsx");
 const client = read("src/app/tournament/[tournamentId]/payments/expense-client.tsx");
 const workspace = read("src/lib/expenses/workspace.ts");
 const sessionStorage = read("src/lib/client-session-storage.ts");
+const recovery = read("src/lib/expenses/expense-recovery-v2.ts");
+const actorGuard = read("src/lib/api/expense-expected-actor.ts");
 
 const tournamentId = "a1280000-0000-4000-8000-000000000001";
 const expenseId = "b1280000-0000-4000-8000-000000000001";
@@ -82,6 +84,9 @@ test("expense API and page remain protected server boundaries", () => {
     assert.match(route, /requireVerifiedSubject/);
     assert.match(route, /createClient/);
     assert.doesNotMatch(route, /createServerOnlyAdminClient|service_role/);
+    assert.match(route, /readExpectedExpenseActor/);
+    assert.match(route, /expenseActorMatches/);
+    assert.ok(route.indexOf("readExpectedExpenseActor") < route.indexOf(".rpc("));
   }
   assert.match(recordRoute, /record_tournament_expense/);
   assert.match(voidRoute, /void_tournament_expense/);
@@ -92,6 +97,18 @@ test("expense API and page remain protected server boundaries", () => {
   assert.match(page, /getExpenseWorkspace/);
   assert.match(client, /syntheticMode \? "Add simulated expense" : "Add Expense"/);
   assert.match(client, /sessionStorage/);
+  assert.doesNotMatch(client, /clearOtherActors/);
+  assert.match(client, /trackAppRecoveryWrite/);
+  assert.match(client, /ExpenseClientScope key=\{`\$\{props\.actorId\}:\$\{props\.tournamentId\}`\}/);
+  assert.match(client, /activation\.current === token/);
+  assert.match(client, /const observed = window\.sessionStorage\.getItem\(storageKey\)/);
+  assert.ok(client.indexOf("const observed = window.sessionStorage.getItem(storageKey)") < client.indexOf("setAppRecoveryItem(window.sessionStorage, storageKey, raw)"));
+  assert.match(client, /x-expected-actor-id/);
+  assert.match(client, /window\.sessionStorage\.getItem\(storageKey\) !== pending\.raw/);
+  assert.match(recovery, /expense-recovery-v2/);
+  assert.match(recovery, /status: "legacy"/);
+  assert.match(recovery, /!exact\(value, \[/);
+  assert.match(actorGuard, /client\.auth\.getUser/);
   assert.match(sessionStorage, /"expense-operation:"/);
   assert.match(client, /This ledger is private and not reconciled/);
   assert.doesNotMatch(client, /sessionStorage[^\n]*(description|amountMinor|voidReason)/);

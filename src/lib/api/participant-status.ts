@@ -1,4 +1,4 @@
-import { isUuid } from "./validation";
+import { isUuid } from "./validation.ts";
 export type ParticipantOperation="mark_absent"|"mark_substituted"|"withdraw"|"disqualify"|"reinstate";
 export type ParticipantStatusWorkspace={tournamentName:string;events:Array<{eventId:string;name:string;playState:string;participants:Array<{participantId:string;displayName:string;verificationId:string|null;status:string}>}>};
 const rec=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==="object"&&!Array.isArray(v);const exact=(v:Record<string,unknown>,k:string[])=>Object.keys(v).length===k.length&&k.every(x=>Object.hasOwn(v,x));

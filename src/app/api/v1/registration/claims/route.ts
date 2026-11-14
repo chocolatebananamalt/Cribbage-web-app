@@ -1,3 +1,4 @@
+import{stationaryRegistrationEnabledV1}from'../../../../../lib/api/stationary-registration-v1';
 import { NextRequest } from "next/server";
 import { isPublicRegistrationClaim, publicRegistrationEnabled } from "../../../../../lib/api/public-registration-v2";
 import { apiJson, readSmallJson, withApiFailureBoundary } from "../../../../../lib/api/route-boundary";
@@ -15,6 +16,8 @@ export async function POST(request: NextRequest) {
     const body = await readSmallJson(request);
     if (body === null) return apiJson({ error: "unavailable" }, { status: 404 });
     if (!isPublicRegistrationClaim(body)) return apiJson({ error: "unavailable" }, { status: 404 });
+    const stationaryRequestPresent=Object.hasOwn(body,"stationarySeatRequested")===true;
+    if(stationaryRequestPresent&&!stationaryRegistrationEnabledV1())return apiJson({error:"unavailable"},{status:404});
     const credential = parseRegistrationLinkCredential(body.credential);
     if (!credential) return apiJson({ error: "unavailable" }, { status: 404 });
     const admin = createServerOnlyAdminClient();
@@ -23,7 +26,7 @@ export async function POST(request: NextRequest) {
     const salt = current ? Buffer.from(current.salt, "base64") : null;
     if (redemption.error || !salt || salt.byteLength !== 32) return apiJson({ error: "unavailable" }, { status: 404 });
     const digest = digestRegistrationLinkCredential(salt, credential.canonicalToken);
-    const result = await admin.rpc("submit_registration_claim_v4", { p_link_id: credential.linkId, p_digest: bytea(digest), p_first_name: body.firstName, p_last_name: body.lastName, p_email: body.email, p_acc_number: body.accNumber, p_intended_payment_method: body.intendedPaymentMethod, p_scorecard_type: body.scorecardType, p_client_operation_id: body.operationId });
+    const result = await admin.rpc(stationaryRequestPresent?"submit_registration_claim_stationary_v1":"submit_registration_claim_v4", { ...(stationaryRequestPresent?{p_stationary_requested:body.stationarySeatRequested}:{}), p_link_id: credential.linkId, p_digest: bytea(digest), p_first_name: body.firstName, p_last_name: body.lastName, p_email: body.email, p_acc_number: body.accNumber, p_intended_payment_method: body.intendedPaymentMethod, p_scorecard_type: body.scorecardType, p_client_operation_id: body.operationId });
     if (result.error || !result.data || typeof result.data !== "object") return apiJson({ error: "unavailable" }, { status: 404 });
     const response = result.data as Record<string, unknown>;
     if (response.status === "received" && Object.keys(response).length === 1) return apiJson({ status: "received" });

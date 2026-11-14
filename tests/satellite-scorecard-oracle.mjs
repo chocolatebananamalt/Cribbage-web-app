@@ -1,0 +1,15 @@
+// Independent fixture oracle. No application score/standing/calculation helpers.
+import assert from'node:assert/strict';
+export function assertSatelliteScorecardOracle({players,games,commands,cards}){
+ assert.equal(players.length,4);assert.equal(games.length,6);assert.equal(cards.length,4);assert.equal(commands.length,24);
+ const identities=new Map(players.map(p=>[p.profileId,p]));assert.equal(identities.size,4);assert.equal(new Set(players.map(p=>p.tableSeat)).size,4);
+ const expected=new Map(players.map(p=>[p.profileId,new Map()])),pairs=new Set();
+ for(const g of games){assert(identities.has(g.a)&&identities.has(g.b)&&g.a!==g.b);assert(Number.isInteger(g.round)&&g.round>=1&&g.round<=3);const pair=[g.a,g.b].sort().join(':');assert(!pairs.has(pair));pairs.add(pair);
+  const all=commands.filter(c=>c.id===g.id),submits=all.filter(c=>c.action==='submit'),confirms=all.filter(c=>c.action==='confirm');assert.equal(all.length,4);assert.equal(submits.length,2);assert.equal(confirms.length,2);const a=submits.find(c=>c.actor===g.a),b=submits.find(c=>c.actor===g.b);assert(a&&b);assert.equal(a.slot,1);assert.equal(b.slot,2);assert.equal(a.winner,b.winner);assert.equal(a.margin,b.margin);assert(['a','b'].includes(a.winner));assert(Number.isInteger(a.margin)&&a.margin>=1&&a.margin<=30,'This bounded oracle covers non-skunk margins only');assert(confirms.some(c=>c.actor===g.a&&c.sub===a.sub));assert(confirms.some(c=>c.actor===g.b&&c.sub===b.sub));
+  for(const[profile,other,side]of[[g.a,g.b,'a'],[g.b,g.a,'b']]){const rows=expected.get(profile);assert(!rows.has(g.round));const won=a.winner===side;rows.set(g.round,{roundNumber:g.round,opponentVerificationId:identities.get(other).tableSeat,gamePoints:won?2:0,plusPoints:won?a.margin:0,minusPoints:won?0:a.margin,won});}
+ }
+ const proof=[];for(let index=0;index<players.length;index++){const p=players[index],card=cards[index],rows=expected.get(p.profileId);assert.equal(card.player.verificationId,p.tableSeat,'Card belongs to the expected fixed Tournament ID');assert.equal(rows.size,3);assert.equal(card.lines.length,3);assert.equal(card.pendingGames.length,0);const seen=new Set();let gamePoints=0,plusPoints=0,minusPoints=0,gamesWon=0;
+  for(const row of card.lines){assert(!seen.has(row.roundNumber));seen.add(row.roundNumber);const want=rows.get(row.roundNumber);assert(want);for(const k of['opponentVerificationId','gamePoints','plusPoints','minusPoints'])assert.equal(row[k],want[k],`${p.tableSeat} round${row.roundNumber} ${k}`);gamePoints+=want.gamePoints;plusPoints+=want.plusPoints;minusPoints+=want.minusPoints;gamesWon+=want.won?1:0;}
+  const totals={gamePoints,plusPoints,minusPoints,gamesWon,netSpreadPoints:plusPoints-minusPoints};assert.deepEqual(card.totals,totals,`${p.tableSeat} independent card totals`);proof.push({profileId:p.profileId,verificationId:p.tableSeat,rounds:[...rows.values()].sort((a,b)=>a.roundNumber-b.roundNumber),totals});
+ }return{passed:true,independentOfAppHelpers:true,players:4,verifiedCardLines:12,nonSkunkGames:6,proof};
+}

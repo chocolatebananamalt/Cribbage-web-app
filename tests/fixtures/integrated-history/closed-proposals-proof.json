@@ -1,0 +1,28 @@
+{
+  "localOnly": true,
+  "fixtureLabel": "codex-integrated-fictional-51becee633",
+  "scope": "Actual closed installation and ACL proof only; no enabled write/provider acceptance",
+  "proposals": [
+    {
+      "path": "database/proposals/mrp-membership-manual-review-v1.sql",
+      "sha256": "ffe5af9a2b04b2164eb0659afdbdc454c573aea481e0837c8172e5c85a2b600c",
+      "publicSignatures": [
+        "record_mrp_membership_manual_review_v1",
+        "get_mrp_membership_manual_review_v1",
+        "get_mrp_membership_manual_review_operation_v1"
+      ],
+      "aclRows": "get_mrp_membership_manual_review_operation_v1:false:false:false\nget_mrp_membership_manual_review_v1:false:false:false\nrecord_mrp_membership_manual_review_v1:false:false:false"
+    },
+    {
+      "path": "database/proposals/native-mixed-game-reopen-v1.sql",
+      "sha256": "239d2e7a8504d7c6077ff9fd48d58bc015c40d8955fd4f83982031d164f3b962",
+      "publicSignatures": [
+        "get_native_mixed_game_reopen_workspace_v1",
+        "record_native_mixed_game_reopen_v1",
+        "get_native_mixed_game_reopen_operation_v1"
+      ],
+      "aclRows": "get_native_mixed_game_reopen_operation_v1:false:false:false\nget_native_mixed_game_reopen_workspace_v1:false:false:false\nrecord_native_mixed_game_reopen_v1:false:false:false"
+    }
+  ],
+  "gates": "false:false"
+}

@@ -22,8 +22,8 @@ export type AssignedGameSummary = {
   ownSubmitted: boolean;
   ownConfirmed: boolean;
   canConfirm: boolean;
-  progressionStatus: "not_started" | "current" | "upcoming" | "completed";
-  nextAction: "enter_result" | "wait_opponent_entry" | "review_confirm" | "wait_opponent_confirmation" | "mismatch_review" | "view_scorecard" | "upcoming_locked" | "event_not_started";
+  progressionStatus: "not_started" | "current" | "upcoming" | "completed" | "awaiting_paper_review";
+  nextAction: "enter_result" | "wait_opponent_entry" | "review_confirm" | "wait_opponent_confirmation" | "mismatch_review" | "view_scorecard" | "upcoming_locked" | "event_not_started" | "await_paper_review";
 };
 
 export type MyGamesWorkspace = {
@@ -34,6 +34,7 @@ export type MyGamesWorkspace = {
 };
 
 function expectedNextAction(game: Record<string, unknown>) {
+  if (game.progressionStatus === "awaiting_paper_review" && game.state === "submitted" && game.ownSubmitted === true && game.ownConfirmed === false && game.canConfirm === false) return "await_paper_review";
   if (game.progressionStatus === "not_started" && game.canConfirm === false) return "event_not_started";
   if (game.progressionStatus === "upcoming" && game.canConfirm === false) return "upcoming_locked";
   if (game.progressionStatus === "completed" && game.canConfirm === false) return "view_scorecard";
@@ -71,8 +72,8 @@ export function isMyGamesWorkspace(value: unknown, tournamentId: string): value 
       && seat(game.playerTableSeat) && seat(game.playerVerificationId)
       && text(game.opponentName) && seat(game.opponentTableSeat) && seat(game.opponentVerificationId)
       && typeof game.ownSubmitted === "boolean" && typeof game.ownConfirmed === "boolean" && typeof game.canConfirm === "boolean"
-      && ["not_started", "current", "upcoming", "completed"].includes(game.progressionStatus as string)
-      && ["enter_result", "wait_opponent_entry", "review_confirm", "wait_opponent_confirmation", "mismatch_review", "view_scorecard", "upcoming_locked", "event_not_started"].includes(game.nextAction as string)
+      && ["not_started", "current", "upcoming", "completed", "awaiting_paper_review"].includes(game.progressionStatus as string)
+      && ["enter_result", "wait_opponent_entry", "review_confirm", "wait_opponent_confirmation", "mismatch_review", "view_scorecard", "upcoming_locked", "event_not_started", "await_paper_review"].includes(game.nextAction as string)
       && game.nextAction === expectedNextAction(game);
   });
 }

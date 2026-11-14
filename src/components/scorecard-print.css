@@ -1,0 +1,24 @@
+.scorecard-print-controls { margin-block: 1rem; }
+.scorecard-print-controls p { font-size: .95rem; }
+.scorecard-print-note { display: none; }
+@media print {
+  body:has(.scorecard-print-controls) { background: white !important; color: black !important; }
+  body:has(.scorecard-print-controls) .player-tabs,
+  body:has(.scorecard-print-controls) .player-bottom-nav,
+  body:has(.scorecard-print-controls) .player-profile-dialog,
+  body:has(.scorecard-print-controls) .player-help,
+  body:has(.scorecard-print-controls) .guide-link,
+  body:has(.scorecard-print-controls) .player-current-game,
+  body:has(.scorecard-print-controls) .player-card-hint,
+  .scorecard-print-controls { display: none !important; }
+  body:has(.scorecard-print-controls) .player-page,
+  body:has(.scorecard-print-controls) .player-page-content { max-width: none; width: auto; min-height: 0; padding: 0; margin: 0; background: white; color: black; }
+  body:has(.scorecard-print-controls) .player-scorecard-scroll { overflow: visible; }
+  body:has(.scorecard-print-controls) .player-scorecard-table { width: 100%; min-width: 0; table-layout: auto; font-size: 11pt; color: black; }
+  body:has(.scorecard-print-controls) .player-scorecard-table th,
+  body:has(.scorecard-print-controls) .player-scorecard-table td { padding: 6pt; border: 1px solid black; white-space: normal; }
+  body:has(.scorecard-print-controls) .player-card-opponent { max-width: none; overflow: visible; text-overflow: clip; }
+  body:has(.scorecard-print-controls) .player-scorecard-table tr { break-inside: avoid; }
+  body:has(.scorecard-print-controls) .player-scorecard-table thead { display: table-header-group; }
+  .scorecard-print-note { display: block; font-size: 10pt; }
+}

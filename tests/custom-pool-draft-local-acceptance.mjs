@@ -1,0 +1,49 @@
+// Disposable local owner-role/JWT simulation, not real provider acceptance.
+import assert from 'node:assert/strict';
+import {qSetupPrizeWorkspace} from './fixtures/q-setup-prize-workspace.mjs';
+import {createCustomPayoutIntentV1} from '../src/lib/api/custom-payout-intent-v1.ts';
+import {isSetupCustomPayoutsV2} from '../src/lib/api/custom-payout-setup-v2.ts';
+import {isCustomPoolDraftSavedV3} from '../src/lib/api/custom-pool-draft-result-v3.ts';
+import {customQDraftConcurrencyPlan} from './custom-q-draft-concurrency-plan.mjs';
+const id=n=>`a3960000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const literal=x=>`'${JSON.stringify(x).replaceAll("'","''")}'::jsonb`;
+export async function verifyCustomPoolDraftV3({q,read,withHeldLock}){
+ const actor=id(1),other=id(2),tid=id(3);let operation=10;
+ q(`insert into auth.users(id,email)values('${actor}','custom-pool-director@test.invalid'),('${other}','custom-pool-outsider@test.invalid');insert into app.tournaments(id,director_profile_id,name,status,registration_status)values('${tid}','${actor}','TEST ONLY Custom Q Side Draft','draft','closed');insert into app.tournament_roles(tournament_id,profile_id,role)values('${tid}','${actor}','director');`);
+ const owner=s=>read(s,actor,'ownerAuthenticated');
+ const base=()=>owner(`select app.get_custom_q_setup_base_v2('${tid}');`).base;
+ function envelope(){const b=base(),{revisionId,version,createdAt,...payload}=structuredClone(qSetupPrizeWorkspace(actor).current);void revisionId;void version;void createdAt;const event=payload.events[0];delete event.sourceStatus;
+  event.qPools=[{poolTypeCode:'Equal (Pays All Equally)',entryFeeCents:1000,note:'preserved exact equal choice'},{poolTypeCode:'Graduated (1-in-9)',entryFeeCents:1000,note:'custom Q'}];
+  event.sidePools=[{poolTypeCode:'Custom Side Seven',entryFeeCents:1000,note:'unchanged descriptive note'},{poolTypeCode:'Preset Side Six',payoutType:'graduated-1-in-6',entryFeeCents:2000,note:'preserve preset'},{poolTypeCode:'Custom Side Max',entryFeeCents:1000,note:''}];
+  return{kind:'setup-custom-payouts-v2',base:b,request:{expectedVersion:b.setupVersion,payload,idempotencyKey:id(operation++)},choices:[{mainClientRowId:event.clientRowId,consolationClientRowIds:[]}],customPayouts:[createCustomPayoutIntentV1('q',9,{...b,eventClientRowId:event.clientRowId,poolSlot:2}),createCustomPayoutIntentV1('side',7,{...b,eventClientRowId:event.clientRowId,poolSlot:1}),createCustomPayoutIntentV1('side',2147483647,{...b,eventClientRowId:event.clientRowId,poolSlot:3})]};}
+ const save=(e,who=actor)=>read(`select app.save_custom_pool_setup_draft_v3('${tid}',${literal(e)});`,who,'ownerAuthenticated');
+ const reconcile=e=>owner(`select app.reconcile_custom_pool_setup_draft_v3('${tid}',${literal(e)});`);
+ const counts=()=>owner(`select jsonb_build_object('revisions',(select count(*)from app.tournament_setup_revisions where tournament_id='${tid}'),'batches',(select count(*)from app.setup_custom_payout_batches_v2 where tournament_id='${tid}'),'intents',(select count(*)from app.setup_custom_payout_intents_v2 where tournament_id='${tid}'),'sides',(select count(*)from app.tournament_setup_side_pool_versions where tournament_id='${tid}'));`);
+ const first=envelope();assert(isSetupCustomPayoutsV2(first,first.base));const accepted=save(first);assert.equal(accepted.status,'custom_pool_setup_draft_saved_v3',JSON.stringify(accepted));assert(isCustomPoolDraftSavedV3(accepted,first,first.base));assert.deepEqual(save(first),accepted);assert.deepEqual(reconcile(first),accepted);
+ const rows=owner(`select jsonb_agg(jsonb_build_object('slot',slot,'type',payout_type,'ratio',custom_ratio_denominator_v3,'name',pool_type_code,'note',note)order by slot)from app.tournament_setup_side_pool_versions where tournament_id='${tid}';`);
+ assert.deepEqual(rows,[{slot:1,type:null,ratio:7,name:'Custom Side Seven',note:'unchanged descriptive note'},{slot:2,type:'graduated-1-in-6',ratio:null,name:'Preset Side Six',note:'preserve preset'},{slot:3,type:null,ratio:2147483647,name:'Custom Side Max',note:''}]);
+ const fresh=owner(`select app.get_custom_pool_setup_workspace_v3('${tid}');`);assert.equal(fresh.status,'available');assert.deepEqual(fresh.retainedEnvelope,first);assert.deepEqual(fresh.customPayouts,first.customPayouts);assert.deepEqual(fresh.sidePayouts.map(s=>s.customRatio),[7,null,2147483647]);assert.equal(fresh.base.setupVersion,accepted.linked.result.version);assert.equal(fresh.newEditRequiresFreshBaseAndOperation,true);
+ // Owner-only rollback corruption probes append an invalid source intent;
+ // immutable rows/triggers are never disabled or edited to manufacture it.
+ for(const slot of[2,4]){const inconsistent=structuredClone(first.customPayouts[1]);inconsistent.source.poolSlot=slot;
+  const mismatch=owner(`begin;insert into app.setup_custom_payout_intents_v2(batch_id,tournament_id,setup_revision_id,setup_event_version_id,scope,pool_slot,ratio_denominator,amount_method,original_intent)select '${accepted.batchId}','${tid}','${accepted.linked.result.revisionId}',id,'side',${slot},7,'graduated-custom-ratio-largest-remainder-5usd-v3',${literal(inconsistent)} from app.tournament_setup_event_versions where tournament_id='${tid}'and setup_revision_id='${accepted.linked.result.revisionId}';select app.get_custom_pool_setup_workspace_v3('${tid}');rollback;`);
+  assert.deepEqual(mismatch,{status:'blocked',code:'custom_side_source_mismatch'});assert.deepEqual(owner(`select app.get_custom_pool_setup_workspace_v3('${tid}');`),fresh);
+ }
+ const digest=()=>owner(`select to_jsonb(md5((select jsonb_agg(to_jsonb(s)order by slot)::text from app.tournament_setup_side_pool_versions s where tournament_id='${tid}'and setup_revision_id='${accepted.linked.result.revisionId}')));`);
+ const historical=digest();assert.equal(save(envelope(),other).code,'not_director');
+ const changed=structuredClone(first);changed.request.payload.city='Changed';assert.equal(save(changed).code,'idempotency_conflict');
+ for(const mutate of [e=>e.customPayouts.pop(),e=>e.customPayouts.push(e.customPayouts[1]),e=>e.customPayouts[1].ratioDenominator=0,e=>e.customPayouts[1].source.poolSlot=6,e=>e.customPayouts[1].source.sourceDigest='a'.repeat(64),e=>e.request.payload.events[0].sidePools[0].payoutType='Equal',e=>e.request.payload.events[0].sidePools[0].payoutType='graduated-1-in-4']){
+  const e=structuredClone(envelope());mutate(e);const before=counts(),r=save(e);assert.equal(r.status,'rejected',JSON.stringify(r));assert.deepEqual(save(e),r);assert.deepEqual(reconcile(e),r);assert.deepEqual(counts(),before);
+ }
+ const failing=envelope(),before=counts();q(`create function app.fixture_custom_pool_fail()returns trigger language plpgsql as $$declare w jsonb;begin w:=app.get_custom_pool_setup_workspace_v3(new.tournament_id);if w->>'code'is distinct from'custom_side_source_mismatch'then raise exception'fixture missing-journal guard failed %',w;end if;raise exception'fixture custom pool post-core failure';end$$;create trigger fixture_custom_pool_fail before insert on app.setup_custom_payout_batches_v2 for each row execute function app.fixture_custom_pool_fail();`);
+ try{assert.throws(()=>save(failing),/fixture custom pool post-core failure/);}finally{q('drop trigger fixture_custom_pool_fail on app.setup_custom_payout_batches_v2;drop function app.fixture_custom_pool_fail();');}
+ assert.deepEqual(counts(),before);assert.equal(reconcile(failing),null);assert.equal(save(failing).status,'custom_pool_setup_draft_saved_v3');
+ for(let index=0;index<3;index++){const e=envelope(),plan=customQDraftConcurrencyPlan({actorId:actor,tournamentId:tid,operationId:e.request.idempotencyKey,envelopeLiteral:literal(e)})[index];await withHeldLock(plan.connectionA,()=>{assert.deepEqual(save(e),plan.expected);assert.equal(reconcile(e),null);});assert.equal(save(e).status,'custom_pool_setup_draft_saved_v3');}
+ assert.equal(digest(),historical);
+ const old=envelope();assert.equal(owner(`select public.save_linked_tournament_setup_v1('${tid}',${literal({kind:'setup-event-links-v1',request:old.request,choices:old.choices})});`).status,'rejected');
+ // Deliberate supported change carries a new full intent; never changes old row.
+ const amendment=structuredClone(envelope());amendment.customPayouts[1].ratioDenominator=11;const amended=save(amendment);assert.equal(amended.status,'custom_pool_setup_draft_saved_v3');assert.equal(owner(`select to_jsonb(custom_ratio_denominator_v3)from app.tournament_setup_side_pool_versions where tournament_id='${tid}'and setup_revision_id='${amended.linked.result.revisionId}'and slot=1;`),11);assert.equal(digest(),historical);
+ const cleared=envelope();cleared.customPayouts=[];cleared.request.payload.events[0].qPools=[cleared.request.payload.events[0].qPools[0]];cleared.request.payload.events[0].sidePools.forEach(s=>s.payoutType='graduated-1-in-4');const clear=save(cleared);assert.equal(clear.status,'custom_pool_setup_draft_saved_v3');const clearRead=owner(`select app.get_custom_pool_setup_workspace_v3('${tid}');`);assert.deepEqual(clearRead.customPayouts,[]);assert(clearRead.sidePayouts.every(s=>s.customRatio===null&&s.payoutType==='graduated-1-in-4'));assert.equal(digest(),historical);
+ for(const role of ['anon','authenticated','service_role'])assert.throws(()=>q(`set role ${role};select app.save_custom_pool_setup_draft_v3('${tid}',${literal(first)});`,actor,'ownerAuthenticated'),/permission denied/);
+ return{firstSaved:accepted,firstRows:rows,freshWorkspace:fresh,amendedSaved:amended,clearedSaved:clear,clearedWorkspace:clearRead,historicalDigest:historical,passed:true,scope:'private-draft-persistence-only',customSideRatios:[7,11,2147483647],presetSixAndEqualQPreserved:true,exactReplayReconcile:true,rejectionsRetainHistory:true,postCoreRollback:true,concurrencyBarriers:3,historicalRowsUnchanged:true,publicCapability:false,policyPublished:false,accountingFinalized:false,moneyMoved:false};
+}

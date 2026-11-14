@@ -1,0 +1,130 @@
+[
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-adjudication/route.ts",
+    "name": "record_manual_mixed_adjudication_v1"
+  },
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-adjudication/route.ts",
+    "name": "get_manual_mixed_adjudication_source_v1"
+  },
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-dispute-binding/route.ts",
+    "name": "bind_manual_mixed_resolved_dispute_v1"
+  },
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-dispute-binding/route.ts",
+    "name": "get_manual_mixed_dispute_binding_v1"
+  },
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-handoff/route.ts",
+    "name": "record_manual_mixed_handoff_v1"
+  },
+  {
+    "file": "src/app/api/v1/games/[id]/manual-mixed-handoff/route.ts",
+    "name": "get_manual_mixed_handoff_v1"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/manual-playoffs/[eventId]/[generationId]/route.ts",
+    "name": "get_modern_manual_playoff_context_v1"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/playoff-games/[eventId]/[generationId]/route.ts",
+    "name": "submit_selected_step_player_action_provider_v3"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/playoff-games/[eventId]/[generationId]/route.ts",
+    "name": "get_selected_step_player_action_provider_v3"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/playoff-games/[eventId]/[generationId]/route.ts",
+    "name": "get_selected_step_player_view_provider_v3"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/stationary-requests/route.ts",
+    "name": "review_registration_stationary_request_v1"
+  },
+  {
+    "file": "src/app/api/v1/tournaments/[id]/template-pool-policies/route.ts",
+    "name": "get_setup_flyer_custom_pools_v1"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/flyer/page.tsx",
+    "name": "get_setup_flyer_custom_pools_v1"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/hybrid-games/page.tsx",
+    "name": "get_manual_mixed_official_status_v1"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/manual-paper-cards/page.tsx",
+    "name": "get_manual_paper_card_workspace_v1"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/manual-playoffs/page.tsx",
+    "name": "get_modern_manual_playoff_directory_v1"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/playoff-games/page.tsx",
+    "name": "get_selected_step_player_matches_v3"
+  },
+  {
+    "file": "src/app/tournament/[tournamentId]/roster/page.tsx",
+    "name": "get_registration_stationary_workspace_v1"
+  },
+  {
+    "file": "src/lib/api/mrp-membership-manual-review-v1.ts",
+    "name": "get_mrp_membership_manual_review_v1"
+  },
+  {
+    "file": "src/lib/api/satellite-finance-handlers-v1.ts",
+    "name": "get_satellite_finance_access_v1"
+  },
+  {
+    "file": "src/lib/finance/satellite-completion-evidence-v1.ts",
+    "name": "get_satellite_completion_evidence_v1"
+  },
+  {
+    "file": "src/lib/finance/satellite-fund-review-v1.ts",
+    "name": "get_satellite_finance_access_v1"
+  },
+  {
+    "file": "src/lib/finance/satellite-fund-review-v1.ts",
+    "name": "get_satellite_fund_source_v1"
+  },
+  {
+    "file": "src/lib/finance/satellite-recorded-reconciliation-provider-v1.ts",
+    "name": "get_satellite_recorded_reconciliation_v1"
+  },
+  {
+    "file": "src/lib/results/main-four-playoff-provider-v1.ts",
+    "name": "get_main_four_playoff_binding_provider_v1"
+  },
+  {
+    "file": "src/lib/results/modern-manual-playoff-results-v1.ts",
+    "name": "get_modern_manual_playoff_results_v1"
+  },
+  {
+    "file": "src/lib/results/modern-prize-results-v2.ts",
+    "name": "get_current_modern_prize_results_provider_v2"
+  },
+  {
+    "file": "src/lib/results/native-mixed-proposed-mrp-read-v1.ts",
+    "name": "get_native_mixed_qualification_review_provider_v1"
+  },
+  {
+    "file": "src/lib/results/native-mixed-proposed-mrp-read-v1.ts",
+    "name": "get_native_mixed_playoff_v1"
+  },
+  {
+    "file": "src/lib/results/result-based-mrp-production-v1.ts",
+    "name": "get_native_playoff_mrp_source_v1"
+  },
+  {
+    "file": "src/lib/results/result-based-mrp-production-v1.ts",
+    "name": "get_mrp_membership_manual_review_v1"
+  },
+  {
+    "file": "src/lib/seating/native-mixed-paper-directory-route-v1.ts",
+    "name": "get_native_mixed_paper_directory_v1"
+  }
+]

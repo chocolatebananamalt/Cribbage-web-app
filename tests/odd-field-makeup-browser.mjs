@@ -52,7 +52,7 @@ const go=async()=>{await page.goto(origin);await status('Review the regular sche
 const publish=()=>page.getByRole('button',{name:'Publish regular and makeup schedule',exact:true});
 const retry=()=>page.getByRole('button',{name:'Check status and retry exact schedule',exact:true});
 const fill=async()=>{await page.getByLabel(/^Regular schedule CSV/).fill(csv);await page.getByLabel(/^Six makeup table/).fill(seats);
- await page.getByLabel('Director review reason',{exact:true}).fill('TEST ONLY reviewed all source pairings');await page.getByRole('checkbox',{name:'This schedule uses zero stationary/anchor seats.',exact:true}).check();
+ await page.getByLabel("Director Review Reason",{exact:true}).fill('TEST ONLY reviewed all source pairings');await page.getByRole('checkbox',{name:'This schedule uses zero stationary/anchor seats.',exact:true}).check();
  await page.getByRole('checkbox',{name:/I reviewed all regular pairings/}).check();};
 try{
  let ready=false;for(let end=Date.now()+180000;Date.now()<end;){try{if((await fetch(origin,{signal:AbortSignal.timeout(20000)})).ok){ready=true;break;}}catch(e){if(['EACCES','EPERM'].includes(e.cause?.code))throw e;}await new Promise(r=>setTimeout(r,300));}assert.ok(ready,'local fixture ready');
@@ -72,9 +72,9 @@ try{
   checks.push(`actual digital, paper and hybrid entry components show original 1/12 card lines and scheduling batch, no thirteen-game claim or overflow ${width}`);await context.close();
  }
  for(const width of[390,1440]){await open();await page.setViewportSize({width,height:1000});await page.goto(origin+'/even');
-  await page.getByLabel('Or paste CSV').fill(evenCsv([{...evenRows[0],sideATableSeat:'A-2',sideBTableSeat:'A-1'},evenRows[1]]));
+  await page.getByLabel("Or Paste CSV").fill(evenCsv([{...evenRows[0],sideATableSeat:'A-2',sideBTableSeat:'A-1'},evenRows[1]]));
   await page.getByRole('alert').getByText(/Game 1: each playing participant/).waitFor();assert.ok(await page.getByRole('button',{name:'Publish Game Schedule',exact:true}).isDisabled());
-  await page.getByLabel('Or paste CSV').fill(evenCsv(evenRows));await page.getByText('Complete schedule ready for final review.',{exact:true}).waitFor();await page.getByRole('checkbox',{name:/I reviewed the complete schedule/}).check();assert.ok(await page.getByRole('button',{name:'Publish Game Schedule',exact:true}).isEnabled());
+  await page.getByLabel("Or Paste CSV").fill(evenCsv(evenRows));await page.getByText('Complete schedule ready for final review.',{exact:true}).waitFor();await page.getByRole('checkbox',{name:/I reviewed the complete schedule/}).check();assert.ok(await page.getByRole('button',{name:'Publish Game Schedule',exact:true}).isEnabled());
   await page.goto(origin+'/historical');await page.getByText(/Player A: ID# A-1;/).waitFor();await page.getByText('Table B, Seat 1',{exact:true}).waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   checks.push(`actual standard publisher blocks mismatched game1 and admits aligned schedule; historical reseated identity/location readable ${width}`);await context.close();}
  await open();current=initial;receipt=null;mode='abort';await go();await fill();await publish().click();await status('Publication could not be confirmed');const raw=await page.evaluate(k=>sessionStorage.getItem(k),key);assert.ok(raw);

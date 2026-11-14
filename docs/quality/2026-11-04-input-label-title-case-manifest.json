@@ -1,0 +1,4627 @@
+{
+  "scope": "Static input label literals only; no runtime transformation or policy/value changes",
+  "files": [
+    {
+      "file": "src/app/director/tournaments/new/new-tournament-client.tsx",
+      "beforeSha256": "8d68f2f5e08a826dcade7bbd29150a501e3fff0f74bab15365e461be77c2fc60",
+      "afterSha256": "8ada2852de9cf277722ac64fa2a3fe22c4c8f77838d0035f712284c74aad7627",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Planned tournament date",
+          "after": "Planned Tournament Date"
+        },
+        {
+          "kind": "label-text",
+          "before": "Tournament name",
+          "after": "Tournament Name"
+        }
+      ]
+    },
+    {
+      "file": "src/app/event-check-in/event-check-in-form.tsx",
+      "beforeSha256": "0a7faa54458970a23b01a0935e0e0652e28782642bf5f9416b60355a7d63dd30",
+      "afterSha256": "64a724ecec94205af14dd58893c88ba8c84b919c6400f41603b58af4af462179",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Last name",
+          "after": "Last Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "First name",
+          "after": "First Name"
+        }
+      ]
+    },
+    {
+      "file": "src/app/register/registration-form.tsx",
+      "beforeSha256": "08daa8a7943c80b78ddbb97abdf87b28cd2a211aa0fb2b098694b0a0101db9f1",
+      "afterSha256": "3e6f9c539223eb5efc70179eb23bca9ef2451cdc36a674fbdd1fd9e5768eb7af",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "ACC Number (if known)",
+          "after": "ACC Number (If Known)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Last name",
+          "after": "Last Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "First name",
+          "after": "First Name"
+        }
+      ]
+    },
+    {
+      "file": "src/app/sign-in/sign-in-form.tsx",
+      "beforeSha256": "c8f8d547ac4bd1dcf244b32866fed2f54e5f0e22c1eebb078d3c58f2d4858bbc",
+      "afterSha256": "f7fb5ccdcc96a2a747960b43097d3442695b480aa40ba77b9a107a8de7efbeb9",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Email address",
+          "after": "Email Address"
+        },
+        {
+          "kind": "label-text",
+          "before": "Email address",
+          "after": "Email Address"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/archive-tournament-client.tsx",
+      "beforeSha256": "6b6245488e81eb84a3a7587dd8221c4fad77af7dcb3dba1178403c384a73c31b",
+      "afterSha256": "8c39b70dc3dc3062d0c58b718403783a88a1b5836a35689adeefdccdf2ab3e2d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason (*required)",
+          "after": "Reason (*Required)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/corrections/corrections-client.tsx",
+      "beforeSha256": "3c383a113fe26df0f226685a7ce13e06a14ad1ac0b8e5ce09f0233d0d5b8b5d1",
+      "afterSha256": "58dcb71feef29dd15009efd859e9a4e748c40a3d2ac2e5b09adeac1bda73d594",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason (optional unless required by tournament policy)",
+          "after": "Reason (Optional unless Required by Tournament Policy)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Affected player",
+          "after": "Affected Player"
+        },
+        {
+          "kind": "label-text",
+          "before": "Rulebook disposition",
+          "after": "Rulebook Disposition"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/event-changes/event-changes-client.tsx",
+      "beforeSha256": "abf6b215161cdd2e706b7de1de4b7b137034304db219726a70018e48be45fe7f",
+      "afterSha256": "049f9c4c6cc6a7eb91f1d88df19f8725df0075e1f56373d9cf1e3ee46f16a073",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Required director reason",
+          "after": "Required Director Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/event-control/event-control-client.tsx",
+      "beforeSha256": "cb82af3ef1b3231aa91aa0563d26d560002f9bc4dd503122d93ddd8e796f3828",
+      "afterSha256": "737f8ffa5e49ae079e8f24a33eece7dbcec65cea0a3147bd6694b2d01df1494e",
+      "changes": [
+        {
+          "kind": "input-aria",
+          "before": "Reason for this change",
+          "after": "Reason for This Change"
+        },
+        {
+          "kind": "label-text",
+          "before": "Event to control\r\n      ",
+          "after": "Event to Control\r\n      "
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/consolation-playoffs/playoff-client.tsx",
+      "beforeSha256": "6b675b364a88629e62bb5d6224681141957ffacc2ac9c8e6f35b05aa00840fcd",
+      "afterSha256": "4cdf5d58ea58114f5e031f103adfe438e104f831f20b394defac24b7bc4c48d8",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Review note",
+          "after": "Review Note"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/disputes/dispute-client.tsx",
+      "beforeSha256": "59d95a135890305d41516d608a4578aa1bb9f3a6791bede2bb366374c386fd9c",
+      "afterSha256": "7a4859eea8e20e25720ad6e923bba8ebcd6c63be61f7b2c2e4b38c95b904dd88",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Concern summary",
+          "after": "Concern Summary"
+        },
+        {
+          "kind": "label-text",
+          "before": "Published game",
+          "after": "Published Game"
+        },
+        {
+          "kind": "label-text",
+          "before": "Resolution note",
+          "after": "Resolution Note"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/accounting-client.tsx",
+      "beforeSha256": "082037ffbf2fadf7c8f5e652ddf7a7bfa46becf078cdcf6b4794380122452add",
+      "afterSha256": "a64135df3e5fc994e327f763738fa0e1338ba0f2062808241168573bd6b6a8b0",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Accounting review reason",
+          "after": "Accounting Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/odd-field-makeup/makeup-client.tsx",
+      "beforeSha256": "20d3ef52a4c03e757732fa73e9f4646cc0eca4fb0c93540ec1b988e69637ac21",
+      "afterSha256": "7637311f68d048f53269873cb4bd46debdbf26e5ab15e95fe8896b041ab82869",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Director review reason",
+          "after": "Director Review Reason"
+        },
+        {
+          "kind": "label-text",
+          "before": "Six makeup table/seat pairs, in sit-out pairing order",
+          "after": "Six Makeup Table/Seat Pairs, in Sit-Out Pairing Order"
+        },
+        {
+          "kind": "label-text",
+          "before": "Regular schedule CSV (96 matches)",
+          "after": "Regular Schedule CSV (96 Matches)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "beforeSha256": "4d25d6a18f99491a889f1a727687e0909aaa17d623e1722bd938a89392331ccc",
+      "afterSha256": "f186fb6d703d082359a5d8acda2058d99e960071cf1200e0d649d5fb702331c2",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Official source reference",
+          "after": "Official Source Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Schedule reference",
+          "after": "Schedule Reference"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-outcomes/linked-main-series-client.tsx",
+      "beforeSha256": "f393d81c1e10b96f839cb7bf0f475d9882cbcdf4eb37cc31d9387e478a356a6a",
+      "afterSha256": "35b98141f9804f2b9810fd2ecc00475959ac785ea08c937fea1ab028cad0d668",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Source note",
+          "after": "Source Note"
+        },
+        {
+          "kind": "label-text",
+          "before": "Result type",
+          "after": "Result Type"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-outcomes/playoff-outcome-client.tsx",
+      "beforeSha256": "8af62070ac955b09f9ae0f8f47f6a1f3c94cdea4be78fbccec166bb9cee5e15f",
+      "afterSha256": "9ef62010cd4cfd2f68d672bb8cd6868efaf386f559f871f6e8a26f3c1dec7488",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Source note (200 characters maximum)",
+          "after": "Source Note (200 Characters Maximum)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/playoff-client.tsx",
+      "beforeSha256": "e447eb9b14f91ced872926c9cf7c77e8fa1186581483ca54e19652657be4c5c5",
+      "afterSha256": "98d5dbb2071b0815382ad0ec201d05014c5fafc2d61bb39c59332df9b657cc52",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Playoff review reason",
+          "after": "Playoff Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "beforeSha256": "6f95a7d7d30a4b1a1c7e119276f8b7b45aa7eaa3391e3e587063149b97b3f24f",
+      "afterSha256": "ce049d6432bc853d657f17648035031faaf27b6173594e40245baa0246295b7d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Recorded contribution to correct",
+          "after": "Recorded Contribution to Correct"
+        },
+        {
+          "kind": "label-text",
+          "before": "Contribution evidence reference",
+          "after": "Contribution Evidence Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Received at (your device&apos;s local time)",
+          "after": "Received at (Your Device&apos;s Local Time)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Contribution received (USD $)",
+          "after": "Contribution Received (USD $)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Accounting review reason",
+          "after": "Accounting Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "beforeSha256": "c969cdb02aac17ada5b8a9ca79a55d07eac61fe6401fff1c3ae7318f3b992961",
+      "afterSha256": "45af18db01c1c908a558eee1c24aaffd6b219439cc97504b317b4e588f1ddc1a",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Recorded contribution to correct",
+          "after": "Recorded Contribution to Correct"
+        },
+        {
+          "kind": "label-text",
+          "before": "Contribution evidence reference",
+          "after": "Contribution Evidence Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Received at (your device&apos;s local time)",
+          "after": "Received at (Your Device&apos;s Local Time)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Contribution received (USD $)",
+          "after": "Contribution Received (USD $)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Accounting review reason",
+          "after": "Accounting Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/accounting-client.tsx",
+      "beforeSha256": "cc8a7cc14e334cad1e07b1566ea5ccc4bb98948e9530b3d4b95c3626a6f68ba4",
+      "afterSha256": "cd6e078f1003495d9ade2de9788a3b410da353ec924925170124c9d6bc9eb5a0",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Accounting review reason",
+          "after": "Accounting Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/playoff-placement-client.tsx",
+      "beforeSha256": "3870f16a467ce801e192faf9a0ae2e784c5b5dd21c1cf9b06f40c58c4103aa25",
+      "afterSha256": "f36c3486cab3096593a1ec2bac6abfe4c30a4f9dc720b8c287e0b89353d82fde",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "MRP playoff exit round\r\n            ",
+          "after": "MRP Playoff Exit Round\r\n            "
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-client.tsx",
+      "beforeSha256": "13624f5b36dbd6b629bac4a9977ae48d7c01756159c27b6ac981c0620e818b34",
+      "afterSha256": "c5dc3519512108737ae7557cb3335e19f747c1945456aac03e14c787190ee673",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Calculation source",
+          "after": "Calculation Source"
+        },
+        {
+          "kind": "label-text",
+          "before": "MRP award (whole points)",
+          "after": "MRP Award (Whole Points)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Optional note",
+          "after": "Optional Note"
+        },
+        {
+          "kind": "label-text",
+          "before": "Award type",
+          "after": "Award Type"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-finalization-client.tsx",
+      "beforeSha256": "dd0889c935fb0d219d31c1f5fbc6619c9ac94c3c6d3e8408c461b323dedc73bf",
+      "afterSha256": "97aba86aa4341d4a7614830990f0851a567155f405ae4991cd78263f7943f211",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Official source reference",
+          "after": "Official Source Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reviewed retained balance (USD)",
+          "after": "Reviewed Retained Balance (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reviewed event expenses (USD)",
+          "after": "Reviewed Event Expenses (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reviewed event income (USD)",
+          "after": "Reviewed Event Income (USD)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/settlement-v5/settlement-v5-client.tsx",
+      "beforeSha256": "a9312de3f113c1b733b461eb767bebe0c14092e152ebc9d3c06594aec1a6f2b0",
+      "afterSha256": "b53a9b858ac8529d6853d37871be91267ce6688289d7313eaf91b56ad6189a08",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reviewed claim note",
+          "after": "Reviewed Claim Note"
+        },
+        {
+          "kind": "label-text",
+          "before": "Optional prize order",
+          "after": "Optional Prize Order"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Claim amount (USD $)",
+          "after": "Claim Amount (USD $)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Claim amount (USD $)",
+          "after": "Claim Amount (USD $)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Qualifier participant ID",
+          "after": "Qualifier Participant ID"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reviewed source reference",
+          "after": "Reviewed Source Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Existing sanctioning expense evidence",
+          "after": "Existing Sanctioning Expense Evidence"
+        },
+        {
+          "kind": "label-text",
+          "before": "Playoff evidence",
+          "after": "Playoff Evidence"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/simulated-accounting/accounting-client.tsx",
+      "beforeSha256": "d2fa3d2bbefcabf8a2738a5d2c652715c0e575ff00348478aec5c43190885161",
+      "afterSha256": "b52fd946d99a5eff367fdd9c97946246784b87f6d070ec05b919fff3577c1dc1",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for this simulated review",
+          "after": "Reason for This Simulated Review"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "beforeSha256": "ca9058bcbd256029fca2875d7b3463d71c874584d571ec8c688ff2b4d2bc2cad",
+      "afterSha256": "57af4b53bb2d5b346c186c3dfa5559dab5cc9d4363b6a55e0eacd957da6e51fa",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Paper-card reference",
+          "after": "Paper-Card Reference"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/officials/officials-client.tsx",
+      "beforeSha256": "7a23b57251724618de32f1ed4a4bf9c772bd48450fb650d40a9b56c5f202c658",
+      "afterSha256": "be24202dfedcec843369f0c4a1f6523a097b2309ccda5eac5f7f81e2e693dd63",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Exact app email",
+          "after": "Exact App Email"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/expense-client.tsx",
+      "beforeSha256": "195f9e293ce2491bd5cf4e0d8bc74af023e38738634543d9206eb5f3ffe2b4cf",
+      "afterSha256": "19fcdf7f1264c37f8363f57b27a96b9a78411950bc964ad7392b6e8d42cd3b12",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for void\r\n          ",
+          "after": "Reason for Void\r\n          "
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/payment-client.tsx",
+      "beforeSha256": "2332db767e20441dc905e2ce7c5698180acabe8db54070da660b2e4a461f54c7",
+      "afterSha256": "b2faa6a3371588e823842987d7d7e10f7cf08b3b537134a916cb207a7bd2be8d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for void",
+          "after": "Reason for Void"
+        },
+        {
+          "kind": "label-text",
+          "before": "Payment method",
+          "after": "Payment Method"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/payment-obligation-client.tsx",
+      "beforeSha256": "56251c3c29c3f74c6078d0114d7cd877bcd8f1032a32c52e6c1db96e69e0c6b4",
+      "afterSha256": "cce117b933f4981c9500d346e79ee3b8f145f35d89c9face9a3ce7806169b15d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Optional reason for change",
+          "after": "Optional Reason for Change"
+        },
+        {
+          "kind": "label-text",
+          "before": "Amount owed",
+          "after": "Amount Owed"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/pool-calculator.tsx",
+      "beforeSha256": "8229ee0b5d261e84063d9a93f67a8731277b364cef93fbdeeeeb70448f8e3448",
+      "afterSha256": "151d892573787f47c842d213748f70cf7019c8bdc35a016ccd71cdf1de8eb04d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Entry fee per player (USD)",
+          "after": "Entry Fee per Player (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Players in pool",
+          "after": "Players in Pool"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "beforeSha256": "1c120176d32d034950710d11836bdacf707dd63ec1bc94ca8367cabae5e23992",
+      "afterSha256": "72740efb441be931bec298d4daa5e953f09ddaef5bc82074e8eb80a5c542a479",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Fictional player",
+          "after": "Fictional Player"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-operating-schedules/operating-client.tsx",
+      "beforeSha256": "b28bddbc23764f22d3068edb600a1a00a3f00f69269e46318578286be2ddd573",
+      "afterSha256": "8e7ee4e01b5315a60ab2ec78c8da7c459155a40a120aacac17277d6de534c9b1",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Disclosure reference",
+          "after": "Disclosure Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Illustrative fully paid entrants",
+          "after": "Illustrative Fully Paid Entrants"
+        },
+        {
+          "kind": "label-text",
+          "before": "Paid-entry ratio",
+          "after": "Paid-Entry Ratio"
+        },
+        {
+          "kind": "label-text",
+          "before": "Payout method",
+          "after": "Payout Method"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pool-policy/policy-client.tsx",
+      "beforeSha256": "9f6713eb070e5e0e69147278af641458076ef17596b75fbdb625cb91c3896cf8",
+      "afterSha256": "1067ea13315078b3031ca3c48801ae08359b73f440255ae948c2c848536e9011",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Disclosure reference",
+          "after": "Disclosure Reference"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "beforeSha256": "04934ed50c4898d41d0dee03eaee437e5a44b24ab71efd0d6446963f65540524",
+      "afterSha256": "145cda3f42321f483c4c54570a1ad9f92da2363beddd3db0f19a40cc73957385",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for allocation record (required)",
+          "after": "Reason for Allocation Record (Required)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Base entry allocation (USD)",
+          "after": "Base Entry Allocation (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reason for membership record (required)",
+          "after": "Reason for Membership Record (Required)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/recoveries/recovery-client.tsx",
+      "beforeSha256": "d1f3e0a8614f2f22813b25860b7e0b51e71f0e7c8216ecc5f622bed764202022",
+      "afterSha256": "7cc4ebc7cd45346df324aa7d73a52f5a6b2b5b48ad6029ee82bbb5f59e217141",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Evidence reference",
+          "after": "Evidence Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Surviving evidence",
+          "after": "Surviving Evidence"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/registration/registration-link-client.tsx",
+      "beforeSha256": "8b67c14f7874cba037a49feb2831eb88bb53e09af017fc2b20fb99f74c487ab3",
+      "afterSha256": "027febf167049f2db0553eff2e11a55a4c0009f6cf19dad4ab58b8fba63c8262",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Maximum registrations per hour",
+          "after": "Maximum Registrations per Hour"
+        },
+        {
+          "kind": "label-text",
+          "before": "Maximum registrations",
+          "after": "Maximum Registrations"
+        },
+        {
+          "kind": "label-text",
+          "before": "Link expiry",
+          "after": "Link Expiry"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/results/qualification-ties-client.tsx",
+      "beforeSha256": "9f58627fe5d932d4f94df24f4f382ed115a909647ad5a758066d463a006b47ea",
+      "afterSha256": "b1d7bd95804205225064ad73f2eb4a3140c742d075a1c03e1ee331b240642c22",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Evidence or playoff record reference",
+          "after": "Evidence or Playoff Record Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Resolution reason",
+          "after": "Resolution Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx",
+      "beforeSha256": "0c0be6622a938151caf9c2c3100f6a56988d445e92addbb853badc4d4ba2e06e",
+      "afterSha256": "9a9a7b3de4ad72e790c11049f45f913ef2bf25b11fe3db20d9f5a1b890cee81d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason (optional)",
+          "after": "Reason (Optional)"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/roster/roster-client.tsx",
+      "beforeSha256": "8dadd4b8af378f0c3033d8f8b28c24a77f017b0f3d7bcc7ce3fea071565b075f",
+      "afterSha256": "e5462bfc727812a4813d29c9dafa54ed401d1d4b78fbd5971ac7b3dcbc7b104b",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "ACC # (optional)",
+          "after": "ACC # (Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Email (optional)",
+          "after": "Email (Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Last name",
+          "after": "Last Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "First name",
+          "after": "First Name"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/rulebook/rulebook-reference.tsx",
+      "beforeSha256": "62e5535d6bd802a3c80122d01eed178402fb99b7b493e901567483d42c6a0d86",
+      "afterSha256": "b973bfcfaa984aa92cd9e23d032bdb8e15ab4e124c66e5ce46a6cbfa07ad9ce6",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Search a topic or rule word",
+          "after": "Search a Topic or Rule Word"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/satellite-results/satellite-results-client.tsx",
+      "beforeSha256": "f1e3dba8c7687997e6bf466dc6ca0e263af6fff6291021eed72fbf8692178b01",
+      "afterSha256": "cb8df3ed3b34cece842d74982852d13a9a26cdac664370d017eea380bf6f93c6",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Director notes",
+          "after": "Director Notes"
+        },
+        {
+          "kind": "label-text",
+          "before": "Cross-check evidence reference",
+          "after": "Cross-Check Evidence Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Side Pool award (USD, optional)",
+          "after": "Side Pool Award (USD, Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Q-Pool award (USD, optional)",
+          "after": "Q-Pool Award (USD, Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Display name",
+          "after": "Display Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Team or entrant reference",
+          "after": "Team or Entrant Reference"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/schedule/schedule-client.tsx",
+      "beforeSha256": "94b99e085af57cf5b8153cb911a5539c14063fe98a1733376e5235ef8d53c537",
+      "afterSha256": "6d25d76747da5a0db12dbada22f35c50be74d5edb42a20b55fd49c54abe61295",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Or paste CSV",
+          "after": "Or Paste CSV"
+        },
+        {
+          "kind": "label-text",
+          "before": "Choose CSV file",
+          "after": "Choose CSV File"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/schedule-amendments/schedule-amendments-client.tsx",
+      "beforeSha256": "9cc467ec99b453d1a23c7689645a3ff95a0bfc69eae61c01d8b4147bb2ea78b3",
+      "afterSha256": "8dd46ad81e73b57d2abc80d2e5e48d9fe86133e0b10bc6494ed7a354660f336d",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Director reason",
+          "after": "Director Reason"
+        },
+        {
+          "kind": "label-text",
+          "before": "Rule-backed operation",
+          "after": "Rule-Backed Operation"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/seating/seating-client.tsx",
+      "beforeSha256": "7a2eb2180465162c5635068509bf9615c34afb06933da1a83bd1f46794f4ef43",
+      "afterSha256": "ecedd71234f6e94acd8cd76de8f02589210fb9229a5d0b89986d96904dab8987",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Seats per table",
+          "after": "Seats per Table"
+        },
+        {
+          "kind": "label-text",
+          "before": "Search player name",
+          "after": "Search Player Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Optional reason",
+          "after": "Optional Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/seating-directory/seating-directory-client.tsx",
+      "beforeSha256": "009cac0873f95eb19403d02855b148a8f50034e69960ef307d471255219ba0d5",
+      "afterSha256": "fe833b13170ad916380aef2d8d22d89d4db9936c50c269400b8302aee66bd937",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Entry type",
+          "after": "Entry Type"
+        },
+        {
+          "kind": "label-text",
+          "before": "Search player, team, or exact ACC #",
+          "after": "Search Player, Team, or Exact ACC #"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/event-prize-declaration-client.tsx",
+      "beforeSha256": "457d4f17b9ee71a2e4659a299976ecdce81e10ff521104d0673f39f5f650a660",
+      "afterSha256": "870195e328cebaee3767e0a3b354e6e9dbae658c6d7f9f44e45919006a4785de",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for schedule",
+          "after": "Reason for Schedule"
+        },
+        {
+          "kind": "label-text",
+          "before": "Schedule source reference",
+          "after": "Schedule Source Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Expected playoff qualifiers",
+          "after": "Expected Playoff Qualifiers"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/officials/[role]/setup-officials-client.tsx",
+      "beforeSha256": "ee21d69cbc828d502536b50656223fd6659313be2f2043c3ab564f8a43eb5ace",
+      "afterSha256": "d06290a88e8cdf972ba808a7944e53831f0b53820dfc5a97a8250c5a6a4bcf60",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Invitation delivery",
+          "after": "Invitation Delivery"
+        },
+        {
+          "kind": "label-text",
+          "before": "Private acceptance link",
+          "after": "Private Acceptance Link"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "beforeSha256": "75f5b15c2db530ab48c1f04377383caaa2a6750c223f996049ca16e7d165a15b",
+      "afterSha256": "da001f66e82c921e4604920722774631fd7f1b4ec80effc9e789c1e118084eb6",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Estimated player-benefit expenses (USD)",
+          "after": "Estimated Player-Benefit Expenses (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Estimated total expenses (USD)",
+          "after": "Estimated Total Expenses (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Estimated entry count",
+          "after": "Estimated Entry Count"
+        },
+        {
+          "kind": "label-text",
+          "before": "Reason for schedule",
+          "after": "Reason for Schedule"
+        },
+        {
+          "kind": "label-text",
+          "before": "Schedule source reference",
+          "after": "Schedule Source Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Expected playoff qualifiers",
+          "after": "Expected Playoff Qualifiers"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/setup-client.tsx",
+      "beforeSha256": "0bddc2423b391ae7e6fef32ec8f4d35aa0be6f83984848b4e753a2d67a8cd7b8",
+      "afterSha256": "5007bd7089335052be81e4ff01c2d50b940086084974a5a55d88b69d91f85eb8",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Tournament Director name (shown to players)",
+          "after": "Tournament Director Name (Shown to Players)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Last name",
+          "after": "Last Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "First name",
+          "after": "First Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Venue city",
+          "after": "Venue City"
+        },
+        {
+          "kind": "label-text",
+          "before": "Venue street address",
+          "after": "Venue Street Address"
+        },
+        {
+          "kind": "label-text",
+          "before": "Venue name",
+          "after": "Venue Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Tournament name",
+          "after": "Tournament Name"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Entry fee",
+          "after": "Entry Fee"
+        },
+        {
+          "kind": "label-text",
+          "before": "Payout information",
+          "after": "Payout Information"
+        },
+        {
+          "kind": "label-text",
+          "before": "Fee includes",
+          "after": "Fee Includes"
+        },
+        {
+          "kind": "label-text",
+          "before": "Start date and time",
+          "after": "Start Date and Time"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Entry fee",
+          "after": "Entry Fee"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Entry type",
+          "after": "Entry Type"
+        },
+        {
+          "kind": "label-text",
+          "before": "Entry type",
+          "after": "Entry Type"
+        },
+        {
+          "kind": "label-text",
+          "before": "Event name",
+          "after": "Event Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Optional note",
+          "after": "Optional Note"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Entry fee",
+          "after": "Entry Fee"
+        },
+        {
+          "kind": "label-text",
+          "before": "Side Pool type/name",
+          "after": "Side Pool Type/Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Optional note",
+          "after": "Optional Note"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Entry fee",
+          "after": "Entry Fee"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Consolation rate per person",
+          "after": "Consolation Rate per Person"
+        },
+        {
+          "kind": "label-prop",
+          "before": "Main rate per person",
+          "after": "Main Rate per Person"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/side-pools/graduated-side-pools-v2.tsx",
+      "beforeSha256": "07ff172ca41fc5c485f47f036541cdb512166d3f801033e517cd9780608e49af",
+      "afterSha256": "92a986c683abb0da14810754163aec898db9933983547efa71bad32f3e36c79f",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Review reason",
+          "after": "Review Reason"
+        },
+        {
+          "kind": "label-text",
+          "before": "Audit reason (optional)",
+          "after": "Audit Reason (Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Check number or reference (optional)",
+          "after": "Check Number or Reference (Optional)"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Disclosure reference",
+          "after": "Disclosure Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Disclosure reference (where players saw this policy)",
+          "after": "Disclosure Reference (Where Players Saw This Policy)"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Paid-entry ratio",
+          "after": "Paid-Entry Ratio"
+        },
+        {
+          "kind": "label-text",
+          "before": "Pay approximately 1 in ",
+          "after": "Pay Approximately 1 in "
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/side-pools/recipients/[eventId]/[poolId]/side-pool-recipient-v3-client.tsx",
+      "beforeSha256": "026beefae043cb26092f520f7f51fa6cb548392b5b31061b9049a89436dc9d4e",
+      "afterSha256": "fbd47b431fb1609ebd149932ff5cbdfb920bdfecd687d8fde6f811455ded4cde",
+      "changes": [
+        {
+          "kind": "input-aria",
+          "before": "Recipient review reason",
+          "after": "Recipient Review Reason"
+        },
+        {
+          "kind": "label-text",
+          "before": "Review reason",
+          "after": "Review Reason"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Recipient policy disclosure reference",
+          "after": "Recipient Policy Disclosure Reference"
+        },
+        {
+          "kind": "label-text",
+          "before": "Disclosure reference",
+          "after": "Disclosure Reference"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx",
+      "beforeSha256": "5df4af97b58430d5b7a53cea61229eaa22bf530d6b2a0c75668ba1ecf72edc24",
+      "afterSha256": "27f3c911b255e7dfad7b779c364e8235fc9f0275e9c5bc08dd85e7a88f694ffc",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason (*required)",
+          "after": "Reason (*Required)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Payout amount (USD)",
+          "after": "Payout Amount (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Check number or reference (optional)",
+          "after": "Check Number or Reference (Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Amount received (USD)",
+          "after": "Amount Received (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Payout amount (USD)",
+          "after": "Payout Amount (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Check number or reference (optional)",
+          "after": "Check Number or Reference (Optional)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Amount received (USD)",
+          "after": "Amount Received (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Posted payout schedule (placement: USD amount)",
+          "after": "Posted Payout Schedule (Placement: USD Amount)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Pay approximately 1 in ",
+          "after": "Pay Approximately 1 in "
+        },
+        {
+          "kind": "label-text",
+          "before": "Entry fee (USD)",
+          "after": "Entry Fee (USD)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Pool name",
+          "after": "Pool Name"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/teams/team-operations-client.tsx",
+      "beforeSha256": "3b7a9087a8ce094dcbb527b7c6d60c78136e28ee6c90790793cd909503566fb8",
+      "afterSha256": "21de4d18e4efad0ae3caa78cd261b8d922310019ee4279bfaf9108f6255270ae",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Correction reason (optional unless required by tournament policy)",
+          "after": "Correction Reason (Optional unless Required by Tournament Policy)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Shared scorecard",
+          "after": "Shared Scorecard"
+        },
+        {
+          "kind": "label-text",
+          "before": "Team event",
+          "after": "Team Event"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/tournament-day-import/tournament-day-import-client.tsx",
+      "beforeSha256": "dc44867987d855c024badcb99db210269c13774b349a167487b5a9af6e15ede0",
+      "afterSha256": "d6db98028fc974c8749796fd9e1cf53049223da07ab44736601d3a63c86bc438",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Registered player CSV",
+          "after": "Registered Player CSV"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Tournament day CSV header template",
+          "after": "Tournament Day CSV Header Template"
+        }
+      ]
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "beforeSha256": "406ddee92944db5a1df5a5a775991667c6893f45a351827d505bf4fd61463596",
+      "afterSha256": "580277a552933191ea8dba228ec293d7390aa61d5eedb57cc7e358a8fe28b53f",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Donation Per Person",
+          "after": "Donation per Person"
+        },
+        {
+          "kind": "label-text",
+          "before": "Search a topic or rule word",
+          "after": "Search a Topic or Rule Word"
+        },
+        {
+          "kind": "label-text",
+          "before": "Search player name",
+          "after": "Search Player Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Seats per table",
+          "after": "Seats per Table"
+        },
+        {
+          "kind": "label-text",
+          "before": "Search player name",
+          "after": "Search Player Name"
+        },
+        {
+          "kind": "label-text",
+          "before": "Tournament flyer PDF or image",
+          "after": "Tournament Flyer PDF or Image"
+        }
+      ]
+    },
+    {
+      "file": "src/components/local-payout-preview.tsx",
+      "beforeSha256": "34a504397e78726c08365170e04e1161b1d1517222a07d3c473a09482f9d2582",
+      "afterSha256": "03988dcd1da46faa0e0a73af993aaaddc3008ec3f1ee4b1c57ceef4fd1640c57",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Example waived count",
+          "after": "Example Waived Count"
+        },
+        {
+          "kind": "label-text",
+          "before": "Example fully paid count",
+          "after": "Example Fully Paid Count"
+        },
+        {
+          "kind": "label-text",
+          "before": "Example entered count",
+          "after": "Example Entered Count"
+        },
+        {
+          "kind": "label-text",
+          "before": "Pool entry amount ($)",
+          "after": "Pool Entry Amount ($)"
+        },
+        {
+          "kind": "label-text",
+          "before": "Paid contributors",
+          "after": "Paid Contributors"
+        },
+        {
+          "kind": "label-text",
+          "before": "Verified example",
+          "after": "Verified Example"
+        }
+      ]
+    },
+    {
+      "file": "src/components/local-playoff-preview.tsx",
+      "beforeSha256": "208c04be6e6414e339100e820a576f54a0cb74f221eafbd4c7ba864a3de6432f",
+      "afterSha256": "f245343f91bb18c552710ed89524fc55e32bd6723ea6729a985bc2291b46c306",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Round to display",
+          "after": "Round to Display"
+        },
+        {
+          "kind": "label-text",
+          "before": "Find player by name or Tournament ID",
+          "after": "Find Player by Name or Tournament ID"
+        },
+        {
+          "kind": "label-text",
+          "before": "Fictional bracket example",
+          "after": "Fictional Bracket Example"
+        }
+      ]
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "beforeSha256": "0943ef4ba30261b4467949d65ce7ae5a8e169788cb9ae9bda9eb25ae30e13d47",
+      "afterSha256": "184556abb65ffe400b364657db1e69abba6bb994798a052e53997c7bbf939968",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for another comparison",
+          "after": "Reason for Another Comparison"
+        },
+        {
+          "kind": "label-text",
+          "before": "Exact round",
+          "after": "Exact Round"
+        },
+        {
+          "kind": "label-text",
+          "before": "Other entry",
+          "after": "Other Entry"
+        },
+        {
+          "kind": "label-text",
+          "before": "First entry",
+          "after": "First Entry"
+        },
+        {
+          "kind": "label-text",
+          "before": "Proposed stationary seat",
+          "after": "Proposed Stationary Seat"
+        }
+      ]
+    },
+    {
+      "file": "src/components/mixed-rehearsal-client.tsx",
+      "beforeSha256": "ce08243c6932d419b4e7a9170c8ec1919d94572c424dc0aa991afffe7c16b15a",
+      "afterSha256": "6d0c2e4e338dada3a9ddbbcec1d50c91d5e86e57efd3dae08f4c12ff08c12af2",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Re-enter digital submission ID",
+          "after": "Re-Enter Digital Submission ID"
+        },
+        {
+          "kind": "label-text",
+          "before": "Assigned game",
+          "after": "Assigned Game"
+        }
+      ]
+    },
+    {
+      "file": "src/components/one-table-movement-preview.tsx",
+      "beforeSha256": "dec409d3c8131ce6828c82e66340b1af5ded6129d363dcdcfa387b604dfe8170",
+      "afterSha256": "8c63850f088af42f75eb0bf0519a0256ec98b29a35edc349aeb3ef836e1aada0",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Find a starting Tournament ID",
+          "after": "Find a Starting Tournament ID"
+        },
+        {
+          "kind": "label-text",
+          "before": "Planned qualifying game",
+          "after": "Planned Qualifying Game"
+        }
+      ]
+    },
+    {
+      "file": "src/components/reviewed-draw-publisher-client.tsx",
+      "beforeSha256": "242fd745dfc64a527f7e679fe04c573a5c97ca155461f66ab7e8f35447e05ced",
+      "afterSha256": "c1090b30278c9e7dec07a5f087f828a12c5087c2c889ba36d758a7558b1f4c78",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Review reason",
+          "after": "Review Reason"
+        }
+      ]
+    },
+    {
+      "file": "src/components/reviewed-draw-schedule-preview.tsx",
+      "beforeSha256": "2c67276524699e88afdcbdcdfcef9eb1726a2640ee4bc7f6ad067c1f5a0568ab",
+      "afterSha256": "a3cf4d286f58b76add73bb95bb494d8c811ac7e1e8a1092129cd0ebb213d59a2",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Show game",
+          "after": "Show Game"
+        }
+      ]
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "beforeSha256": "58c37f724d69755c123b7720d8651519df612d071ee90dc988b4e39ccc0c6ca8",
+      "afterSha256": "3b8d622657340ddc4f7b426cf53295ee8c601a80411eab69cadfd9a02fd805d3",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Reason for another draw",
+          "after": "Reason for Another Draw"
+        },
+        {
+          "kind": "label-text",
+          "before": "Restricted round",
+          "after": "Restricted Round"
+        },
+        {
+          "kind": "label-text",
+          "before": "Other restricted player",
+          "after": "Other Restricted Player"
+        },
+        {
+          "kind": "label-text",
+          "before": "First restricted player",
+          "after": "First Restricted Player"
+        },
+        {
+          "kind": "label-text",
+          "before": "Stationary person",
+          "after": "Stationary Person"
+        },
+        {
+          "kind": "label-text",
+          "before": "Stationary seat",
+          "after": "Stationary Seat"
+        }
+      ]
+    },
+    {
+      "file": "src/components/setup-side-pool-editor.tsx",
+      "beforeSha256": "d60fd1a310ed89a311ba8ea37e04072f4d2249d2b7322b9e237d30cb700c2ed5",
+      "afterSha256": "2a6b97c34e30366770e3eb88edd0afef332e8efca0e06f194d1e20cd15b0a7bc",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Optional note",
+          "after": "Optional Note"
+        },
+        {
+          "kind": "label-text",
+          "before": "Pool name (optional)",
+          "after": "Pool Name (Optional)"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Payout type",
+          "after": "Payout Type"
+        },
+        {
+          "kind": "input-aria",
+          "before": "Side Pool payout ratio",
+          "after": "Side Pool Payout Ratio"
+        }
+      ]
+    },
+    {
+      "file": "src/components/tournament-date-fields.tsx",
+      "beforeSha256": "0197aaa3c7cf7759f0c592d6af85beb27973be2cc5c6eeecc8645c2808cacf8e",
+      "afterSha256": "5542b481e5bc6a5c94951e1823679d5e9684d26f5590438559ade5089707ddeb",
+      "changes": [
+        {
+          "kind": "label-text",
+          "before": "Number of days",
+          "after": "Number of Days"
+        },
+        {
+          "kind": "label-text",
+          "before": "Start time",
+          "after": "Start Time"
+        },
+        {
+          "kind": "label-text",
+          "before": "Start date",
+          "after": "Start Date",
+          "manualReason": "Conditional help follows the input; caption itself is static."
+        }
+      ]
+    }
+  ],
+  "changedCaptionCount": 204,
+  "manualRemaining": [
+    {
+      "file": "src/app/register/registration-form.tsx",
+      "kind": "label-text",
+      "text": "How will you pay?",
+      "reason": "instruction-or-fragment"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/account-activations/activation-workspace-client.tsx",
+      "kind": "label-text",
+      "text": "I am one operator simulating both accounts. No independent identity witness is claimed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx",
+      "kind": "label-text",
+      "text": " Require a short reason for every correction",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx",
+      "kind": "label-text",
+      "text": " Apply a permitted correction immediately",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/correction-policy/policy-client.tsx",
+      "kind": "label-text",
+      "text": " Require an independent cross-checker, director, or co-director approval",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/corrections/corrections-client.tsx",
+      "kind": "label-text",
+      "text": " Apparent qualifier",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/corrections/corrections-client.tsx",
+      "kind": "label-text",
+      "text": " This correction changes who qualifies or their qualifying position",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/cross-checkers/cross-checker-assignment-client.tsx",
+      "kind": "label-text",
+      "text": "I confirm this person will independently check other players&apos; cards.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/event-control/event-control-client.tsx",
+      "kind": "label-text",
+      "text": "required), kept with the record\r\n            ",
+      "reason": "instruction-or-fragment"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/consolation-playoffs/playoff-client.tsx",
+      "kind": "label-text",
+      "text": "I checked these simulated selections. No physical play or independent human verification is claimed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Category for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Evidence for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the saved schedule, regular-prize obligations and expense classifications. All amounts remain unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/no-q-accounting-v7/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Finalize accounting only. No person is marked paid and no payment or refund is executed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/odd-field-makeup/makeup-client.tsx",
+      "kind": "label-text",
+      "text": "This schedule uses zero stationary/anchor seats.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/odd-field-makeup/makeup-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed all regular pairings, the twelve distinct sit-outs, all six makeup pairings and seats, and the original scorecard lines.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-text",
+      "text": ": full-entry cash eligible",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-text",
+      "text": ": eligibility evidence",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-text",
+      "text": ": expense category",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-prop",
+      "text": "Eligible player benefits",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-prop",
+      "text": "Operating costs — excluded from player return",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/payback-review/payback-review-client.tsx",
+      "kind": "label-text",
+      "text": ": expense evidence",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-outcomes/linked-main-series-client.tsx",
+      "kind": "label-text",
+      "text": " This is synthetic test evidence",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-outcomes/linked-main-series-client.tsx",
+      "kind": "label-text",
+      "text": " I reviewed this series and its source",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/playoff-client.tsx",
+      "kind": "label-text",
+      "text": "Winner of series ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/playoff-client.tsx",
+      "kind": "label-text",
+      "text": "Evidence for series ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Category for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Evidence for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the saved policy, expense classifications and separate Q obligations. All awards remain unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I confirm this contribution was already received and the reference supports that record. This does not execute a transfer.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this erroneous record and supplied the reason above. No actual refund is executed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Finalize unpaid accounting using this current draft and funding version ",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "kind": "label-text",
+      "text": ". No person is marked paid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Category for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Evidence for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the saved policy, expense classifications and separate Q obligations. All awards remain unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I confirm this contribution was already received and the reference supports that record. This does not execute a transfer.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this erroneous record and supplied the reason above. No actual refund is executed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Finalize unpaid accounting using this current draft and funding version ",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "kind": "label-text",
+      "text": ". No person is marked paid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Category for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Evidence for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the saved schedule, current Q obligations and expense classifications. All amounts remain unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/q-accounting-v6/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "Finalize accounting only. No person is marked paid and no payment or refund is executed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/settlement/settlement-client.tsx",
+      "kind": "label-text",
+      "text": "Place ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/events/[eventId]/simulated-accounting/accounting-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the fictional awards and sources. No independent human review or money movement is claimed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "kind": "label-text",
+      "text": "Side A won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/hybrid-games/hybrid-game-client.tsx",
+      "kind": "label-text",
+      "text": "Side B won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": "&apos;s ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": "&apos;s ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "kind": "label-text",
+      "text": " won",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/payment-method-configuration.tsx",
+      "kind": "label-text",
+      "text": " Cash",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/payment-method-configuration.tsx",
+      "kind": "label-text",
+      "text": " Check",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "kind": "label-text",
+      "text": " amount in dollars",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "kind": "label-text",
+      "text": " amount in dollars",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "kind": "label-text",
+      "text": "Why is this being simulated?",
+      "reason": "instruction-or-fragment"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/payments/simulation-finance-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this fictional action and understand that no money or independent consent is recorded.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-obligation-reviews/review-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed every named pool and approve recording these obligations as unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-obligation-reviews-v2/review-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed every named pool and approve recording these obligations as unpaid.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-operating-schedules/operating-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed and disclosed this exact named-pool fee, method, ratio and rounding before any election or payment and approve freezing it.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pool-policy/policy-client.tsx",
+      "kind": "label-text",
+      "text": "I disclosed this exact named-pool policy before any payment or elected membership, and approve freezing it.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": "\r\n            Elect into Q Pool ",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": ": ",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": " (",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": ")",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": "Consent reference for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": "Record this membership revision as a director correction",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": " allocation (USD; owed ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": ")",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/q-pools/q-pools-client.tsx",
+      "kind": "label-text",
+      "text": "Record this allocation revision as a director correction",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/roster/registration-claim-review-client.tsx",
+      "kind": "label-text",
+      "text": " I reviewed the possible match and confirmed this is a different person.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/roster/roster-client.tsx",
+      "kind": "label-text",
+      "text": "Note ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/schedule/schedule-client.tsx",
+      "kind": "label-text",
+      "text": "I confirm registration is closed and this event roster, attendance, seating, and schedule are ready for play.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/schedule/schedule-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed the complete schedule and approve these pairings and Table/Seat assignments.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/seating/seating-client.tsx",
+      "kind": "label-text",
+      "text": " I reviewed this exact saved request and want to retry it.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/seating/seating-client.tsx",
+      "kind": "label-text",
+      "text": " I reviewed attendance and am ready to close registration.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/seating/seating-client.tsx",
+      "kind": "label-text",
+      "text": " I understand this permanently assigns verification IDs.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/event-prize-declaration-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this event&apos;s formula and source",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this schedule and its source",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "SCORE ENTRY",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "SCORE ENTRY",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "SCORECARD",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "TOURNAMENT OPERATIONS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "OPERATIONS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "OPERATIONS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "OPERATIONS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "OPERATIONS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "SEATING",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "SEATING",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "CROSS CHECK",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "Demo Player",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "JUDGE DESK",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "TOURNAMENT EVENTS AND FLYER",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "TOURNAMENT EVENTS AND FLYER",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "FINANCIALS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "RESULTS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "RESULTS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "RESULTS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "RESULTS",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "REFERENCE",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/app/tournament-dashboard.tsx",
+      "kind": "label-prop",
+      "text": "REFERENCE",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/components/local-payout-preview.tsx",
+      "kind": "label-text",
+      "text": "One award per how many contributors?",
+      "reason": "instruction-or-fragment"
+    },
+    {
+      "file": "src/components/local-payout-preview.tsx",
+      "kind": "label-text",
+      "text": "Example payment evidence is unknown",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-payout-preview.tsx",
+      "kind": "label-text",
+      "text": "Example withdrawn entry still has allocated money",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-payout-preview.tsx",
+      "kind": "label-text",
+      "text": "Example source is stale",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Assume registration is closed for this local comparison",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Model existing published IDs — no redraw is allowed",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Table ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": ": available chairs",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": " faces ",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Who occupies that stationary slot?",
+      "reason": "instruction-or-fragment"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "I approve this slot and any explicitly pinned person for this planning comparison",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": " requests a stationary seat (planning example)",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Planning decision for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "I have specified this exact planning avoidance, not an assumed ACC family rule",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/local-seating-planner.tsx",
+      "kind": "label-text",
+      "text": "Keep the previous request/outcome in local history and prepare a separate comparison",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/main-consolation-choice.tsx",
+      "kind": "label-text",
+      "text": " Yes",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/main-consolation-choice.tsx",
+      "kind": "label-text",
+      "text": " No",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/mixed-rehearsal-client.tsx",
+      "kind": "label-text",
+      "text": "I acknowledge only my own entry against a fictional opponent. No independent human play is claimed.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/mixed-rehearsal-client.tsx",
+      "kind": "label-text",
+      "text": "I entered the generated evidence for this rehearsal. I do not claim physical originals or independent human play.",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/pending-paper-card-photos.tsx",
+      "kind": "label-prop",
+      "text": "Retained",
+      "reason": "not-input-caption"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": "Table ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": ": available chairs",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": ": director-confirmed stationary request",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": "Decision for ",
+      "reason": "dynamic-label"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": "Approve this stationary slot and any selected-person exception",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": "I verified this exact restriction and its scope",
+      "reason": "checkbox-or-radio"
+    },
+    {
+      "file": "src/components/roster-random-draw-client.tsx",
+      "kind": "label-text",
+      "text": "I reviewed this exact plan and authorize the next local operation",
+      "reason": "checkbox-or-radio"
+    }
+  ],
+  "inventoryCount": 460,
+  "locatorFiles": [
+    {
+      "file": "tests/consolation-playoff-browser.mjs",
+      "beforeSha256": "ae82a4bc3e8030bcc370b19caf4e1f57076a77e869c7ce9e8edd3f2e29713b1c",
+      "afterSha256": "f343d8fd14e8a5deaa84d86c5e8572d1b960db2126d96741c6df665878a7a0f9",
+      "changes": [
+        {
+          "start": 3830,
+          "end": 3843,
+          "before": "'Review note'",
+          "after": "\"Review Note\""
+        }
+      ]
+    },
+    {
+      "file": "tests/director-browser.mjs",
+      "beforeSha256": "87ae02a2279bd722beaf57c254a9915d8796208fa276a39da55ec5b8287dec8d",
+      "afterSha256": "c14b34de594d88ecf69edaffd66f34829d28b65f4e54730e28b0a3de25c08dd1",
+      "changes": [
+        {
+          "start": 41708,
+          "end": 41720,
+          "before": "\"Start time\"",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 41495,
+          "end": 41512,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 41415,
+          "end": 41432,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 37800,
+          "end": 37814,
+          "before": "\"Or paste CSV\"",
+          "after": "\"Or Paste CSV\""
+        },
+        {
+          "start": 35371,
+          "end": 35386,
+          "before": "\"Email address\"",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 34378,
+          "end": 34393,
+          "before": "\"Email address\"",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 31586,
+          "end": 31597,
+          "before": "\"Last name\"",
+          "after": "\"Last Name\""
+        },
+        {
+          "start": 31515,
+          "end": 31527,
+          "before": "\"First name\"",
+          "after": "\"First Name\""
+        },
+        {
+          "start": 30315,
+          "end": 30332,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 29402,
+          "end": 29419,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 29277,
+          "end": 29294,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 28916,
+          "end": 28941,
+          "before": "\"Planned tournament date\"",
+          "after": "\"Planned Tournament Date\""
+        },
+        {
+          "start": 28843,
+          "end": 28860,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 27872,
+          "end": 27885,
+          "before": "\"Amount owed\"",
+          "after": "\"Amount Owed\""
+        },
+        {
+          "start": 27762,
+          "end": 27790,
+          "before": "\"Optional reason for change\"",
+          "after": "\"Optional Reason for Change\""
+        },
+        {
+          "start": 27332,
+          "end": 27360,
+          "before": "\"Optional reason for change\"",
+          "after": "\"Optional Reason for Change\""
+        },
+        {
+          "start": 27262,
+          "end": 27275,
+          "before": "\"Amount owed\"",
+          "after": "\"Amount Owed\""
+        },
+        {
+          "start": 24891,
+          "end": 24903,
+          "before": "\"Start time\"",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 24782,
+          "end": 24799,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 24681,
+          "end": 24693,
+          "before": "\"Venue name\"",
+          "after": "\"Venue Name\""
+        },
+        {
+          "start": 24597,
+          "end": 24614,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 24093,
+          "end": 24105,
+          "before": "\"Start time\"",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 23870,
+          "end": 23882,
+          "before": "\"Venue city\"",
+          "after": "\"Venue City\""
+        },
+        {
+          "start": 23784,
+          "end": 23806,
+          "before": "\"Venue street address\"",
+          "after": "\"Venue Street Address\""
+        },
+        {
+          "start": 23697,
+          "end": 23714,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 23618,
+          "end": 23630,
+          "before": "\"Venue name\"",
+          "after": "\"Venue Name\""
+        },
+        {
+          "start": 23544,
+          "end": 23556,
+          "before": "\"Start time\"",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 23326,
+          "end": 23343,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 23242,
+          "end": 23259,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        },
+        {
+          "start": 22837,
+          "end": 22848,
+          "before": "\"Last name\"",
+          "after": "\"Last Name\""
+        },
+        {
+          "start": 22765,
+          "end": 22777,
+          "before": "\"First name\"",
+          "after": "\"First Name\""
+        },
+        {
+          "start": 16562,
+          "end": 16587,
+          "before": "'Private acceptance link'",
+          "after": "\"Private Acceptance Link\""
+        },
+        {
+          "start": 16263,
+          "end": 16288,
+          "before": "'Private acceptance link'",
+          "after": "\"Private Acceptance Link\""
+        },
+        {
+          "start": 16157,
+          "end": 16182,
+          "before": "'Private acceptance link'",
+          "after": "\"Private Acceptance Link\""
+        },
+        {
+          "start": 15887,
+          "end": 15908,
+          "before": "'Invitation delivery'",
+          "after": "\"Invitation Delivery\""
+        },
+        {
+          "start": 15660,
+          "end": 15671,
+          "before": "'Last name'",
+          "after": "\"Last Name\""
+        },
+        {
+          "start": 15592,
+          "end": 15604,
+          "before": "'First name'",
+          "after": "\"First Name\""
+        },
+        {
+          "start": 15522,
+          "end": 15543,
+          "before": "'Invitation delivery'",
+          "after": "\"Invitation Delivery\""
+        }
+      ]
+    },
+    {
+      "file": "tests/event-prize-declaration-browser.mjs",
+      "beforeSha256": "edf4c175d6d8307bf1675aff2a6d63ae1e06ee0603bf94d391ad37d77df3ab2f",
+      "afterSha256": "6e5eed4d6bd48dcf0ddbd090b22e47b8f37247f37e4c1113a86341728c0b84b0",
+      "changes": [
+        {
+          "start": 7778,
+          "end": 7799,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 7690,
+          "end": 7717,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        },
+        {
+          "start": 6141,
+          "end": 6162,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 6059,
+          "end": 6086,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        },
+        {
+          "start": 3773,
+          "end": 3794,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 3666,
+          "end": 3693,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/five-playoff-browser.mjs",
+      "beforeSha256": "447dea3fb0f406c945e9b4638d1154dd723ad78416ae483928bb9cf1347c7235",
+      "afterSha256": "202d063766092b391e530f8adb65e2a29e1bdde54146da464f93506394368099",
+      "changes": [
+        {
+          "start": 4156,
+          "end": 4179,
+          "before": "'Playoff review reason'",
+          "after": "\"Playoff Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/five-prize-browser.mjs",
+      "beforeSha256": "1b3b2a75186d9ad5ff9df5e824224322119e99c2c43b4a748b022f1060503dcf",
+      "afterSha256": "7e1d0bea533c5d204bcbee1803741820970319b53c98a70d51e738f7e3e29e30",
+      "changes": [
+        {
+          "start": 10950,
+          "end": 10982,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 10892,
+          "end": 10915,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 10510,
+          "end": 10531,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 10417,
+          "end": 10444,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        },
+        {
+          "start": 10175,
+          "end": 10204,
+          "before": "'Expected playoff qualifiers'",
+          "after": "\"Expected Playoff Qualifiers\""
+        },
+        {
+          "start": 9190,
+          "end": 9211,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 8815,
+          "end": 8847,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 8757,
+          "end": 8780,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 5888,
+          "end": 5920,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 5584,
+          "end": 5616,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 5526,
+          "end": 5549,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 5314,
+          "end": 5335,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 5237,
+          "end": 5264,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/fixtures/simple-setup-browser.mjs",
+      "beforeSha256": "ce64f968dbe738c16bc3e1cd549651180732b2d75372a70d0cb059c65a1e534a",
+      "afterSha256": "ba5f93d31f015a2a0be06be6ea2b168816b6110e8e33268da658b738a3a9e92d",
+      "changes": [
+        {
+          "start": 12316,
+          "end": 12328,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 12086,
+          "end": 12098,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 11308,
+          "end": 11320,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 11086,
+          "end": 11098,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 9455,
+          "end": 9467,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 9308,
+          "end": 9320,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 8077,
+          "end": 8089,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 6843,
+          "end": 6855,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 6743,
+          "end": 6760,
+          "before": "'Tournament name'",
+          "after": "\"Tournament Name\""
+        }
+      ]
+    },
+    {
+      "file": "tests/linked-main-series-browser.mjs",
+      "beforeSha256": "f75debf7183ad1b0c6c6ab7b80824e73de6c5593d185afe95e7e4629f8113cb7",
+      "afterSha256": "8aa51e7b301a07707b42c723260881d15c58fa59c9ecf5fc98d22771ced83133",
+      "changes": [
+        {
+          "start": 8503,
+          "end": 8516,
+          "before": "'Source note'",
+          "after": "\"Source Note\""
+        },
+        {
+          "start": 6846,
+          "end": 6859,
+          "before": "'Source note'",
+          "after": "\"Source Note\""
+        },
+        {
+          "start": 5132,
+          "end": 5145,
+          "before": "'Source note'",
+          "after": "\"Source Note\""
+        },
+        {
+          "start": 4732,
+          "end": 4745,
+          "before": "'Source note'",
+          "after": "\"Source Note\""
+        },
+        {
+          "start": 4009,
+          "end": 4022,
+          "before": "'Source note'",
+          "after": "\"Source Note\""
+        }
+      ]
+    },
+    {
+      "file": "tests/local-payout-preview-browser.mjs",
+      "beforeSha256": "8ca4009dde02c6fbbc5866ad1502952a863c4dd881d60a506afc37d940209e95",
+      "afterSha256": "ff9e1f2675ffa965f24f5255d928b8ec4b182ad391f258086f35bedac5ce65c1",
+      "changes": [
+        {
+          "start": 3834,
+          "end": 3857,
+          "before": "'Example entered count'",
+          "after": "\"Example Entered Count\""
+        },
+        {
+          "start": 3626,
+          "end": 3645,
+          "before": "'Paid contributors'",
+          "after": "\"Paid Contributors\""
+        },
+        {
+          "start": 3400,
+          "end": 3419,
+          "before": "'Paid contributors'",
+          "after": "\"Paid Contributors\""
+        },
+        {
+          "start": 3079,
+          "end": 3098,
+          "before": "'Paid contributors'",
+          "after": "\"Paid Contributors\""
+        },
+        {
+          "start": 2556,
+          "end": 2574,
+          "before": "'Verified example'",
+          "after": "\"Verified Example\""
+        }
+      ]
+    },
+    {
+      "file": "tests/local-seating-planner-browser.mjs",
+      "beforeSha256": "0e027e7b144a684c94ba9408a9d01f352d6ef42e6179689ba8d199110a536219",
+      "afterSha256": "3c69ba58368105d7a86e45f4c052685e4c9ba5998678636a79cd702a3786db3f",
+      "changes": [
+        {
+          "start": 8158,
+          "end": 8171,
+          "before": "'Exact round'",
+          "after": "\"Exact Round\""
+        },
+        {
+          "start": 4621,
+          "end": 4652,
+          "before": "'Reason for another comparison'",
+          "after": "\"Reason for Another Comparison\""
+        }
+      ]
+    },
+    {
+      "file": "tests/manual-score-connectivity-browser.mjs",
+      "beforeSha256": "6ff120b80d70746ce803cbc00c4d54dcd489d4f21ceec0cceaf33f3463ef51ee",
+      "afterSha256": "6956b6bfdceb409226b9560bb74ba08808ccb8bf4ee1da89a811b075c3316c46",
+      "changes": [
+        {
+          "start": 7717,
+          "end": 7739,
+          "before": "'Paper-card reference'",
+          "after": "\"Paper-Card Reference\""
+        },
+        {
+          "start": 7621,
+          "end": 7643,
+          "before": "'Paper-card reference'",
+          "after": "\"Paper-Card Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/mixed-rehearsal-browser.mjs",
+      "beforeSha256": "d999196ca4d1384da6abd2392047a948eefc3a85e93860acc10d7e333f593c25",
+      "afterSha256": "362faefd6b39ce1da7dc85cb0d47f919a781841bd9fa3887967c702dc12bb925",
+      "changes": [
+        {
+          "start": 11933,
+          "end": 11949,
+          "before": "/^Assigned game/",
+          "after": "/^Assigned Game/"
+        },
+        {
+          "start": 11391,
+          "end": 11407,
+          "before": "/^Assigned game/",
+          "after": "/^Assigned Game/"
+        },
+        {
+          "start": 9080,
+          "end": 9112,
+          "before": "'Re-enter digital submission ID'",
+          "after": "\"Re-Enter Digital Submission ID\""
+        }
+      ]
+    },
+    {
+      "file": "tests/mixed-rehearsal-real-sql-browser.mjs",
+      "beforeSha256": "098a80872db74622d8e845a300b2daadf6f9a8e0b6555432257a75efdc5eff26",
+      "afterSha256": "8d752a490248798c9aaedbe5a2eaf151165a6f247233603b9a86a60ad8f22b39",
+      "changes": [
+        {
+          "start": 14010,
+          "end": 14042,
+          "before": "'Re-enter digital submission ID'",
+          "after": "\"Re-Enter Digital Submission ID\""
+        }
+      ]
+    },
+    {
+      "file": "tests/multi-event-accounting-browser.mjs",
+      "beforeSha256": "23a31de7e605e0feaa352233e61355ad502f241ec41f7adc366df18cf6b89a03",
+      "afterSha256": "bdeff7de916230a7082b74554e4667e87222fa93c147ea7ed96861ab1056bb3e",
+      "changes": [
+        {
+          "start": 8950,
+          "end": 8984,
+          "before": "'Reason for this simulated review'",
+          "after": "\"Reason for This Simulated Review\""
+        },
+        {
+          "start": 4804,
+          "end": 4838,
+          "before": "'Reason for this simulated review'",
+          "after": "\"Reason for This Simulated Review\""
+        }
+      ]
+    },
+    {
+      "file": "tests/no-q-accounting-v7-browser.mjs",
+      "beforeSha256": "71611379884c965be1f227872af76e59e2214e004718239e4183848eab4b026e",
+      "afterSha256": "8960dc3a19fb92196d8cd0a24ac98c7806abcd4de20908609446aa99a9b9127e",
+      "changes": [
+        {
+          "start": 4583,
+          "end": 4609,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/odd-field-makeup-browser.mjs",
+      "beforeSha256": "a54e67df709a1ce7eae7c785ee46ee17ed85dd60b5ccab012159fbb66869d935",
+      "afterSha256": "a3ee22310d196c3c217d213537ced32f582287a7326d600dfd6b13b22dba2f19",
+      "changes": [
+        {
+          "start": 14079,
+          "end": 14093,
+          "before": "'Or paste CSV'",
+          "after": "\"Or Paste CSV\""
+        },
+        {
+          "start": 13762,
+          "end": 13776,
+          "before": "'Or paste CSV'",
+          "after": "\"Or Paste CSV\""
+        },
+        {
+          "start": 10063,
+          "end": 10087,
+          "before": "'Director review reason'",
+          "after": "\"Director Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/one-table-movement-browser.mjs",
+      "beforeSha256": "0dc1bc9f5ad18354d7fae1b14e3a36034b016f1771266495f407e3dfae62dcb0",
+      "afterSha256": "b58182798d858dff58f0c37c6afa6b56ce0832ef5f9489029986f822400b5dd8",
+      "changes": [
+        {
+          "start": 6109,
+          "end": 6134,
+          "before": "'Planned qualifying game'",
+          "after": "\"Planned Qualifying Game\""
+        },
+        {
+          "start": 5981,
+          "end": 6006,
+          "before": "'Planned qualifying game'",
+          "after": "\"Planned Qualifying Game\""
+        },
+        {
+          "start": 5752,
+          "end": 5777,
+          "before": "'Planned qualifying game'",
+          "after": "\"Planned Qualifying Game\""
+        },
+        {
+          "start": 3507,
+          "end": 3538,
+          "before": "'Find a starting Tournament ID'",
+          "after": "\"Find a Starting Tournament ID\""
+        },
+        {
+          "start": 3460,
+          "end": 3485,
+          "before": "'Planned qualifying game'",
+          "after": "\"Planned Qualifying Game\""
+        }
+      ]
+    },
+    {
+      "file": "tests/other-money-browser.mjs",
+      "beforeSha256": "860b73eaaf73359a0ba6b34b900659678969ab87a2196a3fc526c4c29b1c1625",
+      "afterSha256": "37b0cd264fec85a279b7c1012334ee708d61512d852f41b05284b3306fdfaa18",
+      "changes": [
+        {
+          "start": 7698,
+          "end": 7730,
+          "before": "\"Cross-check evidence reference\"",
+          "after": "\"Cross-Check Evidence Reference\""
+        },
+        {
+          "start": 7562,
+          "end": 7595,
+          "before": "\"Side Pool award (USD, optional)\"",
+          "after": "\"Side Pool Award (USD, Optional)\""
+        },
+        {
+          "start": 7498,
+          "end": 7528,
+          "before": "\"Q-Pool award (USD, optional)\"",
+          "after": "\"Q-Pool Award (USD, Optional)\""
+        },
+        {
+          "start": 7022,
+          "end": 7045,
+          "before": "\"Amount received (USD)\"",
+          "after": "\"Amount Received (USD)\""
+        },
+        {
+          "start": 6432,
+          "end": 6480,
+          "before": "\"Posted payout schedule (placement: USD amount)\"",
+          "after": "\"Posted Payout Schedule (Placement: USD Amount)\""
+        },
+        {
+          "start": 5946,
+          "end": 5957,
+          "before": "\"Pool name\"",
+          "after": "\"Pool Name\""
+        },
+        {
+          "start": 5902,
+          "end": 5919,
+          "before": "\"Entry fee (USD)\"",
+          "after": "\"Entry Fee (USD)\""
+        }
+      ]
+    },
+    {
+      "file": "tests/payback-review-browser.mjs",
+      "beforeSha256": "ff1f09397c32b08e8d6eb3b54d83eb2f5149f53520236176e939364a22c3a348",
+      "afterSha256": "b7267daa98511e7dac4812070b379c2da3978ad47c41604b89479ccce1e1d549",
+      "changes": [
+        {
+          "start": 9916,
+          "end": 9936,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        },
+        {
+          "start": 9434,
+          "end": 9461,
+          "before": "'Official source reference'",
+          "after": "\"Official Source Reference\""
+        },
+        {
+          "start": 9335,
+          "end": 9355,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        },
+        {
+          "start": 9225,
+          "end": 9245,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        },
+        {
+          "start": 7284,
+          "end": 7304,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        },
+        {
+          "start": 7103,
+          "end": 7123,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        },
+        {
+          "start": 6160,
+          "end": 6187,
+          "before": "'Official source reference'",
+          "after": "\"Official Source Reference\""
+        },
+        {
+          "start": 6014,
+          "end": 6041,
+          "before": "'Official source reference'",
+          "after": "\"Official Source Reference\""
+        },
+        {
+          "start": 5330,
+          "end": 5357,
+          "before": "'Official source reference'",
+          "after": "\"Official Source Reference\""
+        },
+        {
+          "start": 5254,
+          "end": 5274,
+          "before": "'Schedule reference'",
+          "after": "\"Schedule Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/player-playoff-browser.mjs",
+      "beforeSha256": "44886766f1cc1fcc0c7ba1566f9cf015c3013e58aef6b9b7c3087c5ee3614207",
+      "afterSha256": "81c7acc2a7ffa675b659f1efda6d045e79f1d0f27493822853f6fb9a6a34e91f",
+      "changes": [
+        {
+          "start": 4920,
+          "end": 4939,
+          "before": "/^Round to display/",
+          "after": "/^Round to Display/"
+        },
+        {
+          "start": 2203,
+          "end": 2222,
+          "before": "/^Round to display/",
+          "after": "/^Round to Display/"
+        },
+        {
+          "start": 2081,
+          "end": 2119,
+          "before": "'Find player by name or Tournament ID'",
+          "after": "\"Find Player by Name or Tournament ID\""
+        },
+        {
+          "start": 2030,
+          "end": 2058,
+          "before": "/^Fictional bracket example/",
+          "after": "/^Fictional Bracket Example/"
+        }
+      ]
+    },
+    {
+      "file": "tests/prize-accounting-v8-browser.mjs",
+      "beforeSha256": "7f888717c2625f536547b4209bff7cf16829b7f468e18d2dbe67bf52e2e6fb62",
+      "afterSha256": "ef5e42dca1bc82221b2a078f91112cf356b0bfcd6375a49544f1a76c899f9f20",
+      "changes": [
+        {
+          "start": 17375,
+          "end": 17401,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        },
+        {
+          "start": 16419,
+          "end": 16453,
+          "before": "/Recorded contribution to correct/",
+          "after": "/Recorded Contribution to Correct/"
+        },
+        {
+          "start": 14766,
+          "end": 14792,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        },
+        {
+          "start": 12337,
+          "end": 12369,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 12091,
+          "end": 12132,
+          "before": "'Estimated player-benefit expenses (USD)'",
+          "after": "\"Estimated Player-Benefit Expenses (USD)\""
+        },
+        {
+          "start": 11824,
+          "end": 11865,
+          "before": "'Estimated player-benefit expenses (USD)'",
+          "after": "\"Estimated Player-Benefit Expenses (USD)\""
+        },
+        {
+          "start": 11740,
+          "end": 11772,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 11669,
+          "end": 11692,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 11328,
+          "end": 11357,
+          "before": "/Expected playoff qualifiers/",
+          "after": "/Expected Playoff Qualifiers/"
+        },
+        {
+          "start": 9828,
+          "end": 9861,
+          "before": "'Contribution evidence reference'",
+          "after": "\"Contribution Evidence Reference\""
+        },
+        {
+          "start": 9671,
+          "end": 9702,
+          "before": "'Contribution received (USD $)'",
+          "after": "\"Contribution Received (USD $)\""
+        },
+        {
+          "start": 9548,
+          "end": 9574,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        },
+        {
+          "start": 9322,
+          "end": 9348,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/prize-accounting-v9-browser.mjs",
+      "beforeSha256": "0f1a057fbe4cae425a5a8debbaec38018dffd483440b3891afdfd84542a90cb0",
+      "afterSha256": "cc3338852d67884d22992f040f1d2890100a281d77c65290f4e3aae400215331",
+      "changes": [
+        {
+          "start": 10229,
+          "end": 10255,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        },
+        {
+          "start": 10047,
+          "end": 10080,
+          "before": "'Contribution evidence reference'",
+          "after": "\"Contribution Evidence Reference\""
+        },
+        {
+          "start": 9958,
+          "end": 9989,
+          "before": "'Contribution received (USD $)'",
+          "after": "\"Contribution Received (USD $)\""
+        },
+        {
+          "start": 8036,
+          "end": 8062,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/prize-schedule-browser.mjs",
+      "beforeSha256": "0be7cef4bd3adc6eedff44d37264ee1ae4bff9155836c53707d5a46863f6250a",
+      "afterSha256": "84b984d5237038a3fc29f14f07e322252a0545a673297ed79155704e3421fee8",
+      "changes": [
+        {
+          "start": 9194,
+          "end": 9215,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 8819,
+          "end": 8851,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 8761,
+          "end": 8784,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 5892,
+          "end": 5924,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 5588,
+          "end": 5620,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 5530,
+          "end": 5553,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 5318,
+          "end": 5339,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 5241,
+          "end": 5268,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-accounting-v6-browser.mjs",
+      "beforeSha256": "fee42bdddf0c59721454d1b1b25fef78e0fb89f7230d12011d5e90ab97175ae7",
+      "afterSha256": "24293e1109c22da9398eceaa8ee4f66139cc70a7ae98025e661b050d984763c4",
+      "changes": [
+        {
+          "start": 4376,
+          "end": 4402,
+          "before": "'Accounting review reason'",
+          "after": "\"Accounting Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-graduated-v4-browser.mjs",
+      "beforeSha256": "943d2582f72ac68ecd4a9e33eb15a2c78ec7b77361535ddc32df5a0e31a02c9f",
+      "afterSha256": "734ed53aa3086955092ea40ae290797af062345600aa14ec7b28c85b936727d0",
+      "changes": [
+        {
+          "start": 15778,
+          "end": 15793,
+          "before": "/Payout method/",
+          "after": "/Payout Method/"
+        },
+        {
+          "start": 10287,
+          "end": 10321,
+          "before": "'Illustrative fully paid entrants'",
+          "after": "\"Illustrative Fully Paid Entrants\""
+        },
+        {
+          "start": 10012,
+          "end": 10030,
+          "before": "/Paid-entry ratio/",
+          "after": "/Paid-Entry Ratio/"
+        },
+        {
+          "start": 9914,
+          "end": 9948,
+          "before": "'Illustrative fully paid entrants'",
+          "after": "\"Illustrative Fully Paid Entrants\""
+        },
+        {
+          "start": 7667,
+          "end": 7689,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-obligation-browser.mjs",
+      "beforeSha256": "e1f6a6a2e328b90f3c5473b3653f7b068a7a00a84cd1aaaf13ba19b2879f417c",
+      "afterSha256": "17930e6e248240ae7af52ce74c532de783a94e58ccb5fcb6fa84a9089ff1c6ca",
+      "changes": [
+        {
+          "start": 4327,
+          "end": 4342,
+          "before": "'Review reason'",
+          "after": "\"Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-obligation-v2-browser.mjs",
+      "beforeSha256": "ef626c6e4827cc13a5d635910657c8263a85c0d77697689daee2a33c7de33d9e",
+      "afterSha256": "ca54f07fe0e7c9d01d796f57158b2378d21cbd4ab05c760d795a9f400fa352e8",
+      "changes": [
+        {
+          "start": 5786,
+          "end": 5801,
+          "before": "\"Review reason\"",
+          "after": "\"Review Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-operating-balanced-browser.mjs",
+      "beforeSha256": "13672d276cfdb82c9f3aeb4ec6d22f3ff9f7ce2f520c2527d3c5ca56d7e23658",
+      "afterSha256": "1136d3498f4fa6ca10bc9e5228ca54d4d533b6d8e2c178a8329f50adba34db39",
+      "changes": [
+        {
+          "start": 15643,
+          "end": 15658,
+          "before": "/Payout method/",
+          "after": "/Payout Method/"
+        },
+        {
+          "start": 9727,
+          "end": 9761,
+          "before": "'Illustrative fully paid entrants'",
+          "after": "\"Illustrative Fully Paid Entrants\""
+        },
+        {
+          "start": 9452,
+          "end": 9470,
+          "before": "/Paid-entry ratio/",
+          "after": "/Paid-Entry Ratio/"
+        },
+        {
+          "start": 9354,
+          "end": 9388,
+          "before": "'Illustrative fully paid entrants'",
+          "after": "\"Illustrative Fully Paid Entrants\""
+        },
+        {
+          "start": 7467,
+          "end": 7489,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-pool-membership-browser.mjs",
+      "beforeSha256": "0e1db0d83488a6ed6823c10ed990b2f4602f048e0b227e2fac4da1edddefeb47",
+      "afterSha256": "03acade5bcf6f68cf136902af3fd24a46694866141f5b4214246b1cc024121d0",
+      "changes": [
+        {
+          "start": 16194,
+          "end": 16235,
+          "before": "\"Reason for membership record (required)\"",
+          "after": "\"Reason for Membership Record (Required)\""
+        },
+        {
+          "start": 14447,
+          "end": 14488,
+          "before": "\"Reason for membership record (required)\"",
+          "after": "\"Reason for Membership Record (Required)\""
+        },
+        {
+          "start": 13683,
+          "end": 13724,
+          "before": "\"Reason for membership record (required)\"",
+          "after": "\"Reason for Membership Record (Required)\""
+        },
+        {
+          "start": 11818,
+          "end": 11859,
+          "before": "\"Reason for allocation record (required)\"",
+          "after": "\"Reason for Allocation Record (Required)\""
+        },
+        {
+          "start": 11396,
+          "end": 11425,
+          "before": "\"Base entry allocation (USD)\"",
+          "after": "\"Base Entry Allocation (USD)\""
+        },
+        {
+          "start": 9116,
+          "end": 9157,
+          "before": "\"Reason for membership record (required)\"",
+          "after": "\"Reason for Membership Record (Required)\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-pool-policy-browser.mjs",
+      "beforeSha256": "2fc4ea3a5b2a9fa8ef8d7f351d6f7f63bf87d0dab154e4724d74d670edf2dbaa",
+      "afterSha256": "66d8e737b8fff355e6030b92f134e81c72ae92a1c947dce02a6a1d0154b846ce",
+      "changes": [
+        {
+          "start": 8147,
+          "end": 8169,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 7506,
+          "end": 7528,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 7389,
+          "end": 7411,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 7214,
+          "end": 7236,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 5446,
+          "end": 5487,
+          "before": "'Reason for membership record (required)'",
+          "after": "\"Reason for Membership Record (Required)\""
+        }
+      ]
+    },
+    {
+      "file": "tests/q-setup-prize-browser.mjs",
+      "beforeSha256": "277c906ca4646c1581f46110fed4227378b7612d8caf64410830b50a268aa475",
+      "afterSha256": "0cca0a1f61956f7265f7fd9011b27a28c833e5d5c7be6cf1d2263d9826fa4c78",
+      "changes": [
+        {
+          "start": 16525,
+          "end": 16566,
+          "before": "'Estimated player-benefit expenses (USD)'",
+          "after": "\"Estimated Player-Benefit Expenses (USD)\""
+        },
+        {
+          "start": 16435,
+          "end": 16467,
+          "before": "'Estimated total expenses (USD)'",
+          "after": "\"Estimated Total Expenses (USD)\""
+        },
+        {
+          "start": 16358,
+          "end": 16381,
+          "before": "'Estimated entry count'",
+          "after": "\"Estimated Entry Count\""
+        },
+        {
+          "start": 16073,
+          "end": 16103,
+          "before": "/^Expected playoff qualifiers/",
+          "after": "/^Expected Playoff Qualifiers/"
+        },
+        {
+          "start": 15680,
+          "end": 15692,
+          "before": "/^Entry fee/",
+          "after": "/^Entry Fee/"
+        },
+        {
+          "start": 15273,
+          "end": 15285,
+          "before": "/^Entry fee/",
+          "after": "/^Entry Fee/"
+        }
+      ]
+    },
+    {
+      "file": "tests/qualification-ties-browser.mjs",
+      "beforeSha256": "5e5eac0859111b71c9c95639a78d49a84e04aa25d042dfe38d32cdb18d6a1d16",
+      "afterSha256": "16847000b9e51779afb5a92e1924e9c1c882b7c59a7a56b66ef3fea056c99331",
+      "changes": [
+        {
+          "start": 5543,
+          "end": 5581,
+          "before": "\"Evidence or playoff record reference\"",
+          "after": "\"Evidence or Playoff Record Reference\""
+        },
+        {
+          "start": 5444,
+          "end": 5463,
+          "before": "\"Resolution reason\"",
+          "after": "\"Resolution Reason\""
+        }
+      ]
+    },
+    {
+      "file": "tests/recovery-auth-browser.mjs",
+      "beforeSha256": "149c491863901bf0ce744b4e50d697cf3ec2456ec32b77d6e935d3d2acdf57cc",
+      "afterSha256": "87ea494f34f7ab11351a02160a38191641dd3177b0282cb977a7275cea561e77",
+      "changes": [
+        {
+          "start": 19882,
+          "end": 19897,
+          "before": "'Email address'",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 19099,
+          "end": 19114,
+          "before": "'Email address'",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 17110,
+          "end": 17125,
+          "before": "'Email address'",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 16172,
+          "end": 16187,
+          "before": "'Email address'",
+          "after": "\"Email Address\""
+        },
+        {
+          "start": 14442,
+          "end": 14457,
+          "before": "'Email address'",
+          "after": "\"Email Address\""
+        }
+      ]
+    },
+    {
+      "file": "tests/reviewed-draw-schedule-browser.mjs",
+      "beforeSha256": "05e662bbb1aabebfffefb5d630f4cb5ddc17dfcad1ec1f4395994211129f7184",
+      "afterSha256": "958c65cf9b027e8f4030e2e8e3c9abe9a03c5e690172a101e1c945bdeb47da72",
+      "changes": [
+        {
+          "start": 2859,
+          "end": 2870,
+          "before": "'Show game'",
+          "after": "\"Show Game\""
+        },
+        {
+          "start": 2780,
+          "end": 2791,
+          "before": "'Show game'",
+          "after": "\"Show Game\""
+        }
+      ]
+    },
+    {
+      "file": "tests/reviewed-native-authenticated-integration-local.mjs",
+      "beforeSha256": "f286a3b84b023e4f9472d56fd65fec1557f602a1ed4c8154628ff0f0939ce10f",
+      "afterSha256": "04052ff4689f2482cb316a0e0afc8a2c8bb0de5c0bdf50423f13569caa073bf6",
+      "changes": [
+        {
+          "start": 13836,
+          "end": 13852,
+          "before": "/^Review reason/",
+          "after": "/^Review Reason/"
+        }
+      ]
+    },
+    {
+      "file": "tests/reviewed-native-publisher-browser.mjs",
+      "beforeSha256": "b52e1cfd1d1249956b873d745d52f645eaba5e934b9c1e7d6139056533fcb855",
+      "afterSha256": "fa343836e28703c7f69592254bd5d8b8f0f5ed6a827b7c5a59438ed67690202f",
+      "changes": [
+        {
+          "start": 6051,
+          "end": 6067,
+          "before": "/^Review reason/",
+          "after": "/^Review Reason/"
+        },
+        {
+          "start": 2996,
+          "end": 3012,
+          "before": "/^Review reason/",
+          "after": "/^Review Reason/"
+        }
+      ]
+    },
+    {
+      "file": "tests/roster-random-draw-browser.mjs",
+      "beforeSha256": "e56d50ccdd56054a8d3fc0acaaf3807bb0bdb67931f241859b633139b4744022",
+      "afterSha256": "e775a69630eabaecc10e2b675d622f7a07b2161b2bdc6e3e7b2b1f8f55bc9f2f",
+      "changes": [
+        {
+          "start": 6160,
+          "end": 6185,
+          "before": "'Other restricted player'",
+          "after": "\"Other Restricted Player\""
+        },
+        {
+          "start": 6094,
+          "end": 6119,
+          "before": "'First restricted player'",
+          "after": "\"First Restricted Player\""
+        }
+      ]
+    },
+    {
+      "file": "tests/settlement-schedule-browser.mjs",
+      "beforeSha256": "663235707898f4d4d940a7dfebf9dd7d5ea03bfc86c2e3437b4c1510de4c84c4",
+      "afterSha256": "63651e7d8bb29116e51f222ee93bd1fb9b1a8af9b86a33bc871ab0cbaeed236e",
+      "changes": [
+        {
+          "start": 8508,
+          "end": 8530,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 7828,
+          "end": 7850,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 6965,
+          "end": 6987,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 6309,
+          "end": 6331,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 6168,
+          "end": 6190,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        }
+      ]
+    },
+    {
+      "file": "tests/settlement-v5-browser.mjs",
+      "beforeSha256": "07d77cea3ccc1b2f8dfc822c41ec30d72b93a66ccec0b00d83fbf92a47c29ea1",
+      "afterSha256": "93228deb863d55d750cb1e14fe3a7f297ead76b182eaec968e32a3477d4c2fbf",
+      "changes": [
+        {
+          "start": 6320,
+          "end": 6342,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 6224,
+          "end": 6246,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 5629,
+          "end": 5651,
+          "before": "'Optional prize order'",
+          "after": "\"Optional Prize Order\""
+        },
+        {
+          "start": 5504,
+          "end": 5525,
+          "before": "'Reviewed claim note'",
+          "after": "\"Reviewed Claim Note\""
+        },
+        {
+          "start": 5429,
+          "end": 5451,
+          "before": "'Claim amount (USD $)'",
+          "after": "\"Claim Amount (USD $)\""
+        },
+        {
+          "start": 5306,
+          "end": 5332,
+          "before": "'Qualifier participant ID'",
+          "after": "\"Qualifier Participant ID\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-duration-browser.mjs",
+      "beforeSha256": "b49738a22c74e0c1fe9e307834c4426118bba40a02e8bb7ce7238975c32f6337",
+      "afterSha256": "1c250ee763e7f254aaa826bc05d1da0281852dc7b73e4b9e956edaf0e69442d1",
+      "changes": [
+        {
+          "start": 2673,
+          "end": 2685,
+          "before": "'Start time'",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 2338,
+          "end": 2354,
+          "before": "'Number of days'",
+          "after": "\"Number of Days\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-event-lock-browser.mjs",
+      "beforeSha256": "ea3760332bcb02982f489ad95663e1385dc003bbd55547ef6038a86ca213aff3",
+      "afterSha256": "d8f9af2db95914881a5c8bacc9a7be5a7f09fada8a5ec00ddf6b102d4c655744",
+      "changes": [
+        {
+          "start": 4246,
+          "end": 4258,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 4182,
+          "end": 4194,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-event-navigation-browser.mjs",
+      "beforeSha256": "9bfb735cb7ffd5223d96a84096c9e74e2e6cd78ae6e2d9be17894c01816bfe17",
+      "afterSha256": "8379877c4b9780f1ef71ebfb537fc8b5c1538340d5dde5e8f79edee4c5cd8c4d",
+      "changes": [
+        {
+          "start": 6071,
+          "end": 6083,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 5939,
+          "end": 5951,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 4453,
+          "end": 4469,
+          "before": "'Number of days'",
+          "after": "\"Number of Days\""
+        },
+        {
+          "start": 4353,
+          "end": 4365,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-fee-persistence-browser.mjs",
+      "beforeSha256": "e89fc17b09baa9e01b04d19473a1fe9f1bf065cac2412d3ded2020524b2f56a2",
+      "afterSha256": "d80018fa34d64269e2fc6812057ff6ce5a9834415832f8ae52b3214929700160",
+      "changes": [
+        {
+          "start": 26395,
+          "end": 26419,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 26254,
+          "end": 26267,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 25937,
+          "end": 25958,
+          "before": "'Side Pool type/name'",
+          "after": "\"Side Pool Type/Name\""
+        },
+        {
+          "start": 25399,
+          "end": 25420,
+          "before": "'Reason for schedule'",
+          "after": "\"Reason for Schedule\""
+        },
+        {
+          "start": 25280,
+          "end": 25307,
+          "before": "'Schedule source reference'",
+          "after": "\"Schedule Source Reference\""
+        },
+        {
+          "start": 24789,
+          "end": 24818,
+          "before": "'Expected playoff qualifiers'",
+          "after": "\"Expected Playoff Qualifiers\""
+        },
+        {
+          "start": 17410,
+          "end": 17423,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 17318,
+          "end": 17329,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 17213,
+          "end": 17234,
+          "before": "'Side Pool type/name'",
+          "after": "\"Side Pool Type/Name\""
+        },
+        {
+          "start": 16953,
+          "end": 16964,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 16858,
+          "end": 16880,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 16774,
+          "end": 16785,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 16542,
+          "end": 16553,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 16438,
+          "end": 16460,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 16339,
+          "end": 16352,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 16033,
+          "end": 16044,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 15851,
+          "end": 15862,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 15708,
+          "end": 15730,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 15611,
+          "end": 15624,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 15307,
+          "end": 15318,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 15217,
+          "end": 15239,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 14984,
+          "end": 14995,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 14798,
+          "end": 14809,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 14640,
+          "end": 14651,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 14318,
+          "end": 14329,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 8766,
+          "end": 8788,
+          "before": "'Main rate per person'",
+          "after": "\"Main Rate per Person\""
+        },
+        {
+          "start": 8187,
+          "end": 8199,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 8036,
+          "end": 8048,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 7863,
+          "end": 7875,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 7778,
+          "end": 7790,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 7682,
+          "end": 7694,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 7574,
+          "end": 7585,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-layout-save-browser.mjs",
+      "beforeSha256": "be53960cfa50f0913fbac0d818180ba4d9d9ae7761eba24f69e49844c14404ec",
+      "afterSha256": "9623702aff627c69eec031b6dfe5137130ec5378877cc18f271b26ee98c8af75",
+      "changes": [
+        {
+          "start": 22290,
+          "end": 22302,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 21232,
+          "end": 21244,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 17709,
+          "end": 17720,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 16336,
+          "end": 16360,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 16065,
+          "end": 16089,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 15986,
+          "end": 15997,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 15896,
+          "end": 15909,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 15541,
+          "end": 15554,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 15285,
+          "end": 15309,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 15175,
+          "end": 15188,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 14550,
+          "end": 14572,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 14399,
+          "end": 14423,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 14317,
+          "end": 14328,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 14230,
+          "end": 14243,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 13961,
+          "end": 13974,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        },
+        {
+          "start": 13236,
+          "end": 13248,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 12135,
+          "end": 12147,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 11520,
+          "end": 11532,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 9313,
+          "end": 9325,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 9209,
+          "end": 9221,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 9102,
+          "end": 9114,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 8801,
+          "end": 8813,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        },
+        {
+          "start": 8695,
+          "end": 8707,
+          "before": "'Event name'",
+          "after": "\"Event Name\""
+        },
+        {
+          "start": 8020,
+          "end": 8032,
+          "before": "'Entry type'",
+          "after": "\"Entry Type\""
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-typed-side-ratio-browser.mjs",
+      "beforeSha256": "9f7282ffa570c969732b56bd7981fbed24857f7061b0b0874451f5ce95e02315",
+      "afterSha256": "8c61b12d82b710ac3a4779de92452f1f91e36b309863cd15ed69405c221bbe80",
+      "changes": [
+        {
+          "start": 4555,
+          "end": 4566,
+          "before": "'Entry fee'",
+          "after": "\"Entry Fee\""
+        },
+        {
+          "start": 4415,
+          "end": 4437,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 4301,
+          "end": 4323,
+          "before": "'Pool name (optional)'",
+          "after": "\"Pool Name (Optional)\""
+        },
+        {
+          "start": 3588,
+          "end": 3612,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 3409,
+          "end": 3433,
+          "before": "'Side Pool payout ratio'",
+          "after": "\"Side Pool Payout Ratio\""
+        },
+        {
+          "start": 2879,
+          "end": 2892,
+          "before": "'Payout type'",
+          "after": "\"Payout Type\""
+        }
+      ]
+    },
+    {
+      "file": "tests/side-pool-graduated-v2-browser.mjs",
+      "beforeSha256": "d57a8b1455b6a3ebeff646d3bbc047230647f8bc68fe1e3940e95b775b70cfb8",
+      "afterSha256": "503f479ad44c56d724c54a01e301d7c5d3cfdb2ed9d46a5584522c8279a282bd",
+      "changes": [
+        {
+          "start": 11711,
+          "end": 11733,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 11048,
+          "end": 11070,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 9940,
+          "end": 9962,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        },
+        {
+          "start": 7212,
+          "end": 7234,
+          "before": "'Disclosure reference'",
+          "after": "\"Disclosure Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/side-pool-recipients-v3-browser.mjs",
+      "beforeSha256": "2b2ebcb946b429837cfa2cefe446149b50114be77d8f383871dbb6882691f756",
+      "afterSha256": "f1f558b192f9df768916d9405cfa1b7551c4c0e29109fa6df1cd67dc9ddc50cf",
+      "changes": [
+        {
+          "start": 13489,
+          "end": 13514,
+          "before": "'Recipient review reason'",
+          "after": "\"Recipient Review Reason\""
+        },
+        {
+          "start": 13062,
+          "end": 13087,
+          "before": "'Recipient review reason'",
+          "after": "\"Recipient Review Reason\""
+        },
+        {
+          "start": 12021,
+          "end": 12060,
+          "before": "'Recipient policy disclosure reference'",
+          "after": "\"Recipient Policy Disclosure Reference\""
+        },
+        {
+          "start": 11412,
+          "end": 11451,
+          "before": "'Recipient policy disclosure reference'",
+          "after": "\"Recipient Policy Disclosure Reference\""
+        },
+        {
+          "start": 10500,
+          "end": 10539,
+          "before": "'Recipient policy disclosure reference'",
+          "after": "\"Recipient Policy Disclosure Reference\""
+        },
+        {
+          "start": 8828,
+          "end": 8853,
+          "before": "'Recipient review reason'",
+          "after": "\"Recipient Review Reason\""
+        },
+        {
+          "start": 7474,
+          "end": 7513,
+          "before": "'Recipient policy disclosure reference'",
+          "after": "\"Recipient Policy Disclosure Reference\""
+        }
+      ]
+    },
+    {
+      "file": "tests/simulation-finance-browser.mjs",
+      "beforeSha256": "6031cc5e7f7186734c4a3b1bc27badedb57184b589136c07fd65fa169a020167",
+      "afterSha256": "33ca7fe5a8bf1b7d96d111a05efebee4cb0ef928f8d918be3211132e04acd71f",
+      "changes": [
+        {
+          "start": 9222,
+          "end": 9240,
+          "before": "'Fictional player'",
+          "after": "\"Fictional Player\""
+        }
+      ]
+    },
+    {
+      "file": "tests/synthetic-event-ui-browser.mjs",
+      "beforeSha256": "17d7eb201dd363658c1f4e6758acc64d0e510a9c47adcaef35a0ced998f7c88f",
+      "afterSha256": "992312905f46fdc3869c4f6cd66030475fa479ebb349070d623bc2385c6b85b0",
+      "changes": [
+        {
+          "start": 16413,
+          "end": 16432,
+          "before": "'Resolution reason'",
+          "after": "\"Resolution Reason\""
+        },
+        {
+          "start": 12369,
+          "end": 12388,
+          "before": "'Resolution reason'",
+          "after": "\"Resolution Reason\""
+        },
+        {
+          "start": 11198,
+          "end": 11221,
+          "before": "'Playoff review reason'",
+          "after": "\"Playoff Review Reason\""
+        }
+      ]
+    }
+  ],
+  "captionAssertionFiles": [
+    {
+      "file": "tests/dashboard-semantics.test.mjs",
+      "beforeSha256": "3aabfc94b2915728d3e8a8b14c495ca2e766560fa43c2c95d9b5785ab02682ca",
+      "afterSha256": "5e0b56aca481520643ca67ca24f2e2fe37842d1d51f74ad406e040c732405d88",
+      "changes": [
+        {
+          "start": 10760,
+          "end": 10780,
+          "before": "/Search player name/",
+          "after": "/Search Player Name/"
+        },
+        {
+          "start": 5890,
+          "end": 5910,
+          "before": "/Search player name/",
+          "after": "/Search Player Name/"
+        }
+      ]
+    },
+    {
+      "file": "tests/event-schedule-publication.test.mjs",
+      "beforeSha256": "0a21f4ca4316b7f210becb626a4b78b0073e711df3ff3c6e3026e514ab3dbe8a",
+      "afterSha256": "af897c9d9a2045b0d07587523c624f2ad48af732ec9409412fea168fd25fe362",
+      "changes": [
+        {
+          "start": 12048,
+          "end": 12065,
+          "before": "/Choose CSV file/",
+          "after": "/Choose CSV File/"
+        }
+      ]
+    },
+    {
+      "file": "tests/finalize-registration-and-event-change.test.mjs",
+      "beforeSha256": "2851bba44875ef3fb7753805e8b08c890ceae71684ea321391f735572cf757d7",
+      "afterSha256": "4423cb95e31a052f870d97e0733291a99b39a7ab581f44e69617d5d725694cbf",
+      "changes": [
+        {
+          "start": 2996,
+          "end": 3022,
+          "before": "/Required director reason/",
+          "after": "/Required Director Reason/"
+        }
+      ]
+    },
+    {
+      "file": "tests/game-api-semantics.test.mjs",
+      "beforeSha256": "9f1f50eae9f71adee65cf9636016e7040a0bf30a18d6ff0c06435424697b2173",
+      "afterSha256": "576b0913f22e2fa5ede118404d9f780ef512afdb7e0ab821317b8eaab375a61f",
+      "changes": [
+        {
+          "start": 114768,
+          "end": 114790,
+          "before": "/Rulebook disposition/",
+          "after": "/Rulebook Disposition/"
+        }
+      ]
+    },
+    {
+      "file": "tests/money.test.mjs",
+      "beforeSha256": "a6f3bfb805994dd42ffa5d7aca0fe56b859325e8728ca905ee1d35eec347b704",
+      "afterSha256": "82196127c7c778e18ab22036c3ffff6fa9e0473f9dba24eaf47f16c3c7ac04d0",
+      "changes": [
+        {
+          "start": 4111,
+          "end": 4140,
+          "before": "/Consolation rate per person/",
+          "after": "/Consolation Rate per Person/"
+        },
+        {
+          "start": 4063,
+          "end": 4085,
+          "before": "/Main rate per person/",
+          "after": "/Main Rate per Person/"
+        }
+      ]
+    },
+    {
+      "file": "tests/persistent-registration-link-reveal.test.mjs",
+      "beforeSha256": "0c44cefbc43dfb9e0b834dd918d29fe768352893456f723351469bb651867375",
+      "afterSha256": "e575eb42c2063d1aac4a29bab12c825a2a6714260907339f5f470546fb0ab38e",
+      "changes": [
+        {
+          "start": 3451,
+          "end": 3462,
+          "before": "/Last name/",
+          "after": "/Last Name/"
+        },
+        {
+          "start": 3415,
+          "end": 3427,
+          "before": "/First name/",
+          "after": "/First Name/"
+        }
+      ]
+    },
+    {
+      "file": "tests/registration-claim-review-ui.test.mjs",
+      "beforeSha256": "43c7412c04d968a39fc0b6e1ad32e2a72313396b273736c241f468b70a2a732e",
+      "afterSha256": "e3feae60e6e05312d7d4fb93663d67c405fcc50ab14c9cfbeb4336d0b5963ab8",
+      "changes": [
+        {
+          "start": 858,
+          "end": 879,
+          "before": "/Reason \\(optional\\)/",
+          "after": "/Reason \\(Optional\\)/"
+        }
+      ]
+    },
+    {
+      "file": "tests/registration-identity-and-public-contact.test.mjs",
+      "beforeSha256": "cec5a9f8d4b95e59c80f800800349dc69de24041c2de596c6c8530b753fca98f",
+      "afterSha256": "e8665ff049c5ecf0ae636545579622baf9366ea3edaf1ec0dc55d5620a9e1da4",
+      "changes": [
+        {
+          "start": 4428,
+          "end": 4475,
+          "before": "/Tournament Director name \\(shown to players\\)/",
+          "after": "/Tournament Director Name \\(Shown to Players\\)/"
+        },
+        {
+          "start": 2343,
+          "end": 2354,
+          "before": "/Last name/",
+          "after": "/Last Name/"
+        },
+        {
+          "start": 2299,
+          "end": 2311,
+          "before": "/First name/",
+          "after": "/First Name/"
+        }
+      ]
+    },
+    {
+      "file": "tests/setup-workspace-ui.test.mjs",
+      "beforeSha256": "e34331ebca3977dd0810c700610c44464ea1e94f5f235cbe6384c85fa8f7dcd7",
+      "afterSha256": "6206a6d82a34f5c0a653038174c833df6ace0d8cfcadc3e8beb1709f970907ec",
+      "changes": [
+        {
+          "start": 6049,
+          "end": 6065,
+          "before": "\"Number of days\"",
+          "after": "\"Number of Days\""
+        },
+        {
+          "start": 6035,
+          "end": 6047,
+          "before": "\"Start time\"",
+          "after": "\"Start Time\""
+        },
+        {
+          "start": 6021,
+          "end": 6033,
+          "before": "\"Start date\"",
+          "after": "\"Start Date\""
+        },
+        {
+          "start": 5704,
+          "end": 5715,
+          "before": "\"Last name\"",
+          "after": "\"Last Name\""
+        },
+        {
+          "start": 5690,
+          "end": 5702,
+          "before": "\"First name\"",
+          "after": "\"First Name\""
+        },
+        {
+          "start": 5635,
+          "end": 5647,
+          "before": "\"Venue city\"",
+          "after": "\"Venue City\""
+        },
+        {
+          "start": 5611,
+          "end": 5633,
+          "before": "\"Venue street address\"",
+          "after": "\"Venue Street Address\""
+        },
+        {
+          "start": 5597,
+          "end": 5609,
+          "before": "\"Venue name\"",
+          "after": "\"Venue Name\""
+        },
+        {
+          "start": 5578,
+          "end": 5595,
+          "before": "\"Tournament name\"",
+          "after": "\"Tournament Name\""
+        }
+      ]
+    },
+    {
+      "file": "tests/standard-singles-playoff-placements.test.mjs",
+      "beforeSha256": "855012ea35141bcea42b5715da2f3faa20ab6cb29d601528d846f38f4a68a846",
+      "afterSha256": "7582e4baea9d73fa30e92d55228e9a155523e86e158c437b8385d74b90712fa9",
+      "changes": [
+        {
+          "start": 6712,
+          "end": 6736,
+          "before": "/MRP playoff exit round/",
+          "after": "/MRP Playoff Exit Round/"
+        }
+      ]
+    },
+    {
+      "file": "tests/supabase-auth-semantics.test.mjs",
+      "beforeSha256": "9c3e3f43da4bb58b067b3743778b7eae1c2cc3a2096fd956697d110dfe8ece2e",
+      "afterSha256": "31fc7f11694419e2eb925a28190ddce5ea837bda3a2d2f8dee75188a6cb57516",
+      "changes": [
+        {
+          "start": 55207,
+          "end": 55236,
+          "before": "/Search a topic or rule word/",
+          "after": "/Search a Topic or Rule Word/"
+        }
+      ]
+    }
+  ],
+  "manualCaptionAssertionFiles": [
+    {
+      "file": "tests/create-setup-flow-ui.test.mjs",
+      "beforeSha256": "e96ce730d63566f9d047026822fa144c9bd80166b686e9847d93d0a88b4ea842",
+      "afterSha256": "7771493202ea221db482e45b41419d2171b5a5e35d4d00a0568b6b87fd27462b",
+      "changes": [
+        {
+          "before": "/Start date<input",
+          "after": "/Start Date<input"
+        },
+        {
+          "before": "/Start time<input",
+          "after": "/Start Time<input"
+        }
+      ]
+    },
+    {
+      "file": "tests/october-team-scoring.test.mjs",
+      "beforeSha256": "10ceed34b2810262f49434cca7ec7d0bb9a0aa44ce56a1af31bdbcda2cd8d6a9",
+      "afterSha256": "69b0ed590c93cbaf1106b43358a05871d8830c21d5ea56e67e7adb934fbec025",
+      "changes": [
+        {
+          "before": "\"Shared scorecard\"",
+          "after": "\"Shared Scorecard\""
+        },
+        {
+          "before": "\"exact ACC #\"",
+          "after": "\"Exact ACC #\""
+        },
+        {
+          "before": "\"Entry type\"",
+          "after": "\"Entry Type\""
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "applicationTests": 1486,
+    "typeScript": "pass",
+    "eslint": "0 errors;97 warnings in combined existing workspace",
+    "browser": {
+      "passed": true,
+      "widths": [
+        320,
+        390,
+        1440
+      ],
+      "zooms": [
+        100,
+        200
+      ],
+      "fixture": "synthetic intercepted APIs only",
+      "receipt": "test-results/setup-layout-save-browser/result.json",
+      "cleanup": "task-owned server6456 exited; exact PID absent on followup"
+    },
+    "limitations": [
+      "Only setup flow received browser acceptance in this pass; other routes received static caption review, type/lint and application regression checks.",
+      "Dynamic labels, full-sentence attestation/instructions, non-input captions and lead-owned playoff editors are excluded.",
+      "No hosted, database, user-session or publication changes."
+    ]
+  }
+}

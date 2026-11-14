@@ -1,3 +1,8 @@
+import {ConsyAddonDirectorProviderV1} from '../../../../components/consy-addon-director-provider-v1';
+import {consyAddonDirectorRoutesEnabledV1} from '../../../../lib/api/consy-addon-director-handlers-v1';
+import {mrpMembershipManualReviewRoutesEnabledV1} from '../../../../lib/api/mrp-membership-manual-review-v1';
+import {MrpMembershipReviewProviderV1} from '../../../../components/mrp-membership-review-provider-v1';
+import {getPublicSupabaseEnv} from '../../../../lib/env';
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,6 +27,8 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ t
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
     <ParticipantsClient actorId={access.user.id} tournamentId={tournamentId} workspace={workspace} />
     <Link className="guide-link" href={`/tournament/${tournamentId}/participant-status`}>Attendance, Disqualification, and Reinstatement</Link>
+    {mrpMembershipManualReviewRoutesEnabledV1()&&access.role==='director'&&<MrpMembershipReviewProviderV1 enabled actorId={access.user.id} tournamentId={tournamentId} projectUrl={getPublicSupabaseEnv().url} workspace={workspace}/>} 
+    {consyAddonDirectorRoutesEnabledV1()&&['director','co_director'].includes(access.role)&&<ConsyAddonDirectorProviderV1 enabled actorId={access.user.id} tournamentId={tournamentId} projectUrl={getPublicSupabaseEnv().url} workspace={workspace}/>}
     <SharedDeviceSignOut />
   </section></main>;
 }

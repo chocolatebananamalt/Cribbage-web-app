@@ -1,0 +1,2 @@
+import fs from'node:fs';import crypto from'node:crypto';import{sql,checkpoint,report}from'./manual-final-genuine-owned-db-v1.mjs';
+for(const f of['custom-q-accounting-bridge-v1.sql','custom-combined-accounting-v10.sql']){const s=fs.readFileSync('database/proposals/'+f,'utf8');sql(s);report.sourceHashes[f]=crypto.createHash('sha256').update(s).digest('hex');checkpoint('genuine_dependency_'+f.replaceAll('.','_'),{installed:true,sha256:report.sourceHashes[f]});}console.log('Actual Custom Q and combined source dependencies installed in existing fictional fixture');

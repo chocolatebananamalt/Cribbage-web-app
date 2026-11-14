@@ -10,6 +10,16 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # Build-only loopback placeholders; no live backend or repository secrets.
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_CRIBBAGE_TEST_APP: fictional
+      NEXT_PUBLIC_SUPABASE_URL: https://localhost:54321
+      NEXT_PUBLIC_CRIBBAGE_TEST_BACKEND_URL: https://localhost:54321
+      NEXT_PUBLIC_CRIBBAGE_TEST_PROJECT_REF: localfictional
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_build_only
+      SUPABASE_SECRET_KEY: sb_secret_build_only
+      EVENT_PRIZE_SETUP_TEST_PROJECT_ENABLED_V1: 'true'
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

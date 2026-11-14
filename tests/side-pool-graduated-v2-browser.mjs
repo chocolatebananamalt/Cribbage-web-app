@@ -57,7 +57,7 @@ try {
   };
   for (const width of [390, 1440]) {
     posts = []; reconciliations = []; mode = 'first-abort'; await go('publish', width);
-    await page.getByLabel('Disclosure reference').fill('TEST ONLY posted tournament rules');
+    await page.getByLabel("Disclosure Reference").fill('TEST ONLY posted tournament rules');
     await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
     await page.getByRole('status').filter({ hasText: 'unresolved' }).waitFor();
     const first = structuredClone(posts[0]); assert.equal(first.body.action, 'policy'); assert.equal(first.body.request.method, graduatedPoolAmountsVersionV2); assert.equal(first.body.request.disclosed, true); assert.equal(first.body.request.disclosureReference, 'TEST ONLY posted tournament rules');
@@ -79,13 +79,13 @@ try {
     assert.equal(await page.getByRole('list', { name: 'Unpaid rank amount schedule' }).getByText('Fictional Player').count(), 0);
   }
   checks.push('disclosure publication before collection', 'interrupted exact request recovery at 390 and 1440', 'fully paid entrant count and conserved unpaid rank amounts at 390 and 1440', 'stale review history remains visible', 'amount review binds current source digest and version', 'no horizontal overflow and no recipient ranking');
-  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.getByLabel('Disclosure reference').fill('TEST ONLY retained bytes check'); mode = 'change-retained-bytes'; await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
+  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.getByLabel("Disclosure Reference").fill('TEST ONLY retained bytes check'); mode = 'change-retained-bytes'; await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
   await page.getByRole('status').filter({ hasText: 'could not be cleared safely' }).waitFor(); const ownKey = `payment-obligation:side-pool-graduated-v2:${actorId}:${tournamentId}:${poolId}`; assert.equal(await page.evaluate(k => sessionStorage.getItem(k), ownKey), '{"tampered":true}'); assert.ok(await page.getByRole('button', { name: 'Retry exact Side Pool request' }).isDisabled());
   checks.push('changed retained bytes are preserved and block retry after receipt');
-  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.addInitScript((key) => { const remove = Storage.prototype.removeItem; Storage.prototype.removeItem = function (candidate) { if (candidate === key) throw new Error('synthetic removal failure'); return remove.call(this, candidate); }; }, ownKey); await page.reload(); await page.getByRole('heading', { name: 'Test Side Pool' }).waitFor(); await page.getByLabel('Disclosure reference').fill('TEST ONLY removal failure'); await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
+  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.addInitScript((key) => { const remove = Storage.prototype.removeItem; Storage.prototype.removeItem = function (candidate) { if (candidate === key) throw new Error('synthetic removal failure'); return remove.call(this, candidate); }; }, ownKey); await page.reload(); await page.getByRole('heading', { name: 'Test Side Pool' }).waitFor(); await page.getByLabel("Disclosure Reference").fill('TEST ONLY removal failure'); await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
   await page.getByRole('status').filter({ hasText: 'could not be cleared safely' }).waitFor(); const retainedAfterRemoveFailure = await page.evaluate(k => sessionStorage.getItem(k), ownKey); assert.ok(retainedAfterRemoveFailure); assert.ok(await page.getByRole('button', { name: 'Retry exact Side Pool request' }).isDisabled());
   checks.push('storage removal failure preserves exact request and blocks retry');
-  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.getByLabel('Disclosure reference').fill('TEST ONLY identity conflict'); mode = 'conflict'; await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
+  posts = []; reconciliations = []; mode = 'success'; await go('publish', 390); await page.getByLabel("Disclosure Reference").fill('TEST ONLY identity conflict'); mode = 'conflict'; await page.getByRole('button', { name: 'Disclose and freeze graduated policy' }).click();
   await page.getByRole('status').filter({ hasText: 'saved operation conflicts' }).waitFor(); const conflictRaw = await page.evaluate(k => sessionStorage.getItem(k), ownKey); assert.ok(conflictRaw); assert.ok(await page.getByRole('button', { name: 'Retry exact Side Pool request' }).isDisabled()); assert.equal(posts.length, 1); assert.equal(reconciliations.length, 0);
   checks.push('initial idempotency conflict blocks and preserves recovery immediately');
   const foreignActor = id(998), foreignKey = `payment-obligation:side-pool-graduated-v2:${foreignActor}:${tournamentId}:${poolId}`;

@@ -71,7 +71,7 @@ test("director UI visibly separates playoff finish from qualifying rank and with
   assert.match(client, /Supervised playoff placements/);
   assert.match(client, /Qualifying-round rank remains unchanged/);
   assert.match(client, /legacy MRP calculation and champion playoff credit are under review/);
-  assert.match(client, /MRP playoff exit round/);
+  assert.match(client, /MRP Playoff Exit Round/);
   assert.match(client, /Legacy recorded place/);
   assert.match(client, /playoff-placement:\$\{actorId\}:\$\{eventId\}/);
   assert.match(client, /reconciliation/);

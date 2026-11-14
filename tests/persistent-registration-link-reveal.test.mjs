@@ -53,7 +53,7 @@ test("registration UI offers repeatable active viewing and renders status only o
   assert.match(form, /Phone:/);
   assert.match(form, /tournamentContact\.phone \?/);
   assert.match(form, /tournamentContact\.email \?/);
-  assert.match(form, /First name/);
-  assert.match(form, /Last name/);
+  assert.match(form, /First Name/);
+  assert.match(form, /Last Name/);
   assert.match(form, /Thank you and welcome/);
 });

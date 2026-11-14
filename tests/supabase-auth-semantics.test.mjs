@@ -1,8 +1,10 @@
+import {directPrivateResponseBoundary,directPrivateUnavailableBoundary,sharedApiUnavailableBoundary} from './helpers/direct-route-contracts.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
+import ts from 'typescript';
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -11,6 +13,183 @@ const collectRoutes = (directory) => fs.readdirSync(directory, { withFileTypes: 
   if (entry.isDirectory()) return collectRoutes(fullPath);
   return entry.name === 'route.ts' ? [fullPath] : [];
 });
+
+function usesGameReopenNoStore(route,source,handler=read('src/lib/api/native-mixed-game-reopen-v1.ts')){
+ const tree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const factory='createNativeMixedGameReopenHandlersV1';
+ const imported=tree.statements.find(n=>ts.isImportDeclaration(n)&&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)&&n.importClause.namedBindings.elements.some(e=>e.name.text===factory));
+ if(!imported||!ts.isStringLiteral(imported.moduleSpecifier)||path.resolve(path.dirname(route),imported.moduleSpecifier.text+'.ts')!==path.join(root,'src/lib/api/native-mixed-game-reopen-v1.ts'))return false;
+ let binding;const exports=[];
+ for(const s of tree.statements){if(!ts.isVariableStatement(s))continue;for(const d of s.declarationList.declarations){
+  if(ts.isIdentifier(d.name)&&d.initializer&&ts.isCallExpression(d.initializer)&&d.initializer.expression.getText(tree)===factory)binding=d.name.text;
+  if(s.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword))exports.push(d);
+ }}
+ if(!binding||!exports.length||!exports.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isArrowFunction(d.initializer)&&ts.isCallExpression(d.initializer.body)&&ts.isPropertyAccessExpression(d.initializer.body.expression)&&d.initializer.body.expression.expression.getText(tree)===binding&&['GET','POST','reconcilePOST'].includes(d.initializer.body.expression.name.text)))return false;
+ // This bounded factory owns its Response.json helper. All return branches
+ // must continue through it; changing the helper or bypassing it fails here.
+ return handler.includes("const json=(body:unknown,status=200)=>Response.json(body,{status,headers:{'cache-control':'private, no-store'}})")
+  &&! /return\s+(?:Response\.|new Response|fetch\()/.test(handler)
+  &&handler.includes("return{GET:(r:NextRequest,c:Context)=>run(r,c,'read'),POST:(r:NextRequest,c:Context)=>run(r,c,'write'),reconcilePOST:(r:NextRequest,c:Context)=>run(r,c,'recover')}");
+}
+
+function usesConsyAddonNoStore(route,source,handler=read('src/lib/api/consy-addon-director-handlers-v1.ts'),factoryName='createConsyAddonDirectorHandlersV1',handlerFile='src/lib/api/consy-addon-director-handlers-v1.ts'){
+ const tree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const name=factoryName;
+ if(!tree.statements.some(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&path.resolve(path.dirname(route),n.moduleSpecifier.text+'.ts')===path.join(root,handlerFile)&&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)&&n.importClause.namedBindings.elements.some(e=>e.name.text===name)))return false;
+ const binding=tree.statements.filter(ts.isVariableStatement).flatMap(n=>[...n.declarationList.declarations]).find(d=>ts.isIdentifier(d.name)&&d.initializer&&ts.isCallExpression(d.initializer)&&d.initializer.expression.getText(tree)===name)?.name.getText(tree);
+ const exports=tree.statements.filter(n=>ts.isVariableStatement(n)&&n.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)).flatMap(n=>[...n.declarationList.declarations]).filter(d=>!(ts.isIdentifier(d.name)&&d.name.text==='dynamic'&&d.initializer&&ts.isStringLiteral(d.initializer)&&d.initializer.text==='force-dynamic'));
+ if(!exports.length||!exports.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isPropertyAccessExpression(d.initializer)&&['GET','POST','reconcilePOST'].includes(d.initializer.name.text)&&(ts.isCallExpression(d.initializer.expression)&&d.initializer.expression.expression.getText(tree)===name||ts.isIdentifier(d.initializer.expression)&&d.initializer.expression.text===binding)))return false;
+ return /const json=\((?:v|body):unknown,status=200\)=>Response\.json\((?:v|body),\{status,headers:\{'cache-control':'private, no-store'\}\}\)/.test(handler)&&!/return\s+(?:Response\.|new Response|fetch\()/.test(handler);
+}
+
+// Follow real wrapper -> production factory -> shared apiJson wiring. Merely
+// placing a boundary name in a route comment is not a factory proof.
+function usesSharedMixedNoStore(route,source,productionSource=read('src/lib/api/synthetic-mixed-production.ts'),settings={factory:'createMixedProductionHandlers',file:'src/lib/api/synthetic-mixed-production.ts',handler:'createMixedHandlers',methods:['capabilityGET','ownGET','ownPOST','officialGET','officialPOST']}){
+ const tree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const imported=tree.statements.find(n=>ts.isImportDeclaration(n)&&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)
+  &&n.importClause.namedBindings.elements.some(e=>e.name.text===settings.factory));
+ if(!imported||!ts.isStringLiteral(imported.moduleSpecifier)||path.resolve(path.dirname(route),imported.moduleSpecifier.text+'.ts')!==path.join(root,settings.file))return false;
+ let binding;const exported=[];
+ for(const statement of tree.statements){
+  if(!ts.isVariableStatement(statement))continue;
+  for(const d of statement.declarationList.declarations){
+   if(ts.isIdentifier(d.name)&&d.initializer&&ts.isCallExpression(d.initializer)&&d.initializer.expression.getText(tree)===settings.factory&&d.initializer.arguments.length===0)binding=d.name.text;
+   if(statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)){if(ts.isIdentifier(d.name)&&d.name.text==='dynamic'&&d.initializer&&ts.isStringLiteral(d.initializer)&&d.initializer.text==='force-dynamic')continue;exported.push(d);}
+  }
+ }
+ if(!binding||!exported.length||!exported.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isPropertyAccessExpression(d.initializer)
+  &&d.initializer.expression.getText(tree)===binding&&settings.methods.includes(d.initializer.name.text)))return false;
+ const factory=ts.createSourceFile('production.ts',productionSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const boundaryImport=factory.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&n.moduleSpecifier.text==='./route-boundary');
+ if(!boundaryImport?.importClause?.namedBindings||!ts.isNamedImports(boundaryImport.importClause.namedBindings))return false;
+ const names=boundaryImport.importClause.namedBindings.elements.map(n=>n.name.text);if(!names.includes('apiJson')||!names.includes('withApiFailureBoundary'))return false;
+ const definition=factory.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===settings.factory);
+ if(!definition?.body||definition.parameters.length)return false;
+ const returned=definition.body.statements.find(ts.isReturnStatement)?.expression;
+ if(!returned||!ts.isCallExpression(returned)||returned.expression.getText(factory)!==settings.handler||returned.arguments.length!==1||!ts.isObjectLiteralExpression(returned.arguments[0]))return false;
+ const properties=returned.arguments[0].properties;
+ return [['json','apiJson'],['boundary','withApiFailureBoundary']].every(([name,value])=>properties.some(p=>ts.isPropertyAssignment(p)&&p.name.getText(factory)===name&&ts.isIdentifier(p.initializer)&&p.initializer.text===value));
+}
+
+function usesSharedBootstrapWorkflowNoStore(route,source,production=read('src/lib/api/native-mixed-bootstrap-production-v1.ts')){
+ return usesSharedMixedNoStore(route,source,production,{factory:'createNativeMixedBootstrapProductionHandlersV1',file:'src/lib/api/native-mixed-bootstrap-production-v1.ts',handler:'createNativeMixedBootstrapHandlersV1',methods:['sourceGET','writePOST','operationPOST']});
+}
+function usesSharedPilotNoStore(route,source,productionSource=read('src/lib/api/native-mixed-pilot-director-production-v1.ts')){
+ const file='src/lib/api/native-mixed-pilot-director-production-v1.ts';
+ return [{factory:'createNativeMixedPilotDirectorProductionHandlersV1',file,handler:'createNativeMixedPilotDirectorHandlersV1',methods:['sourceGET','operationPOST','operationGET','transitionPOST','cancelPOST','cancellationPOST','simulatedStartPOST','simulatedStartOperationPOST','simulatedStartedSourcePOST']},{factory:'createNativeMixedPilotPreparationProductionHandlersV1',file,handler:'createNativeMixedPreparationHandlersV1',methods:['GET','bootstrapGET']}].some(settings=>usesSharedMixedNoStore(route,source,productionSource,settings));
+}
+function usesSharedOperationalProviderNoStore(route,source,productionSource=read('src/lib/api/operational-provider-production-v1.ts'),handlerSource=read('src/lib/api/operational-provider-handlers-v1.ts')){
+ const productionFile='src/lib/api/operational-provider-production-v1.ts';
+ const routeTree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const imported=routeTree.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)
+  &&path.resolve(path.dirname(route),n.moduleSpecifier.text)===path.join(root,productionFile)
+  &&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)
+  &&n.importClause.namedBindings.elements.some(e=>(e.propertyName?.text??e.name.text)==='operationalProviderHandlersV1'));
+ if(!imported||!imported.importClause?.namedBindings||!ts.isNamedImports(imported.importClause.namedBindings))return false;
+ const specifier=imported.importClause.namedBindings.elements.find(e=>(e.propertyName?.text??e.name.text)==='operationalProviderHandlersV1');
+ if(!specifier)return false;
+ const binding=specifier.name.text;
+ const allowed=new Set(['eventSettingsGET','eventSettingsPOST','eventSettingsOperationGET','financeGET','financePOST','financeOperationGET','recipientSourceGET','incomePOST','fundReviewPOST','fundReviewSourceGET','finalSourceGET','finalRecordGET','finalAwardsPOST','nativeOperationGET']);
+ const exported=routeTree.statements.flatMap(statement=>ts.isVariableStatement(statement)&&statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)?[...statement.declarationList.declarations]:[]);
+ if(!exported.length||!exported.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isPropertyAccessExpression(d.initializer)
+  &&d.initializer.expression.getText(routeTree)===binding&&allowed.has(d.initializer.name.text)))return false;
+
+ const production=ts.createSourceFile('operational-provider-production-v1.ts',productionSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const boundaryImport=production.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&n.moduleSpecifier.text==='./route-boundary.ts');
+ if(!boundaryImport?.importClause?.namedBindings||!ts.isNamedImports(boundaryImport.importClause.namedBindings))return false;
+ const boundaryNames=boundaryImport.importClause.namedBindings.elements.map(n=>n.name.text);
+ if(!boundaryNames.includes('apiJson')||!boundaryNames.includes('withApiFailureBoundary'))return false;
+ const handlerImport=production.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&n.moduleSpecifier.text==='./operational-provider-handlers-v1.ts'
+  &&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)
+  &&n.importClause.namedBindings.elements.some(e=>e.name.text==='createOperationalProviderHandlersV1'));
+ if(!handlerImport)return false;
+ const provider=production.statements.flatMap(statement=>ts.isVariableStatement(statement)?[...statement.declarationList.declarations]:[])
+  .find(d=>ts.isIdentifier(d.name)&&d.name.text==='operationalProviderHandlersV1');
+ if(!provider?.initializer||!ts.isCallExpression(provider.initializer)||provider.initializer.expression.getText(production)!=='createOperationalProviderHandlersV1'
+  ||provider.initializer.arguments.length!==1||!ts.isObjectLiteralExpression(provider.initializer.arguments[0]))return false;
+ const properties=provider.initializer.arguments[0].properties;
+ if(![['json','apiJson'],['boundary','withApiFailureBoundary']].every(([name,value])=>properties.some(p=>ts.isPropertyAssignment(p)&&p.name.getText(production)===name&&ts.isIdentifier(p.initializer)&&p.initializer.text===value)))return false;
+
+ const handler=ts.createSourceFile('operational-provider-handlers-v1.ts',handlerSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ if(!handler.statements.some(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='createOperationalProviderHandlersV1'&&n.body))return false;
+ let privateNoStore=false,usesJson=false,usesBoundary=false;
+ const visit=node=>{if(ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)){
+  const target=node.expression.expression.getText(handler),method=node.expression.name.text;
+  if(target==='headers'&&method==='set'&&node.arguments.length===2&&node.arguments.every(ts.isStringLiteral)
+   &&node.arguments[0].text==='cache-control'&&node.arguments[1].text==='private, no-store')privateNoStore=true;
+  if(target==='d'&&method==='json')usesJson=true;
+  if(target==='d'&&method==='boundary')usesBoundary=true;
+ }ts.forEachChild(node,visit);};
+ visit(handler);
+ return privateNoStore&&usesJson&&usesBoundary;
+}
+
+function usesSharedOperationalAdoptionNoStore(route,source){
+ const productionFile='src/lib/api/operational-finance-source-adoption-production-v1.ts',handlerFile='src/lib/api/operational-finance-source-adoption-handlers-v1.ts';
+ const routeTree=ts.createSourceFile(route,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const imported=routeTree.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&path.resolve(path.dirname(route),n.moduleSpecifier.text)===path.join(root,productionFile)&&n.importClause?.namedBindings&&ts.isNamedImports(n.importClause.namedBindings)&&n.importClause.namedBindings.elements.some(e=>(e.propertyName?.text??e.name.text)==='operationalFinanceSourceAdoptionHandlersV1'));
+ if(!imported||!imported.importClause?.namedBindings||!ts.isNamedImports(imported.importClause.namedBindings))return false;
+ const specifier=imported.importClause.namedBindings.elements.find(e=>(e.propertyName?.text??e.name.text)==='operationalFinanceSourceAdoptionHandlersV1');if(!specifier)return false;const binding=specifier.name.text;
+ const allowed=new Set(['adoptionGET','adoptionPOST','adoptionOperationGET','allocationGET','allocationPOST','allocationOperationGET']);
+ const exported=routeTree.statements.flatMap(statement=>ts.isVariableStatement(statement)&&statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)?[...statement.declarationList.declarations]:[]);
+ if(!exported.length||!exported.every(d=>ts.isIdentifier(d.name)&&['GET','POST'].includes(d.name.text)&&d.initializer&&ts.isPropertyAccessExpression(d.initializer)&&d.initializer.expression.getText(routeTree)===binding&&allowed.has(d.initializer.name.text)))return false;
+ const productionSource=read(productionFile),handlerSource=read(handlerFile),production=ts.createSourceFile(productionFile,productionSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS),handler=ts.createSourceFile(handlerFile,handlerSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const boundaryImport=production.statements.find(n=>ts.isImportDeclaration(n)&&ts.isStringLiteral(n.moduleSpecifier)&&n.moduleSpecifier.text==='./route-boundary.ts');
+ if(!boundaryImport?.importClause?.namedBindings||!ts.isNamedImports(boundaryImport.importClause.namedBindings))return false;const names=boundaryImport.importClause.namedBindings.elements.map(n=>n.name.text);if(!names.includes('apiJson')||!names.includes('withApiFailureBoundary'))return false;
+ const provider=production.statements.flatMap(statement=>ts.isVariableStatement(statement)?[...statement.declarationList.declarations]:[]).find(d=>ts.isIdentifier(d.name)&&d.name.text==='operationalFinanceSourceAdoptionHandlersV1');
+ if(!provider?.initializer||!ts.isCallExpression(provider.initializer)||provider.initializer.expression.getText(production)!=='createOperationalFinanceSourceAdoptionHandlersV1'||provider.initializer.arguments.length!==1||!ts.isObjectLiteralExpression(provider.initializer.arguments[0]))return false;
+ const properties=provider.initializer.arguments[0].properties;if(![['json','apiJson'],['boundary','withApiFailureBoundary']].every(([name,value])=>properties.some(p=>ts.isPropertyAssignment(p)&&p.name.getText(production)===name&&ts.isIdentifier(p.initializer)&&p.initializer.text===value)))return false;
+ if(!handler.statements.some(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='createOperationalFinanceSourceAdoptionHandlersV1'&&n.body))return false;
+ let privateNoStore=false,usesJson=false,usesBoundary=false;const visit=node=>{if(ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)){const target=node.expression.expression.getText(handler),method=node.expression.name.text;if(target==='headers'&&method==='set'&&node.arguments.length===2&&node.arguments.every(ts.isStringLiteral)&&node.arguments[0].text==='cache-control'&&node.arguments[1].text==='private, no-store')privateNoStore=true;if(target==='dependencies'&&method==='json')usesJson=true;if(target==='dependencies'&&method==='boundary')usesBoundary=true;}ts.forEachChild(node,visit);};visit(handler);return privateNoStore&&usesJson&&usesBoundary;
+}
+
+function usesSharedPrizeProposalNoStore(route,source,productionSource=read('src/lib/api/playoff-prize-proposal-production-v2.ts'),handlerSource=read('src/lib/api/playoff-prize-proposal-handlers-v2.ts')){
+ const productionFile='src/lib/api/playoff-prize-proposal-production-v2.ts',handlerFile='src/lib/api/playoff-prize-proposal-handlers-v2.ts';
+ const tree=(file,text)=>ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const importedName=(file,filePath,targetPath,name)=>{
+  for(const statement of file.statements){
+   if(!ts.isImportDeclaration(statement)||!ts.isStringLiteral(statement.moduleSpecifier)||path.resolve(path.dirname(filePath),statement.moduleSpecifier.text.replace(/\.ts$/,'')+'.ts')!==path.join(root,targetPath)
+    ||!statement.importClause?.namedBindings||!ts.isNamedImports(statement.importClause.namedBindings))continue;
+   const specifier=statement.importClause.namedBindings.elements.find(e=>(e.propertyName?.text??e.name.text)===name);
+   if(specifier&&!statement.importClause.isTypeOnly&&!specifier.isTypeOnly)return specifier.name.text;
+  }
+  return null;
+ };
+ const routeTree=tree(route,source),binding=importedName(routeTree,route,productionFile,'playoffPrizeProposalHandlersV2');if(!binding)return false;
+ let dynamic=false,methods=0;
+ for(const statement of routeTree.statements){
+  if(!statement.modifiers?.some(m=>m.kind===ts.SyntaxKind.ExportKeyword)&&!ts.isExportDeclaration(statement)&&!ts.isExportAssignment(statement))continue;
+  if(!ts.isVariableStatement(statement))return false;
+  for(const declaration of statement.declarationList.declarations){
+   if(!ts.isIdentifier(declaration.name)||!declaration.initializer)return false;
+   const name=declaration.name.text,value=declaration.initializer;
+   if(name==='dynamic'){if(dynamic||!ts.isStringLiteral(value)||value.text!=='force-dynamic')return false;dynamic=true;continue;}
+   if(!['GET','POST'].includes(name)||!ts.isPropertyAccessExpression(value)||!ts.isIdentifier(value.expression)||value.expression.text!==binding
+    ||!(name==='GET'?value.name.text==='GET':['POST','operationPOST'].includes(value.name.text)))return false;
+   methods++;
+  }
+ }
+ if(!dynamic||!methods)return false;
+ const productionPath=path.join(root,productionFile),production=tree(productionPath,productionSource);
+ const json=importedName(production,productionPath,'src/lib/api/route-boundary.ts','apiJson'),boundary=importedName(production,productionPath,'src/lib/api/route-boundary.ts','withApiFailureBoundary');
+ const factory=importedName(production,productionPath,handlerFile,'createPlayoffPrizeProposalHandlersV2');if(!json||!boundary||!factory)return false;
+ const provider=production.statements.filter(ts.isVariableStatement).flatMap(s=>[...s.declarationList.declarations]).find(d=>ts.isIdentifier(d.name)&&d.name.text==='playoffPrizeProposalHandlersV2');
+ if(!provider?.initializer||!ts.isCallExpression(provider.initializer)||!ts.isIdentifier(provider.initializer.expression)||provider.initializer.expression.text!==factory
+  ||provider.initializer.arguments.length!==1||!ts.isObjectLiteralExpression(provider.initializer.arguments[0]))return false;
+ const properties=new Map();
+ for(const property of provider.initializer.arguments[0].properties){
+  if(!ts.isPropertyAssignment(property)||!ts.isIdentifier(property.name)||properties.has(property.name.text))return false;
+  properties.set(property.name.text,property.initializer);
+ }
+ if(![['json',json],['boundary',boundary]].every(([name,value])=>ts.isIdentifier(properties.get(name)??{})&&properties.get(name).text===value))return false;
+ const handler=tree(handlerFile,handlerSource),definition=handler.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='createPlayoffPrizeProposalHandlersV2');
+ if(!definition?.body||definition.parameters.length!==1||!ts.isIdentifier(definition.parameters[0].name))return false;
+ const dependency=definition.parameters[0].name.text;let usesJson=false,usesBoundary=false;
+ const visit=node=>{if(ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)&&ts.isIdentifier(node.expression.expression)&&node.expression.expression.text===dependency){
+  if(node.expression.name.text==='json')usesJson=true;if(node.expression.name.text==='boundary')usesBoundary=true;
+ }ts.forEachChild(node,visit);};visit(definition.body);
+ return usesJson&&usesBoundary;
+}
 
 test('Supabase auth scaffolding fails closed and does not expose server secrets', () => {
   const env = read('src/lib/env.ts');
@@ -274,12 +453,59 @@ test('every API v1 route uses a private no-store response boundary', () => {
   assert.ok(routes.length > 0);
   for (const route of routes) {
     const source = fs.readFileSync(route, 'utf8');
-    assert.match(
-      source,
-      /apiJson|privateNoStore/,
+    assert.ok(
+      /apiJson|privateNoStore/.test(source)||directPrivateResponseBoundary(source)||usesConsyAddonNoStore(route,source)||usesConsyAddonNoStore(route,source,read('src/lib/api/satellite-finance-handlers-v1.ts'),'createSatelliteFinanceHandlersV1','src/lib/api/satellite-finance-handlers-v1.ts')||usesConsyAddonNoStore(route,source,read('src/lib/api/registration-resolution-handlers-v1.ts'),'createRegistrationResolutionHandlersV1','src/lib/api/registration-resolution-handlers-v1.ts')||usesConsyAddonNoStore(route,source,read('src/lib/api/mrp-membership-manual-review-v1.ts'),'createMrpMembershipManualReviewHandlersV1','src/lib/api/mrp-membership-manual-review-v1.ts')||usesGameReopenNoStore(route,source)||usesSharedBootstrapWorkflowNoStore(route,source)||usesSharedPilotNoStore(route,source)||usesSharedMixedNoStore(route,source)||usesSharedRosterNoStore(route,source)||usesSharedReviewedNoStore(route,source)||usesSharedOperationalProviderNoStore(route,source)||usesSharedOperationalAdoptionNoStore(route,source)||usesSharedPrizeProposalNoStore(route,source),
       `${path.relative(root, route)} must use the private no-store response boundary`,
     );
   }
+});
+
+test('game correction route audit follows its actual private response factory',()=>{
+ const route=path.join(root,'src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/corrections/[startId]/[gameId]/operations/route.ts'),source=fs.readFileSync(route,'utf8'),handler=read('src/lib/api/native-mixed-game-reopen-v1.ts');
+ assert.equal(usesGameReopenNoStore(route,source,handler),true);
+ assert.equal(usesGameReopenNoStore(route,source.replace('handlers.reconcilePOST','unsafe.POST'),handler),false);
+ assert.equal(usesGameReopenNoStore(route,source,handler.replace('private, no-store','public, max-age=60')),false);
+ assert.equal(usesGameReopenNoStore(route,source,handler.replace("return json({error:'not_found'},404)","return Response.json({error:'not_found'})")),false);
+});
+
+test('shared mixed route response audit follows actual factory wiring and rejects unsafe substitutions',()=>{
+ const route=path.join(root,'src/app/api/v1/tournaments/[id]/events/[eventId]/synthetic-mixed-capability/route.ts'),source=fs.readFileSync(route,'utf8');
+ assert.equal(usesSharedMixedNoStore(route,source)||usesSharedRosterNoStore(route,source)||usesSharedReviewedNoStore(route,source),true);
+ assert.equal(usesSharedMixedNoStore(route,source.replace('handlers.capabilityGET','unsafeHandler')),false);
+ assert.equal(usesSharedMixedNoStore(route,source,read('src/lib/api/synthetic-mixed-production.ts').replace('json:apiJson','json:unsafeJson')),false);
+ assert.equal(usesSharedMixedNoStore(route,source,'// apiJson withApiFailureBoundary createMixedProductionHandlers'),false);
+});
+
+test('operational provider wrappers resolve the actual private response boundary chain',()=>{
+ const route=path.join(root,'src/app/api/v1/tournaments/[id]/event-settings-v3/operations/[operationId]/route.ts');
+ const source=fs.readFileSync(route,'utf8');
+ const production=read('src/lib/api/operational-provider-production-v1.ts');
+ const handlers=read('src/lib/api/operational-provider-handlers-v1.ts');
+ assert.equal(usesSharedOperationalProviderNoStore(route,source,production,handlers),true);
+ assert.equal(usesSharedOperationalProviderNoStore(route,source.replace('handlers.eventSettingsOperationGET','unsafeHandler'),production,handlers),false);
+ assert.equal(usesSharedOperationalProviderNoStore(route,source,production.replace('json:apiJson','json:unsafeJson'),handlers),false);
+ assert.equal(usesSharedOperationalProviderNoStore(route,source,production.replace('boundary:withApiFailureBoundary','boundary:unsafeBoundary'),handlers),false);
+ assert.equal(usesSharedOperationalProviderNoStore(route,source,production,handlers.replace("'private, no-store'","'public, max-age=60'")),false);
+ assert.equal(usesSharedOperationalProviderNoStore(route,'// operationalProviderHandlersV1 apiJson withApiFailureBoundary',production,handlers),false);
+});
+
+test('prize proposal routes resolve shared no-store wiring and reject unsafe substitutions',()=>{
+ const production=read('src/lib/api/playoff-prize-proposal-production-v2.ts'),handlers=read('src/lib/api/playoff-prize-proposal-handlers-v2.ts');
+ for(const tail of ['route.ts','operation/route.ts']){
+  const route=path.join(root,'src/app/api/v1/tournaments/[id]/events/[eventId]/prize-proposal',tail),source=fs.readFileSync(route,'utf8');
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production,handlers),true);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source.replace("'force-dynamic'","'force-static'"),production,handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source.replace(/=playoffPrizeProposalHandlersV2\./g,'=unsafe.'),production,handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production.replace('json:apiJson','json:unsafeJson'),handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production.replace('boundary:withApiFailureBoundary','boundary:unsafeBoundary'),handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production.replace('json:apiJson','json:apiJson,...unsafeDependencies'),handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production.replace('json:apiJson','json:apiJson,json:unsafeJson'),handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production.replace('./route-boundary.ts','./unsafe-boundary.ts'),handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production,handlers.replaceAll('d.json(','unsafeJson(')),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,production,handlers.replaceAll('d.boundary(','unsafeBoundary(')),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,source,'// apiJson withApiFailureBoundary createPlayoffPrizeProposalHandlersV2',handlers),false);
+  assert.equal(usesSharedPrizeProposalNoStore(route,'// playoffPrizeProposalHandlersV2 apiJson withApiFailureBoundary',production,handlers),false);
+ }
 });
 
 test('every API v1 mutation remains behind the shared origin gate and RPC-only data boundary', () => {
@@ -292,7 +518,7 @@ test('every API v1 mutation remains behind the shared origin gate and RPC-only d
     const source = fs.readFileSync(route, 'utf8');
     assert.doesNotMatch(source, /\b(?:supabase|admin|client)\.from\(/, `${path.relative(root, route)} must not query an application table directly`);
     if (/export async function POST/.test(source)) {
-      assert.match(source, /withApiFailureBoundary|catch\s*\{[\s\S]*?operation_unavailable/, `${path.relative(root, route)} must preserve a private unavailable-operation failure boundary`);
+      assert.ok(/withApiFailureBoundary|catch\s*\{[\s\S]*?apiJson\(\{error:['"](?:temporarily_unavailable|outcome_unknown|unavailable)['"]\},\{status:503\}\)|catch\s*\{[\s\S]*?operation_unavailable/.test(source)||directPrivateUnavailableBoundary(source)||sharedApiUnavailableBoundary(source), `${path.relative(root, route)} must preserve a private unavailable-operation failure boundary`);
     }
   }
 });
@@ -750,8 +976,30 @@ test('protected Rulebook reference provides dated cached and online ACC sources 
   assert.match(page, /acc-rulebook-2025\.pdf/);
   assert.match(page, /DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD/);
   assert.match(page, /rel="noreferrer"/);
-  assert.match(reference, /Search a topic or rule word/);
+  assert.match(reference, /Search a Topic or Rule Word/);
   assert.match(reference, /does not replace the dated ACC Rulebook/);
   assert.match(workspace, /\/rulebook/);
   assert.match(guide, /Open ACC Rulebook/);
 });
+
+function usesSharedRosterNoStore(route,source){return usesSharedMixedNoStore(route,source,read('src/lib/api/roster-random-draw-production.ts'),{factory:'createRosterDrawProductionHandlers',file:'src/lib/api/roster-random-draw-production.ts',handler:'createRosterDrawHandlers',methods:['workspaceGET','operationGET','POST']});}
+test('roster draw wrappers resolve real no-store boundary wiring, not comments',()=>{const route=path.join(root,'src/app/api/v1/tournaments/[id]/random-seating/route.ts'),source=fs.readFileSync(route,'utf8');assert.equal(usesSharedRosterNoStore(route,source),true);assert.equal(usesSharedRosterNoStore(route,source.replace('handlers.workspaceGET','unsafeHandler')),false);});
+
+function usesSharedReviewedNoStore(route,source,production=read('src/lib/api/reviewed-native-seating-production.ts')){return usesSharedMixedNoStore(route,source,production,{factory:'createReviewedNativeProductionHandlers',file:'src/lib/api/reviewed-native-seating-production.ts',handler:'createReviewedNativeHandlers',methods:['GET','operationGET','POST']});}
+test('reviewed native wrappers resolve actual private response wiring',()=>{for(const rel of ['src/app/api/v1/tournaments/[id]/reviewed-seating/route.ts','src/app/api/v1/tournaments/[id]/reviewed-seating/operations/[operationId]/route.ts']){const route=path.join(root,rel),source=fs.readFileSync(route,'utf8');assert.equal(usesSharedReviewedNoStore(route,source),true);assert.equal(usesSharedReviewedNoStore(route,source.replace(/handlers\.(GET|operationGET|POST)/g,'unsafeHandler')),false);assert.equal(usesSharedReviewedNoStore(route,source,read('src/lib/api/reviewed-native-seating-production.ts').replace('json: apiJson','json: unsafeJson')),false);assert.equal(usesSharedReviewedNoStore(route,source,'// apiJson withApiFailureBoundary'),false);}});
+
+test('pilot response audit follows the actual disabled production factories',()=>{
+ for(const tail of ['cancel','preparation']){
+ const route=path.join(root,'src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/'+tail+'/route.ts'),source=fs.readFileSync(route,'utf8'),production=read('src/lib/api/native-mixed-pilot-director-production-v1.ts');
+ assert.equal(usesSharedPilotNoStore(route,source,production),true);
+ assert.equal(usesSharedPilotNoStore(route,source,production.replaceAll('json:apiJson','json:unsafeJson')),false);
+ assert.equal(usesSharedPilotNoStore(route,source.replace("'force-dynamic'","'force-static'"),production),false);
+ assert.equal(usesSharedPilotNoStore(route,source.replace(/handlers\./g,'unsafe.'),production),false);
+ }
+});
+test('bootstrap workflow route boundary follows the actual disabled factory',()=>{
+ const route=path.join(root,'src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/bootstrap/[mode]/[operationId]/route.ts'),source=fs.readFileSync(route,'utf8'),production=read('src/lib/api/native-mixed-bootstrap-production-v1.ts');
+ assert(usesSharedBootstrapWorkflowNoStore(route,source,production));assert(!usesSharedBootstrapWorkflowNoStore(route,source,production.replace('json:apiJson','json:unsafe')));assert(!usesSharedBootstrapWorkflowNoStore(route,source.replace('handlers.writePOST','unsafe'),production));
+});
+
+test('consolation receipt route audit follows actual factory and rejects public substitutions',()=>{const pathName=path.join(root,'src/app/api/v1/tournaments/[id]/events/[eventId]/consolation-payments/reconcile/route.ts'),source=fs.readFileSync(pathName,'utf8'),handler=read('src/lib/api/consy-addon-director-handlers-v1.ts');assert.equal(usesConsyAddonNoStore(pathName,source,handler),true);assert.equal(usesConsyAddonNoStore(pathName,source.replace('.reconcilePOST','.unsafePOST'),handler),false);assert.equal(usesConsyAddonNoStore(pathName,source,handler.replace('private, no-store','public, max-age=60')),false);});

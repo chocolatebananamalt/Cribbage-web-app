@@ -5,6 +5,7 @@ import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-o
 import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
 import { isUuid } from "../../../../lib/api/validation";
 import { registrationLinkManagementEnabled } from "../../../../lib/api/public-registration-v2";
+import { eventPrizeSetupEnabledV1 } from "../../../../lib/api/event-prize-setup-admission-v1";
 import { getAccessibleTournaments } from "../../../../lib/tournaments/accessible-tournaments";
 import SetupClient from "./setup-client";
 
@@ -21,7 +22,9 @@ export default async function TournamentSetupPage({ params }: { params: Promise<
     <p className="eyebrow">OPERATIONS</p><h1 id="setup-title">Set Up Tournament</h1>
     <p className="auth-note">Configure the tournament and its Main, Consolation, and Satellite events. Saving creates a private versioned setup record; it does not publish results or charge anyone.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
-    <SetupClient actorId={access.user.id} tournamentId={tournamentId} registrationLinkManagementEnabled={registrationLinkManagementEnabled()} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
+    <Link className="guide-link" href="/help/tournament-setup" target="_blank" rel="noopener noreferrer">Definitions and Setup Help (opens in a new tab)</Link>
+    <Link className="guide-link" href={`/tournament/${tournamentId}/flyer`} target="_blank" rel="noopener noreferrer">Preview Saved Events and Flyer Draft (opens in a new tab)</Link>
+    <SetupClient actorId={access.user.id} tournamentId={tournamentId} eventPrizeSettingsV1Enabled={eventPrizeSetupEnabledV1()} registrationLinkManagementEnabled={registrationLinkManagementEnabled()} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
     <SharedDeviceSignOut />
   </section></main>;
 }

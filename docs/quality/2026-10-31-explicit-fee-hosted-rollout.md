@@ -116,3 +116,134 @@ The no-Q schedule has now been published once through the supported makeup UI:
 exactly twelve games. Current makeup mapping is displayed as published. No
 qualifying scores have been submitted and play remains unstarted. No guarded
 sign-out was attempted; the director session is preserved.
+
+## Q disclosure fix published and replacement finance/setup verified
+
+Approved eight-file patch committed and normally pushed as
+223ec1583f18979fc666cd6a26f03e9428705342. Both CI runs succeeded:
+41155446835 (push) and 41155450871 (PR). Preview deployment
+ dpl_67A7pJLpAxD9hGoRp9FKQUjSLqp7 is READY, exact SHA, target Preview,
+stable alias assigned without error; immutable hostname
+cribbage-web-q79yw0k6z-cribbage-app.vercel.app. No migration was applied.
+The stable Preview visibly renders the exact frozen V4 policy before election.
+
+Combined fixture now has exactly 17 Q memberships, 17 allocations, 17 explicit
+base/Q obligations and 17 receipts, all max version 1. Every membership binds
+26431ec0-ac1c-47da-aa1e-3c32bc02c6fb. Obligations and receipts each total
+68000 minor units; each receipt is explicitly allocated base3000 + Q1000.
+Separate Side Pool ledger has 17 entries, max version 1, total17000. Total
+synthetic receipts85000 = base51000 + Q17000 + Side17000. Four simulated
+expenses total22950, matching the disclosed no-Q test budget. Side amount
+review displays85/55/30, sum170; no recipient review, award or disbursement
+has been recorded. Registration closed, all17 event attendees checked in,
+permanent seating unique A1..E1, and102 qualifying games published once.
+No scores entered and neither replacement event started.
+
+Preservation check after the above setup: all223 preexisting app/public table
+counts and fingerprints exactly match the before0269 baseline after excluding
+only rows belonging to the two approved replacement IDs (and consistently
+ignoring the new nullable free_entry column). Evidence:
+test-results/replacement-old-record-preservation.json. A first read-only query
+used a nullable id filter; it was corrected to coalesce missing JSON fields
+before accepting the preservation result. No database mutation was involved.
+
+B invitations remain pending personal acceptance. The next step is a guarded
+account switch with approval, B's user-operated sign-in and personal acceptance
+of both existing invitations. Do not create new invitations or repeat scores.
+The current director session is preserved and no sign-out was attempted.
+
+## Replacement start and B identity milestone
+
+Both nominations verified active for B profile986c7f24-1d42-4115-8532-053fc4bef59a.
+User-operated director sign-in verified by Director workspace. Before start,
+saved base fees3000/freefalse and both activation-bound reviewed regular policy
+IDs were reread; Q pool9b12324b... remains1000/Graduated1in6. Both schedules
+remain unique102-game publications. B nonparticipant bindings saved once:
+NoQ68f830da-7907-4e2d-b2de-2369e98e108e and combined30b72a18-5eb7-4fb2-9b59-40b2e4469c38,
+bothversion1, confirmed by distinct director de0f27a1-60d0-4449-af83-fdf360a9bc08.
+
+Both events started once through normal UI; no bypass:
+NoQstart0896ebce-b706-438e-8483-70dd74b08d66;
+combinedstarta5ec7e8a-1f8d-4ac3-8cba-588015753210. Both in_progress.
+Generated exactly204 synthetic paired-card artifacts using the approved isolated
+owner preparation function,102 per event. Every game mapped one-to-one to the
+reviewed existing plan by game number and both permanent verification IDs; seat
+snapshots also matched. Readback verifies unique games, exactwinner/margin,
+current source version and both artifact SHA256 values. No scores/captures/
+reviews were submitted by the director. B now has both accepted roles and
+nonplayer bindings, so the next scoring session can cover both full fixtures.
+No sign-out or password/clipboard access was attempted in this milestone.
+
+## Replacement no-Q scoring completed
+
+All102 no-Q canonical games verified through the hosted synthetic UI,102 captures
+and102 approving separate re-entries, with204 truthful provenance rows
+(physical_original=false and human_review_claimed=false). Zero pending reviews.
+All17 player totals independently match the prepared plan for12games, gamepoints,
+wins, grossplus, minus and net spread. The intended FeeN01/FeeN02 four-field
+seed tie remains24points/12wins/120net/120plus; no tiebreak score was added.
+Two delayed refreshes and one batch timeout were reconciled before continuing;
+no capture was repeated. B session retained and moved to combined fixture,
+which had zero scores at this checkpoint. No director handoff yet.
+
+## Both replacements: qualifying scoring terminal evidence
+
+Both events now have102verifiedcanonicalgames,102unique captures and102unique
+approving separate re-entries each. Zero pending reviews. Each event has204
+synthetic provenance rows, all B actor986c7f24-1d42-4115-8532-053fc4bef59a,
+physical_original=false and human_review_claimed=false. Every canonical winner
+and spread exactly matches the prepared source-bound plan, including sixmakeups.
+All34 players'12-game totals match expected gamepoints,wins,grossplus,minus,net.
+NoQtop1/2 tie preserved; combinedtoporder02/01/03/04/05. No qualification,
+playoffs, obligation review or final accounting has been performed yet.
+
+After scoring, all223 preexisting table counts/fingerprints still match baseline,
+excluding only both approved replacement fixtureIDs. Evidence retained locally:
+test-results/replacement-scoring-final-evidence.json. Browser timeouts/stale
+refreshes were reconciled; no duplicate captures or approvals exist. B session
+is preserved with no unsent/retry records. Need scoped guarded switch and
+user-operated director sign-in for remaining director-only phases. No password,
+clipboard, production or actualmoney operations.
+
+## Both replacement fixtures: unpaid finals verified
+
+Director session verified; supported synthetic closure, ranking-only tie,
+qualification, four-series playoffs and cross-check finalization completed.
+NoQqualification fd7e8f07-72ea-4701-8942-686416e9a3ad;
+combinedqualification3621d9ad-f858-4282-8578-52920dd380b5.
+NoQtie1d5e89a9-0b86-4366-b8f4-38f730f13698 gives FeeN02 higher seed using
+source-bound synthetic one-game outcome; original34player totals remain exact.
+NoQplayoffa0d695e2-3e84-46b6-b2d0-794ed12996bf;
+combinedplayoff05509ba0-d907-467c-82d3-59648c689288, eachversion1/fourseries,
+first02/second01/semifinalloss03and04/round1loss05. Three byes have separate
+MRPcredits, not phantomplayedgames or qualifying scorechanges.
+
+NoQfinal2fef282e-178a-420f-acb3-9bdf976510dc, draftc0f75347-e134-4a41-a0c0-491d4df78e7d;
+combinedfinalde2b093b-2657-44b2-baf1-f4c230be4ded, draftda5aee8f-2415-4123-9176-93aa45e48337.
+Bothversion1,statusunpaid,currenttrue,fundingversion0, no actual contribution.
+Regularawards inEACH event:02=95,01=70,03=45,04=45,05=25USD; total280.
+Same-round losers equal; everyaward multiple5. Raw280.50 roundsdown280;
+0.50restrictedhold is neitherexpense norparticipantreturn norprofit.
+Eligiblebenefits160=51sanctioning+109meals, already included in229.50expenses;
+nonbenefit69.50=44hall+25.50cards. Return280+160=440>=433.50minimum.
+NoQ510=229.50expenses+280unpaidregular+0.50hold.
+
+CombinedQreviewaa250643-0919-4941-8558-812c11fd0908 version1,
+policy26431ec0-ac1c-47da-aa1e-3c32bc02c6fb:02=85,01=55,03=30, total170unpaid.
+Side review4884ff5b-6f45-424b-a3d1-79430150d921 version1,
+source421da5c60153cd7cce66b4d01e078ee97e40046a5d152ff0705aa50164efff13:
+02=85,01=55,03=30, total170unpaid. Side derives everypaidqualifyingcard,
+not playofffinish; this allpaidfixture'stop3 happenalsoqualified.
+Combined850=229.50expenses+280regular+170Q+170Side+0.50hold, exact.
+No refund obligations, disbursements, paidflags or actualmoney records created.
+Reload/backendsourcechecks confirmcurrentfinals andall34originaltotals unchanged.
+All223oldertablecount/fingerprints still matchbaseline excludingonlynewfixtures.
+
+Recoverable gates encountered: noQfinal initially rejected crosscheck_incomplete;
+normal crosscheckfinalization completed and retained draft finalized, no bypass.
+Generic shared accounting navigation pointsSideeventstoV8, whose guard correctly
+blocksunsupportedSide scope. SupportedcurrentSide-reviewlink routesV9 andcompleted
+combinedfinal normally. This navigation defect remains a separate local repair/
+publication task; no guard weakened andnoextraV8combineddraftwritten.
+Evidence test-results/replacement-final-unpaid-acceptance.json. No production,
+realmoney,passwordorclipboardchange. Director session preserved.

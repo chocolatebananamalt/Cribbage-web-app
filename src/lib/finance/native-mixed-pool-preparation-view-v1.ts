@@ -1,0 +1,61 @@
+/** Read-only projections of the existing SQL replies. No source authority,
+ * method selection, operation authoring, calculator or provider is supplied. */
+type Obj=Record<string,unknown>;
+export type NativeMixedPoolViewScopeV1={actorId:string;tournamentId:string;eventId:string};
+type Amount={version:'native-mixed-pool-policy-v1';kind:'q'|'side';method:string;feeMinor:number;ratio:number|null;roundingUnitMinor:100|500|1000};
+type Policy={policyId:string;policyDigest:string;poolId:string;amountPolicy:Amount;disclosure:string;electedCount:number;simulatedPaidCount:number;simulatedFundMinor:number};
+type Election={electionId:string;electionDigest:string;policyId:string;participantId:string;mode:'digital'|'paper';elected:boolean;simulatedFunded:boolean};
+type Pool={kind:'q'|'side';poolId:string;slot:number;label:string;supported:boolean;method:string|null;feeMinor:number;ratio:number|null;roundingStatus:'saved_latest'|'unknown_legacy';roundingUnitMinor:100|500|1000|null;roundingSourceDigest:string|null};
+type Paper={participantId:string;rosterEntryId:string;displayName:string;fixedTournamentId:string|null;fixedIdStatus:'pending'|'published';simulationOnly:true};
+type Digital=Omit<Paper,'simulationOnly'>;
+export type NativeMixedPoolPreparationReplyV1=NativeMixedPoolViewScopeV1&{kind:'native-mixed-pool-preparation-v1';status:'source_available';fundingSourceDigest:string;journalDigest:string;availablePools:Pool[];fictionalPaperParticipants:Paper[];digitalParticipants:Digital[];preStart:boolean;simulationOnly:true;actualMoneyReceived:false;moneyMoved:false;payoutAuthorized:false;ordinaryLiability:false};
+export type NativeMixedPoolWorkspaceReplyV1=NativeMixedPoolViewScopeV1&{kind:'native-mixed-pool-workspace-v1';status:'source_available';fundingSourceDigest:string;journalDigest:string;policies:Policy[];ownParticipants:{participantId:string;rosterEntryId:string}[];elections:Election[];membership:{sealed:boolean;seal:{id:string;digest:string}|null};simulationOnly:true;actualMoneyReceived:false;moneyMoved:false;payoutAuthorized:false;ordinaryLiability:false};
+const uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);
+const hash=(v:unknown)=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+const integer=(v:unknown,min=0,max=100000000)=>typeof v==='number'&&Number.isSafeInteger(v)&&v>=min&&v<=max;
+const text=(v:unknown,max:number)=>typeof v==='string'&&v.length>0&&v.length<=max&&!/[\u0000-\u001f\u007f]/.test(v);
+function plain(v:unknown,depth=0,seen=new Set<object>(),budget={nodes:0,text:0}):boolean{
+ if(depth>32||++budget.nodes>10000)return false;if(typeof v==='string'){budget.text+=v.length;return budget.text<=1000000;}if(v===null||typeof v==='boolean')return true;if(typeof v==='number')return Number.isFinite(v);
+ if(!v||typeof v!=='object'||seen.has(v))return false;seen.add(v);
+ if(Array.isArray(v)){if(v.length>1000||Reflect.ownKeys(v).length!==v.length+1)return false;for(let i=0;i<v.length;i++){const d=Object.getOwnPropertyDescriptor(v,String(i));if(!d||!('value'in d)||!plain(d.value,depth+1,seen,budget))return false;}return true;}
+ if(Object.getPrototypeOf(v)!==Object.prototype)return false;const keys=Reflect.ownKeys(v);if(keys.length>1000)return false;for(const k of keys){if(typeof k!=='string'||(budget.text+=k.length)>1000000)return false;const d=Object.getOwnPropertyDescriptor(v,k);if(!d?.enumerable||!('value'in d)||!plain(d.value,depth+1,seen,budget))return false;}return true;
+}
+const exact=(v:unknown,keys:string[]):v is Obj=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k));
+const flags=['simulationOnly','actualMoneyReceived','moneyMoved','payoutAuthorized','ordinaryLiability'];
+const base=['kind','status','actorId','tournamentId','eventId','fundingSourceDigest','journalDigest',...flags];
+function common(v:Obj,s:NativeMixedPoolViewScopeV1){return plain(s)&&exact(s,['actorId','tournamentId','eventId'])&&uuid(s.actorId)&&uuid(s.tournamentId)&&uuid(s.eventId)&&v.actorId===s.actorId&&v.tournamentId===s.tournamentId&&v.eventId===s.eventId&&v.status==='source_available'&&hash(v.fundingSourceDigest)&&hash(v.journalDigest)&&v.simulationOnly===true&&flags.slice(1).every(k=>v[k]===false);}
+const method=(kind:unknown,m:unknown)=>kind==='side'?m==='side-sheet20-40-selected-step-v1':kind==='q'&&(m==='q-v3-raw-selected-step-v1'||m==='q-equal-exact-selected-step-v1');
+function ratio(v:unknown,m:unknown){return m==='q-equal-exact-selected-step-v1'?v===null:integer(v,1,2147483647);}
+const unique=(a:Obj[],key:string)=>new Set(a.map(x=>x[key])).size===a.length;
+export function readNativeMixedPoolPreparationV1(raw:unknown,scope:NativeMixedPoolViewScopeV1):NativeMixedPoolPreparationReplyV1|null{try{
+ if(!plain(raw)||!exact(raw,[...base,'availablePools','fictionalPaperParticipants','digitalParticipants','preStart'])||!common(raw,scope)||raw.kind!=='native-mixed-pool-preparation-v1'||!Array.isArray(raw.availablePools)||raw.availablePools.length>8||!Array.isArray(raw.fictionalPaperParticipants)||raw.fictionalPaperParticipants.length!==12||!Array.isArray(raw.digitalParticipants)||raw.digitalParticipants.length!==6||typeof raw.preStart!=='boolean')return null;
+ for(const p of raw.availablePools){if(!exact(p,['kind','poolId','slot','label','supported','method','feeMinor','ratio','roundingStatus','roundingUnitMinor','roundingSourceDigest'])||!['q','side'].includes(p.kind as string)||!uuid(p.poolId)||!integer(p.slot,1,p.kind==='q'?2:6)||!text(p.label,160)||!integer(p.feeMinor)||typeof p.supported!=='boolean')return null;
+  const recognized=method(p.kind,p.method)&&ratio(p.ratio,p.method),fee=p.feeMinor as number,domain=recognized&&(p.method==='side-sheet20-40-selected-step-v1'?[1000,2000,5000,10000].includes(fee):p.method==='q-v3-raw-selected-step-v1'?fee>=500&&fee%500===0:fee>0&&fee%100===0);
+  if(!recognized&&(p.method!==null||p.ratio!==null)||p.supported!==domain)return null;
+  if(p.roundingStatus==='saved_latest'?(![100,500,1000].includes(p.roundingUnitMinor as number)||!hash(p.roundingSourceDigest)):p.roundingStatus!=='unknown_legacy'||p.roundingUnitMinor!==null||p.roundingSourceDigest!==null)return null;}
+ for(const p of raw.fictionalPaperParticipants){if(!exact(p,['participantId','rosterEntryId','displayName','fixedTournamentId','fixedIdStatus','simulationOnly'])||!uuid(p.participantId)||!uuid(p.rosterEntryId)||!text(p.displayName,160)||p.simulationOnly!==true||!(p.fixedIdStatus==='pending'&&p.fixedTournamentId===null||p.fixedIdStatus==='published'&&text(p.fixedTournamentId,160)))return null;}
+ for(const p of raw.digitalParticipants){if(!exact(p,['participantId','rosterEntryId','displayName','fixedTournamentId','fixedIdStatus'])||!uuid(p.participantId)||!uuid(p.rosterEntryId)||!text(p.displayName,160)||!(p.fixedIdStatus==='pending'&&p.fixedTournamentId===null||p.fixedIdStatus==='published'&&text(p.fixedTournamentId,160)))return null;}
+ const participants=[...raw.fictionalPaperParticipants,...raw.digitalParticipants];if(!unique(participants,'participantId')||!unique(participants,'rosterEntryId')||new Set(participants.map(p=>p.fixedIdStatus)).size!==1||participants[0].fixedIdStatus==='published'&&!unique(participants,'fixedTournamentId'))return null;
+ if(!unique(raw.availablePools,'poolId')||!unique(raw.fictionalPaperParticipants,'participantId')||!unique(raw.fictionalPaperParticipants,'rosterEntryId')||new Set(raw.availablePools.map(p=>p.roundingStatus)).size>1||new Set(raw.availablePools.map(p=>p.roundingSourceDigest)).size>1)return null;
+ for(const kind of['q','side'])if(new Set(raw.availablePools.filter(p=>p.kind===kind).map(p=>p.roundingUnitMinor)).size>1)return null;
+ return structuredClone(raw)as NativeMixedPoolPreparationReplyV1;
+ }catch{return null;}}
+export function readNativeMixedPoolWorkspaceV1(raw:unknown,scope:NativeMixedPoolViewScopeV1):NativeMixedPoolWorkspaceReplyV1|null{try{
+ if(!plain(raw)||!exact(raw,[...base,'policies','ownParticipants','elections','membership'])||!common(raw,scope)||raw.kind!=='native-mixed-pool-workspace-v1'||!Array.isArray(raw.policies)||raw.policies.length>8||!Array.isArray(raw.ownParticipants)||raw.ownParticipants.length>1||!Array.isArray(raw.elections)||raw.elections.length>144||!exact(raw.membership,['sealed','seal'])||typeof raw.membership.sealed!=='boolean')return null;
+ const seal=raw.membership.seal;if(seal!==null&&(!exact(seal,['id','digest'])||!uuid(seal.id)||!hash(seal.digest)||raw.membership.sealed!==true))return null;
+ for(const p of raw.policies){if(!exact(p,['policyId','policyDigest','poolId','amountPolicy','disclosure','electedCount','simulatedPaidCount','simulatedFundMinor'])||!uuid(p.policyId)||!hash(p.policyDigest)||!uuid(p.poolId)||!text(p.disclosure,1000)||!integer(p.electedCount,0,18)||!integer(p.simulatedPaidCount,0,18)||!integer(p.simulatedFundMinor,0,1800000000))return null;
+  const a=p.amountPolicy;if(!exact(a,['version','kind','method','feeMinor','ratio','roundingUnitMinor'])||a.version!=='native-mixed-pool-policy-v1'||!method(a.kind,a.method)||!integer(a.feeMinor,1)||!ratio(a.ratio,a.method)||![100,500,1000].includes(a.roundingUnitMinor as number)||p.simulatedFundMinor!==(p.simulatedPaidCount as number)*(a.feeMinor as number)||(p.simulatedPaidCount as number)>(p.electedCount as number))return null;}
+ for(const p of raw.ownParticipants)if(!exact(p,['participantId','rosterEntryId'])||!uuid(p.participantId)||!uuid(p.rosterEntryId))return null;
+ for(const e of raw.elections)if(!exact(e,['electionId','electionDigest','policyId','participantId','mode','elected','simulatedFunded'])||!uuid(e.electionId)||!hash(e.electionDigest)||!uuid(e.policyId)||!uuid(e.participantId)||!['digital','paper'].includes(e.mode as string)||typeof e.elected!=='boolean'||typeof e.simulatedFunded!=='boolean'||e.simulatedFunded&&!e.elected||!raw.policies.some(p=>p.policyId===e.policyId))return null;
+ if(!unique(raw.policies,'policyId')||!unique(raw.policies,'poolId')||!unique(raw.elections,'electionId')||new Set(raw.elections.map(e=>`${e.policyId}:${e.participantId}`)).size!==raw.elections.length)return null;
+ return structuredClone(raw)as NativeMixedPoolWorkspaceReplyV1;
+ }catch{return null;}}
+export function projectNativeMixedPoolPreparationV1(preparation:unknown,workspace:unknown,scope:NativeMixedPoolViewScopeV1,director=false){
+ const p=director?readNativeMixedPoolPreparationV1(preparation,scope):null,w=readNativeMixedPoolWorkspaceV1(workspace,scope);
+ // Two separately captured sources are useful together only at the same source
+ // and journal revision. A provider still must authenticate/coherently capture.
+ const joined=p&&w&&p.fundingSourceDigest===w.fundingSourceDigest&&p.journalDigest===w.journalDigest&&w.policies.every(policy=>p.availablePools.some(pool=>pool.poolId===policy.poolId&&pool.supported&&pool.kind===policy.amountPolicy.kind&&pool.method===policy.amountPolicy.method&&pool.feeMinor===policy.amountPolicy.feeMinor&&pool.ratio===policy.amountPolicy.ratio&&(pool.roundingStatus!=='saved_latest'||pool.roundingUnitMinor===policy.amountPolicy.roundingUnitMinor)));
+ const coherent=director?!!joined&&(!w!.membership.sealed||w!.membership.seal!==null)&&w!.elections.every(e=>(e.mode==='paper'?p!.fictionalPaperParticipants:p!.digitalParticipants).some(person=>person.participantId===e.participantId))&&w!.ownParticipants.every(own=>p!.digitalParticipants.some(person=>person.participantId===own.participantId&&person.rosterEntryId===own.rosterEntryId)):!!w;
+ const rows=coherent?(director?p!.availablePools.map(x=>({...x,policy:w!.policies.find(y=>y.poolId===x.poolId)??null})):w!.policies.map(y=>({kind:y.amountPolicy.kind,poolId:y.poolId,slot:null,label:y.amountPolicy.kind==='q'?'Q-Pool':'Side Pool',supported:true,method:y.amountPolicy.method,feeMinor:y.amountPolicy.feeMinor,ratio:y.amountPolicy.ratio,roundingStatus:null,roundingUnitMinor:null,roundingSourceDigest:null,policy:y}))).map(x=>({...x,ownElection:w!.elections.find(e=>e.policyId===x.policy?.policyId&&w!.ownParticipants.some(p=>p.participantId===e.participantId))??null})):[];
+ return{available:coherent,rows,paper:coherent&&director?p!.fictionalPaperParticipants:[],sealed:coherent?w!.membership.sealed:null,reviewOnly:true as const};
+}

@@ -49,7 +49,7 @@ export default function EventChangesClient({ tournamentId }: { tournamentId: str
   }
   if (!workspace) return <p className="auth-note" role="status">{message}</p>;
   return <section className="setup-amendment"><p className="auth-note">Cancel/Retire and Cancel/Replace preserve event, roster, payment, and audit history. They are unavailable after Start Play. Co-directors cannot use them.</p>
-    {workspace.canManage ? <label>Required director reason<textarea value={reason} maxLength={500} onChange={(event) => setReason(event.target.value)} /></label> : null}
+    {workspace.canManage ? <label>Required Director Reason<textarea value={reason} maxLength={500} onChange={(event) => setReason(event.target.value)} /></label> : null}
     <p className={message.includes("unavailable") || message.includes("not completed") ? "error-text" : "auth-note"} role="status">{message}</p>
     <ul className="event-change-list">{workspace.events.map((event) => <li key={event.eventId}><strong>{event.name}</strong>: {event.operationalState}; {event.participantCount} enrolled{event.hasStarted ? "; play has started" : ""}{event.reason ? `; ${event.reason}` : ""}
       {workspace.canManage && event.operationalState === "active" && !event.hasStarted ? <span className="setup-actions"><button type="button" className="secondary danger-button" disabled={busy || !reason.trim()} onClick={() => setPendingChange({ event, action: "retire" })}>Cancel / Retire</button><button type="button" className="secondary" disabled={busy || !reason.trim()} onClick={() => setPendingChange({ event, action: "replace" })}>Cancel / Replace</button></span> : null}

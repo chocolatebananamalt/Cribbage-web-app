@@ -1,0 +1,15 @@
+# Modern regular prizes in Results (private, default off)
+
+Closed a core presentation gap: recorded modern regular-prize awards can now join the normal finalized-qualification Results page for existing Directors/Co-directors. Main and regular Consolation remain separate event scopes. No legacy final report, team, Satellite or mixed-rehearsal result is replaced. All new gates stay false, functions revoked, and no hosted change occurred.
+
+The new read-only private SQL getter reads the immutable recorded award and rebuilds the current modern award source in the same source-locked transaction. Full capture and digest must match. A historical receipt alone, changed policy, receipt/obligation head, fund, result or otherwise unprovable source returns held/unavailable. There is no write or new access grant. The normal-session server reader checks the signed-in user before and after the RPC; the server projection independently decodes the record and current source and exposes only names, fixed Tournament IDs, finishing groups, amounts, increment and recorded time.
+
+The existing page's previously read finalized qualification ID is a required projector/reader input. It must match the modern source's qualification ID before joining sections; it is never rendered. Independent review found this cross-read race and cleared the fix with no remaining P1/P2 findings.
+
+The Results section labels these as recorded unpaid awards, shows explicit excluded groups and zero awards for those places, keeps optional pool funds separate, and makes no bank-settlement, MRP or ACC-submission claim. Unknown current awards are not shown as zero. Historical data is not modified.
+
+Verification: six focused source/transport tests, TypeScript and scoped lint. Offline actual React at 390/1440 pixels verifies names, Tournament IDs, whole groups and excluded-place labels with no horizontal overflow or network requests. The reused UI harness also preserves its exact-retry/privacy checks; identity/provider/storage are mocks, not signed-in or full-reload acceptance. No database execution or fixture was used.
+
+Limits: SQL syntax/runtime, permissions and real provider acceptance remain unverified; both the new SQL gate and application gate are false. The current source chain contains actor-bound captures: another official may safely receive unavailable rather than current proof for a record captured by someone else. No actor impersonation or relaxed comparison was added, and existing historical-record access remains unchanged. A later supported cross-actor proof is an implementation gap, not a new membership or payout-policy decision. Public/player Results access is not expanded by this candidate.
+
+Cross-official follow-up: the actor-bound implementation hold is resolved locally by the Results-only current-evidence comparison described in docs/quality/2026-11-10-cross-official-prize-results.md. It retains all persisted audit/game actors and rechecks fee heads, without impersonation. All SQL/provider/runtime and default-off limits remain.

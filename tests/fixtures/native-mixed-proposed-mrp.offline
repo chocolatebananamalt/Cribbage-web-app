@@ -1,0 +1,1 @@
+import React from'react';import{createRoot}from'react-dom/client';import{NativeMixedProposedMrpV1}from'../../src/components/native-mixed-proposed-mrp-v1';const root=createRoot(document.getElementById('root')!);window.mount=v=>root.render(<NativeMixedProposedMrpV1 view={v}/>);

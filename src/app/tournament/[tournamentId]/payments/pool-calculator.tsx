@@ -35,9 +35,9 @@ export default function PoolCalculator() {
     <h2 id="pool-calculator-title">Graduated pool calculator</h2>
     <p>Uses the ACC calculator&apos;s raw graduated weights with this app&apos;s exact largest-remainder $5 rounding. Every $5 is assigned automatically and awards equal the fund. This modification is not ACC endorsement. Recipient eligibility and score ties are reviewed separately; no money moves here.</p>
     <div className="setup-grid">
-      <label>Players in pool<input inputMode="numeric" min="1" max="10000" step="1" type="number" value={players} onChange={(event) => setPlayers(event.target.value)} /></label>
+      <label>Players in Pool<input inputMode="numeric" min="1" max="10000" step="1" type="number" value={players} onChange={(event) => setPlayers(event.target.value)} /></label>
       <label>Payout 1-in-<input inputMode="numeric" min="2" max="100" step="1" type="number" value={ratio} onChange={(event) => setRatio(event.target.value)} /></label>
-      <label>Entry fee per player (USD)<input inputMode="decimal" min="5" max="1000000" step="5" type="number" value={fee} onChange={(event) => setFee(event.target.value)} /></label>
+      <label>Entry Fee per Player (USD)<input inputMode="decimal" min="5" max="1000000" step="5" type="number" value={fee} onChange={(event) => setFee(event.target.value)} /></label>
     </div>
     {estimate ? <div className="pool-output" aria-live="polite">
       <p><strong>{estimate.recipientCount}</strong> calculated total awards from a <strong>{money(estimate.fundMinor)}</strong> fund.</p>

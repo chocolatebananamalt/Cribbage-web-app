@@ -110,7 +110,7 @@ try {
 
   const membershipButton = page.getByRole("button", { name: "Save Membership" });
   const poolAConsent = page.getByLabel("Consent reference for Q Pool A");
-  const membershipReason = page.getByLabel("Reason for membership record (required)");
+  const membershipReason = page.getByLabel("Reason for Membership Record (Required)");
   assert.equal(await membershipButton.isDisabled(), true, "reason and opt-in consent are required");
   await page.getByLabel("Elect into Q Pool 1: Q Pool A ($5.00)").check();
   await membershipReason.fill("Sample pre-play election correction");
@@ -137,7 +137,7 @@ try {
   await page.goto(`${origin}/allocation`);
   await page.getByRole("heading", { name: "Q Pool browser fixture" }).waitFor();
   assert.match(await page.getByText(/Recorded receipt:/).innerText(), /\$35\.00/);
-  const base = page.getByLabel("Base entry allocation (USD)");
+  const base = page.getByLabel("Base Entry Allocation (USD)");
   const a = page.getByLabel(/Q Pool A allocation/);
   const b = page.getByLabel(/Q Pool B allocation/);
   const allocate = page.getByRole("button", { name: "Save Receipt Allocation" });
@@ -145,7 +145,7 @@ try {
   await base.fill("30.00");
   await a.fill("5.00");
   await b.fill("1.00");
-  await page.getByLabel("Reason for allocation record (required)").fill("Explicit receipt assignment");
+  await page.getByLabel("Reason for Allocation Record (Required)").fill("Explicit receipt assignment");
   assert.equal(await allocate.isDisabled(), true, "allocation cannot exceed an unelected pool's owed amount");
   await b.fill("0.00");
   assert.equal(await allocate.isDisabled(), false, "explicit full allocation of existing receipt is enabled");
@@ -169,7 +169,7 @@ try {
   assert.equal(await latePool.isDisabled(), true, "a previously unelected pool cannot be opted into after play starts");
   await restoreKnown.check();
   await page.getByLabel("Consent reference for Q Pool A").fill("restore known pre-play election");
-  await page.getByLabel("Reason for membership record (required)").fill("Restore documented pre-play election");
+  await page.getByLabel("Reason for Membership Record (Required)").fill("Restore documented pre-play election");
   await page.getByRole("button", { name: "Save Director Membership Correction" }).click();
   assert.equal(writeCapture[3].body.pools[0].elected, true);
   assert.equal(writeCapture[3].body.pools[1].elected, false);
@@ -178,7 +178,7 @@ try {
   const longNameLayout = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }));
   assert.ok(longNameLayout.scroll <= longNameLayout.width + 1, "database-valid long Unicode pool label wraps without horizontal overflow");
   await page.goto(`${origin}/correction`);
-  await page.getByLabel("Reason for membership record (required)").fill("Correct recorded pre-play opt-in");
+  await page.getByLabel("Reason for Membership Record (Required)").fill("Correct recorded pre-play opt-in");
   const correctMembership = page.getByRole("button", { name: "Save Director Membership Correction" });
   assert.equal(await correctMembership.isDisabled(), false);
   await correctMembership.click();
@@ -199,7 +199,7 @@ try {
     await page.getByText(/Graduated Q: observed ACC raw weights/).waitFor();
     await page.getByLabel("Elect into Q Pool 1: Q Pool A ($5.00)").check();
     await page.getByLabel("Consent reference for Q Pool A").fill("TEST ONLY simulated choice");
-    await page.getByLabel("Reason for membership record (required)").fill("TEST ONLY pre-play balanced acknowledgment");
+    await page.getByLabel("Reason for Membership Record (Required)").fill("TEST ONLY pre-play balanced acknowledgment");
     const before=writeCapture.length;await page.getByRole("button",{name:"Save Membership",exact:true}).click();
     await page.getByText(/Q Pool record saved/).waitFor();
     assert.equal(writeCapture.length,before+1);

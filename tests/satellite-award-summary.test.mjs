@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {summarizeSatelliteAwardBuckets as sum} from '../src/lib/results/satellite-award-summary.ts';
+const row=(prizeMinor,qPoolMinor,sidePoolMinor)=>({placement:1,entrantId:'fictional',displayName:'TEST ONLY',prizeMinor,qPoolMinor,sidePoolMinor,crossCheckEvidence:[]});
+test('Satellite result entry keeps regular, Q and Side totals separate without funded/payment authority',()=>{assert.deepEqual(sum([row(10000,2000,3000),row(5000,1000,0)]),{regularPrizeMinor:15000,qPoolMinor:3000,sidePoolMinor:3000,combinedMinor:21000,fundingVerified:false,paymentVerified:false});assert.equal(sum([]).combinedMinor,0);});
+test('invalid or overflowing entered amounts remain unavailable, never coerced to zero',()=>{for(const value of[-1,-0,NaN,Infinity,1.5,Number.MAX_SAFE_INTEGER+1])assert.equal(sum([row(value,0,0)]),null);assert.equal(sum([row(Number.MAX_SAFE_INTEGER,1,0)]),null);});

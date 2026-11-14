@@ -44,8 +44,8 @@ export function NewTournamentClient({ actorId }: { actorId: string }) {
   }
 
   return <form className="policy-settings" onSubmit={create}>
-    <label>Tournament name<input required maxLength={200} disabled={busy || !!pendingRequest || !hydrated} value={name} onChange={(event) => { setName(event.target.value); clearPendingRequest(pendingStorageKey); }} placeholder="Full Rehearsal 09-16-2026" /></label>
-    <label>Planned tournament date<input required type="date" disabled={busy || !!pendingRequest || !hydrated} value={plannedStartDate} onChange={(event) => { setPlannedStartDate(event.target.value); clearPendingRequest(pendingStorageKey); }} /></label>
+    <label>Tournament Name<input required maxLength={200} disabled={busy || !!pendingRequest || !hydrated} value={name} onChange={(event) => { setName(event.target.value); clearPendingRequest(pendingStorageKey); }} placeholder="Full Rehearsal 09-16-2026" /></label>
+    <label>Planned Tournament Date<input required type="date" disabled={busy || !!pendingRequest || !hydrated} value={plannedStartDate} onChange={(event) => { setPlannedStartDate(event.target.value); clearPendingRequest(pendingStorageKey); }} /></label>
     <button className="primary full" disabled={busy || !hydrated || !name.trim() || !plannedStartDate} type="submit">{busy ? "Creating…" : pendingRequest ? "Retry Exact Draft Creation" : "Create Draft and Continue Setup"}</button>
     {pendingRequest && !busy ? <p className="auth-note" role="status">The request could not be confirmed. Press Retry to send the identical request again. The fields stay locked until this request is confirmed or explicitly rejected.</p> : null}
     {message ? <p className="error-text" role="alert">{message}</p> : null}

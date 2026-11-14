@@ -37,7 +37,7 @@ try{
   return route.fulfill({json:outcome(body)});
  });
  const go=async name=>{await page.goto(origin+"/"+name);await page.getByRole("heading",{name:"Qualification tie review"}).waitFor();await page.getByRole("status").filter({hasText:/Review|retained|recorded|uncertain|receipt/}).waitFor();};
- const fill=async()=>{await page.getByRole("combobox",{name:/^One-game playoff winner/}).selectOption(id(3));await page.getByLabel("Resolution reason",{exact:true}).fill("TEST ONLY separately played winner");await page.getByLabel("Evidence or playoff record reference",{exact:true}).fill("TEST ONLY playoff record 1");};
+ const fill=async()=>{await page.getByRole("combobox",{name:/^One-game playoff winner/}).selectOption(id(3));await page.getByLabel("Resolution Reason",{exact:true}).fill("TEST ONLY separately played winner");await page.getByLabel("Evidence or Playoff Record Reference",{exact:true}).fill("TEST ONLY playoff record 1");};
  for(const width of [390,1440]){
   await page.setViewportSize({width,height:1000});await go("manual");
   const button=page.getByRole("button",{name:"Record qualification tie resolution"});

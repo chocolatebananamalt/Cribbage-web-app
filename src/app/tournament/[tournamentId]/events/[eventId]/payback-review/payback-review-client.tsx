@@ -95,9 +95,9 @@ export default function PaybackReviewClient({ actorId, tournamentId, eventId, wo
       <p>Server-derived gross entry income: {workspace.scope.grossEntryIncomeMinor === null ? "unavailable" : money(workspace.scope.grossEntryIncomeMinor)}.</p>
       {effective ? <fieldset disabled={locked}><legend>Director-selected prize schedule and evidence</legend>
         <p>No arbitrary split, percentage, payout or award amount is prefilled. Equal finishing bands require equal total awards in this supported workflow.</p>
-        <label>Schedule reference<input maxLength={500} readOnly={!!savedScheduleReference} value={effective.scheduleReference} onChange={e => patch({ scheduleReference: e.target.value })} /></label>
+        <label>Schedule Reference<input maxLength={500} readOnly={!!savedScheduleReference} value={effective.scheduleReference} onChange={e => patch({ scheduleReference: e.target.value })} /></label>
         {savedScheduleReference ? <><p className="field-help">This reference must exactly match the saved schedule bound to this draft. It is filled from that record; the official source below is reviewed separately.</p>{effective.scheduleReference !== savedScheduleReference ? <><p role="alert">This review uses a different schedule reference. Retained requests remain unchanged until their outcome is reconciled.</p><button type="button" disabled={locked} onClick={() => patch({ scheduleReference: savedScheduleReference })}>Use the saved schedule reference</button></> : null}</> : null}
-        <label>Official source reference<input maxLength={500} value={effective.sourceReference} onChange={e => patch({ sourceReference: e.target.value })} /></label>
+        <label>Official Source Reference<input maxLength={500} value={effective.sourceReference} onChange={e => patch({ sourceReference: e.target.value })} /></label>
         <fieldset><legend>Eligibility evidence</legend>{workspace.scope.qualifiers.map(q => {
           const item = effective.eligibilityEvidence.find(v => v.participantId === q.participantId);
           return <fieldset className="correction-item" key={q.participantId}><legend>{q.displayName}</legend>

@@ -64,7 +64,7 @@ try {
   const go = async () => { await page.goto(origin); await status("Review every named pool"); };
   const save = () => page.getByRole("button", { name: "Record reviewed Q obligations", exact: true });
   const retry = () => page.getByRole("button", { name: "Retry exact review request", exact: true });
-  const fill = async () => { await page.getByLabel("Review reason", { exact: true }).fill("TEST ONLY reviewed all named pools"); await page.getByRole("checkbox").check(); };
+  const fill = async () => { await page.getByLabel("Review Reason", { exact: true }).fill("TEST ONLY reviewed all named pools"); await page.getByRole("checkbox").check(); };
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 1000 }); await go();
     const rows = await page.locator("article li").allTextContents();

@@ -1,3 +1,5 @@
+> Current actionable checklist: [2026-10-31 production readiness](2026-10-31-production-readiness-current.md). Navigation rollout is complete on1c3cd8c; older intermediate statuses below are historical. No production approval is implied.
+
 > **Current checkpoint, 2026-10-31:** The replacement $5-policy hosted acceptance is complete on test commit `223ec1583f18979fc666cd6a26f03e9428705342`, not production. Both fresh 17-player fixtures have 102 verified games, finalized qualification, four simulated playoff series with three byes, completed cross-checking and one current unpaid accounting final. All 34 original player totals and all 223 older table fingerprints are preserved. Source evidence: `2026-10-31-explicit-fee-hosted-rollout.md`. Older cent-valued and failed-setup examples below are historical and do not define current policy.
 
 ## Current verified monetary acceptance

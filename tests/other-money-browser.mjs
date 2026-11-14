@@ -75,8 +75,8 @@ try {
     await page.screenshot({ path: path.join(root, `test-results/other-money-${width}.png`), fullPage: true });
   }
 
-  const customFee = page.getByLabel("Entry fee (USD)");
-  await page.getByLabel("Pool name").fill("Custom Pool");
+  const customFee = page.getByLabel("Entry Fee (USD)");
+  await page.getByLabel("Pool Name").fill("Custom Pool");
   await customFee.fill("1e3");
   await page.getByRole("button", { name: "Add Custom Side Pool" }).click();
   assert.equal(writes.length, 0, "exponent entry fee starts no write");
@@ -85,7 +85,7 @@ try {
   assert.equal(writes[0].action, "add_pool");
   assert.equal(writes[0].entryFeeMinor, 2510, "custom $25.10 is 2510 minor units");
 
-  const policy = page.getByLabel("Posted payout schedule (placement: USD amount)");
+  const policy = page.getByLabel("Posted Payout Schedule (Placement: USD Amount)");
   const postPolicy = page.getByRole("button", { name: "Post Payout Schedule" });
   await policy.fill("1:5.00,2:2.001");
   assert.equal(await postPolicy.isDisabled(), true, "one invalid schedule row blocks whole submission");
@@ -94,7 +94,7 @@ try {
   await postPolicy.click();
   assert.deepEqual(writes[1].postedPayoutSchedule, [{ placement: 1, amountMinor: 500 }, { placement: 2, amountMinor: 250 }]);
 
-  const received = page.getByLabel("Amount received (USD)").first();
+  const received = page.getByLabel("Amount Received (USD)").first();
   await received.fill("1e2");
   await page.getByRole("button", { name: "Save Election" }).click();
   assert.equal(writes.length, 2, "exponent receipt starts no write");
@@ -103,10 +103,10 @@ try {
   assert.equal(writes[2].amountReceivedMinor, 1234, "$12.34 receipt is 1234 minor units");
 
   const prize = page.getByLabel("Prize (USD)");
-  const qPool = page.getByLabel("Q-Pool award (USD, optional)");
-  const side = page.getByLabel("Side Pool award (USD, optional)");
+  const qPool = page.getByLabel("Q-Pool Award (USD, Optional)");
+  const side = page.getByLabel("Side Pool Award (USD, Optional)");
   const addPlacement = page.getByRole("button", { name: "Add Placement" });
-  await page.getByLabel("Cross-check evidence reference").fill("synthetic paper check");
+  await page.getByLabel("Cross-Check Evidence Reference").fill("synthetic paper check");
   await prize.fill("");
   await addPlacement.click();
   assert.equal(await page.getByText("Enter the prize amount in dollars.").count(), 1, "blank required prize is rejected");

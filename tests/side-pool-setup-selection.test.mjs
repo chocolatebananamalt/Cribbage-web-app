@@ -24,3 +24,5 @@ test('optional names generate distinct bounded identities while retaining entere
   assert.throws(() => sidePoolDefaultName(-1), RangeError);
   assert.throws(() => sidePoolDefaultName(6), RangeError);
 });
+
+test('typed ratio draft preserves only supported saved codes without invented minimum or silent coercion', async()=>{const{sidePoolPayoutTypeFromRatioDraft,sidePoolRatioDraftMessage}=await import('../src/lib/api/side-pool-setup-selection.ts');for(const n of [4,6,8,10])assert.equal(sidePoolPayoutTypeFromRatioDraft(String(n)),`graduated-1-in-${n}`);for(const raw of ['', '0','-4','4.5','4e0',' 4 ','2','3','5','7','100','9007199254740992'])assert.equal(sidePoolPayoutTypeFromRatioDraft(raw),null);assert.match(sidePoolRatioDraftMessage('7'),/cannot be saved/);assert.match(sidePoolRatioDraftMessage('-4'),/positive whole/);assert.equal(sidePoolRatioDraftMessage('4'),null);});

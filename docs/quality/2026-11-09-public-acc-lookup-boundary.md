@@ -1,0 +1,16 @@
+# Public ACC Lookup: Read-Only Source Check (2026-11-09)
+
+Source: https://www.cribbage.org/internet/registration_lookup_player.php
+
+The public page identifies this as “Certify Your Usernames”, Step 1, “Find Your ACC Membership”. It asks users to begin typing a last name and select the correct member, and labels the field “Search Active Members”. The Internet Program instructions require an active ACC membership, an ACC number and an email address on file. These are Internet Program certification instructions, not evidence of a blanket tournament-admission policy or an MRP effective-date rule.
+
+Only the public blank form was read. No person name or ACC number was submitted, no member result was retrieved, no form was continued, and no source API was called. The page establishes a user-led lookup aid; it does not establish a complete roster feed, supported automation contract, freshness guarantee, historic status coverage or reliable exact identity matching. No email-on-file details should be copied into our app merely because this workflow requires them.
+
+Safe current integration boundary: a director may consult the official site separately and record the dated source/evidence reference in the private journal once its runtime verification and release gates pass. A missing result remains unknown and cannot reject registration or authorize/deny an official MRP award. The app must not submit player identity to an unapproved endpoint or treat Internet IRP requirements as MRP rules.
+
+Still needed before an automated lookup: source-owner-supported access method and permitted use; exact stable identity fields; source as-of meaning and refresh behavior; applicable membership date for MRP review; response/privacy handling and retention. Director correction records are evidence of a verified website reporting error, not official ACC approval or an automatic award.
+## Parent-supplied official research update
+
+Parent inspected the linked ACC Policy Manual, Chapter 6 VI.A.2–3: membership must be Active when the tournament is played; points are dated the tournament's last day. These are distinct statements: the last-day points date does not itself establish a single eligibility-check date for every multi-day or changed-status case. Do not infer historical status from a current search.
+
+The same research found conflicting Chapter 5 grace-period descriptions (II.A two months after expiration versus III.C one-month renewal grace). No automatic grace calculation is implemented. The public Grass Roots roster now uses https://www.cribbage.org/grassroots/stats.php?group=All&view=Alltime; some E/D markers are shown, but unmarked or missing entries do not establish current or historical membership. An undocumented Internet search endpoint returning a number/display name establishes neither a supported API contract nor historical/freshness evidence. This journal continues recording dated observations independently of event-specific eligibility. No additional person query or source endpoint request was performed here.

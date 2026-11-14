@@ -23,3 +23,7 @@ artifacts/
 test-results/
 playwright-report/
 *.zip
+
+# Approved hash-pinned fictional inputs for portable application tests.
+!tests/fixtures/integrated-history/test-results/
+!tests/fixtures/integrated-history/test-results/**

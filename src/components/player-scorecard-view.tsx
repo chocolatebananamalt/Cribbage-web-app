@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ScorecardPrintControl } from "./scorecard-print-control";
 import { PlayerPageFrame } from "./player-page-frame";
 import { SharedDeviceSignOut } from "./shared-device-sign-out";
 import type { PlayerScorecard } from "../lib/games/player-scorecard";
@@ -19,6 +20,7 @@ export function PlayerScorecardView({ scorecard, assignments = [], hasCorrection
   const currentGame = currentScorecardAssignment(scorecard, assignments);
 
   return <PlayerPageFrame tournamentId={tournamentId} tournamentName={scorecard.tournamentName} eventId={event} eventName={scorecard.eventName} activeTab="card" player={scorecard.player}>
+    <ScorecardPrintControl />
     <h1 className="player-card-name" id="scorecard-title">{scorecardPlayerName(scorecard.player)}</h1>
     <p className="player-card-id"><strong>Tournament ID# {scorecard.player.verificationId}</strong></p>
     <p className="player-card-state" role="status">{scorecard.lines.length} {scorecard.lines.length === 1 ? "game" : "games"} verified{verificationStatus.tone !== "current" ? ` · ${verificationStatus.message}` : ""}</p>
@@ -44,6 +46,7 @@ export function PlayerScorecardView({ scorecard, assignments = [], hasCorrection
         </tfoot>
       </table>
     </div>
+    <p className="scorecard-print-note">Scorecard Copy — Only verified values are included in totals. A dash means no verified value; handwriting does not verify a result. Refresh the app for current status.</p>
     <p className="player-card-hint">Scroll right for opponent ID# → · — = no verified value</p>
     {verificationStatus.totalMessage ? <p className="verification-pending">{verificationStatus.totalMessage}. Unverified results are excluded from totals.</p> : null}
     {currentGame ? <Link className="primary player-current-game" href={`/tournament/${tournamentId}/game/${currentGame.gameId}`}>Open Current Game</Link> : null}

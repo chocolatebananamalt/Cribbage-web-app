@@ -14,5 +14,5 @@ export default async function OfficialInvitationPage({ params }: { params: Promi
     // An unavailable reader/migration fails closed; never infer context from URL.
     try { context = await getOfficialInvitationContext(createServerOnlyAdminClient(), actorId, secret); } catch { context = null; }
   }
-  return <main className="auth-shell"><section className="auth-card"><OfficialInvitationClient invitationId={secret} initial={context} legacy={legacy} signedIn={!!actorId} /></section></main>;
+  return <main className="auth-shell"><section className="auth-card"><OfficialInvitationClient key={`${secret}:${actorId??'signed-out'}`} invitationId={secret} initial={context} legacy={legacy} signedIn={!!actorId} /></section></main>;
 }

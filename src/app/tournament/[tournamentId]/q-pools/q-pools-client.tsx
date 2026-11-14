@@ -222,20 +222,20 @@ function QPoolEntry({ workspace, entry, editable, busy, onSubmit, policies }: {
       })}
       {workspace.started && !prePlayElected && <p role="alert">A pre-play elected Q Pool record is required before play; first late opt-in is blocked.</p>}
       {!workspace.started && workspace.canCorrect && entry.membershipVersion > 0 && <label><input type="checkbox" checked={membershipCorrection} onChange={(event) => setMembershipCorrection(event.target.checked)}/>Record this membership revision as a director correction</label>}
-      <label>Reason for membership record (required)<input maxLength={500} value={membershipReason} onChange={(event) => setMembershipReason(event.target.value)}/></label>
+      <label>Reason for Membership Record (Required)<input maxLength={500} value={membershipReason} onChange={(event) => setMembershipReason(event.target.value)}/></label>
       <button className="secondary" type="button" disabled={!canSaveMembership} onClick={submitMembership}>{workspace.started ? "Save Director Membership Correction" : "Save Membership"}</button>
     </fieldset>}
     <fieldset disabled={!editable || busy}><legend>Payment allocation · version {entry.allocationVersion}</legend>
       <p>Recorded receipt: {entry.receiptId ? `${formatUsd(entry.receivedMinor)} (receipt ${entry.receiptVersion})` : "No receipt recorded"}. This screen cannot record or change a payment.</p>
       <p>Current obligation: {entry.obligationMinor === null ? "Unavailable" : formatUsd(entry.obligationMinor)}{entry.obligationMinor !== null && entry.obligationMinor !== obligationExpected ? " (does not match current base fee and elections)" : ""}.</p>
-      <label>Base entry allocation (USD)<input inputMode="decimal" value={baseAllocation} onChange={(event) => setBaseAllocation(event.target.value)} placeholder="0.00"/></label>
+      <label>Base Entry Allocation (USD)<input inputMode="decimal" value={baseAllocation} onChange={(event) => setBaseAllocation(event.target.value)} placeholder="0.00"/></label>
       {workspace.pools.map((pool) => <label key={pool.poolVersionId}>{pool.name} allocation (USD; owed {formatUsd(entry.pools.find((item) => item.poolVersionId === pool.poolVersionId)?.amountOwedMinor ?? 0)})<input inputMode="decimal" value={allocations.find((item) => item.poolVersionId === pool.poolVersionId)?.amount ?? ""} onChange={(event) => setAllocations((current) => current.map((item) => item.poolVersionId === pool.poolVersionId ? { ...item, amount: event.target.value } : item))}/></label>)}
       <p>Paid entry eligibility is evaluated separately for the base entry and each elected pool. It does not determine payout eligibility.</p>
       {workspace.started && !(entry.allocationVersion > 0 && entry.membershipVersion > 0 && prePlayElected) && <p role="alert">A post-play allocation correction requires a prior pre-play allocation and pre-play Q Pool consent.</p>}
       {(!entry.receiptId || !entry.obligationMinor || entry.obligationMinor !== obligationExpected) && <p role="alert">Allocation is blocked until a current receipt and obligation match the explicit entry and elected-pool fees.</p>}
       {!entry.allocationCurrent && entry.allocationVersion > 0 && <p className="auth-note">The saved allocation no longer matches current facts. Enter and review a new full allocation snapshot; prior versions remain historical.</p>}
       {!workspace.started && workspace.canCorrect && entry.allocationVersion > 0 && <label><input type="checkbox" checked={allocationCorrection} onChange={(event) => setAllocationCorrection(event.target.checked)}/>Record this allocation revision as a director correction</label>}
-      <label>Reason for allocation record (required)<input maxLength={500} value={allocationReason} onChange={(event) => setAllocationReason(event.target.value)}/></label>
+      <label>Reason for Allocation Record (Required)<input maxLength={500} value={allocationReason} onChange={(event) => setAllocationReason(event.target.value)}/></label>
       <button className="secondary" type="button" disabled={!canSaveAllocation} onClick={submitAllocation}>{workspace.started ? "Save Director Allocation Correction" : "Save Receipt Allocation"}</button>
       {parsedBase !== null && parsedPools.some((pool) => pool.amountMinor === null) && <p role="alert">Enter a valid dollar allocation with up to two decimal places for every row.</p>}
       {allocationTotal !== null && allocationTotal !== BigInt(entry.receivedMinor) && <p role="alert">Base and Q Pool allocations must equal the recorded receipt exactly ({formatUsd(entry.receivedMinor)}).</p>}

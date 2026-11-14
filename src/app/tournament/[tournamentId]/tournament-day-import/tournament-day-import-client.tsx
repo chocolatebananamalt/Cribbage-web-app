@@ -115,7 +115,7 @@ export default function TournamentDayImportClient({ tournamentId, workspace }: {
       <section className="manual-roster-panel" aria-labelledby="csv-template-title">
         <h2 id="csv-template-title">CSV columns for this tournament</h2>
         <p>Copy this header row into your spreadsheet. Amount columns accept dollars such as <strong>50</strong> or <strong>50.00</strong>. Blank or zero means the player did not enter that event or pool.</p>
-        <textarea readOnly rows={4} value={template} aria-label="Tournament day CSV header template" />
+        <textarea readOnly rows={4} value={template} aria-label="Tournament Day CSV Header Template" />
         <button className="secondary" type="button" onClick={downloadBlankTemplate}>Download blank CSV template</button>
         <p className="muted">The download includes 100 starter rows. Add more rows as needed; each upload may contain up to 500 players.</p>
         <ul>
@@ -130,7 +130,7 @@ export default function TournamentDayImportClient({ tournamentId, workspace }: {
       <section className="manual-roster-panel" aria-labelledby="csv-upload-title">
         <h2 id="csv-upload-title">Import desk spreadsheet</h2>
         <div className="roster-csv-controls">
-          <label>Registered player CSV<input type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => void selectCsv(event)} /></label>
+          <label>Registered Player CSV<input type="file" accept=".csv,text/csv" disabled={busy} onChange={(event) => void selectCsv(event)} /></label>
           <button className="primary" type="button" disabled={busy || !rows.length} onClick={() => void importCsv()}>Import {rows.length || ""} Row{rows.length === 1 ? "" : "s"}</button>
         </div>
         {/* The outcome of Import belongs beside Import. It used to render after

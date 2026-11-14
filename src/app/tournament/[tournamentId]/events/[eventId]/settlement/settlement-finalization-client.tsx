@@ -141,10 +141,10 @@ export default function SettlementFinalizationClient({ actorId, tournamentId, ev
         <p>Q-pool payouts: <strong>{money(draft.qPoolPayoutTotalMinor)}</strong></p>
         <p>Other awards: <strong>{money(draft.otherAwardTotalMinor)}</strong></p>
         <p>{draft.mrpClaimCount} of {draft.qualifierCount} qualifier MRP claims explicitly entered.</p>
-        <label>Reviewed event income (USD)<input inputMode="decimal" value={eventIncome} onChange={(event) => setEventIncome(event.target.value)} /></label>
-        <label>Reviewed event expenses (USD)<input inputMode="decimal" value={eventExpense} onChange={(event) => setEventExpense(event.target.value)} /></label>
-        <label>Reviewed retained balance (USD)<input inputMode="decimal" value={retained} onChange={(event) => setRetained(event.target.value)} /></label>
-        <label>Official source reference<input maxLength={500} value={source} onChange={(event) => setSource(event.target.value)} placeholder="Dated worksheet, report, or director record" /></label>
+        <label>Reviewed Event Income (USD)<input inputMode="decimal" value={eventIncome} onChange={(event) => setEventIncome(event.target.value)} /></label>
+        <label>Reviewed Event Expenses (USD)<input inputMode="decimal" value={eventExpense} onChange={(event) => setEventExpense(event.target.value)} /></label>
+        <label>Reviewed Retained Balance (USD)<input inputMode="decimal" value={retained} onChange={(event) => setRetained(event.target.value)} /></label>
+        <label>Official Source Reference<input maxLength={500} value={source} onChange={(event) => setSource(event.target.value)} placeholder="Dated worksheet, report, or director record" /></label>
       </fieldset>
       <fieldset disabled={busy || storageBlocked || !!locked}><legend>Required director attestations</legend>
         {Object.keys(MANUAL_SETTLEMENT_ATTESTATIONS).map((name) => <label key={name}><input type="checkbox" checked={checks[name as keyof typeof checks]} onChange={(event) => setChecks((current) => ({ ...current, [name]: event.target.checked }))} /> {name === "officialSourceReviewed" ? "I reviewed the identified official source inputs." : name === "expenseLedgerReviewed" ? "I reviewed the complete expense ledger for this event allocation." : name === "payoutClaimsReviewed" ? "I reviewed every placement payout amount." : name === "qPoolClaimsReviewed" ? "I reviewed every Q-pool amount, including no-award cases." : name === "mrpClaimsReviewed" ? "I reviewed every qualifier MRP claim, including explicit zeroes." : "I understand this does not submit anything to the ACC."}</label>)}

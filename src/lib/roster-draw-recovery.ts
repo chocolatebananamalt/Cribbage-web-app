@@ -1,0 +1,7 @@
+import{isUuid}from"./api/validation.ts";
+import{isRosterDrawBody,type RosterDrawBody}from"./api/roster-random-draw.ts";
+export type RosterDrawPending={protocol:"roster-draw-recovery-v1";actorId:string;tournamentId:string;body:RosterDrawBody};
+export function rosterDrawRecoveryKey(actor:string,tid:string){if(!isUuid(actor)||!isUuid(tid))throw Error("invalid_draw_scope");return`roster-draw-operation:${actor}:${tid}`;}
+export function isRosterDrawPending(v:unknown,actor:string,tid:string):v is RosterDrawPending{if(!v||typeof v!=="object"||Array.isArray(v))return false;const r=v as Record<string,unknown>;return Object.keys(r).sort().join()==="actorId,body,protocol,tournamentId"&&r.protocol==="roster-draw-recovery-v1"&&r.actorId===actor&&r.tournamentId===tid&&isRosterDrawBody(r.body);}
+export function readRosterDrawPending(storage:Pick<Storage,"getItem">,actor:string,tid:string):{kind:"empty"}|{kind:"blocked"}|{kind:"pending";value:RosterDrawPending;raw:string}{try{const raw=storage.getItem(rosterDrawRecoveryKey(actor,tid));if(raw===null)return{kind:"empty"};if(raw.length>65536)return{kind:"blocked"};const value:unknown=JSON.parse(raw);return isRosterDrawPending(value,actor,tid)?{kind:"pending",value,raw}:{kind:"blocked"};}catch{return{kind:"blocked"};}}
+export function clearExactRosterDrawPending(storage:Pick<Storage,"getItem"|"removeItem">,actor:string,tid:string,raw:string){const key=rosterDrawRecoveryKey(actor,tid);if(storage.getItem(key)!==raw)return false;storage.removeItem(key);return storage.getItem(key)===null;}

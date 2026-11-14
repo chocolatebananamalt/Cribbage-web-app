@@ -4,6 +4,7 @@ import { DirectorAccessActions } from "../components/director-access-actions";
 import { getCurrentSubject } from "../lib/auth/current-subject";
 import { getDirectorAccessWorkspace } from "../lib/director-administration";
 import { getAccessibleTournaments } from "../lib/tournaments/accessible-tournaments";
+import { integratedTestUiEnabled } from "../lib/integrated-test-target";
 
 const roleLabels: Record<string, string> = {
   director: "Director",
@@ -34,6 +35,7 @@ export default async function HomePage() {
           <p className="eyebrow">ACC TOURNAMENT DESK</p>
           <h1 id="welcome-title">You’re signed in</h1>
           <p className="lede">Your secure email sign-in is complete.</p>
+          {integratedTestUiEnabled() ? <Link className="primary-action" href="/test-workspace">Open your integrated test app</Link> : null}
           {access.status === "available" && access.tournaments.length > 0 ? (
             <>
               <h2>Your tournaments</h2>

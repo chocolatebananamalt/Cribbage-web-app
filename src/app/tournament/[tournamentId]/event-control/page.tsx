@@ -12,8 +12,10 @@ import { SyntheticEventNotice } from "../../../../components/synthetic-event-not
 
 export const dynamic = "force-dynamic";
 
-export default async function EventControlPage({ params }: { params: Promise<{ tournamentId: string }> }) {
+export default async function EventControlPage({ params, searchParams }: { params: Promise<{ tournamentId: string }>; searchParams:Promise<{event?:string}> }) {
   const { tournamentId } = await params;
+  const {event:initialEventId}=await searchParams;
+  if(initialEventId!==undefined&&!isUuid(initialEventId))notFound();
   if (!isUuid(tournamentId)) notFound();
   const access = await requireTournamentAccess(tournamentId);
   // Pausing the room and ending an event's play are director decisions. A
@@ -24,6 +26,7 @@ export default async function EventControlPage({ params }: { params: Promise<{ t
     p_tournament_id: tournamentId,
   });
   if (error || !isEventControlWorkspace(data)) notFound();
+  if(initialEventId&&!data.events.some(e=>e.eventId===initialEventId))notFound();
   const syntheticContext = await getSyntheticEventContext(access.user.id, tournamentId);
 
   return <main className="auth-shell"><section className="auth-card schedule-card" aria-labelledby="event-control-title">
@@ -33,7 +36,7 @@ export default async function EventControlPage({ params }: { params: Promise<{ t
     {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
     <p className="auth-note">Pause stops new score entry across an event while play is halted, and resuming puts it back. Close Event ends play for good and hands the event to cross-checking, so it refuses while any scheduled game is still unrecorded or unverified.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
-    <EventControlClient actorId={access.user.id} tournamentId={tournamentId} workspace={data} syntheticContext={syntheticContext} />
+    <EventControlClient actorId={access.user.id} tournamentId={tournamentId} workspace={data} initialEventId={initialEventId} syntheticContext={syntheticContext} />
     <SharedDeviceSignOut />
   </section></main>;
 }

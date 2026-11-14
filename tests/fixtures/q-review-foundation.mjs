@@ -4,7 +4,7 @@ export const actor='a1310000-0000-4000-8000-000000000001',tid='b1310000-0000-400
 export const uuid=(prefix,n)=>`${prefix}0000-0000-4000-8000-${String(n).padStart(12,'0')}`;
 export const quote=s=>`'${String(s).replaceAll("'","''")}'`;
 export function foundation(options={}){
- const pool1People=options.pool1People??[1,2,4,16],pool1Fee=options.pool1Fee??500,pool1Type=options.pool1Type??'Equal (Pays All Equally)';
+ const pool1People=options.pool1People??[1,2,4,16],pool2People=options.pool2People??[15],pool1Fee=options.pool1Fee??500,pool1Type=options.pool1Type??'Equal (Pays All Equally)';
  if(!['Equal (Pays All Equally)','Graduated (1-in-6)'].includes(pool1Type)||![500,1000].includes(pool1Fee))throw Error('Unsupported isolated fixture option');
  let seed=fs.readFileSync('tests/q-pool-membership-seed.sql','utf8').replace("'Equal',500",`'${pool1Type}',${pool1Fee}`).replace("'Graduated',1000","'Equal (Pays All Equally)',1000").replaceAll('generate_series(1,2)','generate_series(1,16)').replace("'A-'||n","chr(65+(n-1)/4)||'-'||(((n-1)%4)+1)");
  const games=options.games??JSON.parse(fs.readFileSync('tests/fixtures/q-review-games.json','utf8')).matches;
@@ -13,7 +13,7 @@ export function foundation(options={}){
  sql+='commit;begin;set role postgres;'; // post-disclosure receipt timestamp, no backdating
  sql+=`select set_config('request.jwt.claim.sub','${actor}',true),set_config('request.jwt.claim.role','authenticated',true);\n`;
  for(let i=1;i<=16;i++){
-  const r=uuid('d243',i),p1=pool1People.includes(i),p2=i===15,amount=3000+(p1?pool1Fee:0)+(p2?1000:0);
+  const r=uuid('d243',i),p1=pool1People.includes(i),p2=pool2People.includes(i),amount=3000+(p1?pool1Fee:0)+(p2?1000:0);
   const poolExpr=n=>`jsonb_build_object('poolVersionId','${uuid('c243',n)}','elected',${n===1?p1:p2},'consentReference',case when ${n===1?p1:p2} then 'Q policy '||(select id from app.q_pool_policies_v1 where pool_version_id='${uuid('c243',n)}')::text||': TEST ONLY acknowledgment' else '' end)`;
   sql+=`select public.save_q_pool_membership_v1('${actor}','${tid}',jsonb_build_object('action','membership','rosterEntryId','${r}','expectedVersion',0,'correction',false,'reason','TEST ONLY election','pools',jsonb_build_array(${poolExpr(1)},${poolExpr(2)})),extensions.gen_random_uuid());
 select public.set_roster_payment_obligation_v1('${tid}','${r}',0,${amount},'TEST ONLY synthetic',extensions.gen_random_uuid());

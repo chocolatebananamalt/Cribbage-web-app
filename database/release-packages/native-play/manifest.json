@@ -1,0 +1,46 @@
+{
+  "status": "LOCAL_CLOSED_CANDIDATE_NOT_AUTHORIZED",
+  "file": "database/release-packages/native-play/supabase/migrations/20261108201030_native_play_closed_install.sql",
+  "version": "20261108201030",
+  "name": "native_play_closed_install",
+  "generatedBy": "checksum-pinned official Supabase CLI2.121.0 migration new in network-none ephemeral container",
+  "sha256": "c0d63d7f9f33dd545861631def4f003818377884461d4b7df59ef33ee3408777",
+  "bytes": 27955,
+  "sources": [
+    {
+      "sha256": "c646b5dd5cb6875cce8a9e74abff74322038df312ad32efff955562c372cdbd9",
+      "bytes": 2337,
+      "path": "database/proposals/native-mixed-pilot-director-session-v1.sql"
+    },
+    {
+      "sha256": "cf15ab56b0cc6c8d67df12e3f9b0fab37687f4fd84ecb51bfb5b343f20912694",
+      "bytes": 5561,
+      "path": "database/proposals/native-mixed-pilot-preparation-v1.sql"
+    },
+    {
+      "sha256": "491adfa47570bf5dba0a09ca0fb460a05cc28e0718e86494cb0f0da2a5a3ff20",
+      "bytes": 13560,
+      "path": "database/proposals/native-mixed-pilot-draw-reservation-v1.sql"
+    },
+    {
+      "sha256": "350c79236274fb586e4920b57872f07e9fd10da486bd06dcf4be7a870beaf0f7",
+      "bytes": 3210,
+      "path": "database/proposals/native-mixed-pilot-bootstrap-status-v1.sql"
+    }
+  ],
+  "newFunctions": [
+    "public.get_native_mixed_pilot_director_session_v1(uuid,uuid,text)",
+    "public.get_native_mixed_pilot_preparation_v1(uuid,uuid,uuid,uuid)",
+    "app.native_mixed_pilot_integer_v1(bytea,integer,bigint)",
+    "app.native_mixed_pilot_seeded_candidate_v1(bytea,jsonb,jsonb)",
+    "app.native_mixed_pilot_reserved_candidate_v1(uuid,uuid,uuid,jsonb,jsonb,jsonb)",
+    "public.reserve_native_mixed_pilot_draw_v1(uuid,uuid,uuid,uuid,jsonb)",
+    "public.get_native_mixed_pilot_bootstrap_v1(uuid,uuid,uuid,uuid)"
+  ],
+  "newTables": 1,
+  "existingFunctionChanged": "app.draw_native_mixed_simulation_v1(uuid,uuid,uuid,jsonb)",
+  "newUniqueIndex": "native_mixed_pilot_one_draw_attempt_v1",
+  "applicationGrants": 0,
+  "cohortWrites": 0,
+  "enabled": false
+}

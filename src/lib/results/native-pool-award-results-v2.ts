@@ -1,0 +1,31 @@
+import { integratedTestUiEnabled as integratedTestFeatureEnabled } from '../integrated-test-target.ts';
+import 'server-only';
+import {isModernPrizeScopeV2,type ModernPrizeScopeV2} from '../finance/modern-prize-journal-contract-v2.ts';
+import {isEventPrizeResponseValueV1} from '../api/event-prize-settings-v1.ts';
+export const nativePoolAwardResultsEnabledV2=()=>integratedTestFeatureEnabled();
+export type NativePoolAwardResultsV2={status:'available';qMinor:number;sideMinor:number;totalMinor:number;recordedAt:string;moneyMoved:false;payoutAuthorized:false;pools:Array<{poolId:string;label:string;kind:'q'|'side';fundMinor:number;roundingUnitMinor:500;recipients:Array<{name:string;tournamentPlayerId:string;amountMinor:number}>}>};
+const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&Object.getPrototypeOf(v)===Object.prototype;
+const exact=(v:unknown,k:string[]):v is Record<string,unknown>=>object(v)&&Reflect.ownKeys(v).length===k.length&&k.every(x=>Object.hasOwn(v,x));
+const uuid=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v);
+const money=(v:unknown):v is number=>typeof v==='number'&&Number.isSafeInteger(v)&&v>=0&&!Object.is(v,-0);
+const text=(v:unknown,max:number):v is string=>typeof v==='string'&&!!v.trim()&&v===v.trim()&&v.length<=max&&!/[\u0000-\u001f\u007f]/.test(v);
+/** The authenticated SQL producer owns current-source proof. This decoder does
+ * scope, exact contract, identity, no-refund and fund conservation checks only. */
+export function projectNativePoolAwardResultsV2(value:unknown,scope:ModernPrizeScopeV2,qualificationId:string):NativePoolAwardResultsV2|null{try{
+ if(!isModernPrizeScopeV2(scope)||!isEventPrizeResponseValueV1(value)||!exact(value,['kind','status','actorId','tournamentId','eventId','qualificationResultVersionId','awardSetId','seatingPublicationId','recordedAt','qMinor','sideMinor','totalMinor','pools','refundPolicy','snapshotConsistency','moneyMoved','payoutAuthorized','bankReceiptVerified','writeAuthorized'])||value.kind!=='current-native-pool-award-results-v2'||value.status!=='source_available'||!Object.entries(scope).every(([k,v])=>value[k]===v)||value.qualificationResultVersionId!==qualificationId||!uuid(qualificationId)||!uuid(value.awardSetId)||!uuid(value.seatingPublicationId)||value.refundPolicy!=='no-pool-refunds-v1'||value.snapshotConsistency!=='locked_source_snapshot'||['moneyMoved','payoutAuthorized','bankReceiptVerified','writeAuthorized'].some(k=>value[k]!==false)||![value.qMinor,value.sideMinor,value.totalMinor].every(money)||typeof value.recordedAt!=='string'||!/^\d{4}-\d\d-\d\dT/.test(value.recordedAt)||!Number.isFinite(Date.parse(value.recordedAt))||!Array.isArray(value.pools)||value.pools.length>10000)return null;
+ let q=BigInt(0),side=BigInt(0),count=0;const pools:NativePoolAwardResultsV2['pools']=[],ids=new Set<string>(),participantIds=new Map<string,string>(),fixedIds=new Map<string,string>();
+ for(const p of value.pools){if(!exact(p,['poolId','label','kind','fundMinor','roundingUnitMinor','recipients'])||!uuid(p.poolId)||ids.has(p.poolId)||!text(p.label,200)||!['q','side'].includes(p.kind as string)||!money(p.fundMinor)||p.fundMinor<500||p.fundMinor%500!==0||p.roundingUnitMinor!==500||!Array.isArray(p.recipients)||!p.recipients.length||p.recipients.length>10000)return null;ids.add(p.poolId);const seen=new Set<string>(),recipients:Array<{name:string;tournamentPlayerId:string;amountMinor:number}>=[];let total=BigInt(0);
+  for(const r of p.recipients){if(++count>10000||!exact(r,['participantId','name','tournamentPlayerId','amountMinor'])||!uuid(r.participantId)||seen.has(r.participantId)||!text(r.name,200)||typeof r.tournamentPlayerId!=='string'||!/^[A-Z]-[1-9][0-9]{0,3}$/.test(r.tournamentPlayerId)||participantIds.has(r.participantId)&&participantIds.get(r.participantId)!==r.tournamentPlayerId||fixedIds.has(r.tournamentPlayerId)&&fixedIds.get(r.tournamentPlayerId)!==r.participantId||!money(r.amountMinor)||r.amountMinor<500||r.amountMinor%500!==0)return null;participantIds.set(r.participantId,r.tournamentPlayerId);fixedIds.set(r.tournamentPlayerId,r.participantId);seen.add(r.participantId);total+=BigInt(r.amountMinor);recipients.push({name:r.name,tournamentPlayerId:r.tournamentPlayerId,amountMinor:r.amountMinor});}
+  if(total!==BigInt(p.fundMinor))return null;if(p.kind==='q')q+=total;else side+=total;
+  pools.push({poolId:p.poolId,label:p.label,kind:p.kind as 'q'|'side',fundMinor:p.fundMinor,roundingUnitMinor:500,recipients});
+ }
+ if(q!==BigInt(value.qMinor as number)||side!==BigInt(value.sideMinor as number)||q+side!==BigInt(value.totalMinor as number))return null;
+ return{status:'available',qMinor:value.qMinor as number,sideMinor:value.sideMinor as number,totalMinor:value.totalMinor as number,recordedAt:value.recordedAt,moneyMoved:false,payoutAuthorized:false,pools};
+ }catch{return null;}}
+type Client={auth:{getUser:()=>Promise<{data:{user:{id:string}|null}|null;error:unknown}>};rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};
+type ServiceRpc=(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>;
+export async function readNativePoolAwardResultsV2(o:{authenticated:Client;serviceRpc:ServiceRpc;scope:ModernPrizeScopeV2;qualificationId:string;enabled:()=>boolean}):Promise<NativePoolAwardResultsV2|null>{
+ if(!o.enabled()||!isModernPrizeScopeV2(o.scope)||!uuid(o.qualificationId))return null;const s=Object.freeze({...o.scope}),qid=o.qualificationId;
+ async function authorized(){if(!o.enabled())return false;const before=await o.authenticated.auth.getUser();if(before.error||before.data?.user?.id!==s.actorId)return false;const role=await o.authenticated.rpc('get_tournament_role',{p_tournament_id:s.tournamentId});const after=await o.authenticated.auth.getUser();return !role.error&&role.data==='director'&&!after.error&&after.data?.user?.id===s.actorId&&o.enabled();}
+ try{if(!await authorized())return null;const r=await o.serviceRpc('get_native_pool_award_results_provider_v2',{actor:s.actorId,tid:s.tournamentId,eid:s.eventId});if(r.error||!await authorized())return null;return projectNativePoolAwardResultsV2(r.data,s,qid);}catch{return null;}
+}

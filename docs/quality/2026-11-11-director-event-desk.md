@@ -1,0 +1,4 @@
+
+
+## 2026-11-11 — Director Event Desk (local, default off)
+Built a read-only per-event workflow route and gated dashboard entry connecting check-in, Schedule/Start, play control, Results, disputes and separately scoped tournament-wide cross-check review. Actual event summary and play status are validated; live identity/session/Director-or-Co role is rechecked after capture. Unknown data is not zero, links do not confer readiness, and destination writers retain authorization. Finance keeps its separate disabled gate. No state-changing endpoint, SQL, hosted operation, frozen release edit or policy change. Seven focused tests, TypeScript and changed-source lint passed. Independent review found a missing cross-check predicate scope argument, corrected with a positive/foreign-scope regression. Signed-in provider/device/browser acceptance remains unverified; feature stays disabled.

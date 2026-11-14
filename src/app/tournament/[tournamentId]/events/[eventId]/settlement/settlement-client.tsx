@@ -190,9 +190,9 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         <legend>Q-pool and other award claims</legend>
         {awards.map((entry, index) => <div className="correction-item" key={`${entry.participantId}-${entry.awardType}-${entry.qPoolSlot ?? "other"}-${index}`}>
           <label>Qualifier<select value={entry.participantId} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, participantId: event.target.value } : item))}>{workspace.qualifierChoices.map((choice) => <option key={choice.participantId} value={choice.participantId}>{choice.displayName}</option>)}</select></label>
-          <label>Award type<select value={entry.awardType === "q_pool" ? String(entry.qPoolSlot) : "other"} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, awardType: event.target.value === "other" ? "other" : "q_pool", qPoolSlot: event.target.value === "other" ? null : Number(event.target.value) as 1 | 2 } : item))}><option value="other">Other</option>{workspace.configuredQPools.map((pool) => <option key={pool.qPoolId} value={pool.slot}>Q-pool {pool.slot}</option>)}</select></label>
+          <label>Award Type<select value={entry.awardType === "q_pool" ? String(entry.qPoolSlot) : "other"} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, awardType: event.target.value === "other" ? "other" : "q_pool", qPoolSlot: event.target.value === "other" ? null : Number(event.target.value) as 1 | 2 } : item))}><option value="other">Other</option>{workspace.configuredQPools.map((pool) => <option key={pool.qPoolId} value={pool.slot}>Q-pool {pool.slot}</option>)}</select></label>
           <label>Amount (USD)<input inputMode="decimal" value={entry.amount} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, amount: event.target.value } : item))} /></label>
-          <label>Optional note<input maxLength={500} value={entry.note} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, note: event.target.value } : item))} /></label>
+          <label>Optional Note<input maxLength={500} value={entry.note} onChange={(event) => setAwards((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, note: event.target.value } : item))} /></label>
           <button className="secondary" type="button" onClick={() => setAwards((current) => current.filter((_, itemIndex) => itemIndex !== index))}>Remove award</button>
         </div>)}
         <button className="secondary" type="button" onClick={() => setAwards((current) => [...current, { participantId: workspace.qualifierChoices[0].participantId, awardType: "other", qPoolSlot: null, amountMinor: 0, amount: "", note: "" }])}>Add Award</button>
@@ -202,8 +202,8 @@ export default function SettlementClient({ actorId, tournamentId, eventId, works
         {workspace.automaticMrp.status === "available" ? <p className="auth-note">ACC published MRP schedule effective {workspace.automaticMrp.effectiveDate}. Values are calculated and verified by the server from the locked qualifying result and recorded playoff exit rounds.</p> : <p className="error-text">{mrpBlockerMessage(workspace.automaticMrp.code)}</p>}
         {mrpClaims.map((entry) => <div className="correction-item" key={entry.participantId}>
           <strong>{entry.displayName}</strong>
-          <label>MRP award (whole points)<input readOnly inputMode="numeric" value={entry.mrpPoints} /></label>
-          <label>Calculation source<input readOnly value={entry.evidenceNote} /></label>
+          <label>MRP Award (Whole Points)<input readOnly inputMode="numeric" value={entry.mrpPoints} /></label>
+          <label>Calculation Source<input readOnly value={entry.evidenceNote} /></label>
         </div>)}
       </fieldset>
       <button className="primary" type="submit" disabled={busy || storageBlocked || (!locked && !workspace.playoffResult)}>{busy ? "Checking…" : locked ? "Retry exact draft request" : `Save Draft Version ${workspace.currentVersion + 1}`}</button>

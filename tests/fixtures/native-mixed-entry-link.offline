@@ -1,0 +1,1 @@
+import React from 'react';export default function Link({children,href,onClick,className}){return <a href={href} onClick={onClick} className={className}>{children}</a>;}

@@ -1,0 +1,8 @@
+.native-mixed-entry .player-keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.native-mixed-entry .native-mixed-notice{font-size:1.125rem;background:#fff3d6;padding:10px;overflow-wrap:anywhere}
+.native-mixed-entry>p{font-size:1.125rem;overflow-wrap:anywhere}
+.native-mixed-entry>.primary{width:100%;margin:10px 0;white-space:normal;overflow-wrap:anywhere}
+.native-mixed-entry .player-matchup>span{font-size:1.25rem}
+.native-mixed-entry .player-matchup strong,.native-mixed-entry .player-result-summary p{font-size:1.25rem}
+.native-mixed-entry .player-keypad button{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.native-mixed-entry .player-spread-entry .skunk b{white-space:normal;overflow-wrap:anywhere}

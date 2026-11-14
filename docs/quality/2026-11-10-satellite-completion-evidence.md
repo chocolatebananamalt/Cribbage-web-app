@@ -1,0 +1,14 @@
+# Satellite Completion Evidence Readers
+
+Local reader and unexecuted SQL candidate, default-off and revoked. No app route/UI enabled and no database fixture or hosted operation.
+
+The reader joins existing current event-specific recorded allocations and reviewed result package to the existing authoritative effective-score standings. Complete schedule and scorecards, safe/conserved score totals, exact active participant roster and no unresolved numeric ties are required. Every entered placement must match the independently calculated standings rank. A result package may list cashers only; the reader still proves the full score order and checks every listed place, without assigning new award recipients. Same names never substitute for immutable participant/roster IDs. Withdrawn/disqualified, incomplete, tied or conflicting data remains held. Positive order proof does not establish independent human play.
+
+Recorded regular funds use only the existing event allocation, excluding optional pools and sibling events. Entered awards exceeding that recorded amount are flagged explicitly. Full fund completeness remains HELD: the native Satellite additional-income and fund-review bridge is missing, and absence of records cannot mean zero. No new formula, payout, award or solvency certification; comparison-only calculator remains unchanged.
+
+SQL requires normal authenticated unexpired session plus Director/Co role, READ COMMITTED and coarse shared locks over scorelines, confirmations, correction/recovery/forfeit/eligibility, schedule and identity/config sources. Existing reconciliation adds recorded allocation/result/participant locks. This source-level lock inventory is not runtime/isolation proof. The provider uses normal cookies, session pre/post checks, default-off no-client behavior and a detached rawreply capture across final authorization.
+
+Eight focused tests pass, covering complete and casher-only results, actual tied fields, incomplete scores/roster, mismatched places, financial shortfall, foreign scope, changed session/role, closed gates and SQL source guards. TypeScript and targeted ESLint pass. Independent source review found no P1/P2; final narrow cashers-only/clone delta review pending. SQL install/ACL/runtime/concurrency/provider acceptance and actual UI wiring remain unverified. No broad suite, external image/data, publication or denied-operation retry.
+Satellite final narrow source re-review GO, no P1/P2; fullroster/casher-place joins and rawreply clone confirmed. SQL/runtime/provider/UI acceptance remain pending.
+
+Superseded fund-hold limitation: the new Satellite income/fund bridge can now provide an exact same-allocation current Director-declared recorded coverage review. Independent asset/bank coverage and all payout authority remain false. Missing/stale review and insufficient recorded funds still hold. See 2026-11-10-satellite-income-fund-bridge.md.

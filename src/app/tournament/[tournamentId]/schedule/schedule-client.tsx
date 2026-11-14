@@ -155,10 +155,10 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
             page contradict the roster and the participants page, where a player
             set to a digital scorecard with no account yet still reads Digital. */}
           <small>{participant.profileLinked ? "App account linked" : "No app account"}</small></li>)}</ul></section>
-      <section className="correction-item"><h2>Import Reviewed Schedule</h2><label>Choose CSV file<input className="check-in-control" type="file" accept=".csv,text/csv,text/plain" disabled={!ready || busy || !!pending} onChange={(event) => {
+      <section className="correction-item"><h2>Import Reviewed Schedule</h2><label>Choose CSV File<input className="check-in-control" type="file" accept=".csv,text/csv,text/plain" disabled={!ready || busy || !!pending} onChange={(event) => {
         const file = event.target.files?.[0]; if (!file) return; if (file.size > 750_000) { setMessage("The schedule file is too large."); return; }
         void file.text().then((text) => { setCsv(text); setReviewed(false); setMessage(null); }).catch(() => setMessage("The schedule file could not be read. Choose the file again or paste its rows."));
-      }} /></label><label>Or paste CSV<textarea className="schedule-csv" value={csv} disabled={!ready || busy || !!pending} onChange={(event) => { setCsv(event.target.value); setReviewed(false); }} /></label>
+      }} /></label><label>Or Paste CSV<textarea className="schedule-csv" value={csv} disabled={!ready || busy || !!pending} onChange={(event) => { setCsv(event.target.value); setReviewed(false); }} /></label>
         <p>{parsed.matches.length} matchup rows found.</p>{validationErrors.length ? <ul className="schedule-errors" role="alert">{validationErrors.map((error) => <li key={error}>{error}</li>)}</ul> : <p className="success-text">Complete schedule ready for final review.</p>}
         <label className="publication-confirmation"><input type="checkbox" checked={reviewed} disabled={validationErrors.length > 0 || busy || !!pending} onChange={(event) => setReviewed(event.target.checked)} />I reviewed the complete schedule and approve these pairings and Table/Seat assignments.</label>
         {pending ? <button className="primary" type="button" disabled={busy} onClick={() => void submit(pending)}>{busy ? "Publishing…" : "Retry exact saved publication"}</button> : <button className="primary" type="button" disabled={!ready || busy || !reviewed || validationErrors.length > 0} onClick={publish}>Publish Game Schedule</button>}

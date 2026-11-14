@@ -6,24 +6,43 @@ import { clearAppSessionStorage, countAppSessionStorageRecords } from "../src/li
 
 const read = (path) => fs.readFileSync(path, "utf8");
 const client = read("src/app/tournament/[tournamentId]/payments/payment-obligation-client.tsx");
+const recovery = read("src/lib/payments/payment-obligation-recovery-v2.ts");
 const page = read("src/app/tournament/[tournamentId]/payments/page.tsx");
 const api = read("src/lib/api/payment-obligation.ts");
+const route = read("src/app/api/v1/tournaments/[id]/payment-obligations/route.ts");
 
 test("payment obligation edits retain an exact actor scoped request for explicit retry", () => {
-  assert.match(client, /payment-obligation:\$\{actorId\}:\$\{tournamentId\}:\$\{rosterEntryId\}/);
-  assert.match(client, /storePending\(key, request\)/);
+  assert.match(recovery, /payment-obligation:\$\{actorId\}:\$\{tournamentId\}:\$\{rosterEntryId\}/);
+  assert.match(client, /createPaymentObligationRecoveryEnvelopeV2/);
+  assert.match(client, /setAppRecoveryItem\(window\.sessionStorage, key, raw\)/);
+  assert.match(client, /trackAppRecoveryWrite/);
+  assert.match(client, /window\.sessionStorage\.getItem\(key\) !== activePending\.raw/);
   assert.match(client, /Retry Exact Amount Owed Request/);
-  assert.match(client, /hydrated \|\| busy \|\| inFlight\.current/);
-  assert.match(client, /disabled=\{busy \|\| !!pending \|\| !hydrated\}/);
-  assert.match(client, /setMessage\("The amount owed request could not be confirmed/);
+  assert.match(client, /!hydrated \|\| storageUnavailable \|\| busy \|\| inFlight\.current/);
+  assert.match(client, /disabled=\{storageUnavailable \|\| busy \|\| !!pending \|\| !hydrated\}/);
+  assert.match(client, /exact recovery record remains saved for retry/);
+  assert.match(client, /exact amount owed request was confirmed\. Refreshing the current amount/);
+  assert.doesNotMatch(client, /Amount owed saved/);
+  assert.match(client, /x-expected-actor-id/);
+  assert.doesNotMatch(client, /sessionStorage\.setItem/);
   assert.doesNotMatch(client, /setMessage\("The amount owed was not saved/);
   assert.match(page, /<PaymentObligationClient actorId=\{access\.user\.id\}/);
+});
+
+test("payment obligation route binds the expected actor and exposes only strict outcomes", () => {
+  assert.match(route, /readExpectedPaymentActor/);
+  assert.match(route, /requireVerifiedSubject\(client\) !== expectedActorId/);
+  assert.equal((route.match(/paymentActorMatches\(client, expectedActorId\)/g) ?? []).length, 2);
+  assert.match(route, /isSavedPaymentObligation/);
+  assert.match(route, /isRejectedPaymentObligation/);
+  assert.match(route, /operation_unavailable/);
+  assert.doesNotMatch(route, /service_role|\.from\(/);
 });
 
 test("payment obligation rejection codec requires the same roster entry", () => {
   assert.match(api, /invalid_request.*tournament_unavailable.*not_director.*idempotency_conflict.*roster_entry_unavailable.*stale_obligation/);
   assert.match(api, /isRejectedPaymentObligation/);
-  assert.match(client, /response\.status === 409 && isRejectedPaymentObligation\(result, request\)/);
+  assert.match(client, /response\.status === 409 && isRejectedPaymentObligation\(result, activePending\.request\)/);
   const request = { rosterEntryId: "10000000-0000-4000-8000-000000000001" };
   assert.equal(isRejectedPaymentObligation({ status: "rejected", code: "stale_obligation", rosterEntryId: request.rosterEntryId }, request), true);
   assert.equal(isRejectedPaymentObligation({ status: "rejected", code: "stale_obligation", rosterEntryId: "other" }, request), false);

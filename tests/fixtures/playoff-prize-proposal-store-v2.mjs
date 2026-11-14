@@ -1,0 +1,13 @@
+import {playoffPrizeBasisFixtureV2} from './playoff-prize-basis-v2.mjs';
+import {assemblePlayoffPrizeNativeSourceV2} from '../../src/lib/finance/playoff-prize-native-read-v2.ts';
+import {serializePlayoffPrizeProposalSaveV2,playoffPrizeProposalRequestHashV2} from '../../src/lib/finance/playoff-prize-proposal-store-v2.ts';
+export const storeIdV2=n=>`92000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+export function proposalStoreFixtureV2(){const i=playoffPrizeBasisFixtureV2();i.ledger.current.mode='documented_actual';i.ledger.current.sources[0].allocations=i.ledger.current.sources[0].allocations.filter(p=>p.bucket==='regular_entry');i.ledger.current.sources[0].amountMinor=200000;i.ledger.retained=structuredClone(i.ledger.current);
+ const scope={actorId:storeIdV2(1),tournamentId:i.binding.tournamentId,eventId:i.binding.eventId};
+ const nativeSource={status:'source_available',kind:'playoff-prize-native-source-v2',...scope,sourceDigest:'d'.repeat(64),capture:{bindingId:storeIdV2(40),activationId:storeIdV2(41),setupEventVersionId:storeIdV2(42),contextReviewId:storeIdV2(43),intentActorId:storeIdV2(44),intentOperationId:storeIdV2(45),input:i},coverage:{additionalIncome:'not_supported',optionalPools:'blocked',feeCoverage:'unverified',fundReview:'unverified'},proposalOnly:true,finalizationAllowed:false,payoutAuthorized:false,moneyMoved:false};
+ const native=assemblePlayoffPrizeNativeSourceV2(nativeSource,scope);if(!native)throw Error('Invalid protocol fixture');const current={source:native.basis.source,input:native.basis.input};
+ const workspace={kind:'playoff-prize-proposal-workspace-v2',...scope,nativeSource,head:null,stale:false,writeAuthorized:false,finalizationAllowed:false,moneyMoved:false};
+ return{scope,nativeSource,current,proposal:{...structuredClone(current),overrideHistory:[]},workspace};
+}
+/** Protocol fixture only, not SQL journal/provider proof. */
+export function proposalStoreReceiptV2(f,request,version=1){const raw=serializePlayoffPrizeProposalSaveV2(request);if(!raw)throw Error('Invalid fictional request');const revision={revisionId:storeIdV2(100+version),version,priorRevisionId:request.expectedRevisionId,...f.scope,operationId:request.operationId,nativeSourceDigest:request.nativeSourceDigest,sourceCapture:structuredClone(f.nativeSource),input:structuredClone(request.input),overrideHistory:structuredClone(request.overrideHistory),mode:request.mode,reason:request.reason,createdAt:'2026-11-08T07:00:00.000Z',proposalOnly:true,payoutAuthorized:false,moneyMoved:false};return{kind:'playoff-prize-proposal-operation-v2',...f.scope,operationId:request.operationId,requestText:raw,requestHash:playoffPrizeProposalRequestHashV2(raw),result:{status:'saved',revision}};}

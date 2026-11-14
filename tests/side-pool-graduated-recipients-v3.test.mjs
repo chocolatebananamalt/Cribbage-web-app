@@ -30,6 +30,21 @@ const recalculate = s => {
 const blocked = (s, code) => assert.deepEqual(previewSidePoolGraduatedRecipientsV3(s), { status: 'blocked', code });
 function preview(s) { const result = previewSidePoolGraduatedRecipientsV3(s); assert.equal(result.status, 'preview', JSON.stringify(result)); return result; }
 
+test('existing operating Side engine supports custom7 independently of the still-unwired setup intent', () => {
+  const s = fixture(21, 7, 1000), r = preview(s);
+  assert.equal(r.awards.length, 3);
+  assert.equal(r.fundMinor, 21000);
+  assert.equal(r.awards.reduce((sum, a) => sum + a.amountMinor, 0), 21000);
+  assert.deepEqual(r.awards.map(a => a.participantId), [id(100), id(101), id(102)]);
+  assert.ok(r.awards.every(a => a.amountMinor % 500 === 0));
+  const restored = JSON.parse(JSON.stringify(s));
+  assert.deepEqual(preview(restored), r);
+  pool(restored).history.push({id:id(90),version:1,sourceDigest:digest,current:true,reason:'TEST ONLY custom7 retained amount schedule',calculation:r.calculation,status:'unpaid_amount_schedule',recordedAt:'2026-11-04T00:00:00Z'});
+  assert.deepEqual(preview(restored), r);
+  pool(restored).policy.ratio = 6;
+  blocked(restored, 'invalid_input');
+});
+
 test('Side awards rank all paid cards, including nonqualifiers, and conserve the approved exact $5 amount schedule', () => {
   const s = fixture(), before = structuredClone(s), r = preview(s);
   assert.deepEqual(r.awards, [{ participantId: id(100), amountMinor: 4000 }, { participantId: id(101), amountMinor: 2500 }, { participantId: id(102), amountMinor: 1500 }]);

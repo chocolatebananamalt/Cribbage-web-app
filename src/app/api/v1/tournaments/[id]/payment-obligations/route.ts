@@ -1,2 +1,26 @@
-import{NextRequest}from"next/server";import{isPaymentObligationRequest,isSavedPaymentObligation}from"../../../../../../lib/api/payment-obligation";import{apiJson,readSmallJson,requireVerifiedSubject,withApiFailureBoundary}from"../../../../../../lib/api/route-boundary";import{isSameOriginRequest}from"../../../../../../lib/api/same-origin";import{isUuid}from"../../../../../../lib/api/validation";import{createClient}from"../../../../../../lib/supabase/server";
-export async function POST(request:NextRequest,{params}:{params:Promise<{id:string}>}){return withApiFailureBoundary(async()=>{if(!isSameOriginRequest(request))return apiJson({error:"invalid_origin"},{status:403});const{id}=await params;const body=await readSmallJson(request);if(!isUuid(id)||!isPaymentObligationRequest(body))return apiJson({error:"invalid_payment_obligation"},{status:400});const client=await createClient();if(!await requireVerifiedSubject(client))return apiJson({error:"unauthorized"},{status:401});const{data,error}=await client.rpc("set_roster_payment_obligation_v1",{p_tournament_id:id,p_roster_entry_id:body.rosterEntryId,p_expected_version:body.expectedVersion,p_amount_owed_minor:body.amountOwedMinor,p_reason:body.reason,p_idempotency_key:body.idempotencyKey});if(error)return apiJson({error:"operation_unavailable"},{status:503});return isSavedPaymentObligation(data,body)?apiJson(data):apiJson(data&&typeof data==="object"?data:{error:"operation_unavailable"},{status:409});});}
+import { NextRequest } from "next/server";
+import { isPaymentObligationRequest, isRejectedPaymentObligation, isSavedPaymentObligation } from "../../../../../../lib/api/payment-obligation";
+import { paymentActorMatches, readExpectedPaymentActor } from "../../../../../../lib/api/payment-expected-actor";
+import { apiJson, readSmallJson, requireVerifiedSubject, withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
+import { isUuid } from "../../../../../../lib/api/validation";
+import { createClient } from "../../../../../../lib/supabase/server";
+
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return withApiFailureBoundary(async () => {
+    if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
+    const expectedActorId = readExpectedPaymentActor(request);
+    if (!expectedActorId) return apiJson({ error: "identity_changed" }, { status: 403 });
+    const { id } = await params;
+    const body = await readSmallJson(request);
+    if (!isUuid(id) || !isPaymentObligationRequest(body)) return apiJson({ error: "invalid_payment_obligation" }, { status: 400 });
+    const client = await createClient();
+    if (await requireVerifiedSubject(client) !== expectedActorId || !await paymentActorMatches(client, expectedActorId)) return apiJson({ error: "identity_changed" }, { status: 403 });
+    const { data, error } = await client.rpc("set_roster_payment_obligation_v1", { p_tournament_id: id, p_roster_entry_id: body.rosterEntryId, p_expected_version: body.expectedVersion, p_amount_owed_minor: body.amountOwedMinor, p_reason: body.reason, p_idempotency_key: body.idempotencyKey });
+    if (!await paymentActorMatches(client, expectedActorId)) return apiJson({ error: "identity_changed" }, { status: 403 });
+    if (error) return apiJson({ error: "operation_unavailable" }, { status: 503 });
+    if (isSavedPaymentObligation(data, body)) return apiJson(data);
+    if (isRejectedPaymentObligation(data, body)) return apiJson(data, { status: 409 });
+    return apiJson({ error: "operation_unavailable" }, { status: 503 });
+  });
+}

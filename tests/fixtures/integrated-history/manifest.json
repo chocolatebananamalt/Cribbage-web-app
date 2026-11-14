@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "fictionalHistoricalInputsOnly": true,
+  "noCurrentProviderAcceptance": true,
+  "files": [
+    {
+      "path": "output/print/physical-trial-18-20261110/print-data.json",
+      "bytes": 62735,
+      "sha256": "f2f587da13ca15333942af70d5ed3a2e980ded101785c93d41db6a8108aec48f"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-atomic51-20261107/closed-install-manifest.json",
+      "bytes": 14932,
+      "sha256": "8e5a06e45c1b187d929912d0b8847e29ec38d4a4dbe932de28e5598a445eb170"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/custom-graduated-amounts-v3.sql",
+      "bytes": 5067,
+      "sha256": "4c42e84bcb49adda21f18931c9da1a0b9ce676b82900b3d93bd6f7385bddbc07"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/custom-payout-intent-journal-v2.sql",
+      "bytes": 4559,
+      "sha256": "c4882e2eca9040c3053f17e959ca36d9b4515cf7592dc0804d7f525fa5e5c813"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/custom-payout-q-setup-save-v2.sql",
+      "bytes": 21620,
+      "sha256": "a86d01b42c31d23faf9ba34c160b0af3cfe52f8e8defac6f76941d3cbacef3a0"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/custom-pool-setup-save-v3.sql",
+      "bytes": 24884,
+      "sha256": "1356478c440f0ad479c6567d432811400784daa61e9c36dce2a8cecd86734a6c"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/custom-side-accounting-bridge-v1.sql",
+      "bytes": 22869,
+      "sha256": "2f37f91dfe955239c85b0f9938e9d9ce09b00a0f3c88024f4b21c35dd16d9c83"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-rule-assessment-v1.sql",
+      "bytes": 7178,
+      "sha256": "3db24dacb4f5a80beee6a0414fda39e33cf3b228c07b70ba74e66fd0fc814671"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-rule-context-v1.sql",
+      "bytes": 12647,
+      "sha256": "3f1c9fd23478231fef92b42ea3db388917c67090ce5313b473d45317d3907081"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-activation-guard-v1.sql",
+      "bytes": 24570,
+      "sha256": "229be79b2a72bb8660ddebbc3229ab9e2a1a878aba776d6fa6a343df5f22542a"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-activation-source-v4.sql",
+      "bytes": 5384,
+      "sha256": "2181ca720df17a8649baa937361e351992594d83e2aa1519599fe9d1e3efcd51"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-finance-backstop-v1.sql",
+      "bytes": 3568,
+      "sha256": "b38fc3cd3462f173687c83a43bec010ad363c0edd26bc863e4d37843e52148a0"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-operational-activation-v1.sql",
+      "bytes": 34253,
+      "sha256": "36787ebeac1291cd6d12414cf957d55daaabcf6a1c345e241ab16c95f1c0075d"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-playoff-gate-v1.sql",
+      "bytes": 32007,
+      "sha256": "f248abb04a830c92659b7aab61ecd7841370aa839466b450dbcdd205fb95bd7a"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-transaction-v3.sql",
+      "bytes": 16370,
+      "sha256": "befa8608a1a08156409f2c906cffb6ae0b4b56df5fc876aff161ac1a7b0a04b4"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/event-settings-workspace-v3.sql",
+      "bytes": 6985,
+      "sha256": "4e6aebd731b0247310a299ef4cd361d4398bcd9ee292319f1a23e774dbc077e3"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-event-ledger-allocation-v1.sql",
+      "bytes": 21991,
+      "sha256": "7f32e127dc57887b6675f254697420e29b2be8d48ba20cc508d33de3f4b85585"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-event-ledger-source-reader-v1.sql",
+      "bytes": 8231,
+      "sha256": "c1e72a18ed15b73595f7d5cd8158ff2a651c36621ddbfbf96156ed6595d0033a"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-admission-funding-source-v1.sql",
+      "bytes": 5381,
+      "sha256": "d40661c3c47bea7de35085335210a576b35748fa17436ef4e47e7cf42ecfddc9"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-admission-v1.sql",
+      "bytes": 54277,
+      "sha256": "50229cda45cfe907de8c68e07762488f7b7d5d28f35a6e3d427398be86513b40"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-attendance-consent-transport-v1.sql",
+      "bytes": 1900,
+      "sha256": "ac3ab36d711cfe9f7533ee1095aa756f5fd36ea38d69dd8ae35cf340b576b1ba"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-attendance-v1.sql",
+      "bytes": 61214,
+      "sha256": "6e6b1b28532ca3e57a90ce593bf11789d41c513d236167b2cd9f900f5bb63302"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-funding-v1.sql",
+      "bytes": 53782,
+      "sha256": "7edf9d032a3f2164aefb2ae3ea13ac3e709cfbcdf4e67f33adadd70a1a01037b"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-own-player-bindings-v1.sql",
+      "bytes": 4529,
+      "sha256": "bbe23cd86c8f4c732f1235643d07d0948f5e47ec5b717a9ff8e50eae56f6a778"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-paper-binding-v1.sql",
+      "bytes": 5008,
+      "sha256": "e3bc68562ad4501f7255baeb5657009b1a63411dcfdef39c64e180b7df5229f7"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-cancellation-v1.sql",
+      "bytes": 17489,
+      "sha256": "4a7bbf67e2d57d02b80b4840cc3247d5da8100de03adbcfccbb1c67971d80ed7"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-game-evidence-v1.sql",
+      "bytes": 64656,
+      "sha256": "9d52eb527b16a0cbfca958727b2214b8ecb196244d29f5348b30fa38b27657d8"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-operation-recovery-v1.sql",
+      "bytes": 8501,
+      "sha256": "bca4c9aa96a4ae015c9fd9fd709f8cce8dcdb7c4cfb78f3fef28c3e4cc1c4637"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-publication-v1.sql",
+      "bytes": 63642,
+      "sha256": "e664ea615e5ed08766b31243c4ef75db7a0e69628c9771cd90770d3c386b308d"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-start-v1.sql",
+      "bytes": 17434,
+      "sha256": "2308778e57bde34f6532832e878c7ccff85640e49c0caafbafeac78b7e3f345b"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-mixed-simulation-transition-v1.sql",
+      "bytes": 5684,
+      "sha256": "0c613022242178d57d2cb88ee230ecd1d4c535c3a50bf6a574057a958b99aa45"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-final-awards-v2.sql",
+      "bytes": 31377,
+      "sha256": "8b80af39fef8243f57a35b3a3026d8959e18b49c1530e53a436f1cd7504c28dc"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-finance-proposals-v2.sql",
+      "bytes": 15523,
+      "sha256": "bcce4132a7c85c57d3ab920e08449f5c5d68e272acb255e1d8749b4c92a8fc5a"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-finance-source-adoption-v2.sql",
+      "bytes": 32529,
+      "sha256": "923809807fcb2a2ac286329e323a339a2c5dc16180b6e5973977238961291bcc"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-finance-source-v2.sql",
+      "bytes": 8627,
+      "sha256": "d8eb18924b9bed289b26e9aa5240ef034e67eb9c1a8f7a7ffa73c10412686bbf"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-income-v2.sql",
+      "bytes": 27629,
+      "sha256": "748e29c9125cf635173e54f649436db996179eb1e1a1c3b6eedf24eb6cddc182"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-playoff-source-v2.sql",
+      "bytes": 20368,
+      "sha256": "3161db82d87b00b68be6ee7bf698a3de4ebd52c7ee25a2583d3a679f3bb6c1e6"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-pool-ownership-v2.sql",
+      "bytes": 25035,
+      "sha256": "e79e5692b8cfa542f5e6296f8425b9cb880d9fca5ca66b4659ce6bcfbedeb963"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-recorded-fund-v2.sql",
+      "bytes": 28200,
+      "sha256": "89f83a6d28a26ec905efab541c02ed372925c7b1cfb875a960b729660b0c5e0b"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-optional-regular-awards-v2.sql",
+      "bytes": 10236,
+      "sha256": "67ed30ce95a6384f0dac7bfe6205d89d5c8d63ef11cf167729d939ce319dc842"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-playoff-final-awards-v1.sql",
+      "bytes": 75331,
+      "sha256": "bc4001de1e4b4cb33dc3961fb3728aaa143e1bd1874d6c366d40d35fce6dd806"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/native-playoff-finance-recipient-source-v1.sql",
+      "bytes": 19714,
+      "sha256": "981bf61c93563d894944c82d24e0a0e1408c1da151975702e8697fc46ba53ffe"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/operational-event-finance-proposals-v1.sql",
+      "bytes": 48703,
+      "sha256": "a497c880d9660bfdd9cac80822cbb1486ff4390705cce5fcc600eae3bf8adb06"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/playoff-series-games-v1.sql",
+      "bytes": 42449,
+      "sha256": "c14f759f34ef2ef6b855910eb70277f030dab5c3e95e03eff3f05c4a4c4af2a2"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/playoff-series-matches-v1.sql",
+      "bytes": 25856,
+      "sha256": "b6f786fcad9c7e58beb38d4be61db43c2fcae830f0287c4ca58f4375d1f25dcc"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/random-seating-draw-v1.sql",
+      "bytes": 29763,
+      "sha256": "03eb2379fc0e15eeefb41246c5a459447ac6631f708a1795088e276e68e3f754"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/reviewed-draw-native-publication-v1.sql",
+      "bytes": 21927,
+      "sha256": "c1b91e64f8d0a31681a6835ef5440fc2d4716fa93de4ca066b05f25856cef50e"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/reviewed-seating-trial-scope-v1.sql",
+      "bytes": 20724,
+      "sha256": "851a493aefb1e06f78f497ccb8379959d0980c100f816f2a466f3d087e22e1b9"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/synthetic-mixed-evidence-v1.sql",
+      "bytes": 40315,
+      "sha256": "f8248a1afb60e62a563fcd0369e085c115333b6f1631a4c1d7ea774202f112a3"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/synthetic-mixed-evidence-v2.sql",
+      "bytes": 9086,
+      "sha256": "d03c0d2aae96a44fb18dc5c0c38f31286ab744d5bd23581961685b1f1a7c8813"
+    },
+    {
+      "path": "test-results/native-mixed-bootstrap-closure53-20261107/schema/synthetic-mixed-main-finance-v1.sql",
+      "bytes": 43160,
+      "sha256": "1b74c8ade5592ef5fec2e90ab12627378f1bb9498dac243fda336976b13a4f02"
+    },
+    {
+      "path": "test-results/native-mixed-finance-release-20261109/candidate.sql",
+      "bytes": 285191,
+      "sha256": "0d79b616670a910133e8a94c236166dd9129302222570978b89bab761bdf8c97"
+    },
+    {
+      "path": "test-results/native-mixed-finance-release-20261109/sql-manifest.json",
+      "bytes": 5897,
+      "sha256": "874d707079d4c1843bd9eeb7c4716ed9c5e8f5563123ba9b238dcc8661b39cfc"
+    },
+    {
+      "path": "test-results/native-mixed-pool-results-20261109/runtime-evidence/current-results-source-witness.json",
+      "bytes": 71255,
+      "sha256": "3009b053327bc45b6e348c597f5b0c4bad165f081b751519d8ccadc680c9814a"
+    },
+    {
+      "path": "test-results/native-mixed-pool-results-20261109/runtime-evidence/flow-results.json",
+      "bytes": 131301,
+      "sha256": "e98464bbf327f2b44e05bc7be6b3c97d8ebb9f86b238b1f89d90a2862ddbe4f7"
+    },
+    {
+      "path": "test-results/native-mixed-pool-results-20261109/runtime-evidence/scoring-results.json",
+      "bytes": 1638720,
+      "sha256": "5f596a02fe823bdb8d53a7d1d0197ab2b7cd0a568bd29f63a310fa701d2d1a3e"
+    }
+  ],
+  "supportingMetadata": [
+    {
+      "path": "closed-proposals-proof.json",
+      "bytes": 1329,
+      "sha256": "77258491767dbca721b45cef9b0e2239d6116b6e007a25ab0d68963c11449dc4"
+    },
+    {
+      "path": "installed-rpc-contract.json",
+      "bytes": 241634,
+      "sha256": "a0fdc976661a73c8ef0bacd2ea69277ba80e8aa817f4a67ac3fcbe1751d6a62d"
+    },
+    {
+      "path": "scoped-rpc-callers.json",
+      "bytes": 4250,
+      "sha256": "aee201c3ba463d4c83a8409cc6ab8f3e9c3017a15c81efdbfaf6e707c387ac74"
+    }
+  ]
+}

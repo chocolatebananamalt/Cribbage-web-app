@@ -175,7 +175,8 @@ test("paper completion route and page enforce protected cross-check access", () 
   const photo = readFileSync(new URL("../src/components/local-paper-card-photo.tsx", import.meta.url), "utf8");
   assert.match(photo, /capture="environment"/);
   assert.match(photo, /image\/jpeg,image\/png,image\/webp/);
-  assert.match(photo, /stays on this device and is not uploaded/i);
+  assert.match(photo, /stays in this page&apos;s memory and is not uploaded or saved/i);
+  assert.match(photo, /does not automatically identify players or read scores/i);
   assert.doesNotMatch(photo, /fetch\(|supabase|uploadToSignedUrl/);
   const reviewRoute = readFileSync(new URL("../src/app/api/v1/paper-game-completions/[id]/reviews/route.ts", import.meta.url), "utf8");
   assert.match(reviewRoute, /rpc\("review_paper_vs_paper_game_v1"/);

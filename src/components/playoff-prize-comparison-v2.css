@@ -1,0 +1,19 @@
+.playoff-prize-comparison-v2{display:grid;gap:1rem;min-width:0;margin:1rem 0;color:var(--ink,#162238);line-height:1.45;overflow-wrap:anywhere}
+.playoff-prize-comparison-v2>*{min-width:0}
+.playoff-prize-comparison-v2 h3,.playoff-prize-comparison-v2 h4,.playoff-prize-comparison-v2 h5{margin:0 0 .35rem;font-size:1em;line-height:1.3}
+.playoff-prize-comparison-v2 h3{font-size:1.15em}
+.playoff-prize-comparison-v2 p{margin:.35rem 0}
+.playoff-prize-comparison-v2 dl,.playoff-prize-comparison-v2 dd{margin:0}
+.playoff-prize-comparison-v2 dt{font-weight:600;color:var(--muted,#52627a)}
+.playoff-prize-comparison-v2 dd{font-weight:700;font-variant-numeric:tabular-nums}
+.prize-comparison-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.8rem}
+.prize-comparison-summary>div{display:grid;gap:.2rem;min-width:0;padding:.75rem;border:1px solid var(--line,#dfe5ed);border-radius:.5rem;background:#fff}
+.prize-comparison-notice{min-width:0;padding:.85rem;border:1px solid var(--line,#dfe5ed);border-radius:.5rem;background:#f5f8fc}
+.prize-comparison-balance-review{border-left:4px solid #986322;background:#fff7e8}
+.prize-comparison-balanced{border-left:4px solid #387052}
+.prize-comparison-bands{display:grid;gap:.6rem;list-style:none;padding:0;margin:.7rem 0}
+.prize-comparison-bands>li{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,2fr);align-items:start;gap:.75rem;min-width:0;padding:.8rem;border:1px solid var(--line,#dfe5ed);border-radius:.5rem;background:#fff}
+.prize-comparison-bands dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;min-width:0}
+.prize-comparison-bands dl>div{min-width:0}
+.prize-comparison-authority{padding:.75rem;border-top:1px solid var(--line,#dfe5ed);color:var(--muted,#52627a)}
+@media(max-width:700px){.prize-comparison-bands>li{grid-template-columns:minmax(0,1fr)}.prize-comparison-bands dl{grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr))}}

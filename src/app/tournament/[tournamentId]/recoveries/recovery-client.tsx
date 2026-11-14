@@ -102,9 +102,9 @@ function Proposal({ actorId, tournamentId, item }: { actorId: string; tournament
       </fieldset>
       <label htmlFor={`${formId}-margin`}>Spread Points</label>
       <input id={`${formId}-margin`} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={margin} disabled={busy || !!locked} onChange={(event) => setMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} />
-      <label htmlFor={`${formId}-source`}>Surviving evidence</label>
+      <label htmlFor={`${formId}-source`}>Surviving Evidence</label>
       <select id={`${formId}-source`} value={sourceType} disabled={busy || !!locked} onChange={(event) => setSourceType(event.target.value as EvidenceSource)}><option value="opponent_device">Opponent device</option><option value="paper_card">Paper card</option></select>
-      <label htmlFor={`${formId}-reference`}>Evidence reference</label>
+      <label htmlFor={`${formId}-reference`}>Evidence Reference</label>
       <input id={`${formId}-reference`} value={sourceReference} maxLength={200} disabled={busy || !!locked} onChange={(event) => setSourceReference(event.target.value)} placeholder="Example: opponent receipt or paper card ID" />
       <button type="submit" className="primary full" disabled={!valid || busy}>{busy ? "Recording evidence…" : locked ? "Retry locked request" : "Record for independent review"}</button>
     </form>

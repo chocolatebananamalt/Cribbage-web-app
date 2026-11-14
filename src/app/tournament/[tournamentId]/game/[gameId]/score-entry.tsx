@@ -1,4 +1,5 @@
 "use client";
+import { ManualMixedHandoffV1 } from '../../../../../components/manual-mixed-handoff-v1';
 import { GamePlayerLocation } from "../../../../../components/game-player-location";
 import { setAppRecoveryItem } from "../../../../../lib/recovery-write-coordinator";
 
@@ -380,7 +381,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
           : canConfirm ? <button type="button" className="primary full" disabled={busy || !online} onClick={confirm}>{busy ? "Confirming…" : "Confirm My Entry"}</button> : null}
       <p className="live-status player-entry-status" role="status">{playerStatusCopy(status)}</p>
       <p className="player-offline-status" role="status">{canConfirm && !online ? "Reconnect before confirming. Confirmations are saved only online." : offlinePageReady ? "Offline Ready" : online ? "Preparing Offline Use…" : "Offline reload is not ready on this device."}</p>
-      <details className="player-help"><summary>Help and account options</summary><JudgeCallButton tournamentId={context.tournamentId} gameId={context.gameId} /><PaperDigitalGuide /><a className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</a><SharedDeviceSignOut /></details>
+      <ManualMixedHandoffV1 actorId={context.actorId} gameId={context.gameId} submissionId={submissionId}/><details className="player-help"><summary>Help and account options</summary><JudgeCallButton tournamentId={context.tournamentId} gameId={context.gameId} /><PaperDigitalGuide /><a className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</a><SharedDeviceSignOut /></details>
     </section>
   </PlayerPageFrame>;
 }

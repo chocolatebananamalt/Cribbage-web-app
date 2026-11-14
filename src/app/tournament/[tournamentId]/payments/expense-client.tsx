@@ -1,12 +1,11 @@
 "use client";
-import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
+import { setAppRecoveryItem, trackAppRecoveryWrite } from "../../../../lib/recovery-write-coordinator";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   isExpenseRecordRequest,
-  isExpenseRecoveryRequest,
   isExpenseVoidRequest,
   isRecordedExpense,
   isRecoveredExpense,
@@ -17,53 +16,14 @@ import {
   type ExpenseRecoveryRequest,
   type ExpenseVoidRequest,
 } from "../../../../lib/api/expense";
-
-type Envelope = ExpenseRecoveryRequest & { kind: "expense"; digest: string };
-
-function validEnvelope(value: unknown): value is Envelope {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const item = value as Record<string, unknown>;
-  const recovery = {
-    operationType: item.operationType,
-    expenseId: item.expenseId,
-    expectedExpenseVersion: item.expectedExpenseVersion,
-    expenseEventId: item.expenseEventId,
-    idempotencyKey: item.idempotencyKey,
-  };
-  return item.kind === "expense" && typeof item.digest === "string"
-    && /^[a-f0-9]{64}$/.test(item.digest) && isExpenseRecoveryRequest(recovery);
-}
-
-function readEnvelope(key: string) {
-  try {
-    const raw = window.sessionStorage.getItem(key);
-    const value: unknown = raw ? JSON.parse(raw) : null;
-    return validEnvelope(value) ? value : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeEnvelope(key: string, value: Envelope) {
-  try {
-    setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function clearEnvelope(key: string) {
-  try { window.sessionStorage.removeItem(key); } catch { /* Server state is authoritative. */ }
-}
-
-function clearOtherActors(storage: Storage, actorId: string) {
-  for (let index = storage.length - 1; index >= 0; index -= 1) {
-    const key = storage.key(index);
-    if (key?.startsWith("expense-operation:")
-      && !key.startsWith(`expense-operation:${actorId}:`)) storage.removeItem(key);
-  }
-}
+import {
+  createExpenseRecoveryEnvelopeV2,
+  exactExpenseRecoveryRequestMatches,
+  expenseRecoveryStorageKey,
+  parseExpenseRecoveryRaw,
+  readExpenseRecovery,
+  type ParsedExpenseRecovery,
+} from "../../../../lib/expenses/expense-recovery-v2";
 
 async function digest(value: unknown) {
   const bytes = new TextEncoder().encode(JSON.stringify(value));
@@ -102,7 +62,7 @@ function ExpenseRow({
     }}>
       <fieldset disabled={disabled}>
         <legend>Void this expense</legend>
-        <label>Reason for void
+        <label>Reason for Void
           <textarea required maxLength={500} value={reason} onChange={(event) => setReason(event.target.value)} />
         </label>
         <button className="secondary" type="submit">Void expense</button>
@@ -111,37 +71,53 @@ function ExpenseRow({
   </li>;
 }
 
-export default function ExpenseClient({
-  actorId,
-  tournamentId,
-  activeExpenseTotalMinor,
-  expenses,
-  syntheticMode = false,
-}: {
+type ExpenseClientProps = {
   actorId: string;
   tournamentId: string;
   activeExpenseTotalMinor: number;
   expenses: ExpenseEntry[];
   syntheticMode?: boolean;
-}) {
+};
+
+export default function ExpenseClient(props: ExpenseClientProps) {
+  return <ExpenseClientScope key={`${props.actorId}:${props.tournamentId}`} {...props} />;
+}
+
+function ExpenseClientScope({
+  actorId,
+  tournamentId,
+  activeExpenseTotalMinor,
+  expenses,
+  syntheticMode = false,
+}: ExpenseClientProps) {
   const router = useRouter();
-  const storageKey = `expense-operation:${actorId}:${tournamentId}`;
+  const storageKey = expenseRecoveryStorageKey(actorId, tournamentId);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [locked, setLocked] = useState<Envelope | null>(null);
+  const [locked, setLocked] = useState<ParsedExpenseRecovery | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const inFlight = useRef(false);
+  const activation = useRef<object | null>(null);
+  const isActive = useCallback((token: object | null): token is object => token !== null && activation.current === token, []);
 
-  const reconcile = useCallback(async (envelope: Envelope) => {
+  useLayoutEffect(() => {
+    const token = {};
+    activation.current = token;
+    return () => {
+      if (activation.current === token) activation.current = null;
+    };
+  }, []);
+
+  const reconcile = useCallback(async (recovery: ExpenseRecoveryRequest) => {
     try {
       const response = await fetch(`/api/v1/tournaments/${tournamentId}/expenses/reconciliation`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-expected-actor-id": actorId },
         credentials: "same-origin",
         cache: "no-store",
-        body: JSON.stringify(envelope),
+        body: JSON.stringify(recovery),
       });
       const payload: unknown = response.ok ? await response.json().catch(() => null) : null;
       if (!payload || typeof payload !== "object" || !("result" in (payload as Record<string, unknown>))) {
@@ -149,41 +125,90 @@ export default function ExpenseClient({
       }
       const result = (payload as Record<string, unknown>).result;
       if (result === null) return "none";
-      if (isRecoveredExpense(result, envelope)) return "accepted";
-      return isRejectedExpense(result, envelope) ? "rejected" : "unresolved";
+      if (isRecoveredExpense(result, recovery)) return "accepted";
+      return isRejectedExpense(result, recovery) ? "rejected" : "unresolved";
     } catch {
       return "unresolved";
     }
-  }, [tournamentId]);
+  }, [actorId, tournamentId]);
+
+  const removeExact = useCallback(async (raw: string, token: object) => {
+    if (!isActive(token)) return false;
+    try {
+      return await trackAppRecoveryWrite(async () => {
+        try {
+          if (!isActive(token)) return false;
+          if (window.sessionStorage.getItem(storageKey) !== raw) return false;
+          window.sessionStorage.removeItem(storageKey);
+          return window.sessionStorage.getItem(storageKey) === null;
+        } catch { return false; }
+      });
+    } catch { return false; }
+  }, [isActive, storageKey]);
 
   useEffect(() => {
-    clearOtherActors(window.sessionStorage, actorId);
+    let live = true;
+    const token = activation.current;
+    const current = () => live && isActive(token);
     void (async () => {
-      const saved = readEnvelope(storageKey);
+      const saved = readExpenseRecovery(window.sessionStorage, storageKey, actorId, tournamentId);
+      if (!current()) return;
       if (!saved) { setReady(true); return; }
-      const state = await reconcile(saved);
+      if (saved.status === "unknown") {
+        setLocked(saved);
+        setMessage("An unrecognized expense recovery record remains saved. It was not changed or removed.");
+        setReady(true); return;
+      }
+      const state = await reconcile(saved.recovery);
+      if (!current()) return;
       if (state === "accepted") {
-        clearEnvelope(storageKey); setReady(true); router.refresh(); return;
+        if (token && await removeExact(saved.raw, token)) {
+          if (!current()) return;
+          setReady(true); router.refresh(); return;
+        }
+        if (!current()) return;
+        setLocked(readExpenseRecovery(window.sessionStorage, storageKey, actorId, tournamentId) ?? saved);
+        setMessage("The retained expense request changed while reconciliation was pending. The newer bytes remain saved.");
+        setReady(true); return;
       }
       if (state === "rejected") {
-        clearEnvelope(storageKey);
-        setMessage("The prior expense action was rejected; the ledger was not changed.");
-        setReady(true); router.refresh(); return;
+        if (token && await removeExact(saved.raw, token)) {
+          if (!current()) return;
+          setMessage("The prior expense action was rejected; the ledger was not changed.");
+          setReady(true); router.refresh(); return;
+        }
+        if (!current()) return;
+        setLocked(readExpenseRecovery(window.sessionStorage, storageKey, actorId, tournamentId) ?? saved);
+        setMessage("The retained expense request changed while reconciliation was pending. The newer bytes remain saved.");
+        setReady(true); return;
       }
       if (state === "none") {
-        clearEnvelope(storageKey);
-        setMessage("A prior expense action did not reach the server. Re-enter it before trying again.");
+        setLocked(saved);
+        if (saved.status === "current" && saved.envelope.operationType === "record_tournament_expense"
+          && isExpenseRecordRequest(saved.envelope.request)) {
+          setDescription(syntheticMode && saved.envelope.request.description.startsWith("TEST ONLY SYNTHETIC:")
+            ? saved.envelope.request.description.slice("TEST ONLY SYNTHETIC:".length).trimStart()
+            : saved.envelope.request.description);
+          setAmount((saved.envelope.request.amountMinor / 100).toFixed(2));
+        }
+        setMessage(saved.status === "current"
+          ? "No server receipt exists yet. The exact request remains saved and can be retried."
+          : "No server receipt exists yet. This legacy record has no full payload; re-enter its original details exactly before retrying.");
         setReady(true); return;
       }
       setLocked(saved);
-      setMessage("A prior expense action is unresolved. Re-enter its original details exactly before retrying.");
+      setMessage(saved.status === "current"
+        ? "A prior expense action is unresolved. Its exact request remains saved for retry."
+        : "A prior legacy expense action is unresolved. Re-enter its original details exactly before retrying.");
       setReady(true);
     })();
-  }, [actorId, reconcile, router, storageKey]);
+    return () => { live = false; };
+  }, [actorId, isActive, reconcile, removeExact, router, storageKey, syntheticMode, tournamentId]);
 
   async function submitRecord() {
     const amountMinor = dollarsToMinor(amount);
-    const idempotencyKey = locked?.idempotencyKey ?? crypto.randomUUID();
+    const idempotencyKey = locked?.status === "current" || locked?.status === "legacy"
+      ? locked.recovery.idempotencyKey : crypto.randomUUID();
     const body: ExpenseRecordRequest = { amountMinor: amountMinor ?? 0, description: syntheticMode ? `TEST ONLY SYNTHETIC:${description.trim() ? ` ${description.trim()}` : ""}` : description, idempotencyKey };
     if (!isExpenseRecordRequest(body)) {
       setMessage("Enter a positive USD amount and a description of 200 characters or fewer.");
@@ -194,7 +219,8 @@ export default function ExpenseClient({
 
   async function submitVoid(expense: ExpenseEntry, voidReason: string) {
     if (!expense.currentExpenseEventId) return;
-    const idempotencyKey = locked?.idempotencyKey ?? crypto.randomUUID();
+    const idempotencyKey = locked?.status === "current" || locked?.status === "legacy"
+      ? locked.recovery.idempotencyKey : crypto.randomUUID();
     const body: ExpenseVoidRequest = {
       expenseId: expense.expenseId,
       expectedExpenseVersion: expense.expenseVersion,
@@ -214,7 +240,8 @@ export default function ExpenseClient({
     body: ExpenseRecordRequest | ExpenseVoidRequest,
     expense: ExpenseEntry | null,
   ) {
-    if (!ready || busy || inFlight.current) return;
+    const token = activation.current;
+    if (!ready || busy || inFlight.current || !isActive(token)) return;
     inFlight.current = true;
     try {
       const expenseId = expense?.expenseId ?? null;
@@ -225,50 +252,96 @@ export default function ExpenseClient({
           ? { amountMinor: (body as ExpenseRecordRequest).amountMinor, description: (body as ExpenseRecordRequest).description }
           : { voidReason: (body as ExpenseVoidRequest).voidReason }),
       } });
-      let envelope = locked;
-      if (envelope) {
+      if (!isActive(token)) return;
+      let pending = locked;
+      if (pending?.status === "unknown") {
+        setMessage("An unrecognized expense recovery record remains saved. It cannot be overwritten here.");
+        return;
+      }
+      if (pending?.status === "legacy") {
+        const envelope = pending.envelope;
         if (envelope.operationType !== operationType || envelope.expenseId !== expenseId
-          || envelope.expectedExpenseVersion !== expectedExpenseVersion
-          || envelope.expenseEventId !== expenseEventId || envelope.digest !== operationDigest) {
+          || envelope.expectedExpenseVersion !== expectedExpenseVersion || envelope.expenseEventId !== expenseEventId
+          || envelope.digest !== operationDigest || envelope.idempotencyKey !== body.idempotencyKey) {
           setMessage("This action is locked. Re-enter the original details exactly or refresh after it resolves.");
           return;
         }
+      } else if (pending?.status === "current") {
+        if (!exactExpenseRecoveryRequestMatches(pending, operationType, body)) {
+          setMessage("This action is locked. Retry the exact saved request without changing its fields.");
+          return;
+        }
       } else {
-        envelope = {
-          kind: "expense", operationType, expenseId, expectedExpenseVersion,
-          expenseEventId, idempotencyKey: body.idempotencyKey, digest: operationDigest,
-        };
-        if (!writeEnvelope(storageKey, envelope)) {
+        const envelope = createExpenseRecoveryEnvelopeV2(actorId, tournamentId, operationType, body);
+        const raw = envelope && JSON.stringify(envelope);
+        if (!envelope || !raw) return;
+        try {
+          if (!isActive(token)) return;
+          const observed = window.sessionStorage.getItem(storageKey);
+          if (observed !== null) {
+            const retained = parseExpenseRecoveryRaw(observed, actorId, tournamentId);
+            setLocked(retained);
+            setMessage("Another expense recovery record was saved before this request. Its bytes remain unchanged.");
+            return;
+          }
+          setAppRecoveryItem(window.sessionStorage, storageKey, raw);
+          if (window.sessionStorage.getItem(storageKey) !== raw) throw new Error("recovery_write_unconfirmed");
+          pending = parseExpenseRecoveryRaw(raw, actorId, tournamentId);
+        } catch {
           setMessage("This browser cannot safely retain an expense request for recovery. Enable session storage first.");
           return;
         }
       }
-      setBusy(true); setLocked(envelope); setMessage(null);
+      if (!pending || pending.status === "unknown") return;
+      if (!isActive(token)) return;
+      setBusy(true); setLocked(pending); setMessage(null);
       const path = operationType === "record_tournament_expense" ? "record" : "void";
-      const response = await fetch(`/api/v1/tournaments/${tournamentId}/expenses/${path}`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        credentials: "same-origin",
-        cache: "no-store",
-        body: JSON.stringify(body),
+      const outcome = await trackAppRecoveryWrite(async () => {
+        if (!isActive(token)) return "superseded" as const;
+        const response = await fetch(`/api/v1/tournaments/${tournamentId}/expenses/${path}`, {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-expected-actor-id": actorId },
+          credentials: "same-origin",
+          cache: "no-store",
+          body: JSON.stringify(body),
+        });
+        const result: unknown = await response.json().catch(() => null);
+        if (!isActive(token)) return "superseded" as const;
+        const directAccepted = response.ok && (operationType === "record_tournament_expense"
+          ? isRecordedExpense(result, body as ExpenseRecordRequest)
+          : isVoidedExpense(result, body as ExpenseVoidRequest));
+        const directRejected = response.status === 409 && isRejectedExpense(result, pending.recovery);
+        if (!directAccepted && !directRejected) return "unresolved" as const;
+        const confirmed = await reconcile(pending.recovery);
+        if (!isActive(token)) return "superseded" as const;
+        if (confirmed !== (directAccepted ? "accepted" : "rejected")) return "unresolved" as const;
+        try {
+          if (window.sessionStorage.getItem(storageKey) !== pending.raw) return "changed" as const;
+          window.sessionStorage.removeItem(storageKey);
+          return window.sessionStorage.getItem(storageKey) === null ? confirmed : "unresolved" as const;
+        } catch { return "unresolved" as const; }
       });
-      const result: unknown = await response.json().catch(() => null);
-      const accepted = response.ok && (operationType === "record_tournament_expense"
-        ? isRecordedExpense(result, body as ExpenseRecordRequest)
-        : isVoidedExpense(result, body as ExpenseVoidRequest));
-      if (accepted) {
-        clearEnvelope(storageKey); setLocked(null); setDescription(""); setAmount(""); router.refresh(); return;
+      if (!isActive(token)) return;
+      if (outcome === "accepted") {
+        setLocked(null); setDescription(""); setAmount(""); router.refresh(); return;
       }
-      if (response.status === 409 && isRejectedExpense(result, envelope)) {
-        clearEnvelope(storageKey); setLocked(null);
-        setMessage("The server rejected that expense action; the ledger was not changed.");
-        router.refresh(); return;
+      if (outcome === "rejected") {
+        setLocked(null); setMessage("The server rejected that expense action; the ledger was not changed."); router.refresh(); return;
       }
-      setMessage("The expense action is unresolved. It remains locked until safely reconciled.");
+      if (outcome === "changed") {
+        setLocked(readExpenseRecovery(window.sessionStorage, storageKey, actorId, tournamentId) ?? pending);
+        setMessage("The retained expense request changed while the write was pending. The newer bytes remain saved.");
+        return;
+      }
+      setMessage("The expense action is unresolved. Its exact recovery record remains saved.");
     } catch {
-      setMessage("The expense action is unresolved. It remains locked until safely reconciled.");
+      if (isActive(token)) {
+        setMessage("The expense action is unresolved. Its exact recovery record remains saved until safely reconciled.");
+      }
     } finally {
-      inFlight.current = false; setBusy(false);
+      if (isActive(token)) {
+        inFlight.current = false; setBusy(false);
+      }
     }
   }
 
@@ -276,7 +349,7 @@ export default function ExpenseClient({
     <h2 id="expenses-title">Tournament expenses</h2>
     <p>{syntheticMode ? "Fixture expenses are simulated evidence only; no actual purchase or disbursement is claimed." : null} Active expense total: <strong>${(activeExpenseTotalMinor / 100).toFixed(2)} USD</strong>. This ledger is private and not reconciled with payouts, Q-pools, sanctioning fees, or results.</p>
     <form onSubmit={(event) => { event.preventDefault(); void submitRecord(); }}>
-      <fieldset disabled={!ready || busy || locked?.operationType === "void_tournament_expense"}>
+      <fieldset disabled={!ready || busy || locked?.status === "unknown" || ((locked?.status === "current" || locked?.status === "legacy") && locked.recovery.operationType === "void_tournament_expense")}>
         <legend>{syntheticMode ? "Add simulated fixture expense" : "Add expense"}</legend>
         <label>{syntheticMode ? "Expense detail after required synthetic label" : "Description"}
           <textarea required maxLength={syntheticMode ? 178 : 200} value={description} onChange={(event) => setDescription(event.target.value)} />
@@ -290,7 +363,7 @@ export default function ExpenseClient({
     {expenses.length ? <ul className="correction-list">{expenses.map((expense) => <ExpenseRow
       key={expense.expenseId}
       expense={expense}
-      disabled={!ready || busy || (!!locked && locked.expenseId !== expense.expenseId)}
+      disabled={!ready || busy || (!!locked && (locked.status === "unknown" || locked.recovery.expenseId !== expense.expenseId))}
       onVoid={(entry, reason) => void submitVoid(entry, reason)}
     />)}</ul> : <p>No expenses have been recorded.</p>}
     {message ? <p className="error-text" role="alert">{message}</p> : null}

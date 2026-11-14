@@ -1,0 +1,9 @@
+# Versioned Sheet Side Pool comparison - local only
+
+Added workbook-side-comparison-v1.ts, a separate amount-only TEST comparison, not an operating policy. Existing graduated kernel, method registry, disclosures, elections, awards/history and recipient selection are unchanged. No UI/endpoint/migration or data writes. Uses parent-verified native Sheet summary: $10/1-in-6/counts12-30, fixed$20 baseline unless F/triangularsum strictly exceeds$40; conserving largest-remainder $5 rounding reproduced19 observed cases and10differ from app.
+
+The implementation deliberately supports ONLY that19-case domain. $5 or other fees, other ratios/counts and unverified source branches block; no scaling, inferred single-recipient or alternate floor. Exact integer/rational arithmetic conserves each fund. Raw amounts and separately reconstructed independent-nearest result remain explicit. 17paid/$10 pays95/55/20 versus unchanged app85/55/30, both170. 12paid reaches exactly40threshold and retains fixed baseline100/20, not linear80/40.
+
+Evidence metadata explicitly says no local live Sheet recalculation and no full observed output arrays received. Test vectors are local reconstructions from the trusted parent rule, NOT fabricated independent spreadsheet observations. Nineteen independent PythonFraction checks pass,10distribution differences reproduced; four focused tests and independent review pass with noP1/P2. Unsupported inputs and winner/override fields reject. Full1,398app/build/lint/audit/provider/workspace/handoff pass includes this slice. No browser claim because no UI changed.
+
+Artifacts: test-results/workbook-side-comparison-local.json, -independent.json, -focused.log. Scope is review/test comparison only; broader fees/counts/branch coverage, actual Sheet-source cell provenance, server parity, new versioned disclosure and accounting/historical compatibility must be reviewed before any operating adoption. No policy/hosted/historical award changed.

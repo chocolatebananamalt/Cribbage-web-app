@@ -1,6 +1,9 @@
+import { eventDeskEnabledV1 } from '../../../lib/operations/event-desk-v1';
 import { requireTournamentAccess } from "../../../lib/auth/require-tournament-access";
 import { SharedDeviceSignOut } from "../../../components/shared-device-sign-out";
 import Link from "next/link";
+import { runningPoolPageEnabledV1 } from "../../../lib/results/pool-running-page-v1";
+import { playerPoolTotalsPageEnabledV1, playerPoolVisibilityPageEnabledV1 } from "../../../lib/results/player-pool-totals-gates-v1";
 import { registrationLinkManagementEnabled } from "../../../lib/api/public-registration-v2";
 import { accountActivationEnabled } from "../../../lib/api/account-activation-release";
 import { rule12CorrectionEnabled } from "../../../lib/api/rule12-correction-release";
@@ -8,6 +11,8 @@ import { getAccessibleTournaments } from "../../../lib/tournaments/accessible-to
 import { ArchiveTournamentClient } from "./archive-tournament-client";
 import DirectorChecklist from "./director-checklist";
 import { readDirectorChecklist } from "../../../lib/director-checklist-reader";
+import { IntegratedWorkspaceNav } from "../../../components/integrated-workspace-nav";
+import { integratedTestUiEnabled } from "../../../lib/integrated-test-target";
 
 const roleLabels: Record<string, string> = {
   director: "Director",
@@ -36,7 +41,9 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <Link className="secondary workspace-chooser-link" href="/">Back to Your Tournaments</Link>
         <h1 id="tournament-title">{tournamentName ?? "Tournament workspace"}</h1>
         <p className="lede">Your role{access.roles.length === 1 ? "" : "s"}: {access.roles.map((role) => roleLabels[role] ?? role).join(", ")}.</p>
+        {isDirector && eventDeskEnabledV1() ? <Link className="guide-link" href={`/tournament/${tournamentId}/event-desk`}>Director Event Desk</Link> : null}
         {checklist ? <DirectorChecklist tournamentId={tournamentId} snapshot={checklist} /> : null}
+        {integratedTestUiEnabled() ? <IntegratedWorkspaceNav tournamentId={tournamentId} director={isDirector} official={isCrossCheckOfficial} /> : null}
         <section className="workspace-phase-grid" aria-label="Tournament operations">
           <section className="workspace-phase"><h2>Start here</h2><p>Personal tournament information and player tools.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/how-to`}>How to run this tournament</Link>
@@ -56,6 +63,8 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
             <Link className="guide-link" href={`/tournament/${tournamentId}/payments`}>Payments and expenses</Link>
               <Link className="guide-link" href={`/tournament/${tournamentId}/q-pools`}>Q Pool membership and receipt allocation</Link>
             <Link className="guide-link" href={`/tournament/${tournamentId}/side-pools`}>Event Side Pools</Link>
+            {runningPoolPageEnabledV1()&&<Link className="guide-link" href={`/tournament/${tournamentId}/pool-totals`}>Pool Participants and Recorded Funds</Link>}
+            {access.roles.includes("director")&&playerPoolVisibilityPageEnabledV1()&&<Link className="guide-link" href={`/tournament/${tournamentId}/pool-visibility`}>Player Pool Visibility</Link>}
           </section> : null}
           {isDirector ? <section className="workspace-phase"><h2>3. Check-in and seating</h2><p>Open event check-in, manage desk requests, publish seating, and schedule play.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/event-check-in`}>Event Check-In</Link>
@@ -75,6 +84,7 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
           </section> : null}
           {canViewResults ? <section className="workspace-phase"><h2>5. Results and reporting</h2><p>Review live standings, qualifications, event results, and director reports.</p>
             <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Tournament Results</Link>
+            {playerPoolTotalsPageEnabledV1()&&<Link className="guide-link" href={`/tournament/${tournamentId}/pool-entries`}>Pool Entries and Totals</Link>}
           </section> : null}
         </section>
         {access.roles.includes("director") ? <ArchiveTournamentClient tournamentId={tournamentId} tournamentName={tournamentName ?? "this tournament"} /> : null}

@@ -178,9 +178,9 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
     {!graduated ? <fieldset disabled={!ready || busy || blocked || !!pending || !pool.canPublish}>
       <legend>Disclose and post the new graduated policy before collection</legend>
       <p>Observed ACC weighted amounts use this app’s exact balanced $5 rounding, so all rank amounts add to the collected pot. This is not an ACC-endorsed rule. Directors select and disclose the policy before collecting entry fees. Later review records unpaid rank amounts only.</p>
-      <label>Pay approximately 1 in <input aria-label="Paid-entry ratio" inputMode="numeric" min="2" max="100" readOnly={!!pool.setupPayoutType} value={ratio} onChange={(event) => setRatio(event.target.value)} /></label>
+      <label>Pay Approximately 1 in <input aria-label="Paid-Entry Ratio" inputMode="numeric" min="2" max="100" readOnly={!!pool.setupPayoutType} value={ratio} onChange={(event) => setRatio(event.target.value)} /></label>
       {pool.setupPayoutType && <p className="field-help">The ratio comes from the saved setup choice. Disclose it before recording entries.</p>}
-      <label>Disclosure reference (where players saw this policy)<input aria-label="Disclosure reference" maxLength={500} value={disclosure} onChange={(event) => setDisclosure(event.target.value)} placeholder="Posted event rules / registration notice" /></label>
+      <label>Disclosure Reference (Where Players Saw This Policy)<input aria-label="Disclosure Reference" maxLength={500} value={disclosure} onChange={(event) => setDisclosure(event.target.value)} placeholder="Posted event rules / registration notice" /></label>
       {!pool.canPublish ? <p className="auth-note">This Side Pool cannot adopt the new policy. Existing fixed-schedule policy and history are preserved.</p> : null}
       <button className="secondary" type="button" disabled={busy || !!pending || !pool.canPublish || !/^\d+$/.test(ratio) || Number(ratio) < 2 || Number(ratio) > 100 || !disclosure.trim()} onClick={publishPolicy}>Disclose and freeze graduated policy</button>
     </fieldset> : <>
@@ -191,8 +191,8 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
         <label>Participant<select value={participantId} onChange={(event) => setParticipantId(event.target.value)}><option value="">Select participant</option>{participants.map((item) => <option key={item.participantId} value={item.participantId}>{item.displayName}</option>)}</select></label>
         <label>{syntheticMode ? "Simulated amount received (USD)" : "Amount received (USD)"}<input inputMode="decimal" value={received} onChange={(event) => setReceived(event.target.value)} /></label>
         <label>Method<select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value as "cash" | "check")}><option value="cash">Cash</option><option value="check">Check</option></select></label>
-        <label>Check number or reference (optional)<input maxLength={syntheticMode ? 79 : 100} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} /></label>
-        <label>Audit reason (optional)<input maxLength={400} value={reason} onChange={(event) => setReason(event.target.value)} /></label>
+        <label>Check Number or Reference (Optional)<input maxLength={syntheticMode ? 79 : 100} value={paymentReference} onChange={(event) => setPaymentReference(event.target.value)} /></label>
+        <label>Audit Reason (Optional)<input maxLength={400} value={reason} onChange={(event) => setReason(event.target.value)} /></label>
         <button className="secondary" type="button" disabled={busy || !!pending || !participantId || pool.started} onClick={saveElection}>{entry ? "Correct audited entry" : "Record collection"}</button>
       </fieldset>
       <ul aria-label="Audited Side Pool entries">{pool.entries.filter((item) => item.elected).map((item) => <li key={item.electionId}>{participantNames.get(item.participantId) ?? "Participant"} · due {money(item.dueMinor)} · received {money(item.receivedMinor)} · {item.receivedMinor === item.dueMinor ? "fully paid" : "not fully paid"}</li>)}</ul>
@@ -201,7 +201,7 @@ export function GraduatedPool({ actorId, tournamentId, pool, participants = pool
         <p><strong>{pool.paidCount} fully paid entrant{pool.paidCount === 1 ? "" : "s"}; pot {money(pool.calculation.fundMinor)}; ratio 1 in {pool.calculation.ratio}.</strong></p>
         <ol aria-label="Unpaid rank amount schedule">{pool.calculation.awardsMinor.map((amount, index) => <li key={index}>Rank {index + 1}: {money(amount)}</li>)}</ol>
         <p>Rank amounts sum to {money(pool.calculation.awardsMinor.reduce((sum, amount) => sum + amount, 0))}. This review assigns no recipients and moves no money.</p>
-        {pool.started ? <><label>Review reason<input maxLength={500} value={reason} onChange={(event) => setReason(event.target.value)} /></label><button className="secondary" type="button" disabled={!ready || busy || blocked || !!pending || !!currentReview} onClick={reviewAmounts}>{currentReview ? "Current amounts reviewed" : "Review unpaid rank amounts"}</button></> : <p className="auth-note">Review becomes available after entries are locked.</p>}
+        {pool.started ? <><label>Review Reason<input maxLength={500} value={reason} onChange={(event) => setReason(event.target.value)} /></label><button className="secondary" type="button" disabled={!ready || busy || blocked || !!pending || !!currentReview} onClick={reviewAmounts}>{currentReview ? "Current amounts reviewed" : "Review unpaid rank amounts"}</button></> : <p className="auth-note">Review becomes available after entries are locked.</p>}
       </> : null}
       {storedReview ? <details><summary>Amount review history</summary><ol>{pool.history.map((item) => <li key={item.id}>Version {item.version} · {item.current ? "current" : "stale"} · {item.status} · {item.reason} · {new Date(item.recordedAt).toISOString()} · {item.calculation.awardsMinor.map(money).join(", ")}</li>)}</ol></details> : null}
     </>}

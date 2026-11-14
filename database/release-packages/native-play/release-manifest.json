@@ -1,0 +1,454 @@
+{
+  "status": "LOCAL_FROZEN_CLOSED_CANDIDATE_NOT_AUTHORIZED",
+  "baseline": "d51b203cd18ecc98b2b9fae0641805bc00582634",
+  "repository": "chocolatebananamalt/Cribbage-web-app",
+  "branch": "codex/director-setup-journey",
+  "appFiles": 50,
+  "closed": true,
+  "hostedChanges": false,
+  "sqlVersion": "20261108201030",
+  "sqlSha256": "c0d63d7f9f33dd545861631def4f003818377884461d4b7df59ef33ee3408777",
+  "activationExcluded": true,
+  "payloadFiles": [
+    {
+      "path": "database/proposals/native-mixed-paper-binding-v1.sql",
+      "bytes": 5008,
+      "sha256": "e3bc68562ad4501f7255baeb5657009b1a63411dcfdef39c64e180b7df5229f7"
+    },
+    {
+      "path": "database/proposals/native-mixed-pilot-bootstrap-status-v1.sql",
+      "bytes": 3210,
+      "sha256": "350c79236274fb586e4920b57872f07e9fd10da486bd06dcf4be7a870beaf0f7"
+    },
+    {
+      "path": "database/proposals/native-mixed-pilot-director-session-v1.sql",
+      "bytes": 2337,
+      "sha256": "c646b5dd5cb6875cce8a9e74abff74322038df312ad32efff955562c372cdbd9"
+    },
+    {
+      "path": "database/proposals/native-mixed-pilot-draw-reservation-v1.sql",
+      "bytes": 13560,
+      "sha256": "491adfa47570bf5dba0a09ca0fb460a05cc28e0718e86494cb0f0da2a5a3ff20"
+    },
+    {
+      "path": "database/proposals/native-mixed-pilot-preparation-v1.sql",
+      "bytes": 5561,
+      "sha256": "cf15ab56b0cc6c8d67df12e3f9b0fab37687f4fd84ecb51bfb5b343f20912694"
+    },
+    {
+      "path": "database/proposals/native-mixed-simulation-game-evidence-v1.sql",
+      "bytes": 64656,
+      "sha256": "9d52eb527b16a0cbfca958727b2214b8ecb196244d29f5348b30fa38b27657d8"
+    },
+    {
+      "path": "database/release-packages/native-play/README.md",
+      "bytes": 5745,
+      "sha256": "39c16d0c9a3fa8f986327bc537267b8824a5967b576ca9ea0934d912b0443aa8"
+    },
+    {
+      "path": "database/release-packages/native-play/manifest.json",
+      "bytes": 2027,
+      "sha256": "9b03abc11f1391bd6f2748a50224d1d985a505540ba9c28420b69669151a9e37"
+    },
+    {
+      "path": "database/release-packages/native-play/prior-review-tests/native-mixed-review-release-contract.test.mjs",
+      "bytes": 3786,
+      "sha256": "71eef3de4d423decc3dcd6d8ecf1faf74654e2fa22c9244c0fd77a212cfd3fb3"
+    },
+    {
+      "path": "database/release-packages/native-play/prior-review-tests/rpc-argument-names-match-migrations.test.mjs",
+      "bytes": 9863,
+      "sha256": "0b43d6e5ba59c92aa0c22c7f47fadfa71f508162cda1da0106843ec1cefc3feb"
+    },
+    {
+      "path": "database/release-packages/native-play/prior-review-tests/tournament-route-reachability.test.mjs",
+      "bytes": 4450,
+      "sha256": "fc2616b6a0720d0ce69134ef236d383cec8b1bf1573aa152831f5f2cd4a79036"
+    },
+    {
+      "path": "database/release-packages/native-play/supabase/migrations/20261108201030_native_play_closed_install.sql",
+      "bytes": 27955,
+      "sha256": "c0d63d7f9f33dd545861631def4f003818377884461d4b7df59ef33ee3408777"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/bootstrap/route.ts",
+      "bytes": 292,
+      "sha256": "1c2ebd10324f9b1cab644856ab248d3a455ec5dd5a76936f971e6a779367b695"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/cancel/route.ts",
+      "bytes": 289,
+      "sha256": "1cad51be186f581512f9a6a3409b431a2e3110acd41cce2dccfe44f88a2bb655"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/cancellation/route.ts",
+      "bytes": 295,
+      "sha256": "d7f9d6796a1bdb3ce9c8cb8c214c50d484f08f697cd239af830e20710768f322"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/operations/[operationId]/route.ts",
+      "bytes": 293,
+      "sha256": "726e78367ed701cbf54de1a3e395f08b495bbab946e8d2e58e0bd68d09d7fb1d"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/preparation/route.ts",
+      "bytes": 287,
+      "sha256": "2b611b2785a2a092ad5c01ba62d15f191a1abb42c1589a0b0cf4a89e390acfe1"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/route.ts",
+      "bytes": 327,
+      "sha256": "b1c21521f7a3da6135f0034128768e6026d5e47f26f77475317e13ccff6cccdd"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/start/[operationId]/operation/route.ts",
+      "bytes": 308,
+      "sha256": "b24b862cbbf249af7290d5bc974e44c08f818ab8ac2b37c5dbc01349ea1e0c0f"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/start/[operationId]/route.ts",
+      "bytes": 296,
+      "sha256": "e36e04841b7c9e0f0a743ad64845176221259571a1070713b1d484b38f279e0e"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/start/[operationId]/source/route.ts",
+      "bytes": 307,
+      "sha256": "9d0b1b31b46983f6369539ac69baaf18b3b9b8e8a25195f438029498389c2fd4"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/transition/route.ts",
+      "bytes": 293,
+      "sha256": "7a40e155618044d32bf46e8d9613804e124d3d1ca32ed46be26bdc2c2f90b2f5"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/rehearsal-paper/[eventId]/[startId]/[gameId]/page.tsx",
+      "bytes": 1221,
+      "sha256": "363d86fc09436e5867858a330a79d64401bc4f1b06f8e66b01b42bac2d2dca87"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/rehearsal-prepare/[eventId]/page.tsx",
+      "bytes": 698,
+      "sha256": "2b2cb09ec6631b4dd3ab3c9b14889e0ba5cc189ef16ec270de30015a2864615a"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/rehearsal/[eventId]/[startId]/[gameId]/page.tsx",
+      "bytes": 1427,
+      "sha256": "330f91ca5cdc13a34f4a1003fedbaf0897620b19a76ca2fd560f5bcbd8ed8d3e"
+    },
+    {
+      "path": "src/components/native-mixed-bound-paper-screen-v1.tsx",
+      "bytes": 2336,
+      "sha256": "a473cf49e070f48fd70850dd060d5819d7e983b4f128fb1029d43960e26278ff"
+    },
+    {
+      "path": "src/components/native-mixed-digital-score-entry-v1.css",
+      "bytes": 730,
+      "sha256": "c412bb6f69e1dbe639f68468402b9f66f06e84e8e3b39e5d0f2ae7f15a648a21"
+    },
+    {
+      "path": "src/components/native-mixed-digital-score-entry-v1.tsx",
+      "bytes": 14361,
+      "sha256": "8668b73953deff465b946c5583b733c1181444a6a104a8292602caefb9d0112d"
+    },
+    {
+      "path": "src/components/native-mixed-director-panel-v1.tsx",
+      "bytes": 10070,
+      "sha256": "f627e06154ccc720bc321ed9403f3914da490f7591825d25cd8b5099669ff283"
+    },
+    {
+      "path": "src/components/native-mixed-own-player-screen-v1.tsx",
+      "bytes": 3566,
+      "sha256": "91d3c96d6b134e94b4b15277913f2fa1c3a7d4119b3a5d6c22381580f4f2a059"
+    },
+    {
+      "path": "src/components/native-mixed-paper-entry-v1.css",
+      "bytes": 1189,
+      "sha256": "5a5d2f570a2670ae499ea957fb46212646657e3c0008ecd2ead63a7a84bba45c"
+    },
+    {
+      "path": "src/components/native-mixed-paper-entry-v1.tsx",
+      "bytes": 12554,
+      "sha256": "8de384b0a8134981555258ae38053f75e6f029ab15deaeb2eb727c7f104599da"
+    },
+    {
+      "path": "src/components/native-mixed-paper-provider-v1.tsx",
+      "bytes": 4287,
+      "sha256": "85349212768f59a09b72611874e3fab05b5f5e01aa33cc05d4be9469b1a395b0"
+    },
+    {
+      "path": "src/components/native-mixed-player-provider-v1.tsx",
+      "bytes": 4012,
+      "sha256": "0ec49842bb1efba73abbab39a512bdd7843d6d4cc37ea7dd0b4cb795d02c8178"
+    },
+    {
+      "path": "src/components/native-mixed-player-scorecard-v1.tsx",
+      "bytes": 3049,
+      "sha256": "b64294dafdbe7f52b09bc3d9a6890ad5c7104166e853a0f0223d76065e6e34f5"
+    },
+    {
+      "path": "src/components/native-mixed-preparation-provider-v1.tsx",
+      "bytes": 4945,
+      "sha256": "2db53fa25d4117bf7da3797fa1da6f2bef9720cddd48107b07ae6408ffa99490"
+    },
+    {
+      "path": "src/components/native-mixed-preparation-screen-v1.tsx",
+      "bytes": 6616,
+      "sha256": "c3cbc477047fd113564429367d842567a418185ab0638177006441da048d4b6b"
+    },
+    {
+      "path": "src/components/native-mixed-start-panel-v1.tsx",
+      "bytes": 7220,
+      "sha256": "b2649b7a5fdc65faeebe631b8c6de53a5045617568368eaa39d0c1dd00e144ac"
+    },
+    {
+      "path": "src/components/one-table-movement-preview.tsx",
+      "bytes": 5866,
+      "sha256": "8c63850f088af42f75eb0bf0519a0256ec98b29a35edc349aeb3ef836e1aada0"
+    },
+    {
+      "path": "src/components/player-page-frame.tsx",
+      "bytes": 2944,
+      "sha256": "290832d047737be6a4b12bfaf336abe6c9500d70fad4ecfb7d3a198f139d76d6"
+    },
+    {
+      "path": "src/lib/api/native-mixed-director-http-v1.ts",
+      "bytes": 3196,
+      "sha256": "70ee79e77879ab9fa712340b86c3efeb4cce461472594fc9cdb22490bf058b9d"
+    },
+    {
+      "path": "src/lib/api/native-mixed-game-evidence-transport-v1.ts",
+      "bytes": 9767,
+      "sha256": "7f5a6e3867a086e743724a0a24a40cf9081ee7134cda9e64b1f198d1414da05d"
+    },
+    {
+      "path": "src/lib/api/native-mixed-pilot-director-executor-v1.ts",
+      "bytes": 5117,
+      "sha256": "ef90542635955502e560c2cf7263c18408c8e745fd13e177fb8c8539cb291934"
+    },
+    {
+      "path": "src/lib/api/native-mixed-pilot-director-handlers-v1.ts",
+      "bytes": 4091,
+      "sha256": "b30f5d07bdb2aa70a120806fd8b451c119a5bc09b6d5afd959137dfa6c200cd8"
+    },
+    {
+      "path": "src/lib/api/native-mixed-pilot-director-production-v1.ts",
+      "bytes": 1304,
+      "sha256": "f2b0f953858a4f175cb9408f3f7a3702648cf6f5f54cd06c1876036f9a0cd539"
+    },
+    {
+      "path": "src/lib/api/native-mixed-pilot-preparation-handlers-v1.ts",
+      "bytes": 3650,
+      "sha256": "c9b699257018ab5b2f8c37f005bf90469cc2ffe8aea42ea8ada35573ba731c25"
+    },
+    {
+      "path": "src/lib/api/native-mixed-simulation-handlers-v1.ts",
+      "bytes": 13224,
+      "sha256": "19934f1e51793a2ee801277f7cb9109775cd74da22efd7ca6fb92f61a36b3544"
+    },
+    {
+      "path": "src/lib/playoffs/series-game-retained-v1.ts",
+      "bytes": 3928,
+      "sha256": "3a05e3c2de1f16d57acc027e13840da720036115a872edf3bdc2ac66b013b6a4"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-bootstrap-status-v1.ts",
+      "bytes": 2258,
+      "sha256": "93ff5233d93eac74cfb6d82696320239cd021aade43941bfd556d2b3d7f4fbfe"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-digital-entry-view-v1.ts",
+      "bytes": 11494,
+      "sha256": "1fae24e3cf1b58d9f2bd5ea08ac732d96e22b8b4e5fa6a4d179be0dc215886ee"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-director-review-materials-v1.ts",
+      "bytes": 3189,
+      "sha256": "03999be0e8d8b34b3bd7ff4eae30c2e6eba7ddf8691caf8addf31241cc43170c"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-game-evidence-v1.ts",
+      "bytes": 12942,
+      "sha256": "7b58dc794123999ac0c775eaf0a9663db187106003c5c224847806dfd9b504e1"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-game-pending-v1.ts",
+      "bytes": 13293,
+      "sha256": "8a18ba059255ece5ef7e55bc17f0b3369507e315b5f384855187070b2469f80f"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-paper-bound-transport-v1.ts",
+      "bytes": 1795,
+      "sha256": "8c2fb33a3544dc92bb80259ebd5ad4ab4cf32abb16fbf2255262bcd358867f7f"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-paper-entry-view-v1.ts",
+      "bytes": 9749,
+      "sha256": "cbab8260db6ae0e10623488bb859eadf56b2ae55108ad96f608f6e92250bc3ed"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-paper-route-v1.ts",
+      "bytes": 2031,
+      "sha256": "00fb9be76fb3e61faacbe70c795d09d1ddf5ecbf42ff8399f0b26e5dde9a6740"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-pilot-preparation-v1.ts",
+      "bytes": 7261,
+      "sha256": "a5256bd2d0fd55df2b83f8996848cdb42c76602e53d71513cb71044f8b7338f0"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-player-route-v1.ts",
+      "bytes": 2357,
+      "sha256": "7beea62ca61b26167ce070eefb7036a0d58398cbbe3bead33f156816517f7c0d"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-player-scorecard-v1.ts",
+      "bytes": 5809,
+      "sha256": "9bc8f740449c7b71f15d9499045312c30b765b388aced871ffb77db8fb487ff9"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-post-start-admission-v1.ts",
+      "bytes": 14436,
+      "sha256": "97e45bdb25ade62bce254edcca16e883940de2103374cfddbd691c33fb384204"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-published-schedule-v1.ts",
+      "bytes": 11512,
+      "sha256": "69d5e95c612dc8557fc9120002d31cbaf46ee9f703ae9e22ab5dd8d91a4ca87f"
+    },
+    {
+      "path": "src/lib/seating/native-mixed-start-session-v1.ts",
+      "bytes": 11838,
+      "sha256": "5341e31ed5a95e7da40efea0895bab9e90ec2d513e668f418e41e98d4e7afedf"
+    },
+    {
+      "path": "tests/helpers/native-mixed-digital-screen-example.mjs",
+      "bytes": 2964,
+      "sha256": "d14ba993dd6f140e4b2c1002e418bc6b1caf28277717e064d72679703ca446da"
+    },
+    {
+      "path": "tests/helpers/native-mixed-paper-screen-example.mjs",
+      "bytes": 2508,
+      "sha256": "588575d740bba7ba88e70700b3f81887f0d598653cf7ae08835d829fa844e160"
+    },
+    {
+      "path": "tests/helpers/native-mixed-published-model-example.mjs",
+      "bytes": 3495,
+      "sha256": "bf30f18fac88e95525cbff84da5f68a4ff012e919915cdfea835cae1b815a65f"
+    },
+    {
+      "path": "tests/helpers/native-mixed-readiness-example.mjs",
+      "bytes": 2122,
+      "sha256": "b9bbfb6cef71d485d3dbfbb613e920d0796a4abae16c784a06de54aea9454187"
+    },
+    {
+      "path": "tests/helpers/native-mixed-simulation-start-example.mjs",
+      "bytes": 1209,
+      "sha256": "c4dccbb10e1be34f01ccb334f2a0ef773f46e644a79637faa124a4ea8faa1a72"
+    },
+    {
+      "path": "tests/helpers/render-native-mixed-digital-screen.mjs",
+      "bytes": 4299,
+      "sha256": "b0a3b71685cec9ac8337db5aebe0960a8357618f161e59df8745cc5b9e3461f1"
+    },
+    {
+      "path": "tests/helpers/render-native-mixed-paper-screen.mjs",
+      "bytes": 3524,
+      "sha256": "93d49bd1a63ef1a11a1c3f5bf86b69c31ad3418e90d6e50bf8f9fd5fef6f9069"
+    },
+    {
+      "path": "tests/helpers/render-native-mixed-player-scorecard.mjs",
+      "bytes": 2579,
+      "sha256": "05f6c4dfc44c08221f7838fe640b6958868aed874da0759e343615ec9f60e45b"
+    },
+    {
+      "path": "tests/native-mixed-digital-entry-view-v1.test.mjs",
+      "bytes": 7418,
+      "sha256": "b82d97dd30d3bdc55c061a23fad944f02eef839d53a44eb23d75272938202430"
+    },
+    {
+      "path": "tests/native-mixed-game-pending-v1.test.mjs",
+      "bytes": 20403,
+      "sha256": "3981977717bb0fc82e42f94d87d0da70d61503784d26a5d2c86d6f2e78340105"
+    },
+    {
+      "path": "tests/native-mixed-paper-entry-view-v1.test.mjs",
+      "bytes": 7189,
+      "sha256": "b483163e28ef15d7a69c1eed53b4011d2089949282ec32640c074d8aea84a50f"
+    },
+    {
+      "path": "tests/native-mixed-paper-provider-v1.test.mjs",
+      "bytes": 5777,
+      "sha256": "04151d32a1fe3520ec02b67623ba944f6e1134cbd2579f94bd03fcc0be0af2e2"
+    },
+    {
+      "path": "tests/native-mixed-pilot-director-executor-v1.test.mjs",
+      "bytes": 5237,
+      "sha256": "620218b2249b60698a5f2b01893c4267257c0eadb25a1cdc939814eed0a9b171"
+    },
+    {
+      "path": "tests/native-mixed-pilot-director-handlers-v1.test.mjs",
+      "bytes": 3538,
+      "sha256": "33dbc590cfb8516be91ed31c52d8bbad8a11e56f03558f2bf264dacb7c43087c"
+    },
+    {
+      "path": "tests/native-mixed-pilot-preparation-handlers-v1.test.mjs",
+      "bytes": 6900,
+      "sha256": "d83de0e0407b13b03fe4b82a1eb217045224f673c1ad8222d94c3ae8cbd07a93"
+    },
+    {
+      "path": "tests/native-mixed-pilot-preparation-v1.test.mjs",
+      "bytes": 2477,
+      "sha256": "555144bfd295be9f58fd5c9c3b359a8e708c485140e8834b28e760360ca3b80d"
+    },
+    {
+      "path": "tests/native-mixed-player-scorecard-v1.test.mjs",
+      "bytes": 5738,
+      "sha256": "1abff0d1a0475018cf02595456252e54f22c6e73edae31f42634bf9d37064667"
+    },
+    {
+      "path": "tests/native-mixed-post-start-admission-v1.test.mjs",
+      "bytes": 11675,
+      "sha256": "194c370b8c4c2a25da6b88385601a3f84fbe21a3ca6aa4a35b6d9e09294cb580"
+    },
+    {
+      "path": "tests/native-mixed-review-release-contract.test.mjs",
+      "bytes": 4286,
+      "sha256": "35e04e950b75dc585728239ff8ee5a23a99adb6443e90129ee8fbe53d46a5c91"
+    },
+    {
+      "path": "tests/native-mixed-simulation-start-handlers-v1.test.mjs",
+      "bytes": 5627,
+      "sha256": "b1691672f5a8abdf7f01d5184a94cec9a9b4d958fac1869f4c2d0ac953af6122"
+    },
+    {
+      "path": "tests/native-mixed-simulation-start-provider-v1.test.mjs",
+      "bytes": 7761,
+      "sha256": "987871496390da6efb24af605d9e2fcba1a31019fff99735ff87ea7f06bdd882"
+    },
+    {
+      "path": "tests/native-mixed-start-session-v1.test.mjs",
+      "bytes": 7503,
+      "sha256": "0959c475b65ac3501aeba0c8a9c736c0389975ba72510003c9ee3fd8f17d439b"
+    },
+    {
+      "path": "tests/native-play-release-contract.test.mjs",
+      "bytes": 2447,
+      "sha256": "d9924a8108310d135113174491de0e9439ac82d9e11d796501284c06e8f510f0"
+    },
+    {
+      "path": "tests/rpc-argument-names-match-migrations.test.mjs",
+      "bytes": 10160,
+      "sha256": "1b504a0d6a7070ced7ab8eb25faba268cdf974398d385ac2ee71bbdda658a0de"
+    },
+    {
+      "path": "tests/supabase-auth-semantics.test.mjs",
+      "bytes": 57412,
+      "sha256": "4a4f6f0705de3e347db49715f4a5aa5a93e2c19669ace6e8edbc7ce666f809c7"
+    },
+    {
+      "path": "tests/tournament-route-reachability.test.mjs",
+      "bytes": 5621,
+      "sha256": "78b38c7fcf9ddc3a87adb530e5de2ede2bfe3748dc2cddd14bb09d1ca6ce2671"
+    }
+  ]
+}

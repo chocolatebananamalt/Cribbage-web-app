@@ -67,7 +67,7 @@ try {
 
   for (const width of [390, 1440]) {
     posts = []; reconciliations = []; mode = 'abort-policy'; await go('disclosure', width);
-    await page.getByLabel('Recipient policy disclosure reference').fill('TEST ONLY posted Side Pool terms');
+    await page.getByLabel("Recipient Policy Disclosure Reference").fill('TEST ONLY posted Side Pool terms');
     await page.getByRole('button', { name: 'Disclose and freeze recipient policy' }).click();
     await page.getByText(/exact retry is preserved/).waitFor();
     const first = structuredClone(posts[0]); assert.equal(first.body.action, 'publish_policy');
@@ -83,7 +83,7 @@ try {
 
     posts = []; reconciliations = []; mode = 'abort-review'; await go('review', width);
     assert.equal(await page.getByText(/not playoff-qualified; included by the frozen paid-card policy/).count(), 1);
-    await page.getByLabel('Recipient review reason').fill('TEST ONLY checked full paid-card order');
+    await page.getByLabel("Recipient Review Reason").fill('TEST ONLY checked full paid-card order');
     await page.getByRole('button', { name: 'Record unpaid recipient review' }).click();
     await page.getByText(/exact retry is preserved/).waitFor();
     const reviewFirst = structuredClone(posts[0]); assert.equal(reviewFirst.body.action, 'review');
@@ -105,7 +105,7 @@ try {
   checks.push('unresolved monetary ties block review');
 
   posts = []; reconciliations = []; mode = 'change-retained-bytes'; await go('disclosure', 390);
-  await page.getByLabel('Recipient policy disclosure reference').fill('TEST ONLY changed retained bytes');
+  await page.getByLabel("Recipient Policy Disclosure Reference").fill('TEST ONLY changed retained bytes');
   await page.getByRole('button', { name: 'Disclose and freeze recipient policy' }).click();
   await page.getByText(/could not be cleared safely/).waitFor();
   assert.equal(await page.evaluate(k => sessionStorage.getItem(k), ownKey), '{"tampered":true}');
@@ -114,7 +114,7 @@ try {
 
   posts = []; reconciliations = []; mode = 'success'; await go('disclosure', 390);
   await page.addInitScript(key => { const remove = Storage.prototype.removeItem; Storage.prototype.removeItem = function (candidate) { if (candidate === key) throw new Error('synthetic removal failure'); return remove.call(this, candidate); }; }, ownKey);
-  await page.reload(); await page.getByLabel('Recipient policy disclosure reference').fill('TEST ONLY failed removal');
+  await page.reload(); await page.getByLabel("Recipient Policy Disclosure Reference").fill('TEST ONLY failed removal');
   await page.getByRole('button', { name: 'Disclose and freeze recipient policy' }).click();
   await page.getByText(/could not be cleared safely/).waitFor();
   assert.ok(await page.evaluate(k => sessionStorage.getItem(k), ownKey));
@@ -122,7 +122,7 @@ try {
   checks.push('storage removal failure preserves the recovery item and blocks writes');
 
   posts = []; reconciliations = []; mode = 'conflict'; await go('disclosure', 390);
-  await page.getByLabel('Recipient policy disclosure reference').fill('TEST ONLY initial conflict');
+  await page.getByLabel("Recipient Policy Disclosure Reference").fill('TEST ONLY initial conflict');
   await page.getByRole('button', { name: 'Disclose and freeze recipient policy' }).click();
   await page.getByText(/conflicts with another request/).waitFor();
   assert.ok(await page.evaluate(k => sessionStorage.getItem(k), ownKey));
@@ -135,13 +135,13 @@ try {
   checks.push('old amount-only history cannot be retrofitted after elections/play');
 
   posts = []; reconciliations = []; committedReview = null; mode = 'commit-abort-review'; await go('review', 390);
-  await page.getByLabel('Recipient review reason').fill('TEST ONLY committed before lost response');
+  await page.getByLabel("Recipient Review Reason").fill('TEST ONLY committed before lost response');
   await page.getByRole('button', { name: 'Record unpaid recipient review' }).click();
   await page.getByText(/exact retry is preserved/).waitFor();
   await page.reload();
   await page.getByText('Unpaid recipient review confirmed.').waitFor();
   assert.equal(await page.evaluate(k => sessionStorage.getItem(k), ownKey), null);
-  await page.getByLabel('Recipient review reason').fill('TEST ONLY new review attempt after recovery');
+  await page.getByLabel("Recipient Review Reason").fill('TEST ONLY new review attempt after recovery');
   assert.equal(await page.getByRole('button', { name: 'Record unpaid recipient review' }).isEnabled(), true, 'reconciliation releases busy state for subsequent work');
   await page.getByRole('button', { name: 'Record unpaid recipient review' }).click();
   assert.equal(posts.length, 2); assert.notEqual(posts[0].key, posts[1].key);

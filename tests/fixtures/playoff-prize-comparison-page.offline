@@ -1,0 +1,35 @@
+import {createRoot} from 'react-dom/client';import {useState} from 'react';
+import {PlayoffPrizeComparisonV2} from '../../src/components/playoff-prize-comparison-v2';
+import {newPlayoffPrizePlanDraftV2} from '../../src/lib/playoffs/playoff-prize-plan-v2';
+const field={status:'known',qualifierCount:10,firstRoundLoserPlaces:[9,10],entryFeeMinor:1000};
+const make=(id,label,planChange={},fieldChange={},fundMinor=28000)=>({id,label,plan:{...newPlayoffPrizePlanDraftV2(),...planChange},field:{...field,...fieldChange},fundMinor});
+const cases=[
+ make('baseline','Graduated $280 Source Example'),
+ make('equal','Equal Example',{method:'equal'}),
+ make('top-four','Top Four Paid Places',{recipients:'top-4',firstRoundComparison:'more'}),
+ make('multiplier','Winner Multiplier Example',{method:'winner-multiplier',firstRoundComparison:'more'}),
+ make('winner','Winner Takes All Example',{method:'winner-takes-all',recipients:'top-128',incrementFactorText:'dormant',winnerMultiplierText:'dormant'}),
+ make('one','Regular $1 Increment',{rounding:{regular:'1',qPool:'5',sidePool:'5'}}),
+ make('ten','Regular $10 Increment',{rounding:{regular:'10',qPool:'1',sidePool:'5'}}),
+ make('more','First-Round Intention Met',{firstRoundComparison:'more'}),
+ make('equal-fee','First-Round Intention Not Met',{firstRoundComparison:'equal'}),
+ make('incompatible','Entry Fee Increment Conflict',{firstRoundComparison:'equal'},{entryFeeMinor:5300}),
+ make('unknown-fee','Unknown Entry Fee',{firstRoundComparison:'more'},{entryFeeMinor:null}),
+ make('unknown-first-round','Unknown First-Round Evidence',{firstRoundComparison:'more'},{firstRoundLoserPlaces:null}),
+ make('zero','Zero Rounded Groups',{rounding:{regular:'10',qPool:'5',sidePool:'5'}},{},100),
+ make('boundary','Safe-Integer Cents Boundary',{method:'winner-takes-all',rounding:{regular:'1',qPool:'5',sidePool:'5'}},{qualifierCount:1,firstRoundLoserPlaces:[]},Number.MAX_SAFE_INTEGER-100),
+ make('unknown-field','Unknown Playoff Field',{}, {status:'unknown',qualifierCount:null,firstRoundLoserPlaces:null}),
+ make('invalid-factor','Incomplete Active Factor',{incrementFactorText:''}),
+ make('over-count','Requested Places Exceed Field',{recipients:'top-16'})
+];
+const before=JSON.stringify(cases);
+function App(){const [selected,setSelected]=useState('baseline'),value=cases.find(c=>c.id===selected)!;
+ (window as unknown as Record<string,unknown>).__comparisonInputsUnchanged=()=>JSON.stringify(cases)===before;
+ return <main style={{maxWidth:'1000px',margin:'0 auto',padding:'12px',minWidth:0}}>
+  <h1 style={{overflowWrap:'anywhere'}}>Fictional Finance Comparison</h1><p>Source example: 40 entrants at $10 with $3 per person in benefits gives a supplied $280 fund and a fictional 10-person playoff field.</p>
+  <nav aria-label="Fictional Comparison Cases" style={{display:'flex',flexWrap:'wrap',gap:'.4rem'}}>{cases.map(c=><button key={c.id} type="button" onClick={()=>setSelected(c.id)}>{c.label}</button>)}</nav>
+  <output aria-label="Selected Comparison Case" style={{display:'block',overflowWrap:'anywhere'}}>{value.id}</output>
+  <PlayoffPrizeComparisonV2 plan={value.plan} field={value.field} fundMinor={value.fundMinor}/>
+ </main>;
+}
+createRoot(document.getElementById('root')!).render(<App/>);

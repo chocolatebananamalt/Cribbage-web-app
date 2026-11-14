@@ -12,6 +12,7 @@ import {
   withApiFailureBoundary,
 } from "../../../../../../../lib/api/route-boundary";
 import { isSameOriginRequest } from "../../../../../../../lib/api/same-origin";
+import { expenseActorMatches, readExpectedExpenseActor } from "../../../../../../../lib/api/expense-expected-actor";
 import { isUuid } from "../../../../../../../lib/api/validation";
 import { createClient } from "../../../../../../../lib/supabase/server";
 
@@ -21,6 +22,8 @@ export async function POST(
 ) {
   return withApiFailureBoundary(async () => {
     if (!isSameOriginRequest(request)) return apiJson({ error: "invalid_origin" }, { status: 403 });
+    const expectedActorId = readExpectedExpenseActor(request);
+    if (!expectedActorId) return apiJson({ error: "identity_changed" }, { status: 403 });
     const { id } = await params;
     const body = await readSmallJson(request);
     if (body === null) return apiJson({ error: "invalid_json" }, { status: 400 });
@@ -28,12 +31,13 @@ export async function POST(
       return apiJson({ error: "invalid_expense_recovery" }, { status: 400 });
     }
     const supabase = await createClient();
-    if (!await requireVerifiedSubject(supabase)) return apiJson({ error: "unauthorized" }, { status: 401 });
+    if (await requireVerifiedSubject(supabase) !== expectedActorId || !await expenseActorMatches(supabase, expectedActorId)) return apiJson({ error: "identity_changed" }, { status: 403 });
     const { data, error } = await supabase.rpc("get_tournament_expense_operation_reconciliation", {
       p_tournament_id: id,
       p_operation_type: body.operationType,
       p_idempotency_key: body.idempotencyKey,
     });
+    if (!await expenseActorMatches(supabase, expectedActorId)) return apiJson({ error: "identity_changed" }, { status: 403 });
     if (error || !data || typeof data !== "object"
       || (data as Record<string, unknown>).authorized !== true
       || !("result" in (data as Record<string, unknown>))) {

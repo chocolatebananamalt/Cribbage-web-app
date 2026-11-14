@@ -162,7 +162,7 @@ test("route and UI retain the server-only authority and reviewed import boundary
   assert.match(route, /p_actor_id: subject/);
   assert.match(route, /p_reviewed_and_approved: body\.reviewedAndApproved/);
   assert.doesNotMatch(route, /\.from\(|\.insert\(|\.update\(/);
-  assert.match(client, /Choose CSV file/);
+  assert.match(client, /Choose CSV File/);
   assert.match(client, /Download CSV template/);
   assert.match(client, /I reviewed the complete schedule/);
   assert.match(client, /Retry exact saved publication/);

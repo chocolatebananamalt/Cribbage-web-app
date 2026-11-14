@@ -1,0 +1,110 @@
+{
+  "kind": "sql-source-pin-reconciliation-v1",
+  "reviewedOn": "2026-11-13",
+  "reopen": {
+    "historical": {
+      "file": "tests/fixtures/sql-provenance/native-mixed-game-reopen-v1-2f3f5a09.sql",
+      "sha256": "2f3f5a09da1caebf9bd96137435bb19b31f0e8ba49c12a81ab75d5b1421ee998",
+      "bytes": 97922,
+      "recovery": {
+        "trace": "test-results/native-mixed-paper-disagreement-20261109/runtime-evidence/scoring-trace.sql",
+        "byteOffset": 397814,
+        "length": 97922
+      }
+    },
+    "current": {
+      "file": "database/proposals/native-mixed-game-reopen-v1.sql",
+      "sha256": "239d2e7a8504d7c6077ff9fd48d58bc015c40d8955fd4f83982031d164f3b962",
+      "bytes": 111516
+    },
+    "unchangedExtractedFunctions": [
+      {
+        "name": "app.native_mixed_game_reopen_block_v1",
+        "sha256": "50988f8856ed1f97dfba2f214409375715f6b6bd50d8595495a0040e78aa1b1d"
+      },
+      {
+        "name": "app.native_mixed_game_entry_bound_with_start_v1",
+        "sha256": "4b91a329042fd9ef4111b34bbb78bf2dca9fb5388a83dbc05a4a8ae8b6321763"
+      },
+      {
+        "name": "app.native_mixed_game_complete_with_start_v1",
+        "sha256": "814be08c6ca5f33e69ac172d65fd2c1c9f29f0dff318cf36562446b4812ed247"
+      },
+      {
+        "name": "app.append_native_mixed_simulation_game_evidence_v1",
+        "sha256": "c4c98ffda8e2adb45ddae8314d58cf834fa29f4827d65ae656588c05001ca428"
+      },
+      {
+        "name": "app.get_native_mixed_simulation_game_state_v1",
+        "sha256": "e4e6c0932bd5f4b386c012a49db439174691e2f94257fb574e5b2aaa7a092cff"
+      }
+    ],
+    "paperDelta": {
+      "file": "database/proposals/native-mixed-paper-disagreement-v1.sql",
+      "sha256": "085e18e5957fe871bb8942bba5372cbd7784d6ec73275f45cccb3c0845b1df1b",
+      "runtimeAcceptance": "historical policy0 stack only; current policy1 combined runtime unverified"
+    },
+    "policy1RuntimeAccepted": false,
+    "featureEnablementAuthorized": false
+  },
+  "prize": {
+    "historical": {
+      "sha256": "c1d414088b13fb35e6e962b626c5ae67b38ba2517cac69c4d3ce2129f59d8573",
+      "bytes": 37904,
+      "source": "2026-11-09 frozen source / cribbage-playoff-display-20261109"
+    },
+    "current": {
+      "file": "database/proposals/event-prize-activation-source-v1.sql",
+      "sha256": "a25c4d31c6dc9625de7be27f2035f0b16c5f86132054d201cbc31a0617d0a346",
+      "bytes": 39399
+    },
+    "change": "Guarded playoff-reader compatibility installation; all other source unchanged.",
+    "runtime": {
+      "reference": "test-results/normal-satellite-2026-11-13T21-37-41-162Z",
+      "installed": {
+        "at": "2026-11-13T21:38:12.105Z",
+        "phase": "prepared_dependency",
+        "file": "event-prize-activation-source-v1.sql",
+        "alreadyPresent": false,
+        "installed": true,
+        "sourceSha256": "a25c4d31c6dc9625de7be27f2035f0b16c5f86132054d201cbc31a0617d0a346",
+        "sourceBytes": 39399
+      },
+      "proof": {
+        "at": "2026-11-13T21:39:10.389Z",
+        "phase": "pass",
+        "passed": true,
+        "normalLatestSetup": true,
+        "unknownWrapperAndUtcMutantsHeld": true,
+        "nativeActivations": 3,
+        "mainConPlayoffBindings": 2,
+        "satellitePlayoffBindings": 0,
+        "entrantCount": 4,
+        "scorecardType": "paper",
+        "satelliteReceiptsMinor": 4000,
+        "satelliteExpenseMinor": 500,
+        "enteredAwardsMinor": 3500,
+        "separateFunds": true,
+        "existingTournamentReceiptsUnchanged": true,
+        "noMetadataConversion": true,
+        "startOrScoringProven": false,
+        "playProof": {},
+        "realPaperReviewProven": false,
+        "actualProviderSessionProven": false,
+        "moneyMoved": false
+      },
+      "cleanup": {
+        "runnerExitCode": 0,
+        "removed": true,
+        "verifiedAbsentByIdAndName": true
+      },
+      "image": "sha256:b15d862126dd2dac02da524696ccfde2dcce2ceaee0a58973b2727befe492706",
+      "checkpointSha256": "ad061c20f0ad8fe104a5a950f8e722288543b7bfb853a913a236b9153ca3bcf3",
+      "traceSha256": "cebca2e9477445576962418cf85c2b4b9af189f8eeea480b6fb5f96ca79ffe6a",
+      "proofSha256": "509a5c5d7307eed4d715814396284a41a35dac0b8a5e49b802e30462250d09df",
+      "cleanupSha256": "0416303896007bf02cfab24cb2e83160f83282e87b9521a7c1c10feac163a32f"
+    },
+    "fullActivationConcurrencyRollbackAcceptance": false,
+    "providerSessionVerified": false
+  }
+}

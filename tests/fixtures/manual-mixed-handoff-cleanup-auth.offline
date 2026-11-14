@@ -1,0 +1,1 @@
+export function createClient(){return {auth:{onAuthStateChange(callback){window.__authCallbacks.add(callback);return {data:{subscription:{unsubscribe(){window.__authCallbacks.delete(callback);}}}};}}};}

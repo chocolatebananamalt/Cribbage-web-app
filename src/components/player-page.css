@@ -62,3 +62,8 @@
 .player-scorecard-table .player-card-net-value{text-align:center;font-size:1.25rem;border-left:2px solid #8b9eb0;border-right:2px solid #8b9eb0}
 .player-card-hint{font-size:.875rem;color:#43576a}
 @media(prefers-reduced-motion:reduce){.player-page *{scroll-behavior:auto}}
+/* Keep verification state visible beside its game without widening the card. */
+.player-scorecard-table .player-card-opponent-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.player-scorecard-table .player-card-row-state { display:block; margin-top:4px; white-space:normal; overflow-wrap:anywhere; font-size:0.875rem; font-weight:700; }
+
+.player-card-verification-note { max-width:100%; overflow-wrap:anywhere; font-size:1rem; line-height:1.5; }

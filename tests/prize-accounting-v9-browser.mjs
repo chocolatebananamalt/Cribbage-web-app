@@ -86,7 +86,7 @@ try {
       assert.equal(workspace.qReview, null); assert.equal(workspace.facts.qIncomeMinor, 0);
       checks.push(`Side-only, Q=0 unpaid obligations render without horizontal overflow at ${width}px`);
     } else {
-      await page.getByLabel('Accounting review reason', { exact: true }).fill('TEST ONLY unpaid combined final');
+      await page.getByLabel("Accounting Review Reason", { exact: true }).fill('TEST ONLY unpaid combined final');
       await page.getByRole('checkbox', { name: /Finalize unpaid accounting using/ }).check();
       const button = page.getByRole('button', { name: 'Finalize unpaid accounting', exact: true });
       assert.equal(await button.isEnabled(), true);
@@ -115,10 +115,10 @@ try {
     await page.getByRole('heading', { name: 'Unpaid regular and Side Pool accounting' }).waitFor();
     if (screen === 'upUnfunded') {
       await page.getByRole('alert').filter({ hasText: 'rounding cover remains unfunded' }).waitFor();
-      await page.getByLabel('Contribution received (USD $)', { exact: true }).waitFor();
-      await page.getByLabel('Contribution evidence reference', { exact: true }).waitFor();
+      await page.getByLabel("Contribution Received (USD $)", { exact: true }).waitFor();
+      await page.getByLabel("Contribution Evidence Reference", { exact: true }).waitFor();
       await page.getByText('Maximum remaining cover: $4.50.', { exact: false }).waitFor();
-      await page.getByLabel('Accounting review reason', { exact: true }).fill('TEST ONLY upward draft remains unpaid pending cover');
+      await page.getByLabel("Accounting Review Reason", { exact: true }).fill('TEST ONLY upward draft remains unpaid pending cover');
       await page.getByRole('checkbox', { name: /Finalize unpaid accounting using/ }).check();
       assert.equal(await page.getByRole('button', { name: 'Finalize unpaid accounting', exact: true }).isDisabled(), true);
       checks.push('upward $4.50 unpaid draft remains readable and exposes its funding evidence form at 1440px');

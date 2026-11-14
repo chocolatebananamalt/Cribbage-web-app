@@ -56,7 +56,7 @@ test("retire and replace preserve history and reject event operations after Star
   assert.doesNotMatch(route, /\.from\(|\.insert\(|\.update\(/);
   assert.match(page, /Cancel \/ Retire/);
   assert.match(page, /Cancel \/ Replace/);
-  assert.match(page, /Required director reason/);
+  assert.match(page, /Required Director Reason/);
   assert.match(client, /getCurrentSubject/);
   assert.match(client, /getEventChangesWorkspaceAccess/);
   for (const required of [

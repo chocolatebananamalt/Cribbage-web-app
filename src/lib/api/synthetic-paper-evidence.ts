@@ -1,6 +1,7 @@
+import { integratedTestBackendRef } from '../integrated-test-target.ts';
 import { isUuid } from "./validation.ts";
 
-export const syntheticPaperProjectRef = "nnhcnvksxgxnpvdqjgpg";
+export const syntheticPaperProjectRef = integratedTestBackendRef();
 export const syntheticPaperNotice = "SYNTHETIC TEST SCORECARDS - no physical originals or human review are claimed.";
 export type SyntheticPaperArtifact = {
   artifactId: string; gameId: string; eventId: string; gameVersion: number;

@@ -48,7 +48,7 @@ test("the workspace has no separate official or cross-checker menu entry", () =>
   const setup = readFileSync("src/app/tournament/[tournamentId]/setup/setup-official-summaries.tsx", "utf8");
   assert.doesNotMatch(workspace, /href=\{`\/tournament\/\$\{tournamentId\}\/officials`\}/);
   assert.doesNotMatch(workspace, /Cross-checker assignments/);
-  assert.match(setup, /Tournament officials/);
+  assert.match(setup, /Tournament Officials/);
   assert.match(setup, /Add\/Remove/);
 });
 

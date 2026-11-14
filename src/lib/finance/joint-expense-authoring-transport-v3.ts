@@ -1,0 +1,31 @@
+import { integratedTestUiEnabled as integratedTestFeatureEnabled } from '../integrated-test-target.ts';
+import 'server-only';
+import {requireVerifiedIdentity} from '../api/verified-subject.ts';
+import {closeUuid as uuid,closeSame as same} from './modern-event-close-contract-v1.ts';
+import {readJointExpenseReviewV3,readJointExpenseAttemptV3,type JointExpenseScopeV3,type JointExpenseViewV3,type JointExpenseReplyV3} from './joint-expense-authoring-contract-v3.ts';
+export const jointExpenseAuthoringPageEnabledV3=()=>integratedTestFeatureEnabled();
+export const jointExpenseAuthoringRoutesEnabledV3=()=>integratedTestFeatureEnabled();
+export const jointExpenseAuthoringWritesVerifiedV3=()=>integratedTestFeatureEnabled();
+type Client={auth:{getClaims:()=>Promise<{data:{claims?:{sub?:unknown;session_id?:unknown}}|null;error:unknown}>;getUser:()=>Promise<{data:{user:{id:string}|null};error:unknown}>};rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};type Service=(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>;
+const obj=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v);
+const code=(v:unknown)=>typeof v==='string'&&/^[a-z0-9_]{1,100}$/.test(v)?v:'source_unavailable';
+export function projectJointExpenseAuthorViewV3(v:unknown,scope:JointExpenseScopeV3):JointExpenseViewV3|null{
+ if(!obj(v))return null;if(['held','retry_exact'].includes(String(v.status)))return{status:'held',scope,code:code(v.code),moneyMoved:false};
+ if(v.kind!=='joint-expense-split-author-source-v3'||v.status!=='source_available'||!Object.entries(scope).every(([k,x])=>v[k]===x)||v.receiptOwnershipChanged!==false||v.requiresFreshOwnershipReview!==true||v.moneyMoved!==false||v.consolationEventId===scope.eventId)return null;
+ const review=readJointExpenseReviewV3(Object.fromEntries(['sourceDigest','expectedVersion','priorRevisionId','consolationEventId','expenses'].map(k=>[k,v[k]])));return review?{status:'review',scope,review,moneyMoved:false}:null;
+}
+export function createJointExpenseAuthorTransportV3(normal:Client,service:Service,scope:JointExpenseScopeV3,flags:{read:()=>boolean;write:()=>boolean}){
+ const fixed=Object.freeze({...scope});let pinned:string|null=null;
+ const auth=async()=>{if(!flags.read()||!Object.values(fixed).every(uuid))throw Error('disabled');const i=await requireVerifiedIdentity(normal),u=await normal.auth.getUser();if(!i||i.subject!==fixed.actorId||u.error||u.data.user?.id!==fixed.actorId||pinned!==null&&pinned!==i.sessionId)throw Error('identity_changed');const r=await normal.rpc('get_tournament_role',{p_tournament_id:fixed.tournamentId});if(r.error||r.data!=='director')throw Error('director_required');pinned=i.sessionId;return i;};
+ const rpc=async(name:string,args:Record<string,unknown>={})=>{const before=await auth(),r=await service(name,{actor:fixed.actorId,sid:before.sessionId,tid:fixed.tournamentId,main_id:fixed.eventId,...args});await auth();if(r.error||!flags.read())throw Error('outcome_unknown');return r.data;};
+ const read=async()=>{const v=projectJointExpenseAuthorViewV3(await rpc('get_joint_expense_split_source_provider_v3'),fixed);if(!v)throw Error('invalid_source');return v;};
+ const send=async(value:unknown,recoverOnly=false,resolveOnly=false):Promise<JointExpenseReplyV3>=>{const a=readJointExpenseAttemptV3(value,fixed);if(!a)throw Error('invalid_attempt');
+  const parse=(r:unknown):JointExpenseReplyV3|null=>{if(!obj(r))throw Error('outcome_unknown');if(r.status==='unknown'&&r.code==='operation_not_found')return null;if(r.status==='rejected'&&r.terminalConfirmed===true){if(r.kind!=='joint-expense-split-cancelled-v3'||r.code!=='review_cancelled_uncommitted'||!Object.entries(fixed).every(([k,v])=>r[k]===v)||r.consolationEventId!==a.review.consolationEventId||r.operationId!==a.operationId||!same(r.request,a.request)||r.moneyMoved!==false||r.currentSourceVerified!==false)throw Error('unbound_cancellation');return{status:'rejected',operationId:a.operationId,code:r.code,revisionId:null,historicalReceipt:false,currentSourceVerified:false,moneyMoved:false,terminalConfirmed:true};}if(['rejected','retry_exact'].includes(String(r.status)))return{status:r.status as 'rejected'|'retry_exact',operationId:a.operationId,code:code(r.code),revisionId:null,historicalReceipt:false,currentSourceVerified:false,moneyMoved:false};
+   if(r.kind!=='joint-expense-split-receipt-v3'||r.status!=='joint_expense_split_reviewed_v3'||!Object.entries(fixed).every(([k,v])=>r[k]===v)||r.consolationEventId!==a.review.consolationEventId||r.operationId!==a.operationId||!same(r.request,a.request)||r.sourceDigest!==a.review.sourceDigest||r.version!==a.review.expectedVersion+1||!uuid(r.revisionId)||r.historicalReceipt!==true||r.currentSourceVerified!==false||r.moneyMoved!==false||r.receiptOwnershipChanged!==false)throw Error('unbound_receipt');return{status:'accepted',operationId:a.operationId,code:'expense_partitions_reviewed',revisionId:r.revisionId,historicalReceipt:true,currentSourceVerified:false,moneyMoved:false};};
+  const prior=parse(await rpc('get_joint_expense_split_operation_provider_v3',{op:a.operationId,request:a.request}));if(prior)return prior;if(recoverOnly)return{status:'unknown',operationId:a.operationId,code:'operation_not_found',revisionId:null,historicalReceipt:false,currentSourceVerified:false,moneyMoved:false};
+  if(!flags.write())return{status:'rejected',operationId:a.operationId,code:'database_verification_pending',revisionId:null,historicalReceipt:false,currentSourceVerified:false,moneyMoved:false};
+  if(resolveOnly){const out=parse(await rpc('resolve_joint_expense_split_provider_v3',{op:a.operationId,request:a.request}));if(!flags.write()||!out)throw Error('outcome_unknown');return out;}
+  const current=await read();if(current.status!=='review'||!same(current.review,a.review))return{status:'rejected',operationId:a.operationId,code:'review_source_changed',revisionId:null,historicalReceipt:false,currentSourceVerified:false,moneyMoved:false};
+  const out=parse(await rpc('record_joint_expense_split_provider_v3',{op:a.operationId,request:a.request}));if(!flags.write()||!out)throw Error('outcome_unknown');return out;
+ };return{read,send};
+}

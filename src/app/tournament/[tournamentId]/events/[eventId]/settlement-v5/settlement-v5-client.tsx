@@ -176,19 +176,19 @@ export default function SettlementV5Client({ actorId, tournamentId, eventId, wor
       <ul>{workspace.expenseEvidence.map(evidence => <li key={evidence.expenseEventId}>{evidence.description}: {formatUsd(evidence.amountMinor)} — {evidence.expenseEventId}</li>)}</ul>
     </section>
     <fieldset disabled={editingLocked}><legend>Draft financial claims</legend>
-      <label>Playoff evidence<select value={effectiveRequest.source.resultId} onChange={event => { const selected = workspace.sources.find(source => source.resultId === event.target.value); if (selected) patch({ source: { kind: selected.kind, resultId: selected.resultId, qualificationResultVersionId: selected.qualificationResultVersionId } }); }}><option value="">Choose recorded evidence</option>{workspace.sources.map(source => <option key={source.resultId} value={source.resultId}>{source.label}</option>)}</select></label>
+      <label>Playoff Evidence<select value={effectiveRequest.source.resultId} onChange={event => { const selected = workspace.sources.find(source => source.resultId === event.target.value); if (selected) patch({ source: { kind: selected.kind, resultId: selected.resultId, qualificationResultVersionId: selected.qualificationResultVersionId } }); }}><option value="">Choose recorded evidence</option>{workspace.sources.map(source => <option key={source.resultId} value={source.resultId}>{source.label}</option>)}</select></label>
       {(["eventIncomeMinor", "eventExpenseMinor", "retainedBalanceMinor"] as const).map(field => {
         const label = `${field === "eventIncomeMinor" ? "Event income allocation" : field === "eventExpenseMinor" ? "Event expense allocation" : "Retained balance"} (USD $)`;
         return <label key={field}>{label}<UsdAmountInput label={label} value={effectiveRequest[field]} onChange={minor => patch({ [field]: minor })} /></label>;
       })}
-      <label>Existing sanctioning expense evidence<select value={effectiveRequest.sanctioningExpenseEventId ?? ""} onChange={event => patch({ sanctioningExpenseEventId: event.target.value || null })}><option value="">No expense bound</option>{workspace.expenseEvidence.map(evidence => <option key={evidence.expenseEventId} value={evidence.expenseEventId}>{evidence.description} — {formatUsd(evidence.amountMinor)}</option>)}</select></label>
-      <label>Reviewed source reference<input maxLength={500} value={effectiveRequest.officialSourceReference} onChange={event => patch({ officialSourceReference: event.target.value })} /></label>
+      <label>Existing Sanctioning Expense Evidence<select value={effectiveRequest.sanctioningExpenseEventId ?? ""} onChange={event => patch({ sanctioningExpenseEventId: event.target.value || null })}><option value="">No expense bound</option>{workspace.expenseEvidence.map(evidence => <option key={evidence.expenseEventId} value={evidence.expenseEventId}>{evidence.description} — {formatUsd(evidence.amountMinor)}</option>)}</select></label>
+      <label>Reviewed Source Reference<input maxLength={500} value={effectiveRequest.officialSourceReference} onChange={event => patch({ officialSourceReference: event.target.value })} /></label>
       <p>Prize order is optional financial claim data, separate from the ACC elimination cohort. No third/fourth order is inferred.</p>
       {effectiveRequest.prizeClaims.map((claim, index) => <div className="correction-item" key={index}>
-        <label>Qualifier participant ID<input value={claim.participantId} onChange={event => updateClaim(index, "participantId", event.target.value)} /></label>
-        <label>Claim amount (USD $)<UsdAmountInput label="Claim amount (USD $)" value={claim.amountMinor} onChange={minor => updateClaim(index, "amountMinor", minor)} /></label>
-        <label>Optional prize order<input type="number" min="1" max="256" value={claim.prizeOrder ?? ""} onChange={event => updateClaim(index, "prizeOrder", event.target.value ? Number(event.target.value) : null)} /></label>
-        <label>Reviewed claim note<input maxLength={500} value={claim.note} onChange={event => updateClaim(index, "note", event.target.value)} /></label>
+        <label>Qualifier Participant ID<input value={claim.participantId} onChange={event => updateClaim(index, "participantId", event.target.value)} /></label>
+        <label>Claim Amount (USD $)<UsdAmountInput label="Claim Amount (USD $)" value={claim.amountMinor} onChange={minor => updateClaim(index, "amountMinor", minor)} /></label>
+        <label>Optional Prize Order<input type="number" min="1" max="256" value={claim.prizeOrder ?? ""} onChange={event => updateClaim(index, "prizeOrder", event.target.value ? Number(event.target.value) : null)} /></label>
+        <label>Reviewed Claim Note<input maxLength={500} value={claim.note} onChange={event => updateClaim(index, "note", event.target.value)} /></label>
         <button type="button" onClick={() => patch({ prizeClaims: effectiveRequest.prizeClaims.filter((_, position) => position !== index) })}>Remove claim</button>
       </div>)}
       <button type="button" disabled={effectiveRequest.prizeClaims.length >= 256} onClick={() => patch({ prizeClaims: [...effectiveRequest.prizeClaims, { participantId: "", amountMinor: 0, prizeOrder: null, note: "" }] })}>Add reviewed prize claim</button>

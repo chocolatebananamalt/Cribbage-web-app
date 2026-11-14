@@ -97,7 +97,7 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
         {handoffWarning ? <p className="error-text" role="alert">Sign-out completed, but this browser could not confirm that local tournament data was cleared. Close this browser before another person uses this device.</p> : null}
         {usePassword ? (
           <form onSubmit={submitPassword}>
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Email Address</label>
             <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
             <label htmlFor="password">Password</label>
             <input id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} />
@@ -105,7 +105,7 @@ export function SignInForm({ handoffWarning }: { handoffWarning: boolean }) {
           </form>
         ) : (
           <form onSubmit={submit}>
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Email Address</label>
             <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
             <button className="primary-action" type="submit" disabled={busy || cooldownSeconds !== null}>{busy ? "Requesting sign-in link." : "Email me a sign-in link"}</button>
           </form>

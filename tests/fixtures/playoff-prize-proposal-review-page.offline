@@ -1,0 +1,19 @@
+import {createRoot} from 'react-dom/client';import {useState} from 'react';
+import {PlayoffPrizeProposalReviewV2} from '../../src/components/playoff-prize-proposal-review-v2';
+import {newPlayoffPrizePlanDraftV2} from '../../src/lib/playoffs/playoff-prize-plan-v2';
+import {calculatePlayoffPrizeProposalsV2} from '../../src/lib/results/playoff-prize-proposals-v2';
+const id=n=>`c9150000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+// about:blank has no secure-context randomUUID. Fictional deterministic UUID
+// generation is the only browser mock; production keeps its fail-closed API.
+let sequence=100;Object.defineProperty(crypto,'randomUUID',{configurable:true,value:()=>id(sequence++)});
+const initial=(kind='1800')=>({source:{tournamentId:id(1),eventId:id(2),eventClientRowId:id(3),eventKind:'main',setupRevisionId:id(4),settingsSnapshotId:id(5),settingsDigest:'a'.repeat(64),prizeSnapshotId:id(6),prizeDigest:'b'.repeat(64),allocationRevisionId:id(7),qualificationResultVersionId:id(8),ledgerDigest:'c'.repeat(64),resultsDigest:'d'.repeat(64)},input:{plan:{...newPlayoffPrizePlanDraftV2(),recipients:kind==='1800'?'top-8':'all',method:kind==='equal'?'equal':kind==='multiplier'?'winner-multiplier':'graduated',firstRoundComparison:'more'},field:{status:'known',qualifierCount:kind==='equal'||kind==='multiplier'?4:10,firstRoundLoserPlaces:kind==='280'?[9,10]:null,entryFeeMinor:kind==='280'?1000:null},fundMinor:kind==='1800'?180000:kind==='equal'?40000:kind==='multiplier'?50000:28000},overrideHistory:[]});
+function App(){const [retained,setRetained]=useState(()=>initial()),[current,setCurrent]=useState(()=>{const p=initial();return{source:p.source,input:p.input};}),[generation,setGeneration]=useState(0),[hold,setHold]=useState(false),[calls,setCalls]=useState(0);
+ const reset=(kind='1800')=>{const p=initial(kind);setRetained(p);setCurrent({source:p.source,input:p.input});setGeneration(x=>x+1);setHold(false);setCalls(0);};
+ (window as unknown as Record<string,unknown>).__proposalState=()=>({retained,current,calls,view:calculatePlayoffPrizeProposalsV2(retained,current)});
+ return <main style={{maxWidth:'1100px',margin:'0 auto',padding:'12px',minWidth:0}}><h1>Fictional Local Prize Review</h1><p>Fictional source examples; no provider or saved records.</p><nav aria-label="Fixture Controls" style={{display:'flex',flexWrap:'wrap',gap:'.5rem'}}>
+  <button onClick={()=>reset()}>Reset $1800 Example</button><button onClick={()=>reset('280')}>Reset $280 Example</button><button onClick={()=>reset('equal')}>Reset Equal Example</button><button onClick={()=>reset('multiplier')}>Reset Multiplier Example</button>
+  <button onClick={()=>{const p=structuredClone(retained);p.source.ledgerDigest='e'.repeat(64);setRetained(p);setCurrent({source:p.source,input:p.input});}}>Change Source While Editing</button><button onClick={()=>{const p=structuredClone(retained);p.input.plan.recipients='top-4';setRetained(p);setCurrent({source:p.source,input:p.input});}}>Remove Group By Source Change</button><button onClick={()=>setCurrent(null)}>Current Source Unknown</button><button onClick={()=>setHold(true)}>Hold Local Callback</button><button onClick={()=>setRetained({...retained,overrideHistory:null})}>Malformed Controlled History</button><button onClick={()=>{const p={...retained};Object.defineProperty(p,'overrideHistory',{enumerable:true,get(){throw Error('must not invoke getter');}});setRetained(p);}}>Accessor Controlled History</button></nav>
+ <PlayoffPrizeProposalReviewV2 key={generation} retained={retained} expectedCurrent={current} onChange={(next,previous)=>{setCalls(x=>x+1);if(!hold)setRetained(latest=>JSON.stringify(latest)===JSON.stringify(previous)?next:latest);}}/>
+ </main>;
+}
+createRoot(document.getElementById('root')!).render(<App/>);

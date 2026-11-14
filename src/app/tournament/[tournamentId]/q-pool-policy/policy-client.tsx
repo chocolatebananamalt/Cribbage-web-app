@@ -80,7 +80,7 @@ export default function QPolicyClient({ actorId, tournamentId, source }: { actor
       {source && <fieldset disabled={!ready || busy || blocked || !!pending}><label>Named Q Pool<select value={poolId} onChange={(e) => { setPoolId(e.target.value); setDisclosed(false); }}>{pools.map((p) => <option key={p.poolVersionId} value={p.poolVersionId}>{p.name} ({formatUsd(p.feeMinor)})</option>)}</select></label>
         {selected ? <p>Frozen policy {selected.id} · version 1 · {selected.publishedAt}. Disclosure: {selected.disclosureReference}</p> : <>
           {!source.canPublish && <p role="alert">Publishing is blocked: scope, play state, earlier collection/consent or director authority must be reviewed. Existing history is preserved.</p>}
-          <label>Disclosure reference<input maxLength={500} value={reference} onChange={(e) => setReference(e.target.value)}/></label>
+          <label>Disclosure Reference<input maxLength={500} value={reference} onChange={(e) => setReference(e.target.value)}/></label>
           <label><input type="checkbox" checked={disclosed} onChange={(e) => setDisclosed(e.target.checked)}/>I disclosed this exact named-pool policy before any payment or elected membership, and approve freezing it.</label>
           <button type="button" disabled={!source.canPublish || !disclosed || !isQPolicyRequest(request)} onClick={() => void submit({ kind: "q-policy", operationId: crypto.randomUUID(), request }, false)}>Publish and freeze disclosed policy</button>
         </>}

@@ -1,0 +1,159 @@
+{
+  "status": "LOCAL_CLOSED_CANDIDATE_NOT_AUTHORIZED",
+  "baseCommit": "3c3d6533f4ad384a0ba84064b6849e389e91b77e",
+  "baseTree": "69329356a7e4dff2632a3a3904a6f41943e5d091",
+  "repository": "chocolatebananamalt/Cribbage-web-app",
+  "branch": "codex/director-setup-journey",
+  "applicationFiles": 10,
+  "newFunctions": 3,
+  "newTables": 0,
+  "existingFunctionsReplaced": 0,
+  "applicationGrants": 0,
+  "cohortWrites": 0,
+  "disabled": true,
+  "migration": "database/release-packages/native-mixed-qualifying-review/supabase/migrations/20261108111139_native_mixed_qualifying_review_closed_install.sql",
+  "migrationSha256": "1952a5c212e82eee126cdc7c9529b89833acc45a6bf1af2ed408f45cf4786c91",
+  "sources": [
+    {
+      "path": "database/proposals/native-mixed-qualification-review-v1.sql",
+      "sha256": "ee216fee4313839e99b0176aa5be78bdd3eb163d6540805f3a43d4a0939b7459"
+    },
+    {
+      "path": "database/proposals/native-mixed-qualification-review-provider-v1.sql",
+      "sha256": "b1896f8050060c22841fd24394185726abadf3c62879d3832abac8ffb38e0961"
+    }
+  ],
+  "payloadFiles": [
+    {
+      "path": "database/proposals/native-mixed-qualification-review-provider-v1.sql",
+      "bytes": 3478,
+      "sha256": "b1896f8050060c22841fd24394185726abadf3c62879d3832abac8ffb38e0961"
+    },
+    {
+      "path": "database/proposals/native-mixed-qualification-review-v1.sql",
+      "bytes": 7284,
+      "sha256": "ee216fee4313839e99b0176aa5be78bdd3eb163d6540805f3a43d4a0939b7459"
+    },
+    {
+      "path": "database/release-packages/native-mixed-qualifying-review/README.md",
+      "bytes": 6894,
+      "sha256": "f9f4c6e204b3c84c7fcc4c4f09b92ac2f0bd965c081047f1a676d3453cd14f85"
+    },
+    {
+      "path": "database/release-packages/native-mixed-qualifying-review/preflight-readonly.sql",
+      "bytes": 6584,
+      "sha256": "f926ad55e2d457f72132db6a66129d1e3b849bc2fcc0e9bd3773d3582e816dd7"
+    },
+    {
+      "path": "database/release-packages/native-mixed-qualifying-review/supabase/migrations/20261108111139_native_mixed_qualifying_review_closed_install.sql",
+      "bytes": 13204,
+      "sha256": "1952a5c212e82eee126cdc7c9529b89833acc45a6bf1af2ed408f45cf4786c91"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/rehearsal/[eventId]/review/route.ts",
+      "bytes": 558,
+      "sha256": "ea88e01518d00b77b821ccea972659e1b5994a15a933e733b8c88c303cba93da"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/rehearsal-review/[eventId]/page.tsx",
+      "bytes": 676,
+      "sha256": "87b8667cd66bf33b4e602b03005e6138b46b0351ac1cde0866d81058bcfd3d58"
+    },
+    {
+      "path": "src/components/native-mixed-review-provider-v1.tsx",
+      "bytes": 3434,
+      "sha256": "29c484aaeb22f40d799888840ccfd2c4b6aa8df2cea53ac2c2ac556452e8190d"
+    },
+    {
+      "path": "src/components/native-mixed-review-section-v1.css",
+      "bytes": 856,
+      "sha256": "e70d555819d9d327629074d60c6158ae266381c6ddc9d8eb2aa48d0e13a5b75b"
+    },
+    {
+      "path": "src/components/native-mixed-review-section-v1.tsx",
+      "bytes": 4927,
+      "sha256": "c42d18c9c7098695bf1c4bedbbecf0b8974efe57153940bcf6569c2c547106c6"
+    },
+    {
+      "path": "src/lib/api/native-mixed-review-handlers-v1.ts",
+      "bytes": 3563,
+      "sha256": "77873048307eede7dbb26327a4a3a5069010b8e2372067c033e22046f99d84de"
+    },
+    {
+      "path": "src/lib/api/native-mixed-review-http-v1.ts",
+      "bytes": 2485,
+      "sha256": "9fefa456656453994964b064194926c263caf016d538f3503be7b9664c812162"
+    },
+    {
+      "path": "src/lib/finance/format-finance-money-v1.ts",
+      "bytes": 474,
+      "sha256": "aebae6feb0bc12bc93d00f7e295d03bc87546d7001dee8ccc068f0f006c11f29"
+    },
+    {
+      "path": "src/lib/finance/native-mixed-qualification-review-v1.ts",
+      "bytes": 6491,
+      "sha256": "d5ece2b7cab074446e905f2d9e2187b16bd0e95457a362b442f0e371243a041b"
+    },
+    {
+      "path": "src/lib/finance/native-mixed-review-read-v1.ts",
+      "bytes": 3674,
+      "sha256": "44bb7a4272054df159766756d03b31ebdabc48396748f153621df0f483afee3b"
+    },
+    {
+      "path": "tests/fixtures/native-mixed-practice-cards-v1.json",
+      "bytes": 5866,
+      "sha256": "07d6cf119a0cb393d858bbfb65b6cf87a1d1d3422e8c52373ffaf6626ba968bf"
+    },
+    {
+      "path": "tests/fixtures/native-mixed-review-completed-v1.json",
+      "bytes": 31145,
+      "sha256": "153dde025b5e52e4fd90066322e81e98ed6f63f403709f95f98b869b97021590"
+    },
+    {
+      "path": "tests/helpers/native-mixed-review-example.mjs",
+      "bytes": 732,
+      "sha256": "39860fb63ab503fe8da418bfabc4d5bc2c62787c31c2dd731dd3ec3080504de4"
+    },
+    {
+      "path": "tests/native-mixed-qualification-review-provider-v1.test.mjs",
+      "bytes": 4813,
+      "sha256": "aedd71bc198e61a958d28bb3ff5edc626af50164e1a2c2d2f92488b0558fe4c5"
+    },
+    {
+      "path": "tests/native-mixed-qualification-review-v1.test.mjs",
+      "bytes": 4063,
+      "sha256": "20bed27df6b2019475b9bbb6bb6cdaf0c718b9abba03cc8a815017cbc065abec"
+    },
+    {
+      "path": "tests/native-mixed-review-intake-v1.test.mjs",
+      "bytes": 7992,
+      "sha256": "42cd7c3ff33f83fbf675bc475925bfc46d79d9bf1d00bdafc60c34226a09bbf6"
+    },
+    {
+      "path": "tests/native-mixed-review-release-contract.test.mjs",
+      "bytes": 3786,
+      "sha256": "71eef3de4d423decc3dcd6d8ecf1faf74654e2fa22c9244c0fd77a212cfd3fb3"
+    },
+    {
+      "path": "tests/rpc-argument-names-match-migrations.test.mjs",
+      "bytes": 9863,
+      "sha256": "0b43d6e5ba59c92aa0c22c7f47fadfa71f508162cda1da0106843ec1cefc3feb"
+    },
+    {
+      "path": "tests/tournament-route-reachability.test.mjs",
+      "bytes": 4450,
+      "sha256": "fc2616b6a0720d0ce69134ef236d383cec8b1bf1573aa152831f5f2cd4a79036"
+    }
+  ],
+  "manifestSelfExcludedFromPayloadHash": true,
+  "publicationFileCount": 25,
+  "fixtureClassification": "Static fictional test output and synthetic unit cards only; no live player records, contacts, backups or credentials",
+  "notIncluded": [
+    "Unfinished draw/Start/scoring/Finance source",
+    "Preparation host integration changes",
+    "Access activation",
+    "Hosted fixture enrollment",
+    "Real funds",
+    "New dependency or lockfile changes"
+  ]
+}

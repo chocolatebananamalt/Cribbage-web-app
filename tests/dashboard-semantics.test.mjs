@@ -99,7 +99,7 @@ test("prototype navigation includes review and all requested operational screens
   assert.match(source, /title="Review Current Game Result"/);
   assert.match(source, /title="Seating"/);
 assert.match(source, /Seating Assignments and Table Plan/);
-  assert.match(source, /Search player name/);
+  assert.match(source, /Search Player Name/);
   assert.match(source, /Assigned Table - Seat/);
   assert.match(source, /<span>\{table\}-\{seat\}<\/span>/);
   assert.match(source, /seating-print-head/);
@@ -180,7 +180,7 @@ test("October pilot event summary distinguishes configured events from deferred 
 test("player check-in search is accessible and cannot change the full attendance or seating inputs", () => {
   for (const contents of [source, protectedSeating]) {
     assert.match(contents, /type="search"/);
-    assert.match(contents, /Search player name/);
+    assert.match(contents, /Search Player Name/);
     assert.match(contents, /Showing \{visibleCheckIn\.length\} of/);
     assert.match(contents, /aria-live="polite"/);
     assert.match(contents, /No player matches that name\./);
@@ -194,7 +194,7 @@ test("player check-in search is accessible and cannot change the full attendance
 test("new-tab links cannot retain control of an application tab", () => {
   const links = collectTsxSources("src").flatMap((contents) => [...contents.matchAll(/<a\b[^>]*\btarget="_blank"[^>]*>/g)]);
   assert.ok(links.length > 0, "the app intentionally opens cached and official Rulebook references in a new tab");
-  assert.ok(links.every((match) => /\brel="noreferrer"/.test(match[0])), "every new-tab link must sever opener and referrer access");
+  assert.ok(links.every((match) => /\brel="[^"]*\bnoreferrer\b[^"]*"/.test(match[0])), "every new-tab link must sever opener and referrer access");
 });
 
 test("interactive controls meet the baseline touch-target and keyboard-focus contract", () => {

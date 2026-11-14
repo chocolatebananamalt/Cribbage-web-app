@@ -14,7 +14,7 @@ test("director roster screen includes an actionable registration review queue", 
   assert.match(client, /Different person — approve for roster/);
   assert.match(client, /Same person — reject duplicate/);
   assert.match(client, /Possible duplicate—director review required/);
-  assert.match(client, /Reason \(optional\)/);
+  assert.match(client, /Reason \(Optional\)/);
   assert.match(client, /confirmed this is a different person/);
   assert.match(client, /registration-review-operation:/);
   assert.match(client, /Retry the same protected decision/);

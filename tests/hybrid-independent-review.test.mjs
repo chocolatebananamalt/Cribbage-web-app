@@ -1,0 +1,2 @@
+import test from'node:test';import assert from'node:assert/strict';import{spawnSync}from'node:child_process';
+test('hybrid paper and digital evidence start independently blank with unambiguous named choices',()=>{const r=spawnSync(process.execPath,['--experimental-strip-types','tests/helpers/render-hybrid-independent-review.mjs'],{encoding:'utf8'});assert.equal(r.status,0,r.stderr||r.stdout);assert.match(r.stdout,/no copied digital margin/);});

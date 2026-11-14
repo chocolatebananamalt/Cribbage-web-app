@@ -1,3 +1,4 @@
+import{stationaryRegistrationEnabledV1}from'../../lib/api/stationary-registration-v1';
 import Script from "next/script";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
@@ -12,5 +13,5 @@ export default async function RegistrationPage() {
   // enabling the release switch in production changes nothing.
   await connection();
   if (!publicRegistrationEnabled()) notFound();
-  return <main className="auth-shell"><Script src="/registration-bootstrap.js" strategy="beforeInteractive" /><RegistrationForm /></main>;
+  return <main className="auth-shell"><Script src="/registration-bootstrap.js" strategy="beforeInteractive" /><RegistrationForm stationaryRequestsEnabled={stationaryRegistrationEnabledV1()} /></main>;
 }

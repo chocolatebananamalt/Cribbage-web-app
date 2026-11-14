@@ -1,0 +1,9 @@
+# Local regular payout clarification and series retention QA
+
+Actual controlled components in newheadless contexts, fictionalmemory only. Main/Consolation freshdropdown no1-in-N; legacyone-in=7 rendersdisabled, retained throughchoosingGraduated, no silent deletion. Separatefinal toggle preserves4/7, Top-N/factor preserve3/2.25, FeeIncludes/comments unchanged. NewConsolation defaults2/3. Both100/200%text at320/390/768/1440. No write requests, storage, database or usertabs. Browserresult: test-results/event-playoff-parameters-browser/result.json.
+
+Seriesbrowser provesvalid2/3 andinvalid2/5 Customtext survivepresetroundtrip, presetresolvesvalid, invalidCustomdisabled, maxLength256, ACC257+warning unchanged. Fourwidths/twotextscales, no API/storage. Result: test-results/playoff-series-editor-browser/result.json. Screenshots internalQA only, no Library upload.
+
+Fullverify andhandoff logs: test-results/regular-payout-clarification-verify.log, regular-payout-clarification-handoff.log. Independent source review GO. Fullverify2130applicationtests, audit/build/providers, workspace8/handoff6 passed;119 existinglintwarnings,zeroerrors. No SQL/fixture/hosted/publication. This is not durableprovideracceptance, historicalconversion, fundedConsolation or18personmixedreadiness. Earlier forecast archive preserved, source changes intentional only policywarnings and controllededitor.
+
+Mocked actualSetupClient V3 harness passed32scenarios overfourwidths, includinglostresponse/accessloss/lateaccount/mode/linkmismatch/legacy-to-V3/currentinitialread. Legacyratio is injected into source andfactor editedtoexerciseexisting saveguard;posts0. Freshselector lacksone-in. MockedAPI calls are not realprovider/databasepersistence. Prior harness issues were testexpectations forremovedoption, no-op save withcleanstate, native option disabledproperty andduplicate statuslocator. Guardsunchanged. Owned3359/3361/3386portscheckedaftercleanup.

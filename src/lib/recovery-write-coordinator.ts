@@ -277,6 +277,41 @@ export function setAppRecoveryItem(storage: Storage, key: string, value: string)
   storage.setItem(key, value);
 }
 
+export function compareAndReplaceAppRecoveryItem(
+  storage: Storage,
+  key: string,
+  expectedValue: string,
+  replacementValue: string,
+) {
+  assertRecoveryWriteAllowed();
+  if (!isAppRecoveryStorageKey(key)) throw new Error("recovery_storage_key_unsupported");
+  if (storage.getItem(key) !== expectedValue) return false;
+  claimRecoveryStorageOwner(actorId);
+  storage.setItem(key, replacementValue);
+  return storage.getItem(key) === replacementValue;
+}
+
+/** Synchronous session-storage CAS, coordinated with account switching. Secure
+ * an immutable archive before clearing pending; never replace unknown bytes. */
+export function transitionAppRecoveryItem(storage: Storage, key: string, expected: string | null, next: string | null, archive?: { key: string; raw: string }) {
+  assertRecoveryWriteAllowed();
+  if (!isAppRecoveryStorageKey(key) || archive && !isAppRecoveryStorageKey(archive.key)) throw new Error('recovery_storage_key_unsupported');
+  if (storage.getItem(key) !== expected) return false;
+  if (archive) {
+    if (archive.key === key) throw new Error('recovery_archive_key_conflict');
+    const prior = storage.getItem(archive.key);
+    if (prior !== null && prior !== archive.raw) return false;
+    setAppRecoveryItem(storage, archive.key, archive.raw);
+    if (storage.getItem(archive.key) !== archive.raw) return false;
+  }
+  assertRecoveryWriteAllowed();
+  if (storage.getItem(key) !== expected) return false;
+  if (next === null) storage.removeItem(key);
+  else if (expected === null) setAppRecoveryItem(storage, key, next);
+  else return compareAndReplaceAppRecoveryItem(storage, key, expected, next);
+  return storage.getItem(key) === next;
+}
+
 export function setPublicCheckInRecoveryItem(storage: Storage, key: string, value: string) {
   if (key !== "acc:event-check-in:completion") throw new Error("recovery_storage_key_unsupported");
   if (actorId) {

@@ -1,3 +1,5 @@
+> Superseded status/domain notes: use [current production readiness](../quality/2026-10-31-production-readiness-current.md) and the exact candidate1c3cd8c. Older formula-domain, Side exclusion and migration claims below describe their dated checkpoint, not current support or rollout instructions.
+
 > Payout-policy hold, 2026-10-30 06:24 UTC: the owner requires whole-dollar prizes, preferably $5, and the shared balanced $5 formula for graduated Q/Side Pools without per-event remainder-placement questions. Historical cent-based regular/equal calculations below prove bookkeeping only, not current product policy. Graduated rank-down remains correct; the separate equal-pool refund edge case is not a graduated refund. Preserve historical records. See docs/reference/payout-policy-clarification-2026-10-30.md for the automatic-policy proposal and unresolved real-funding residue decision. No app/hosted change is authorized here.
 # Release and restore checkpoint — 2026-10-30
 

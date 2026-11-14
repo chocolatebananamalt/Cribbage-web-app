@@ -4,9 +4,9 @@ import { isOptionalAccNumber } from "../acc-number.ts";
 
 const methods = ["cash", "check"];
 const keys = ["credential", "firstName", "lastName", "email", "accNumber", "intendedPaymentMethod", "scorecardType", "operationId"];
-const own = (value: object) => Object.keys(value).length === keys.length && keys.every((key) => key in value);
+const own = (value: object) => (Object.keys(value).length === keys.length || Object.keys(value).length === keys.length+1 && Object.hasOwn(value,"stationarySeatRequested") && typeof (value as Record<string,unknown>).stationarySeatRequested === "boolean") && keys.every((key) => key in value);
 
-export type PublicRegistrationClaim = { credential: string; firstName: string; lastName: string; email: string; accNumber: string; intendedPaymentMethod: "cash" | "check"; scorecardType: "digital" | "paper"; operationId: string };
+export type PublicRegistrationClaim = { stationarySeatRequested?:boolean; credential: string; firstName: string; lastName: string; email: string; accNumber: string; intendedPaymentMethod: "cash" | "check"; scorecardType: "digital" | "paper"; operationId: string };
 
 export function publicRegistrationEnabled(env: Record<string, string | undefined> = process.env) {
   return env.ACC_PUBLIC_REGISTRATION_V2 === "enabled";

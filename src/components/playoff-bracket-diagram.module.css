@@ -1,0 +1,24 @@
+.diagram { margin-top: 28px; min-width: 0; }
+.scroller { overflow: auto; max-width: 100%; border: 2px solid #526a80; border-radius: 10px; background: #f3f6f9; padding: 20px; }
+.headings, .grid { display: grid; grid-template-columns: repeat(var(--columns), 19rem); column-gap: 4rem; width: max-content; }
+.headings { align-items: start; }
+.headings h3 { margin: 0 0 16px; }
+.grid { grid-template-rows: repeat(var(--rows), minmax(5.5rem, 1fr)); padding-right: 4px; }
+.cell { display: flex; align-items: center; position: relative; padding: 12px 0; min-width: 0; }
+.card { background: #fff; border: 2px solid #738da4; border-radius: 8px; padding: 12px; width: 100%; position: relative; z-index: 1; overflow-wrap: anywhere; }
+.card h4 { font-size: 1rem; margin: 0 0 8px; }
+.card ol { list-style: none; margin: 0; padding: 0; }
+.card li { padding: 9px 0; }
+.card li + li { border-top: 1px solid #a8bacb; }
+.card strong, .card span, .card small { display: block; }
+.card strong { font-size: 1.05rem; }
+.card span { font-size: 1rem; }
+.card small, .card p { font-size: .9rem; }
+.card p { margin: 6px 0 0; }
+.advanced { background: #e8f4eb; }
+.topFeed::after, .bottomFeed::after { content: ""; position: absolute; left: 100%; width: 2rem; height: 50%; border-right: 2px solid #526a80; }
+.topFeed::after { top: 50%; border-top: 2px solid #526a80; }
+.bottomFeed::after { bottom: 50%; border-bottom: 2px solid #526a80; }
+.receives::before { content: ""; position: absolute; right: 100%; top: 50%; width: 2rem; border-top: 2px solid #526a80; }
+.champion { padding: 18px; border: 2px solid #315b7b; background: #edf4fa; border-radius: 8px; font-weight: 700; }
+@media print { .scroller { overflow: visible; } .headings, .grid { grid-template-columns: repeat(var(--columns), 19rem); } }

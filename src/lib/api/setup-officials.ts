@@ -36,7 +36,7 @@ export function isSetupOfficialsWorkspace(value: unknown): value is SetupOfficia
 // message re-typed correct details over and over.
 export function officialRejectionMessage(code: unknown, role: string) {
   const who = role === "co_director" ? "co-director" : role === "cross_checker" ? "cross-checker" : "judge";
-  if (code === "saved_setup_end_required") return `Save the tournament setup first. Open Set Up Tournament, fill in the state or territory and the end date, and press Save All Events Draft. The ${who} invitation expires with the tournament, so it needs a saved end date before it can be sent.`;
+  if (code === "saved_setup_end_required") return `Save the tournament setup first. Open Set Up Tournament, choose the State or Territory, enter the Start Date and Number of Days, and press Save All Events Draft. The ${who} invitation expires with the tournament, so its calculated end date must be saved first.`;
   if (code === "not_primary_director") return `Only the tournament's primary director can add a ${who}.`;
   if (code === "official_capacity_reached") return `This tournament already has the maximum of 12 ${who} positions filled or pending.`;
   if (code === "duplicate_official") return `That email address is already assigned as a ${who} for this tournament.`;

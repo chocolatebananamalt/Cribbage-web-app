@@ -86,7 +86,7 @@ function ResolutionForm({ actorId, dispute }: {
 
   if (!dispute.canResolve) return <p className="auth-note">You are a participant in this game, so an independent official must resolve this dispute.</p>;
   return <form onSubmit={submit}>
-    <label htmlFor={`resolution-${dispute.disputeId}`}>Resolution note</label>
+    <label htmlFor={`resolution-${dispute.disputeId}`}>Resolution Note</label>
     <textarea id={`resolution-${dispute.disputeId}`} value={note} maxLength={500} disabled={busy || !!locked} onChange={(event) => setNote(event.target.value)} />
     <button className="primary full" type="submit" disabled={busy || !note.trim()}>{busy ? "Resolving…" : locked ? "Retry locked resolution" : "Resolve dispute"}</button>
     {message ? <p className="error-text" role="status">{message}</p> : null}
@@ -147,12 +147,12 @@ export default function DisputeClient({ actorId, tournamentId, eventId, workspac
     <section className="correction-item" aria-labelledby="open-dispute-title">
       <h2 id="open-dispute-title">Open a dispute</h2>
       {workspace.games.some((game) => game.canOpen) || locked ? <form onSubmit={open}>
-        <label htmlFor="dispute-game">Published game</label>
+        <label htmlFor="dispute-game">Published Game</label>
         <select id="dispute-game" value={gameId} disabled={busy || !!locked} onChange={(event) => setGameId(event.target.value)}>
           <option value="">Choose a game</option>
           {workspace.games.filter((game) => game.canOpen || game.gameId === locked?.gameId).map((game) => <option key={game.gameId} value={game.gameId}>Game {game.roundNumber}.{game.matchInstance} · {game.sideAName} / {game.sideBName} · {game.state.replaceAll("_", " ")}</option>)}
         </select>
-        <label htmlFor="dispute-summary">Concern summary</label>
+        <label htmlFor="dispute-summary">Concern Summary</label>
         <textarea id="dispute-summary" value={summary} maxLength={500} disabled={busy || !!locked} onChange={(event) => setSummary(event.target.value)} />
         <button className="primary full" type="submit" disabled={busy || !gameId || !summary.trim()}>{busy ? "Recording…" : locked ? "Retry locked request" : "Open dispute"}</button>
       </form> : <p className="auth-note">No published game is currently eligible for a new dispute.</p>}

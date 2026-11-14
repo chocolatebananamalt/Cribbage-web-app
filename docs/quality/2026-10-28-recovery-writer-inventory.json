@@ -150,6 +150,11 @@
       "path": "src/lib/paper-games/photo-retry-envelope.ts",
       "calls": 1,
       "kind": "exact private photo metadata request; no image bytes"
+    },
+    {
+      "path": "src/components/roster-random-draw-client.tsx",
+      "calls": 1,
+      "kind": "actor/tournament owned durable-draw exact operation recovery"
     }
   ],
   "asynchronousWriters": [

@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { assertIntegratedTestTarget } from "./src/lib/integrated-test-target";
+
+assertIntegratedTestTarget(process.env);
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

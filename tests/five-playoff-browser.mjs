@@ -21,7 +21,7 @@ const open=async()=>{context=await browser.newContext();page=await context.newPa
  current={...recorded,result:{...recorded.result,request:body,series:body.series}};return route.fulfill({json:receipt});
  });};
 const go=async(name='review')=>{await page.goto(origin+'/'+name);await page.getByRole('heading',{name:'Five-qualifier playoff',exact:true}).waitFor();await page.getByRole('status').filter({hasText:/Review four|No completed|retained|conflict|recorded|uncertain|blocked/}).waitFor();};
-const fill=async()=>{for(let i=0;i<4;i++){await page.getByRole('combobox',{name:`Winner of series ${i+1}`,exact:true}).selectOption(series[i].winnerId);await page.getByLabel(`Evidence for series ${i+1}`,{exact:true}).fill(series[i].evidenceNote);}await page.getByLabel('Playoff review reason',{exact:true}).fill(request.reason);await page.getByRole('checkbox').check();};
+const fill=async()=>{for(let i=0;i<4;i++){await page.getByRole('combobox',{name:`Winner of series ${i+1}`,exact:true}).selectOption(series[i].winnerId);await page.getByLabel(`Evidence for series ${i+1}`,{exact:true}).fill(series[i].evidenceNote);}await page.getByLabel("Playoff Review Reason",{exact:true}).fill(request.reason);await page.getByRole('checkbox').check();};
 const save=()=>page.getByRole('button',{name:'Record five-qualifier playoff',exact:true});
 try{
  for(let i=0;i<160;i++){try{if((await fetch(origin+'/review')).ok)break;}catch{}if(i===159)throw Error('Local readiness failed\n'+logs);await new Promise(r=>setTimeout(r,200));}

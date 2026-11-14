@@ -57,7 +57,7 @@ try {
     await page.goto(origin + '/playoff'); await page.getByRole('heading', { name: 'Five-qualifier playoff' }).waitFor();
     assert.equal(await page.getByRole('group', { name: 'Review four simulated series' }).count(), 1); assert.equal(await page.locator('ol li').filter({ hasText: 'first-round bye' }).count(), 3);
     const picks = [series[0], series[1], series[2], series[3]]; for (let i = 0; i < 4; i++) await page.getByRole('combobox', { name: `Winner of series ${i + 1}`, exact: true }).selectOption(picks[i].winnerId);
-    await page.getByLabel('Playoff review reason', { exact: true }).fill('Synthetic rehearsal'); await page.getByRole('checkbox', { name: /simulated results/ }).check();
+    await page.getByLabel("Playoff Review Reason", { exact: true }).fill('Synthetic rehearsal'); await page.getByRole('checkbox', { name: /simulated results/ }).check();
     assert.ok(await page.getByRole('button', { name: 'Record five-qualifier playoff', exact: true }).isEnabled()); await page.getByRole('button', { name: 'Record five-qualifier playoff', exact: true }).click();
     await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth + 1); assert.ok(await page.getByText(/no physical games were played/i).count());
     await page.close();
@@ -65,7 +65,7 @@ try {
   const playoffWrites = writes.filter(x => x.path.endsWith('/playoff-v4')); assert.equal(playoffWrites.length, 2);
   for (const write of playoffWrites) { assert.ok(write.body.reason.startsWith(`TEST ONLY SYNTHETIC: ${ref}`)); assert.deepEqual(write.body.series.map(row => row.evidenceNote), [1, 2, 3, 4].map(i => `${ref}:${i}`)); }
   const tie = await harness.newPage(); await tie.goto(origin + '/tie'); await tie.getByRole('heading', { name: 'Qualification tie review' }).waitFor();
-  assert.equal(await tie.getByLabel(/Simulated one-game playoff winner/).isEnabled(), true); assert.equal(await tie.getByLabel('Resolution reason').count(), 0);
+  assert.equal(await tie.getByLabel(/Simulated one-game playoff winner/).isEnabled(), true); assert.equal(await tie.getByLabel("Resolution Reason").count(), 0);
   await tie.getByLabel(/Simulated one-game playoff winner/).selectOption(tiePair[0]); await tie.getByRole('checkbox', { name: /no physical game was played/i }).check(); const tieWrite = tie.waitForRequest(req => req.url().endsWith('/qualification-ties')); await tie.getByRole('button', { name: 'Record qualification tie resolution' }).click(); const tieRequest = JSON.parse((await tieWrite).postData());
   assert.ok(tieRequest.reason.startsWith('TEST ONLY SYNTHETIC:') && tieRequest.evidenceReference === ref);
   for (const route of ['tieMissing', 'tieStale']) { const p = await harness.newPage(); await p.goto(origin + '/' + route); await p.getByRole('heading', { name: 'Qualification tie review' }).waitFor(); assert.equal(await p.getByLabel(/one-game playoff winner/i).isEnabled(), false); await p.close(); }
@@ -85,7 +85,7 @@ try {
   assert.deepEqual(writes.filter(x=>x.path.endsWith('/play-close')).at(-1).body,originalClose);assert.equal(await close.evaluate(()=>Object.keys(sessionStorage).filter(k=>k.includes('synthetic-close')).length),0);
   const mixed=await harness.newPage();await mixed.goto(origin+'/closeSibling');await mixed.getByRole('combobox').selectOption(sibling);
   assert.equal(await mixed.getByLabel('I have checked every table and play is finished for this event.').count(),1);assert.equal(await mixed.getByLabel('I have checked every table and play is finished for this event.').isEnabled(),false);await mixed.getByLabel(/Reason/).fill('Ordinary event reason');assert.equal(await mixed.getByLabel('I have checked every table and play is finished for this event.').isEnabled(),true);
-  const ordinaryTie=await harness.newPage();await ordinaryTie.goto(origin+'/tieSibling');await ordinaryTie.getByLabel('Resolution reason').waitFor();assert.equal(await ordinaryTie.getByText(/no physical game was played/i).count(),0);
+  const ordinaryTie=await harness.newPage();await ordinaryTie.goto(origin+'/tieSibling');await ordinaryTie.getByLabel("Resolution Reason").waitFor();assert.equal(await ordinaryTie.getByText(/no physical game was played/i).count(),0);
   for (const route of ['accountingV8', 'accountingV9']) { const p = await harness.newPage(); await p.goto(origin + '/' + route); await p.getByRole('heading', { name: /Unpaid/ }).waitFor(); assert.equal(await p.getByRole('button', { name: 'Record received-cover evidence' }).isDisabled(), true); assert.equal(await p.getByRole('button', { name: 'Record funding correction' }).isDisabled(), true); await p.close(); }
   const payment = await harness.newPage(); await payment.goto(origin + '/payment'); await payment.getByRole('heading', { name: 'TEST entrant' }).waitFor(); await payment.getByLabel('Amount in USD').fill('5.00'); await payment.getByRole('button', { name: 'Record simulated receipt evidence' }).click(); assert.ok(writes.some(x => x.path.endsWith('/payments/record') && x.body.note.startsWith('TEST ONLY SYNTHETIC:')));
   assert.ok(await payment.getByText(/no cash or check is claimed as actually received/i).count());

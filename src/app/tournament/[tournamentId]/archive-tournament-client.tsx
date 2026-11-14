@@ -43,7 +43,7 @@ export function ArchiveTournamentClient({ tournamentId, tournamentName }: { tour
   return <section className="workspace-archive" aria-labelledby="archive-tournament-title">
     <h2 id="archive-tournament-title">Archive this tournament</h2>
     <p className="auth-note">This removes <strong>{tournamentName}</strong> from the tournament list for every person who can see it. It does not delete any record, and you can restore it.</p>
-    <label>Reason (*required)<input value={reason} maxLength={1000} disabled={busy} onChange={(event) => setReason(event.target.value)} placeholder="Rehearsal finished; archiving so it stops appearing beside the real tournament." /></label>
+    <label>Reason (*Required)<input value={reason} maxLength={1000} disabled={busy} onChange={(event) => setReason(event.target.value)} placeholder="Rehearsal finished; archiving so it stops appearing beside the real tournament." /></label>
     <button className="secondary danger-button" type="button" disabled={busy || !reason.trim()} onClick={() => void archive()}>{busy ? "Archiving…" : "Yes, archive this tournament"}</button>
     <button className="secondary" type="button" disabled={busy} onClick={() => { setConfirming(false); setMessage(""); }}>Cancel</button>
     {message ? <p className="error-text" role="alert">{message}</p> : null}

@@ -120,7 +120,7 @@ export default function PlayoffPlacementClient({ actorId, tournamentId, eventId,
               {workspace.qualifierChoices.map((choice) => <option key={choice.participantId} value={choice.participantId}>{choice.displayName} · qualifying rank {choice.qualificationRank}</option>)}
             </select>
           </label>
-          <label>MRP playoff exit round
+          <label>MRP Playoff Exit Round
             <input type="number" min="1" max="9" value={entry.mrpPlayoffExitRound} onChange={(event) => setPlacements((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, mrpPlayoffExitRound: Number(event.target.value) } : item))} />
           </label>
         </div>)}

@@ -6,7 +6,7 @@ type RpcClient = { rpc(name: string, args: Record<string, unknown>): PromiseLike
 export async function getSetupOfficialsWorkspace(admin: RpcClient, actorId: string, tournamentId: string, role: SetupOfficialRole): Promise<SetupOfficialsWorkspace | null> {
   const { data, error } = await admin.rpc("get_tournament_setup_officials_v1", { p_actor_id: actorId, p_tournament_id: tournamentId, p_role: role });
   if (error) throw new Error("Tournament official assignments are unavailable.");
-  return data === null ? null : isSetupOfficialsWorkspace(data) ? data : (() => { throw new Error("Tournament official assignments are unavailable."); })();
+  return data === null ? null : isSetupOfficialsWorkspace(data)&&data.role===role ? data : (() => { throw new Error("Tournament official assignments are unavailable."); })();
 }
 
 export async function nominateSetupOfficial(admin: RpcClient, input: { actorId: string; tournamentId: string; role: SetupOfficialRole; firstName: string; lastName: string; email: string; accNumber: string; secret: string; operationId: string }) {
