@@ -1,0 +1,142 @@
+{
+  "kind": "current-runtime-acceptance-v1",
+  "reviewedOn": "2026-11-13",
+  "hostedAcceptance": false,
+  "featureEnablementAuthorized": false,
+  "membership": {
+    "historical": {
+      "file": "tests/fixtures/sql-provenance/mrp-membership-manual-review-v1-f16fd545.sql",
+      "bytes": 20742,
+      "sha256": "f16fd5453c691d866b821c41310aab52fdc4404cf22c2c867edfbbf32a0fd4e7"
+    },
+    "current": {
+      "file": "database/proposals/mrp-membership-manual-review-v1.sql",
+      "bytes": 22249,
+      "sha256": "ffe5af9a2b04b2164eb0659afdbdc454c573aea481e0837c8172e5c85a2b600c"
+    },
+    "recovery": {
+      "byteOffset": 7219,
+      "bytes": 20742,
+      "trace": "mrp-membership-manual-review-runtime-20261109/attempt-2/trace.sql"
+    },
+    "runtime": {
+      "passed": true,
+      "cleanupVerified": true,
+      "resultFile": "test-results/mrp-membership-manual-review-runtime-20261113/attempt-3/state.json",
+      "checks": [
+        "closed install preserves populated baseline",
+        "default gate, all six function ACLs and table access closed",
+        "baseline audit/receipt direct-access denial",
+        "default gate denies before journal write even with temporary execute",
+        "primary TD and session rejection matrix",
+        "banned/deleted user and expired stored session reject",
+        "observation records one receipt/audit and exact replay is idempotent",
+        "changed exact operation conflicts without overwriting",
+        "explicit correction then withdrawal preserves original observation",
+        "new observation supersedes correction and absence stays unknown",
+        "identity mismatch rejects and never mutates roster",
+        "no-number entry stays review-pending; definitive matching claim is rejected",
+        "concurrent writers serialize; loser exact retry rejects stale head",
+        "explicit rollback removes journal, receipt and audit together",
+        "late audit failure rolls back journal and receipt",
+        "current provisional branches retain journal-only authority and exact withdrawal",
+        "journal, receipt and audit cannot be updated or deleted",
+        "all original populated rows preserved; unrelated tables exact",
+        "fixture-only gate/grants restored exactly; source remains false and unchanged"
+      ],
+      "baseline": "pinned empty post-0236 only; no later migration equivalence claimed",
+      "populatedRows": 38,
+      "populatedTables": 13,
+      "artifacts": [
+        {
+          "file": "test-results/mrp-membership-manual-review-runtime-20261113/attempt-3/state.json",
+          "bytes": 6439,
+          "sha256": "d6ae16a7e194f0fb74a85443bab95f14b38ca87c4160edd55473f6823b4a9133"
+        },
+        {
+          "file": "test-results/mrp-membership-manual-review-runtime-20261113/attempt-3/trace.sql",
+          "bytes": 107422,
+          "sha256": "b324e20aa5290840f03b7daf3b7d08d94f2669cfd0cbcde3490e5cdf50e554f7"
+        },
+        {
+          "file": "test-results/mrp-membership-manual-review-runtime-20261113/attempt-3/closed-acl.json",
+          "bytes": 1543,
+          "sha256": "14361a0924ea563ee0c2be32cfb4e33d37c3787356e3dcf036fd28bd7482725c"
+        },
+        {
+          "file": "test-results/mrp-membership-manual-review-runtime-20261113/runtime.mjs",
+          "bytes": 25463,
+          "sha256": "46115d7c5d3d65c803648d48d3553006db845d17d47fc97bbd3cdb4b7530b2d6"
+        }
+      ]
+    }
+  },
+  "reopen": {
+    "historical": {
+      "file": "tests/fixtures/sql-provenance/native-mixed-game-reopen-v1-2f3f5a09.sql",
+      "bytes": 97922,
+      "sha256": "2f3f5a09da1caebf9bd96137435bb19b31f0e8ba49c12a81ab75d5b1421ee998"
+    },
+    "current": {
+      "file": "database/proposals/native-mixed-game-reopen-v1.sql",
+      "bytes": 111516,
+      "sha256": "239d2e7a8504d7c6077ff9fd48d58bc015c40d8955fd4f83982031d164f3b962"
+    },
+    "paper": {
+      "file": "database/proposals/native-mixed-paper-disagreement-v1.sql",
+      "bytes": 43720,
+      "sha256": "085e18e5957fe871bb8942bba5372cbd7784d6ec73275f45cccb3c0845b1df1b"
+    },
+    "runtime": {
+      "passed": true,
+      "cleanupVerified": true,
+      "resultFile": "test-results/native-mixed-game-reopen-20261109/runtime-evidence/reopen-result.json",
+      "cleanupFile": "test-results/native-mixed-game-reopen-20261109/runtime-evidence/state.json",
+      "checks": [
+        "exact current reopen and paper SQL install; all new access remains closed",
+        "genuine independently entered DD DP PP mismatch and disputed paper evidence",
+        "policy0 immediately reopens while preserving disputed paper history",
+        "policy1 pending has no active attempt; self and playing reviewer denied",
+        "exact source history policy and old proposal rejection paths preserve pending evidence",
+        "actual post-proposal consent revocation and role loss hold approval; stale rejection remains available",
+        "actual later paper evidence blocks pending approval under unchanged original request",
+        "downstream context marker closes reopening without silent recompute",
+        "explicit rejection is terminal with no active attempt",
+        "approval transaction and late audit failure roll back all new rows",
+        "overlapping approve reject serializes and approval retries recover historical receipt",
+        "fresh independently verified paper attempt excludes disputed history",
+        "no ordinary result qualification or money authority; journals immutable"
+      ],
+      "providerSessionProven": false,
+      "artifacts": [
+        {
+          "file": "test-results/native-mixed-game-reopen-20261109/runtime-evidence/reopen-result.json",
+          "bytes": 49377,
+          "sha256": "76eb9268fca18028512ac63e107109e4eb927377f05a0efb18aebfcf93bce8bd"
+        },
+        {
+          "file": "test-results/native-mixed-game-reopen-20261109/runtime-evidence/state.json",
+          "bytes": 14422,
+          "sha256": "fba8290c5760d972973f55094d86c504d22079c1318a4a2e7d535524413c4002"
+        },
+        {
+          "file": "test-results/native-mixed-game-reopen-20261109/runtime-evidence/scoring-trace.sql",
+          "bytes": 628673,
+          "sha256": "baaafc417ca4329cc4206b7224cb7605389e809098d53f92b3bb124e80231318"
+        },
+        {
+          "file": "test-results/native-mixed-game-reopen-20261109/current-policy1-runtime.mjs",
+          "bytes": 24506,
+          "sha256": "b09cda10659028f2cdb87dff6685cada371f459d815238b667ce36c1e8b36715"
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Fictional injected JWT/session identities; no actual provider/browser/device acceptance.",
+    "Membership exact runtime uses pinned empty post-0236 baseline with 38 seeded fictional rows, not all later migrations.",
+    "Reopen uses frozen 56-migration/three-package plus exact Finance source stack; no hosted installation proof.",
+    "Downstream rejection uses an explicitly synthetic rolled-back context marker; no real qualification/Finance lifecycle approval.",
+    "No feature gate enablement, official ACC submission, actual award or money movement authorized."
+  ]
+}

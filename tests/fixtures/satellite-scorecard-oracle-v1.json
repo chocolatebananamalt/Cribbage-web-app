@@ -1,0 +1,497 @@
+{
+  "fixtureOnly": true,
+  "realRecords": false,
+  "basisSha256": "ddcf7ac0a11f1276b9fb0d4e5054af0616a245d71e689dc328d8224d3ca45850",
+  "players": [
+    {
+      "profileId": "a2950000-0000-4000-8000-000000009013",
+      "rosterEntryId": "fa9b7a4b-b1c1-4b49-8ecc-a530d832de41",
+      "tableSeat": "A-1"
+    },
+    {
+      "profileId": "a2950000-0000-4000-8000-000000009018",
+      "rosterEntryId": "c077ef52-56ba-4597-871b-c42685a0eb4d",
+      "tableSeat": "A-2"
+    },
+    {
+      "profileId": "a2950000-0000-4000-8000-000000009023",
+      "rosterEntryId": "6109de4d-67e6-4910-8d12-eec0a9854085",
+      "tableSeat": "A-3"
+    },
+    {
+      "profileId": "a2950000-0000-4000-8000-000000009028",
+      "rosterEntryId": "b5268a04-be22-43e7-824e-8da89b61e750",
+      "tableSeat": "A-4"
+    }
+  ],
+  "games": [
+    {
+      "a": "a2950000-0000-4000-8000-000000009018",
+      "b": "a2950000-0000-4000-8000-000000009023",
+      "id": "0f52a891-55d8-49b2-80ee-94418a19e54d",
+      "round": 1,
+      "aRoster": "c077ef52-56ba-4597-871b-c42685a0eb4d",
+      "bRoster": "6109de4d-67e6-4910-8d12-eec0a9854085"
+    },
+    {
+      "a": "a2950000-0000-4000-8000-000000009013",
+      "b": "a2950000-0000-4000-8000-000000009028",
+      "id": "f08d1f02-428a-4c58-badd-f9e236b7c8e8",
+      "round": 1,
+      "aRoster": "fa9b7a4b-b1c1-4b49-8ecc-a530d832de41",
+      "bRoster": "b5268a04-be22-43e7-824e-8da89b61e750"
+    },
+    {
+      "a": "a2950000-0000-4000-8000-000000009013",
+      "b": "a2950000-0000-4000-8000-000000009023",
+      "id": "4877d39d-7f5d-4fcc-a596-c226e9ca1e07",
+      "round": 2,
+      "aRoster": "fa9b7a4b-b1c1-4b49-8ecc-a530d832de41",
+      "bRoster": "6109de4d-67e6-4910-8d12-eec0a9854085"
+    },
+    {
+      "a": "a2950000-0000-4000-8000-000000009028",
+      "b": "a2950000-0000-4000-8000-000000009018",
+      "id": "4be183c0-c954-41f1-abbe-73faff7c7b3f",
+      "round": 2,
+      "aRoster": "b5268a04-be22-43e7-824e-8da89b61e750",
+      "bRoster": "c077ef52-56ba-4597-871b-c42685a0eb4d"
+    },
+    {
+      "a": "a2950000-0000-4000-8000-000000009023",
+      "b": "a2950000-0000-4000-8000-000000009028",
+      "id": "7724299a-d6a9-435b-9e60-ec2d57a2e252",
+      "round": 3,
+      "aRoster": "6109de4d-67e6-4910-8d12-eec0a9854085",
+      "bRoster": "b5268a04-be22-43e7-824e-8da89b61e750"
+    },
+    {
+      "a": "a2950000-0000-4000-8000-000000009013",
+      "b": "a2950000-0000-4000-8000-000000009018",
+      "id": "94bb10ab-1da3-4e9f-9b96-7a53e5c5ad89",
+      "round": 3,
+      "aRoster": "fa9b7a4b-b1c1-4b49-8ecc-a530d832de41",
+      "bRoster": "c077ef52-56ba-4597-871b-c42685a0eb4d"
+    }
+  ],
+  "commands": [
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "0f52a891-55d8-49b2-80ee-94418a19e54d",
+      "sub": "a2950000-0000-4000-8000-000000009062",
+      "slot": 1,
+      "winner": "a",
+      "margin": 11,
+      "op": "a2950000-0000-4000-8000-000000009064",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "0f52a891-55d8-49b2-80ee-94418a19e54d",
+      "sub": "a2950000-0000-4000-8000-000000009063",
+      "slot": 2,
+      "winner": "a",
+      "margin": 11,
+      "op": "a2950000-0000-4000-8000-000000009065",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "0f52a891-55d8-49b2-80ee-94418a19e54d",
+      "sub": "a2950000-0000-4000-8000-000000009062",
+      "op": "a2950000-0000-4000-8000-000000009066",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "0f52a891-55d8-49b2-80ee-94418a19e54d",
+      "sub": "a2950000-0000-4000-8000-000000009063",
+      "op": "a2950000-0000-4000-8000-000000009067",
+      "expected": "verified"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "f08d1f02-428a-4c58-badd-f9e236b7c8e8",
+      "sub": "a2950000-0000-4000-8000-000000009068",
+      "slot": 1,
+      "winner": "a",
+      "margin": 11,
+      "op": "a2950000-0000-4000-8000-000000009070",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "f08d1f02-428a-4c58-badd-f9e236b7c8e8",
+      "sub": "a2950000-0000-4000-8000-000000009069",
+      "slot": 2,
+      "winner": "a",
+      "margin": 11,
+      "op": "a2950000-0000-4000-8000-000000009071",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "f08d1f02-428a-4c58-badd-f9e236b7c8e8",
+      "sub": "a2950000-0000-4000-8000-000000009068",
+      "op": "a2950000-0000-4000-8000-000000009072",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "f08d1f02-428a-4c58-badd-f9e236b7c8e8",
+      "sub": "a2950000-0000-4000-8000-000000009069",
+      "op": "a2950000-0000-4000-8000-000000009073",
+      "expected": "verified"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "4877d39d-7f5d-4fcc-a596-c226e9ca1e07",
+      "sub": "a2950000-0000-4000-8000-000000009074",
+      "slot": 1,
+      "winner": "a",
+      "margin": 12,
+      "op": "a2950000-0000-4000-8000-000000009076",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "4877d39d-7f5d-4fcc-a596-c226e9ca1e07",
+      "sub": "a2950000-0000-4000-8000-000000009075",
+      "slot": 2,
+      "winner": "a",
+      "margin": 12,
+      "op": "a2950000-0000-4000-8000-000000009077",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "4877d39d-7f5d-4fcc-a596-c226e9ca1e07",
+      "sub": "a2950000-0000-4000-8000-000000009074",
+      "op": "a2950000-0000-4000-8000-000000009078",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "4877d39d-7f5d-4fcc-a596-c226e9ca1e07",
+      "sub": "a2950000-0000-4000-8000-000000009075",
+      "op": "a2950000-0000-4000-8000-000000009079",
+      "expected": "verified"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "4be183c0-c954-41f1-abbe-73faff7c7b3f",
+      "sub": "a2950000-0000-4000-8000-000000009080",
+      "slot": 1,
+      "winner": "b",
+      "margin": 12,
+      "op": "a2950000-0000-4000-8000-000000009082",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "4be183c0-c954-41f1-abbe-73faff7c7b3f",
+      "sub": "a2950000-0000-4000-8000-000000009081",
+      "slot": 2,
+      "winner": "b",
+      "margin": 12,
+      "op": "a2950000-0000-4000-8000-000000009083",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "4be183c0-c954-41f1-abbe-73faff7c7b3f",
+      "sub": "a2950000-0000-4000-8000-000000009080",
+      "op": "a2950000-0000-4000-8000-000000009084",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "4be183c0-c954-41f1-abbe-73faff7c7b3f",
+      "sub": "a2950000-0000-4000-8000-000000009081",
+      "op": "a2950000-0000-4000-8000-000000009085",
+      "expected": "verified"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "7724299a-d6a9-435b-9e60-ec2d57a2e252",
+      "sub": "a2950000-0000-4000-8000-000000009086",
+      "slot": 1,
+      "winner": "a",
+      "margin": 13,
+      "op": "a2950000-0000-4000-8000-000000009088",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "7724299a-d6a9-435b-9e60-ec2d57a2e252",
+      "sub": "a2950000-0000-4000-8000-000000009087",
+      "slot": 2,
+      "winner": "a",
+      "margin": 13,
+      "op": "a2950000-0000-4000-8000-000000009089",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009023",
+      "id": "7724299a-d6a9-435b-9e60-ec2d57a2e252",
+      "sub": "a2950000-0000-4000-8000-000000009086",
+      "op": "a2950000-0000-4000-8000-000000009090",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009028",
+      "id": "7724299a-d6a9-435b-9e60-ec2d57a2e252",
+      "sub": "a2950000-0000-4000-8000-000000009087",
+      "op": "a2950000-0000-4000-8000-000000009091",
+      "expected": "verified"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "94bb10ab-1da3-4e9f-9b96-7a53e5c5ad89",
+      "sub": "a2950000-0000-4000-8000-000000009092",
+      "slot": 1,
+      "winner": "a",
+      "margin": 13,
+      "op": "a2950000-0000-4000-8000-000000009094",
+      "expected": "submitted"
+    },
+    {
+      "action": "submit",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "94bb10ab-1da3-4e9f-9b96-7a53e5c5ad89",
+      "sub": "a2950000-0000-4000-8000-000000009093",
+      "slot": 2,
+      "winner": "a",
+      "margin": 13,
+      "op": "a2950000-0000-4000-8000-000000009095",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009013",
+      "id": "94bb10ab-1da3-4e9f-9b96-7a53e5c5ad89",
+      "sub": "a2950000-0000-4000-8000-000000009092",
+      "op": "a2950000-0000-4000-8000-000000009096",
+      "expected": "confirmation_pending"
+    },
+    {
+      "action": "confirm",
+      "actor": "a2950000-0000-4000-8000-000000009018",
+      "id": "94bb10ab-1da3-4e9f-9b96-7a53e5c5ad89",
+      "sub": "a2950000-0000-4000-8000-000000009093",
+      "op": "a2950000-0000-4000-8000-000000009097",
+      "expected": "verified"
+    }
+  ],
+  "cards": [
+    {
+      "lines": [
+        {
+          "gamePoints": 2,
+          "plusPoints": 11,
+          "minusPoints": 0,
+          "roundNumber": 1,
+          "opponentName": "Fictional Satellite 4",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-4"
+        },
+        {
+          "gamePoints": 2,
+          "plusPoints": 12,
+          "minusPoints": 0,
+          "roundNumber": 2,
+          "opponentName": "Fictional Satellite 3",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-3"
+        },
+        {
+          "gamePoints": 2,
+          "plusPoints": 13,
+          "minusPoints": 0,
+          "roundNumber": 3,
+          "opponentName": "Fictional Satellite 2",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-2"
+        }
+      ],
+      "player": {
+        "displayName": "Tournament participant",
+        "verificationId": "A-1"
+      },
+      "totals": {
+        "gamesWon": 3,
+        "gamePoints": 6,
+        "plusPoints": 36,
+        "minusPoints": 0,
+        "netSpreadPoints": 36
+      },
+      "eventId": "ca9ea45c-92e3-4f34-a9b9-73021c78e870",
+      "eventName": "TEST ONLY Normal Satellite",
+      "pendingGames": [],
+      "tournamentId": "a2950000-0000-4000-8000-000000009000",
+      "tournamentName": "TEST ONLY Normal Satellite Authoring"
+    },
+    {
+      "lines": [
+        {
+          "gamePoints": 2,
+          "plusPoints": 11,
+          "minusPoints": 0,
+          "roundNumber": 1,
+          "opponentName": "Fictional Satellite 3",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-3"
+        },
+        {
+          "gamePoints": 2,
+          "plusPoints": 12,
+          "minusPoints": 0,
+          "roundNumber": 2,
+          "opponentName": "Fictional Satellite 4",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-4"
+        },
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 13,
+          "roundNumber": 3,
+          "opponentName": "Fictional Satellite 1",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-1"
+        }
+      ],
+      "player": {
+        "displayName": "Tournament participant",
+        "verificationId": "A-2"
+      },
+      "totals": {
+        "gamesWon": 2,
+        "gamePoints": 4,
+        "plusPoints": 23,
+        "minusPoints": 13,
+        "netSpreadPoints": 10
+      },
+      "eventId": "ca9ea45c-92e3-4f34-a9b9-73021c78e870",
+      "eventName": "TEST ONLY Normal Satellite",
+      "pendingGames": [],
+      "tournamentId": "a2950000-0000-4000-8000-000000009000",
+      "tournamentName": "TEST ONLY Normal Satellite Authoring"
+    },
+    {
+      "lines": [
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 11,
+          "roundNumber": 1,
+          "opponentName": "Fictional Satellite 2",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-2"
+        },
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 12,
+          "roundNumber": 2,
+          "opponentName": "Fictional Satellite 1",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-1"
+        },
+        {
+          "gamePoints": 2,
+          "plusPoints": 13,
+          "minusPoints": 0,
+          "roundNumber": 3,
+          "opponentName": "Fictional Satellite 4",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-4"
+        }
+      ],
+      "player": {
+        "displayName": "Tournament participant",
+        "verificationId": "A-3"
+      },
+      "totals": {
+        "gamesWon": 1,
+        "gamePoints": 2,
+        "plusPoints": 13,
+        "minusPoints": 23,
+        "netSpreadPoints": -10
+      },
+      "eventId": "ca9ea45c-92e3-4f34-a9b9-73021c78e870",
+      "eventName": "TEST ONLY Normal Satellite",
+      "pendingGames": [],
+      "tournamentId": "a2950000-0000-4000-8000-000000009000",
+      "tournamentName": "TEST ONLY Normal Satellite Authoring"
+    },
+    {
+      "lines": [
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 11,
+          "roundNumber": 1,
+          "opponentName": "Fictional Satellite 1",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-1"
+        },
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 12,
+          "roundNumber": 2,
+          "opponentName": "Fictional Satellite 2",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-2"
+        },
+        {
+          "gamePoints": 0,
+          "plusPoints": 0,
+          "minusPoints": 13,
+          "roundNumber": 3,
+          "opponentName": "Fictional Satellite 3",
+          "matchInstance": 1,
+          "opponentVerificationId": "A-3"
+        }
+      ],
+      "player": {
+        "displayName": "Tournament participant",
+        "verificationId": "A-4"
+      },
+      "totals": {
+        "gamesWon": 0,
+        "gamePoints": 0,
+        "plusPoints": 0,
+        "minusPoints": 36,
+        "netSpreadPoints": -36
+      },
+      "eventId": "ca9ea45c-92e3-4f34-a9b9-73021c78e870",
+      "eventName": "TEST ONLY Normal Satellite",
+      "pendingGames": [],
+      "tournamentId": "a2950000-0000-4000-8000-000000009000",
+      "tournamentName": "TEST ONLY Normal Satellite Authoring"
+    }
+  ]
+}

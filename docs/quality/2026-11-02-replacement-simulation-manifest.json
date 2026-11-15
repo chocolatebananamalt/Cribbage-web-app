@@ -1,0 +1,47 @@
+{
+  "baseCommit": "2358d56471007f3e7c57baa729ac992805ccf4c2",
+  "scope": "local prepared only; publication/application/enrollment/access approval pending",
+  "fixture": "fd0589d0-31e7-4921-b793-1beec2431337",
+  "files": [
+    {
+      "path": "src/lib/api/simulated-player-links.ts",
+      "bytes": 1083,
+      "sha256": "b5a2529a5b5a9ac871984ef730dff12b16081547125d53af8dad927dc17ad7cf"
+    },
+    {
+      "path": "src/lib/simulated-player-links.ts",
+      "bytes": 1379,
+      "sha256": "9d3ce06722191060d196c2d3682b4d98ddb15863644eec55dcdedb1bd3aa7b68"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/layout.tsx",
+      "bytes": 949,
+      "sha256": "5e3a2b7a6c898f1f8ec453b118951f2f1a64d5b0c3b6045abcde9e71119783f3"
+    },
+    {
+      "path": "database/migrations/0272_replacement_simulated_links_v1.sql",
+      "bytes": 1676,
+      "sha256": "8f3924b2585a0aa8007401b6c87b59a6c84e63c7b739643a8177cfbc76ddea5a"
+    },
+    {
+      "path": "tests/simulated-player-links.test.mjs",
+      "bytes": 3162,
+      "sha256": "f85c04b4511975688da16eecebe3398f1115290c6d448aea04bff82daa160718"
+    },
+    {
+      "path": "tests/run-replacement-links-container.mjs",
+      "bytes": 3561,
+      "sha256": "6d22e95ebec9cdc0ca8346a723e5d5dfde564eb2655883634aea59276d47e8b7"
+    },
+    {
+      "path": "tests/run-replacement-links-isolated.mjs",
+      "bytes": 7547,
+      "sha256": "b6ab0b4ca55f83d557d25eb0a70ed9be370f3d8e111c4ef5dd64ff4992b3f00a"
+    },
+    {
+      "path": "docs/quality/2026-11-02-replacement-rehearsal-preparation.md",
+      "bytes": 5297,
+      "sha256": "4fc8fcb9c067908c3516584a1116f76cfdb53843e7409e4d892efe6fa6d51d27"
+    }
+  ]
+}

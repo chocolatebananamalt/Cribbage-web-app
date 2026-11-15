@@ -1,0 +1,20 @@
+# Authentic restored-history candidate compatibility — in progress
+
+Authorized scope: disposable local restore of verified recovery eb52816c, candidate acceptance only. No recapture, upload, hosted changes or deployment. Archive and 59-file frozen recovery manifest verified before execution. Candidate SHA25622f9145694802d79d13d50ab36d52e8dc030b1f86649b9cb8a5f2fe733187f58; official CLI2.121.0 pinned.
+
+Acceptance: first reproduce covered recovery parity, then run exact candidate as source-matching NOSUPERUSER postgres through official CLI over isolated Unix socket. Inject SQL failure to prove catalog/data/history rollback. Install once, retain292 authentic ledger rows and original-column data, verify closed permissions, then exact retry no-op. No impersonated save against private user records; prior fictional legacy-save proof is separate. Post-commit rollback is not implied. All outputs with private contents remain protected outside Git; only summaries are recorded here. Require independent owned-container/volume cleanup.
+
+Independent source review GO. Reviewer suggested frozen input rehash; added startup checks for all59 recovery-manifest entries. Local test started, final result pending. No new credentials and no network/ports. No audit or browser-denial retry.
+
+Runtime checkpoint: fresh restored parity PASS; injected complete-candidate SQL failure verified and rolled back exact existing data, full security/additional metadata, column ACLs, sequences and292 old history rows. Exact candidate install/preservation/repeat verification remains in progress. Source package test5 PASS.
+
+
+## Final runtime PASS
+
+Official CLI2.121.0 executed exact candidate SHA25622f9145694802d79d13d50ab36d52e8dc030b1f86649b9cb8a5f2fe733187f58 against the authentic restored292-entry history, using actual NOSUPERUSER postgres sessions. Fresh covered restore parity passed first. Full candidate with injected division-by-zero rolled back exact old function/table/security/additional metadata, column ACLs, sequences, data and all292 history rows. Exact candidate then installed once:293 history rows,292 original rows including SQL arrays exact; repeat no-op.291 nonledger tables retain identical original-column row counts/fingerprints; ledger checked separately. All781 existing app/public owners/ACLs exact; only2 reviewed activation trigger bodies changed, so five existing accounting functions are exact.379 newfunctions closed to anon/authenticated/service_role;118 new RLS tables passed354 effective table/column denials;1 newsequence denies all3roles. Existing table owner/ACL/RLS/force metadata and sequence states remain unchanged.
+
+DB52e37ffb3aca6319ebe2406c5f6e6344d1d4493d8ff8a1ea435b157d0992b8fc; CLI9249b1dd7801cf2e2647b348a85adb4a098ad410efee488787a97ce9544f1ca0; volume cribbage-recovery-eb52816c-candidate-v1-socket removed and independently absent. Private logs owner/SYSTEM only. Original archive and all59 frozen recovery-manifest entries rehashed unchanged after run. New6-file candidate evidence manifest verified privately outside Git. No recapture/upload/hosted action/access/deployment/real money.
+
+Source package integrity5 tests PASS. No live legacy writer invoked against private user records or impersonated: prior fictional save/retry acceptance is separate. Injected pre-commit rollback is proven; no post-commit/hosted restore rollback claim. Provider Auth/PostgREST/signed devices remain unverified; separate hosted installation and cohort/grant enablement approvals still required. No browser/audit denial retried.
+
+Independent final safe-evidence review GO, no blocking finding. Workspace/handoff combined14 PASS (plus nested handoff6). Package5 initially failed only on its obsolete status literal after recording the new local acceptance. Updated that assertion to require authentic-local evidence while retaining all hosted/code/cohort flags false; added evidence hash/count/cleanup guards. Package5 rerun PASS. Full application/audit/browser suite not repeated for this local recovery-test tooling task; denied operations not retried.

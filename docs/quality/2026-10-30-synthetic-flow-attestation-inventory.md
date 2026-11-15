@@ -1,0 +1,26 @@
+# Remaining fictional-flow attestation inventory
+
+Scope: the two existing 17-player fictional staging fixtures, through simulated qualifying scores, closure, qualification, four playoff series and unpaid accounting. This inventory expands the local synthetic design before its proposed rollout. It does not authorize hosted execution or turn generated records into physical originals.
+
+| Step | Existing assertion or stored meaning | Required truthful treatment |
+| --- | --- | --- |
+| Paper capture and separate re-entry | Both original paper scorecards compared | Covered by local0266: actual generated text artifacts, hashes, explicit no-physical/no-human provenance and protected normal score writers. |
+| Close Event | “I have checked every table and play is finished for this event.” | A source-bound simulated closure artifact must identify verified software game counts, with no physical table inspection claimed. Normal production wording and checks remain. |
+| Qualification residual tie | Winner of a separately played one-game playoff | Record a separately simulated tiebreak artifact for the exact current pair/source. Preserve original qualifying totals. A current unambiguous qualifying head-to-head result still takes priority. Never use this to resolve Q monetary ties. |
+| Five-qualifier playoffs | “I reviewed the four played results, separate bye credits and unchanged qualifying scores.” | Identify four simulated series with immutable source/plan hashes. Label derived wins and MRP as simulation; keep bye credits distinct and reuse normal bracket/advancement validation. |
+| Cross-check finalization | Completion of server-counted conditions | Retain all role, identity and result-count guards. Show persistent synthetic fixture context; do not claim independent human or physical inspection. |
+| Qualification lock | Review of current server-derived ranking | Retain all dispute/tie/source guards and show synthetic context. |
+| Q policy disclosure and membership | Director disclosure attestation, exact policy acknowledgment, elected membership | Use explicit simulated disclosure/election references for fictional entrants. Retain version locking, before-payment disclosure, exact acknowledgment and allocation checks. Do not imply personal consent from nonexistent players. |
+| Manual receipts | Cash/check actually received | Future fresh Q/Side receipts must be labeled simulated and carry atomic, immutable synthetic provenance. No actual money received or transferred is claimed. Existing no-Q receipt history remains untouched; old receipt replay must not acquire new provenance. |
+| Expenses, Q/Side unpaid review and accounting | Review of recorded evidence, costs, policy and unpaid claims | Review fictional saved data with persistent simulation context. Preserve full conservation, denomination, role and source guards. No obligation is marked paid. |
+| Rounding cover | Actual contribution already received | Excluded and disabled for the synthetic fixture mode. Both planned fresh budgets round down to $280 and need $0 cover. The upward unfunded case remains a local negative test, not a fabricated received contribution. |
+| Funding correction, disbursement, executed refund or ACC submission | External or paid-state effects | Outside these acceptance fixtures. Keep unavailable; no money movement or official submission. |
+| Official invitation acceptance/nonplayer binding | Personal acceptance and tournament-scoped identity | Already completed under specific user authorization. Preserve the historical records; no synthetic relabel, duplicate invitation or automated acceptance. |
+
+The additional local design uses the existing staging/runtime and private event enrollment, narrow core-writer wrappers, source-bound stage artifacts and accepted-operation provenance. It must block new unlabelled ordinary writes in enrolled fixtures, reconcile exact requests after lost responses, and retain current authority and lifecycle checks. No generic command dispatcher or direct score/MRP mutation is acceptable.
+
+Coverage must persist after refresh in relevant result, closure, playoff and unpaid-accounting readers. A form-only disclaimer is insufficient. Generic legacy APIs and printed output still require review for their fixture context; no claim of physical, human, offline-field or production certification follows from a numerical simulation.
+
+The complete local design is now implemented in 0266 and 0267, including the manual qualification tiebreak, closure and playoff assertions above. Version 19 protects the earlier paper-only checkpoint; it does not cover this extension or the later enrollment hardening. Final adverse SQL verification, the expanded file manifest and a replacement source backup must be reported before publication/staging enrollment approval.
+
+The intended hosted acceptance path does not include generic legacy printouts, official ACC submission, actual funding cover, voids or disbursement. Those paths are excluded rather than silently represented as simulated. A physical/camera/offline field rehearsal remains separate. An unresolved Q monetary tie remains blocked and is not resolved by a qualification-playoff artifact.

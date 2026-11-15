@@ -1,0 +1,60 @@
+"use client";
+import {createRoot} from 'react-dom/client';import {useState} from 'react';
+import {EventPrizeRuleReviewV1} from '../../src/components/event-prize-rule-review-v1';
+import {newEventPlayoffParametersDraftV1,resolveEventSeriesDraftV1} from '../../src/lib/playoffs/event-playoff-parameters-v1';
+import {assessSeriesForSetupReviewV2} from '../../src/lib/playoffs/series-activation-review-v2';
+const id=n=>`c8800000-0000-4000-8000-${String(n).padStart(12,'0')}`,actor=id(1),co=id(2),tid=id(3),rowId=id(4);let sequence=100;
+const nextId=()=>id(sequence++),clone=v=>JSON.parse(JSON.stringify(v));
+const bridge=()=>window as unknown as Record<string,any>;
+let notify=()=>{};const memory=new Map<string,string>();
+const storage={get length(){return memory.size;},key:i=>[...memory.keys()][i]??null,getItem:k=>memory.get(k)??null,setItem:(k,v)=>{memory.set(k,String(v));notify();},removeItem:k=>{memory.delete(k);notify();},clear:()=>{memory.clear();notify();}};
+Object.defineProperty(window,'sessionStorage',{configurable:true,value:storage});
+Object.defineProperty(globalThis.crypto,'randomUUID',{configurable:true,value:nextId});
+bridge().__fixtureActor=actor;bridge().__fixtureWritesAllowed=true;
+const draft=newEventPlayoffParametersDraftV1('main');draft.payoutMode='one-in';draft.oneInText='dormant';draft.incrementFactorText='dormant';
+let workspace={kind:'event-prize-rule-context-workspace-v1',actorId:actor,tournamentId:tid,setupRevisionId:id(6),setupVersion:2,settingsSnapshotId:id(7),settingsDigest:'b'.repeat(64),rows:[{eventClientRowId:rowId,eventKind:'main',setupEventVersionId:id(8),displayName:'TEST ONLY Fictional Main',draft,review:null}],deferredGuardAvailable:true,allCurrentEligible:false,activationAllowed:false,moneyMoved:false};
+function review(context,reason,reference,who=actor){const row=workspace.rows[0],series=resolveEventSeriesDraftV1(row.draft),assessment=assessSeriesForSetupReviewV2(series,context);row.review={state:'present',historyExists:true,reviewId:nextId(),actorId:who,version:row.review?.version+1||1,setupRevisionId:workspace.setupRevisionId,setupEventVersionId:row.setupEventVersionId,settingsSnapshotId:workspace.settingsSnapshotId,draftDigest:'a'.repeat(64),draft:clone(row.draft),context:clone(context),reason,approvalReference:reference,reviewerAuthorized:true,current:true,eligible:assessment.setupReviewEligible,deferredOriginalField:!!assessment.deferredRequirements.length};workspace.allCurrentEligible=row.review.eligible;return row.review;}
+review({sanctioned:false,eventKind:'main',durationDays:1,originalEntrants:null},'Initial saved review','Initial evidence');
+const operations=new Map(),requests=[];let postMode='normal',held=null;
+globalThis.fetch=async(url,init={})=>{
+ const path=String(url),method=init.method??'GET',headers=new Headers(init.headers),who=headers.get('x-expected-actor-id');
+ if(!path.startsWith(`/api/v1/tournaments/${tid}/event-prize-settings/activation/context`))throw Error('unexpected_endpoint');
+ if(who!==bridge().__fixtureActor)return Response.json({error:'identity_changed'},{status:403});
+ if(method==='GET'){requests.push({method,path,actor:who});notify();return Response.json({...clone(workspace),actorId:who});}
+ const request=JSON.parse(String(init.body));requests.push({method,path,actor:who,request:clone(request),retainedBeforePost:[...memory.values()].some(raw=>JSON.parse(raw).request.operationId===request.operationId)});notify();
+ const key=who+':'+request.operationId;
+ if(path.endsWith('/reconcile'))return operations.has(key)?Response.json(clone(operations.get(key))):Response.json({status:'unknown',code:'operation_not_found'});
+ if(postMode==='loseBeforeCommit'){postMode='normal';throw Error('fictional_lost_reply_before_commit');}
+ let op=operations.get(key);
+ if(!op){
+  if(request.setupRevisionId!==workspace.setupRevisionId||request.settingsSnapshotId!==workspace.settingsSnapshotId)return Response.json({status:'rejected',code:'source_changed'},{status:409});
+  const prior=workspace.rows[0].review?.reviewId??null;
+  if(request.expectedReviewId!==prior)return Response.json({status:'rejected',code:'review_version_changed'},{status:409});
+  const q=review(request.context,request.reason,request.approvalReference,who);
+  const result={status:'context_recorded',reviewId:q.reviewId,version:q.version,priorReviewId:prior,provenance:'director_declared',source:{tournamentId:tid,setupRevisionId:workspace.setupRevisionId,settingsSnapshotId:workspace.settingsSnapshotId,eventClientRowId:rowId,setupEventVersionId:workspace.rows[0].setupEventVersionId,draftDigest:q.draftDigest},context:clone(request.context),actorId:who,tournamentId:tid,operationId:request.operationId,request:clone(request),officialApprovalClaimed:false,activationAllowed:false,moneyMoved:false};
+  op={kind:'event-prize-rule-context-operation-v1',actorId:who,tournamentId:tid,operationId:request.operationId,request:clone(request),result};operations.set(key,clone(op));
+ }
+ if(JSON.stringify(op.request)!==JSON.stringify(request))return Response.json({status:'rejected',code:'operation_conflict'},{status:409});
+ if(postMode==='loseAfterCommit'){postMode='normal';throw Error('fictional_lost_reply_after_commit');}
+ if(postMode==='holdAfterCommit'){postMode='normal';return new Promise(resolve=>{held=()=>resolve(Response.json(clone(op)));bridge().__releasePost=()=>{const release=held;held=null;release?.();};});}
+ return Response.json(clone(op));
+};
+function App(){
+ const [tick,setTick]=useState(0),[props,setProps]=useState(()=>({actorId:actor,tournamentId:tid,setupRevisionId:workspace.setupRevisionId,setupVersion:workspace.setupVersion,settingsSnapshotId:workspace.settingsSnapshotId,settingsDigest:workspace.settingsDigest})),[ready,setReady]=useState(false),[readyReviews,setReadyReviews]=useState(null),[shown,setShown]=useState(true);
+ notify=()=>setTick(x=>x+1);
+ bridge().__fixtureState=()=>({props:clone(props),ready,readyReviews:clone(readyReviews),source:clone(workspace),requests:clone(requests),retained:[...memory.entries()].map(([key,raw])=>({key,raw})),operations:operations.size});
+ bridge().__postMode=mode=>{postMode=mode;};
+ bridge().__coDirectorUpdate=()=>{review({sanctioned:true,eventKind:'main',durationDays:2,originalEntrants:null},'Co-director refreshed review','Co-director evidence',co);setTick(x=>x+1);};
+ bridge().__noReview=()=>{workspace.rows[0].review={state:'absent',historyExists:false};workspace.allCurrentEligible=false;setTick(x=>x+1);};
+ bridge().__advanceSource=()=>{workspace.setupRevisionId=id(16);workspace.setupVersion++;workspace.settingsSnapshotId=id(17);workspace.settingsDigest='c'.repeat(64);workspace.rows[0].setupEventVersionId=id(18);workspace.rows[0].review.current=false;workspace.rows[0].review.eligible=false;workspace.allCurrentEligible=false;setProps(old=>({...old,setupRevisionId:workspace.setupRevisionId,setupVersion:workspace.setupVersion,settingsSnapshotId:workspace.settingsSnapshotId,settingsDigest:workspace.settingsDigest}));};
+ bridge().__switchActor=who=>{bridge().__fixtureActor=who==='co'?co:actor;workspace.actorId=bridge().__fixtureActor;setProps(old=>({...old,actorId:workspace.actorId}));};
+ bridge().__restoreInitialActor=()=>bridge().__switchActor('actor');
+ bridge().__hide=()=>setShown(false);bridge().__show=()=>setShown(true);
+ return <main style={{padding:'12px',maxWidth:'1000px',margin:'0 auto',minWidth:0}}>
+  <h1 style={{overflowWrap:'anywhere'}}>Offline Rule-Context Acceptance</h1><p>Fictional ports and memory only. No records, provider session or money.</p>
+  <output aria-label="Fixture Readiness" style={{display:'block'}}>Readiness: {ready?'ready':'blocked'}</output>
+  <output aria-label="Fixture Counts" style={{display:'block',overflowWrap:'anywhere'}}>Tick {tick}; posts {requests.filter(r=>r.method==='POST'&&!r.path.endsWith('/reconcile')).length}; checks {requests.filter(r=>r.path.endsWith('/reconcile')).length}; retained {memory.size}</output>
+  <div className="policy-settings setup-workspace">{shown&&<EventPrizeRuleReviewV1 {...props} onReadyChange={setReady} onReadyReviews={setReadyReviews}/>}</div>
+ </main>;
+}
+createRoot(document.getElementById('root')!).render(<App/>);

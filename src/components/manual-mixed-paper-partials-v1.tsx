@@ -1,0 +1,11 @@
+import {manualMixedPaperCardLineV1} from '../lib/games/manual-mixed-paper-card-line-v1';
+import type {GameScorecardNumbers} from '../lib/api/odd-field-makeup';
+import {deriveScore} from '../lib/score';
+import {manualMixedHandoffEnabledV1} from '../lib/games/manual-mixed-handoff-v1';
+import type {HybridGameItem} from '../lib/hybrid-games/workspace';
+/** Only mount for the existing admitted first-transcriber candidates, never the independent review queue. */
+export function ManualMixedPaperPartialsV1({items,tournamentId,cardNumberContexts={}}:{items:HybridGameItem[];tournamentId:string;cardNumberContexts?:Record<string,GameScorecardNumbers>}){
+ if(!manualMixedHandoffEnabledV1()||items.length===0)return null;
+ const cards=Map.groupBy(items,item=>JSON.stringify([item.eventId??item.eventName,item.paperVerificationId]));
+ return <section aria-label="Tentative Paper Scorecards"><h2>Tentative Partial Paper Scorecards</h2><p>These rows mirror saved digital-opponent submissions. They are not verified card scores or final totals. Use the original paper card to transcribe every remaining game through the manual forms below and Paper-versus-Paper Games. No photo is required.</p>{[...cards].map(([key,rows])=><section key={key}><h3>{rows[0].eventName}: {rows[0].paperPlayerName} — Tournament ID {rows[0].paperVerificationId}</h3><ul>{rows.map(item=>{const line=manualMixedPaperCardLineV1(item,cardNumberContexts[item.gameId]);if(line===null)return <li key={item.gameId} role="alert">Original paper-card line unavailable for scheduling batch {item.gameNumber}, opponent {item.digitalPlayerName}. Reload the card-line mapping before transcription; no tentative score is shown.</li>;const paperSide=item.digitalSide==='a'?'b':'a',score=deriveScore(item.digitalMargin,item.digitalWinnerSide===paperSide?'player':'opponent');return <li key={item.gameId}>Game {line}{item.gameNumber===13?' (qualifying makeup, scheduling batch 13)':''}, opponent {item.digitalPlayerName}: tentative {score.playerGamePoints} Game Points, +{score.playerPlus} / −{score.playerMinus}. Pending original-card transcription and independent review.</li>;})}</ul></section>)}<a href={'/tournament/'+tournamentId+'/paper-games'}>Manually Enter Remaining Paper-versus-Paper Games</a></section>;
+}

@@ -1,0 +1,31 @@
+# Implementation status — local, unpublished
+
+The plan below is retained as historical design evidence. Local migration candidates 0290–0292 now implement the versioned association and reviewed eligibility protocol; current verification and limitations are in `docs/quality/2026-11-04-linked-setup-local-verification.md`. No hosted migration or publication is authorized.
+
+# Explicit Main / Consolation associations — safe implementation boundary
+
+LOCAL PLAN ONLY; no schema change, record read/write or deployment. Current owner wants Yes/No perMain and associated Consolation editor with its own Q-Pool/SidePool options, no invented universal oneMain/oneConsolation limit or changed eligibility.
+
+## Existing facts
+SetupEvent in src/lib/api/setup.ts has clientRowId/eventKind but no parent/sourceMain link. Q-Pools and SidePools already belong to each event, and drafts preserve row IDs. Legacy saveRPC0191_four_co_director_roles.sql:221-224 rejects more thanoneMain oroneConsolation; activation0112_multi_event_setup_activation.sql:111-115 requires exactlyoneMain. Clientadd/finalization and readEventPrizeDeclarationPins mirror that implementation limit. This is an EXISTING implementation constraint, not proof of ACC policy. This patch does not introduce additional cardinality restrictions, forceConsolation, remove existing drafts or bypass backendguards.
+
+CurrentConsolation source0278_consolation_four_qualifier_source_v1.sql:23-40 infers the soleactiveStandardSinglesMain, then requires eachConsolation entrant’s rosterEntryId map to thatMain’s current nonqualifier result. This is not an explicit persistent relationship and cannot identify whichMain in a twoMain gathering. No newYes/No UI is presented as if it solves this dependency.
+
+ParentACC research: GN44 flyer advertises twoMains/twoConsolations/eightSatellites whileschedule listsMains as separatetournaments. Attributedparentresearch, not independentnewPDFinspection. No universalper-record/satellitecap proven: https://www.cribbage.org/NewSite/GrandNatl/Grand_National_44.pdf . Gathering/series versus sanctionedtournamentrecord must be explicit before imposing cardinality.
+
+## Concrete follow-up
+1. Add versioned explicit event associations keyed by stable setupclientRowIds and source revision; mirror stable operationaleventIDs after activation. SourceMain and targetConsolation must be in the intended scope; never match names or order. Keep new fields/version separate from strict historical payload codecs.
+2. New auditedwriter andreadback verify actor/director, expectedsetuprevision, exactrequest/idempotency, association fingerprint, eventtypes, sameallowedscope, duplicates andcycles. Preserve oldrequestreplay/history and roleboundaries. Define supported relationship multiplicity from verifiedrequirements; do not infer oneoverallMain/Consolation from oldlimitations. Existing32event technicalbound is not an ACCrule.
+3. UIYes opens associated editor or explicitly chooses an existingConsolation without recreating it; savedQ-Pools/SidePools stay intact. No cannot silently delete or detach an existing event; any permitted change needs explicit review, reason, and currentdownstreamguards. Legacyunassociated drafts are shown forreview, not automaticallyassigned basedon names. Preserveunsavedstate/recovery and alloldversions.
+4. Replace implicitMain lookup in eligibility/qualification/playoff/MRP/financialdependencies with explicit sourceassociation and currentqualificationversion. Finalize/start/review failsclosed ifassociationmissing/ambiguous/stale. Preliminaryregistration interest is not proof offinaleligibility; do not silentlychangefee/election/consent orautoenroll allnonqualifiers.
+5. Remove existing singleeventkindguards only alongsidereviewed save/activation/declaration/operationalchanges; changingbuttons alone would allowunsavable orwronglyboundwork. TesttwoMains+twoConsolations+Satellites, individualpools/declaredfees, perMainqualifiedexclusion, duplicates/crossscope/stale/retry/concurrentrequests, alreadyactivated/funded/finalizedimmutability and legacyreplay.
+6. Presentexactlocalmigration/API/UI scope forapproval beforehostedapplication/publication. Nohostedchanges orneweligibilityclaims in thisUIpatch.
+
+## Definitions page proposal
+Currentresources: docs/reference/INDEX.md indexes officialRulebookPDF/selectedreviews; src/app/tournament/[tournamentId]/rulebook/rulebook-reference.tsx has five searchtopics, not a fullglossary. Existing apprequirements/dateddecisions describe specificbehaviors. No completeworkbookDefinitionssheet text has been supplied to thisexecutor; fivepayoutfixtures are not definitions.
+
+Propose a smallread-onlysearchable Resources→Definitions page, groupedbySetup/Scoring/Results-MRP/Payouts, retaining eachdefinition’s exact reviewedsource/version and whetherofficialACCterminology orapp-specificbehavior. Confirmtermmeanings/citations fromactualworkbookdefinitions/manual andprojectdecisions beforedrafting. Do not copy outdated permanentID wording blindly; ownerusesTournamentID#, distinctfromACCmembernumber/currentTableSeat. Unresolvedmethodnames/eligibility/refunds remainexplicitlypending ratherthaninvented. Noaccount/permission/financialactions onthispage. Firstdeliverable is asource-to-term inventory forownerreview, thenpageimplementation; no inventedglossary in currentpatch.
+
+## Superseding eligibility clarification — owner2026-11-04
+
+NEWprotocol mustnotexcludesomeonesolelybecausequalifiedforMainplayoffs. Ownerexplicitlyallows aMainqualifierjoininglinkedConsolationafterlosinginfirstorsecondplayoffround,beforeConsolationstarts. Preservelegacyv1/nonqualifier-onlyhistoricalevidencewithoutreinterpretation. Mainlosssource mustbe thelinkedMain, currentandreviewed; byes,MRPexitcredit,absenceforfeitsandunsavedbrowserchoicesarenotplayedlossproof. CurrentfullbracketV3/V4recordsarewrittenonlyafterallseries; a durableincrementalreviewedseries-evidencedomain isneededforearlyloserswhileMaincontinues. This is an implementationgap, not evidenceofuserineligibility. Do notclaimindependentgameverificationfromdirectorwholebracketrecord. Verifytiming/correction/admissionfreeze andanypolicyexceptionswithoutinventingACCpermission. Normalregistrationinterest remainsdistinctfromfinaleligibility.

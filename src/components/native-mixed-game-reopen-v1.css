@@ -1,0 +1,6 @@
+.native-mixed-reopen { max-width:48rem; min-width:0; margin:0 auto; padding:16px; color:#172b40; overflow-wrap:anywhere; }
+.native-mixed-reopen textarea { display:block; width:100%; max-width:100%; min-height:7rem; margin:8px 0 16px; font:inherit; padding:12px; }
+.native-mixed-reopen button { min-height:48px; max-width:100%; margin:8px 8px 8px 0; padding:10px 14px; white-space:normal; font:inherit; }
+.native-mixed-reopen-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.native-mixed-reopen label { display:block; font-weight:700; }
+.native-mixed-reopen li { margin:8px 0; }

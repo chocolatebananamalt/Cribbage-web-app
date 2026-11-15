@@ -1,0 +1,62 @@
+import Link from "next/link";
+import { GamePlayerLocation } from "../../../../components/game-player-location";
+import { notFound } from "next/navigation";
+
+import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
+import { isUuid } from "../../../../lib/api/validation";
+import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
+import { getMyGames, type AssignedGameSummary } from "../../../../lib/games/my-games";
+import {modernManualPagesEnabledV1} from '../../../../lib/playoffs/modern-manual-playoff-contract-v1';
+import {selectedStepPlayerPageEnabledV3} from '../../../../lib/playoffs/selected-step-player-v3';
+
+export const dynamic = "force-dynamic";
+
+import {MakeupCardLines} from '../../../../components/makeup-card-lines';
+
+const actionLabel: Record<AssignedGameSummary["nextAction"], string> = {
+  await_paper_review: "Tentative — awaiting paper-card cross-check",
+  enter_result: "Enter result",
+  wait_opponent_entry: "Waiting for opponent entry",
+  review_confirm: "Review and confirm",
+  wait_opponent_confirmation: "Waiting for opponent confirmation",
+  mismatch_review: "Entries do not match",
+  view_scorecard: "Verified",
+  upcoming_locked: "Upcoming — opens after the prior game is verified",
+  event_not_started: "Waiting for an official to start this event",
+};
+
+function GameList({ games, tournamentId }: { games: AssignedGameSummary[]; tournamentId: string }) {
+  return <ul className="my-games-list">{games.map((game) => <li key={game.gameId}>
+    <div><strong>Event: {game.eventName} · {game.cardNumbers?.isMakeup?`Makeup for card game ${game.playerSide==='a'?game.cardNumbers.sideACardGameNumber:game.cardNumbers.sideBCardGameNumber}`:`Game ${game.gameNumber}`}</strong><GamePlayerLocation label={game.playerName ?? "You"} playerId={game.playerVerificationId} tableSeat={game.playerTableSeat} /><GamePlayerLocation label={game.opponentName} playerId={game.opponentVerificationId} tableSeat={game.opponentTableSeat} /><MakeupCardLines numbers={game.cardNumbers} sideAName={game.playerSide==='a'?'You':game.opponentName} sideBName={game.playerSide==='b'?'You':game.opponentName}/></div>
+    <div><span className={`game-state game-state-${game.state}`}>{game.state === "corrected" ? "Verified correction" : game.state === "recovered" ? "Verified recovery" : actionLabel[game.nextAction]}</span>{["upcoming_locked", "event_not_started"].includes(game.nextAction) ? <span className="secondary" aria-disabled="true">Locked</span> : <Link className="secondary" href={game.nextAction === "view_scorecard" ? `/tournament/${tournamentId}/scorecard?event=${game.eventId}` : `/tournament/${tournamentId}/game/${game.gameId}`}>{game.nextAction === "view_scorecard" ? "View Scorecard" : "Open Game"}</Link>}</div>
+  </li>)}</ul>;
+}
+
+export default async function MyGamesPage({ params }: { params: Promise<{ tournamentId: string }> }) {
+  const { tournamentId } = await params;
+  if (!isUuid(tournamentId)) notFound();
+  await requireTournamentAccess(tournamentId);
+  const result = await getMyGames(tournamentId);
+  if (result.status === "unavailable") return <main className="auth-shell"><section className="auth-card" aria-labelledby="games-unavailable-title"><p className="eyebrow">SCORE ENTRY</p><h1 id="games-unavailable-title">Games temporarily unavailable</h1><p className="auth-note">No game can be opened until the tournament system is current. Please ask a director to verify the system before trying again.</p><Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link></section></main>;
+
+  const awaitingPaper = result.workspace.games.filter(game => game.progressionStatus === "awaiting_paper_review");
+  const active = result.workspace.games.filter((game) => game.progressionStatus === "current");
+  const notStarted = result.workspace.games.filter((game) => game.progressionStatus === "not_started");
+  const upcoming = result.workspace.games.filter((game) => game.progressionStatus === "upcoming");
+  const completed = result.workspace.games.filter((game) => game.progressionStatus === "completed");
+  const eventIds = [...new Set(result.workspace.games.map((game) => game.eventId))];
+  const tournamentLabel = [result.workspace.tournamentName, result.workspace.tournamentDate].filter(Boolean).join(" ");
+
+  return <main className="auth-shell"><section className="auth-card games-card" aria-labelledby="my-games-title">
+    <p className="eyebrow">SCORE ENTRY</p><h1 id="my-games-title">My Games</h1><p className="card-context">{tournamentLabel}</p>
+    {modernManualPagesEnabledV1()&&<Link className="guide-link" href={`/tournament/${tournamentId}/manual-playoffs`}>Open Manual Playoff Games</Link>}
+    {selectedStepPlayerPageEnabledV3()&&<Link className="guide-link" href={`/tournament/${tournamentId}/playoff-games`}>Open My Playoff Games</Link>}
+    {notStarted.length ? <><h2>Waiting to Start</h2><GameList games={notStarted} tournamentId={tournamentId} /></> : null}
+    <h2>Current Games</h2>{active.length ? <GameList games={active} tournamentId={tournamentId} /> : <p className="auth-note">No current game is waiting for your entry or confirmation.</p>}
+    <h2>Upcoming Games</h2>{upcoming.length ? <GameList games={upcoming} tournamentId={tournamentId} /> : <p className="auth-note">No later scheduled games.</p>}
+    {awaitingPaper.length ? <><h2>Awaiting Paper-Card Review</h2><p>These games are tentative, not verified or included in final results. Continue with your current game while officials review the original paper card.</p><GameList games={awaitingPaper} tournamentId={tournamentId}/></> : null}
+    <h2>Completed Games</h2>{completed.length ? <GameList games={completed} tournamentId={tournamentId} /> : <p className="auth-note">No verified games yet.</p>}
+    {eventIds.map((eventId) => <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${eventId}`} key={eventId}>View {result.workspace.games.find((game) => game.eventId === eventId)?.eventName} Scorecard</Link>)}
+    <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link><SharedDeviceSignOut />
+  </section></main>;
+}

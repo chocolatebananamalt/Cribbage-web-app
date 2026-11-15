@@ -1,0 +1,237 @@
+# ACC Tournament Desk — Working Outline
+
+## 2026-10-30 current verified balanced-Q milestone
+
+Balanced ACC-weighted Q policy integration is complete locally through immutable unpaid review and canonical accounting. Final1,046 tests/full checks,14 policy browser groups, actual SQL phone/desktop render and isolated17-player102-game workflow pass; old chart/equal history is preserved. See `docs/quality/2026-10-30-balanced-q-integration-local.md`. Next is separately approved exact-release staging publication/schema/acceptance; production, restore/physical-offline, unresolved Q cash ties, unsupported formats and paid-state gates remain. No new hosted change is authorized or performed by this milestone.
+
+## 2026-10-30 verified local five-qualifier / optional-Q milestone
+
+All three 17-player local cases now pass: Q-funded, genuine no-Q, and a two-card seed tie resolved without altering original qualifying totals. Each has 102 real verified qualifying matches, five qualifiers and three separate bye credits. Regular awards and classified expenses reconcile through one immutable unpaid final; Q and no-Q histories remain separate. Actual authenticated pending/completed scorecard reads retain each player's original lines 1–12. Full verification passes 1,038 application tests, audit/build/types/providers and eight workspace checks; current component and actual-SQL-rendering browser checks pass. Only two pre-existing lint warnings remain. Independent review found no confirmed P1/P2. Migrations 0247–0254 are local/unapplied and nothing has been committed, pushed or deployed.
+
+Evidence: `docs/quality/2026-10-30-five-qualifier-main-local.md`. The source snapshot is being refreshed at this verified checkpoint; authoritative Library version/hash is retained in the verified snapshot receipt outside the archived source tree. It remains a source-only backup, not database/Auth/Storage recovery.
+
+The approved ACC-weighted largest-remainder calculator is separately verified (320 research goldens and all 1,536 supported combinations) and included in the full checks. Connecting its new disclosed policy to existing unpaid review/accounting is the next local implementation step. Existing historical chart/equal policies and hosted fixtures are unchanged. Larger brackets, other formats, unresolved Q cash ties, paid-state/disbursement, physical offline rehearsal, restore and exact-release hosted acceptance remain distinct gates; this is not production approval.
+
+
+## 2026-10-29 current local completion sequence
+
+Qualification-tie recording and the Q v2 canonical unpaid-accounting bridge are implemented and locally verified; a downstream source-validated playoff/MRP bridge is under staged verification. See `docs/quality/2026-10-29-q-v2-canonical-accounting-local.md` and `docs/quality/2026-10-29-release-readiness-current.md` for current evidence rather than the historical dates below. No changes are published or applied to hosted databases.
+
+The owner now prefers the ACC calculator for future pool payouts; largest-remainder balancing is a recommendation awaiting approval, not active policy. Preserve historical chart schedules/reviews. Current canonical accounting supports four qualifiers only; the sourced 17-player Main minimum produces five qualifiers and requires a larger/bye bracket. That supported tournament path is a material production-readiness gap, not merely an optional polish item. Existing16-player rehearsals are software fixtures, not sanctioned-Main acceptance. Physical multi-user/offline proof, database restore, exact-release rollout/rollback and director go/no-go remain gates. Automatic payments/OCR are not silently activated by this work.
+
+## 2026-10-29 local qualification tie repair
+
+Implement source-bound two-player head-to-head / separately played one-game ranking resolution, preserving original scores and all historical finalizations. Independent Q cash tie policy remains separate. Local SQL/race/browser verification and reviewed additive migration are gates before any staging rollout; see `../decisions/2026-10-29-qualification-two-player-ties.md`.
+
+## 2026-10-28 current local checkpoint
+
+Funded synthetic staging rehearsal is finalized and preserved. Local repair makes money displays/inputs dollar-based without changing integer-cent records, clarifies exact saved schedule references, and routes new structured events to canonical playoff outcomes while preserving legacy history. Verification and separate publication boundary: [currency repair](../quality/2026-10-28-usd-display-local-repair.md). Next proposed bounded development is explicit Q Pool membership/payment allocation, with sourced eligibility/distribution fixtures before automatic payouts; photo/OCR and interrupted multi-device/byes remain separate acceptance gates. Do not infer Q Pool election from recorded dollars or reuse Side Pool payout estimates as Q Pool authority.
+
+**Last updated:** 2026-09-17
+
+> **October standard correction (approved 2026-09-14):** October is not
+> Standard-Singles-only. Two-person Traditional Doubles and Canadian Doubles
+> support captain-selected Digital or Paper team scoring; participant seating
+> lookup and up to six configurable Side Pools are release blockers. See
+> `docs/decisions/2026-09-14-october-team-scoring-seating-and-six-side-pools.md`.
+
+**How to ask for this:** `Show Outline`
+**Planning baseline:** This is a living delivery tracker, not a promise that
+an unverified feature is ready. Estimates assume prompt decisions, continued
+access to the current Vercel/Supabase projects, and no newly discovered ACC
+rule conflict. Any item that needs a real director decision or real-world test
+shows that dependency explicitly.
+
+## Completion forecast
+
+| Target | Target date | What must be true |
+| --- | --- | --- |
+| Director onboarding build | **2026-09-18 — at risk** | The corrected October pilot minimum below (Standard Singles plus supported two-person doubles, seating directory, and six Side Pools) passes real server, offline, independent-user, phone/desktop, backup/restore, and rehearsal checks. |
+| Supervised first tournament | **2026-10-03** | The September build survives director rehearsal and any release-blocking defects are closed. |
+| Deferred full-suite capabilities | **After 2026-10-03** | Production Rulebook/quick-reference integration, flyer creation/import, online payments, SMS, OCR, and automatic ACC submission are delivered separately. The temporary two-Judge call surface is release work; it is not a ruling register. Supported doubles team scoring, seating directory, and six Side Pools are release work. |
+
+September 18 is the requested operating target, not a promise that an unsafe
+or unverified build will be called ready. The release candidate now contains
+the required offline, results, finance, and recovery workflows. The remaining
+acceptance risk is physical multi-person rehearsal evidence and the external
+ACC/director confirmations listed below. Deferred features do not consume
+pilot time.
+
+## Working steps
+
+| # | Step and definition of done | Status | Completed / estimated date | Current evidence or dependency |
+| --- | --- | --- | --- | --- |
+| 1 | **Requirements and design baseline.** Approved score entry, paper-style scorecard, roles, corrections, seating, event/flyer, results, finance, how-to, and paper-capture requirements are traceable and conflicts are recorded. | Complete | **2026-09-10** | `docs/product/production-requirements.md`, decisions, reviewed prototype. Official rules remain versioned inputs, not assumptions. |
+| 2 | **Platform and access foundation.** Vercel Production, Supabase Auth/database, private role boundaries, audit receipts, director approval, self-service tournament creation, and safe registration links operate. | Registration identity/contact update in verification; physical acceptance remains | **Implemented/deployed baseline 2026-09-13; update target 2026-09-17** | Migration 0163, audited app-owner/ACC-administrator governance, and approved-director draft creation are live. The distinct `Full Rehearsal — 09-16-2026` draft exists exactly once; the app owner is its creator and sole primary director, and the separately approved friend is its co-director without Director Administration authority. The current Genesis link remains legacy-active but deliberately unrecoverable. The current release extends the sealed-link/first-last public-claim work to strict `First Name`/`Last Name` CSV and manual roster entry, visible Digital/Paper `Scorecard Type` choices, and a tournament-specific public Director name with primary-director correction. Automated, hosted, independent-session, and Production proof is pending. |
+| 3 | **Tournament setup, players, check-in, seating, and directory.** Main/Consolation/Satellites, supported doubles, game counts, fees, Q-pools, roster/import, payment status, check-in, closure, capacity, assignments, scoped lookup, event participants, and schedules operate under one tournament. | Deployed; rehearsal remains | **Deployed 2026-09-17; attendance hardening implemented 2026-09-18** | Manual/CSV/public intake, registration freeze, dynamic table plan, printable seating, audited schedule publication/amendment, captain-selected shared team mode, team claims, scorer designation/linkage, published starting/current Table/Seat and permanent IDs, participant directory with private-field filtering, and printable paper-card lists are live. The event-specific Day-of-play Event QR Check-In workspace adds a director-controlled 60-second rotating code, five-minute completion session, and desk alternative enforcing payment/enrollment. The desk projects current—not historical—attendance, requires check-in/no-show resolution for every active enrollee before closing, audits pre-start corrections, and prevents one player being active in two unfinished events. Consolation cannot open before Main qualification finalizes. Physical independent-session rehearsal and email-delivery capacity remain open gates. |
+| 4 | **Singles and supported team scoring, scorecards, cross-checking, disputes, and offline durability.** Standard Singles plus Traditional/Canadian Doubles support independent verification, reciprocal team lines, paper/hybrid paths, corrections, and durable offline replay. | Deployed; physical proof remains | **Deployed 2026-09-15; physical proof target 2026-09-17** | Team-specific records, four-member display, one opposing designated-scorer submission per team, two distinct eligible confirmations, self-confirmation rejection, team standings, paper-card counts, audit-safe corrections, and offline recovery are live without changing singles safeguards. Hosted fixtures pass; independent-session disconnect/reload/reconnect and physical reconstruction remain. |
+| 5 | **Results and financials.** Standings, qualification/high-non-qualifier, playoff results, six Side Pools, Main/Consolation MRP calculation, expenses, fees, payouts, reconciliation, and director exports operate per event. | Deployed; rehearsal remains | **MRP calculation applied 2026-09-15; rehearsal target 2026-09-17** | Main/Consolation MRP values are server-calculated only from the owner-approved currently published ACC schedule source `acc-published-mrp-2016-08-01`, after complete recorded playoff exit rounds. Satellite reports remain MRP-not-applicable. Six configurable event-scoped Side Pools support unique names, equal-fee pools with different names, elections, collections, corrections, payouts, reconciliation, CSV/PDF reports, and seventh-pool rejection. The 2026-09-16 recovery is deployed: Q Pool and Side Pool setup are separate, the stale finalization path is cleared, existing Canadian Doubles is Digital/Paper-capable, the unused Traditional Doubles was retired, and Canadian Doubles Practice was added. Physical results/finance review remains. |
+| 6 | **Pilot release proof.** Phone/desktop/zoom, independent sessions, offline/reconnect, backup/restore, rollback, monitoring, and director rehearsal pass against the release candidate. | In progress | **Target 2026-09-18** | Automated 320/375/640/1280 rendering, full local gate, hosted rollback fixtures, Production smoke/runtime monitoring, Vercel rollback, and isolated schema reconstruction/parity pass. On 2026-09-13 `pnpm verify:live-demo` operated 20 distinct production-demo screens at 320/640/1280 with zero overflow, CSP violations, failed requests, console errors, or page errors and parsed both required PDFs. Hosted rollback proof now covers migrations through `0163`, including director administration and independent paper-image authorization, while retaining no synthetic fixture users or tournaments. Independent player/official sessions, single-device and whole-venue disconnect/reconnect, a private-record backup/content restore, and the director walkthrough remain physical acceptance rehearsals in `OCTOBER_PILOT_REHEARSAL.md`. |
+| 7 | **Supervised October 3 event.** Monitor the first tournament, preserve rollback/recovery paths, and capture issues without losing scorecards. | Not started | **2026-10-03** | Requires Step 6 and director approval. |
+| 8 | **Deferred full suite.** Production Rulebook/quick-reference integration, flyer creation/import, online payments, SMS, live OCR activation, and automatic ACC submission. | Foundations prepared; live integrations deferred | **After 2026-10-03** | These do not include the temporary two-Judge call surface, supported October doubles, seating directory, or six Side Pools, which block the September 18 gate. Future payment methods remain default-off; OCR remains disabled. |
+
+## Current highest-priority work
+
+### Rehearsal findings priority rule
+
+1. **Must fix before October 3:** blocks safe scoring, verification, results,
+   finances, seating, or data recovery.
+2. **Fix before director setup begins:** required for accurate or practical
+   director setup, including setup of **Full Rehearsal — 09-16-2026**.
+3. **Post-rehearsal improvement:** valuable work to complete before later
+   pilots, but not required for the rehearsal or October 3.
+
+For a finding that could reasonably fit more than one class, present the owner
+with the recommendation and these three choices before assigning it. The
+calculated Main/Consolation ACC Sanctioning Fee is Category 2. The implementation replaces the manual total with one on-entry/manual-refresh calculation panel, immutable Start Play snapshot, and a one-rate-at-a-time pre-start adjustment requiring a director reason and system-recorded ACC Board-approval attestation; release verification remains pending.
+
+**Category 2 — Setup-based official administration and time zones:** Setup
+requires a State/Territory and DST-aware IANA Time Zone before it can finalize.
+It also becomes the primary director's compact assignment surface for up to 12
+Co-Directors, Cross-Checkers, and Judges per role. Exact-email secure sign-in
+is required before a pending official receives authority; old separate
+official/cross-checker pages redirect to Setup. Migration, independent-session,
+email-provider, browser, and production proof remain release gates.
+
+**Category 2 — Structured tournament contact information and rehearsal setup
+repair:** the open-ended Director contact-details field is replaced with
+optional player-facing phone/email and Mailing Address for Correspondence,
+role-backed primary-director name, and versioned audit history. QR-link issue
+and replacement require those saved public contact values. Setup now separates
+Save All Events Draft from Finalize All Events / Open Registration, keeps a saved draft
+visible if finalization-status reading fails, and separates ordinary Sign out
+from safe app-data clearing. Before Start Play, the primary director may use
+the exceptional Event Changes workspace to retire an event or replace it with
+a separately identified editable copy; eligible individual/team enrollments
+and references to the same tournament payment ledger transfer without
+rewriting history or duplicating money. Production deployment and director
+visual proof remain before this finding is closed.
+
+**Category 2 — Structured venue and Director identity:** the first Setup stage
+uses separate required Venue name, street, city, State/Territory, and ZIP
+fields plus separate player-facing Tournament Director First name and Last
+name fields. Desktop rows follow the owner-approved layout and stack safely on
+phones. The immutable setup revision stores each value, while compatibility
+projections keep existing registration and reporting readers working without
+rewriting historic revisions. The layout preview requires owner approval
+before PR, merge, hosted migration, or Production deployment.
+
+**Category 2 — Pool setup and rehearsal recovery:** Q Pools now retain their
+two-pool Main/Consolation limit while Side Pools have their own zero-to-six
+Main/Consolation/Satellite configuration area, versioned setup records, and
+operational-financial materialization. The rehearsal’s active legacy
+paper-team event state is recognized as valid, so a stale finalization retry
+cannot reopen or duplicate registration. The remaining director-facing
+rehearsal actions are to retire the unused Traditional Doubles event, enable
+the existing Canadian Doubles event for Digital/Paper scoring, and add
+**Canadian Doubles Practice** through the audited later-event workflow.
+
+**Category 1 — Cross-source duplicate roster prevention:** hard duplicate
+prevention remains in place for ACC # and exact first/last/email. The current
+release repairs the weak-match dead end: a name-only or email-only collision is
+now an explicit director decision between **Same person—reject duplicate** and
+**Different person—approve for roster**, with immutable distinct-person audit
+evidence before promotion. Shared family email is contact-only, never a shared
+Digital account. Existing-player removal is separately named and warned as a
+roster withdrawal; withdrawn records use an explicit expandable list and
+guarded reinstatement. Production browser and independent-session verification
+remain before this finding is closed.
+
+**Category 1 — Youth ACC-number support:** all current registration, manual
+roster, CSV, event QR check-in, roster matching, and Seating Directory paths
+now accept adult `HI296` and youth `HI296Y` identifiers. The final uppercase
+`Y` remains visible in the recorded value but is omitted only from the internal
+member-identity key, so adult/youth forms cannot create duplicate active
+records. The deployed physical rehearsal must still prove the phone, iPad, and
+desktop paths before this finding is closed.
+
+1. Use the isolated `Full Rehearsal — 09-16-2026` draft and its six fictional
+   identities. Complete setup → roster/check-in → registration-close → seating
+   → enrollment → schedule without altering the real October tournament.
+2. Run the complete independent-session, single-device outage, whole-venue
+   outage, paper/hybrid, failed-device, results/financial-finalization,
+   backup/restore, and director rehearsal by September 18.
+3. Complete the source-versioned automatic Main/Consolation MRP proof in the
+   rehearsal, retain director-reviewed finalization, and do not invent Q-pool
+   or payout formulas.
+
+The owner-private, plain-language blocker dashboard is published at
+<https://acc-tournament-production-readiness.chocolatebananamalt.chatgpt.site>.
+
+The detailed rule/ACC decision split is maintained in
+`docs/operations/ACC_RULE_CONFIRMATION_CHECKLIST.md`.
+Owner corrections and the mandatory solve-first protocol are maintained in
+`docs/operations/DURABLE_PROJECT_MEMORY.md`.
+
+## Exact shared-pilot preparation state
+
+Read-only inspection on 2026-09-13 found the following in the approved pilot
+database for **October 3 Pilot Tournament**. These are operational preparation
+facts, not missing integrations or hidden engineering work.
+
+| Item | Current count/state | What closes it |
+| --- | --- | --- |
+| Tournament setup | Activated | No engineering action remains for the setup shell. |
+| Private roster identities | 2 | Director completes the real roster by manual entry, CSV import, or approved public registration claims. |
+| Assigned official accounts | 2 — director and co-director; 0 cross-checkers as of the last hosted read | Use **Set Up Tournament** → the applicable Co-Directors, Cross-Checkers, or Judges **Add/Remove** page after the intended official’s exact-email secure sign-in. At least two independent cross-checkers are required for the rehearsal. |
+| Assigned player accounts | 0 | At least two real test players sign in and are linked before independent-session proof can begin. |
+| Check-ins | 0 | Director records arrival during the rehearsal. |
+| Event enrollments | 0 | Director enrolls the final roster after registration closes. |
+| Seating publications | 0 | Director reviews table capacity and publishes the initial assignments once registration closes. |
+| Scheduled games | 0 | Director imports/reviews and publishes the event schedule after enrollment. |
+
+Do not fill these rows with invented production identities or prematurely
+close registration merely to turn the tracker green. The product supplies the
+required manual, CSV, QR/link, account-link, check-in, seating, enrollment, and
+schedule workflows; the remaining values must represent the real rehearsal or
+tournament participants.
+
+## ACC confirmation checklist
+
+### Part A — Codex confirms from official ACC sources
+
+| Confirmation | Status | Target |
+| --- | --- | --- |
+| Current Rulebook edition plus game-point, spread, scorecard, and cross-check source extraction | Complete — cached 2025 edition reviewed 2026-09-10 | 2026-09-10 |
+| Complete released score/cross-check rule-to-code fixtures and real workflow proof | Automated fixtures complete; physical workflow proof remains | 2026-09-17 |
+| Qualification order, playoff count, bracket, and bye fixtures | Automated fixtures complete; current-effective ACC acceptance remains | 2026-09-17 |
+| Event styles, game-count options, sanctioning fields, role vocabulary, and rotation-exception sources | Complete for the defined operations — the 2019 Manual/2025 Rulebook drive fixed outcomes; mixed rotations use a validated, audited director-entered correction because no automatic pairing is prescribed | 2026-09-14 |
+| MRP, Q-pool, payout, and reporting-source inventory | In progress — Codex must exhaust cached/public schedules and build fixtures before requesting any missing current-effective confirmation | 2026-09-16 |
+| Rule-to-code traceability, positive fixtures, and rejection/edge-case fixtures | Implemented for Standard Singles and supported two-person Traditional/Canadian Doubles; final dated evidence reconciliation remains | 2026-09-17 |
+
+### Part B — ACC/director confirmations needed
+
+| Your checklist item | Status | Needed by |
+| --- | --- | --- |
+| Written approval to use the app as an official digital operational record | Waiting for ACC/director response | Before pilot acceptance of Step 3 |
+| Approved ACC portal API, import, or director-reviewed export process | Waiting for ACC/director response | 2026-09-16 for official pilot export; API itself remains optional |
+| Current authoritative MRP, Q-pool, and payout schedules for supported events | Waiting for ACC/director response | 2026-09-16 for the September 17 results gate |
+| Paper-scorecard image/OCR retention and access policy | Approved for private restricted hold with no automatic purge — 2026-09-12 | Complete for storage foundation; live OCR still requires provider evidence |
+| Confirmed official role list, including multiple co-directors | Waiting for ACC/director response | Before Step 3 acceptance |
+| Payment authority and processor choice, only if app payments are enabled | Not yet needed | Before enabling payments |
+
+The detailed checklist explains the source, purpose, and exact evidence for
+each item. When either side completes an item, its status and date are updated
+here and in the detailed record.
+
+## Rules for status updates
+
+- **Complete** means the stated definition of done has direct recorded
+  evidence, not merely a prototype screen, migration, or passing static test.
+- **In progress** means useful implementation exists but a requirement or
+  verification gate remains open.
+- Every `Show Outline` response reports the table above, highlights changes
+  since the prior report, and revises estimates only when evidence warrants it.
+- A new critical defect reopens the affected step and its estimate; it is never
+  hidden behind a green deployment.
+
+## Source of truth
+
+The detailed requirements and release gates remain in
+`docs/product/production-requirements.md`, `docs/quality/`, and
+`docs/operations/LAUNCH_PLAN.md`. This document is their plain-language
+execution tracker.
+
+## 2026-10-28 approved local Q Pool foundation
+
+Owner-approved app defaults: explicit opt-in to exact configured pool versions; named receipt allocation; full base/pool payment for paid-entry status; ordinary entries lock at Start Play; later director corrections require a reason and existing pre-play evidence. Local implementation is bounded to a single activated Standard Main without Side Pool/other-event cash domains. Existing immutable histories stay intact; no payment or payout is created by election/allocation. Automatic Q payouts, canonical Q settlement, late first opt-ins/new payment sources, multi-event allocation and CSV migration remain separate gates. Evidence: docs/quality/2026-10-28-q-pool-membership-local.md. No staging/production rollout authorized by this local milestone.

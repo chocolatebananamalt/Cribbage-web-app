@@ -1,0 +1,8 @@
+import { NextRequest } from "next/server";
+import { isAcceptedHybridCreate,isCreateHybridCaseRequest,isRejectedHybrid } from "../../../../../../lib/api/hybrid-game";
+import { apiJson,readSmallJson,requireVerifiedSubject,withApiFailureBoundary } from "../../../../../../lib/api/route-boundary";
+import { isSameOriginRequest } from "../../../../../../lib/api/same-origin";
+import { isUuid } from "../../../../../../lib/api/validation";
+import { createServerOnlyAdminClient } from "../../../../../../lib/supabase/private-admin";
+import { createClient } from "../../../../../../lib/supabase/server";
+export async function POST(request:NextRequest,{params}:{params:Promise<{id:string}>}){return withApiFailureBoundary(async()=>{if(!isSameOriginRequest(request))return apiJson({error:"invalid_origin"},{status:403});const{id}=await params;const body=await readSmallJson(request);if(!isUuid(id)||!isCreateHybridCaseRequest(body))return apiJson({error:"invalid_hybrid_case"},{status:400});const actor=await requireVerifiedSubject(await createClient());if(!actor)return apiJson({error:"unauthorized"},{status:401});const{data,error}=await createServerOnlyAdminClient().rpc("create_hybrid_digital_paper_case_v1",{p_actor_id:actor,p_tournament_id:id,p_event_id:body.eventId,p_game_id:body.gameId,p_case_id:body.caseId,p_expected_game_version:body.expectedGameVersion,p_digital_submission_id:body.digitalSubmissionId,p_paper_claim:body.paperClaim,p_operation_id:body.idempotencyKey});if(error)return apiJson({error:"operation_unavailable"},{status:503});if(isAcceptedHybridCreate(data,body))return apiJson(data);if(isRejectedHybrid(data,body.caseId))return apiJson(data,{status:409});return apiJson({error:"operation_unavailable"},{status:503})})}

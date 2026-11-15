@@ -1,0 +1,1 @@
+export function createIndexedFinanceDraftRetainedV1(){return{read:async()=>window.stored,transition:async(k:any,b:any,n:any,a:any)=>{if(window.stored!==b)return false;window.stored=n;return true;}};}

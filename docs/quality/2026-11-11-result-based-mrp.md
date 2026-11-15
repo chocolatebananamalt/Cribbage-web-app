@@ -1,0 +1,25 @@
+# Automatic Result-Based Proposed MRP Reporting
+
+Local, default-off implementation. No database execution, migrations, hosted reads/writes, public uploads, access changes, submissions or awards occurred. Frozen 216-file release untouched.
+
+## Working local capability
+
+The ordinary Main/Consolation Standard Singles Results page now has a gated result-based proposed/hypothetical MRP table. It uses the existing finalized qualification version, live completed standings, current published schedule and identity assignments, and existing reviewed playoff source models. Directors no longer re-enter score totals, qualification rank, played match wins or byes for this path. All calculations reuse published Standard Singles qualifying schedules and the existing wins-plus-byes calculation. It does not copy a historical stored MRP amount as a fresh calculation.
+
+The projection binds tournament/event/participant IDs, fixed Tournament IDs, qualification version/time, live score totals/rank/game count, current roster coverage and verified/corrected schedule states. Current contradictions hold. Supported complete playoff paths derive played wins separately from awarded byes using the validated bracket; missing/stale/unlinked playoff evidence leaves qualifying proposals visible and playoff/total values explicitly pending. No points are inferred from finishing rank alone.
+
+A default-off server reader rechecks the actual Director/Co-director and verified account/session around two matching captures using existing authorized read APIs. It does not add SQL, grants or write calls. Matching reads are explicitly non-atomic; observation time, source digest and provenance are displayed and exported. The CSV download freshly re-reads the result rather than exporting a browser-asserted current snapshot; text formulas are defanged. Current data on a page remains an observed snapshot, not a perpetual currentness guarantee.
+
+All points are proposed/hypothetical. Nonmembers may see them but receive no actual award from this path. There is no membership API, E/D, Finance, registration-resolution or ACC acceptance gate. Unresolved registration overrides may remain unresolved before submission. ACC acceptance/official event-player reconciliation stays pending; missing official records are not rejection. The result readers used here do not expose ACC-number references, so they remain explicitly not collected rather than fabricated or joined by name. Participant UUID and fixed Tournament ID remain attached to every row. Registration-resolution companion reports and membership annotations remain separate; this change does not silently assert or resolve them.
+
+## Scope and limits
+
+Qualifying proposals support existing published Main/Consolation game-count domains with finalized qualification and completed current schedules. Full playoff totals are supported by source projection for a bound Main-four, Main-five and regular Consolation-four result. Production wiring can obtain Main-five and Consolation-four through existing RPCs. The Main-four normal authenticated provider bridge is now implemented locally (2026-11-11 follow-up), but its SQL/permissions remain unexecuted/revoked; the deployed path stays qualifying-only until accepted installation and enablement. See 2026-11-11-main-four-mrp-provider.md. Follow-up local bridges now cover native digital saved results for6–64 qualifiers (2026-11-11-large-result-mrp.md) and the separate native mixed five-qualifier rehearsal (2026-11-11-native-mixed-proposed-mrp.md); their installation and provider acceptance remain gated. Satellite/team/unsupported game-count rules are held, not inferred. No membership timing, ZZ identifier, new MRP rule or new ACC integration is invented.
+
+## Focused verification
+
+Seven changed-path tests pass: automatic Main-five 35 qualifying +70 playoff =105 with two played wins and one bye; independently expected bound Main-four 77 and Consolation-four 36; missing linkage retains qualifying-only proposals; wrong event/player/current-score/schedule evidence holds; CSV provenance/formula protection; closed gate; changed session and changed source hold; matching authorized reader makes no atomic/award/acceptance claim. Fabricated read DTOs only; no database fixture.
+
+TypeScript noEmit and scoped ESLint pass. Actual offline React phone390/desktop1440 checks pass automatic 105 display, source and pending-ACC labels, fresh worksheet link and zero duplicate-entry inputs, with zero network requests. Evidence: test-results/result-based-mrp-20261111/result.json. This is display acceptance with fictional supplied models, not real signed-in provider or CSV-route RPC acceptance. Independent source review GO found no material issues.
+
+Remaining acceptance: installed RPC compatibility, actual role/session/provider behavior and freshly downloaded CSV through a signed-in test environment. All new gates remain false; no hosted change or previously denied operation was attempted. No broad suite, audit, full build or tournament rehearsal was run.

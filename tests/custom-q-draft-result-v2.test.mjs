@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {qSetupPrizeWorkspace}from'./fixtures/q-setup-prize-workspace.mjs';
+import {createCustomPayoutIntentV1}from'../src/lib/api/custom-payout-intent-v1.ts';
+import {isCustomQDraftSavedV2,isCustomQDraftRetryV2}from'../src/lib/api/custom-q-draft-result-v2.ts';
+const id=n=>`10000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+function fixture(){const base={tournamentId:id(1),setupRevisionId:id(2),setupVersion:1,sourceDigest:'a'.repeat(64)},payload=structuredClone(qSetupPrizeWorkspace(id(3)).current);for(const k of['revisionId','version','createdAt'])delete payload[k];const event=payload.events[0];delete event.sourceStatus;event.qPools=[{poolTypeCode:'Graduated (1-in-7)',entryFeeCents:1000,note:''},{poolTypeCode:'Equal (Pays All Equally)',entryFeeCents:2000,note:''}];event.sidePools=[];
+ const envelope={kind:'setup-custom-payouts-v2',base:structuredClone(base),request:{expectedVersion:1,payload,idempotencyKey:id(4)},choices:[{mainClientRowId:event.clientRowId,consolationClientRowIds:[]}],customPayouts:[createCustomPayoutIntentV1('q',7,{...base,eventClientRowId:event.clientRowId,poolSlot:1})]};
+ const result={status:'setup_draft_saved',revisionId:id(5),version:2,eventCount:1};for(const flag of['operationalEventsCreated','rulesetApproved','seatingUpdated','financeUpdated','resultsUpdated','payoutsCalculated','qualifiersCalculated','accSubmissionCreated'])result[flag]=false;
+ const linked={status:'linked_setup_saved',result,links:{protocol:'setup-event-links-v1',setupRevisionId:id(5),setupVersion:2,choices:envelope.choices,complete:true,associationHash:'b'.repeat(64)}};
+ const saved={status:'custom_q_setup_draft_saved',scope:'draft-q-only',batchId:id(6),fullRequestHash:'c'.repeat(64),envelope:structuredClone(envelope),linked,operatingPolicyPublished:false,moneyMoved:false};return{base,envelope,saved};}
+test('Q-only draft acknowledgement binds complete echoed request and inherited saved result, without policy or money claims',()=>{const f=fixture();assert.equal(isCustomQDraftSavedV2(f.saved,f.envelope,f.base),true);for(const mutate of[
+ f=>f.saved.envelope.customPayouts[0].ratioDenominator=8,f=>f.saved.envelope.request.payload.events[0].qPools[1].poolTypeCode='Equal (Top Qualifier Paid Double)',f=>f.saved.linked.result.version=3,f=>f.saved.linked.links.choices=[],f=>f.saved.operatingPolicyPublished=true,f=>f.saved.moneyMoved=true,f=>f.saved.fullRequestHash='not-a-hash',f=>delete f.saved.envelope,f=>f.saved.extra=true,
+ ]){const f=fixture();mutate(f);assert.equal(isCustomQDraftSavedV2(f.saved,f.envelope,f.base),false);}});
+test('busy and unsupported-isolation replies are nonterminal, never saved acknowledgements',()=>{for(const code of['operation_busy','source_busy','isolation_not_supported']){const r={status:'retry_exact',code};assert.equal(isCustomQDraftRetryV2(r),true);const f=fixture();assert.equal(isCustomQDraftSavedV2(r,f.envelope,f.base),false);}assert.equal(isCustomQDraftRetryV2({status:'rejected',code:'source_busy'}),false);assert.equal(isCustomQDraftRetryV2({status:'retry_exact',code:'source_busy',accepted:true}),false);});
+
+test('retry codes require primitive strings',()=>{assert.equal(isCustomQDraftRetryV2({status:'retry_exact',code:{toString:()=> 'source_busy'}}),false);});

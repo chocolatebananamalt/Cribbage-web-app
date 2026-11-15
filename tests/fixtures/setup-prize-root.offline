@@ -1,0 +1,45 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import '../../src/app/globals.css';
+import SetupClient from '../../src/app/tournament/[tournamentId]/setup/setup-client';
+import {prizeSetupScenario,prizeSetupReceipt,prizeActivationFixture,prizeTestId} from './setup-prize-replacement-v1.mjs';
+import {eventPrizeActivationRequestHashV1,serializeEventPrizeActivationV1} from '../../src/lib/api/event-prize-activation-v1';
+const s=prizeSetupScenario(),memory=new Map(),calls=[];
+const storage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k),clear:()=>memory.clear(),key:i=>[...memory.keys()][i]??null,get length(){return memory.size}};
+Object.defineProperty(window,'sessionStorage',{value:storage});
+const storedEvents=events=>events.map(e=>({...e,sourceStatus:'director_configured_unverified',qPools:e.qPools.map((p,i)=>({...p,slot:i+1,sourceStatus:'director_configured_unverified'})),sidePools:e.sidePools.map((p,i)=>({...p,slot:i+1,sourceStatus:'director_configured_unverified'}))}));
+let core=structuredClone(s.core),workspace=structuredClone(s.workspace),links={protocol:'setup-event-links-v1',setupRevisionId:core.current.revisionId,setupVersion:core.current.version,choices:s.links,complete:true,associationHash:'c'.repeat(64)},receipt=null,pendingSaved=null,activation=null,operation=null,activated=false;core.current.events=storedEvents(core.current.events);
+window.__loseSave=false;window.__calls=calls;window.__memory=memory;window.__scenario=s;
+window.__advanceReview=()=>{activation.source.reviews[0].reviewId=prizeTestId(150);};
+window.fetch=async(url,init={})=>{
+ const method=init.method??'GET',route=String(url).split(`/api/v1/tournaments/${s.tournamentId}`)[1];calls.push({method,route});
+ const reply=(value,status=200)=>({ok:status>=200&&status<300,status,json:async()=>structuredClone(value)});
+ if(method==='GET'&&route==='/setup')return reply({workspace:core,officialChoices:{directorProfileId:s.actorId,directorDisplayName:'Fictional Director',coDirectorProfileIds:[]},sidePoolTypesReady:true});
+ if(method==='GET'&&route==='/setup/activation')return reply(activated?{status:'activated',setupRevisionId:workspace.base.setupRevisionId,setupVersion:workspace.base.setupVersion,eventCount:activation.native.eventCount,events:activation.native.events.map(({eventId,eventType,name,format,scoringMethod,gameCount})=>({eventId,eventType,name,format,scoringMethod,gameCount}))}: {status:'not_activated'});
+ if(method==='GET'&&route==='/setup/linked')return reply({available:true,protocol:'setup-event-links-v1',current:links});
+ if(method==='GET'&&route==='/event-prize-settings')return reply(workspace);
+ if(method==='POST'&&route==='/event-prize-settings'){
+  const envelope=JSON.parse(init.body),pending={kind:'tournament-event-prize-v1',actorId:s.actorId,request:envelope.setup.setup.request,envelope,stage:'all'};
+  pendingSaved=pending;receipt=await prizeSetupReceipt(pending,workspace.prizes.snapshot);workspace=receipt.workspace;activation=await prizeActivationFixture(pendingSaved,receipt);
+  core.current={...structuredClone(pending.request.payload),revisionId:workspace.base.setupRevisionId,version:workspace.base.setupVersion,createdAt:'2026-11-08T09:00:00.000Z'};core.current.events=storedEvents(core.current.events);core.history=[{version:core.current.version,createdAt:core.current.createdAt,eventCount:core.current.events.length}];links=receipt.ack.nested.linked.links;
+  if(window.__loseSave){window.__loseSave=false;throw Error('Fictional lost response');}return reply(receipt.reply);
+ }
+ if(method==='POST'&&route==='/event-prize-settings/reconcile'){if(window.__blockAfterSave){window.__blockAfterSave=false;window.__blockRecovery=true;}return reply(receipt?.reply??{status:'unavailable'},receipt?200:409);}
+ if(method==='GET'&&route==='/event-prize-settings/activation'){if(window.__holdSource){window.__holdSource=false;await new Promise(resolve=>window.__releaseSource=resolve);}return reply(activation.source);}
+ if(method==='GET'&&route==='/event-prize-settings/activation/context'){
+  const w=workspace,rows=activation.source.activationSource.configuredRows.map((r,i)=>({eventClientRowId:r.eventClientRowId,eventKind:r.eventKind,setupEventVersionId:r.setupEventVersionId,displayName:core.current.events.find(e=>e.clientRowId===r.eventClientRowId).displayName,draft:r.draft,review:{state:'present',historyExists:true,reviewId:activation.source.reviews[i].reviewId,actorId:s.actorId,version:1,setupRevisionId:w.base.setupRevisionId,setupEventVersionId:r.setupEventVersionId,settingsSnapshotId:w.settings.id,draftDigest:String(i+1).repeat(64),draft:r.draft,context:{sanctioned:false,eventKind:r.eventKind,durationDays:1,originalEntrants:null},reason:'Fictional review',approvalReference:'',reviewerAuthorized:true,current:true,eligible:true,deferredOriginalField:false}}));
+  return reply({kind:'event-prize-rule-context-workspace-v1',actorId:s.actorId,tournamentId:s.tournamentId,setupRevisionId:w.base.setupRevisionId,setupVersion:w.base.setupVersion,settingsSnapshotId:w.settings.id,settingsDigest:w.settings.digest,rows,deferredGuardAvailable:true,allCurrentEligible:true,activationAllowed:false,moneyMoved:false});
+ }
+ if(method==='POST'&&['/event-prize-settings/activation','/event-prize-settings/activation/finalize','/event-prize-settings/activation/reconcile'].includes(route)){
+  const e=JSON.parse(init.body),inner={kind:'event-settings-activation-intent-v1',request:e.activation.request,associationHash:e.activation.associationHash,settingsSnapshotId:e.activation.settingsSnapshotId,settingsDigest:e.activation.settingsDigest,settingsPins:e.activation.settingsPins,confirmedContext:true};
+  if(!operation){operation=structuredClone(activation.record);Object.assign(operation,{operationId:e.activation.request.idempotencyKey,requestText:serializeEventPrizeActivationV1(e),requestHash:await eventPrizeActivationRequestHashV1(e),envelope:e});Object.assign(operation.preparation,{operationId:operation.operationId,request:inner});}
+  if(route.endsWith('/finalize')){activated=true;operation.activation={...structuredClone(activation.finalized.activation),operationId:operation.operationId,request:inner};if(window.__loseFinal){window.__loseFinal=false;throw Error('Fictional lost finalization response');}}
+  return reply(operation);
+ }
+ if(method==='GET'&&route?.startsWith('/setup-officials/'))return reply({invalid:true},404);
+ return reply({unsupportedFictionalPort:route},404);
+};
+let root=createRoot(document.getElementById('root'));
+window.__mount=()=>root.render(<main className="auth-shell"><section className="auth-card corrections-card setup-card"><SetupClient actorId={s.actorId} tournamentId={s.tournamentId} eventPrizeSettingsV1Enabled/></section></main>);
+window.__remount=()=>{root.unmount();root=createRoot(document.getElementById('root'));window.__mount();};
+window.__mount();

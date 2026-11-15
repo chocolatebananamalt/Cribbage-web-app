@@ -1,0 +1,27 @@
+# ACC playoff source review, 2026-10-27
+
+Read-only review prompted by owner request to consult original ACC PDF before asking for policy. No hosted playoff or settlement writes. Local source public/rulebook/acc-rulebook-2025.pdf matches SHA256 DB284283420259C99CFCC960BFDF4A6B79C95A5FC1BEE02B1817B4AF4A02F9FD. Title: Cribbage Tournament Rules,2025 edition; printed p1/PDF page2 states effective August1,2025. CapturedSeptember7,2026 per repo reference. Official identical-title source: https://www.cribbage.org/NewSite/rules/rulebook_2025.pdf .64PDFpages. Read actual pages with pypdf, visual chart via pdfplumber render; no dependency installation.
+
+## Required rules versus unestablished labels
+
+Printed pp50–52/PDF pages51–53,Rule13.1–13.2: cross-check/tally before playoffs,one-in-four qualification roundedup, approved bracket charts,highestqualifier first-roundbyes only when needed. Printed p56/PDFpage57 chart visually shows four-player bracket seeds1vs4 and2vs3. Rule13.1 treats a nonappearing player as a loser of the forfeited round for prizes/MRPs. It does not mandate unique third/fourth ordering, a bronze match, or a qualifying-rank tiebreak for semifinal losers. Read surrounding Rule12end andRule14.1: uncovered situations go to headjudge; this is not a blanket director authorization to invent a missing policy. Automated fullPDFtermsearch found only one substantive prize/MRP passage(Rule13.1); chart has no semifinal-loser payout labels. Do not claim this PDF explicitly mandates the literal report label tied3rd; it leaves those reporting/payment details unstated.
+
+## Supplementary official MRP source resolves the important distinction
+
+https://www.cribbage.org/NewSite/sched/MainMRPs.pdf ,onepage,effectiveAugust1,2016,linked from official TournamentDirectorResources. Earlier direct fetch failed; following the currently observed official resource link succeeded. Read full playoff paragraph and qualifying table. It bases playoff MRPs on rounds WON,with byes counted,minimum7 for anyqualifier,and no further accrual after loss. It explicitly permits some events to use backward playoffs for trophies/prizes without changing MRP credit for those eliminated cohorts. Therefore a backward match is OPTIONAL trophy/prize discrimination,not automatic extraMRP or a required third-place match. No source reviewed authorizes replacing a same-round finish with qualifying-rank order by default.
+
+For the proposed4-playerbracket with no byes: champion2roundwins earns42playoffMRPs;runner-up1win earns21;bothsemifinallosers0wins earn7each. With existingqualifyingMRPs55,55,5,5: correctexpected totals Paper02=97,Paper01=76,Paper04=12,Paper03=12. Their qualifying ranks02/01/04/03 remain unchanged. This supersedes the earlier conditional application-oracle76/76/12/12 as a source-backed expected tournament result. A test of currenthelperinput2forchampion proves only arithmetic,not correct semantic mapping.
+
+CurrentUI labels mrpPlayoffExitRound as round where lost OR WON; it defaults1for everyone. SQL0190 computes7*n*(n+1)/2,does not inspect placement/wins. To obtain source-correct champion42 it needs n3 while final was played inround2. Thus the current field is ambiguous/misleading: winner needs the next credit level after two wins,not literal finalround2. No codefix/migration/hosted workaround performed; local diagnosis and explicit regression/review required before authoritative MRP recording. Do not invent an actual third round or feed3while claiming it was played.
+
+The sensible representation is same-round semifinal finish cohort (commonly positions3–4) unless an explicitly announced optional backward playoff distinguishes trophies/prizes. Appcurrentlyrequires unique sequentialplacementforallqualifiers and cannotrepresentthatcohort. This is an implementation/reporting limitation,not proofACCdemandsseed-order or a third-placegame. The remainingchoice is product handling of supported source semantics,not askingownertorestatewrittenrules.
+
+## Supporting director manual, not newer than rulebook
+
+Officialresourcealso links February2019 TournamentDirectorManual: https://www.cribbage.org/NewSite/sched/Directors%20Manual%20-%202019.pdf .Printedp7,section5.E recommends bracketdisplaysshowroundMRPs and postedprizes. Printedp11,section7.A distinguishes recommendedprizedistributionfrommandatorypayback/postingrequirements. It doesnotestablishaqualifying-rankorderforsemifinallosers. Its olderqualifyingtiebreakparagraphmustnotoverridenewer2025rules. Financialtable/percentagepolicyandactualfundingstillnotderivedfromthesepages.
+
+## Accounting continuation
+
+Confirmedentry/QPoolfee0,receipts0,expenses0,assessment48. Proposed honestdeficit48 remainsunfunded;supportedsponsor/directorfundingledgerabsent. No assessmentpayment claimed, no playerpayment fabricated. Separate posteventproposal documents exact expense-only test proposal and implementation gap forfullfunding settlement; no financialwrites. Focused29localchecksPASS, not actualSQLorhostedfinancialproof. SemifinalpolicyandMRPcorrectionmustnotbeconflatedwithfunding.
+
+Independent Sol source review confirmed P1 blocker: rounds-won source means creditindexwins+1, expected97/76/12/12. Do not persist3asfictionalplayedround. A versionedunambiguousrounds-won/creditindexorbracketcontract isneededbeforehostedMRPrecording;preserveexistinghistorywithoutreinterpretation. Reviewerconfirmedsource doesnotestablishunique3rd/4thorderingandbackwardplayoffsdonotearnpostlossMRPs. Localdiagnostic22/22PASS;nohostedwriteorproductionfixclaim.

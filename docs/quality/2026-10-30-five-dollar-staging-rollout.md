@@ -1,0 +1,11 @@
+# $5 policy staging rollout — acceptance pending
+
+Staging project: nnhcnvksxgxnpvdqjgpg, ACTIVE_HEALTHY. Migrations 0256–0263 each reported success and each appears exactly once. Original reviewed migration source hashes are in the rollout manifest; Supabase stored each source with one extra trailing CRLF. Removing that suffix yields the reviewed size and SHA256. No other code difference is asserted from raw hash alone.
+
+Read-only comparison: 207 pre-existing app-table fingerprints unchanged; 212 tables after adding five. Five new private tables are empty, forced-RLS, postgres-owned with no anon/authenticated SELECT or service-role INSERT. Thirteen new public RPCs have postgres ownership, empty search paths, service-role execution and no anon/authenticated execution. Twenty-one denomination and five immutable triggers are enabled. No other active database session was observed during preflight.
+
+The reviewed files and inventory matched; Git normalized 42 files from CRLF to LF, and both reviewed working hashes and normalized Git blob hashes are recorded in the committed inventory. Commit 0c15806a632c6ae83c197ed426d41d9929d0b216 was normally pushed to codex/director-setup-journey; draft PR122 points to it. GitHub verify runs 41030342708 and 41030333407 passed. Git-created Preview dpl_BHXS7QyTbD49r56X8NnDeS8mwKXP is READY at https://cribbage-web-hjift3b49-cribbage-app.vercel.app and has stable branch alias https://cribbage-web-app-git-codex-director-setup-journey-cribbage-app.vercel.app.
+
+Hosted fictional acceptance NOT STARTED. The automation review rejected inspection of available Chrome sessions, citing prior user restriction on browser/laptop control and the possibility of exposing or interacting with signed-in personal sessions; it suggested a task-owned isolated headless harness. No alternative attempted to access the denied session. A safe authenticated staging session for a task-owned isolated harness remains to be established before fixture writes; no user password was requested or handled. No new tournament, prize claim, payment, refund, production write or settings change was made.
+
+Local evidence and remaining broader launch gates are in five-dollar-prize-policy-local.md and five-dollar-rollout-manifest.md. Source backup does not protect hosted database rows, authentication users, storage objects or configuration.

@@ -1,0 +1,158 @@
+{
+  "kind": "LOCAL ONLY proposed publication; not a commit/deployment/hosted enrollment",
+  "baseCommit": "1c3cd8ceb150cdc16138267220707c8ddb7e4472",
+  "createdUtc": "2026-11-01T07:49:49.093671+00:00",
+  "files": [
+    {
+      "path": "database/migrations/0270_simulated_player_links_v1.sql",
+      "bytes": 9773,
+      "sha256": "733536d1a495373564c5f5a63a0992dae77583b5af94932681a3943b06bfea19"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/account-activation-requests/[requestId]/route.ts",
+      "bytes": 2119,
+      "sha256": "76ef0dcb5971d5dc6f07ca1e5cb2dcb6c399ddf061c3913c6b8f55d9d03698c5"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/account-activations/activation-workspace-client.tsx",
+      "bytes": 9503,
+      "sha256": "a30d9e0d62c9f614d7e10d9b346ed1c0c65264846dc05e49c5cc8ea1bebb3b5e"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/account-activations/page.tsx",
+      "bytes": 2350,
+      "sha256": "108572d9dd9d03198042085907e3c8cafdbdf8bca838932835b1f66e752d8ccd"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/layout.tsx",
+      "bytes": 938,
+      "sha256": "faa4b7db40b0b4e69bf4d0bf2571ad99bb41a51bcda6d3b643fddacca23dbd9e"
+    },
+    {
+      "path": "src/components/activation-witness.tsx",
+      "bytes": 926,
+      "sha256": "8742fbcaeeb75f461af6716e31d35f79063f7fa34def65da28de5ea801777332"
+    },
+    {
+      "path": "src/components/simulated-rehearsal-notice.tsx",
+      "bytes": 286,
+      "sha256": "750ac1cd0ba980eb8d40ae447fae009b92924288120d490af1faeb1be7a1f7d7"
+    },
+    {
+      "path": "src/lib/api/roster-account-activation.ts",
+      "bytes": 7363,
+      "sha256": "fb2f2359378a213c313d42d21142d6284332e45ebc4161751bfe64147e684a67"
+    },
+    {
+      "path": "src/lib/api/simulated-player-links.ts",
+      "bytes": 812,
+      "sha256": "2643a9ed1b27396be09320ab0afe0f6c3a27bd6379761999411efc0670fa30a0"
+    },
+    {
+      "path": "src/lib/roster-account-activation-decision.ts",
+      "bytes": 2614,
+      "sha256": "65cc0653e7dac49233e1b7c45a9666a14f63ed73c0db5e3d9c546eefb8cbffe5"
+    },
+    {
+      "path": "src/lib/simulated-player-links.ts",
+      "bytes": 1362,
+      "sha256": "16a862b776e4b2e597a5c24bcb739b9c6dc3e17dfc1f6fa1b7dc53de6ccd22fe"
+    },
+    {
+      "path": "tests/simulated-player-links.test.mjs",
+      "bytes": 2814,
+      "sha256": "c1bed8621946ba284abf716f552e2407b6e3c48eca42c616e212665a88dec148"
+    },
+    {
+      "path": "tests/simulated-player-links-sql-acceptance.mjs",
+      "bytes": 10534,
+      "sha256": "9537c84877fc015f348797f03f537230fd5845dd2e5a67320a1e06be595a15e5"
+    },
+    {
+      "path": "tests/simulated-player-links-browser.mjs",
+      "bytes": 6402,
+      "sha256": "e8a44020817208e0164439116fb17ce6e8a7bcf055dd55696ca0ee549a10309b"
+    },
+    {
+      "path": "tests/run-simulated-links-container.mjs",
+      "bytes": 3553,
+      "sha256": "37bc71894d3e72e383b54e7d86fdc73de033b217272c6db1f879534ef03c540a"
+    },
+    {
+      "path": "tests/run-simulated-links-isolated.mjs",
+      "bytes": 4981,
+      "sha256": "486c89bab3cdd99da5b4ba806ff940f7264aa708902d9b248e00187eb18bb80a"
+    },
+    {
+      "path": "docs/quality/2026-11-01-simulated-player-links-local.md",
+      "bytes": 7959,
+      "sha256": "3d1ca416b6878ebc26d28bf589c5b7d5141bb60c1bdf61aef6f260f255370964"
+    },
+    {
+      "path": "docs/decisions/2026-11-01-single-operator-link-simulation.md",
+      "bytes": 928,
+      "sha256": "12e9248c183865cae96601632d78b5404eeedc329f3df583dc7e333cc3e1c67e"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 51395,
+      "sha256": "3f1f851908ab99ac0fa06f7607ad139627117b60be4b1d5e3429aa97a7532f30"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 98896,
+      "sha256": "329fa3aa2cbce37b3a8119663378b98dbd73b377c82467e5ab9b3ad6833cc8dd"
+    },
+    {
+      "path": "docs/operations/TWO_PERSON_DEVICE_REHEARSAL_2026_10_31.md",
+      "bytes": 10589,
+      "sha256": "aebeec93ce31a4882ffec4f43c4a5c0b4a4225919d7cc3d0785d286c2c28f3dc"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 468035,
+      "sha256": "4ae4d9fcf043d4b8430cae18cca8d86bb5287023a7c63774fc0251279af0dc19"
+    }
+  ],
+  "fileCountExcludingManifest": 22,
+  "migration": {
+    "path": "database/migrations/0270_simulated_player_links_v1.sql",
+    "bytes": 9773,
+    "sha256": "733536d1a495373564c5f5a63a0992dae77583b5af94932681a3943b06bfea19"
+  },
+  "objects": {
+    "privateTables": [
+      "app.simulated_player_link_scopes_v1",
+      "app.simulated_player_link_provenance_v1"
+    ],
+    "serviceOnlyRPCs": [
+      "public.get_simulated_player_link_scope_v1(uuid,uuid)",
+      "public.get_simulated_player_link_label_v1(uuid,uuid)",
+      "public.decide_simulated_player_link_v1(uuid,uuid,uuid,text,text,uuid)"
+    ],
+    "humanGrants": [],
+    "seededRows": 0
+  },
+  "proposedTarget": "staging nnhcnvksxgxnpvdqjgpg only; fixture3c58ef91-010c-4769-af20-5cfa2ffe98a9; operator director; two exact test profiles",
+  "verification": {
+    "applicationTests": 1148,
+    "sqlGroups": 8,
+    "enrollmentRaceOrders": 2,
+    "browserWidths": [
+      390,
+      1440
+    ],
+    "browserAPI": "intercepted local-only; actual SQL persistence separately verified",
+    "review": "independent Sol, no unresolved P1/P2"
+  },
+  "approvalStillRequired": [
+    "staging0270 schema application",
+    "existing branch/PR122 publication",
+    "explicit named fixture simulation enrollment and use",
+    "user-operated device disconnect/reconnect"
+  ],
+  "acceptanceSequence": [
+    "Single operator / two devices: technical rehearsal, no helper required",
+    "After technical success: recruit helper for usability and genuine independent-human verification"
+  ]
+}

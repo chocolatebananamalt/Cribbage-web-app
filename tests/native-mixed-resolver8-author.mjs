@@ -1,0 +1,5 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const old='native-mixed-qualification4',fresh='native-mixed-resolver8',oldDir=old+'-20261107',newDir=fresh+'-20261108';assert(!fs.existsSync('test-results/'+newDir));fs.mkdirSync('test-results/'+newDir,{recursive:true});
+const files=fs.readdirSync('tests').filter(f=>f.startsWith(old+'-acceptance-local-'));for(const file of files){const out='tests/'+file.replace(old,fresh);assert(!fs.existsSync(out));let s=fs.readFileSync('tests/'+file,'utf8').replaceAll(oldDir,newDir).replaceAll(old+'-acceptance',fresh+'-acceptance').replaceAll('fixture_native_mixed_qualification4','fixture_native_mixed_resolver8');fs.writeFileSync(out,s);}
+const helper='tests/helpers/'+old+'-acceptance-db.mjs';fs.writeFileSync(helper.replace(old,fresh),fs.readFileSync(helper,'utf8').replaceAll(oldDir,newDir).replaceAll('fixture_native_mixed_qualification4','fixture_native_mixed_resolver8'));
+fs.copyFileSync('test-results/'+oldDir+'/proposal-order.json','test-results/'+newDir+'/proposal-order.json');console.log(JSON.stringify({createdSourceFiles:files.length+1,resultDirectory:newDir,originalUntouched:true}));

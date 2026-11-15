@@ -1,0 +1,40 @@
+# Player bracket and running pools: read access boundary
+
+## Current implemented boundary
+
+Local only, no fixture or hosted/provider action. The new server-only private-results-view coordinator composes existing guarded bracket and pool readers without a route, new RPC, client admin access or access grant. Only the existing Director/co-director permission intersection is accepted. Player and public audiences are rejected BEFORE identity or source reads. Current identity/role is rechecked after both sections; actor changes/revocation discard the entire response. Nested readers retain their own current-access checks and double-read source validation.
+
+Each section fails independently. Pool validation requires exact event/tournament, strict aggregate allowlist and matching-double-read source observation. Bracket input must bind the exact event/tournament and revalidate through the existing strict chart projector; raw source display, evidence notes and notice are discarded. Output retains names and fixed Tournament IDs already authorized for that official, never ACC/contact details or private score/evidence records. Responses explicitly claim independent-section reads, NOT a global atomic/live snapshot. An unavailable section never becomes zero or silently erases an available section.
+
+The production composition calls only readExistingPlayerBracket and readExistingRunningPools. It is UNWIRED; no page/API or public route invokes it. Existing private adapters still require Director/co-director; broader access to qualification or an older Side reader does not authorize the private Q/playoff sources. Ordinary players, cross-checker alone and judge alone cannot inherit access through this composition.
+
+## Owner intent versus remaining permission work
+
+The owner has requested a publicly viewable playoff bracket and everyone seeing running Q-Pool/Side Pool counts and totals. That product intent is recorded. This task explicitly forbids broadening real access, so no public grant or route is enabled now. The missing implementation is a separately reviewed, published per-event projection with explicit audience and current source contracts, not reuse of a privileged reader under an ordinary player's identity.
+
+Before enablement, record the exact visibility scope: anonymous visitors/public link versus signed-in event participants, which event publication opens that view, and what closes/withdraws access. Public bracket intent is known; do not repeatedly ask the owner whether he wants a bracket. Resolve implementation/consent/disclosure with a concrete publication plan. Do not automatically make every draft tournament's roster/results financial state public. A guessed event UUID or access to another event is never sufficient authority.
+
+## Proposed safe public projection (design, not implemented)
+
+1. Use an explicit per-event published read projection/source revision. Bracket needs current reviewed qualification, resolved ties, verified chart scope and current result revisions/parent bindings. Pool projection needs current active election/payment/eligibility source and exact selected event/pool policy. Do not infer from display names, zeroed stale Q allocations, total receipt amounts, or another event's fund. Multi-event/Side Q source support remains incomplete and must not fall back to unscoped legacy data.
+2. Derive the public object server-side from minimal whitelisted fields. Bracket: display name, fixed Tournament ID, seed, match/round path, bye/result/pending state, source/version and truthful synthetic provenance. No ACC number, account/profile ID, contact data, evidence note or private reason. Preserve fixed Tournament ID across rounds. If public opaque player handles replace internal participant UUIDs, bind them deterministically within the published event and preserve competitive paths; never change Tournament IDs or seed by display name.
+3. Pool: pool metadata, event/pool identity, observed source revision/time, entered count, fully paid recorded count, eligible count, recorded amount, held/excluded amount if approved for that audience, projected-if-all-pay estimate and unknown/partial flags. No membership list, receipts, individual amounts or account data. The owner wants running totals; do not conceal unknown amounts as zero or claim recorded money is bank-confirmed. Validate the disclosure implications of small groups before enabling exact financial aggregates; no suppression rule is invented in this checkpoint.
+4. Prefer one transaction/snapshot for all source predicates needed for EACH published projection. Current matching double reads only detect observed drift; they do not establish atomicity, freshness since return or a cross-section snapshot. If atomic source read is not available, retain explicit observation limits and do not advertise a live synchronized view. Version changes/withdrawals invalidate cached projections; never silently reuse an old source as current.
+5. Authenticate/authorize at the server boundary according to published audience, then use narrowly scoped read functions/view. Do not grant raw private-source access, table SELECT, arbitrary actor override or broad service-role RPC access to clients. Validate canonical scope and rate/size bounds. Unauthorized/not-published/not-found states must not leak hidden event details. Existing source errors never return SQL, private notes or credentials.
+6. Start with no-store responses for authenticated views, existing trusted no-store API boundary and no client persistence of private records. Any public caching/polling policy must respect projection revision/withdrawal and show observed time; no polling/push is implemented now. An unavailable refresh can display a clearly marked older snapshot only if approved and safely versioned, never a current-looking zero.
+7. Read paths create no audit attestations, result writes, enrollment, payment or award. A displayed bracket does not establish independent physical play. Pool eligibility is not playoff qualification; projected funds are not awards. Preserve current unsupported >64 exact placement, small-field, unresolved ties and stale result guards.
+
+## Observable enablement acceptance
+
+- Anonymous/player/private roles and wrong event tested separately; current revocation and actor changes deny without private source reads/leaks.
+- Published-only visibility, event isolation, source-version changes, withholding/withdrawal and cache invalidation proved.
+- Names/Tournament IDs correct, no ACC/contact/private notes; no source table/member/receipt access from client.
+- Confirmed, partial, held, withdrawn, voided/stale and truly zero pool states remain distinct; duplicate membership/payment not double-counted.
+- Unsupported legacy/multi-event scope stays unavailable, not zero; qualification review/parent corrections block stale bracket paths.
+- Actual current provider/API/database proof and phone/desktop read-only navigation. Existing static/unit/UI samples do not replace this proof. A new disposable verification fixture needs explicit scope; earlier denied operation must not be retried without it.
+
+## Local checks and next independent work
+
+Eight pure tests cover denied audiences before reads, role intersection/revocation/actor replacement, event/source mismatch, strict privacy and owned response snapshots, unavailable sections and dependency display/notice injection. Independent review passed all eight with no P1/P2. Full repository results are recorded in the quality checkpoint after terminal completion. No UI changed, so no new browser rendering claim. The existing bracket/pool component browser proofs remain separate.
+
+Work possible under current restrictions: specify published projection schema/allowlist; inventory source dependencies and privileges; pure codec/access/error/cache-version tests; read-only navigation design and review. Actual published projections, grants, endpoint enablement and runtime backend acceptance remain gated; no policy decisions about payout methods are made here.

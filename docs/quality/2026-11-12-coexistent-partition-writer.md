@@ -1,0 +1,23 @@
+# Main Q/Side and separate Consolation partition writer
+
+## Built locally, default off; not operationally accepted
+
+`selected-step-consolation-coexistence-v3.sql` adds an authenticated primary-Director/session-bound writer that reuses the actual V3 ownership operation, revision, audit and exact-retry transaction. It does not manufacture a native allocation revision or a payment. The current reviewed Main ledger, its actual Q/Side/regular partitions and all physical source amounts remain unchanged. Only disjoint, already-recorded, full-fee Consolation add-on receipts can be appended. Each receipt must pass the real existing receipt validator and match its actual scope, accepted operation, current native source, eligible checked-in roster and event fee. Duplicate physical IDs, missing field coverage and unclaimed receipts/expenses hold the operation.
+
+The Con ownership capture pins that real Main journal and the actual separate receipt/scope/operation rows. The existing Con V3 ledger, modern prize source, ownership review projection and unpaid Results consumer now recognize this distinct composition proof. The full combined ledger retains Main Q/Side shares; only Con-owned entry parts contribute to Con prizes. Existing optional arithmetic is reused with event/pool metadata checks. The live Director/session wrapper revalidates the actual stored ownership revision after committing; old exact outcomes remain historical rather than current fund proof.
+
+Review identified that the underlying Main Q basis/context only supported one activation. A guarded prerequisite now supports exactly one active standard Main and its linked active standard Consolation, with exactly two events/activations and no active roster outside Main. It selects Main explicitly and retains all original Main whole-receipt/Q allocation, full roster, `paymentCount` and `paymentTotalMinor` reconciliation. The original single-event context and financial basis remain delegates. Added receipt/context evidence may require a fresh real Main ownership/Q review; old source captures are not coerced into being current. Additional Satellite events, Con-only roster entrants and unsupported fields stay held.
+
+## Exact remaining source limits
+
+The original Consolation add-on **producer** still rejects opening its scope after optional evidence and requires a Main-only base receipt/allocation. This candidate consumes only receipts that remain valid under that original contract. It does not add collection for a Con entrant whose Main base receipt also pays Q-pool money. Consequently the practical end-to-end pool-aware add-on workflow is still blocked until that producer/validator is genuinely adapted to actual saved Main pool partitions. No mock receipt DTO can establish this missing path. No supported normal collection sequence is claimed here.
+
+This writer also refuses any saved Con/shared-cost allocation. It cannot silently revise a Main expense share or discard saved Con intent. Prepaid Con money embedded in a Main physical receipt, pool-aware new add-on collection, and joint Main/Con expense reassignment require their own genuine reviewed source/producer integration. The previously built exact shared-sanctioning proof remains separate and held when Main ownership is incompatible. There is no newly inferred ratio, refund, tie, reversal or allocation policy.
+
+## Focused evidence and release boundary
+
+Five Con projection/consumer checks (including the new composition) and three new writer/source-structure checks passed. Synthetic private DTO evidence retains Main regular 25000 + Q 5000 on its original 30000 receipt and a disjoint Con 10000 receipt; Con prizes remain 10000 and Q money is excluded. Changed Main amounts, physical-ID collision, wrong Con event and rejected receipt operation are rejected. These are not actual SQL or provider acceptance. The SQL structural checks do not replace PostgreSQL parsing or real journal execution.
+
+TypeScript no-emit, scoped lint and independent source review passed. SQL/actual receipt-producer/provider/device acceptance remains unverified. No fixture or database execution occurred, no hosted state/access/publication changed, and frozen216 was untouched. All new functions remain revoked and feature gates literal false. No actual awards, payment or ACC submission occurred.
+
+Next meaningful source work is the pool-aware Con add-on scope/source/validator bridge using real current Main partition evidence, preserving original receipt history and unrelated hard guards. Then run only a bounded isolated actual-journal acceptance of this exact writer/consumer chain. This remains a development candidate, not readiness for a live tournament.

@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';
+import{createOperationalFinanceSourceAdoptionHandlersV1}from'../src/lib/api/operational-finance-source-adoption-handlers-v1.ts';
+const id=n=>`e6040000-0000-4000-8000-${String(n).padStart(12,'0')}`,tid=id(1),eid=id(2),actor=id(3);
+const reply=(body,init={})=>({body,status:init.status??200,headers:init.headers});
+function factory(){let calls=0,received=null;const port={workspace:async(scope,expected)=>{calls++;received={scope,expected};return{data:null,error:'permission_required'};}};const handlers=createOperationalFinanceSourceAdoptionHandlersV1({enabled:()=>true,port:async()=>port,readJson:async()=>null,sameOrigin:()=>true,json:reply,boundary:run=>run()});return{handlers,get calls(){return calls;},get received(){return received;}};}
+const context={params:Promise.resolve({id:tid,eventId:eid})};
+test('missing or malformed expected actor fails before a provider call',async()=>{for(const value of[null,'bad']){const f=factory(),headers=value?{'x-expected-actor-id':value}:undefined,response=await f.handlers.adoptionGET(new Request('https://local.test',{headers}),context);assert.equal(response.status,403);assert.deepEqual(response.body,{error:'identity_changed'});assert.equal(f.calls,0);}});
+test('strict expected actor is passed separately from route scope',async()=>{const f=factory(),response=await f.handlers.adoptionGET(new Request('https://local.test',{headers:{'x-expected-actor-id':actor}}),context);assert.equal(response.status,403);assert.deepEqual(response.body,{error:'forbidden'});assert.deepEqual(f.received,{scope:{tournamentId:tid,eventId:eid,operationId:undefined},expected:actor});});

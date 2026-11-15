@@ -1,0 +1,22 @@
+// Read-only verification of the disposable fixture's actual exported evidence.
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {assembleNativeOperationalFinanceV1} from '../src/lib/finance/operational-finance-native-assembler-v1.ts';
+import {validateOperationalFinanceProposalRequestV1} from '../src/lib/finance/operational-finance-proposal-request-v1.ts';
+import {isRestorableEventFinanceEditorV1} from '../src/lib/finance/event-finance-draft-codec-v1.ts';
+import {projectOperationalFinanceEstimateV1} from '../src/lib/finance/operational-finance-estimate-basis-v1.ts';
+const directory=resolve(process.argv[2]??'');
+if(!process.argv[2])throw Error('Supply the completed disposable local result directory.');
+const read=async name=>JSON.parse(await readFile(join(directory,name),'utf8'));
+const source=await read('current-qualified-operational-source.json'),result=await read('current-qualified-result.json'),retained=await read('current-qualified-proposal-request.json');
+const assembled=assembleNativeOperationalFinanceV1(source,{actorId:source.actorId,tournamentId:source.tournamentId,eventId:source.eventId});assert.ok(assembled);
+assert.equal(result.qualificationCurrent,true);assert.equal(result.qualifierCount,5);assert.equal(result.participants,18);assert.equal(result.configuredGameCount,12);
+assert.equal(result.publishedMatches,108);assert.equal(result.supportedDigitalSubmissions,216);assert.equal(result.supportedDigitalConfirmations,216);assert.equal(result.supportedDigitalScorelines,216);
+assert.equal(source.raw.qualification.resultVersionId,result.qualificationResultVersionId);assert.equal(source.raw.qualification.participantCount,18);assert.equal(source.raw.qualification.qualifierCount,5);
+assert.equal(assembled.basis.sourceDigest,result.sourceDigest);assert.equal(assembled.basisDigest,result.basisDigest);
+assert.ok(validateOperationalFinanceProposalRequestV1(retained.request,assembled.basis,assembled.basisDigest));assert.deepEqual(retained.editor,retained.request.editor);assert.ok(isRestorableEventFinanceEditorV1(retained.editor));
+const before=structuredClone(retained.editor),view=projectOperationalFinanceEstimateV1(retained.editor,assembled.basis);assert.ok(view);assert.equal(view.proposal.canEditPayout,true);assert.equal(view.proposal.blocked,false);
+const band=view.proposal.payoutBands.find(b=>b.firstPlace===3&&b.lastPlace===4);assert.ok(band);assert.equal(band.people,2);assert.equal(band.adjustedPerPersonMinor,500);assert.equal(band.bandTotalMinor,1000);assert.deepEqual(result.storedEqualBand,{firstPlace:3,lastPlace:4,perPersonMinor:500});assert.deepEqual(retained.editor,before);
+assert.equal(view.recordedFundMinor,null);assert.equal(view.moneyMoved,false);assert.equal(view.payoutAuthorized,false);assert.equal(result.playoffResultAvailable,false);assert.equal(result.recipientProviderProved,false);
+await writeFile(join(directory,'root-current-qualified-parity.json'),JSON.stringify({status:'passed',scope:'actual-local-source-and-saved-request-with-sql-override-readback',qualificationCurrent:true,qualifierCount:5,sourceBasisParity:true,requestCodecValid:true,restoredProjectionEditable:true,wholeBand:{firstPlace:3,lastPlace:4,people:2,perPersonMinor:500,totalMinor:1000},exactRetainedEditorUnchanged:true,actualFundAvailable:false,nativeRecipientProviderProved:false,moneyMoved:false,payoutAuthorized:false},null,2)+'\n','utf8');

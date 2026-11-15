@@ -1,0 +1,56 @@
+{
+  "baseCommit": "adfb70cbe78ad41033c680b777a6a8c5ea042a65",
+  "scope": "LOCAL proposed; publish compatible parser/UI first, then staging0273, then two exact-link RPCs after approval",
+  "files": [
+    {
+      "path": "database/migrations/0273_late_roster_account_binding.sql",
+      "bytes": 16953,
+      "sha256": "65ed12880e4a5562dfeb4660877b54b5eb6254630bbed7bf67227086df8d2487"
+    },
+    {
+      "path": "src/lib/api/roster-account-activation.ts",
+      "bytes": 8165,
+      "sha256": "2fd6aeb5aed999943a74b5596acafb5acfa5ed1fab41c8fad5f20b12eb77936f"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/account-activations/activation-workspace-client.tsx",
+      "bytes": 9994,
+      "sha256": "573822a9076da74da0d8ce66e967ac618661a1663589160e4412d029e4fcb20c"
+    },
+    {
+      "path": "tests/late-roster-account-binding.test.mjs",
+      "bytes": 1069,
+      "sha256": "df656342b1862381ac84eeebe66c8316532406a7b03fd16181d5fe5ec8be08a4"
+    },
+    {
+      "path": "tests/late-account-binding-browser.mjs",
+      "bytes": 6689,
+      "sha256": "a7d932d26520d29edd1294a118e5784f9e8c9ce55f25261f870ccfacacc155eb"
+    },
+    {
+      "path": "tests/run-late-links-container.mjs",
+      "bytes": 3533,
+      "sha256": "2b31cb261a9c313f42234094ed183c7e85d97fe5558bcd2191079c79ec180611"
+    },
+    {
+      "path": "tests/run-late-links-isolated.mjs",
+      "bytes": 15120,
+      "sha256": "ba90233d964c52122f62ee9c9bb45d36b5db2de202a14817b1091c91a24c452f"
+    },
+    {
+      "path": "docs/quality/2026-11-02-late-roster-account-binding.md",
+      "bytes": 4304,
+      "sha256": "e58f8cefef6450efe075245ddd310773efe6d01e98be93c791c0a282102f1f1e"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 476055,
+      "sha256": "2522750215148e4a6790aea38880cfab251e3720975b604a78c8e4118e0fda58"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 110129,
+      "sha256": "49b63a91897d3dd631a7a68167a8966b7529427fafa665bdc786c3e51b8914cd"
+    }
+  ]
+}

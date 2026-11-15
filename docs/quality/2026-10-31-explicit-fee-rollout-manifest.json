@@ -1,0 +1,128 @@
+{
+  "status": "LOCAL VERIFIED; PUBLICATION/STAGING APPLICATION PENDING APPROVAL",
+  "baselineCommit": "a97ced93a124ce41a24dbe62c841fe720eddfaaf",
+  "branch": "codex/director-setup-journey",
+  "draftPR": 122,
+  "stagingProject": "nnhcnvksxgxnpvdqjgpg",
+  "productionExcluded": "fnjkwymxpnsqvxtpronk",
+  "fileCountIncludingManifest": 24,
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 463075,
+      "sha256": "12ef6006b588209be8ba2f9cf3ec2bfa1a63a230bfb0f5c54f42b94d8572cf0e"
+    },
+    {
+      "path": "database/migrations/0269_explicit_setup_fee_intent_v1.sql",
+      "bytes": 13019,
+      "sha256": "344c37b7421bc7f609541cfacbc7899f4b42a9c1493a86751f736bb82ac0c588"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 89884,
+      "sha256": "855cb123d5344d6dd0af743d82787f5114766e60bb590a7aee7f2b3f43271a7c"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 49653,
+      "sha256": "29ec6ce1251bddf6c7cb9635226e764ef3b245949f8d501145624efd5b0c2d6b"
+    },
+    {
+      "path": "docs/quality/2026-10-31-explicit-fee-validation-local.md",
+      "bytes": 5633,
+      "sha256": "029896f2fbd709bab5d2263b7817aa13a06f455200f7333be2c5e265ee14c3e9"
+    },
+    {
+      "path": "docs/quality/2026-10-31-explicit-setup-fee-intent-sql-local.md",
+      "bytes": 7174,
+      "sha256": "004358b6018e41222c8cdca9051ace9f0ec04504c50ba469869ca02c157a2a0b"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/amendments/route.ts",
+      "bytes": 5647,
+      "sha256": "073213522c7447214d50ea06faa742f84dd3ca31a74d6f58807a070f1492d696"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/setup/route.ts",
+      "bytes": 6562,
+      "sha256": "fc01f0575f0a96ecc2c0fa9f864e98da8f17a78b46667df8716362f4b09b59c3"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/setup-client.tsx",
+      "bytes": 71609,
+      "sha256": "d14cbda24d05d88bca4a5d37ca2a1af6c0664fd5b78d9a00bda2490343470ca4"
+    },
+    {
+      "path": "src/lib/api/setup-amendment.ts",
+      "bytes": 4288,
+      "sha256": "72b081f23b0717162be4492b07a4765f8b1ea3639c6f0909f9c816ab22553fda"
+    },
+    {
+      "path": "src/lib/api/setup.ts",
+      "bytes": 24332,
+      "sha256": "6f1808e720bf2fa6a4aecbc949b70a02113b01fa5e0a3439de01a3c8ea89c82e"
+    },
+    {
+      "path": "src/lib/setup-save-recovery.ts",
+      "bytes": 2164,
+      "sha256": "9a852e51c8b9e884bea56df347878ed09277344f7cac78e0379a15b9409f3ec6"
+    },
+    {
+      "path": "src/lib/setup-save-verification.ts",
+      "bytes": 1210,
+      "sha256": "548a0d6ed24eba54673ae7c8469e05731cff0edffdb1e00f1f2df232047e9d8a"
+    },
+    {
+      "path": "src/lib/setup-write-policy.ts",
+      "bytes": 358,
+      "sha256": "ceae9ad5ef8b52b5f5409a3cfb53ded79cedd1595ca5a25be33884e92f4fd138"
+    },
+    {
+      "path": "tests/game-api-semantics.test.mjs",
+      "bytes": 118795,
+      "sha256": "d789f5cc90b7bb0b07c8c69704c790a61cd9e6ff69ea2bf033db3db77902d594"
+    },
+    {
+      "path": "tests/operational-guard-scope.test.mjs",
+      "bytes": 4566,
+      "sha256": "bb64310eb8ba359a943e5c22810ad620fed127e83f8f28394b9503224a3c1113"
+    },
+    {
+      "path": "tests/run-setup-fee-intent-container.mjs",
+      "bytes": 3559,
+      "sha256": "6e16954197e137dd394f1a4a01bb06b88208687340129dc3065535a5e6ffdfad"
+    },
+    {
+      "path": "tests/run-setup-fee-intent-isolated.mjs",
+      "bytes": 6260,
+      "sha256": "a70751003546757b8a8b16fa3265a8dd359b5196a2d1d90d77957eaff3121660"
+    },
+    {
+      "path": "tests/setup-amendment.test.mjs",
+      "bytes": 6894,
+      "sha256": "1caaf56ca55edf61b8829597104212499addf7920ce616709197d4fa7bcb346f"
+    },
+    {
+      "path": "tests/setup-explicit-fees.test.mjs",
+      "bytes": 2925,
+      "sha256": "9bdaf3230885a6b623ec2492b30204d9d5d46333bb2d9cbd244f25c4504025d8"
+    },
+    {
+      "path": "tests/setup-fee-intent-sql-acceptance.mjs",
+      "bytes": 14828,
+      "sha256": "0b91f8115f9a56f0c2c627e0b9cb792a534ea803c78368d01b9f4964b2e75f1b"
+    },
+    {
+      "path": "tests/setup-fee-persistence-browser.mjs",
+      "bytes": 18720,
+      "sha256": "182d03275e5e3b65214cb862a960c0958b6f8c8fd4a5f923f3485a0c94bf0a47"
+    },
+    {
+      "path": "tests/setup-write-policy.test.mjs",
+      "bytes": 1269,
+      "sha256": "05f8c1cdba5adcc005b3ce4baa134f3461d119d0789f820ab38c3a330c780ea4"
+    }
+  ],
+  "excluded": "unrelated historical reports, recovery-barrier report edit, generated/private data, environment/configuration/secrets, tsbuildinfo",
+  "verification": "1140app/fullverify;8workspace;6handoff;16mockUI;10realSQL;independentreview"
+}

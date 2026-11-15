@@ -1,0 +1,4 @@
+.setup-side-payout-heading{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;grid-column:1/-1}.setup-side-payout-heading>label{margin:0}.setup-subsection>select[aria-label="Payout type"]{min-height:44px;max-width:100%}
+.setup-side-ratio-line{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;max-width:100%}.setup-side-ratio-line input{width:7ch;min-width:4ch;max-width:100%;min-height:44px;font:inherit;box-sizing:border-box}.setup-side-ratio-required{color:#b00020;font-weight:700}
+.setup-side-pool-editor{min-inline-size:0;max-width:100%;box-sizing:border-box}.setup-side-pool-editor select,.setup-side-pool-editor input{min-width:0;max-width:100%;box-sizing:border-box}
+.setup-side-payout-heading .setup-side-ratio-line{flex-direction:row;justify-content:flex-start}

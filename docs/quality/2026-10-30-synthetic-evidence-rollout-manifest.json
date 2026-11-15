@@ -1,0 +1,287 @@
+{
+  "status": "verified local only; hosted migration, enrollment and publication require separate approval",
+  "baseCommit": "562d6e80aa315077cd269437d74f2876a687a3db",
+  "fileCount": 54,
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 453300,
+      "sha256": "bd5f6fdbe36780d0f3d8b3b28a2c7cdb0452af85ed3c45edcf2cb20e3d09e476"
+    },
+    {
+      "path": "database/migrations/0266_synthetic_scorecard_evidence_v1.sql",
+      "bytes": 23037,
+      "sha256": "779dbf95973667e32f4bd4fab7483968aec40e224553223d5e641973dea6ee41"
+    },
+    {
+      "path": "database/migrations/0267_synthetic_event_evidence_v1.sql",
+      "bytes": 30239,
+      "sha256": "1800e7e8b276f9e318bb0ad47d98688766c988c21393c2965f48bd14a2fee57b"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 80107,
+      "sha256": "0ae292414924baa0ccd922ac5a4cd3c63d2fae00f30330963737236064a997a5"
+    },
+    {
+      "path": "docs/quality/2026-10-30-side-staging-rollout.md",
+      "bytes": 4023,
+      "sha256": "10dca73de8dd450f87809eefd4be4f930128bae213ce68b89585576381375eaa"
+    },
+    {
+      "path": "docs/quality/2026-10-30-synthetic-event-flow-local.md",
+      "bytes": 7599,
+      "sha256": "3963933ac790cf7be698e9f1071dc228d006e8fac7eb2f27134aee1e014dea59"
+    },
+    {
+      "path": "docs/quality/2026-10-30-synthetic-evidence-local.md",
+      "bytes": 12469,
+      "sha256": "ce93f9250bb052b846b4ee5397bc5bcf02a142303f62749ca36258ddf7b42cb5"
+    },
+    {
+      "path": "docs/quality/2026-10-30-synthetic-flow-attestation-inventory.md",
+      "bytes": 5212,
+      "sha256": "7044b38305d47e91c64a6f6f0b54b2f0285a995447d2e198619687194d4acdc4"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/play-close/route.ts",
+      "bytes": 3178,
+      "sha256": "1ae7885604aeb5ce8482ab6738686f360ddf25db61430490cda961aae35ffd70"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/playoff-v4/route.ts",
+      "bytes": 3284,
+      "sha256": "a9958a174563ee698becc0721ab8cf993d2e7ba6e6a4541aab0a2a2cdbbe6eb6"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/qualification-ties/route.ts",
+      "bytes": 3555,
+      "sha256": "1fea8501b3f387c59164d52f71d0e5586aca5b79665cf1fb6f63f1f7d98fada0"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/synthetic-paper-game-completions/[completionId]/reviews/route.ts",
+      "bytes": 2334,
+      "sha256": "d6e2f15331b9f9cad9873fd0d4bed4bfd0fbd23af50b72091edce6aeb02b36ca"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/synthetic-paper-game-completions/route.ts",
+      "bytes": 2286,
+      "sha256": "3f73caa3a890bca191c5e515386656688ee39497fe25a189ab7099900ee9780d"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/cross-check-finalization/page.tsx",
+      "bytes": 2849,
+      "sha256": "6d58f1f544f3e6b92e2614d99eadc4c6ffb81cae08474761a5e0323e6cca83f9"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/event-control/event-control-client.tsx",
+      "bytes": 19598,
+      "sha256": "cb82af3ef1b3231aa91aa0563d26d560002f9bc4dd503122d93ddd8e796f3828"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/event-control/page.tsx",
+      "bytes": 2495,
+      "sha256": "35b44e739fc74d93e37f35e2c4d110c2e3ab448e83e3905df5215b5d6ffcef8a"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/page.tsx",
+      "bytes": 3024,
+      "sha256": "d4ace7f9f9560f63e2dd26ec8a57056831c94cbce8d9daa4c3d9a985e8d23ca0"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/playoff-v4/playoff-client.tsx",
+      "bytes": 14977,
+      "sha256": "e447eb9b14f91ced872926c9cf7c77e8fa1186581483ca54e19652657be4c5c5"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "bytes": 22788,
+      "sha256": "6f95a7d7d30a4b1a1c7e119276f8b7b45aa7eaa3391e3e587063149b97b3f24f"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/page.tsx",
+      "bytes": 2306,
+      "sha256": "98b22c757a64714cde72065894de960a406453ed19663d1e4051bfb32c3521b4"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "bytes": 24888,
+      "sha256": "c969cdb02aac17ada5b8a9ca79a55d07eac61fe6401fff1c3ae7318f3b992961"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/page.tsx",
+      "bytes": 2307,
+      "sha256": "ca38bfbe797c2d656c10d29d0b7f5c0a92d2a74bb43ca593504db4aeb3fafac5"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/paper-games/page.tsx",
+      "bytes": 3094,
+      "sha256": "4e6772d7f2a4b8f7b1b6ab11dd396c7c21137e8202eca3f65772c52dd3cf48fd"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/paper-games/paper-game-client.tsx",
+      "bytes": 35630,
+      "sha256": "f327501cd0c8aa4036697ce802b5491692c505aec070601674da6aec350899e3"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/expense-client.tsx",
+      "bytes": 12955,
+      "sha256": "195f9e293ce2491bd5cf4e0d8bc74af023e38738634543d9206eb5f3ffe2b4cf"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/page.tsx",
+      "bytes": 3261,
+      "sha256": "722c715bf04f0d78c1b2686da2ced243b9f0e73d3241f73db75a87c46c625556"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/payments/payment-client.tsx",
+      "bytes": 13971,
+      "sha256": "2332db767e20441dc905e2ce7c5698180acabe8db54070da660b2e4a461f54c7"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-operating-schedules/page.tsx",
+      "bytes": 2454,
+      "sha256": "3827e7e4ce5c7c3ec50505418139326d8ed30424ef98e22e4dd061cea222f70c"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pool-policy/page.tsx",
+      "bytes": 2594,
+      "sha256": "522d4e8025e9fb4e328c9703bffadc921ba6a7762108b07999ca409a36279607"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/q-pools/page.tsx",
+      "bytes": 4858,
+      "sha256": "92d80dd4353c11ad396a398e17524493821fc54f35b15e2b8af1b5070eddc4b8"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/results/page.tsx",
+      "bytes": 24893,
+      "sha256": "c25312dd7ef05047f6513d07fc2474d5aa0c8e3e0c6d9c81f1e9651ea46d2540"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/results/qualification-ties-client.tsx",
+      "bytes": 12519,
+      "sha256": "9f58627fe5d932d4f94df24f4f382ed115a909647ad5a758066d463a006b47ea"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/graduated-side-pools-v2.tsx",
+      "bytes": 21911,
+      "sha256": "1a1418b0c143eb40ad1a2759b48d13e40b44e0ee76f03dc77af6fbf0f53453cf"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/page.tsx",
+      "bytes": 3032,
+      "sha256": "de5d97f005ee6722a534a6a69478de65ad0a4905dbd40c5627b111d3c1e91250"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/recipients/[eventId]/[poolId]/page.tsx",
+      "bytes": 3730,
+      "sha256": "3e19b6c9e70513d30e7a1a5feaa9d85cd9b8d75f5abaa3fe8c455082b10b7ad2"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/side-pools-client.tsx",
+      "bytes": 26084,
+      "sha256": "5df4af97b58430d5b7a53cea61229eaa22bf530d6b2a0c75668ba1ecf72edc24"
+    },
+    {
+      "path": "src/components/synthetic-event-notice.tsx",
+      "bytes": 1154,
+      "sha256": "40e4cd3902911b63c89ac4e8de75566fd532e472e18410cdcdc8a28ccb617312"
+    },
+    {
+      "path": "src/components/synthetic-paper-cards.tsx",
+      "bytes": 1083,
+      "sha256": "da8282e2f392c5a09a154b594e731bd57f4b0c8f3ec4bc017d033a948b4b9c3f"
+    },
+    {
+      "path": "src/lib/api/synthetic-event-evidence.ts",
+      "bytes": 4387,
+      "sha256": "252cc8a6bf3440a9e6039af1c37310cbace0ae6068fba832eaf3ea9ad588ae15"
+    },
+    {
+      "path": "src/lib/api/synthetic-paper-evidence.ts",
+      "bytes": 3426,
+      "sha256": "cfc5ba3084245e89658f8b2b39169029c9f5979390f45758527237fce6926cb7"
+    },
+    {
+      "path": "src/lib/paper-games/synthetic-event-context.ts",
+      "bytes": 813,
+      "sha256": "bd912aae277825cc1e4363abbc1f79c0d427bba1dacbd161e2703507afcaba23"
+    },
+    {
+      "path": "src/lib/paper-games/synthetic-evidence.ts",
+      "bytes": 885,
+      "sha256": "54e55bf86bcbe0393d69b9733a2578a2534fbe592a0ea88ad09d41c8331de3a3"
+    },
+    {
+      "path": "tests/fixtures/synthetic-paper-evidence-workspace.mjs",
+      "bytes": 1309,
+      "sha256": "9ddfae409cf5d6dde87fb1def163c4c22f1b848dd49f5ac7772c0419532a5ee6"
+    },
+    {
+      "path": "tests/run-synthetic-event-container.mjs",
+      "bytes": 3553,
+      "sha256": "baf9ef15c1e857554c8ce630bc6279a15f9e7d964c1b0d56e47c80721b874bea"
+    },
+    {
+      "path": "tests/run-synthetic-event-isolated.mjs",
+      "bytes": 4472,
+      "sha256": "aad48dc34287a85a36138264ddd72f8079008fd726e3aa83848bf88fe6825da5"
+    },
+    {
+      "path": "tests/run-synthetic-evidence-container.mjs",
+      "bytes": 3565,
+      "sha256": "1c4e6a0276d785ef8cde5f73ed245a8b7ef4d749d9bd1d5f0da6beb3c3edd1a4"
+    },
+    {
+      "path": "tests/run-synthetic-evidence-isolated.mjs",
+      "bytes": 4721,
+      "sha256": "23c62a58ef22dbb3be345e24cb7d6110de47d87f2e101147791bf222bb9ea587"
+    },
+    {
+      "path": "tests/synthetic-event-evidence.test.mjs",
+      "bytes": 7271,
+      "sha256": "f2cb487b2a0b768363f63ffdc841fc5c1e1687abb760bc58d2d8c7ba26b5aee6"
+    },
+    {
+      "path": "tests/synthetic-event-flow-sql-acceptance.mjs",
+      "bytes": 34425,
+      "sha256": "0c99e5b87644939674fe78615f7f0bb31b2650d1557baa3f815f56b587122543"
+    },
+    {
+      "path": "tests/synthetic-event-ui-browser.mjs",
+      "bytes": 19222,
+      "sha256": "17d7eb201dd363658c1f4e6758acc64d0e510a9c47adcaef35a0ced998f7c88f"
+    },
+    {
+      "path": "tests/synthetic-paper-evidence-browser.mjs",
+      "bytes": 8777,
+      "sha256": "a3120a3ff49928aa03dd501134deaa666a520473e9a447290396beffc2036ba3"
+    },
+    {
+      "path": "tests/synthetic-paper-evidence-sql-acceptance.mjs",
+      "bytes": 14984,
+      "sha256": "3507066cddc5644144bfa0f357d7d1fb1bb64e65f4433e8dc82d6aa062189995"
+    },
+    {
+      "path": "tests/synthetic-paper-evidence.test.mjs",
+      "bytes": 5701,
+      "sha256": "7b576d3d6f1b6201fbaf652d972f1ce597824e494bf367fcb9458696e4e3e816"
+    },
+    {
+      "path": "tests/tournament-expense-ledger.test.mjs",
+      "bytes": 8164,
+      "sha256": "4b18ff90b02373be8b93708594d7a111a5023216005f757a276002a7bfca4b14"
+    }
+  ],
+  "manifestSelfExcluded": true,
+  "scope": "Truthful synthetic scorecard and full-event evidence, exact staging gate, six private tables and seven service-only RPCs; no human grants, seeded enrollment or money movement",
+  "verification": "1122 application tests; full audit/lint/build/workspace; paper SQL11; complete event SQL both17-player fixtures and adverse/race/replay paths; phone/desktop browser contracts; independent review",
+  "exclusions": [
+    "unrelated historical quality reports",
+    "recovery-barrier report outside this patch",
+    "tsconfig.tsbuildinfo",
+    "test-results and all generated/private data",
+    "configuration and credentials"
+  ]
+}

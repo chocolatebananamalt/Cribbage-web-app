@@ -1,0 +1,23 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {ManualMixedHandoffV1} from '../../src/components/manual-mixed-handoff-v1';
+import {acquireRecoveryDocument,setAppRecoveryItem,beginSafeRecoverySwitch} from '../../src/lib/recovery-write-coordinator';
+import {countAppSessionStorageRecords} from '../../src/lib/client-session-storage';
+
+const config=window.__config;
+const root=createRoot(document.getElementById('app'));
+window.__authCallbacks=new Set();
+window.__emitAuth=event=>{for(const callback of window.__authCallbacks)callback(event);};
+window.__unmount=()=>root.unmount();
+window.__beginSwitch=()=>beginSafeRecoverySwitch();
+window.__moveRecoveryActor=async actor=>{document.cookie='acc_recovery_owner_v1='+actor+'; Path=/; SameSite=Lax';await acquireRecoveryDocument(actor);};
+window.__recoveryCount=()=>countAppSessionStorageRecords(sessionStorage);
+window.__ready=false;
+void(async()=>{
+ await acquireRecoveryDocument(config.actorId);
+ if(config.seedRaw!==undefined&&sessionStorage.getItem(config.key)===null)setAppRecoveryItem(sessionStorage,config.key,config.seedRaw);
+ if(config.foreignRaw!==undefined)sessionStorage.setItem(config.foreignKey,config.foreignRaw);
+ if(config.removeFails){const original=Storage.prototype.removeItem;Storage.prototype.removeItem=function(key){if(this===sessionStorage&&key===config.key)throw Error('fixture removal unavailable');return original.call(this,key);};}
+ root.render(<ManualMixedHandoffV1 actorId={config.actorId} gameId={config.gameId} submissionId={config.submissionId}/>);
+ window.__ready=true;
+})().catch(error=>{window.__initError=String(error);});

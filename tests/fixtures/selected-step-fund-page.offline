@@ -1,0 +1,7 @@
+import{createRoot}from'react-dom/client';import{SelectedStepFundSectionV3}from'../../src/components/selected-step-fund-section-v3';
+const scope={actorId:'ab130000-0000-4000-8000-000000000001',tournamentId:'ab130000-0000-4000-8000-000000000002',eventId:'ab130000-0000-4000-8000-000000000003'},values=new Map();window.sent=[];
+const view={status:'available',sourceDigest:'7'.repeat(64),expectedVersion:0,expenseId:null,candidates:[],totals:{regularReceiptsMinor:10000,qReceiptsMinor:1000,sideReceiptsMinor:1000,benefitsMinor:0,expensesMinor:0,regularAllocationFundMinor:10000},sanctioningMinor:0,hold:null,moneyMoved:false,payoutAuthorized:false};
+const storage={read:async k=>values.get(k)??null,transition:async(k,expected,next,archive)=>{if((values.get(k)??null)!==expected)return false;if(archive)values.set(archive.id,archive.raw);if(next===null)values.delete(k);else values.set(k,next);return true;}};
+const receipt=a=>({status:'accepted',attempt:a,reviewId:'ab130000-0000-4000-8000-000000000099',version:1,historicalReceipt:true,currentSourceVerified:false,moneyMoved:false,payoutAuthorized:false});
+const port={read:async()=>structuredClone(view),save:async a=>{window.sent.push(JSON.stringify(a));throw Error('lost');},check:async a=>receipt(a)};
+const root=createRoot(document.getElementById('root'));window.mount=()=>root.render(<SelectedStepFundSectionV3 enabled writesVerified scope={scope} port={port} storage={storage} subscribeIdentity={f=>{window.identity=f;f(scope.actorId);return()=>{window.identity=null;};}}/>);window.retained=()=>[...values.entries()];

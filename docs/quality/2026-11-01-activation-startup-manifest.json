@@ -1,0 +1,67 @@
+{
+  "baseCommit": "f183d395bf75df9648871d6eb870ffdd6ce4fb9e",
+  "branch": "codex/director-setup-journey",
+  "publicationStatus": "unapproved local-only",
+  "schemaChanges": false,
+  "permissionsChanges": false,
+  "files": [
+    {
+      "path": "public/activation-bootstrap.js",
+      "bytes": 701,
+      "sha256": "34ffee7e743b5c453955ce930a5bf2a9b021ff28fbc5e554d1608662cb59578c"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "bytes": 989,
+      "sha256": "0777f539556763e1316d67cd48986c56b3f2fe854977d707ecf841bcbb9e76a2"
+    },
+    {
+      "path": "src/app/activate/page.tsx",
+      "bytes": 396,
+      "sha256": "9a6d08dfbd972c7c07664bf6d5831e835172e7a84c434eea3f71426eeabee97c"
+    },
+    {
+      "path": "src/app/activate/activation-form.tsx",
+      "bytes": 4136,
+      "sha256": "6194a550a8929fe62e27ed550039e93f48dd7383bbe3747d656116c8635c44c2"
+    },
+    {
+      "path": "tests/roster-account-activation-routes.test.mjs",
+      "bytes": 4453,
+      "sha256": "39c4b11dbc6f5090849c89b0bcdda79a00e951afe132d9fc494d902f9a1fe3f6"
+    },
+    {
+      "path": "tests/activation-bootstrap.test.mjs",
+      "bytes": 1962,
+      "sha256": "724dc899bd4ad793e0cf7268508b17e95df10e8ba29bd34a1814ea7aaf18b47e"
+    },
+    {
+      "path": "tests/activation-startup-browser.mjs",
+      "bytes": 9349,
+      "sha256": "a147cff4059157110de8931c3e56c8cd7cd1a846cd82eb50192ff4b1525d45a9"
+    },
+    {
+      "path": "docs/quality/2026-11-01-activation-startup-repair.md",
+      "bytes": 4014,
+      "sha256": "6ada858b9886294f043f42617bbffd1a7377c9b16b0f3381573b4c111c8aa3a6"
+    },
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 470720,
+      "sha256": "802b187b3912891ab095d1985840d77762c7a536432ab75a06c0c891c3c0ab71"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 102658,
+      "sha256": "2d46243965750b63a1e81fa9e4e3099f492cb4064d04487c939f0515426b33c8"
+    }
+  ],
+  "verification": {
+    "applicationTests": 1151,
+    "productionBrowserScenarios": 9,
+    "strictModeBrowserScenarios": 9,
+    "independentReview": "no remaining P1/P2"
+  },
+  "excluded": "all other working-tree files; generated evidence, secrets, private data, credentials and activation URLs",
+  "freezeNote": "Publication preflight removed one trailing blank line from browser harness; no behavioral change."
+}

@@ -1,0 +1,9 @@
+import {projectOneTableMovement} from './one-table-movement.ts';
+const escapeHtml=(value:string)=>value.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+/** Physical labels only; no names, IDs of people, source tokens or inferred movement. */
+export function buildOneTableChairLabels(config:unknown,candidate:unknown):string|null{
+ const model=projectOneTableMovement(config,candidate);if(model.status!=='verified')return null;
+ const table=escapeHtml(model.tableId);
+ const pages=Array.from({length:3},(_,page)=>`<section class="sheet">${Array.from({length:6},(_,i)=>{const n=page*6+i+1;return `<article><p>Table ${table} — Physical Chair</p><h1>${table}-${n}</h1><p>Leave This Label Here</p><p>Your Tournament ID stays with you.</p>${n===1?'<strong>Stationary in This Layout Preview</strong>':''}<small>Local layout labels — confirm room capacity before use.</small></article>`;}).join('')}</section>`).join('');
+ return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>Table ${table} Chair Labels</title><style>@page{size:letter;margin:.375in}*{box-sizing:border-box}body{margin:0;color:#111;font:12pt Arial,sans-serif}.sheet{width:7.75in;height:10.2in;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:12px;padding:8px;break-after:page}.sheet:last-child{break-after:auto}article{border:2px dashed #333;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;overflow-wrap:anywhere}h1{font-size:64pt;margin:8px 0}p{margin:5px 0}small{font-size:9pt;margin-top:12px}@media screen{body{background:#ddd}.sheet{background:#fff;margin:12px auto}}</style></head><body>${pages}</body></html>`;
+}

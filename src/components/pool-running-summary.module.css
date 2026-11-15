@@ -1,0 +1,22 @@
+.summary { color: #172d45; font-size: 19px; line-height: 1.55; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.summary * { box-sizing: border-box; }
+.summary h2 { font-size: 28px; line-height: 1.3; margin: 0 0 18px; }
+.summary h3 { font-size: 25px; line-height: 1.35; margin: 0 0 16px; }
+.summary h4 { font-size: 23px; line-height: 1.4; margin: 0 0 14px; }
+.summary p { margin: 14px 0; }
+.notice, .warning, .incomplete, .available { padding: 15px 18px; border-radius: 7px; }
+.notice { background: #edf4fa; border: 2px solid #738da4; }
+.warning, .incomplete { background: #fff4d6; border: 2px solid #9b7200; }
+.available { background: #edf5ef; border: 1px solid #64846c; }
+.explanation { color: #304e68; }
+.group { margin: 32px 0; padding-top: 22px; border-top: 3px solid #738da4; }
+.pool { border: 2px solid #a8bacb; border-radius: 10px; padding: 22px; margin: 22px 0; min-width: 0; background: #fff; }
+.kind { font-weight: 700; color: #304e68; }
+.facts, .secondary { margin: 20px 0; padding: 0; }
+.facts > div, .secondary > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; padding: 14px 0; border-bottom: 1px solid #bdcbd6; }
+.facts dt, .secondary dt { font-weight: 600; }
+.facts dd, .secondary dd { font-size: 22px; font-weight: 700; margin: 0; min-width: 0; }
+.estimate { background: #edf4fa; }
+.facts > .estimate { padding-left: 12px; padding-right: 12px; }
+@media (min-width: 760px) { .facts > div, .secondary > div { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 18px; } .facts dd, .secondary dd { text-align: right; } }
+@media print { .pool { break-inside: avoid; } .summary { color: #000; } }

@@ -1,0 +1,10 @@
+.setup-draft-save { display: grid; gap: 8px; min-width: 0; max-width: 100%; flex: 1 1 300px; }
+.setup-draft-save > button { justify-self: start; }
+.setup-save-status { padding: 12px; border-left: 4px solid #24537b; background: #edf5fc; color: #152f45; overflow-wrap: anywhere; }
+.setup-save-status strong, .setup-save-status span { display: block; }
+.setup-save-status span { margin-top: 4px; }
+.setup-save-status[data-state="confirmed"] { border-color: #22633b; background: #eef8f1; color: #143e23; }
+.sanctioning-rate-reason { padding: 10px; background: #fff0f0; color: #522020; border-left: 3px solid #953838; }
+.policy-settings.setup-workspace .sanctioning-rate-reason input:not([type="checkbox"]):not([type="radio"]) { background: #fff4f4; color: #241414; }
+.sanctioning-fee-panel button.secondary:disabled { background: #e7ebef; color: #52606e; border-color: #9ca8b5; cursor: not-allowed; }
+@media (max-width: 600px) { .setup-draft-save, .setup-draft-save > button { width: 100%; } }

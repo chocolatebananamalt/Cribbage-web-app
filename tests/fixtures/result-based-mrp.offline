@@ -1,0 +1,1 @@
+import React from'react';import{createRoot}from'react-dom/client';import{ResultBasedMrpV1}from'../../src/components/result-based-mrp-v1';createRoot(document.getElementById('root')!).render(<ResultBasedMrpV1 view={window.view}/>);

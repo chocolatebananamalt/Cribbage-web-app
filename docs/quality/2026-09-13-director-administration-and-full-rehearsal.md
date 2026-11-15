@@ -1,0 +1,107 @@
+# Director administration and Full Rehearsal evidence
+
+Date: 2026-09-13  
+Scope: director approval, self-service tournament creation, rehearsal bootstrap,
+and rehearsal runbook
+
+## Observable acceptance criteria
+
+- The app owner and ACC administrators can review director applications; only
+  an ACC administrator can mark an applicant ACC-verified.
+- An approved director can create one named/dated draft, is assigned primary
+  director, and can discover it under Your tournaments.
+- Players, unapproved accounts, suspended directors, and direct browser
+  database roles cannot create tournaments or approve directors.
+- Every accepted application, decision, authorization change, creation, and
+  role assignment has durable audit/receipt evidence and exact retry behavior.
+- **Full Rehearsal — 09-16-2026** exists once, remains separate from the Pilot
+  and October 3 tournaments, and is visible only through authorized roles.
+- The runbook covers six fictional identities, single-device outage,
+  whole-venue outage, paper/digital evidence, mismatch, correction, finance,
+  results, and recovery.
+
+## Database proof
+
+- Applied migration `0163_director_administration_and_tournament_creation` to
+  disposable project `donfxulkliuyteiannir`, then ran
+  `tests/director-administration.sql` inside a rollback transaction: pass.
+- Applied the same migration to approved pilot project
+  `fnjkwymxpnsqvxtpronk`, then ran the same rollback fixture: pass with no
+  retained fictional fixture rows.
+- Read-only post-bootstrap inspection found exactly one platform administrator,
+  two approved app directors, one rehearsal tournament, one primary-director
+  role, one creation operation receipt, and one creation audit event.
+- The rehearsal is `draft`, registration is `open`, its planned date is
+  `2026-09-16`, and creator and primary-director profile IDs match.
+- Existing Pilot Tournament and October 3 Pilot Tournament were not renamed,
+  replaced, or reused.
+
+## Ownership-correction proof
+
+- Before mutation, a locked preflight confirmed the exact rehearsal was still
+  the single unused `draft` with open registration and zero setup revisions,
+  events, roster entries, participants, games, payments, or expenses.
+- One hosted transaction retained the rehearsal ID, changed its creator and
+  sole primary director to the app owner, changed the previously assigned
+  approved director to co-director, and preserved both accounts' separate
+  approved-director status.
+- Operation receipt `c1f5e650-187a-4a62-a360-54dcff8c0b52` exists exactly
+  once. Three associated audit events record the ownership correction, role
+  change, and primary-director assignment.
+- A post-transaction service-bound chooser check returns the exact rehearsal
+  to the app owner as `director` and to the friend as `co_director`. The owner
+  remains the platform administrator and both remain approved to create their
+  own tournaments; the friend has no Director Administration authority.
+- Exactly one rehearsal, one primary director, and one co-director remain.
+  The before/after checksum of all unrelated tournaments and their roles is
+  unchanged:
+  `bc27ad8afb7783dbfdfcddfb52da14e93fe3982601b8d5ed3598fdd20542afed`.
+- No product requirement or public screen changed; this correction reconciles
+  hosted operational data and the affected decision, memory, outline, status,
+  and evidence records.
+
+## Repository proof
+
+- `pnpm verify`: pass — dependency audit has no known high production
+  vulnerability, ESLint passes, all **464/464** application tests pass,
+  provider fallbacks are declared/default-off, Next.js 16.3.4 production build
+  passes, and all **7/7** workspace checks pass.
+- `pnpm verify:handoff`: pass — **6/6** private handoff checks.
+- `tests/director-administration.test.mjs`: included in the 464-test gate and
+  covers strict contracts, private projections, database authority/audit/replay,
+  HTTP boundaries, and screen discovery.
+- `git diff --check`: pass.
+
+## Remaining physical evidence
+
+The six independent authenticated sessions and actual offline network/device
+exercise cannot be synthesized by a repository test. Complete the dated steps
+in `docs/operations/OCTOBER_PILOT_REHEARSAL.md`; a pending offline record is not
+server-verified until synchronization and the required independent evidence
+complete.
+
+## Deployment evidence
+
+- The ownership correction merged in
+  [PR #36](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/36)
+  as commit `a818440958eef35aa931202a38a8d00be459cbc7` after both
+  pull-request verification jobs and the Vercel preview passed.
+- Vercel Production deployment `dpl_Aa9EuafSrDkHAuqYj4MLXJVNdqLB` is READY
+  for that exact commit. The post-merge `main` verification passed, both the
+  stable root and `/demo` returned HTTP 200, and the post-release Vercel
+  runtime-error scan found no clusters.
+- Merged [PR #34](https://github.com/chocolatebananamalt/Cribbage-web-app/pull/34)
+  as commit `883331951cf5e0c7202113ea0603154085a96fbb` after both pull-request
+  verification jobs and the Vercel preview passed.
+- Vercel Production deployment `dpl_9eTGgEts1soS1xAS7uv16ob4Gzuh` is READY
+  with no alias error at `https://cribbage-web-app.vercel.app/`.
+- The post-merge `main` verification job passed.
+- `pnpm verify:live-demo` passed at 320, 640, and 1280 pixels across 20
+  distinct screens with no overflow, CSP violation, failed request, console
+  error, or page error.
+- Vercel reported no runtime-error clusters in the post-release interval.
+- A service-bound chooser check returns the rehearsal by its exact name/date
+  to the app owner with the `director` role and to the approved friend with the
+  `co_director` role. The owner workspace reports platform-admin and
+  tournament-creation authority; the friend reports creation authority without
+  Director Administration access or being mislabeled ACC-verified.

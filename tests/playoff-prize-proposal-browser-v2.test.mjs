@@ -1,0 +1,42 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import path from 'node:path';
+import {proposalStoreFixtureV2 as fixture,proposalStoreReceiptV2 as receipt,storeIdV2 as id} from './fixtures/playoff-prize-proposal-store-v2.mjs';
+import {projectPlayoffPrizeBrowserWorkspaceV2 as project,projectPlayoffPrizeBrowserReplyV2 as projectReply} from '../src/lib/finance/playoff-prize-proposal-browser-projector-v2.ts';
+import {readPlayoffPrizeBrowserWorkspaceV2 as read,preparePlayoffPrizeBrowserSaveV2 as prepare,readPlayoffPrizeBrowserPreparedV2 as pending,readPlayoffPrizeBrowserReplyV2 as reply} from '../src/lib/api/playoff-prize-proposal-browser-v2.ts';
+import {serializePlayoffPrizeProposalSaveV2 as serialize,playoffPrizeProposalRequestHashV2 as hash} from '../src/lib/finance/playoff-prize-proposal-store-v2.ts';
+async function first(){const f=fixture(),w=project(f.workspace,f.scope);assert(w);const p=await prepare(w,f.proposal,' Explicit raw reason ','append',id(10));assert(p);return{f,w,p};}
+
+test('projected source and real WebCrypto request exactly match existing server serializer/hash without Node imports in browser graph',async()=>{
+ const {f,w,p}=await first();assert.deepEqual(p.scope,f.scope);assert.equal(p.raw,serialize(p.request));assert.equal(p.hash,hash(p.raw));assert.equal(p.request.reason,' Explicit raw reason ');assert(await pending(p,f.scope));assert(Object.isFrozen(p.request));assert.equal(w.writeAuthorized,false);assert.equal(w.current.proposal.input.field.entryFeeMinor,null);assert.equal(w.current.proposal.input.field.firstRoundLoserPlaces,null);
+ const visited=new Set();function inspect(file){if(visited.has(file))return;visited.add(file);const source=readFileSync(file,'utf8');assert.doesNotMatch(source,/import\s+['"]server-only['"]|from\s+['"]node:|\bBuffer\b/,file);for(const match of source.matchAll(/import\s+(?!type\b)[\s\S]*?from\s*['"]([^'"]+)['"]/g)){if(!match[1].startsWith('.'))continue;const next=path.resolve(path.dirname(file),match[1]);inspect(path.extname(next)?next:`${next}.ts`);}}
+ inspect(path.resolve('src/lib/api/playoff-prize-proposal-browser-v2.ts'));assert(visited.size>3);
+});
+test('browser rejects cross-scope, malformed projections, invented fee facts, stale claims and getters without reading them',async()=>{
+ const {f,w}=await first(),before=structuredClone(w);
+ for(const change of[v=>v.actorId=id(99),v=>v.stale=true,v=>v.extra=true,v=>v.writeAuthorized=true,v=>v.current.proposal.source.settingsDigest='e'.repeat(64),v=>v.current.proposal.input.fundMinor++,v=>v.current.proposal.input.field.entryFeeMinor=1000,v=>v.current.nativeInput.binding.eventId=id(99),v=>v.current.evidence.capture.bindingId='bad',v=>v.current.proposal.overrideHistory=[{recordId:id(20),firstPlace:1,lastPlace:1,priorRecordId:null,perPersonMinor:0,voided:false,reason:'Not empty'}]]){const v=structuredClone(w);change(v);assert.equal(read(v,f.scope),null);}
+ let calls=0;const bad=structuredClone(w);Object.defineProperty(bad,'current',{enumerable:true,get(){calls++;throw Error();}});assert.equal(read(bad,f.scope),null);assert.equal(calls,0);assert.deepEqual(w,before);
+ const malformed=structuredClone(f.workspace);malformed.nativeSource.capture.contextReviewId='bad';assert.equal(project(malformed,f.scope),null);assert.equal(await prepare(w,{...f.proposal,input:{...f.proposal.input,fundMinor:1}},'Review','append',id(10)),null);
+});
+test('co-directors share full source evidence while provenance drift requires explicit empty-history adoption',async()=>{
+ const {f,p}=await first(),saved=receipt(f,p.request);f.workspace.head=saved.result.revision;
+ const other=structuredClone(f);other.scope.actorId=id(2);other.nativeSource.actorId=id(2);other.nativeSource.sourceDigest='e'.repeat(64);other.workspace.actorId=id(2);other.workspace.nativeSource=other.nativeSource;const shared=project(other.workspace,other.scope);assert(shared);assert.equal(shared.stale,false);assert(await prepare(shared,f.proposal,'Co-director exact source','append',id(11)));
+ const drift=structuredClone(f);drift.workspace.nativeSource.capture.contextReviewId=id(98);drift.workspace.nativeSource.sourceDigest='a'.repeat(64);drift.workspace.stale=true;const changed=project(drift.workspace,drift.scope);assert(changed);assert.equal(await prepare(changed,f.proposal,'No auto rebase','append',id(12)),null);assert(await prepare(changed,f.proposal,'Explicit changed provenance adoption','adopt-current',id(13)));
+ const prefix=structuredClone(f.proposal);prefix.overrideHistory.push({recordId:id(30),firstPlace:1,lastPlace:1,priorRecordId:null,perPersonMinor:44000,voided:false,reason:'Whole-group local amount'});assert.equal(await prepare(changed,prefix,'Cannot carry old amounts','adopt-current',id(14)),null);
+ f.workspace.nativeSource={status:'blocked',code:'feature_disabled'};f.workspace.stale=true;const unavailable=project(f.workspace,f.scope);assert(unavailable?.head);assert.equal(unavailable.current,null);assert.equal(await prepare(unavailable,f.proposal,'No source','append',id(15)),null);
+});
+test('projected immutable saved receipt binds complete history, raw bytes, actor/op/prior/source/reason and exact input',async()=>{
+ const {f,w,p}=await first(),raw=receipt(f,p.request),r=projectReply(raw,f.scope,p.request);assert(r);const accepted=await reply(r,p);assert.equal(accepted.kind,'playoff-prize-proposal-browser-operation-v2');assert.equal(accepted.result.status,'saved');assert.equal(accepted.result.head.proposalOnly,true);
+ for(const change of[v=>v.actorId=id(99),v=>v.requestHash='f'.repeat(64),v=>v.requestText+=' ',v=>delete v.requestText,v=>v.result.head.reason='Other',v=>v.result.head.priorRevisionId=id(99),v=>v.result.head.actorId=id(99),v=>v.result.head.operationId=id(99),v=>v.result.head.nativeSourceDigest='f'.repeat(64),v=>v.result.head.sourceEvidence.capture.input.binding.eventId=id(99),v=>v.result.head.createdAt='2026-02-30T00:00:00.000Z',v=>v.payoutAuthorized=true]){const value=structuredClone(r);change(value);assert.equal(await reply(value,p),null);}
+ const badRaw=structuredClone(raw);badRaw.result.revision.reason='Wrong raw request';assert.equal(projectReply(badRaw,f.scope,p.request),null);assert.equal(read({...w,head:accepted.result.head,stale:false},f.scope)?.head.revisionId,accepted.result.head.revisionId);
+});
+test('recorded rejection remains distinct from all bound attempts and no-record never becomes an immutable operation',async()=>{
+ const {f,p}=await first(),base=receipt(f,p.request);base.result={status:'rejected',code:'head_conflict'};const rejected=projectReply(base,f.scope,p.request);assert.equal((await reply(rejected,p)).result.status,'rejected');
+ for(const status of['unknown','retry_exact','rejected','blocked','unavailable']){const attempt={kind:'playoff-prize-proposal-attempt-v2',...f.scope,operationId:p.request.operationId,requestHash:p.hash,status,code:status==='unknown'?'operation_not_found':'source_busy'};const value=projectReply(attempt,f.scope,p.request);assert(value);assert.equal((await reply(value,p)).kind,'playoff-prize-proposal-attempt-v2');attempt.requestHash='f'.repeat(64);assert.equal(await reply(attempt,p),null);}
+ assert.equal(await reply({kind:'accepted',operationId:p.request.operationId},p),null);
+});
+test('retained prepared bytes stay historical after source change and malformed/tampered/database-incompatible text cannot prepare or clear',async()=>{
+ const {f,w,p}=await first(),before=structuredClone(p);assert(await pending(p,f.scope));
+ for(const change of[v=>v.hash='f'.repeat(64),v=>v.raw+=' ',v=>v.request.reason='Changed',v=>v.scope.actorId=id(98),v=>v.extra=true,v=>v.request.input.binding.eventId=id(99)]){const value=structuredClone(p);change(value);assert.equal(await pending(value,f.scope),null);}
+ assert.equal(await pending(p,{...f.scope,actorId:id(99)}),null);for(const reason of[' ','\u0000','\ud800','x'.repeat(2001)])assert.equal(await prepare(w,f.proposal,reason,'append',id(12)),null);
+ let calls=0;const bad=structuredClone(p);Object.defineProperty(bad,'request',{enumerable:true,get(){calls++;throw Error();}});assert.equal(await pending(bad,f.scope),null);assert.equal(calls,0);assert.deepEqual(p,before);
+ const unavailable=structuredClone(w);unavailable.current=null;unavailable.stale=true;assert(read(unavailable,f.scope));assert(await pending(p,f.scope));assert.equal(await prepare(unavailable,f.proposal,'No current native source','append',id(13)),null);
+});

@@ -1,0 +1,226 @@
+﻿[
+    {
+        "name":  "1786331640380.jpeg",
+        "bytes":  144314,
+        "sha256":  "10d8ccf8728e9a5ffa75db50fe5e50b1506327f037c52b24dcaa6f082ac9e879",
+        "organizedPath":  "docs/design/references/1786331640380.jpeg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "18419(1).jpg",
+        "bytes":  225423,
+        "sha256":  "3dfd3c3478e673c48e049f5a77cb09d95a8cf7b9a6adc55536762ce449ad0f08",
+        "organizedPath":  "docs/design/references/18419(1).jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "18419.jpg",
+        "bytes":  225423,
+        "sha256":  "3dfd3c3478e673c48e049f5a77cb09d95a8cf7b9a6adc55536762ce449ad0f08",
+        "organizedPath":  "docs/design/references/18419(1).jpg",
+        "duplicateOf":  "18419(1).jpg"
+    },
+    {
+        "name":  "18581(1).jpg",
+        "bytes":  39854,
+        "sha256":  "d23bb701e3801b40178bcd23ad7fe9b8a92bc67317d0dcf881861f19deb5002c",
+        "organizedPath":  "docs/design/references/18581(1).jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "18581.jpg",
+        "bytes":  39854,
+        "sha256":  "d23bb701e3801b40178bcd23ad7fe9b8a92bc67317d0dcf881861f19deb5002c",
+        "organizedPath":  "docs/design/references/18581(1).jpg",
+        "duplicateOf":  "18581(1).jpg"
+    },
+    {
+        "name":  "18617.jpg",
+        "bytes":  223386,
+        "sha256":  "786cd413c82c25822fbc2a8d44607653b3db87281d87a5d6da5e9f7f1979ae29",
+        "organizedPath":  "docs/design/references/18617.jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "18618.jpg",
+        "bytes":  208443,
+        "sha256":  "1254ac816c2236fd1f970709c8789fb472fe7975ff91e951ec4175fb201945d2",
+        "organizedPath":  "docs/design/references/18618.jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC Digital Scorecard Demo Flow(1).png",
+        "bytes":  1659562,
+        "sha256":  "ba3a12b583329f6a05de8c94000e0ebe9d8a7832d28c21cd7d7c4f8ca075eb28",
+        "organizedPath":  "docs/design/references/ACC Digital Scorecard Demo Flow(1).png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC Digital Scorecard Demo Flow.png",
+        "bytes":  1632625,
+        "sha256":  "05bb667fd1154dfdf4b5eeffa26a2544a78abd6203433caba98fc36c2b54a25f",
+        "organizedPath":  "docs/design/references/ACC Digital Scorecard Demo Flow.png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Director_Review_Prototype_v1.2.html",
+        "bytes":  75176,
+        "sha256":  "1ff8457c5991ce94a47281716113e9b90863600740f13ec7300fd69b775620bc",
+        "organizedPath":  "archive/prototypes/director-v1.2/ACC_Digital_Tournament_System_Director_Review_Prototype_v1.2.html",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Director_Review_Prototype_v1.2.zip",
+        "bytes":  41995,
+        "sha256":  "736bb4f43742d0c0c2524531b5be42eaa910d8ad33ae875d342a1ae555e9ebdf",
+        "organizedPath":  "archive/prototypes/packages/ACC_Digital_Tournament_System_Director_Review_Prototype_v1.2.zip",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3-2.html",
+        "bytes":  79286,
+        "sha256":  "b7b8065b70059a3932495d87fce0b2dd4b30983b2a10a3ecc68607515343d270",
+        "organizedPath":  "prototypes/pilot-v1.3/ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3-2.html",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3.html",
+        "bytes":  79286,
+        "sha256":  "b7b8065b70059a3932495d87fce0b2dd4b30983b2a10a3ecc68607515343d270",
+        "organizedPath":  "prototypes/pilot-v1.3/ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3-2.html",
+        "duplicateOf":  "ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3-2.html"
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3.zip",
+        "bytes":  43376,
+        "sha256":  "bb2d9699d648a1cf77bd8a76e23f1db893378fa2495d5c5a337e65053a327266",
+        "organizedPath":  "archive/prototypes/packages/ACC_Digital_Tournament_System_Pilot_Review_Prototype_v1.3.zip",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Specification_v1.0.docx",
+        "bytes":  47805,
+        "sha256":  "d08f839252b82e36309fceb9104468303e8d60af04f6aa658d9e6527bf92ac47",
+        "organizedPath":  "docs/product/source-documents/ACC_Digital_Tournament_System_Specification_v1.0.docx",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Specification_v1.0_EXTRACTED_TEXT.txt",
+        "bytes":  23230,
+        "sha256":  "3ec7bca66b6656becabb0ce65fc701a82d7fbcb9a9e24db4d3cf30a4d42251fa",
+        "organizedPath":  "docs/product/source-documents/ACC_Digital_Tournament_System_Specification_v1.0_EXTRACTED_TEXT.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Specification_v1.1.docx",
+        "bytes":  52035,
+        "sha256":  "b844332a7ff0b259316a98a0728e4b644c813104910970d4d20cfc5021655bb0",
+        "organizedPath":  "docs/product/source-documents/ACC_Digital_Tournament_System_Specification_v1.1.docx",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Specification_v1.1.pdf",
+        "bytes":  346741,
+        "sha256":  "54a8ec1e78ec2b8245105faa9063e1436b8ab17580ae441c4411a578d3968db8",
+        "organizedPath":  "docs/product/source-documents/ACC_Digital_Tournament_System_Specification_v1.1.pdf",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt",
+        "bytes":  32447,
+        "sha256":  "772d01ba96c85936d5e16c0f1aa73bf344e0db46740db48f2de37ecd53a95961",
+        "organizedPath":  "docs/product/source-documents/ACC_Digital_Tournament_System_Specification_v1.1_EXTRACTED_TEXT.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "CURRENT_RECOVERY_CONVERSATION_2026-09-05.txt",
+        "bytes":  1998,
+        "sha256":  "cc26046715e85770d60d2c11997c5069b0570f7329a326df483232e7f2aa4855",
+        "organizedPath":  "docs/private/handoff-context/CURRENT_RECOVERY_CONVERSATION_2026-09-05.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "Digital Cribbage Tournament App Mockup(1).png",
+        "bytes":  1688092,
+        "sha256":  "68aa8c91d963b5b17dea4039637b004ff4669ceb55276b14d8e1d0e49a4cc2b3",
+        "organizedPath":  "docs/design/references/Digital Cribbage Tournament App Mockup(1).png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "Digital Cribbage Tournament App Mockup.png",
+        "bytes":  1619966,
+        "sha256":  "b2ee487dce64feb21d1f0e0fac2600d92c5636c24b027970ae6bd92df6f897de",
+        "organizedPath":  "docs/design/references/Digital Cribbage Tournament App Mockup.png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "GMAIL_ACC_eScorecard_SELF_EMAIL_2026-08-10.txt",
+        "bytes":  474,
+        "sha256":  "57324e9c5577b72806ce18bef9cac9c2414dc631ab8b8ae5d0c6ea2ffac4a890",
+        "organizedPath":  "docs/private/handoff-context/GMAIL_ACC_eScorecard_SELF_EMAIL_2026-08-10.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "GMAIL_PROJECT_CORRESPONDENCE_2026-08-10_to_2026-08-11.txt",
+        "bytes":  13279,
+        "sha256":  "171362a53bd6290858aff414b2c7b6aaceb761a551dff67317d0d0f296ab62b1",
+        "organizedPath":  "docs/private/handoff-context/GMAIL_PROJECT_CORRESPONDENCE_2026-08-10_to_2026-08-11.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-1786131830835.jpg",
+        "bytes":  294388,
+        "sha256":  "f20fc8a00658b24b00390042a19c2801e108d51924aa60e068b0a8a8a9d3acb9",
+        "organizedPath":  "docs/design/references/image-1786131830835.jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-1786232682918.jpg",
+        "bytes":  285809,
+        "sha256":  "61b31e9a8ba9783202072eb9eefefcc47f0b71a7900635ca9297168aec1d45c7",
+        "organizedPath":  "docs/design/references/image-1786232682918.jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-1786304720135.jpg",
+        "bytes":  313126,
+        "sha256":  "a281e14890f8af81fa689ec6cbe800678016f053fde0e7f19d2223749c01ad04",
+        "organizedPath":  "docs/design/references/image-1786304720135.jpg",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-gen-1(10).png",
+        "bytes":  1544409,
+        "sha256":  "7be6daa8943be9fffb9a46dada0647ce04fde72ba3b825df44b797a7889bbebb",
+        "organizedPath":  "docs/design/references/image-gen-1(10).png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-gen-1(20260808-072617).png",
+        "bytes":  1548796,
+        "sha256":  "98ee6145e1eb994c78cfc5dd77dc63ed39fa6fce9fb7470b3536249bd67cbd1b",
+        "organizedPath":  "docs/design/references/image-gen-1(20260808-072617).png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "image-gen-1(20260808-073044).png",
+        "bytes":  1603678,
+        "sha256":  "f1df420283d2b665f6a8e215cd8ec7f731ab8a431108364faa132e25f4a21685",
+        "organizedPath":  "docs/design/references/image-gen-1(20260808-073044).png",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "ORIGINAL_CHAT_RECOVERY_STATUS_AND_EXPORT_STEPS.txt",
+        "bytes":  1452,
+        "sha256":  "fb4e2c1f97468bef02cf7206152a359e644d9096e7129254adb77443efa73288",
+        "organizedPath":  "docs/private/handoff-context/ORIGINAL_CHAT_RECOVERY_STATUS_AND_EXPORT_STEPS.txt",
+        "duplicateOf":  null
+    },
+    {
+        "name":  "RECOVERED_PROJECT_CONTEXT_FOR_CODEX.md",
+        "bytes":  4670,
+        "sha256":  "69928766fc054d04dd0b76ba0332358acd1ad93288f6f31ec220bbcc5e000465",
+        "organizedPath":  "docs/private/handoff-context/RECOVERED_PROJECT_CONTEXT_FOR_CODEX.md",
+        "duplicateOf":  null
+    }
+]

@@ -1,0 +1,28 @@
+import assert from'node:assert/strict';import{acceptMainConManualChainV3}from'./main-con-manual-awards-chain-v3.mjs';
+import{projectSelectedStepAwardWorkspaceV3}from'../src/lib/finance/selected-step-award-view-v3.ts';
+import{raw,call,checkpoint,actor,tid,sid,official,reviewer,op,lit,json,report}from'./main-con-owned-db-v3.mjs';
+const eid=report.consolationEventId;assert(eid);const args=[actor,sid,tid,eid].map(lit).join(','),pins=[actor,tid,eid].map(lit).join(',');
+const gate=call('select app.selected_step_player_gate_evidence_v3('+pins+');');assert.equal(gate.status,'source_available',JSON.stringify(gate));
+const finance=call('select app.selected_step_pool_playoff_source_v3('+pins+');');assert.equal(finance.sourceDigest,gate.sourceDigest);assert.deepEqual(gate,finance);
+assert.equal(call("begin;create or replace function app.consolation_player_evidence_enabled_v3()returns boolean language sql stable set search_path=''as $$select false$$;select app.selected_step_player_gate_evidence_v3("+pins+');rollback;'),null);
+assert.deepEqual(call('select app.selected_step_player_gate_evidence_v3('+pins+');'),gate);
+assert.equal(call('select app.selected_step_player_gate_evidence_v3('+[reviewer,tid,eid].map(lit).join(',')+');'),null);
+const mainArgs=[actor,tid,report.eventId].map(lit).join(',');assert.deepEqual(call('select app.selected_step_player_gate_evidence_v3('+mainArgs+');'),call('select app.selected_step_player_gate_before_consolation_v3('+mainArgs+');'));
+checkpoint('con_player_gate_acceptance',{sameGenuineFinanceSource:true,disabledHeld:true,unauthorizedRejected:true,mainDelegateUnchanged:true,qualificationId:gate.qualificationId});
+if(process.argv.includes('--resume-after-award')){
+ const w=call('select public.get_selected_step_award_workspace_provider_v3('+args+');'),p=projectSelectedStepAwardWorkspaceV3(w,{actorId:actor,tournamentId:tid,eventId:eid});
+ assert.equal(p?.workspace.status,'recorded');assert.equal(p.results.totalMinor,15600);checkpoint('con_current_award_projection_recovered',{status:p.workspace.status,totalMinor:p.results.totalMinor,liveSourceVerified:true});
+}else await acceptMainConManualChainV3({raw,call,checkpoint:(k,v)=>checkpoint('con_'+k,v),actor,tid,eid,sid,official,reviewer,op,lit,json,report});
+const source=call('select app.current_regular_consolation_final_source_v1('+args+');');checkpoint('con_final_source',source);assert.equal(source.status,'source_available',JSON.stringify(source));
+const req={kind:'regular-consolation-finalize-v1',expectedSourceDigest:source.sourceDigest,...Object.fromEntries(['qualificationId','ownershipRevisionId','prizeRevisionId','fundReviewId','regularAwardSetId'].map(k=>[k,source[k]])),approved:true,reason:'Fictional explicit separate regular-only Consolation approval'};
+const finalWrite='select public.record_regular_consolation_final_provider_v1('+args+','+lit(op())+','+json(req)+');';
+const count=()=>call('select to_jsonb(count(*))from app.regular_consolation_final_snapshots_v1 where event_id='+lit(eid)+';');assert.equal(count(),0);
+assert.equal(call('begin;'+finalWrite+'rollback;').status,'accepted');assert.equal(count(),0);
+const final=call(finalWrite);assert.equal(final.status,'accepted',JSON.stringify(final));assert.deepEqual(call(finalWrite),final);assert.equal(count(),1);checkpoint('con_final_accepted',final);
+const w=call('select public.get_regular_consolation_closure_workspace_v1('+args+');');checkpoint('con_closure_workspace',w);assert.equal(w.status,'review',JSON.stringify(w));
+const closeReq={kind:'regular-consolation-close-v1',expectedSourceDigest:w.source.sourceDigest,snapshotId:w.snapshotId,confirmed:true,reason:'Fictional explicit event-only closure; unpaid records'};
+const closeWrite='select public.record_regular_consolation_closure_provider_v1('+args+','+lit(op())+','+json(closeReq)+');';
+assert.equal(call('begin;'+closeWrite+'rollback;').status,'accepted');assert.equal(call('select to_jsonb(count(*))from app.regular_consolation_closures_v1 where event_id='+lit(eid)+';'),0);
+const closed=call(closeWrite);assert.equal(closed.status,'accepted',JSON.stringify(closed));assert.deepEqual(call(closeWrite),closed);checkpoint('con_closed',closed);
+assert.equal(call('select to_jsonb(count(*))from app.modern_event_final_snapshots_v1;'),0);
+report.passed=true;report.realProviderAcceptance=false;checkpoint('con_genuine_chain_completed',{mainUntouchedByFinalization:true,regularMinor:15600,conQualifyingGames:12,qualifiers:4,realManualJournals:true,realFundReviewAndUnpaidAwards:true,finalApprovalAndClosure:true,rollbackAndExactRetry:true,moneyMoved:false,officialMrpAwarded:false,syntheticQualifyingUpstream:true,providerAcceptance:false});

@@ -1,0 +1,1 @@
+import React from 'react';export default function Image({alt}){return <span role="img" aria-label={alt}/>;}

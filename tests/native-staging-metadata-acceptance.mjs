@@ -1,0 +1,12 @@
+// Offline evidence check only: no provider calls, SQL or credentials.
+import fs from'node:fs';import assert from'node:assert/strict';import crypto from'node:crypto';
+const load=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const stage=load('test-results/native-staging-metadata-20261107.json'),comparison=load('test-results/native-staging-history-role-comparison-20261107.json'),base=load('test-results/native-mixed-official-full51-20261107/state.json'),manifest=load('database/release-packages/native-preparation51/manifest.json');
+assert.equal(stage.project.id,'nnhcnvksxgxnpvdqjgpg');assert.equal(stage.project.name,'cribbage-pr122-staging');assert.equal(stage.project.status,'ACTIVE_HEALTHY');
+const h=stage.history.history;assert.equal(h.length,292);assert.equal(new Set(h.map(x=>x.version)).size,292);assert.equal(h.at(-1).name,'0292_linked_main_series_evidence_v1');assert(h.at(-1).version<manifest.version);assert(!h.some(x=>x.version===manifest.version));
+assert.deepEqual(h.map(x=>/^\d{4}_/.test(x.name)?Number(x.name.slice(0,4)):x.name==='late_roster_account_binding'?273:null),Array.from({length:292},(_,i)=>i+1));assert(h.every(x=>x.statementCount>0&&x.statementBytes>0));
+const funcs=new Map(base.baselineFunctions.map(f=>[f.signature,f]));assert.equal(stage.catalog.functions.length,781);for(const f of stage.catalog.functions){const b=funcs.get(f.signature);assert(b);assert.equal(f.definitionMd5,crypto.createHash('md5').update(b.definition).digest('hex'));assert.equal(f.owner,b.owner);assert.deepEqual(f.acl,b.acl);}
+const postgres=stage.roles.roles.find(x=>x.name==='postgres');assert.equal(postgres.super,false);assert(postgres.inherit&&postgres.bypassRLS&&postgres.canLogin);assert(stage.roles.schemaPrivileges.filter(x=>['app','public'].includes(x.schema)).every(x=>x.postgresCreate&&x.postgresUsage));assert(stage.history.historyPrivileges.postgresInsert);
+assert(comparison.touchedTableMetadata.every(x=>x.ownerRlsForceMatch&&x.columnNamesMatch&&x.normalizedAclEqual));assert(comparison.qConstraintsMatchLocal0292);assert.deepEqual(comparison.functionDifferences,[]);
+assert.equal(manifest.realStagingHistoryContinuityVerified,false);assert.equal(manifest.managedNonSuperuserVerified,false);assert.equal(manifest.hostedApplication,false);
+console.log('PASS staging target,292-ledger ordering,781 definition/owner/ACL matches,role metadata and explicit unresolved gates; no hosted action');

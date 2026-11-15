@@ -1,0 +1,11 @@
+.playoff-prize-proposal-review-v2{display:grid;gap:1rem;min-width:0;overflow-wrap:anywhere;line-height:1.5;color:var(--ink,#162238)}
+.playoff-prize-proposal-review-v2 *{box-sizing:border-box;min-width:0}
+.playoff-prize-proposal-review-v2 h3,.playoff-prize-proposal-review-v2 h4,.playoff-prize-proposal-review-v2 p{margin:0 0 .5rem}
+.playoff-prize-proposal-review-v2 h3{font-size:1.2em}.playoff-prize-proposal-review-v2 h4{font-size:1em}
+.playoff-prize-proposal-review-v2 dl,.playoff-prize-proposal-review-v2 dd{margin:0}.playoff-prize-proposal-review-v2 dt{font-weight:600}.playoff-prize-proposal-review-v2 dd{font-variant-numeric:tabular-nums}
+.prize-proposal-summary,.prize-proposal-band dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.8rem}
+.prize-proposal-warning,.prize-proposal-band,.prize-proposal-history>li{border:1px solid #ced8e5;border-radius:.5rem;padding:.85rem;background:#fff}.prize-proposal-warning{border-left:4px solid #986322;background:#fff7e8}
+.prize-proposal-bands,.prize-proposal-history{display:grid;gap:1rem;list-style:none;padding:0;margin:0}.prize-proposal-band{display:grid;gap:.6rem}
+.prize-proposal-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:.75rem}.prize-proposal-fields>div,.prize-proposal-fields>label{display:grid;gap:.3rem}.prize-proposal-fields label{font-weight:600}
+.prize-proposal-fields input,.prize-proposal-fields textarea{width:100%;max-width:100%;font:inherit;border:1px solid #6b7c94;border-radius:.3rem;padding:.5rem;color:inherit;background:#fff}.prize-proposal-fields textarea{min-height:5rem;resize:vertical}
+.prize-proposal-actions{display:flex;flex-wrap:wrap;gap:.5rem}.prize-proposal-actions button{max-width:100%;white-space:normal;font:inherit;min-height:44px;padding:.5rem .7rem}.prize-proposal-actions button:focus-visible,.prize-proposal-fields input:focus-visible,.prize-proposal-fields textarea:focus-visible{outline:3px solid #265bba;outline-offset:3px}.prize-proposal-reason{white-space:pre-wrap}

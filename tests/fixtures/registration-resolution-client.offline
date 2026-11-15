@@ -1,0 +1,1 @@
+export function createClient(){return{auth:{getClaims:async()=>({data:{claims:{sub:window.ids.actorId,session_id:window.ids.sessionId,exp:9999999999}},error:null}),getUser:async()=>({data:{user:{id:window.ids.actorId}},error:null}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})},rpc:async()=>({data:'director',error:null})};}

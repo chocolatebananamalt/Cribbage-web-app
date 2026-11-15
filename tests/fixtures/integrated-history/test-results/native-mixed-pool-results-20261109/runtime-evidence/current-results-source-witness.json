@@ -1,0 +1,1853 @@
+{
+  "fictionalOnly": true,
+  "actualAuthenticatedSqlRole": true,
+  "providerSessionVerified": false,
+  "context": {
+    "projectRef": "nnhcnvksxgxnpvdqjgpg",
+    "scope": {
+      "actorId": "a1310000-0000-4000-8000-000000000001",
+      "tournamentId": "b1310000-0000-4000-8000-000000000001",
+      "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613"
+    },
+    "sessionId": "e880d94c-c63a-479d-8f82-97b780bb6fd5"
+  },
+  "qualificationEnvelope": {
+    "kind": "native-mixed-review-provider-v1",
+    "review": {
+      "kind": "native-mixed-qualification-finance-review-v1",
+      "cards": [
+        {
+          "rank": 1,
+          "wins": 10,
+          "games": 12,
+          "losses": 2,
+          "tieCount": 1,
+          "netSpread": 397,
+          "gamePoints": 28,
+          "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+          "negativeSpread": 155,
+          "positiveSpread": 552,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-15"
+        },
+        {
+          "rank": 2,
+          "wins": 9,
+          "games": 12,
+          "losses": 3,
+          "tieCount": 1,
+          "netSpread": 388,
+          "gamePoints": 24,
+          "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+          "negativeSpread": 154,
+          "positiveSpread": 542,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-7"
+        },
+        {
+          "rank": 3,
+          "wins": 9,
+          "games": 12,
+          "losses": 3,
+          "tieCount": 1,
+          "netSpread": 295,
+          "gamePoints": 23,
+          "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+          "negativeSpread": 131,
+          "positiveSpread": 426,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-13"
+        },
+        {
+          "rank": 4,
+          "wins": 8,
+          "games": 12,
+          "losses": 4,
+          "tieCount": 1,
+          "netSpread": 344,
+          "gamePoints": 22,
+          "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+          "negativeSpread": 127,
+          "positiveSpread": 471,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-8"
+        },
+        {
+          "rank": 5,
+          "wins": 8,
+          "games": 12,
+          "losses": 4,
+          "tieCount": 1,
+          "netSpread": 297,
+          "gamePoints": 22,
+          "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+          "negativeSpread": 256,
+          "positiveSpread": 553,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-1"
+        },
+        {
+          "rank": 6,
+          "wins": 7,
+          "games": 12,
+          "losses": 5,
+          "tieCount": 1,
+          "netSpread": 76,
+          "gamePoints": 20,
+          "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+          "negativeSpread": 364,
+          "positiveSpread": 440,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-2"
+        },
+        {
+          "rank": 7,
+          "wins": 7,
+          "games": 12,
+          "losses": 5,
+          "tieCount": 1,
+          "netSpread": -13,
+          "gamePoints": 19,
+          "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+          "negativeSpread": 388,
+          "positiveSpread": 375,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-14"
+        },
+        {
+          "rank": 8,
+          "wins": 6,
+          "games": 12,
+          "losses": 6,
+          "tieCount": 1,
+          "netSpread": 182,
+          "gamePoints": 17,
+          "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+          "negativeSpread": 190,
+          "positiveSpread": 372,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-11"
+        },
+        {
+          "rank": 9,
+          "wins": 6,
+          "games": 12,
+          "losses": 6,
+          "tieCount": 1,
+          "netSpread": -75,
+          "gamePoints": 17,
+          "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+          "negativeSpread": 449,
+          "positiveSpread": 374,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-5"
+        },
+        {
+          "rank": 10,
+          "wins": 6,
+          "games": 12,
+          "losses": 6,
+          "tieCount": 1,
+          "netSpread": -36,
+          "gamePoints": 15,
+          "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+          "negativeSpread": 332,
+          "positiveSpread": 296,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-6"
+        },
+        {
+          "rank": 11,
+          "wins": 5,
+          "games": 12,
+          "losses": 7,
+          "tieCount": 1,
+          "netSpread": 30,
+          "gamePoints": 14,
+          "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+          "negativeSpread": 340,
+          "positiveSpread": 370,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-16"
+        },
+        {
+          "rank": 12,
+          "wins": 5,
+          "games": 12,
+          "losses": 7,
+          "tieCount": 1,
+          "netSpread": 22,
+          "gamePoints": 14,
+          "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+          "negativeSpread": 254,
+          "positiveSpread": 276,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-17"
+        },
+        {
+          "rank": 13,
+          "wins": 5,
+          "games": 12,
+          "losses": 7,
+          "tieCount": 1,
+          "netSpread": -127,
+          "gamePoints": 12,
+          "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+          "negativeSpread": 300,
+          "positiveSpread": 173,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-12"
+        },
+        {
+          "rank": 14,
+          "wins": 5,
+          "games": 12,
+          "losses": 7,
+          "tieCount": 1,
+          "netSpread": -454,
+          "gamePoints": 12,
+          "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+          "negativeSpread": 590,
+          "positiveSpread": 136,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-18"
+        },
+        {
+          "rank": 15,
+          "wins": 3,
+          "games": 12,
+          "losses": 9,
+          "tieCount": 1,
+          "netSpread": -212,
+          "gamePoints": 9,
+          "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+          "negativeSpread": 507,
+          "positiveSpread": 295,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-4"
+        },
+        {
+          "rank": 16,
+          "wins": 3,
+          "games": 12,
+          "losses": 9,
+          "tieCount": 1,
+          "netSpread": -291,
+          "gamePoints": 9,
+          "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+          "negativeSpread": 488,
+          "positiveSpread": 197,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-9"
+        },
+        {
+          "rank": 17,
+          "wins": 3,
+          "games": 12,
+          "losses": 9,
+          "tieCount": 1,
+          "netSpread": -520,
+          "gamePoints": 9,
+          "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+          "negativeSpread": 630,
+          "positiveSpread": 110,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-10"
+        },
+        {
+          "rank": 18,
+          "wins": 3,
+          "games": 12,
+          "losses": 9,
+          "tieCount": 1,
+          "netSpread": -303,
+          "gamePoints": 8,
+          "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+          "negativeSpread": 441,
+          "positiveSpread": 138,
+          "distinctOpponents": 12,
+          "fixedTournamentId": "A-3"
+        }
+      ],
+      "awards": null,
+      "status": "review_available",
+      "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+      "startId": "1bb23e9e-ed67-4fd4-a7e8-cb9c6af1d1ee",
+      "costsMinor": null,
+      "moneyMoved": false,
+      "mrpAwarded": false,
+      "entrantCount": 18,
+      "sourceDigest": "675b633fc4ff19035bcfdb67e40fc119d330e076d8997b866c5acd1295a147ec",
+      "tournamentId": "b1310000-0000-4000-8000-000000000001",
+      "evidenceHeads": [
+        {
+          "gameId": "008d14ec-26a1-472b-8fb6-de218a996966",
+          "revision": 4,
+          "historyDigest": "e49291c140308084cbc8611101f25283f915fe9af3c69ab02abc316c88f15d1b"
+        },
+        {
+          "gameId": "03b7a2d0-30f4-438b-a4dd-eaf59405d759",
+          "revision": 2,
+          "historyDigest": "1e0037ccf7385b0ed5f43397118e050ca23239c5e82637f5005c955a5803b451"
+        },
+        {
+          "gameId": "03d50f5e-af1d-4729-9a1b-cad5e438652c",
+          "revision": 4,
+          "historyDigest": "af36053d0921516623961c099fcd863a94aba636641d602e3cdb5e7580eae01a"
+        },
+        {
+          "gameId": "041bf2d9-fc83-4570-a9a0-22c0977dba88",
+          "revision": 2,
+          "historyDigest": "2de0ee0c94546179416ec5e1523ab5399f15314b174f97f8137d1f5cb098e0d1"
+        },
+        {
+          "gameId": "05e7153e-3e77-4709-b032-3e15e3bf491a",
+          "revision": 2,
+          "historyDigest": "9fb7e01e98681298d4a479f66199d28a9a2251697b297abbb09a9efe813106d1"
+        },
+        {
+          "gameId": "0a319ccd-172b-40bb-830d-527416325bcc",
+          "revision": 2,
+          "historyDigest": "b5c29cb4764df0ed21dc2ae2c639c160e224d70fe418608d92bd46f5269370a9"
+        },
+        {
+          "gameId": "0aad88cc-c823-4509-a2d2-e3913cd21140",
+          "revision": 4,
+          "historyDigest": "c72c7c0ae54ca1a5d7333546473d0ce3517b54b22906b29555a8ceb7072b868e"
+        },
+        {
+          "gameId": "0b241cf8-0e4a-438d-88ac-1f4b14159ea6",
+          "revision": 4,
+          "historyDigest": "e52ca114a7ffa2bafea739fa78cc82a9174c84d7131ec0c09aa440df334ec5dc"
+        },
+        {
+          "gameId": "0c272ffe-7f4f-4f62-9f78-832f0f9f5fb3",
+          "revision": 4,
+          "historyDigest": "9fb956bb7f095fc86e089ce0e0b70e5ea347d412af29a356ba5b1910c4d8aed6"
+        },
+        {
+          "gameId": "159cd4c3-efb7-49c0-b6e0-fb36dca3cc4c",
+          "revision": 2,
+          "historyDigest": "be99dbac4904d3c3ccf701870012083f33bb6064c347d43b49ca78299f643ac8"
+        },
+        {
+          "gameId": "167ca2d8-b8ee-490d-8c48-41f477bd003a",
+          "revision": 4,
+          "historyDigest": "eee4614e512c8e208e76d48432e9538d2314c2e107d67693ccf74016b2a9752e"
+        },
+        {
+          "gameId": "173ccb22-2906-4cbb-9577-17e88e2e127e",
+          "revision": 4,
+          "historyDigest": "43e170c603712822f696d6e9e4fd1039174a35a90feea29244c994572ff60495"
+        },
+        {
+          "gameId": "1a0ea1d0-eff9-4f56-9699-8dbffa62a0a9",
+          "revision": 4,
+          "historyDigest": "f348cc817604e7760cb49a28d759e290c764392b4af735a43f962762be45db54"
+        },
+        {
+          "gameId": "1bf51e5b-2c12-41e0-b76d-ffe86434dd46",
+          "revision": 4,
+          "historyDigest": "9c18c441ef780001d2eb84813fffdeeeccce17ad5b7d52807f2a8d17d700b9a2"
+        },
+        {
+          "gameId": "1d464fc7-c689-42a2-89bf-4b7918d4f020",
+          "revision": 4,
+          "historyDigest": "a42474943f14a5d1a50ecfb32a9397e8fa0f7bea17363ef26befaf2877695916"
+        },
+        {
+          "gameId": "1f899fcc-ab38-4b73-9de6-f62fb9feb19c",
+          "revision": 4,
+          "historyDigest": "e9c4bc9fda2fdee0995f715a1820a61bd682346cf15b3a5e9c15b3f0b2299cfe"
+        },
+        {
+          "gameId": "1fb67ca8-4fdc-4588-a6d1-3d17e3c2b5af",
+          "revision": 4,
+          "historyDigest": "d21b50b71bbdab2bc40241c5548297b71033dc611b4cb961b9f5d2aead98a3e2"
+        },
+        {
+          "gameId": "2019ccdb-a3f4-4485-b6d4-971ad1f64ec7",
+          "revision": 4,
+          "historyDigest": "82879512112675fec5d208192db91a69e1f59aa6196f3f68809d492ac3b72a3f"
+        },
+        {
+          "gameId": "22aaf831-5a97-4486-a9d4-64162efb1636",
+          "revision": 4,
+          "historyDigest": "b5f084a8339ee5310d6bdee3e6ec31af40dcea217dbc1fce6500b9124abd2467"
+        },
+        {
+          "gameId": "255a1090-622c-4037-8db5-659b49204c83",
+          "revision": 4,
+          "historyDigest": "8bc77f7b7b18ee7ce3775e2c37eac064c087b56332e11aa54a1225b16fd9d9f4"
+        },
+        {
+          "gameId": "257a79be-a5fb-4215-a0e0-f7c24634a81a",
+          "revision": 2,
+          "historyDigest": "cdc6d3656944462ce4b0c534add1116ea87cbb1355814cbb7b9869caa6bd5a6c"
+        },
+        {
+          "gameId": "291e8419-2720-4323-824d-684ae04801a2",
+          "revision": 2,
+          "historyDigest": "6b4566e2f5fa2f00360994a47bd14552361cb02ba969aae9050be4c7accfb29b"
+        },
+        {
+          "gameId": "29ff7c50-9e52-456c-87c3-a09a642bb174",
+          "revision": 2,
+          "historyDigest": "d33909ca18f5d23337618df5bff13eff6c4e92aa537d34e5be54f1d4077a5906"
+        },
+        {
+          "gameId": "2d33e8dc-5aa6-4907-b237-c533e67b8373",
+          "revision": 4,
+          "historyDigest": "a2f53e1de65b24223fdf9bc331e88ed25c286dc04d8f62517b757598ae51b094"
+        },
+        {
+          "gameId": "34f17f12-5b66-466f-aa1b-6f7cc6b7ba71",
+          "revision": 4,
+          "historyDigest": "30f931d27ef713752e94429f58b10166acbe3382054a6f2ba726ff53b062b00f"
+        },
+        {
+          "gameId": "35ddaf92-edee-4b2b-9592-00380341f2e0",
+          "revision": 4,
+          "historyDigest": "3bb57c1167bee4bd177f2eb146dbcba7a6ab805edc3425c5f42ebf3e8163e877"
+        },
+        {
+          "gameId": "36562250-f99c-4d40-a841-7bd82d07f7bb",
+          "revision": 2,
+          "historyDigest": "fd6542fb740a8a30087b2cb9f2486a7979527bf707c3de16ffc3facd96956c50"
+        },
+        {
+          "gameId": "377e251a-1212-4cc8-a03f-d65c7dc1b4d0",
+          "revision": 4,
+          "historyDigest": "a8503dbf36af8190527f0b568dd8ae9302f287df539670610bba10f1407b638b"
+        },
+        {
+          "gameId": "3c207f87-d608-4e23-85f2-e23ec4a8cb95",
+          "revision": 4,
+          "historyDigest": "b23e2df7c4547349613a619d3d574ff24ec221b9ec864274c6588c2ab13213fc"
+        },
+        {
+          "gameId": "40b6d990-b49e-480c-8e80-4234276aebb4",
+          "revision": 2,
+          "historyDigest": "6d7555ddab6704f6d0f546a861a99cdb1d1b23c52c75e2401f2710332b535162"
+        },
+        {
+          "gameId": "43133bc3-68bd-403b-9ae5-d19ef92879ed",
+          "revision": 4,
+          "historyDigest": "4faa6fa2a883bcff97fe285db1fa4fb4e849ff065fc6d71e732b1b554c448eab"
+        },
+        {
+          "gameId": "436144bd-49a7-4a16-a5d1-6e1b2f02d992",
+          "revision": 4,
+          "historyDigest": "9e9f508534033c8e59b2b65cde97c9006eb76f090d3bd3fa8c819e819436a654"
+        },
+        {
+          "gameId": "466f5570-0839-41a1-8c89-79c6a203c351",
+          "revision": 4,
+          "historyDigest": "a68beeeaf5a20e71bf70d38c78dbe3d74b41024e09fe01451c2eb392551e8a8c"
+        },
+        {
+          "gameId": "4743ce4b-f876-4499-8cc7-5fefc87c38bf",
+          "revision": 4,
+          "historyDigest": "1cf07b2cebb1cab485858c646e3ba08dd6ac768d82971036eb26dd1f063be06c"
+        },
+        {
+          "gameId": "4cac92c8-073c-4ddc-b33b-f1dcf017b8f3",
+          "revision": 2,
+          "historyDigest": "d8bbbadf67bfb94eb0024808e3cb4e9acd637af2bfe1a80410b68cb6e26456c2"
+        },
+        {
+          "gameId": "4de3b1dd-136c-4487-a68b-a8c4d879c276",
+          "revision": 2,
+          "historyDigest": "79e05208f80c8800b18b4633c7cc94d318b2660faf94d98e99aa1e4b99042de8"
+        },
+        {
+          "gameId": "5093a089-7846-4703-af00-a2ebb715c514",
+          "revision": 4,
+          "historyDigest": "7e9ad174da152771b2551241289ec03658032a8db55214d30a8ba38f708627f0"
+        },
+        {
+          "gameId": "5692a20e-fa11-4f69-97e2-564ea2909093",
+          "revision": 4,
+          "historyDigest": "acda1407da0888a3373a8cabdf60cc7e1419d887bcf76debcedbfa218dfdcf4c"
+        },
+        {
+          "gameId": "59a5dd37-a427-4878-83e1-a5ff638d0b57",
+          "revision": 2,
+          "historyDigest": "bcc54d463f7d454a68a1d55272ae3b639cd7dfdfa87da5e3b0748bfabfc719b6"
+        },
+        {
+          "gameId": "5e5bb84b-910f-46b5-bbc7-153473229c68",
+          "revision": 2,
+          "historyDigest": "dfe4e2e87d3a2d189fba04b042790f3f276ad0f6deb9187eec56c78d67d10a52"
+        },
+        {
+          "gameId": "6186bf92-fbad-43ec-ae8a-fcdfa1535759",
+          "revision": 4,
+          "historyDigest": "e811f0f1b436401f2901fadc5636beeef6055bf753f959a185bbc0b715e94cd5"
+        },
+        {
+          "gameId": "61ae5dbe-1220-43c4-9a05-8013754a37c0",
+          "revision": 2,
+          "historyDigest": "cb10c39a52f0c1bd8bb6912875f956db52cb239fcc065fc3950dc8373dc137cc"
+        },
+        {
+          "gameId": "62c3589d-5bcf-46ef-aa35-9038809ce153",
+          "revision": 4,
+          "historyDigest": "dd8ea4c34f179deb4d0462dbe5d94370588d23fac289a99657da8db54eeac341"
+        },
+        {
+          "gameId": "62e7b2ec-6b5a-4049-91aa-d9e94ff9e9c5",
+          "revision": 2,
+          "historyDigest": "0fd5ffee2a9aaabcb6b3ab113251802c63f345b305a827640782a4f7e968cbf5"
+        },
+        {
+          "gameId": "6598a2fc-b912-4191-8578-1877a02ac461",
+          "revision": 4,
+          "historyDigest": "677fb60fae713879efecdb1a326f78002b02e74565e181672ad20a1324c74986"
+        },
+        {
+          "gameId": "66687bf7-2964-47c0-9a16-9be209f2a1c6",
+          "revision": 2,
+          "historyDigest": "91037856eece4d70ff452b80308fa3b8ac3d8798c1264d568981da018f0aa198"
+        },
+        {
+          "gameId": "672523e4-6c80-4fb8-b8b7-1b6fd8e32112",
+          "revision": 4,
+          "historyDigest": "89bd622d6687ea0166e17bcef59f9ffcdad160eb1c4d86014a9b9095c1ab8ab1"
+        },
+        {
+          "gameId": "6757e6d0-a697-4015-9dc7-1dba34e1bfbb",
+          "revision": 2,
+          "historyDigest": "d945f7111050efac3a228a19467ee3eec97640b08d333c54ef3f37d24e05f526"
+        },
+        {
+          "gameId": "678d5499-3810-42f9-bd76-2d3f73e02536",
+          "revision": 2,
+          "historyDigest": "b53aa754d5d73f1eaa55b00a6d3c886af3e652b40fd11d88c677ba1d74611903"
+        },
+        {
+          "gameId": "7512b6d1-62e9-46be-acca-a9686abae6e6",
+          "revision": 2,
+          "historyDigest": "e807e5c803a11bc50804ae01bbc5e55af82defb51a59722beb5fe7f68b47003c"
+        },
+        {
+          "gameId": "760ca5d1-5f27-4122-b026-f29058eef0d1",
+          "revision": 2,
+          "historyDigest": "abe73a8df6f018a6f11f8600f893700653063fd2abf1d0da0c069053cad18dec"
+        },
+        {
+          "gameId": "770c5874-756d-4e9a-9c32-2e7be762f98b",
+          "revision": 2,
+          "historyDigest": "9af5adde7f53d76b883fdc28075d1a7ef5fc5baf7cf83b740f5f08f7a0aae4c6"
+        },
+        {
+          "gameId": "7f7c73d6-66bb-444a-b1a4-d9419d742499",
+          "revision": 4,
+          "historyDigest": "9f8136bc59fa32ea40232ced31d08ecf0506f56e5bd6730466a5477b81d33c67"
+        },
+        {
+          "gameId": "81a5d6db-060b-43eb-83d5-10934fc3c044",
+          "revision": 4,
+          "historyDigest": "264936bab85aab5d81abb5206c2d52da58a5b4eb769cc7894f53fdc148f100cf"
+        },
+        {
+          "gameId": "872bd5fb-ec2e-4c8d-94a7-e96105a57ac4",
+          "revision": 4,
+          "historyDigest": "46b69b8425ff9b8cb34b15bb8088f02400050ec4ecaf46f8b5f3e951c9c7ea56"
+        },
+        {
+          "gameId": "87bda8b7-3687-4029-b6fa-9542edac403e",
+          "revision": 4,
+          "historyDigest": "9adc341217b235d598c389a54a094f4abf7f682ac8c792a51fd30b2e34e1cb04"
+        },
+        {
+          "gameId": "897d809c-444d-43f1-98ab-6db7e4e7c928",
+          "revision": 4,
+          "historyDigest": "10b24fa8ad7fb821df941c39fc5aabfb5725b375b5d44d8ab49ec5430557a821"
+        },
+        {
+          "gameId": "8a69ae8a-1fc7-4cf6-a10f-72a1a8069d66",
+          "revision": 4,
+          "historyDigest": "fdfa40cc1989813b14c4ae48ef9efe18cd680e27d8240e0b9b85533389650e44"
+        },
+        {
+          "gameId": "91031ca0-783d-4e0d-a5b4-0cd342bbb23c",
+          "revision": 4,
+          "historyDigest": "986703a4e45a8971a77e228fe3865cd8f1e28af1fa8036902d45ec76128554ef"
+        },
+        {
+          "gameId": "9431a594-4081-4bcb-8eae-179af726250d",
+          "revision": 4,
+          "historyDigest": "c7e32bf09daeac020d991345cc43426135421168e5e11b250e094c1e2b887f66"
+        },
+        {
+          "gameId": "943a161f-a66f-440f-ac38-6a3dfb675e97",
+          "revision": 2,
+          "historyDigest": "6c5605a3eda4cd4549b4a15bb12ab6b68a9d2fdab18b3835a3addfd2c99e4eac"
+        },
+        {
+          "gameId": "95a15f95-00be-4108-b44f-23a401ebbb36",
+          "revision": 4,
+          "historyDigest": "c905fd971a28f8ce285467ac3a7618782c2cf6665c1c70f5f6181061192fe0ab"
+        },
+        {
+          "gameId": "9a1db54b-bfb6-4e42-aca2-7890ad2d19e2",
+          "revision": 4,
+          "historyDigest": "647053c8dde9c37108a635e759fe9a76dc858bf62a4b8271f5d9ff26be974f08"
+        },
+        {
+          "gameId": "9bce19ed-7fa8-49ed-b721-c7e50b7cb45b",
+          "revision": 4,
+          "historyDigest": "f816fd7cc1bab0d80622b472d7af96a6ed98aa3b5d8c05e498ff05dd62b30589"
+        },
+        {
+          "gameId": "9e72d112-f895-46d3-9931-eddf061e3da7",
+          "revision": 2,
+          "historyDigest": "1a056039be637053fd8dd0fe69287bcf776fee452c7ee460f61b2d75e2121ee9"
+        },
+        {
+          "gameId": "a04fc7b8-0214-4d41-a9af-008af5f2a404",
+          "revision": 4,
+          "historyDigest": "c419ed48c7f1050a003096736a8b4bd8f88c780a5580e3c7ebccfc3df47fe687"
+        },
+        {
+          "gameId": "a4c1bebb-deff-46c6-951a-488d7534bbb5",
+          "revision": 4,
+          "historyDigest": "63b0aa5a0b89ebe24af3edcda9cd7a33c6ecf7c8a2de0162f561f71a68817dd3"
+        },
+        {
+          "gameId": "a766bf01-b45a-4c5e-b0b7-8500ad7e314f",
+          "revision": 4,
+          "historyDigest": "239ca47bbd23f826e256a3fa61a9b02df062b80536d51193c732b252d9bd5af4"
+        },
+        {
+          "gameId": "aaf21f38-21b2-443d-a408-1fd1cba3f8d3",
+          "revision": 2,
+          "historyDigest": "c36624c4eff910ab2d4a98f011835e9564b9483f4e9749a9f7a4b59c734c8397"
+        },
+        {
+          "gameId": "ae2780e3-d785-414a-9db7-238fdc371396",
+          "revision": 2,
+          "historyDigest": "7bf0caaec2347c7b4965b1e23b33e94bb1e8e849bbc33cab67684b01d4ccb7c2"
+        },
+        {
+          "gameId": "b02a0434-fe27-419f-9e48-fa6338b3dc93",
+          "revision": 2,
+          "historyDigest": "b73a24743be99bd0c7ef11bcbbfaffaf37dcd12558102fd159e6a25677d98db7"
+        },
+        {
+          "gameId": "b38461f0-f9e8-4fd6-a805-b97c392f8000",
+          "revision": 4,
+          "historyDigest": "36e1197c9a664bc56952928a6b337cf7b6ffb9157ce1e8dd6b8473b263008914"
+        },
+        {
+          "gameId": "b42ff56c-c1dc-4ebe-ba2c-682a12dbc49a",
+          "revision": 2,
+          "historyDigest": "493b94e0980d6f832f3b6e8fc0a659252571716f065ea4175bb9fe30af0699be"
+        },
+        {
+          "gameId": "b624c2b7-fbed-4e46-aeb1-4411decfffe0",
+          "revision": 4,
+          "historyDigest": "a97b3c7f03458688949897b00c099018c0876a66bd1085badb5866a4e53ea81f"
+        },
+        {
+          "gameId": "b73243fa-85fb-4d99-a0c3-91af6cc851c7",
+          "revision": 2,
+          "historyDigest": "adf56657416a2a30f104ad352724f695acb3723a682b9314effd0a4d9caef7e1"
+        },
+        {
+          "gameId": "b778952e-b721-47bb-8a8b-f910435d68ae",
+          "revision": 4,
+          "historyDigest": "e63daae3f4c5259b630282c40e71a80679c5477acc1d15e7142e35e9a45626bb"
+        },
+        {
+          "gameId": "bdbea172-d070-4f95-aa2e-77a8f7441d9e",
+          "revision": 4,
+          "historyDigest": "e0ed5f6a538c96718ab79a8da1fd94bdfec7aacf5f934ad7da021b950ebfbd63"
+        },
+        {
+          "gameId": "bdfbdeaf-dbb2-491b-9360-385557a0909d",
+          "revision": 2,
+          "historyDigest": "de9fa169cef020b390200395b2757c9f44d75cab62ddc65339724147a5cab139"
+        },
+        {
+          "gameId": "c07f4dce-2957-46af-874e-5290532ee370",
+          "revision": 2,
+          "historyDigest": "f7ef60dc6d27cb604ad97ba9172fa63a51b63147e5044075d7ee8ed0a2944a7f"
+        },
+        {
+          "gameId": "c0dc0a23-4f13-4e13-b05c-499d049ad761",
+          "revision": 4,
+          "historyDigest": "360d0d1314eb490ecf1b2d23f3119319693abb28d80a270ac157c8c93b9ad82c"
+        },
+        {
+          "gameId": "c5d23417-bd50-4ac2-8126-d849f826c604",
+          "revision": 2,
+          "historyDigest": "dcabb1501aa8e810bea3b44388eb18772e97879f416c65a7fe4e5861edce1ea6"
+        },
+        {
+          "gameId": "c5db5896-7473-4007-9dc8-a13ff3843f5e",
+          "revision": 4,
+          "historyDigest": "17ed68179e388c0523086d61c3a27bbd74cb8ca2502ff46e9a7cfb7f523b30be"
+        },
+        {
+          "gameId": "c74ea72d-9d6d-40a2-a023-eebe4fa3868d",
+          "revision": 2,
+          "historyDigest": "34d0defd8ca75c71d153441bb463c4bb0a779c6201a8d7ab45af2af8a1b34b4f"
+        },
+        {
+          "gameId": "c762c655-74e1-4544-a013-b07092ca084c",
+          "revision": 2,
+          "historyDigest": "363ecef625fec7432d39907bf634c8788776751f58616f3f63c39a2505720c09"
+        },
+        {
+          "gameId": "cfe0fbbd-73bd-4950-8ba7-7254fa0ed4e1",
+          "revision": 4,
+          "historyDigest": "62d875276e92855166186cbd3c029c11119726958eb576e9f6203d74c74374ad"
+        },
+        {
+          "gameId": "cff3ae5d-fea3-4a8a-9b3a-24339416fbe9",
+          "revision": 4,
+          "historyDigest": "8f58137c768b8fd499d74d21a83c4f8d886c2653691edfb803c8376177aff554"
+        },
+        {
+          "gameId": "d3d3ec5a-182c-485c-87b7-ca80ebff4c71",
+          "revision": 2,
+          "historyDigest": "8d28ad12c22d9c4f47eefb1f16cd827119011d03905da87ccc43aef19d905844"
+        },
+        {
+          "gameId": "d4425cf0-2420-493a-b7ae-35640bc921e2",
+          "revision": 4,
+          "historyDigest": "aae734a17ee4c47d3c92c87b0c6c46a85bbb777f0d713999ce84a7c2dcfd0e0d"
+        },
+        {
+          "gameId": "d6f4430f-553a-41dd-962b-3353c130d8d7",
+          "revision": 4,
+          "historyDigest": "a887a87cd02a4ef30c07ed44fe48abbab4b698d81b7c05e77411cbe4b3c48b1d"
+        },
+        {
+          "gameId": "db2d7c45-a6ce-4c57-95b7-286a0430e175",
+          "revision": 4,
+          "historyDigest": "36a3fc1542f94d757807e5128f2abde1f6685d73a6c41c99d64e70152a9b62c9"
+        },
+        {
+          "gameId": "dd6e657d-6def-43d7-8acf-8851230c88bd",
+          "revision": 4,
+          "historyDigest": "2ae5db3ae12b4fc0bf07562d3c7dedb894c0bf4b1783fc5e016fcacc30c75be4"
+        },
+        {
+          "gameId": "dd91a8b0-6f7a-4ed7-8b2a-60cc855248ae",
+          "revision": 2,
+          "historyDigest": "a7e047e8a391ab5bcb3727d485f321d7fd0bcf75522a25c8e19bc7f67e27a0a6"
+        },
+        {
+          "gameId": "ddf90abc-f767-45fd-9db1-35e9489ad9b7",
+          "revision": 4,
+          "historyDigest": "747d87567facfd9bc045fc3e3d8c0f1f63d9fe0c3bd5648d3168409fb47a3fd1"
+        },
+        {
+          "gameId": "de821b9b-15a8-47e4-8a1a-352f92d73f65",
+          "revision": 2,
+          "historyDigest": "c4bb7d30ee8326394d955ab938ca5ac75a4b5d12d29292d2eb93ce813f0751ab"
+        },
+        {
+          "gameId": "deb08502-b755-4eff-8bba-86071a95ab13",
+          "revision": 2,
+          "historyDigest": "b3594d64e7e7e82fa7cbd848da1e50d5dfa7bac8e4000ff18a828303740d4c58"
+        },
+        {
+          "gameId": "e0daa65c-e64d-4ee0-825a-bfe7f9ddeff9",
+          "revision": 2,
+          "historyDigest": "6b148351ae67dd482cb8085022df6492b6a7da0d03f9b8c73bd3db83b99f2e5b"
+        },
+        {
+          "gameId": "e1a1d128-90aa-41b5-98dd-7c3d1c4dd009",
+          "revision": 4,
+          "historyDigest": "85338d95c53fa8f8bd5459288f6145199d14466ddc71c0e5352a0c444960259f"
+        },
+        {
+          "gameId": "e49f16cb-9e46-409b-8931-81b95515fa90",
+          "revision": 2,
+          "historyDigest": "aa600c4a3f0d8c07192422ab40a1074839237d212cc07e4740850086fe338214"
+        },
+        {
+          "gameId": "e9ba9a71-e111-4665-9020-00004c5f2e3a",
+          "revision": 4,
+          "historyDigest": "b9cb79a705714fe92bd55bf1403e0ceadf134f3c733f70d7e08807256dbc34f5"
+        },
+        {
+          "gameId": "e9e3da3c-9a1b-446e-9ea5-43f39bbeefe3",
+          "revision": 2,
+          "historyDigest": "9086c8255419c187b7a0d34042db9aca3fcc52b57badd9de9ea7f8f205fcb96f"
+        },
+        {
+          "gameId": "eaf2a111-3002-4969-9033-6a20a98adb95",
+          "revision": 2,
+          "historyDigest": "8b27e11f902081be02a57377134772332f49fdb223f6df229b818a19fe95c23e"
+        },
+        {
+          "gameId": "ebd51afe-4ee1-4cfc-9eb0-f9aa6b84a8b2",
+          "revision": 4,
+          "historyDigest": "5c4ba29df1801406a98270d2917b82a95fd80f4dc0843978ae553721bb1169be"
+        },
+        {
+          "gameId": "ec11a7e5-ca41-4d14-99ea-c4dc53837e24",
+          "revision": 4,
+          "historyDigest": "dfb08699998ac95a7473c87d4ce9109aedd69d99b276e58a15fffcc1a5f769f6"
+        },
+        {
+          "gameId": "ec9931b3-994c-4131-a033-7878837871ae",
+          "revision": 4,
+          "historyDigest": "650893d21908b9b23f61dda3f74040a9b87e3a8337c2f64fda38a206ec01cbea"
+        },
+        {
+          "gameId": "ece7b194-17ee-48b8-98d9-b9858afc1bd1",
+          "revision": 2,
+          "historyDigest": "8844d4136499df1463c4ebc4dd4ec606606796afdc8df7455d403bc640d73bfd"
+        },
+        {
+          "gameId": "f49bce05-f173-4a83-80c7-2db77516af9d",
+          "revision": 4,
+          "historyDigest": "c3eb139dea886cd59dc0a34077d48b1a312673d3c9055bc3a438825af5cf84d4"
+        },
+        {
+          "gameId": "f5f3662f-88ad-4197-8477-fb31e64db7dd",
+          "revision": 2,
+          "historyDigest": "71a48c1b9cf8fb3b5009ef2a60437e565fec87c861406154aab2bba9350eef42"
+        },
+        {
+          "gameId": "fb1be607-178c-4d0c-8cd8-ab970964895a",
+          "revision": 2,
+          "historyDigest": "01285699848c0dff43bc5ce9ef08eea7643b61337bbb6fee81a02e88e4b539cc"
+        }
+      ],
+      "simulationOnly": true,
+      "qualifyingCount": 5,
+      "tieReviewReason": null,
+      "payoutAuthorized": false,
+      "netPrizeFundMinor": null,
+      "simulatedReceipts": [
+        {
+          "receiptId": "1149a719-868f-4a12-9030-7c0fd481ebe9",
+          "amountMinor": 3000,
+          "sourceDigest": "8d2f7b9d938665c260ed544ab7dad795e8b099d6a895b4a65628698ccbb23a00",
+          "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed"
+        },
+        {
+          "receiptId": "475b0d1d-b7b1-4021-8bed-11eca1a355df",
+          "amountMinor": 3000,
+          "sourceDigest": "bf272a38301cdf33c3293a540a127ed078ae5f882975d2ff6a12f5413ea924a2",
+          "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213"
+        },
+        {
+          "receiptId": "29531393-d38f-4ddb-99b6-db6cd1457360",
+          "amountMinor": 3000,
+          "sourceDigest": "178d7c560274db70987772c64e48d3122691f179b5806e4b66b1de9eafbbd226",
+          "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc"
+        },
+        {
+          "receiptId": "95965b6c-74e3-4269-85dd-3cd578964f59",
+          "amountMinor": 3000,
+          "sourceDigest": "56161aaf1c1b216f7db34748bad575c64dac0dacec5485d83d847e64a10ec500",
+          "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a"
+        },
+        {
+          "receiptId": "913fa88f-a743-41e8-b467-729eb8776fad",
+          "amountMinor": 3000,
+          "sourceDigest": "8e4cc2be649988469e5facae58813f614e7eb7d210f72ba901795be15ff3ba33",
+          "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e"
+        },
+        {
+          "receiptId": "a5682c53-a8a2-43a4-b6e8-ab30a3bb73cf",
+          "amountMinor": 3000,
+          "sourceDigest": "81c8e7c077c24f0c57b9b30ce9dc86cb6d164d9efd00de4b7e25776e99f5f1b9",
+          "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19"
+        },
+        {
+          "receiptId": "568390b9-5101-4666-835b-9b6634f1b5df",
+          "amountMinor": 3000,
+          "sourceDigest": "2f866d896107a82ec09da26558a72b2cb1c5aacee41279bf9eb4c7833690e7e9",
+          "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda"
+        },
+        {
+          "receiptId": "723b724f-8070-4853-9d5b-a05a2b416f78",
+          "amountMinor": 3000,
+          "sourceDigest": "f8070ad26a6fdfae08ca87d42035796844649f4a85d9590f82adf295b6fef5be",
+          "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907"
+        },
+        {
+          "receiptId": "c697a5d9-c946-4011-9e66-897eaaa35f11",
+          "amountMinor": 3000,
+          "sourceDigest": "0b2989fb32b2946295122c5633e3058800315f8d09397d70c215aa1137d5abe7",
+          "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205"
+        },
+        {
+          "receiptId": "b59719de-6840-432c-ac9e-215f89045d4e",
+          "amountMinor": 3000,
+          "sourceDigest": "55c3b221a8b693965bee72bd9f4772d3688e946d665ee15e4c638b6405183381",
+          "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23"
+        },
+        {
+          "receiptId": "44a3aeaf-dea5-40fc-bf0d-e3393616a2bc",
+          "amountMinor": 3000,
+          "sourceDigest": "5447dd2e130ebe7f43decaa00e80512d974c1b9d5faea8ab0557676fde1060e7",
+          "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8"
+        },
+        {
+          "receiptId": "feba025e-25b4-4a9d-9c03-686eff576916",
+          "amountMinor": 3000,
+          "sourceDigest": "336a13c092e2ac1d9a036ad620dea95b1abe368cc26cc48b4af5edfd28557a4a",
+          "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99"
+        },
+        {
+          "receiptId": "c070339d-97c5-4fd0-859e-70a15d92f3a9",
+          "amountMinor": 3000,
+          "sourceDigest": "28c9406b85cd0edfeacfc661dba324e96fec055013099268d3aeb0579f695877",
+          "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296"
+        },
+        {
+          "receiptId": "c06a17d8-b53e-41b1-8ad7-69970ae37f82",
+          "amountMinor": 3000,
+          "sourceDigest": "c91a4ea0d11e2e037c72ecb706e143598200eb61fabbb2fc43ca0c127cdc561f",
+          "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c"
+        },
+        {
+          "receiptId": "620995df-287d-4d30-b4ec-61f8e25a381d",
+          "amountMinor": 3000,
+          "sourceDigest": "7890d002d4a6bbf7f7922d7fec2ae83299089c6954a5f0f24b0fcb8126ab399e",
+          "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad"
+        },
+        {
+          "receiptId": "8c7d7484-1d84-43da-939f-d6f9c78b93b3",
+          "amountMinor": 3000,
+          "sourceDigest": "9a6b93e8e0fa845978607a071402d60a1420d37ab0dc06c333405ac0c3c3d409",
+          "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331"
+        },
+        {
+          "receiptId": "c7dd6dfa-e9dd-495f-81f1-41ba5e88133f",
+          "amountMinor": 3000,
+          "sourceDigest": "3ad1cc17fcd866b83692b30e438e6074352178b3a33e58d0af3a75334981e84f",
+          "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316"
+        },
+        {
+          "receiptId": "af5695ed-4b42-4644-8fd1-467a7e01727f",
+          "amountMinor": 3000,
+          "sourceDigest": "992f243c4753693ca9158e3db27c6d44d5c523a95ed7ea06ceac546c5e21e06c",
+          "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d"
+        }
+      ],
+      "startSourceDigest": "822c08ddf92e09e91fb0ffb0c7dcaf9d40865e6961ac3d032bc2cc64a5b1b281",
+      "tieReviewRequired": false,
+      "qualificationReady": true,
+      "actualMoneyReceived": false,
+      "fundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325",
+      "simulatedGrossMinor": 54000,
+      "policyReviewRequired": true,
+      "ordinaryFinanceSource": false,
+      "officialQualificationRecorded": false
+    },
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "sessionId": "e880d94c-c63a-479d-8f82-97b780bb6fd5",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001"
+  },
+  "preparation": {
+    "kind": "native-mixed-pool-preparation-v1",
+    "status": "source_available",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "preStart": false,
+    "moneyMoved": false,
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "journalDigest": "fe4d6c29ae7c56d128eea239e5abdda9ea13f1de144acf74d547fcbd3b19ff14",
+    "availablePools": [
+      {
+        "kind": "q",
+        "slot": 1,
+        "label": "Graduated (1-in-4)",
+        "ratio": 4,
+        "method": "q-v3-raw-selected-step-v1",
+        "poolId": "e0a7f759-a6d7-4f1d-9754-9f17c277f931",
+        "feeMinor": 1000,
+        "supported": true,
+        "roundingStatus": "saved_latest",
+        "roundingUnitMinor": 100,
+        "roundingSourceDigest": "8c95311b0bdea2e17112df7fa6bba866b5b3a22b5b014c5c4a909d16ac8786c9"
+      },
+      {
+        "kind": "q",
+        "slot": 2,
+        "label": "Equal (Pays All Equally)",
+        "ratio": null,
+        "method": "q-equal-exact-selected-step-v1",
+        "poolId": "17267881-5d1b-4c21-a0d0-c648f60f488d",
+        "feeMinor": 2000,
+        "supported": true,
+        "roundingStatus": "saved_latest",
+        "roundingUnitMinor": 100,
+        "roundingSourceDigest": "8c95311b0bdea2e17112df7fa6bba866b5b3a22b5b014c5c4a909d16ac8786c9"
+      },
+      {
+        "kind": "side",
+        "slot": 1,
+        "label": "TEST ONLY Side",
+        "ratio": 6,
+        "method": "side-sheet20-40-selected-step-v1",
+        "poolId": "6d7e3bff-4058-48bc-96e2-b0d8d17f8fc6",
+        "feeMinor": 1000,
+        "supported": true,
+        "roundingStatus": "saved_latest",
+        "roundingUnitMinor": 1000,
+        "roundingSourceDigest": "8c95311b0bdea2e17112df7fa6bba866b5b3a22b5b014c5c4a909d16ac8786c9"
+      },
+      {
+        "kind": "side",
+        "slot": 2,
+        "label": "TEST ONLY Empty Side",
+        "ratio": 4,
+        "method": "side-sheet20-40-selected-step-v1",
+        "poolId": "f8af4132-9679-49c7-ad4e-59d47a7356f0",
+        "feeMinor": 2000,
+        "supported": true,
+        "roundingStatus": "saved_latest",
+        "roundingUnitMinor": 1000,
+        "roundingSourceDigest": "8c95311b0bdea2e17112df7fa6bba866b5b3a22b5b014c5c4a909d16ac8786c9"
+      }
+    ],
+    "simulationOnly": true,
+    "payoutAuthorized": false,
+    "ordinaryLiability": false,
+    "actualMoneyReceived": false,
+    "digitalParticipants": [
+      {
+        "displayName": "TEST ONLY Person 6",
+        "fixedIdStatus": "published",
+        "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+        "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+        "fixedTournamentId": "A-3"
+      },
+      {
+        "displayName": "TEST ONLY Person 3",
+        "fixedIdStatus": "published",
+        "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+        "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+        "fixedTournamentId": "A-11"
+      },
+      {
+        "displayName": "TEST ONLY Person 4",
+        "fixedIdStatus": "published",
+        "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+        "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+        "fixedTournamentId": "A-17"
+      },
+      {
+        "displayName": "TEST ONLY Person 1",
+        "fixedIdStatus": "published",
+        "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+        "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+        "fixedTournamentId": "A-7"
+      },
+      {
+        "displayName": "TEST ONLY Person 2",
+        "fixedIdStatus": "published",
+        "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+        "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+        "fixedTournamentId": "A-4"
+      },
+      {
+        "displayName": "TEST ONLY Person 5",
+        "fixedIdStatus": "published",
+        "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+        "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+        "fixedTournamentId": "A-8"
+      }
+    ],
+    "fundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325",
+    "fictionalPaperParticipants": [
+      {
+        "displayName": "TEST ONLY Person 11",
+        "fixedIdStatus": "published",
+        "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+        "rosterEntryId": "00be9c9a-ff95-4914-943b-db07ff3ec925",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-10"
+      },
+      {
+        "displayName": "TEST ONLY Person 17",
+        "fixedIdStatus": "published",
+        "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+        "rosterEntryId": "02916e33-9a9a-45fd-a72c-44a603c510c0",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-14"
+      },
+      {
+        "displayName": "TEST ONLY Person 10",
+        "fixedIdStatus": "published",
+        "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+        "rosterEntryId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-2"
+      },
+      {
+        "displayName": "TEST ONLY Person 14",
+        "fixedIdStatus": "published",
+        "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+        "rosterEntryId": "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-6"
+      },
+      {
+        "displayName": "TEST ONLY Person 16",
+        "fixedIdStatus": "published",
+        "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+        "rosterEntryId": "3c579e44-51c1-41f5-a0f6-603567c72af1",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-5"
+      },
+      {
+        "displayName": "TEST ONLY Person 7",
+        "fixedIdStatus": "published",
+        "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+        "rosterEntryId": "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-12"
+      },
+      {
+        "displayName": "TEST ONLY Person 13",
+        "fixedIdStatus": "published",
+        "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+        "rosterEntryId": "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-15"
+      },
+      {
+        "displayName": "TEST ONLY Person 18",
+        "fixedIdStatus": "published",
+        "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+        "rosterEntryId": "b8103090-9206-4c53-8328-cecc1ff2433b",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-18"
+      },
+      {
+        "displayName": "TEST ONLY Person 12",
+        "fixedIdStatus": "published",
+        "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+        "rosterEntryId": "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-1"
+      },
+      {
+        "displayName": "TEST ONLY Person 9",
+        "fixedIdStatus": "published",
+        "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+        "rosterEntryId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-9"
+      },
+      {
+        "displayName": "TEST ONLY Person 8",
+        "fixedIdStatus": "published",
+        "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+        "rosterEntryId": "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-13"
+      },
+      {
+        "displayName": "TEST ONLY Person 15",
+        "fixedIdStatus": "published",
+        "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+        "rosterEntryId": "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+        "simulationOnly": true,
+        "fixedTournamentId": "A-16"
+      }
+    ]
+  },
+  "workspace": {
+    "kind": "native-mixed-pool-workspace-v1",
+    "status": "source_available",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "policies": [
+      {
+        "poolId": "17267881-5d1b-4c21-a0d0-c648f60f488d",
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "disclosure": "TEST ONLY selected method and unit, simulated funds, no actual debt or payment",
+        "amountPolicy": {
+          "kind": "q",
+          "ratio": null,
+          "method": "q-equal-exact-selected-step-v1",
+          "version": "native-mixed-pool-policy-v1",
+          "feeMinor": 2000,
+          "roundingUnitMinor": 100
+        },
+        "electedCount": 18,
+        "policyDigest": "d190abf852ca25dc561abd85f1ade47eac343def9c70d6119174122749ba78e2",
+        "simulatedFundMinor": 36000,
+        "simulatedPaidCount": 18
+      },
+      {
+        "poolId": "e0a7f759-a6d7-4f1d-9754-9f17c277f931",
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "disclosure": "TEST ONLY selected method and unit, simulated funds, no actual debt or payment",
+        "amountPolicy": {
+          "kind": "q",
+          "ratio": 4,
+          "method": "q-v3-raw-selected-step-v1",
+          "version": "native-mixed-pool-policy-v1",
+          "feeMinor": 1000,
+          "roundingUnitMinor": 100
+        },
+        "electedCount": 16,
+        "policyDigest": "366a7d5a8b7e391bfa84443614215467d474032c68113eaefc7615024c33ec89",
+        "simulatedFundMinor": 16000,
+        "simulatedPaidCount": 16
+      },
+      {
+        "poolId": "6d7e3bff-4058-48bc-96e2-b0d8d17f8fc6",
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "disclosure": "TEST ONLY selected method and unit, simulated funds, no actual debt or payment",
+        "amountPolicy": {
+          "kind": "side",
+          "ratio": 6,
+          "method": "side-sheet20-40-selected-step-v1",
+          "version": "native-mixed-pool-policy-v1",
+          "feeMinor": 1000,
+          "roundingUnitMinor": 1000
+        },
+        "electedCount": 17,
+        "policyDigest": "a66593091491e08ee54037b9210ed4cfbf5341ba69498ccc5b051e7666e2b443",
+        "simulatedFundMinor": 17000,
+        "simulatedPaidCount": 17
+      },
+      {
+        "poolId": "f8af4132-9679-49c7-ad4e-59d47a7356f0",
+        "policyId": "a3818a49-c734-43cc-8f71-11998de86a28",
+        "disclosure": "TEST ONLY selected method and unit, simulated funds, no actual debt or payment",
+        "amountPolicy": {
+          "kind": "side",
+          "ratio": 4,
+          "method": "side-sheet20-40-selected-step-v1",
+          "version": "native-mixed-pool-policy-v1",
+          "feeMinor": 2000,
+          "roundingUnitMinor": 1000
+        },
+        "electedCount": 0,
+        "policyDigest": "383798fd892781531eec2b1d865b3676d8030793c35a190ce6c6eb2982dcbb5a",
+        "simulatedFundMinor": 0,
+        "simulatedPaidCount": 0
+      }
+    ],
+    "elections": [
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "67e23ff5-dd95-40a0-b16c-d6d1808b3c07",
+        "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+        "electionDigest": "7efe3b05769e6aca810be8c89dc5d576ecb22bce87488e46988c0dc06d001f54",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "a0a7a49e-78cb-4d91-94fe-cebe0546b113",
+        "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+        "electionDigest": "3dc7fd88b108632ef9595b84a2a1e326453c5a0aafc1c32c067794ddcd75b4d5",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "0a3130fd-3fa4-424f-8007-c96c13c66aaa",
+        "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+        "electionDigest": "2460e31ff548bbe6b280613d4f2cea6f81b1385dca2b41f0e12e49d7cf2017f9",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "f9d4ab3a-e4f0-4e0d-895e-b4c3ec4ac6df",
+        "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+        "electionDigest": "690d1146082448acd5a7852fbf2fa1e594e71681c1ad10ce13bb863f92da570c",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "264a84c0-873a-4c03-aa86-f6db3b1540b1",
+        "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+        "electionDigest": "27afb1915284c0bb16c6c9742213628f9446d820d19323797dc65276b5884335",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "33a22f42-d9f1-4136-b990-c6b40f66f571",
+        "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+        "electionDigest": "cfed75cfc786918252c10720c4371b99c3c794fe42781f6cb69658b0d5c21f63",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "72747767-4469-477e-8031-496e4ef0dec7",
+        "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+        "electionDigest": "503abc42701840da394e15556ca83c2fd616516c0997e04717ffd75beb0725b6",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "1204c6ec-8abc-44e3-bee9-c581ae260e19",
+        "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+        "electionDigest": "728af939a68e3afdf5e59547ea1b595ad1b978899a42655cc526f91ac29d0c07",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "cf226db9-aeff-4489-9fea-dd88c7d11895",
+        "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+        "electionDigest": "20877885b6fbe49e607ee789d929e2cbc64de70889e29fc496eea0033b7a3989",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "7c213ec6-5617-4b64-bde8-a32267379bda",
+        "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+        "electionDigest": "d9ae8a38a3c24b159ba21b97365f565367489d2c6b6407a6ad59a3017d059f7e",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "38f3d9c1-9c70-4bee-9f7b-b27890ebc71c",
+        "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+        "electionDigest": "41ba96e0955670bc42964b07f8e0afd6cac19f4c9932a2b5659a8a26c69f8eb7",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "7ef5d4af-c9a2-4ec8-abb9-3e6e5d71020b",
+        "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+        "electionDigest": "b81fcc303cadbe7b51ae6eb855012f1881392176553b51a543f20dac7a5f522a",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "6125f2f0-6ab0-4cb0-8064-ab092392c40a",
+        "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+        "electionDigest": "43fe6b61dd5146a6e780c9ba231d0e935f271b2e9abed04e68b1d484f88e6683",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "4e3aad9f-3ef5-48bf-8fd1-8a52ca262839",
+        "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+        "electionDigest": "aa0ad0984513709d8b09f246edd8c488a0eec08190610b105586a72949f086c7",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "25918249-34a9-486d-a935-6167ba1b2ad2",
+        "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+        "electionDigest": "f77193cc31d9de9ad8299ae79d077905c61131654e32ecb0fe56037b2c4e7cae",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "ad6e44b7-627c-451f-8a32-2f83d54e621f",
+        "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+        "electionDigest": "4dd5331e2f94744d1c56e92c76adefe245557fbd611d441ba4c8466e28b1318a",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "electionId": "c154949b-e09d-4f7b-b550-8b6d7f0f7d8f",
+        "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+        "electionDigest": "345f5519d7e9f4e60a235e61a9cba30a3c5a45fee5f3b27fb0c2856f75753384",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "e387c101-c661-4da4-9410-a80fd44418b8",
+        "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+        "electionDigest": "70882c2097dd9bcdb9cb5dc0182f657a568bf6e0275528274595d0608c15b31b",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "625493b1-95ed-4a8e-b09c-55a7a916870f",
+        "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+        "electionDigest": "eafad3a5b552e3d2d0000790ed1ebd96a5ed0883030320ca4a94231a994f4cec",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "4c8dbdea-f112-43ec-aa0d-d5d01b8d834c",
+        "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+        "electionDigest": "f1aa15b56311391c260982279f41281fcc8931ac736b062513adc8f635b61906",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "57ad7cda-abb7-4f85-bc25-bf1b85758e81",
+        "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+        "electionDigest": "24fd6cacc1091d34c4b7bb8a357a9f96391fc01d493eb57b77c7976f40e6cf00",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "067457a2-998f-4da2-a434-600dc21ea6a2",
+        "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+        "electionDigest": "15e48a8690d53250871c3406c6a58a9b30cd97c451b4d69a298409237e16ed63",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "fe8ba44f-81a3-42f2-a50c-c29fba0e56e5",
+        "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+        "electionDigest": "5f520853f0e65fa8658e29051ada0346c75ff187a2c9a17a831cdbcada675dae",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "fd63ae25-5c98-4f3d-8d2f-f03e59b86222",
+        "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+        "electionDigest": "f859ff462e8bf48d8d661b01747b8f6a7de8eb29c9129dd3d2c73d800fdcad8e",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "79689e41-7780-4281-979c-229e8ddd18fd",
+        "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+        "electionDigest": "5319e37346f5d91a0dbc1393e1da9b293316b6797529df3c6384d0e8fca076ca",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "b22b6c1d-b3b3-4206-aa80-73d3db0692da",
+        "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+        "electionDigest": "b4d55ec00350bec4a8624d6462b9fb3991275f373f3e2ea3633ce7e8e11fbace",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "c1467a70-5e69-4ba1-954e-fd2da69c002c",
+        "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+        "electionDigest": "57335063c30a82c93ed85cab517731ad0ea863eb0595f0826e85bfd0676e9958",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "2c76d81f-0e6d-4e00-8962-c7dbdd7223c1",
+        "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+        "electionDigest": "7b3e844f358e3ae69cdab6ebedaafdb85bf49d24c1b696da76b7479e1d3f7cc4",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "06e4da47-d417-42cb-9875-09939f02bf51",
+        "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+        "electionDigest": "5f2c5734d5e268aaa06d156178788d63549b2a8929e030161ba21cbf0bef8252",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "3ac234ac-f9bc-48ec-b809-f33891a6a685",
+        "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+        "electionDigest": "39845370eed0e536cdedcb186d735d275438b72e1492990d5d5dda9d0e565996",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "ca21c942-5893-40f9-9605-5295c8cd0fee",
+        "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+        "electionDigest": "db828a6f1135e20ebd4b6d8460dc0c853006df180559cf31be33c75412fa9ecf",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "72e201c1-8a55-4a88-b332-98e0243d23d0",
+        "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+        "electionDigest": "5392af44e8283ebb6b370b411a1ea6b7494a63cf13b2927962076c982f998a61",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "abe6e47c-2b25-4b3b-9855-ced16f8317e4",
+        "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+        "electionDigest": "61f57d5c001448af9edd74d205f241748ebe5febb28e6883f81dd2bedb6f3d59",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "d6f1e006-3947-49b2-a0e8-c692739b6804",
+        "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+        "electionDigest": "a01909b8338f236bfe89d06f22d31106c5e136354fe912c392216804d01287cd",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "electionId": "21ea245d-5ac4-4a36-a2af-c21e37d050e0",
+        "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+        "electionDigest": "8fbd7b556fa77e2494fa0db78944e68c298504911ee654df896e17bdca04232d",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "c23b1763-de60-47b1-be4e-5aa85c7c5772",
+        "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+        "electionDigest": "53de3e2e29a8632ca95b4edf6e7ee1e203c7ff99acca391a2cb916df0ee7177d",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "01caeb58-8993-4c83-9b10-b402c5824f0c",
+        "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+        "electionDigest": "46471a68ca28e7365a2841b16d76387805c1943f6fd9c809308ebf9139916e7d",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "3bca8714-65be-49bb-8ba4-6a69a2d0d5dd",
+        "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+        "electionDigest": "aacf468108be41d5070235c7f4fccd2f13194271b7d5003ae80df24e23e231b7",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "9e5607fc-985f-47ef-b32c-24524bdec876",
+        "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+        "electionDigest": "43b71dfcdde7ec4e48c41728e590ea0c45e4c4fd7a2d2e22fec21ae4d1129488",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "65d4b818-ff93-430b-98f3-5b18288b6220",
+        "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+        "electionDigest": "e9840ba1590b5379a53f599a67f450834d9285a84d73d057a3ead3775e8bcabe",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "786e77bc-804f-40cd-b18b-f75a6e6295fd",
+        "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+        "electionDigest": "6fac8a3995677b60a4b1b7849a611505d4ca1a90d580394c7d501294fb1ea241",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "c0266f81-cafd-4b38-bd89-8e126270a965",
+        "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+        "electionDigest": "c9108a63e9b30d02ebc78d2d6dc60fe654241fc1675eb30215d5159df13e38f9",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "83b38f6b-8ca9-42e4-973f-94b478af0404",
+        "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+        "electionDigest": "258f2ce3c1ebfd0ec5993ff963612447fe754f49632bd5349b084595abb3715f",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "088a04bc-06fe-4de6-a07e-901309a6b019",
+        "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+        "electionDigest": "db76b7ba8d29fec9a8fcdcb1aba943c8a5c9c736feb4e0998baac8cca685fcdf",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "8cee7e03-5c4f-44d0-b624-bb5a2c2c273d",
+        "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+        "electionDigest": "6e6578394a4dedf18072a2d198b0d219b6875e5eaa568e14206539de5b54e621",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "58b1e221-d012-4880-84a5-727210effa9b",
+        "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+        "electionDigest": "1c04ff156a68efd5af16aa6cfb6c3f47c0a775b98972bcf034ef46fd5326b91d",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "0cdb76ef-07a9-4d78-90cb-d60546da0fb3",
+        "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+        "electionDigest": "826d27c202722bca5676ac495a06d95af9d618a4f1d0519d46eb0faec1b99b80",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "paper",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "1a7fd71b-4a3e-4801-af7f-c7a3d0146b32",
+        "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+        "electionDigest": "adc300abd21e6c9dbd2b1b0af2797ef6115b69c9f8d2635a9372fb357548b67b",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "22cf3735-147b-423b-9caa-0f0c720d92a9",
+        "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+        "electionDigest": "8de79b669250ef34dd3030eb7158a1be23477e25fc63beb0c44bae8fb32e8009",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "9a6fff0a-6255-44f2-a761-2f55e4f94c0d",
+        "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+        "electionDigest": "a86fdc636832d397045cadc6706be379fa67b3393d6975e3d503691569a0b51d",
+        "simulatedFunded": true
+      },
+      {
+        "mode": "digital",
+        "elected": true,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "electionId": "0acc0882-6c14-4c7c-88a4-f24469840533",
+        "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+        "electionDigest": "d453b24c152720eff017f7eaf31373982f2c8381f0685dced0643e3e4f5087d5",
+        "simulatedFunded": true
+      }
+    ],
+    "membership": {
+      "seal": {
+        "id": "bec5b2df-302d-413e-bb20-26febae1f879",
+        "digest": "b9e372dfce37069f58c68000f287400e57c3c7ecf3b41a84f99486577cc1763a"
+      },
+      "sealed": true
+    },
+    "moneyMoved": false,
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "journalDigest": "fe4d6c29ae7c56d128eea239e5abdda9ea13f1de144acf74d547fcbd3b19ff14",
+    "simulationOnly": true,
+    "ownParticipants": [],
+    "payoutAuthorized": false,
+    "ordinaryLiability": false,
+    "actualMoneyReceived": false,
+    "fundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325"
+  },
+  "finalResults": {
+    "kind": "native-mixed-pool-final-results-v1",
+    "pools": [
+      {
+        "kind": "q",
+        "ratio": null,
+        "method": "q-equal-exact-selected-step-v1",
+        "poolId": "17267881-5d1b-4c21-a0d0-c648f60f488d",
+        "status": "UNPAID_SIMULATED",
+        "feeMinor": 2000,
+        "policyId": "54d2280d-97d5-49d9-9e1f-84e0d5c6daf3",
+        "fundMinor": 36000,
+        "paidCount": 18,
+        "obligations": [
+          {
+            "amountMinor": 7200,
+            "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8"
+          },
+          {
+            "amountMinor": 7200,
+            "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19"
+          },
+          {
+            "amountMinor": 7200,
+            "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad"
+          },
+          {
+            "amountMinor": 7200,
+            "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23"
+          },
+          {
+            "amountMinor": 7200,
+            "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c"
+          }
+        ],
+        "policyDigest": "d190abf852ca25dc561abd85f1ade47eac343def9c70d6119174122749ba78e2",
+        "roundingUnitMinor": 100
+      },
+      {
+        "kind": "q",
+        "ratio": 4,
+        "method": "q-v3-raw-selected-step-v1",
+        "poolId": "e0a7f759-a6d7-4f1d-9754-9f17c277f931",
+        "status": "UNPAID_SIMULATED",
+        "feeMinor": 1000,
+        "policyId": "cc5a5861-0b7d-4f16-86fe-484ec5aab381",
+        "fundMinor": 16000,
+        "paidCount": 16,
+        "obligations": [
+          {
+            "amountMinor": 6400,
+            "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8"
+          },
+          {
+            "amountMinor": 4800,
+            "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19"
+          },
+          {
+            "amountMinor": 3200,
+            "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad"
+          },
+          {
+            "amountMinor": 1600,
+            "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907"
+          }
+        ],
+        "policyDigest": "366a7d5a8b7e391bfa84443614215467d474032c68113eaefc7615024c33ec89",
+        "roundingUnitMinor": 100
+      },
+      {
+        "kind": "side",
+        "ratio": 6,
+        "method": "side-sheet20-40-selected-step-v1",
+        "poolId": "6d7e3bff-4058-48bc-96e2-b0d8d17f8fc6",
+        "status": "UNPAID_SIMULATED",
+        "feeMinor": 1000,
+        "policyId": "2692d928-e858-483f-b0ed-8d51db96c9ed",
+        "fundMinor": 17000,
+        "paidCount": 17,
+        "obligations": [
+          {
+            "amountMinor": 9000,
+            "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8"
+          },
+          {
+            "amountMinor": 6000,
+            "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19"
+          },
+          {
+            "amountMinor": 2000,
+            "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad"
+          }
+        ],
+        "policyDigest": "a66593091491e08ee54037b9210ed4cfbf5341ba69498ccc5b051e7666e2b443",
+        "roundingUnitMinor": 1000
+      },
+      {
+        "kind": "side",
+        "ratio": 4,
+        "method": "side-sheet20-40-selected-step-v1",
+        "poolId": "f8af4132-9679-49c7-ad4e-59d47a7356f0",
+        "status": "empty_no_obligations",
+        "feeMinor": 2000,
+        "policyId": "a3818a49-c734-43cc-8f71-11998de86a28",
+        "fundMinor": 0,
+        "paidCount": 0,
+        "obligations": [],
+        "policyDigest": "383798fd892781531eec2b1d865b3676d8030793c35a190ce6c6eb2982dcbb5a",
+        "roundingUnitMinor": 1000
+      }
+    ],
+    "sealId": "bec5b2df-302d-413e-bb20-26febae1f879",
+    "status": "source_available",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "refunds": [],
+    "startId": "1bb23e9e-ed67-4fd4-a7e8-cb9c6af1d1ee",
+    "sessionId": "e880d94c-c63a-479d-8f82-97b780bb6fd5",
+    "moneyMoved": false,
+    "mrpAwarded": false,
+    "sealDigest": "b9e372dfce37069f58c68000f287400e57c3c7ecf3b41a84f99486577cc1763a",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "finalRecordId": "588c41da-da46-4b2c-b159-e0739c4fd814",
+    "journalDigest": "fe4d6c29ae7c56d128eea239e5abdda9ea13f1de144acf74d547fcbd3b19ff14",
+    "simulationOnly": true,
+    "writeAuthorized": false,
+    "payoutAuthorized": false,
+    "finalRecordDigest": "669b554490184a0e020d015dc2ca4c75f71970f48a2ed38d01d9d9bf819ac4b6",
+    "ordinaryLiability": false,
+    "startSourceDigest": "822c08ddf92e09e91fb0ffb0c7dcaf9d40865e6961ac3d032bc2cc64a5b1b281",
+    "reviewSourceDigest": "675b633fc4ff19035bcfdb67e40fc119d330e076d8997b866c5acd1295a147ec",
+    "actualMoneyReceived": false,
+    "fundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325",
+    "currentSourceVerified": true
+  }
+}

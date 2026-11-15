@@ -1,0 +1,22 @@
+import assert from'node:assert/strict';import fs from'node:fs';import crypto from'node:crypto';
+import{withMixedBrowserFixture}from'./fixtures/mixed-browser-fixture.mjs';
+import{isMixedCapability,isMixedOwnHybrid,projectMixedOfficialWorkspace}from'../src/lib/api/synthetic-mixed-evidence.ts';
+const result=await withMixedBrowserFixture(async({fixture:f,q,read,rpc,games,checkers,people,containerId})=>{
+ const checker=checkers[0],player=f.uid(2),paper=f.uid(4),params=who=>({p_actor_id:who,p_tournament_id:f.tid,p_event_id:f.eid});
+ const official=await rpc('get_synthetic_mixed_capability_v2',params(checker),checker,'service_role');assert.equal(official.error,null);assert.ok(isMixedCapability(official.data,checker,f.tid,f.eid));assert.equal(official.data.isOfficial,true);assert.equal(official.data.officialIdentityConfirmed,true);assert.equal(official.data.sourceCurrent,true);
+ const own=await rpc('get_synthetic_mixed_capability_v2',params(player),player,'service_role');assert.equal(own.error,null);assert.ok(isMixedCapability(own.data,player,f.tid,f.eid));assert.equal(own.data.isDigitalParticipant,true);assert.equal(own.data.isOfficial,false);
+ assert.equal((await rpc('get_synthetic_mixed_capability_v2',params(paper),paper,'service_role')).data,null);
+ assert.equal((await rpc('get_synthetic_mixed_capability_v2',{...params(player),p_event_id:'a2980000-0000-4000-8000-000000000001'},player,'service_role')).data,null);
+ assert.throws(()=>q(`set role authenticated;select public.get_synthetic_mixed_capability_v2('${player}','${f.tid}','${f.eid}');`,player,'authenticated'),/permission denied/);
+ assert.throws(()=>q('set role authenticated;select * from app.synthetic_mixed_enrollment_kinds_v2;',player,'authenticated'),/permission denied/);
+ const game=games.find(g=>g.gameNumber===1&&g.pairing==='PD'),args={tid:f.tid,eid:f.eid,gid:game.gameId};
+ const data=await rpc('get_own_synthetic_mixed_hybrid_v1',args,game.digitalProfileId,'authenticated');assert.equal(data.error,null);assert.ok(isMixedOwnHybrid(data.data,f.tid,f.eid,game.gameId));assert.equal(data.data.digitalSubmissionId,null);assert.equal(data.data.scriptedSpreadPoints,40);assert.equal((await rpc('get_own_synthetic_mixed_hybrid_v1',args,people.find(p=>p.profileId&&p.profileId!==game.digitalProfileId).profileId,'authenticated')).data,null);
+ const mixed=await rpc('get_synthetic_mixed_workspace_v1',{actor:checker,tid:f.tid},checker,'service_role'),pp=await rpc('get_paper_game_completion_workspace_v1',{p_actor_id:checker,p_tournament_id:f.tid},checker,'service_role'),pd=await rpc('get_hybrid_game_workspace_v1',{p_actor_id:checker,p_tournament_id:f.tid},checker,'service_role');
+ for(const r of[mixed,pp,pd])assert.equal(r.error,null);
+ const workspace=projectMixedOfficialWorkspace(official.data,mixed.data,pp.data,pd.data);assert.ok(workspace);assert.ok(workspace.paperCandidates.length>0);assert.equal(workspace.hybridCandidates.length,0);assert.equal(workspace.paperReviewCases.length,0);assert.equal(workspace.hybridReviewCases.length,0);
+ const before=read(`select count(*)from app.audit_events where action like'%synthetic_mixed%';`);await rpc('get_synthetic_mixed_capability_v2',params(checker),checker,'service_role');assert.equal(read(`select count(*)from app.audit_events where action like'%synthetic_mixed%';`),before);
+ q(`update app.event_participants set status='withdrawn'where id='${people.find(p=>p.mode==='paper').participantId}';`);
+ const stale=await rpc('get_synthetic_mixed_capability_v2',params(checker),checker,'service_role');assert.ok(isMixedCapability(stale.data,checker,f.tid,f.eid));assert.equal(stale.data.sourceCurrent,false);
+ return{passed:true,checks:['actual service-role read capability; exact18 actor/event/kind scope','actual authenticated own-reader; wrong actor null','authenticated role cannot execute capability or read private registry','ordinary/missing fixture returns null, not capability','actual official workspaces pass scoped codec; no hidden DD entries','read capability appends no audit/mutation; stale source remains explicit read-only'],scoresWritten:0,containerId,capabilitySqlSha256:crypto.createHash('sha256').update(fs.readFileSync('database/proposals/synthetic-mixed-api-capability-v1.sql')).digest('hex'),scope:'isolated PostgreSQL read/API-model proof only; no hosted data or browser/Supabase-provider-auth acceptance'};
+});
+fs.writeFileSync('test-results/mixed-capability-local.json',JSON.stringify(result,null,2));console.log('PASS',JSON.stringify(result));

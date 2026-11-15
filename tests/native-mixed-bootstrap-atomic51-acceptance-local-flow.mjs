@@ -1,0 +1,18 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import{spawnSync}from'node:child_process';import{randomUUID}from'node:crypto';
+const dir='test-results/native-mixed-bootstrap-atomic51-20261107',state=JSON.parse(fs.readFileSync(dir+'/state.json','utf8')),actor='a1310000-0000-4000-8000-000000000001',tid='b1310000-0000-4000-8000-000000000001';
+const uuid=()=>randomUUID(),quote=v=>"'"+String(v).replaceAll("'","''")+"'",json=v=>quote(JSON.stringify(v))+'::jsonb';
+function sql(text){fs.appendFileSync(dir+'/acceptance-trace.sql',text+'\n');const r=spawnSync('docker',['--context','desktop-linux','exec','-i',state.containerId,'psql','-h','/tmp','-U','supabase_admin','-d',state.db,'-X','-qAt','-v','ON_ERROR_STOP=1'],{input:text,encoding:'utf8',windowsHide:true,maxBuffer:16e6});if(r.status!==0)throw Error(r.stderr);return r.stdout.trim();}
+const meta=JSON.parse(spawnSync('docker',['--context','desktop-linux','inspect',state.containerId],{encoding:'utf8',windowsHide:true}).stdout)[0];assert.equal(meta.Name,'/'+state.name);assert.equal(meta.HostConfig.NetworkMode,'none');assert.equal(meta.Mounts.length,0);assert.equal(meta.Config.Labels['codex.fixture'],state.name);
+
+const binding=JSON.parse(fs.readFileSync(dir+'/activation-result.json')).binding,eid=binding.eventId;
+const cacheFile=dir+'/flow-results.json',cache=fs.existsSync(cacheFile)?JSON.parse(fs.readFileSync(cacheFile)):{};
+const persist=()=>fs.writeFileSync(cacheFile,JSON.stringify(cache,null,2));
+function step(k,f){if(cache[k])return cache[k];const r=f();cache[k]=r;persist();console.log('PASS',k);return r;}
+const read=s=>JSON.parse(sql(s)||'null'),claims=(a,role='service_role')=>`set request.jwt.claim.sub='${a}';set request.jwt.claim.role='${role}';set request.jwt.claims='${JSON.stringify({role,sub:a})}';`;
+const call=(fn,req,a=actor)=>read(claims(a)+'set role service_role;'+`select app.${fn}('${a}','${tid}','${eid}',${json(req)});`);
+const request=(key,value)=>{if(!cache['req_'+key]){cache['req_'+key]={operationId:uuid(),reason:'TEST ONLY fictional local rehearsal',...value};persist();}return cache['req_'+key];};
+const accepted=(r)=>{assert.equal(r?.status,'accepted',JSON.stringify(r));return r;};
+const checkActor='a1310000-0000-4000-8000-000000000008';
+const people=step('seed18',()=>{assert.equal(sql('select count(*)from app.event_participants'),'0');const v=Array.from({length:18},(_,i)=>({r:uuid(),p:uuid(),profile:i<6?`a1310000-0000-4000-8000-${String(i+2).padStart(12,'0')}`:null,mode:i<6?'digital':'paper'}));sql(claims(actor)+`begin;insert into auth.users(id,email)values('${checkActor}','fictional-independent-checker@test.invalid');insert into app.tournament_roles(tournament_id,profile_id,role)values('${tid}','${checkActor}','cross_checker'),('${tid}','${actor}','cross_checker');`+v.map((p,i)=>`insert into app.tournament_roster_entries(id,tournament_id,source_kind,claimed_display_name,claimed_normalized_name,scorecard_type,creator_profile_id,operation_receipt_id)values('${p.r}','${tid}','director_manual','TEST ONLY Person ${i+1}','test only person ${i+1}','${p.mode}','${actor}','c1310000-0000-4000-8000-000000000001');${p.profile?`insert into app.roster_account_links(tournament_id,roster_entry_id,profile_id,actor_profile_id,operation_receipt_id)values('${tid}','${p.r}','${p.profile}','${actor}','c1310000-0000-4000-8000-000000000001');`:''}insert into app.event_participants(id,tournament_id,event_id,profile_id,roster_entry_id,status)values('${p.p}','${tid}','${eid}',${p.profile?quote(p.profile):'null'},'${p.r}','registered');`).join('')+'commit;');return v;});
+
+console.log('PASS seed18 only; no preparation writes');

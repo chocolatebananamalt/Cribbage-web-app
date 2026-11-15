@@ -1,0 +1,250 @@
+{
+  "status": "prepared local only; publication and staging application require approval",
+  "baseCommit": "b0005ad6c065640961b01efb3ef3497c5de075f7",
+  "branch": "codex/director-setup-journey",
+  "fileCount": 48,
+  "files": [
+    {
+      "path": "PROJECT_STATUS.md",
+      "bytes": 448873,
+      "sha256": "4a36468724b5809fffa407e40e0c3a0850e7e26b539facfd4a5516543c39a8fc"
+    },
+    {
+      "path": "database/migrations/0264_side_pool_unpaid_recipients_v3.sql",
+      "bytes": 21317,
+      "sha256": "df4f0a902fd0762df45a2a1121c74e18158bf71ab4b3a80979a13f26ec837e8a"
+    },
+    {
+      "path": "database/migrations/0265_combined_q_side_accounting_v9.sql",
+      "bytes": 50399,
+      "sha256": "4b08363e8ac7a5966e5aa91c0a1bf8c6eed549db4deaf1730d2165c7f129fc2b"
+    },
+    {
+      "path": "docs/operations/DURABLE_PROJECT_MEMORY.md",
+      "bytes": 74634,
+      "sha256": "3df9490f60a158d10398e3c9fba8ce3944796208d5f686734c9c28e430f6cffd"
+    },
+    {
+      "path": "docs/product/requirements.md",
+      "bytes": 48591,
+      "sha256": "0f0bcda5fc4c4bc3901652545743ef89b5eb32c9d586ff8532d08387827d2813"
+    },
+    {
+      "path": "docs/quality/2026-10-30-combined-q-side-repair-investigation.md",
+      "bytes": 7182,
+      "sha256": "d663ab79201abe261abe5ba79fc411112ef4b49a31f8c4506f65de3a99ae5042"
+    },
+    {
+      "path": "docs/quality/2026-10-30-production-gates-after-hosted-acceptance.md",
+      "bytes": 10310,
+      "sha256": "be4ebce65da26f7b3f9365e34ca99cb02f90c7b296f41516e2445f251a1450a5"
+    },
+    {
+      "path": "docs/quality/2026-10-30-production-pause-side-ranking.md",
+      "bytes": 8816,
+      "sha256": "026fd53eb67baa742b5d84a7b5f9595f977ba4107bc5760051b04d32c09733e6"
+    },
+    {
+      "path": "docs/quality/2026-10-30-side-pool-local-rollout.md",
+      "bytes": 9909,
+      "sha256": "57ae3cc6a29c5bea32c91f98a06e96dc66a5555d824b27c8bc3497a7ed70a7ff"
+    },
+    {
+      "path": "docs/quality/2026-10-30-synthetic-local-restore-rehearsal.md",
+      "bytes": 5907,
+      "sha256": "c1698ecfd4be29b63e518eccb278c12801132aafa0a9c9a3158e9714dea74128"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/draft/route.ts",
+      "bytes": 2113,
+      "sha256": "234c7fc76df520091d947626e10b137001b94df635a287a4c2ffb4ee796ec638"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/finalize/route.ts",
+      "bytes": 2116,
+      "sha256": "5d9c457aa1dfd3e1f1bd3fc091bd887ed1387470ad55df2dd9e256d3abfc9edc"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/funding/route.ts",
+      "bytes": 2124,
+      "sha256": "1a02e4ba4c749ee6503c2a8cba54d20d7312fdba7e682f1da737fab307a90d90"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/reconciliation/route.ts",
+      "bytes": 2105,
+      "sha256": "78471a1dfcc31baf48e0e7862b544edf60bb196b5f122de4a58d4d320c8ace17"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/route.ts",
+      "bytes": 1448,
+      "sha256": "1036b0466cbf284078672fae5a07c7fe6aa3554c76c58071b91d5eaa8be17fad"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/prize-accounting-v9/void-funding/route.ts",
+      "bytes": 2135,
+      "sha256": "0828ce6522ad1a97b27cef4e36e347be678b4215f7baa0dd38ebee1a927a6ab5"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/side-pools/[poolId]/recipients-v3/reconciliation/route.ts",
+      "bytes": 2443,
+      "sha256": "fd1531a338457870a7ba85b65fa709156a7339157566db20293270cd1a6052af"
+    },
+    {
+      "path": "src/app/api/v1/tournaments/[id]/events/[eventId]/side-pools/[poolId]/recipients-v3/route.ts",
+      "bytes": 3356,
+      "sha256": "2c3db95deb458329ba8d1d3ec72baf6ee6fed3005beb52e1949dfd6a7f2c44f9"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v8/accounting-client.tsx",
+      "bytes": 21870,
+      "sha256": "66f8777ffa079e43fec95252b3e90aa56d1b79cd221def9dc262df4388d32f53"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/accounting-client.tsx",
+      "bytes": 23970,
+      "sha256": "890d4da317d05853843ea3f40c7633b6e03e32c30091ab89a3a26cae2e3e6960"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/events/[eventId]/prize-accounting-v9/page.tsx",
+      "bytes": 1916,
+      "sha256": "ad225961516d71b72bfce275d3d135eb6db01df24786bbf9a86d745975717365"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/setup/prize-schedule-client.tsx",
+      "bytes": 19549,
+      "sha256": "27028b97dfbd6989fcba594762919b98156c94a61f8a5f96328c214a3c2c755d"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/graduated-side-pools-v2.tsx",
+      "bytes": 21532,
+      "sha256": "1c4a4d0a7a65ec0ce0f4b46bbd3200db84d03f286edbb7b17d7910884e12444f"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/recipients/[eventId]/[poolId]/page.tsx",
+      "bytes": 3232,
+      "sha256": "082e5dba53928998f5aa718889239fbb0766492e366d955b3fa65ddbdf8645e0"
+    },
+    {
+      "path": "src/app/tournament/[tournamentId]/side-pools/recipients/[eventId]/[poolId]/side-pool-recipient-v3-client.tsx",
+      "bytes": 18674,
+      "sha256": "026beefae043cb26092f520f7f51fa6cb548392b5b31061b9049a89436dc9d4e"
+    },
+    {
+      "path": "src/lib/api/prize-accounting-v9.ts",
+      "bytes": 22632,
+      "sha256": "eaca1c4a4d267632ecfc0b0751cd83c1e9fb21831d5e1b4ca6bc342ad9313003"
+    },
+    {
+      "path": "src/lib/api/side-pool-recipients-v3.ts",
+      "bytes": 11721,
+      "sha256": "145deb061546c4bd968d2993557a711ded59d11dc88acf211e3c8b250b417d19"
+    },
+    {
+      "path": "src/lib/results/side-pool-graduated-recipients-v3.ts",
+      "bytes": 6511,
+      "sha256": "49f5bbc7e12300908e28a0c4acb8063e14ef29f31fbf0aaf76d4a744c7904af9"
+    },
+    {
+      "path": "tests/combined-pool-amount-boundaries.test.mjs",
+      "bytes": 2679,
+      "sha256": "1a924d9ac073d3a3dc6e171dc012541d6c727bebaa7913f8c87e759e3b949cce"
+    },
+    {
+      "path": "tests/fixtures/prize-accounting-v8-browser-fixture.mjs",
+      "bytes": 4067,
+      "sha256": "ff84765f973b22ed0407c50f01df492c7d43f67fd3c22bd8847638696ca7cc3c"
+    },
+    {
+      "path": "tests/fixtures/prize-accounting-v8-workspace.mjs",
+      "bytes": 3711,
+      "sha256": "b855537bda4940dca85f644e4af9f0d79e0e5e37307bdf93bc1bfaec39ec30e2"
+    },
+    {
+      "path": "tests/fixtures/prize-accounting-v9-workspace.mjs",
+      "bytes": 3904,
+      "sha256": "ec678d19e7e1579454120dabf94ffb8ab9b9e7e8e7587b5bb67e09e81115f22f"
+    },
+    {
+      "path": "tests/prize-accounting-v8-browser.mjs",
+      "bytes": 23047,
+      "sha256": "7f888717c2625f536547b4209bff7cf16829b7f468e18d2dbe67bf52e2e6fb62"
+    },
+    {
+      "path": "tests/prize-accounting-v9-browser.mjs",
+      "bytes": 12151,
+      "sha256": "0f1a057fbe4cae425a5a8debbaec38018dffd483440b3891afdfd84542a90cb0"
+    },
+    {
+      "path": "tests/prize-accounting-v9.test.mjs",
+      "bytes": 7037,
+      "sha256": "999b14b1002b03d5ca6c30da54061fa598650f5cc5d23ff315bf450a8118ec87"
+    },
+    {
+      "path": "tests/run-combined-accounting-container.mjs",
+      "bytes": 3564,
+      "sha256": "51843538e7da1cee1775dd65aeb8280ef2be93029622cd7d213398cd0d29d238"
+    },
+    {
+      "path": "tests/run-combined-accounting-isolated.mjs",
+      "bytes": 22438,
+      "sha256": "2cde622bd02c1b80d6f8d4d6e1254b201ded58bcda67545b80298f5ddf363819"
+    },
+    {
+      "path": "tests/run-side-recipient-container.mjs",
+      "bytes": 3550,
+      "sha256": "7e05ccff676e5f74f096ec17184c1bf22699a261e7dc848b6f905b4069d6f4ed"
+    },
+    {
+      "path": "tests/run-side-recipient-isolated.mjs",
+      "bytes": 6165,
+      "sha256": "4b680f256fe283e2d3e8c7f602a253e2ef36dc926324edfc7cbe780eab495ba0"
+    },
+    {
+      "path": "tests/run-synthetic-restore-container.mjs",
+      "bytes": 3555,
+      "sha256": "b0055411c6e82b55b4c1aeba1cd636d35e8f27fb73b9278bf356840d9dc409cd"
+    },
+    {
+      "path": "tests/run-synthetic-restore-isolated.mjs",
+      "bytes": 12318,
+      "sha256": "6f84951d0ed7afd6cf4bb179a02747961d6c9179cc1ff4e8fbc827e5ed995082"
+    },
+    {
+      "path": "tests/run-v8-compat-container.mjs",
+      "bytes": 3534,
+      "sha256": "ed8a41d4f741c6a0a6ba36185bcd2f8b769cba99d4701cbb54a9accd1fbfd5fa"
+    },
+    {
+      "path": "tests/run-v8-compat-isolated.mjs",
+      "bytes": 6583,
+      "sha256": "cccad9940b93ae8ec7416eecf84dce6412792486dcd39753593988d7d1f5e953"
+    },
+    {
+      "path": "tests/side-pool-graduated-recipients-v3.test.mjs",
+      "bytes": 10577,
+      "sha256": "e7932d70245877cdbd9097597246c40c865b813e4997e6d442e41ae26a19fe17"
+    },
+    {
+      "path": "tests/side-pool-recipients-v3-api.test.mjs",
+      "bytes": 10181,
+      "sha256": "4eb6f1c94897da9f70c4892a1599c0c2a8811b9605e00d71c89c103d203437e3"
+    },
+    {
+      "path": "tests/side-pool-recipients-v3-browser.mjs",
+      "bytes": 16523,
+      "sha256": "2b2ebcb946b429837cfa2cefe446149b50114be77d8f383871dbb6882691f756"
+    },
+    {
+      "path": "tests/side-recipient-v3-sql-acceptance.mjs",
+      "bytes": 8543,
+      "sha256": "d3cc10900411f48cce7f628b800f4fe4cfa419bd9066fc580793fca7a4768865"
+    },
+    {
+      "path": "tests/synthetic-restore-hook.mjs",
+      "bytes": 6989,
+      "sha256": "43c194b47c079c8e1109627f06aafb6c602a9359e28f4e2a4aa7a3d918ea27ae"
+    }
+  ],
+  "secretScan": "zero matches; no environment/configuration, credentials, generated result data, private source or screenshots included",
+  "manifestSelfExcluded": true
+}

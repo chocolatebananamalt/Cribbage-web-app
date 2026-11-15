@@ -1,0 +1,3726 @@
+{
+  "seed18": [
+    {
+      "r": "575ff667-df51-40b5-9324-4d177a18ba79",
+      "p": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+      "profile": "a1310000-0000-4000-8000-000000000002",
+      "mode": "digital"
+    },
+    {
+      "r": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+      "p": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+      "profile": "a1310000-0000-4000-8000-000000000003",
+      "mode": "digital"
+    },
+    {
+      "r": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+      "p": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+      "profile": "a1310000-0000-4000-8000-000000000004",
+      "mode": "digital"
+    },
+    {
+      "r": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+      "p": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+      "profile": "a1310000-0000-4000-8000-000000000005",
+      "mode": "digital"
+    },
+    {
+      "r": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+      "p": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+      "profile": "a1310000-0000-4000-8000-000000000006",
+      "mode": "digital"
+    },
+    {
+      "r": "01202de3-b87e-4511-b542-42af9f857581",
+      "p": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+      "profile": "a1310000-0000-4000-8000-000000000007",
+      "mode": "digital"
+    },
+    {
+      "r": "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+      "p": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+      "p": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+      "p": "2f568468-6aec-45fa-aae2-f96186a1255a",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+      "p": "4715d35f-dd14-4a3e-aecc-699f88017907",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "00be9c9a-ff95-4914-943b-db07ff3ec925",
+      "p": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+      "p": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+      "p": "64167477-dccf-4bef-bfd9-df139ff747e8",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+      "p": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+      "p": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "3c579e44-51c1-41f5-a0f6-603567c72af1",
+      "p": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "02916e33-9a9a-45fd-a72c-44a603c510c0",
+      "p": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+      "profile": null,
+      "mode": "paper"
+    },
+    {
+      "r": "b8103090-9206-4c53-8328-cecc1ff2433b",
+      "p": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+      "profile": null,
+      "mode": "paper"
+    }
+  ],
+  "latestBridge": {
+    "sourceBound": true
+  },
+  "base": {
+    "status": "source_available",
+    "rosterCount": 18
+  },
+  "req_intent": {
+    "operationId": "266e17d3-d655-4aab-84a6-557ae3c159ec",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-admission-intent-v1",
+    "nonce": "e5554cd5-a78e-411a-a8c4-4002511ea9f2",
+    "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+    "expectedPriorIntentId": null,
+    "expectedVersion": 0,
+    "scope": {
+      "environment": "test-only-local-candidate",
+      "protocol": "native-mixed-6d12p-v1",
+      "participantCount": 18,
+      "digitalCount": 6,
+      "paperCount": 12,
+      "roundCount": 12,
+      "matchCount": 108,
+      "scoringEvidence": "not-yet-recorded-synthetic-scope",
+      "financialEvidence": "not-yet-recorded-no-authority"
+    }
+  },
+  "intent": {
+    "code": "native_mixed_intent_recorded",
+    "kind": "native-mixed-admission-receipt-v1",
+    "nonce": "e5554cd5-a78e-411a-a8c4-4002511ea9f2",
+    "phase": "intent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-admission-intent-v1",
+      "nonce": "e5554cd5-a78e-411a-a8c4-4002511ea9f2",
+      "scope": {
+        "protocol": "native-mixed-6d12p-v1",
+        "matchCount": 108,
+        "paperCount": 12,
+        "roundCount": 12,
+        "environment": "test-only-local-candidate",
+        "digitalCount": 6,
+        "scoringEvidence": "not-yet-recorded-synthetic-scope",
+        "participantCount": 18,
+        "financialEvidence": "not-yet-recorded-no-authority"
+      },
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "266e17d3-d655-4aab-84a6-557ae3c159ec",
+      "expectedVersion": 0,
+      "expectedPriorIntentId": null,
+      "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f"
+    },
+    "version": 1,
+    "intentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+    "moneyMoved": false,
+    "operationId": "266e17d3-d655-4aab-84a6-557ae3c159ec",
+    "sourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorIntentId": null,
+    "payoutAuthorized": false,
+    "sourceAvailableV2": false,
+    "syntheticAllFlags": false,
+    "bankReceiptVerified": false,
+    "finalizationAuthorized": false
+  },
+  "req_fundScope": {
+    "operationId": "30bcb289-07da-4f0b-a84a-ccad9374b0b7",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-scope-v1",
+    "nonce": "c02e71d3-0611-42e3-b1e4-2c4d9c26824f",
+    "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+    "expectedAdmissionIntentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+    "expectedAdmissionIntentVersion": 1,
+    "expectedAdmissionSourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8"
+  },
+  "fundScope": {
+    "code": "native_mixed_funding_scope_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "scope",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-scope-v1",
+      "nonce": "c02e71d3-0611-42e3-b1e4-2c4d9c26824f",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "30bcb289-07da-4f0b-a84a-ccad9374b0b7",
+      "expectedAdmissionIntentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+      "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+      "expectedAdmissionSourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8",
+      "expectedAdmissionIntentVersion": 1
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "version": 1,
+    "moneyMoved": false,
+    "operationId": "30bcb289-07da-4f0b-a84a-ccad9374b0b7",
+    "sourceDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_0": {
+    "operationId": "d9ca73ad-caf1-429d-855f-2b1ab07af9c3",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_0": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "d9ca73ad-caf1-429d-855f-2b1ab07af9c3",
+      "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "a5682c53-a8a2-43a4-b6e8-ab30a3bb73cf",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "d9ca73ad-caf1-429d-855f-2b1ab07af9c3",
+    "obligationId": "427dc88f-72af-488f-83f5-f6491f8f2fd0",
+    "sourceDigest": "81c8e7c077c24f0c57b9b30ce9dc86cb6d164d9efd00de4b7e25776e99f5f1b9",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_1": {
+    "operationId": "8bc1ba06-2cb3-42b5-a718-3379f5ec49b9",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_1": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "8bc1ba06-2cb3-42b5-a718-3379f5ec49b9",
+      "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "8c7d7484-1d84-43da-939f-d6f9c78b93b3",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "8bc1ba06-2cb3-42b5-a718-3379f5ec49b9",
+    "obligationId": "6fbb0cb5-4727-42a5-887c-660589fb020f",
+    "sourceDigest": "9a6b93e8e0fa845978607a071402d60a1420d37ab0dc06c333405ac0c3c3d409",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_2": {
+    "operationId": "400b4ebd-2e6e-49bc-be05-7952557a1019",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_2": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "400b4ebd-2e6e-49bc-be05-7952557a1019",
+      "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "568390b9-5101-4666-835b-9b6634f1b5df",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "400b4ebd-2e6e-49bc-be05-7952557a1019",
+    "obligationId": "3f7e1fe4-d8df-4c6c-ac28-1f3eb3e3f8ae",
+    "sourceDigest": "2f866d896107a82ec09da26558a72b2cb1c5aacee41279bf9eb4c7833690e7e9",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_3": {
+    "operationId": "f173e2ca-ac34-4636-962a-5f49e999783e",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_3": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "f173e2ca-ac34-4636-962a-5f49e999783e",
+      "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "c7dd6dfa-e9dd-495f-81f1-41ba5e88133f",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "f173e2ca-ac34-4636-962a-5f49e999783e",
+    "obligationId": "626b81b2-508d-422d-b534-23c4c3bc193f",
+    "sourceDigest": "3ad1cc17fcd866b83692b30e438e6074352178b3a33e58d0af3a75334981e84f",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_4": {
+    "operationId": "e4c3afb7-fa14-4815-b6d8-b6151e0d4a39",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_4": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "e4c3afb7-fa14-4815-b6d8-b6151e0d4a39",
+      "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "b59719de-6840-432c-ac9e-215f89045d4e",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "e4c3afb7-fa14-4815-b6d8-b6151e0d4a39",
+    "obligationId": "ae949be5-2a89-42d1-8c4b-476f2de11a30",
+    "sourceDigest": "55c3b221a8b693965bee72bd9f4772d3688e946d665ee15e4c638b6405183381",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_5": {
+    "operationId": "36c604de-98c1-492b-8509-32270c4b8512",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_5": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "36c604de-98c1-492b-8509-32270c4b8512",
+      "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "af5695ed-4b42-4644-8fd1-467a7e01727f",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "36c604de-98c1-492b-8509-32270c4b8512",
+    "obligationId": "9298d9f3-9ff1-4d4d-8945-8d31eeb81377",
+    "sourceDigest": "992f243c4753693ca9158e3db27c6d44d5c523a95ed7ea06ceac546c5e21e06c",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_6": {
+    "operationId": "922af6a1-b68f-400e-9116-94607505fe0d",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_6": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "922af6a1-b68f-400e-9116-94607505fe0d",
+      "rosterEntryId": "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "913fa88f-a743-41e8-b467-729eb8776fad",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "922af6a1-b68f-400e-9116-94607505fe0d",
+    "obligationId": "dabb35bd-e6a3-4416-bd15-9cbadcca7882",
+    "sourceDigest": "8e4cc2be649988469e5facae58813f614e7eb7d210f72ba901795be15ff3ba33",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_7": {
+    "operationId": "2b847b35-11e5-4375-aaf2-98332843ef10",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_7": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "2b847b35-11e5-4375-aaf2-98332843ef10",
+      "rosterEntryId": "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "620995df-287d-4d30-b4ec-61f8e25a381d",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "2b847b35-11e5-4375-aaf2-98332843ef10",
+    "obligationId": "046985bd-2d7c-4f5b-befa-96b9c09f9601",
+    "sourceDigest": "7890d002d4a6bbf7f7922d7fec2ae83299089c6954a5f0f24b0fcb8126ab399e",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_8": {
+    "operationId": "24f369a7-0286-4cc2-96ac-33c4d88d347c",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_8": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "24f369a7-0286-4cc2-96ac-33c4d88d347c",
+      "rosterEntryId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "95965b6c-74e3-4269-85dd-3cd578964f59",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "24f369a7-0286-4cc2-96ac-33c4d88d347c",
+    "obligationId": "fd6d21de-57aa-4a2e-bad8-c4025d714d02",
+    "sourceDigest": "56161aaf1c1b216f7db34748bad575c64dac0dacec5485d83d847e64a10ec500",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_9": {
+    "operationId": "4840b6c1-0215-40f1-a852-43edfc9039f5",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_9": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "4840b6c1-0215-40f1-a852-43edfc9039f5",
+      "rosterEntryId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "723b724f-8070-4853-9d5b-a05a2b416f78",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "4840b6c1-0215-40f1-a852-43edfc9039f5",
+    "obligationId": "b49732e3-f1c4-49d0-a28c-5b1cce2d4c50",
+    "sourceDigest": "f8070ad26a6fdfae08ca87d42035796844649f4a85d9590f82adf295b6fef5be",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_10": {
+    "operationId": "c1f1a73a-cce9-41c1-8fc3-f9a6b95e6b9c",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "00be9c9a-ff95-4914-943b-db07ff3ec925",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_10": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "c1f1a73a-cce9-41c1-8fc3-f9a6b95e6b9c",
+      "rosterEntryId": "00be9c9a-ff95-4914-943b-db07ff3ec925",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "c070339d-97c5-4fd0-859e-70a15d92f3a9",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "c1f1a73a-cce9-41c1-8fc3-f9a6b95e6b9c",
+    "obligationId": "85d7e7e4-a1ef-471d-b978-6a94fb16fbc6",
+    "sourceDigest": "28c9406b85cd0edfeacfc661dba324e96fec055013099268d3aeb0579f695877",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "00be9c9a-ff95-4914-943b-db07ff3ec925",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_11": {
+    "operationId": "f2ed00e2-04c4-454a-814d-659482f9679b",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_11": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "f2ed00e2-04c4-454a-814d-659482f9679b",
+      "rosterEntryId": "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "c06a17d8-b53e-41b1-8ad7-69970ae37f82",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "f2ed00e2-04c4-454a-814d-659482f9679b",
+    "obligationId": "04c015f0-085a-4fb7-a815-17b101becd89",
+    "sourceDigest": "c91a4ea0d11e2e037c72ecb706e143598200eb61fabbb2fc43ca0c127cdc561f",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_12": {
+    "operationId": "2d0d8c07-6364-42e5-8583-49ac773aa7ea",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_12": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "2d0d8c07-6364-42e5-8583-49ac773aa7ea",
+      "rosterEntryId": "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "44a3aeaf-dea5-40fc-bf0d-e3393616a2bc",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "2d0d8c07-6364-42e5-8583-49ac773aa7ea",
+    "obligationId": "5f599eea-b697-4f2e-931b-d02d402a7dfd",
+    "sourceDigest": "5447dd2e130ebe7f43decaa00e80512d974c1b9d5faea8ab0557676fde1060e7",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_13": {
+    "operationId": "24b6ba1c-e141-421c-9f68-7677b539221c",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_13": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "24b6ba1c-e141-421c-9f68-7677b539221c",
+      "rosterEntryId": "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "1149a719-868f-4a12-9030-7c0fd481ebe9",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "24b6ba1c-e141-421c-9f68-7677b539221c",
+    "obligationId": "e34cd138-a3c9-409b-b2bd-15d8f1c7aa7f",
+    "sourceDigest": "8d2f7b9d938665c260ed544ab7dad795e8b099d6a895b4a65628698ccbb23a00",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_14": {
+    "operationId": "e386d48a-bb92-49ab-8be5-39287d55812c",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_14": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "e386d48a-bb92-49ab-8be5-39287d55812c",
+      "rosterEntryId": "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "29531393-d38f-4ddb-99b6-db6cd1457360",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "e386d48a-bb92-49ab-8be5-39287d55812c",
+    "obligationId": "9779de84-b718-4b56-8cf0-6ed75690d8fa",
+    "sourceDigest": "178d7c560274db70987772c64e48d3122691f179b5806e4b66b1de9eafbbd226",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_15": {
+    "operationId": "b975c7ea-f7bb-47f6-ae86-782350f3b47d",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "3c579e44-51c1-41f5-a0f6-603567c72af1",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_15": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "b975c7ea-f7bb-47f6-ae86-782350f3b47d",
+      "rosterEntryId": "3c579e44-51c1-41f5-a0f6-603567c72af1",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "feba025e-25b4-4a9d-9c03-686eff576916",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "b975c7ea-f7bb-47f6-ae86-782350f3b47d",
+    "obligationId": "0c606e97-1deb-4119-b5cf-ef3d7b3c0e52",
+    "sourceDigest": "336a13c092e2ac1d9a036ad620dea95b1abe368cc26cc48b4af5edfd28557a4a",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "3c579e44-51c1-41f5-a0f6-603567c72af1",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_16": {
+    "operationId": "1fba8778-f52b-4b26-bc4b-931618e48fc6",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "02916e33-9a9a-45fd-a72c-44a603c510c0",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_16": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "1fba8778-f52b-4b26-bc4b-931618e48fc6",
+      "rosterEntryId": "02916e33-9a9a-45fd-a72c-44a603c510c0",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "c697a5d9-c946-4011-9e66-897eaaa35f11",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "1fba8778-f52b-4b26-bc4b-931618e48fc6",
+    "obligationId": "e6f478bd-f867-4b42-801d-5c08540b9bc5",
+    "sourceDigest": "0b2989fb32b2946295122c5633e3058800315f8d09397d70c215aa1137d5abe7",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "02916e33-9a9a-45fd-a72c-44a603c510c0",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_fund_17": {
+    "operationId": "85c83014-19b3-40b1-a780-18adec6ae322",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-funding-entry-v1",
+    "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+    "expectedVersion": 0,
+    "rosterEntryId": "b8103090-9206-4c53-8328-cecc1ff2433b",
+    "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+  },
+  "fund_17": {
+    "code": "native_mixed_funding_entry_recorded",
+    "kind": "native-mixed-funding-receipt-v1",
+    "action": "entry",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-funding-entry-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "85c83014-19b3-40b1-a780-18adec6ae322",
+      "rosterEntryId": "b8103090-9206-4c53-8328-cecc1ff2433b",
+      "expectedScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+    },
+    "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "receiptId": "475b0d1d-b7b1-4021-8bed-11eca1a355df",
+    "moneyMoved": false,
+    "amountMinor": 3000,
+    "operationId": "85c83014-19b3-40b1-a780-18adec6ae322",
+    "obligationId": "58f77bb1-7015-412f-8db4-2beae620d1ab",
+    "sourceDigest": "bf272a38301cdf33c3293a540a127ed078ae5f882975d2ff6a12f5413ea924a2",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "rosterEntryId": "b8103090-9206-4c53-8328-cecc1ff2433b",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "fundedSource": {
+    "kind": "native-mixed-funding-source-v1",
+    "scope": {
+      "scopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "version": 1,
+      "paperCount": 12,
+      "digitalCount": 6,
+      "sourceDigest": "71fe4a40e24fd2fb672a00294fddb93bb05d95146da1c2c685be4c34f4697785",
+      "entryFeeMinor": 3000,
+      "participantCount": 18,
+      "admissionIntentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+      "operationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+      "admissionSourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8",
+      "admissionIntentVersion": 1
+    },
+    "status": "source_available",
+    "totals": {
+      "entryCount": 18,
+      "receiptMinor": 54000,
+      "obligationMinor": 54000
+    },
+    "entries": [
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "c070339d-97c5-4fd0-859e-70a15d92f3a9",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "c844d275-ea2b-4c9a-8604-43bf7e83f2b3",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "85d7e7e4-a1ef-471d-b978-6a94fb16fbc6"
+        },
+        "operationId": "c1f1a73a-cce9-41c1-8fc3-f9a6b95e6b9c",
+        "sourceDigest": "28c9406b85cd0edfeacfc661dba324e96fec055013099268d3aeb0579f695877",
+        "participantId": "bf2a7b9c-222a-4eb4-8586-2f5df1ef2296",
+        "rosterEntryId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "af5695ed-4b42-4644-8fd1-467a7e01727f",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "df3eddea-ad99-4f4f-8ffe-3fa290f87cc1",
+        "profileId": "a1310000-0000-4000-8000-000000000007",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "9298d9f3-9ff1-4d4d-8945-8d31eeb81377"
+        },
+        "operationId": "36c604de-98c1-492b-8509-32270c4b8512",
+        "sourceDigest": "992f243c4753693ca9158e3db27c6d44d5c523a95ed7ea06ceac546c5e21e06c",
+        "participantId": "fddcc362-7c9a-4f9f-8f87-abda9565049d",
+        "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "c697a5d9-c946-4011-9e66-897eaaa35f11",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "8a442fe4-47d2-43a8-be7a-58a918822b29",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "e6f478bd-f867-4b42-801d-5c08540b9bc5"
+        },
+        "operationId": "1fba8778-f52b-4b26-bc4b-931618e48fc6",
+        "sourceDigest": "0b2989fb32b2946295122c5633e3058800315f8d09397d70c215aa1137d5abe7",
+        "participantId": "4a6c3127-e8d5-45dd-8bf8-eb85abed4205",
+        "rosterEntryId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "723b724f-8070-4853-9d5b-a05a2b416f78",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "5e7d4896-87be-4b58-afbb-eb58d7b723cb",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "b49732e3-f1c4-49d0-a28c-5b1cce2d4c50"
+        },
+        "operationId": "4840b6c1-0215-40f1-a852-43edfc9039f5",
+        "sourceDigest": "f8070ad26a6fdfae08ca87d42035796844649f4a85d9590f82adf295b6fef5be",
+        "participantId": "4715d35f-dd14-4a3e-aecc-699f88017907",
+        "rosterEntryId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "568390b9-5101-4666-835b-9b6634f1b5df",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "81419afb-841b-4270-966c-870283cdc949",
+        "profileId": "a1310000-0000-4000-8000-000000000004",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "3f7e1fe4-d8df-4c6c-ac28-1f3eb3e3f8ae"
+        },
+        "operationId": "400b4ebd-2e6e-49bc-be05-7952557a1019",
+        "sourceDigest": "2f866d896107a82ec09da26558a72b2cb1c5aacee41279bf9eb4c7833690e7e9",
+        "participantId": "45b3fc72-d9ad-4475-bf40-740b41876eda",
+        "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "1149a719-868f-4a12-9030-7c0fd481ebe9",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "4973e832-1740-4ecf-a005-f2d6414d179c",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "e34cd138-a3c9-409b-b2bd-15d8f1c7aa7f"
+        },
+        "operationId": "24b6ba1c-e141-421c-9f68-7677b539221c",
+        "sourceDigest": "8d2f7b9d938665c260ed544ab7dad795e8b099d6a895b4a65628698ccbb23a00",
+        "participantId": "04b88035-f1d8-4193-8b9b-18c3085642ed",
+        "rosterEntryId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "feba025e-25b4-4a9d-9c03-686eff576916",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "95e9699e-9e5a-4d8c-8f2d-a623194258f2",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "0c606e97-1deb-4119-b5cf-ef3d7b3c0e52"
+        },
+        "operationId": "b975c7ea-f7bb-47f6-ae86-782350f3b47d",
+        "sourceDigest": "336a13c092e2ac1d9a036ad620dea95b1abe368cc26cc48b4af5edfd28557a4a",
+        "participantId": "af50d4fe-6230-40c1-8edd-dcc4aada4c99",
+        "rosterEntryId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "c7dd6dfa-e9dd-495f-81f1-41ba5e88133f",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "87b4616a-24d3-4ce4-a04f-7fda1ac52af8",
+        "profileId": "a1310000-0000-4000-8000-000000000005",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "626b81b2-508d-422d-b534-23c4c3bc193f"
+        },
+        "operationId": "f173e2ca-ac34-4636-962a-5f49e999783e",
+        "sourceDigest": "3ad1cc17fcd866b83692b30e438e6074352178b3a33e58d0af3a75334981e84f",
+        "participantId": "ed5469fa-bd5f-4816-853a-1c84140c5316",
+        "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "a5682c53-a8a2-43a4-b6e8-ab30a3bb73cf",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "15729efa-57dd-412e-a826-97a2d5ed2592",
+        "profileId": "a1310000-0000-4000-8000-000000000002",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "427dc88f-72af-488f-83f5-f6491f8f2fd0"
+        },
+        "operationId": "d9ca73ad-caf1-429d-855f-2b1ab07af9c3",
+        "sourceDigest": "81c8e7c077c24f0c57b9b30ce9dc86cb6d164d9efd00de4b7e25776e99f5f1b9",
+        "participantId": "39e07e29-8a17-4295-9ad7-f53b0e62ec19",
+        "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "913fa88f-a743-41e8-b467-729eb8776fad",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "a9d5b66e-6925-4178-b578-cff8c4c48026",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "dabb35bd-e6a3-4416-bd15-9cbadcca7882"
+        },
+        "operationId": "922af6a1-b68f-400e-9116-94607505fe0d",
+        "sourceDigest": "8e4cc2be649988469e5facae58813f614e7eb7d210f72ba901795be15ff3ba33",
+        "participantId": "30fc2c53-9c46-4381-88dd-52f44e38f97e",
+        "rosterEntryId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "8c7d7484-1d84-43da-939f-d6f9c78b93b3",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "d74db7ab-82b2-47c8-8cec-57402a855db4",
+        "profileId": "a1310000-0000-4000-8000-000000000003",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "6fbb0cb5-4727-42a5-887c-660589fb020f"
+        },
+        "operationId": "8bc1ba06-2cb3-42b5-a718-3379f5ec49b9",
+        "sourceDigest": "9a6b93e8e0fa845978607a071402d60a1420d37ab0dc06c333405ac0c3c3d409",
+        "participantId": "d42b057b-cfb7-4cda-a2d0-33aac9e87331",
+        "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "44a3aeaf-dea5-40fc-bf0d-e3393616a2bc",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "081698da-e70a-474a-ab6a-1f5599773d7d",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "5f599eea-b697-4f2e-931b-d02d402a7dfd"
+        },
+        "operationId": "2d0d8c07-6364-42e5-8583-49ac773aa7ea",
+        "sourceDigest": "5447dd2e130ebe7f43decaa00e80512d974c1b9d5faea8ab0557676fde1060e7",
+        "participantId": "64167477-dccf-4bef-bfd9-df139ff747e8",
+        "rosterEntryId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "475b0d1d-b7b1-4021-8bed-11eca1a355df",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "d95d1500-48a0-41e7-821f-8ec8481ff354",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "58f77bb1-7015-412f-8db4-2beae620d1ab"
+        },
+        "operationId": "85c83014-19b3-40b1-a780-18adec6ae322",
+        "sourceDigest": "bf272a38301cdf33c3293a540a127ed078ae5f882975d2ff6a12f5413ea924a2",
+        "participantId": "09a6a4c1-2fde-46cb-94f4-942b8c665213",
+        "rosterEntryId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "c06a17d8-b53e-41b1-8ad7-69970ae37f82",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "b3b5e680-9b5b-4da4-8e17-1481137be80c",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "04c015f0-085a-4fb7-a815-17b101becd89"
+        },
+        "operationId": "f2ed00e2-04c4-454a-814d-659482f9679b",
+        "sourceDigest": "c91a4ea0d11e2e037c72ecb706e143598200eb61fabbb2fc43ca0c127cdc561f",
+        "participantId": "c4d3fb46-bebc-454c-be0e-91aa520f791c",
+        "rosterEntryId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "95965b6c-74e3-4269-85dd-3cd578964f59",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "caf45147-e252-4e7f-b4cd-e7470339bfb8",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "fd6d21de-57aa-4a2e-bad8-c4025d714d02"
+        },
+        "operationId": "24f369a7-0286-4cc2-96ac-33c4d88d347c",
+        "sourceDigest": "56161aaf1c1b216f7db34748bad575c64dac0dacec5485d83d847e64a10ec500",
+        "participantId": "2f568468-6aec-45fa-aae2-f96186a1255a",
+        "rosterEntryId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+      },
+      {
+        "mode": "digital",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "b59719de-6840-432c-ac9e-215f89045d4e",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "e02d4751-e48c-410a-bce7-bd729e9cd01f",
+        "profileId": "a1310000-0000-4000-8000-000000000006",
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "ae949be5-2a89-42d1-8c4b-476f2de11a30"
+        },
+        "operationId": "e4c3afb7-fa14-4815-b6d8-b6151e0d4a39",
+        "sourceDigest": "55c3b221a8b693965bee72bd9f4772d3688e946d665ee15e4c638b6405183381",
+        "participantId": "52db3f34-f629-4916-b0bb-3483d3b3ea23",
+        "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "620995df-287d-4d30-b4ec-61f8e25a381d",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "429398cf-7e9b-4681-a32c-e0692e6a213b",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "046985bd-2d7c-4f5b-befa-96b9c09f9601"
+        },
+        "operationId": "2b847b35-11e5-4375-aaf2-98332843ef10",
+        "sourceDigest": "7890d002d4a6bbf7f7922d7fec2ae83299089c6954a5f0f24b0fcb8126ab399e",
+        "participantId": "c7ab2583-2994-4911-a0e0-2e782196b2ad",
+        "rosterEntryId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+      },
+      {
+        "mode": "paper",
+        "fixedId": null,
+        "receipt": {
+          "method": "simulated",
+          "currency": "USD",
+          "receiptId": "29531393-d38f-4ddb-99b6-db6cd1457360",
+          "amountMinor": 3000,
+          "simulatedReceivedAt": "2026-11-06T18:00:00.000Z"
+        },
+        "version": 1,
+        "contextId": "3f02d385-2707-4333-9fce-7b28fc342093",
+        "profileId": null,
+        "obligation": {
+          "amountMinor": 3000,
+          "obligationId": "9779de84-b718-4b56-8cf0-6ed75690d8fa"
+        },
+        "operationId": "e386d48a-bb92-49ab-8be5-39287d55812c",
+        "sourceDigest": "178d7c560274db70987772c64e48d3122691f179b5806e4b66b1de9eafbbd226",
+        "participantId": "1462c1d2-39ff-4cf4-83cf-9fc66b1fa7fc",
+        "rosterEntryId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+      }
+    ],
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "moneyMoved": false,
+    "sourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "payoutAuthorized": false,
+    "refundAuthorized": false,
+    "actualMoneyReceived": false,
+    "bankReceiptVerified": false,
+    "ordinaryCheckInSource": false,
+    "paidCheckInAuthorized": false,
+    "finalizationAuthorized": false,
+    "assessmentSourceAvailable": false,
+    "optionalPoolSourceAvailable": false
+  },
+  "req_attendanceScope2": {
+    "operationId": "714c1ad6-97ec-499f-a92c-ec68a4595b6e",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-attendance-scope-v1",
+    "nonce": "a39570c9-55df-4812-9504-3ca89156b909",
+    "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+    "expectedAdmissionIntentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+    "expectedAdmissionSourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8",
+    "expectedFundingScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+    "expectedFundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325"
+  },
+  "attendanceScope": {
+    "code": "attendance_scope_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "scope",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-attendance-scope-v1",
+      "nonce": "a39570c9-55df-4812-9504-3ca89156b909",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "714c1ad6-97ec-499f-a92c-ec68a4595b6e",
+      "expectedFundingScopeId": "b5b68515-6dea-492e-a4ff-1caf2a1f3858",
+      "expectedAdmissionIntentId": "fe8cf451-2c32-4422-bfb8-75b736870f89",
+      "expectedFundingSourceDigest": "3bf576aa23907b5dffb070e4956df1495aaf02365f2805db16375b77247e9325",
+      "expectedOperationalBindingId": "9e2e6ffe-6bba-4f74-b645-4a1f523b769f",
+      "expectedAdmissionSourceDigest": "2e4ee104d56a4cdf3f6ff1737776909bf0c08cef65ed93f15fc2c97ea5312dc8"
+    },
+    "scopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "version": 1,
+    "operationId": "714c1ad6-97ec-499f-a92c-ec68a4595b6e",
+    "sourceDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_0": {
+    "operationId": "ec22893b-f9e1-41ee-be41-7af906f19e42",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_0": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000002",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "ec22893b-f9e1-41ee-be41-7af906f19e42",
+      "rosterEntryId": "575ff667-df51-40b5-9324-4d177a18ba79",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "860990bc-b428-408c-9880-a784fcf78f40",
+    "operationId": "ec22893b-f9e1-41ee-be41-7af906f19e42",
+    "sourceDigest": "670547f3430224cb132bc4333046f783bde25096125f10d360fe74a02a2e91d3",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_1": {
+    "operationId": "4c6a60fa-ccf1-4f5f-9926-ce5027f4d673",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_1": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000003",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "4c6a60fa-ccf1-4f5f-9926-ce5027f4d673",
+      "rosterEntryId": "791ce2f3-4a0c-49f6-8063-99920eebab9a",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "71fb18be-cdc6-4e9d-8820-db51c5ec5476",
+    "operationId": "4c6a60fa-ccf1-4f5f-9926-ce5027f4d673",
+    "sourceDigest": "237a9625e1709600d9df7d1f9d2abe57869f99ee5db3f768a5dfb7aa2d5aafbb",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_2": {
+    "operationId": "0990e986-d25a-4f74-866e-76d1912e9091",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_2": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000004",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "0990e986-d25a-4f74-866e-76d1912e9091",
+      "rosterEntryId": "0db4862e-8edd-4d01-9116-4df2aecfccbf",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "180c3db2-5dda-428c-a444-2a328a252d72",
+    "operationId": "0990e986-d25a-4f74-866e-76d1912e9091",
+    "sourceDigest": "a29419733a15846a9cda5336b45d2108bc5ff5e9c629d9d6005e7f7810ac0b7c",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_3": {
+    "operationId": "2e963e87-bc4b-4480-882f-c370ec3aec31",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_3": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000005",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "2e963e87-bc4b-4480-882f-c370ec3aec31",
+      "rosterEntryId": "4ee82efc-2e57-4078-a2db-5f21583124f2",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "3f8b9acb-6dba-4869-ad83-0359dbbd82fd",
+    "operationId": "2e963e87-bc4b-4480-882f-c370ec3aec31",
+    "sourceDigest": "e256e2802b7e0e43ec07cc635cb3b625b48e1a579a4628c2549f0abfb5dd8bb1",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_4": {
+    "operationId": "9acb70fe-d9ea-4f34-b3a7-5fc4de84bbeb",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_4": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000006",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "9acb70fe-d9ea-4f34-b3a7-5fc4de84bbeb",
+      "rosterEntryId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "5b5cc718-6b54-4363-9e87-c610efb0338d",
+    "operationId": "9acb70fe-d9ea-4f34-b3a7-5fc4de84bbeb",
+    "sourceDigest": "42173a0018f31dd61f6e1d084352130d3c67090e321dbc1ded25cf49eed3c554",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_consent_5": {
+    "operationId": "3c24edfb-1309-4779-a1a1-0e8095126513",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-digital-consent-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPriorConsentId": null,
+    "expectedVersion": 0,
+    "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+    "decision": "granted",
+    "statement": "test-only-simulation-participation-v1"
+  },
+  "consent_5": {
+    "code": "digital_consent_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "consent",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000007",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-digital-consent-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "granted",
+      "statement": "test-only-simulation-participation-v1",
+      "operationId": "3c24edfb-1309-4779-a1a1-0e8095126513",
+      "rosterEntryId": "01202de3-b87e-4511-b542-42af9f857581",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedVersion": 0,
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPriorConsentId": null
+    },
+    "version": 1,
+    "decision": "granted",
+    "consentId": "f2f9bd7d-deba-4c9c-9663-a7ac9e9e81a1",
+    "operationId": "3c24edfb-1309-4779-a1a1-0e8095126513",
+    "sourceDigest": "054d9ed9d8e901cb1b77ae1c41f6d2d0f894ef667471acb5b8c5982c7c7882c2",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "priorConsentId": null,
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_paperDeclaration": {
+    "operationId": "b6e7ecc7-5ff4-459c-9942-50570ba7a5a1",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-paper-declaration-v1",
+    "nonce": "70504c4d-5a07-4e41-b150-66e3a5b45dd8",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedPaperRosterEntryIds": [
+      "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+      "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+      "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+      "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+      "00be9c9a-ff95-4914-943b-db07ff3ec925",
+      "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+      "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+      "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+      "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+      "3c579e44-51c1-41f5-a0f6-603567c72af1",
+      "02916e33-9a9a-45fd-a72c-44a603c510c0",
+      "b8103090-9206-4c53-8328-cecc1ff2433b"
+    ]
+  },
+  "paperDeclaration": {
+    "code": "paper_declaration_recorded",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "paper_declaration",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-paper-declaration-v1",
+      "nonce": "70504c4d-5a07-4e41-b150-66e3a5b45dd8",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "b6e7ecc7-5ff4-459c-9942-50570ba7a5a1",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedPaperRosterEntryIds": [
+        "63ddc6c8-f8d6-4404-888a-3d4097bed265",
+        "fd564c7c-fd7f-406b-8cf8-7789327d175c",
+        "d112260c-0fbb-4a76-bc41-5c04bc3b685b",
+        "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738",
+        "00be9c9a-ff95-4914-943b-db07ff3ec925",
+        "b855e347-9e44-4cc3-8238-d0adba85f5c7",
+        "97a5a00e-f61d-434a-bb21-5e703c5395d5",
+        "34cdf94c-df3b-46e9-b77e-50062b2b188b",
+        "ff2afbd9-ff69-49b0-adbe-d65370385e61",
+        "3c579e44-51c1-41f5-a0f6-603567c72af1",
+        "02916e33-9a9a-45fd-a72c-44a603c510c0",
+        "b8103090-9206-4c53-8328-cecc1ff2433b"
+      ]
+    },
+    "fictional": true,
+    "operationId": "b6e7ecc7-5ff4-459c-9942-50570ba7a5a1",
+    "sourceDigest": "0be7b16843161ddaf8fa66e788159c319d6aef6b8b40804dd9c4d21f2c7870e8",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "declarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc",
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_paperReview": {
+    "operationId": "25ffbd8d-b446-4567-8b04-103934448c26",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-paper-review-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedDeclarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc",
+    "expectedDeclarationDigest": "0be7b16843161ddaf8fa66e788159c319d6aef6b8b40804dd9c4d21f2c7870e8",
+    "decision": "accepted-synthetic-only"
+  },
+  "selfReviewBlocked": {
+    "code": "source_or_independence_changed",
+    "status": "rejected"
+  },
+  "paperReview": {
+    "code": "paper_declaration_reviewed",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "paper_review",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000008",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-paper-review-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "decision": "accepted-synthetic-only",
+      "operationId": "25ffbd8d-b446-4567-8b04-103934448c26",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedDeclarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc",
+      "expectedDeclarationDigest": "0be7b16843161ddaf8fa66e788159c319d6aef6b8b40804dd9c4d21f2c7870e8"
+    },
+    "decision": "accepted-synthetic-only",
+    "reviewId": "cbfad7dc-6813-4537-8e47-f340157d143f",
+    "operationId": "25ffbd8d-b446-4567-8b04-103934448c26",
+    "sourceDigest": "14a87724e4af48ee943259ac7af857d466164002f3338d33bd86cc6cdd1d84ac",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "declarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc",
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_attendanceSeal": {
+    "operationId": "8c15911a-3ecf-4e30-a9fe-6d1b4232d8df",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "native-mixed-attendance-seal-v1",
+    "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+    "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+    "expectedDeclarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc",
+    "expectedReviewId": "cbfad7dc-6813-4537-8e47-f340157d143f"
+  },
+  "attendanceSeal": {
+    "code": "predraw_simulation_readiness_sealed",
+    "kind": "native-mixed-attendance-receipt-v1",
+    "action": "seal",
+    "sealId": "d4540db7-cbfd-42e2-8bc4-93b8a3aa70ab",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-attendance-seal-v1",
+      "reason": "TEST ONLY fictional local rehearsal",
+      "operationId": "8c15911a-3ecf-4e30-a9fe-6d1b4232d8df",
+      "expectedScopeId": "a126f04d-8bae-4d7a-9454-fca764a9f173",
+      "expectedReviewId": "cbfad7dc-6813-4537-8e47-f340157d143f",
+      "expectedScopeDigest": "3d8cf0ad6449b82e9fc6bbc55a0501105cfd42cdc78d418d671a58d7fb38c056",
+      "expectedDeclarationId": "c69d7aff-2332-4f60-bb3d-a7ad77d22cfc"
+    },
+    "operationId": "8c15911a-3ecf-4e30-a9fe-6d1b4232d8df",
+    "sourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "serviceRoleExactIntentReplay": {
+    "passed": true
+  },
+  "serviceRoleFundingReplay": {
+    "passed": true,
+    "count": 18
+  },
+  "req_registrationClose": {
+    "operationId": "0e80ac22-5eaa-4e8a-b2bb-00f902621416",
+    "reason": "TEST ONLY fictional local rehearsal",
+    "kind": "registration-close-fixture-descriptor-v1"
+  },
+  "fixtureRegistrationClosed": {
+    "fixtureOnly": true,
+    "normalCloseRegistrationApiTested": true,
+    "response": {
+      "status": "registration_closed",
+      "linkClosed": false,
+      "registrationClosed": true
+    }
+  },
+  "req_plan": {
+    "kind": "native-mixed-simulation-plan-v1",
+    "operationId": "4444668a-2b06-4678-8593-c572e3909b66",
+    "reason": "Director reviewed A18; no special seating requests for this test",
+    "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b",
+    "expectedAttendanceSealId": "d4540db7-cbfd-42e2-8bc4-93b8a3aa70ab",
+    "config": {
+      "tables": [
+        {
+          "tableId": "A",
+          "seatCount": 18
+        }
+      ],
+      "activePairIds": [
+        "A:1-2",
+        "A:3-4",
+        "A:5-6",
+        "A:7-8",
+        "A:9-10",
+        "A:11-12",
+        "A:13-14",
+        "A:15-16",
+        "A:17-18"
+      ],
+      "anchor": {
+        "participantId": null,
+        "seatId": "A-1",
+        "directorApproved": true
+      },
+      "stationaryRequests": [],
+      "stationaryDecisions": [],
+      "constraints": [],
+      "maxAttempts": 8
+    }
+  },
+  "plan": {
+    "code": "simulation_plan_saved",
+    "kind": "native-mixed-simulation-receipt-v1",
+    "action": "plan",
+    "planId": "4e6057ff-6835-42b4-875c-61201554c9c1",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-simulation-plan-v1",
+      "config": {
+        "anchor": {
+          "seatId": "A-1",
+          "participantId": null,
+          "directorApproved": true
+        },
+        "tables": [
+          {
+            "tableId": "A",
+            "seatCount": 18
+          }
+        ],
+        "constraints": [],
+        "maxAttempts": 8,
+        "activePairIds": [
+          "A:1-2",
+          "A:3-4",
+          "A:5-6",
+          "A:7-8",
+          "A:9-10",
+          "A:11-12",
+          "A:13-14",
+          "A:15-16",
+          "A:17-18"
+        ],
+        "stationaryRequests": [],
+        "stationaryDecisions": []
+      },
+      "reason": "Director reviewed A18; no special seating requests for this test",
+      "operationId": "4444668a-2b06-4678-8593-c572e3909b66",
+      "expectedAttendanceSealId": "d4540db7-cbfd-42e2-8bc4-93b8a3aa70ab",
+      "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b"
+    },
+    "version": 1,
+    "operationId": "4444668a-2b06-4678-8593-c572e3909b66",
+    "sourceDigest": "546e53584c102c44ba4b1f68c7fec8e545bc7fee9af7c5e8e24c4e8488414418",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "normalDrawAuthorized": false,
+    "normalStartAuthorized": false
+  },
+  "req_draw": {
+    "kind": "native-mixed-simulation-draw-v1",
+    "operationId": "fc82047a-a5f9-416e-9857-a8c3c6527f8e",
+    "reason": "Director prepared this test-only rehearsal step",
+    "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b",
+    "planId": "4e6057ff-6835-42b4-875c-61201554c9c1",
+    "expectedPlanDigest": "546e53584c102c44ba4b1f68c7fec8e545bc7fee9af7c5e8e24c4e8488414418"
+  },
+  "draw": {
+    "code": "simulation_draw_recorded",
+    "kind": "native-mixed-simulation-receipt-v1",
+    "action": "draw",
+    "drawId": "699abe04-7430-4c66-9db4-c46085f33fe2",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-simulation-draw-v1",
+      "planId": "4e6057ff-6835-42b4-875c-61201554c9c1",
+      "reason": "Director prepared this test-only rehearsal step",
+      "operationId": "fc82047a-a5f9-416e-9857-a8c3c6527f8e",
+      "expectedPlanDigest": "546e53584c102c44ba4b1f68c7fec8e545bc7fee9af7c5e8e24c4e8488414418",
+      "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b"
+    },
+    "candidate": {
+      "anchor": {
+        "seatId": "A-1",
+        "selection": "blind-draw",
+        "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+      },
+      "matches": [
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 1,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 2,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 3,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 4,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 5,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 6,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 7,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 8,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 9,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 10,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 11,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            }
+          ],
+          "pairId": "A:17-18"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-1",
+              "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+            },
+            {
+              "seatId": "A-2",
+              "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+            }
+          ],
+          "pairId": "A:1-2"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-3",
+              "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+            },
+            {
+              "seatId": "A-4",
+              "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+            }
+          ],
+          "pairId": "A:3-4"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-5",
+              "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+            },
+            {
+              "seatId": "A-6",
+              "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+            }
+          ],
+          "pairId": "A:5-6"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-7",
+              "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+            },
+            {
+              "seatId": "A-8",
+              "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+            }
+          ],
+          "pairId": "A:7-8"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-9",
+              "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+            },
+            {
+              "seatId": "A-10",
+              "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+            }
+          ],
+          "pairId": "A:9-10"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-11",
+              "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+            },
+            {
+              "seatId": "A-12",
+              "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+            }
+          ],
+          "pairId": "A:11-12"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-13",
+              "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+            },
+            {
+              "seatId": "A-14",
+              "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+            }
+          ],
+          "pairId": "A:13-14"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-15",
+              "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+            },
+            {
+              "seatId": "A-16",
+              "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+            }
+          ],
+          "pairId": "A:15-16"
+        },
+        {
+          "round": 12,
+          "sides": [
+            {
+              "seatId": "A-17",
+              "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+            },
+            {
+              "seatId": "A-18",
+              "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+            }
+          ],
+          "pairId": "A:17-18"
+        }
+      ],
+      "attempts": 1,
+      "assignments": [
+        {
+          "logicalSlot": 0,
+          "tournamentId": "A-1",
+          "participantId": "b855e347-9e44-4cc3-8238-d0adba85f5c7"
+        },
+        {
+          "logicalSlot": 17,
+          "tournamentId": "A-2",
+          "participantId": "0a1dbe92-7b8b-4fa7-bfee-a5ccd962f738"
+        },
+        {
+          "logicalSlot": 1,
+          "tournamentId": "A-3",
+          "participantId": "01202de3-b87e-4511-b542-42af9f857581"
+        },
+        {
+          "logicalSlot": 16,
+          "tournamentId": "A-4",
+          "participantId": "791ce2f3-4a0c-49f6-8063-99920eebab9a"
+        },
+        {
+          "logicalSlot": 2,
+          "tournamentId": "A-5",
+          "participantId": "3c579e44-51c1-41f5-a0f6-603567c72af1"
+        },
+        {
+          "logicalSlot": 15,
+          "tournamentId": "A-6",
+          "participantId": "34cdf94c-df3b-46e9-b77e-50062b2b188b"
+        },
+        {
+          "logicalSlot": 3,
+          "tournamentId": "A-7",
+          "participantId": "575ff667-df51-40b5-9324-4d177a18ba79"
+        },
+        {
+          "logicalSlot": 14,
+          "tournamentId": "A-8",
+          "participantId": "e891ebe0-dfcd-4015-af2f-9f787c5ad3cf"
+        },
+        {
+          "logicalSlot": 4,
+          "tournamentId": "A-9",
+          "participantId": "d112260c-0fbb-4a76-bc41-5c04bc3b685b"
+        },
+        {
+          "logicalSlot": 13,
+          "tournamentId": "A-10",
+          "participantId": "00be9c9a-ff95-4914-943b-db07ff3ec925"
+        },
+        {
+          "logicalSlot": 5,
+          "tournamentId": "A-11",
+          "participantId": "0db4862e-8edd-4d01-9116-4df2aecfccbf"
+        },
+        {
+          "logicalSlot": 12,
+          "tournamentId": "A-12",
+          "participantId": "63ddc6c8-f8d6-4404-888a-3d4097bed265"
+        },
+        {
+          "logicalSlot": 6,
+          "tournamentId": "A-13",
+          "participantId": "fd564c7c-fd7f-406b-8cf8-7789327d175c"
+        },
+        {
+          "logicalSlot": 11,
+          "tournamentId": "A-14",
+          "participantId": "02916e33-9a9a-45fd-a72c-44a603c510c0"
+        },
+        {
+          "logicalSlot": 7,
+          "tournamentId": "A-15",
+          "participantId": "97a5a00e-f61d-434a-bb21-5e703c5395d5"
+        },
+        {
+          "logicalSlot": 10,
+          "tournamentId": "A-16",
+          "participantId": "ff2afbd9-ff69-49b0-adbe-d65370385e61"
+        },
+        {
+          "logicalSlot": 8,
+          "tournamentId": "A-17",
+          "participantId": "4ee82efc-2e57-4078-a2db-5f21583124f2"
+        },
+        {
+          "logicalSlot": 9,
+          "tournamentId": "A-18",
+          "participantId": "b8103090-9206-4c53-8328-cecc1ff2433b"
+        }
+      ],
+      "publishable": false,
+      "algorithmVersion": "local-circle-18-v1",
+      "physicalReviewRequired": true
+    },
+    "operationId": "fc82047a-a5f9-416e-9857-a8c3c6527f8e",
+    "sourceDigest": "14f2dc78a8994ec966ef4361f8535937e9657c7b04ab40cacb4c7cb4f9cb6dea",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "publishAuthorized": false
+  },
+  "req_drawReview": {
+    "kind": "native-mixed-simulation-review-v1",
+    "operationId": "7d36125e-9e0e-485d-a04c-79825db831b9",
+    "reason": "Director prepared this test-only rehearsal step",
+    "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b",
+    "drawId": "699abe04-7430-4c66-9db4-c46085f33fe2",
+    "expectedDrawDigest": "14f2dc78a8994ec966ef4361f8535937e9657c7b04ab40cacb4c7cb4f9cb6dea",
+    "decision": "accepted-test-simulation-only",
+    "humanPresenceNotVerified": true,
+    "simulationLayoutReviewed": true,
+    "fictionalPaperAcknowledged": true
+  },
+  "drawReview": {
+    "code": "simulation_draw_reviewed",
+    "kind": "native-mixed-simulation-receipt-v1",
+    "action": "review",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-simulation-review-v1",
+      "drawId": "699abe04-7430-4c66-9db4-c46085f33fe2",
+      "reason": "Director prepared this test-only rehearsal step",
+      "decision": "accepted-test-simulation-only",
+      "operationId": "7d36125e-9e0e-485d-a04c-79825db831b9",
+      "expectedDrawDigest": "14f2dc78a8994ec966ef4361f8535937e9657c7b04ab40cacb4c7cb4f9cb6dea",
+      "humanPresenceNotVerified": true,
+      "simulationLayoutReviewed": true,
+      "fictionalPaperAcknowledged": true,
+      "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b"
+    },
+    "reviewId": "314879bb-2d33-4350-b62f-b09c81670505",
+    "operationId": "7d36125e-9e0e-485d-a04c-79825db831b9",
+    "sourceDigest": "c9aa0ffbb94af73cc4fa024062a2611f8b597946bc6555569d7098de46aed99d",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "publishAuthorized": false
+  },
+  "req_localScheduleSave": {
+    "kind": "native-mixed-simulation-publish-v1",
+    "operationId": "83cc8658-7e34-408c-a5b8-d7ac14102e59",
+    "reason": "Director prepared this test-only rehearsal step",
+    "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b",
+    "reviewId": "314879bb-2d33-4350-b62f-b09c81670505",
+    "expectedReviewDigest": "c9aa0ffbb94af73cc4fa024062a2611f8b597946bc6555569d7098de46aed99d",
+    "seatingOperationId": "f7845f78-aea6-41bb-a60a-200725bebcc4",
+    "scheduleOperationId": "280fdf5a-7edd-47de-8fb9-9debcd0c8000"
+  },
+  "localScheduleSave": {
+    "code": "native_mixed_simulation_published",
+    "kind": "native-mixed-simulation-receipt-v1",
+    "action": "publish",
+    "status": "accepted",
+    "actorId": "a1310000-0000-4000-8000-000000000001",
+    "eventId": "7551ee95-b686-4e6d-9a48-e18afef15613",
+    "request": {
+      "kind": "native-mixed-simulation-publish-v1",
+      "reason": "Director prepared this test-only rehearsal step",
+      "reviewId": "314879bb-2d33-4350-b62f-b09c81670505",
+      "operationId": "83cc8658-7e34-408c-a5b8-d7ac14102e59",
+      "seatingOperationId": "f7845f78-aea6-41bb-a60a-200725bebcc4",
+      "scheduleOperationId": "280fdf5a-7edd-47de-8fb9-9debcd0c8000",
+      "expectedReviewDigest": "c9aa0ffbb94af73cc4fa024062a2611f8b597946bc6555569d7098de46aed99d",
+      "expectedAttendanceSourceDigest": "23127ce84331733d004880156017ad034c58e1262085dc90c6b202fc8edc4e4b"
+    },
+    "contextId": "3d54e770-d495-498e-9943-4c577cd9c93e",
+    "matchCount": 108,
+    "roundCount": 12,
+    "operationId": "83cc8658-7e34-408c-a5b8-d7ac14102e59",
+    "tournamentId": "b1310000-0000-4000-8000-000000000001",
+    "assignmentCount": 18,
+    "seatingPublicationId": "75f1657d-cdc1-4e89-be8c-9d0952caa092",
+    "currentSourceVerified": true,
+    "normalStartAuthorized": false,
+    "schedulePublicationId": "648b2f25-1e27-4ad6-9729-69d59699dfee",
+    "ordinaryAttendanceUsed": false
+  }
+}

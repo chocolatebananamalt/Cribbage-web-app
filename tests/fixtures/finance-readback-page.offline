@@ -1,0 +1,43 @@
+"use client";import{createRoot}from'react-dom/client';let fixtureSequence=100;const fixtureId=()=>'d5010000-0000-4000-8000-'+String(fixtureSequence++).padStart(12,'0');import{useMemo,useState}from'react';import{EventFinanceProviderSectionV1}from'../../src/components/event-finance-provider-section-v1';import{FinanceProviderOperationV1,type FinanceProviderOperationPortV1}from'../../src/lib/finance/finance-provider-operation-v1';import{createEventFinanceEditorV1,reduceEventFinanceEditorV1,type EventFinanceWorkspaceV1}from'../../src/lib/finance/event-finance-workspace-v1';const scope={"actorId":"d5010000-0000-4000-8000-000000000001","tournamentId":"d5010000-0000-4000-8000-000000000002","eventId":"d5010000-0000-4000-8000-000000000003"};const current:EventFinanceWorkspaceV1={"complete":true,"source":{"tournamentId":"d5010000-0000-4000-8000-000000000002","eventId":"d5010000-0000-4000-8000-000000000003","sourceVersion":1,"sourceDigest":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},"mode":"estimate","tournamentName":"Fictional UI Trial","eventName":"Main","eventKind":"main","startLabel":"November 7","entryCount":40,"paidEntryCount":null,"qualifierCount":10,"grossEntryMinor":5000,"history":[],"settings":{"method":"graduated_all_qualifiers","factor":"1.5"},"payoutSource":{"tournamentId":"d5010000-0000-4000-8000-000000000002","eventId":"d5010000-0000-4000-8000-000000000003","settingsSnapshotId":"d5010000-0000-4000-8000-000000000007","ledgerDigest":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","resultsDigest":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},"savedAt":null,"overrideHistory":[]};const bridge=()=>window as unknown as Record<string,unknown>;export default function Page(){
+ const[editor,setEditor]=useState(()=>createEventFinanceEditorV1(current)!);
+ const[blocked,setBlocked]=useState(false),[revision,setRevision]=useState(0),[clone,setClone]=useState(0),[hidden,setHidden]=useState(false),[generation,setGeneration]=useState(0);
+ const[stats,setStats]=useState({posts:0,checks:0,retained:0,callbacks:0,checkpoints:0,archives:0});
+ const[ports]=useState(()=>{
+  let raw:string|null=null,receipt:unknown=null;const history=new Map<string,string>();
+  return{
+   read:async()=>raw,
+   transition:async(_key:string,expected:string|null,next:string|null,archive?:{id:string;raw:string})=>{
+    if(raw!==expected)return false;
+    if(archive&&bridge().__holdArchive===true)await new Promise<void>(resolve=>{bridge().__releaseArchive=resolve;});
+    if(archive){if(history.has(archive.id)&&history.get(archive.id)!==archive.raw)return false;history.set(archive.id,archive.raw);}
+    raw=next;const kind=next?JSON.parse(next).kind:null;
+    setStats(s=>({...s,retained:kind==='finance-provider-pending-v1'?1:0,checkpoints:kind==='finance-provider-reviewed-head-v1'?1:0,archives:history.size}));
+    if(archive&&bridge().__loseArchiveAck===true)throw Error('Fictional lost archive acknowledgment');
+    return true;
+   },
+   save:async(request:Parameters<FinanceProviderOperationPortV1['save']>[0])=>{
+    if(!raw||JSON.parse(raw).kind!=='finance-provider-pending-v1')throw Error('missing_retained');
+    setStats(s=>({...s,posts:s.posts+1}));
+    receipt={kind:'operational-finance-provider-write-v1',...scope,operationId:request.operationId,request,outcome:{status:'accepted',code:'operational_finance_proposal_saved',revisionId:'d5010000-0000-4000-8000-000000000030',version:request.expectedVersion+1,sourceDigest:request.expectedSourceDigest,basisDigest:request.expectedBasisDigest}};
+    throw Error('Fictional lost reply');
+   },
+   reconcile:async()=>{setStats(s=>({...s,checks:s.checks+1}));return receipt;},
+  };
+ });
+ const makeOperation=()=>new FinanceProviderOperationV1(scope,{read:ports.read,transition:ports.transition},{save:ports.save,reconcile:ports.reconcile});
+ const[op,setOp]=useState(makeOperation);
+ const workspace=useMemo(()=>({scope,current,sourceDigest:current.source.sourceDigest,basisDigest:'c'.repeat(64),version:revision,headRevisionId:revision?'d5010000-0000-4000-8000-000000000030':null,editor,editable:!blocked}),[editor,blocked,revision,clone]);
+ return<main><h1 style={{overflowWrap:'anywhere'}}>LOCAL MOCK PROVIDER - NO RECORDS OR MONEY</h1>
+  <button type="button" onClick={()=>setBlocked(true)}>Block Source</button>
+  <button type="button" onClick={()=>setEditor(old=>({...old,basis:{...old.basis,eventName:'FOREIGN SECRET',source:{...old.basis.source,eventId:'d5010000-0000-4000-8000-000000000099'},payoutSource:{...old.basis.payoutSource,eventId:'d5010000-0000-4000-8000-000000000099'}}}))}>Show Foreign Editor</button>
+  <button type="button" onClick={()=>setClone(n=>n+1)}>Clone Workspace</button>
+  <button type="button" onClick={()=>setRevision(n=>n+1)}>Adopt Verified Workspace</button>
+  <button type="button" onClick={()=>setHidden(true)}>Hide Finance</button><button type="button" onClick={()=>setHidden(false)}>Show Finance</button>
+  <button type="button" onClick={()=>{setOp(makeOperation());setGeneration(n=>n+1);}}>New Finance Instance</button>
+  <output style={{overflowWrap:'anywhere'}} aria-label="Mock Counts">{JSON.stringify(stats)}</output>
+  <EventFinanceProviderSectionV1 key={generation} onSavedWorkspaceVerified={()=>setStats(s=>({...s,callbacks:s.callbacks+1}))} enabled={!hidden}
+   readSavedWorkspace={()=>new Promise((resolve,reject)=>{bridge().__releaseRead=()=>{if(bridge().__failRead)reject(Error('Fictional readback failure'));else resolve({...workspace,version:workspace.version+1,headRevisionId:'d5010000-0000-4000-8000-000000000030'});};})}
+   workspace={workspace} editor={editor} operation={op} makeOperationId={()=>fixtureId()} onAction={(action,expected)=>setEditor(old=>old===expected?reduceEventFinanceEditorV1(old,action,current,()=>fixtureId()):old)}/>
+ </main>;
+}
+createRoot(document.getElementById('root')!).render(<Page/>);

@@ -1,0 +1,30 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { SharedDeviceSignOut } from "../../../../components/shared-device-sign-out";
+import { requireTournamentAccess } from "../../../../lib/auth/require-tournament-access";
+import { isUuid } from "../../../../lib/api/validation";
+import { registrationLinkManagementEnabled } from "../../../../lib/api/public-registration-v2";
+import { eventPrizeSetupEnabledV1 } from "../../../../lib/api/event-prize-setup-admission-v1";
+import { getAccessibleTournaments } from "../../../../lib/tournaments/accessible-tournaments";
+import SetupClient from "./setup-client";
+
+export const dynamic = "force-dynamic";
+
+export default async function TournamentSetupPage({ params }: { params: Promise<{ tournamentId: string }> }) {
+  const { tournamentId } = await params;
+  if (!isUuid(tournamentId)) notFound();
+  const access = await requireTournamentAccess(tournamentId);
+  if (!["director", "co_director"].includes(access.role)) notFound();
+  const accessible = await getAccessibleTournaments(access.user.id);
+  const tournament = accessible.status === "available" ? accessible.tournaments.find((item) => item.tournamentId === tournamentId) : undefined;
+  return <main className="auth-shell"><section className="auth-card corrections-card setup-card" aria-labelledby="setup-title">
+    <p className="eyebrow">OPERATIONS</p><h1 id="setup-title">Set Up Tournament</h1>
+    <p className="auth-note">Configure the tournament and its Main, Consolation, and Satellite events. Saving creates a private versioned setup record; it does not publish results or charge anyone.</p>
+    <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
+    <Link className="guide-link" href="/help/tournament-setup" target="_blank" rel="noopener noreferrer">Definitions and Setup Help (opens in a new tab)</Link>
+    <Link className="guide-link" href={`/tournament/${tournamentId}/flyer`} target="_blank" rel="noopener noreferrer">Preview Saved Events and Flyer Draft (opens in a new tab)</Link>
+    <SetupClient actorId={access.user.id} tournamentId={tournamentId} eventPrizeSettingsV1Enabled={eventPrizeSetupEnabledV1()} registrationLinkManagementEnabled={registrationLinkManagementEnabled()} creationSeed={tournament ? { name: tournament.tournamentName, plannedDate: tournament.tournamentDate } : undefined} />
+    <SharedDeviceSignOut />
+  </section></main>;
+}

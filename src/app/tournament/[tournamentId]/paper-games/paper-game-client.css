@@ -1,0 +1,10 @@
+/* Keep the two original-card entries readable within narrow review cards. */
+.correction-item.paper-card-entry,
+.correction-item.paper-card-entry form,
+.correction-item.paper-card-entry fieldset { min-width:0; }
+.correction-item.paper-card-entry fieldset { display:grid; grid-template-columns:minmax(0,1fr); }
+.correction-item.paper-card-entry fieldset > * { min-width:0; max-width:100%; }
+.correction-item.paper-card-entry input:not([type="radio"]):not([type="checkbox"]),
+.correction-item.paper-card-entry textarea { min-width:0; max-width:100%; width:100%; }
+.correction-item.paper-card-entry fieldset label:has(>input:not([type="radio"]):not([type="checkbox"])) { display:grid; gap:6px; }
+.correction-item.paper-card-entry input[type="radio"] { flex-shrink:0; }

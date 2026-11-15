@@ -1,0 +1,12 @@
+# Reviewed Additional Income in Modern Prize Awards
+
+Local gated implementation. Modern awards previously rejected every nonzero additional-income amount, even after complete event fund review. The derived current award review now uses allocation-only baseline plus independently reviewed active unrestricted income, checked exactly once with integer arithmetic against the recorded fund. Saved policy and manual-history bytes are preserved. Q/Side funds remain excluded.
+
+The full current-native fund capture already verifies income version lineage, corrections/voids, source evidence and reviewed heads. Nonzero income through the older plain source remains blocked. Changed source proof invalidates prior Director confirmation before a provider write. Manual awards that no longer balance remain held; no redistribution, refund, fee-reference substitution or new rounding policy was introduced. The Director sees the included reviewed income alongside the income-inclusive fund.
+
+Checks: six new focused tests cover Equal/WTA/Graduated/Multiplier, corrections, voids, unchanged saved policy/history, stale/inconsistent/legacy sources, retained manual imbalance and changed-source confirmation. Seventeen related fee, manual-adjustment and transport checks passed. TypeScript and targeted ESLint pass. Existing actual React offline harness passed390/1440 with the new income label and existing exact-retry/confirmation checks, zero network requests. Fixtures are fictional/in-memory, not actual provider or storage acceptance. Evidence: test-results/modern-prize-journal-browser-20261110/result.json.
+
+SQL candidate modern-prize-awards-v2.sql now checks the same baseline+income identity before using recorded fund math. Source review identified an ambiguous PL/pgSQL alias in the new sum; explicit income_sources.value/income_parts.value fixed it. SQL is UNEXECUTED, not installed, gates stay false/RPCs revoked. Native database runtime, actual authenticated provider, fullreload/storage and release acceptance remain pending. No full-suite/build/audit rerun, new fixture, hosted access, publication or denied-operation retry.
+
+Independent implementation re-review remains pending at this checkpoint; plan review passed and the SQL alias finding was corrected. Do not interpret the focused checks as database readiness.
+Independent additional-income implementation source re-review GO: SQL alias ambiguity resolved; no remaining P1/P2, baseline+income exactlyonce, currentconfirmation/fee/overrideholds preserved. SQL/runtime remains unverified.

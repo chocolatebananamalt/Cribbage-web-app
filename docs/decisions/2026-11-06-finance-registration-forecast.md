@@ -1,0 +1,7 @@
+# Main/Consolation registration payout forecast
+
+Close the missing pre-qualification estimate using a separate optional view. A host must supply Standard/standard_singles and regular-top-quarter-round-up evidence matching tournament/event/version/digest and settingsSnapshotId. Generic Main/Consolation kind is insufficient; Consy Lite is not inferred. Controller snapshots evidence; source updates discard it unless explicitly resupplied. Retained editor must still match current workspace. Positive active entry count is known, official qualifierCount strictly null, regular fund valid.
+
+Use active registrations including comped for ceil(entries/4), labeled estimated. Use supplied regular fund plus unsaved costs/income, not count-times-fee fabricated receipts. Optional Q/Side funds remain excluded. Reuse saved factor and paid-place settings; whole-band expansion and nearest-$5 balance discrepancy stay separate. Forecast never applies manual overrides or maps player recipients. All authority flags false.
+
+No actual provider/page enables this view yet. Custom regular ratio population/rounding and beyond-qualifier awards remain blocked. Existing workspace persistence, official qualifier count, actual payout review, historic records, declaration and activation guards unchanged. No SQL or database fixture was needed for this display patch. Real provider/session acceptance required before enablement.

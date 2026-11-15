@@ -1,0 +1,38 @@
+[
+  {
+    "mode": "main-v3",
+    "options": {},
+    "sha256": "2af7c989cba7ef862153bcf903cb21934ae3a2e19cc09e5219c4909d273aee30"
+  },
+  {
+    "mode": "main-v4",
+    "options": {},
+    "sha256": "e9c0d2ea91a785712ac03becabc84e6aad5c459a83e00e53f12969d42c571b95"
+  },
+  {
+    "mode": "consolation-v1",
+    "options": {},
+    "sha256": "3f13fdc0ee53f33746883cb9d474fbb943e3b648278773d59f2c36a52ab912ae"
+  },
+  {
+    "mode": "main-v4",
+    "options": {
+      "qualifiers": 6
+    },
+    "sha256": "6eeadb5fbd63505d0fc7b1cbbbdad872a01a8cd5b1978da4f844f6d2662e6bb7"
+  },
+  {
+    "mode": "main-v4",
+    "options": {
+      "qualifiers": 8
+    },
+    "sha256": "abdbcddafee797161f81aeb6a45abaa4ecca73e10254b46632e0d56b15926a05"
+  },
+  {
+    "mode": "main-v4",
+    "options": {
+      "qualifiers": 64
+    },
+    "sha256": "cdee76d18552abb0a2a6eed3d0db48f268bd40f06696186a9ef851c6ab4e90b8"
+  }
+]
