@@ -1,5 +1,5 @@
 "use client";
-import { beginSafeRecoverySwitch, finishRecoveryAuthentication } from "../recovery-write-coordinator";
+import { beginSafeRecoverySwitch, cancelSafeRecoverySwitch, finishRecoveryAuthentication } from "../recovery-write-coordinator";
 import { protectUnownedRecovery } from "./recovery-preflight";
 import { safeAuthNext, type RecoveryAuthInput } from "./recovery-auth";
 import { recoveryActionGate } from "../safe-device-switch";
@@ -10,9 +10,16 @@ export async function submitCoordinatedAuthentication(input: RecoveryAuthInput):
   try { return await perform(input); } finally { recoveryActionGate.leave(); }
 }
 async function perform(input: RecoveryAuthInput): Promise<{ status: "signed_in"; next: string } | { status: "blocked"; message: string }> {
-  await beginSafeRecoverySwitch();
-  await protectUnownedRecovery();
-  await beginSafeRecoverySwitch();
+  try {
+    await beginSafeRecoverySwitch();
+    await protectUnownedRecovery();
+    await beginSafeRecoverySwitch();
+  } catch (error) {
+    // No authentication request has started. Restore this document's shared
+    // lease without clearing recovery, so later navigation cannot deadlock.
+    await cancelSafeRecoverySwitch();
+    throw error;
+  }
   let response: Response;
   try {
     response = await fetch(input.mode === "password" ? "/auth/password" : "/auth/callback", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "content-type": "application/json" }, body: JSON.stringify(input) });
@@ -26,6 +33,11 @@ async function perform(input: RecoveryAuthInput): Promise<{ status: "signed_in";
     catch { return { status: "blocked", message: "Sign-in was accepted, but browser recovery coordination changed. Keep this tab and recovery data intact; the account switch is paused." }; }
   }
   if (response.ok) return reconcile(input.attemptId, input.next);
+  // A confirmed rejection publishes no candidate cookies. Release the switch
+  // barrier before returning; the worker needs a shared lease to load sign-in.
+  // Uncertain/5xx outcomes above remain held until reconciliation succeeds.
+  try { await cancelSafeRecoverySwitch(); }
+  catch { return { status: "blocked", message: "Sign-in was not accepted, and browser recovery coordination could not resume. Keep recovery data intact. This one-time link will not be retried." }; }
   return { status: "blocked", message: response.status === 409 ? "Saved recovery work belongs to another or unknown account. Keep it intact and use its original account; do not clear pending work." : response.status === 429 ? "Sign-in is temporarily limited. Wait before trying again." : "Sign-in was not accepted. Recovery data was preserved. Passwords and one-time links are not automatically retried." };
 }
 async function reconcile(attemptId: string, next: string): Promise<{ status: "signed_in"; next: string } | { status: "blocked"; message: string }> {
