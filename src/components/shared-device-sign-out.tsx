@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { localRecoveryCountCopy } from "../lib/local-recovery-count-copy";
 import { clearAppSessionStorage, countAppSessionStorageRecords } from "../lib/client-session-storage";
 import { clearOfflineScoreStorage, countOfflineSubmissions } from "../lib/offline-score-queue";
 import { recoveryActionGate, safeSwitchMessage, safeRecoveryBarrierMessage, type SafeSwitchStage } from "../lib/safe-device-switch";
@@ -141,7 +142,7 @@ export function SharedDeviceSignOut() {
 
   const safetyMessage = localState.status === "checking" ? "Checking whether this device has any local tournament recovery work…"
     : localState.status === "safe" ? "This device has no unsent score entries or retry records. It may be safely cleared for a different player by pressing Clear safe app data and sign out below."
-      : localState.status === "unsafe" ? `${localState.offlineCount ? `${localState.offlineCount} offline score ${localState.offlineCount === 1 ? "entry is" : "entries are"}` : "No offline score entries are"} ${localState.retryCount ? `${localState.offlineCount ? "and " : ""}${localState.retryCount} retry ${localState.retryCount === 1 ? "record is" : "records are"}` : ""} still stored locally. Sign out is safe for the same player, but this device must not be cleared or handed to a different player until synchronization/retry is complete.`
+      : localState.status === "unsafe" ? `${localRecoveryCountCopy(localState.offlineCount, localState.retryCount)} Sign out is safe for the same player, but this device must not be cleared or handed to a different player until synchronization/retry is complete.`
         : "The app cannot verify this device’s local recovery state. Keep it with the same player and try again after connectivity is restored.";
 
   return <div className="shared-device-sign-out"><button type="button" className="secondary" onClick={() => void signOut()} disabled={busy}>{busy ? "Signing out…" : "Sign out"}</button><p className="auth-note">Sign out is appropriate on a personal device or when the same player will return to this device. It keeps this app&apos;s offline recovery copy and retry records. It does not delete saved tournament records, personal files, browser history, or other websites&apos; data.</p><p className={localState.status === "safe" ? "auth-note" : "error-text"} role="status">{safetyMessage}</p>{localState.status === "safe" ? <button type="button" className="secondary danger-button" onClick={() => void clearSafeAppData()} disabled={busy}>Clear safe app data and sign out</button> : null}{switchStage ? <p className="auth-note" role="status">{safeSwitchMessage(switchStage)}</p> : null}{error ? <p className="error-text" role="alert">{error}</p> : null}</div>;

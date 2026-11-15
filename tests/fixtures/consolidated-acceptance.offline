@@ -1,0 +1,10 @@
+import {createRoot} from 'react-dom/client';
+import {SharedDeviceSignOut} from '../../src/components/shared-device-sign-out';
+import {LiveScoreEntry} from '../../src/app/tournament/[tournamentId]/game/[gameId]/score-entry';
+import '../../src/app/globals.css';
+const root=createRoot(document.getElementById('root'));
+window.fixtureCounts={offline:0,retry:0};window.fixtureStats={forbiddenActions:0,recoveryWrites:0,refreshes:0,readbacks:[]};
+window.mountFooter=counts=>{window.fixtureCounts=counts;root.render(<SharedDeviceSignOut key={`${counts.offline}:${counts.retry}`}/>);};
+window.mountScore=context=>{window.currentFixtureContext=context;root.render(<LiveScoreEntry key={context.actorId} context={context}/>);};
+window.refreshScore=()=>{window.fixtureStats.refreshes++;void fetch('/fixture/context',{cache:'no-store',credentials:'same-origin'}).then(r=>r.json()).then(context=>{window.fixtureStats.readbacks.push({state:context.state,ownConfirmed:context.ownConfirmed,canConfirm:context.canConfirm});window.mountScore(context);});};
+window.unmountFixture=()=>root.render(null);

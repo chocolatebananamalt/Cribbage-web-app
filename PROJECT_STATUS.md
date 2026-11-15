@@ -1,3 +1,7 @@
+## 2026-11-15: Consolidated unpublished test candidate
+
+Footer count wording uses a pure display helper with7cases and14phone/laptop renders; recovery readers/status/actions are unchanged. Actual LiveScoreEntry passes both historical two-session confirmation orders plus2pending-unmount checks under deterministic server ports: first device updates on its next10second poll, without manual refresh or duplicate submission. Scoring source is unchanged. One cumulative patch/manifest from liveccff9f7d and exact-import/reconstruction inventory are in support files; full checks and final identity are recorded there. Not full13033415or genuine hosted acceptance. No push/deploy/config/SQL/flags/user draft/session change. See docs/quality/2026-11-15-consolidated-test-candidate.md.
+
 ## 2026-11-15: Creation seed cleanup guarded locally
 
 Setup cleanup now requires the existing strict tournament-created DTO, matching tournament and identical raw bytes immediately before removal; unknown/foreign/replaced/storage-denied data is preserved. All four callers use the guard; owner/load/revision/financial/pending protections remain unchanged. Six actual-root-component lifecycle fixture groups pass and independent recovery review passes. Semantic reconstruction from275dbd0, not exact13033415import. Full check outcomes and candidate/tree are recorded in support files. No hosted or user draft/session actions. See docs/quality/2026-11-15-creation-seed-recovery-guard.md.
