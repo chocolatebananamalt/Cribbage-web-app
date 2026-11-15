@@ -1,3 +1,7 @@
+## 2026-11-15: Check-in readback reconciled with local seating draft
+
+Current checked-in identities must now match the local seating draft before publishing. An explicit update preserves manual choices until requested and renews publication consent; both Table Plan rebuild inputs also revoke consent. Actual component390/1440browser10cases and current route3groups pass with synthetic RPC/router ports and real browser sessionStorage; independent review passes. Payment/fee rules, SQL/gates/grants and hosted/user draft/session remain unchanged. See docs/quality/2026-11-15-check-in-seating-refresh.md; support report records aggregate checks and limitations.
+
 ## 2026-11-15: Final approval readback failure distinguished locally
 
 After a bound accepted receipt and successful archival, unavailable current records now request explicit refresh instead of falsely claiming a retained pending request. Actual component390/1440synthetic browser cases8pass, closeout contract tests9pass, application tests3640pass and TypeScript/targeted lint pass; independent review passes. No financial rules, SQL, gates, permissions, hosted state or user draft/session changed. See docs/quality/2026-11-15-final-review-readback.md; aggregate verification and limits are in the support package.

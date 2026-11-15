@@ -1,0 +1,34 @@
+import {createRoot} from 'react-dom/client';
+import SeatingClient from '../../src/app/tournament/[tournamentId]/seating/seating-client';
+import {isCheckInRequest,isInitialSeatingRequest} from '../../src/lib/api/seating';
+const id=n=>`bc120000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const actorId=id(1),tournamentId=id(2),a=id(3),b=id(4),foreign='payment-operation:foreign-fictional-preserved';
+const root=createRoot(document.getElementById('root'));
+export const useRouter=()=>({refresh:()=>window.fixture.refresh()});
+export const setAppRecoveryItem=(storage,key,value)=>storage.setItem(key,value);
+export default function Link({href,children,...props}){return <a href={href} {...props}>{children}</a>;}
+window.mount=mode=>{
+ sessionStorage.setItem(foreign,'fictional foreign recovery - unchanged');
+ const f=window.fixture={mode,rows:[{rosterEntryId:a,displayName:'Fictional Alpha',scorecardType:'digital',state:'checked_in'},{rosterEntryId:b,displayName:'Fictional Beta',scorecardType:'paper',state:'not_checked_in'}],closed:false,publication:null,requests:[],checkInWrites:0,seatingWrites:0,receipts:new Map(),lost:false};
+ f.render=()=>root.render(<SeatingClient key={mode} actorId={actorId} tournamentId={tournamentId} registrationClosed={f.closed} publication={f.publication} checkIn={f.rows.map(r=>({...r}))}/>);
+ f.refresh=()=>f.render();
+ f.swap=()=>{f.rows=f.rows.map(r=>({...r,state:r.rosterEntryId===b?'checked_in':'absent'}));f.render();};
+ f.pending=()=>sessionStorage.getItem(`seating-operation:${actorId}:${tournamentId}`);
+ window.fetch=async(url,options)=>{
+  const request=JSON.parse(options.body);f.requests.push({url,request});let status=200,data;
+  if(url.endsWith('/seating/check-in')){
+   if(!isCheckInRequest(request))throw Error('Fixture received invalid actual check-in DTO');
+   data=f.receipts.get(request.idempotencyKey);
+   if(!data){f.checkInWrites++;f.rows=f.rows.map(r=>r.rosterEntryId===request.rosterEntryId?{...r,state:request.checkInState}:r);data={status:'check_in_recorded',checkInEventId:id(80),rosterEntryId:request.rosterEntryId,checkInState:request.checkInState,eventEnrolled:false,seatAssigned:false,verificationIdAssigned:false,tournamentId,operationId:request.idempotencyKey};f.receipts.set(request.idempotencyKey,data);}
+   if(mode==='lost-reply'&&!f.lost){f.lost=true;throw Error('Synthetic response lost after fixture commit');}
+  }else if(url.endsWith('/registration-close')){f.closed=true;data={status:'registration_closed',registrationClosed:true,linkClosed:true};}
+  else if(url.endsWith('/seating/publish')){
+   if(!isInitialSeatingRequest(request))throw Error('Fixture received invalid actual seating DTO');
+   const present=f.rows.filter(r=>r.state==='checked_in');
+   if(request.assignments.length!==present.length||request.assignments.some(x=>!present.some(r=>r.rosterEntryId===x.rosterEntryId))){status=409;data={status:'rejected',code:'checked_in_roster_required',tournamentId,operationId:request.idempotencyKey};}
+   else{f.seatingWrites++;f.publication={publicationId:id(90),tableCount:request.tableCount,seatsPerTable:request.seatsPerTable,publishedAt:'2026-11-15T00:00:00Z',assignments:request.assignments.map(x=>({...present.find(r=>r.rosterEntryId===x.rosterEntryId),initialTableSeat:x.tableSeat,verificationId:x.tableSeat}))};data={status:'initial_seating_published',publicationId:id(90),assignmentCount:request.assignments.length,registrationClosed:true,roundRotationGenerated:false,tournamentId,operationId:request.idempotencyKey};}
+  }else throw Error('Unexpected fixture URL');
+  return {ok:status===200,status,json:async()=>data};
+ };
+ f.render();
+};
