@@ -1,3 +1,7 @@
+## 2026-11-15: Exact reviewed-draw reload slice reconciled locally
+
+Copied only three hash-verified13033415draw-navigation files onto isolated b6af14e; prior seating-refresh product code is byte-identical. Exact remembered-operation/native-ID validation and actor/tournament/generation guards remain distinct from unpublished draft membership.19focused and10phone/laptop browser cases pass; independent review passes. Full checks and candidate/tree are recorded in the support package. Not full13033415integration; no SQL/gates/grants/hosted/user draft/session changes. See docs/quality/2026-11-15-seating-draw-exact-compatibility.md.
+
 ## 2026-11-15: Check-in readback reconciled with local seating draft
 
 Current checked-in identities must now match the local seating draft before publishing. An explicit update preserves manual choices until requested and renews publication consent; both Table Plan rebuild inputs also revoke consent. Actual component390/1440browser10cases and current route3groups pass with synthetic RPC/router ports and real browser sessionStorage; independent review passes. Payment/fee rules, SQL/gates/grants and hosted/user draft/session remain unchanged. See docs/quality/2026-11-15-check-in-seating-refresh.md; support report records aggregate checks and limitations.

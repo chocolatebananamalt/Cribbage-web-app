@@ -6,6 +6,8 @@ import { sameDrawRequest } from "../lib/api/roster-random-draw";
 import { prepareReviewedDrawPublication, isDrawPhysicalReview } from "../lib/seating/reviewed-draw-publication";
 import { reviewedDrawRecoveryKey, readReviewedDrawRecovery, clearExactReviewedDrawRecovery, type RetainedDrawPublication } from "../lib/seating/reviewed-draw-recovery";
 import { readReviewedDrawPublicationResult, readReviewedDrawPublicationOperation } from "../lib/seating/reviewed-draw-publication-result";
+import { reviewedDrawScheduleOperationId } from "../lib/seating/reviewed-draw-navigation";
+import { isUuid } from "../lib/api/validation";
 import { assertRecoveryStorageOwner } from "../lib/auth/recovery-owner";
 import { setAppRecoveryItem } from "../lib/recovery-write-coordinator";
 import styles from "./reviewed-draw-publisher.module.css";
@@ -26,12 +28,27 @@ function ScopedReviewedDrawPublisherClient({ actorId, tournamentId }: { actorId:
   const active = useCallback(() => current.current === scope, [scope]);
   const refresh = useCallback(async () => {
     const seq = ++generation.current;
-    if (active()) setReady(false);
+    if (active()) { setReady(false); setSavedOperationId(null); }
     const response = await fetch(base, { cache: "no-store", credentials: "same-origin" }), body: unknown = await response.json().catch(() => null);
     if (!active() || seq !== generation.current) return false;
     if (!response.ok || !isReviewedNativeWorkspace(body, actorId, tournamentId)) throw Error("workspace_unavailable");
-    setWorkspace(body); setReady(true); setReview([false, false, false]); setReason(""); return true;
-  }, [active, actorId, tournamentId, base]);
+    setWorkspace(body);
+    // The local value is only an exact operation pointer. Re-establish its
+    // accepted server receipt and current native IDs before rendering a link.
+    try {
+      const remembered = sessionStorage.getItem(publishedKey);
+      if (body.native.publication && isUuid(remembered) && remembered === remembered.toLowerCase()) {
+        const storedResponse = await fetch(`${base}/operations/${remembered}`, { cache: "no-store", credentials: "same-origin" });
+        const stored: unknown = await storedResponse.json().catch(() => null);
+        if (!active() || seq !== generation.current) return false;
+        if (storedResponse.ok && sessionStorage.getItem(publishedKey) === remembered) {
+          setSavedOperationId(reviewedDrawScheduleOperationId(stored, actorId, tournamentId, remembered, body.native));
+        }
+      }
+    } catch { /* Unverified navigation stays hidden; saved work is untouched. */ }
+    if (!active() || seq !== generation.current) return false;
+    setReady(true); setReview([false, false, false]); setReason(""); return true;
+  }, [active, actorId, tournamentId, base, publishedKey]);
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!active()) return;
