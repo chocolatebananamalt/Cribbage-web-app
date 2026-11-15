@@ -29,8 +29,8 @@ test("setup seeds only authoritative server tournament data and never invents a 
   assert.match(create, /tournament-creation-seed:\$\{actorId\}:\$\{receipt\.tournamentId\}/);
   assert.match(setup, /readCreationSeed\(creationSeedStorageKey, tournamentId\)/);
   assert.match(setup, /isTournamentCreated\(value\) && value\.tournamentId === tournamentId/);
-  assert.match(setup, /if \(current\) clearCreationSeed\(creationSeedStorageKey\)/);
-  assert.match(setup, /clearCreationSeed\(creationSeedStorageKey\); setCreationSeedActive\(false\); setPending\(null\)/);
+  assert.match(setup, /if \(current\) clearCreationSeed\(creationSeedStorageKey, tournamentId\)/);
+  assert.match(setup, /clearCreationSeed\(creationSeedStorageKey, tournamentId\); setCreationSeedActive\(false\); setPending\(null\)/);
   assert.match(setup, /startsAt: creationSeed \? creationDateInputValue\(creationSeed\.plannedDate\)/);
   assert.match(setup, /<TournamentDateFields startsAt=\{payload.startsAt\} endsAt=\{payload.endsAt\}/);
   assert.match(dateFields, /Start Date<input required type="date" value=\{startsAt\.slice\(0, 10\)\}/);

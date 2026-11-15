@@ -1,3 +1,7 @@
+## 2026-11-15: Creation seed cleanup guarded locally
+
+Setup cleanup now requires the existing strict tournament-created DTO, matching tournament and identical raw bytes immediately before removal; unknown/foreign/replaced/storage-denied data is preserved. All four callers use the guard; owner/load/revision/financial/pending protections remain unchanged. Six actual-root-component lifecycle fixture groups pass and independent recovery review passes. Semantic reconstruction from275dbd0, not exact13033415import. Full check outcomes and candidate/tree are recorded in support files. No hosted or user draft/session actions. See docs/quality/2026-11-15-creation-seed-recovery-guard.md.
+
 ## 2026-11-15: Exact reviewed-draw reload slice reconciled locally
 
 Copied only three hash-verified13033415draw-navigation files onto isolated b6af14e; prior seating-refresh product code is byte-identical. Exact remembered-operation/native-ID validation and actor/tournament/generation guards remain distinct from unpublished draft membership.19focused and10phone/laptop browser cases pass; independent review passes. Full checks and candidate/tree are recorded in the support package. Not full13033415integration; no SQL/gates/grants/hosted/user draft/session changes. See docs/quality/2026-11-15-seating-draw-exact-compatibility.md.

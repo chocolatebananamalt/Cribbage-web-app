@@ -159,7 +159,14 @@ function readPending(key: string, actorId?: string, tournamentId?: string): Pend
 function storePending(key: string, value: PendingSave | PendingActivation | PendingAmendment) { try { if(value.kind === "tournament-prize-activation-v1"){const raw=serializePendingPrizeActivationV1(value);if(!raw||sessionStorage.getItem(key)!==null)return false;setAppRecoveryItem(sessionStorage,key,raw);return sessionStorage.getItem(key)===raw;} if(value.kind === "tournament-event-prize-v1"){const raw=serializePendingEventPrizeSetupV1(value);if(!raw||sessionStorage.getItem(key)!==null)return false;setAppRecoveryItem(sessionStorage,key,raw);return sessionStorage.getItem(key)===raw;} if(value.kind === "tournament-event-settings-v3") { const raw=serializePendingEventSettingsSetupV3(value); if(!raw||sessionStorage.getItem(key)!==null)return false;setAppRecoveryItem(sessionStorage,key,raw);return sessionStorage.getItem(key)===raw; } const text=JSON.stringify(value); setAppRecoveryItem(sessionStorage, key, text); return sessionStorage.getItem(key)===text; } catch { return false; } }
 function clearPending(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted server receipt remains authoritative */ } }
 function readCreationSeed(key: string, tournamentId: string): CreationSeed | undefined { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return isTournamentCreated(value) && value.tournamentId === tournamentId ? { name: value.tournamentName, plannedDate: value.tournamentDate } : undefined; } catch { return undefined; } }
-function clearCreationSeed(key: string) { try { sessionStorage.removeItem(key); } catch { /* accepted setup receipt remains authoritative */ } }
+function clearCreationSeed(key: string, tournamentId: string) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (raw === null) return;
+    const value: unknown = JSON.parse(raw);
+    if (isTournamentCreated(value) && value.tournamentId === tournamentId && sessionStorage.getItem(key) === raw) sessionStorage.removeItem(key);
+  } catch { /* Unknown or unavailable recovery data stays untouched; accepted setup remains authoritative. */ }
+}
 function readPendingActivation(key: string,actorId?:string,tournamentId?:string): PendingActivation | null { try { const prize=actorId&&tournamentId?parsePendingPrizeActivationV1(sessionStorage.getItem(key),actorId,tournamentId):null;if(prize)return prize;const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && !Array.isArray(value) && isSetupActivationRequest((value as PendingActivation).request) && ((Object.keys(value).sort().join(',')==='kind,request' && (value as PendingActivation).kind === "tournament-activation") || (Object.keys(value).sort().join(',')==='associationHash,kind,request' && (value as PendingActivation).kind === "tournament-activation-linked-v1" && typeof (value as {associationHash:unknown}).associationHash === "string" && /^[a-f0-9]{64}$/.test((value as {associationHash:string}).associationHash))) ? value as PendingActivation : null; } catch { return null; } }
 function readPendingAmendment(key: string): PendingAmendment | null { try { const value: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null"); return value && typeof value === "object" && (value as PendingAmendment).kind === "tournament-setup-amendment" && isRetainedSetupAmendmentRequest((value as PendingAmendment).request) ? value as PendingAmendment : null; } catch { return null; } }
 function editableEvent(event: SetupEvent & { sourceStatus?: string; qPools: Array<SetupPool & { slot?: number; sourceStatus?: string }>; sidePools: Array<SetupPool & { slot?: number; sourceStatus?: string }> }): SetupEvent {
@@ -400,7 +407,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
     if((eventSettingsV3Enabled||eventPrizeSettingsV1Enabled)&&linksAvailable&&(current?linkData.current?.setupRevisionId!==current.revisionId||linkData.current?.setupVersion!==current.version:linkData.current!==null))throw new Error("linked-settings-source-mismatch");
     if (expected && current && current.version > expected.receipt.version) throw new Error("newer-setup-revision");
     if (expected && !setupFinancialTermsMatch(expected.request, expected.receipt, current)) throw new Error("saved-financial-terms-mismatch");
-    if (current) clearCreationSeed(creationSeedStorageKey);
+    if (current) clearCreationSeed(creationSeedStorageKey, tournamentId);
     const effectiveCreationSeed = creationSeed ?? (!current ? readCreationSeed(creationSeedStorageKey, tournamentId) : undefined);
     setCreationSeedActive(Boolean(effectiveCreationSeed && !current));
     const legacyDirector = current ? splitPersonName(current.tournamentDirectorPublicName) : null;
@@ -561,7 +568,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
       const loaded=await load({request:operation.request,receipt:verified.ack.nested.linked.result});if(!owned())return;
       if(!eventPrizeReadbackMatchesV1(loaded.prizeSettings,operation,verified.ack,verified.priorSnapshot,hash)||!isSetupEventLinksWorkspace(loaded.linked)||!linkedSnapshotMatches(loaded.linked.current,verified.ack.nested.linked.links)){setMessage("Current setup or Playoff settings do not match the saved operation. Keep the exact request for review.");return;}
       assertRecoveryStorageOwner(actorId);assertRecoveryWriteAllowed();if(sessionStorage.getItem(storageKey)!==raw)throw Error("pending-changed");sessionStorage.removeItem(storageKey);if(sessionStorage.getItem(storageKey)!==null)throw Error("cleanup-unconfirmed");
-      setPending(null);setSaveOutcome("confirmed");clearCreationSeed(creationSeedStorageKey);setCreationSeedActive(false);
+      setPending(null);setSaveOutcome("confirmed");clearCreationSeed(creationSeedStorageKey, tournamentId);setCreationSeedActive(false);
       setMessage(operation.stage==='details'?"Tournament details and Playoff settings saved. Tournament Events is now available.":`Tournament setup version ${verified.ack.snapshot.setupVersion} and its complete Playoff settings were saved and verified.`);
     }catch{if(owned())setMessage("The Playoff save or readback is unresolved. Keep the exact request; check its outcome before retrying.");}finally{if(owned()){inFlight.current=false;setBusy(false);}}
   }
@@ -639,7 +646,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
         const links: unknown = read.ok ? await read.json().catch(() => null) : null;if(!owned())return;
         if (!isSetupEventLinksWorkspace(links) || !linkedSnapshotMatches(links.current,data.links)) throw new Error("link-readback");
         if (clearVerifiedLinkedRecovery(sessionStorage,storageKey,retained,receipt) !== "cleared") throw new Error("recovery-cleanup");
-        setLinkedReady(true); setSavedLinks(data.links); setLinkChoices(data.links.choices); clearCreationSeed(creationSeedStorageKey); setCreationSeedActive(false); setPending(null); setSaveOutcome("confirmed");
+        setLinkedReady(true); setSavedLinks(data.links); setLinkChoices(data.links.choices); clearCreationSeed(creationSeedStorageKey, tournamentId); setCreationSeedActive(false); setPending(null); setSaveOutcome("confirmed");
         setMessage(retained.stage === "details" ? "Tournament details saved. Tournament Events is now available." : `Tournament setup version ${receipt.version} was saved.`);
       } catch { if(owned())setMessage("The linked save could not be fully verified. The exact request remains saved for retry."); }
       finally { if(owned()){inFlight.current = false; setBusy(false);} }
@@ -656,7 +663,7 @@ export default function SetupClient({ actorId, tournamentId, registrationLinkMan
           await load({request:envelope.request,receipt:data});if(!owned())return;
           const cleanup=clearVerifiedSetupRecovery(sessionStorage,storageKey,envelope.request,data);
           if(cleanup!=="cleared"){setPending(acceptedEnvelope);setMessage("Saved financial terms are verified, but local recovery cleanup could not be confirmed. The original operation remains available; do not finalize until this recovery state is resolved.");return;}
-          clearCreationSeed(creationSeedStorageKey); setCreationSeedActive(false); setPending(null);
+          clearCreationSeed(creationSeedStorageKey, tournamentId); setCreationSeedActive(false); setPending(null);
           setSaveOutcome("confirmed");
           setMessage(envelope.stage === "details" ? "Tournament details saved. Tournament Events is now available." : `Tournament setup version ${data.version} was saved.`);
         } catch (error) {
