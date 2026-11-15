@@ -1,3 +1,7 @@
+## 2026-11-15: Prize model ordering assertion corrected locally, tests only
+
+Removed an unsupported invocation-order winner assumption from the concurrency test and added deterministic both-order ownership/replay checks.22focused tests,60bounded serial-adapter groups and3640application tests pass; changed-test lint and independent review pass. Product source/SQL/gates and deployed runtime are unchanged from44f770; historical intermittent failure exactcause remains unproven. No user draft/session or hosted action. See docs/quality/2026-11-15-prize-model-ordering-correction.md.
+
 ## 2026-11-15: Manual-paper waiting status corrected and checked in isolation
 
 Canonical awaiting-paper-review copy no longer asserts opponent agreement; tentative status, independent original-card cross-check and navigation remain unchanged. Full app repeat3636passes, fictional production build/typecheck, provider/workspace checks and390/1440browserfixtures pass. Prior unchanged prize-adapter model failure is retained as unexplained intermittent evidence. Browser/API fixtures do not prove genuine provider/SQL or completed paper cross-check. No hosted/user-draft change or publication. See docs/quality/2026-11-15-manual-paper-status-verification.md.

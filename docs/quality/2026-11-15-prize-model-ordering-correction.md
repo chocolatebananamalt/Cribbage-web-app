@@ -1,0 +1,13 @@
+# Test-only prize-model admission ordering correction
+
+Applied locally on parent44f770fd496ec313af2755c4853f1df84394d623, itself based on02fba1d. No overnight13033415 integration. No product source, SQL, gate, permission, deployed runtime or user draft/session changes.
+
+The serial adapter model test assumed results[0] must win for distinct operations. The coordinator awaits native SHA-256 before transaction admission, so invocation order is not admission order. Investigation reproduced a matching failure mechanism on unchanged base/candidate by gating digest-result delivery; the historical full-run failure lacks order traces and its exact cause remains unproven.
+
+The corrected assertion requires exactly one accepted result and one source_changed rejection for distinct operations; same-operation retries require two accepted results with exactly one fresh and one replay. Original one-write/one-operation checks remain. Four deterministic cases exercise both visible hash-completion orders for same and distinct operations using real native SHA-256 and the existing in-memory atomic port. They verify delivery/admission order, expected winning caller, stale loser/replay, winning operation record/scope, request-text operation ID/nested idempotency key, nested write key, acknowledgement operation and head. Counts require one nested write, snapshot, operation and reservation. These request-text assertions bind operation/key ownership; they do not independently compare the entire envelope.
+
+The digest method is restored in finally; a bounded watchdog prevents a missing transaction from hanging the test. This is isolated test instrumentation, not a crypto implementation or runtime-policy change. No wall-clock performance assumption determines a winner.
+
+Executed:22/22prize-file tests pass;12bounded focused repeats each containing five serial-adapter groups pass(60groups), including all four controlled cases; full application suite3640/3640passes; changed-test ESLint passes. Independent Sol review found no assertion weakening and confirmed explicit evidence limits. Historical24unchanged repeats/12ordering scenarios remain preserved separately. No production build rerun was needed because all product source is byte-identical to the verified44f770 candidate.
+
+These results concern a model/actual-coordinator contract. They do not prove PostgreSQL atomicity, persisted finance behavior, live provider sessions or hosted acceptance. Full identities, hashes and durable packaging appear in the independent applied report and manifest. No publication is authorized by this correction.
