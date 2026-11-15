@@ -1,3 +1,7 @@
+## 2026-11-15: Final approval readback failure distinguished locally
+
+After a bound accepted receipt and successful archival, unavailable current records now request explicit refresh instead of falsely claiming a retained pending request. Actual component390/1440synthetic browser cases8pass, closeout contract tests9pass, application tests3640pass and TypeScript/targeted lint pass; independent review passes. No financial rules, SQL, gates, permissions, hosted state or user draft/session changed. See docs/quality/2026-11-15-final-review-readback.md; aggregate verification and limits are in the support package.
+
 ## 2026-11-15: Prize model ordering assertion corrected locally, tests only
 
 Removed an unsupported invocation-order winner assumption from the concurrency test and added deterministic both-order ownership/replay checks.22focused tests,60bounded serial-adapter groups and3640application tests pass; changed-test lint and independent review pass. Product source/SQL/gates and deployed runtime are unchanged from44f770; historical intermittent failure exactcause remains unproven. No user draft/session or hosted action. See docs/quality/2026-11-15-prize-model-ordering-correction.md.

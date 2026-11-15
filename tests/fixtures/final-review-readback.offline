@@ -1,0 +1,22 @@
+import {createRoot} from 'react-dom/client';
+import {ModernEventCloseSectionV1} from '../../src/components/modern-event-close-section-v1';
+import {closePinNames} from '../../src/lib/finance/modern-event-close-contract-v1';
+const id=n=>`bc120000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const scope={actorId:id(1),tournamentId:id(2),eventId:id(3)};
+const review={...Object.fromEntries(closePinNames.map((k,i)=>[k,id(10+i)])),stage:'pool',sourceDigest:'a'.repeat(64),poolSourceDigest:'b'.repeat(64),poolFinalId:null,regularMinor:43200,qMinor:17000,sideMinor:16000,groups:[],pools:[]};
+const root=createRoot(document.getElementById('root'));
+window.mount=mode=>{
+ if(!crypto.randomUUID)Object.defineProperty(crypto,'randomUUID',{value:()=>id(70)});
+ window.fixture={mode,values:new Map(),archives:[],reads:0,sends:[],failNext:false};
+ window.fetch=async(_url,options={})=>{
+  const f=window.fixture;
+  if(options.method==='POST'){
+   const a=JSON.parse(options.body);f.sends.push(a);f.failNext=true;
+   if(f.mode==='unknown')throw Error('synthetic response loss');
+   return {ok:true,json:async()=>({status:'accepted',code:'approved_unpaid',operationId:f.mode==='unbound'?id(99):a.attempt.operationId,recordId:id(80),historicalReceipt:true,currentSourceVerified:false,moneyMoved:false})};
+  }
+  f.reads++;if(f.failNext){f.failNext=false;throw Error('synthetic current read unavailable');}
+  return {ok:true,json:async()=>({scope,status:f.sends.length?'recorded':'review',code:'fixture',review,recordId:f.sends.length?id(80):null,moneyMoved:false,officialMrpAwarded:false})};
+ };
+ root.render(<ModernEventCloseSectionV1 key={mode} enabled writesVerified scope={scope}/>);
+};
