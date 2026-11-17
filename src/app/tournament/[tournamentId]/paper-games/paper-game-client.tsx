@@ -1,8 +1,8 @@
 "use client";
 import "./paper-game-client.css";
-import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
+import { setAppRecoveryItem, transitionAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PendingPaperCardPhotos } from "../../../../components/pending-paper-card-photos";
 import { PrivatePaperCardPhoto } from "../../../../components/private-paper-card-photo";
@@ -62,38 +62,57 @@ async function reconcileOperation(tournamentId: string, operationType: "complete
   return (value as { result: unknown }).result;
 }
 
+import {reconcileRetainedPaperOperationV35} from '../../../../lib/paper-games/reconcile-retained-v35';
+
 function SavedOperationReconciler({ actorId, tournamentId }: { actorId: string; tournamentId: string }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
+  const lease = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    const token = {}; lease.current = token;
+    return () => { if (lease.current === token) lease.current = null; };
+  }, [actorId, tournamentId]);
   useEffect(() => {
     let cancelled = false;
+    const token = lease.current;
+    const current = () => !cancelled && token !== null && lease.current === token;
     const run = async () => {
       let resolved = 0;
-      const entries: Array<{ key: string; operationType: "complete_paper_vs_paper_game_v1" | "review_paper_vs_paper_game_v1" | "bind_paper_official_identity_v1"; targetId: string; idempotencyKey: string; accepted: (value: unknown) => boolean }> = [];
+      const entries: Array<{ raw: string; key: string; operationType: "complete_paper_vs_paper_game_v1" | "review_paper_vs_paper_game_v1" | "bind_paper_official_identity_v1"; targetId: string; idempotencyKey: string; accepted: (value: unknown) => boolean }> = [];
       let storedEntryCount = 0;
       try { storedEntryCount = window.sessionStorage.length; } catch { return; }
       for (let index = 0; index < storedEntryCount; index += 1) {
         const key = window.sessionStorage.key(index);
         if (!key) continue;
         try {
-          const saved: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null");
+          const raw = window.sessionStorage.getItem(key);
+          if (raw === null) continue;
+          const saved: unknown = JSON.parse(raw);
           if (key.startsWith(`paper-game-completion:${actorId}:`) && isCompletePaperGameRequest(saved)) {
-            entries.push({ key, operationType: "complete_paper_vs_paper_game_v1", targetId: saved.completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameCompletion(value, saved) || isRejectedPaperGameCompletion(value, saved.completionId) });
+            entries.push({ raw, key, operationType: "complete_paper_vs_paper_game_v1", targetId: saved.completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameCompletion(value, saved) || isRejectedPaperGameCompletion(value, saved.completionId) });
           } else if (key.startsWith(`paper-game-review:${actorId}:`) && isReviewPaperGameRequest(saved)) {
             const completionId = key.slice(`paper-game-review:${actorId}:`.length).replace(/:synthetic-v1$/, "");
-            entries.push({ key, operationType: "review_paper_vs_paper_game_v1", targetId: completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameReview(value, completionId, saved) || isRejectedPaperGameCompletion(value, completionId) });
+            entries.push({ raw, key, operationType: "review_paper_vs_paper_game_v1", targetId: completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameReview(value, completionId, saved) || isRejectedPaperGameCompletion(value, completionId) });
           } else if (key === identityStorageKey(actorId, tournamentId) && isBindPaperOfficialIdentityRequest(saved)) {
-            entries.push({ key, operationType: "bind_paper_official_identity_v1", targetId: saved.bindingId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperOfficialIdentity(value, saved, tournamentId) || isRejectedPaperOfficialIdentity(value, saved.bindingId) });
+            entries.push({ raw, key, operationType: "bind_paper_official_identity_v1", targetId: saved.bindingId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperOfficialIdentity(value, saved, tournamentId) || isRejectedPaperOfficialIdentity(value, saved.bindingId) });
           }
         } catch { /* A malformed local value cannot be reconciled into authority. */ }
       }
       for (const entry of entries) {
         try {
-          const result = await reconcileOperation(tournamentId, entry.operationType, entry.targetId, entry.idempotencyKey);
-          if (result !== null && entry.accepted(result)) { clearLocked(entry.key); resolved += 1; }
+          if (!current()) return;
+          const removed = await reconcileRetainedPaperOperationV35({
+            current, raw: entry.raw,
+            read: () => window.sessionStorage.getItem(entry.key),
+            lookup: () => reconcileOperation(tournamentId, entry.operationType, entry.targetId, entry.idempotencyKey),
+            accepted: entry.accepted,
+            remove: raw => transitionAppRecoveryItem(window.sessionStorage, entry.key, raw, null),
+          });
+          if (!current()) return;
+          if (removed) resolved += 1;
         } catch { /* Keep the exact envelope for a later retry. */ }
       }
-      if (!cancelled && resolved > 0) {
+      if (current() && resolved > 0) {
         setMessage(`${resolved} saved paper-card operation${resolved === 1 ? " was" : "s were"} reconciled with the tournament record.`);
         router.refresh();
       }

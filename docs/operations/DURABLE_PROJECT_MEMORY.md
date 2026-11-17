@@ -1,3 +1,7 @@
+## 2026-11-17: V35 paper cross-check background recovery — LOCAL only
+
+SavedOperationReconciler now requires exact retained bytes and an ABA-safe current context lease before historical receipt cleanup through the existing recovery coordinator. Stale/cancelled/replaced/denied work remains intact; no game verification inferred. Baseline actualcomponent reproduced replacement deletion.13focused/3860app/26synthetic Chrome390/1440 cases pass; no genuineprovider/Next acceptance. All paperform bodies unchanged and their cleanup paths remain separate review gaps. No SQL/grant/flag/hosted/publication/email action; V34 preserved. See docs/quality/2026-11-17-paper-reconciliation-v35.md.
+
 ## 2026-11-17: V34 ordinary scoring recovery conflict hold — LOCAL only
 
 Retained submission cleanup now requires exact server ID/winner/margin and exact stored envelope. Conflicts, replacement or unknown/unreadable bytes hold retry/confirmation/handoff while preserving drafts and recovery. Same-mounted null-to-conflicting readback is protected independently of local submissionId. 54focused and18synthetic Chrome390/1440 cases pass; final checks in aggregatepackage. No SQL/grant/flag/hosted changes or publication. See docs/quality/2026-11-17-ordinary-score-recovery-v34.md.
