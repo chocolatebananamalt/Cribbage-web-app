@@ -1,0 +1,71 @@
+{
+  "stagingProject": "nnhcnvksxgxnpvdqjgpg",
+  "metadataOnly": true,
+  "helpers": [
+    {
+      "signature": "app.device_recovery_is_approved(uuid)",
+      "bodySha256": "0780f8e71ff4cee0ec1daaa4056ccd9441c98253fb6346d15ac7ef8d5a190d55",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "app.event_play_close_readiness_v1(uuid)",
+      "bodySha256": "05e8e882bb2f723e24d93199565c1d6c65aefc0eb65279f2277e34a77485e53a",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "app.event_play_close_state_v1(uuid)",
+      "bodySha256": "7dc6b49885a5435cc7ca78fdc437b8d707e0e9131f70ec23a550e0f2a5d64016",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "app.event_play_pause_state_v1(uuid)",
+      "bodySha256": "08ea899b80ba52cebe2bb0ee33a9a2b26be5a4320ea58f87b50085962cc50b68",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "app.event_play_reopen_is_safe_v1(uuid)",
+      "bodySha256": "18d16c7ee0368de7a49fd44a08984c6570d8f7a029036a1cca109885523ddee6",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "app.game_is_authoritatively_resolved_v1(uuid)",
+      "bodySha256": "8cb794c21c8dee4ea7b5180067867be4d9b93bfe2c62671fa27a890f08006f9c",
+      "owner": "postgres",
+      "securityDefiner": true
+    },
+    {
+      "signature": "auth.jwt()",
+      "bodySha256": "fed2a8ac0349ffaba807c1b574698bfb1348825b8ef5163ad72d8408386f5e3e",
+      "owner": "supabase_auth_admin",
+      "securityDefiner": false
+    }
+  ],
+  "relations": [
+    "app.audit_events",
+    "app.canonical_games",
+    "app.card_scorelines",
+    "app.device_failure_recoveries",
+    "app.device_failure_recovery_state_events",
+    "app.event_play_closes",
+    "app.event_play_pauses",
+    "app.event_play_starts",
+    "app.event_schedule_games",
+    "app.event_team_starts",
+    "app.events",
+    "app.operation_receipts",
+    "app.operational_game_forfeits",
+    "app.qualification_result_versions",
+    "app.standard_singles_playoff_result_versions",
+    "app.standard_singles_settlement_drafts",
+    "app.standard_singles_settlement_final_versions",
+    "app.tournament_roles",
+    "app.tournaments"
+  ],
+  "sourceShapedFixture": true,
+  "genuineAuth": false
+}
