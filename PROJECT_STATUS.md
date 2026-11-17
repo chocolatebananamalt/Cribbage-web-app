@@ -7187,3 +7187,7 @@ Capability RPC/route adapter and16-writer shared fencing implemented locally.376
 ## 2026-11-17 V21 local lifecycle positive proof
 Two actual close/reopen writers and six current-matching helpers passed16native groups; reproduced omitted transitive capability pins and added a closed V21 proposal with7functions/19relations. Four focused source tests pass. App code/gates unchanged; bootstrapfalse/grantsclosed. Other14financialwriter accepted effects and genuine Auth/provider/maturebaseline remain unproved. See docs/quality/2026-11-17-closeout-lifecycle-positive-v21.md.
 
+
+## 2026-11-17 V22 manual registration outcome recovery
+Explicit Recover prior manual entry now preserves null/unknown records, checks exact current actor/session/tournament/operation and uses safe raw-byte cleanup. Exact local getter correction reads v1/v2/v3 manual receipts without changing grants.3771app tests,7nativeSQLgroups+28browser390/1440cases,lint/type/provider/build pass. SQL not applied hosted; creation/Auth/coordinator/Next/PostgREST limits and broader identical-name/check-in requirements remain explicit. See docs/quality/2026-11-17-manual-roster-recovery-v22.md. No hosted/publication/email or draft/session action.
+

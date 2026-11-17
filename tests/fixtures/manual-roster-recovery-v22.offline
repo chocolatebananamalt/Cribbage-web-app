@@ -1,0 +1,13 @@
+import React from'react';import{createRoot}from'react-dom/client';
+import RosterClient from'../../src/app/tournament/[tournamentId]/roster/roster-client';
+const c=window.fixtureConfig,listeners=new Set();
+export default function Link({children,href,...props}){return <a href={href} {...props}>{children}</a>;}
+export const useRouter=()=>router;const router={refresh(){window.fixture.refreshes++;}};
+export const createClient=()=>({auth:{getClaims:async()=>({data:{claims:{sub:window.fixture.authActor,session_id:window.fixture.sid}},error:null}),getUser:async()=>{const f=window.fixture;if(f.rotateSidOnUser){f.rotateSidOnUser=false;f.sid=window.fixtureConfig.otherSid;}return{data:{user:{id:f.authActor}},error:null};},onAuthStateChange:fn=>{listeners.add(fn);return{data:{subscription:{unsubscribe:()=>listeners.delete(fn)}}};}}});
+export function assertRecoveryWriteAllowed(){if(!window.fixture.allowed)throw Error('synthetic_owner_denied');}
+export function setAppRecoveryItem(storage,key,value){assertRecoveryWriteAllowed();storage.setItem(key,value);}
+export function transitionAppRecoveryItem(storage,key,expected,next){assertRecoveryWriteAllowed();if(storage.getItem(key)!==expected)return false;if(next===null)storage.removeItem(key);else storage.setItem(key,next);return storage.getItem(key)===next;}
+export const trackAppRecoveryWrite=async fn=>{assertRecoveryWriteAllowed();return await fn();};
+const root=createRoot(document.getElementById('root'));
+const f=window.fixture={actor:c.actor,tournament:c.tournament,authActor:c.actor,sid:c.sid,allowed:true,refreshes:0,callbacks:null,key:`manual-roster-operation:${c.actor}:${c.tournament}`,foreignKey:`manual-roster-operation:${c.foreign}:${c.tournament}`,render(){root.render(<RosterClient key={f.actor+':'+f.tournament} actorId={f.actor} tournamentId={f.tournament} intakeState="open" rosterEntries={[]} withdrawnRosterEntries={[]} promotionCandidates={[]}/>);},capture(callbacks){f.callbacks=callbacks;},auth(actor,sid,event='SIGNED_IN'){f.authActor=actor;f.sid=sid;for(const listener of listeners)listener(event);},unmount(){root.unmount();}};
+sessionStorage.setItem(f.foreignKey,'foreign retained data');if(c.raw!==null&&sessionStorage.getItem('fixture_initialized')===null)sessionStorage.setItem(f.key,c.raw);sessionStorage.setItem('fixture_initialized','yes');f.render();
