@@ -94,7 +94,7 @@ test("every tournament page is linked from somewhere a director can reach", () =
       assert(gate>=0&&gate<page.indexOf('await params'));
       continue;
     }
-    if(segment==='rehearsal-prepare'&&!nativeMixedPreparationPageEnabledV1()){const file=`${BASE}/rehearsal-prepare/[eventId]/page.tsx`;assert.deepEqual(sourceFiles(`${BASE}/rehearsal-prepare`).filter(p=>p.endsWith('/page.tsx')),[file]);const page=readFileSync(file,'utf8');assert(page.indexOf('if(!nativeMixedPreparationPageEnabledV1())notFound()')<page.indexOf('await params'));continue;}
+    if(segment==='rehearsal-prepare'&&!nativeMixedPreparationPageEnabledV1()){const file=`${BASE}/rehearsal-prepare/[eventId]/page.tsx`;const print=file.replace('/page.tsx','/print/page.tsx');assert.deepEqual(sourceFiles(`${BASE}/rehearsal-prepare`).filter(p=>p.endsWith('/page.tsx')).sort(),[file,print].sort());const printSource=readFileSync(print,'utf8');assert(printSource.indexOf('if(!nativePaperPairingEnabledV29())notFound()')<printSource.indexOf('await params'));assert(readFileSync('src/lib/events/native-paper-pairing-read-v29.ts','utf8').includes('nativePaperPairingEnabledV29=()=>false'));const page=readFileSync(file,'utf8');assert(page.indexOf('if(!nativeMixedPreparationPageEnabledV1())notFound()')<page.indexOf('await params'));continue;}
 
     // This candidate must not be advertised before provider/fund/release
     // acceptance. Opening its gate automatically restores the link requirement.

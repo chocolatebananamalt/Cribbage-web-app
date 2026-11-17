@@ -1,3 +1,4 @@
+import {nativePaperPairingEnabledV29} from '../../../../../lib/events/native-paper-pairing-read-v29';
 import{notFound}from'next/navigation';
 import Link from'next/link';
 import{nativeMixedPreparationPageEnabledV1}from'../../../../../lib/seating/native-mixed-pilot-preparation-v1';
@@ -17,5 +18,5 @@ export default async function Page({params}:{params:Promise<{tournamentId:string
   {enabled:nativeMixedPlayoffOwnRouteEnabledV1(),suffix:'playoffs',label:'My Playoff Matches'},
   {enabled:nativeMixedMainFinanceRouteEnabledV1(),suffix:'finance',label:'Main Finance'},
  ].filter(link=>link.enabled);
- return <>{(links.length>0||nativeMixedEventResultsEnabledV1())&&<nav aria-label="Rehearsal Sections"><ul>{links.map(link=><li key={link.suffix}><Link href={`/tournament/${tournamentId}/rehearsal/${eventId}/${link.suffix}`}>{link.label}</Link></li>)}{nativeMixedEventResultsEnabledV1()&&<li><Link href={`/tournament/${tournamentId}/results?event=${eventId}&practice=mixed`}>Practice Results</Link></li>}</ul></nav>}<NativeMixedPreparationProviderV1 enabled tournamentId={tournamentId} eventId={eventId}/></>;
+ return <>{(links.length>0||nativeMixedEventResultsEnabledV1())&&<nav aria-label="Rehearsal Sections"><ul>{links.map(link=><li key={link.suffix}><Link href={`/tournament/${tournamentId}/rehearsal/${eventId}/${link.suffix}`}>{link.label}</Link></li>)}{nativeMixedEventResultsEnabledV1()&&<li><Link href={`/tournament/${tournamentId}/results?event=${eventId}&practice=mixed`}>Practice Results</Link></li>}</ul></nav>}{nativePaperPairingEnabledV29()&&<Link prefetch={false} href={`/tournament/${tournamentId}/rehearsal-prepare/${eventId}/print`}>Rehearsal Pairing Sheets</Link>}<NativeMixedPreparationProviderV1 enabled tournamentId={tournamentId} eventId={eventId}/></>;
 }

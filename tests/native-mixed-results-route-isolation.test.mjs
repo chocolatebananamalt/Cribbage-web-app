@@ -5,6 +5,7 @@ const tid='aaaa0000-0000-4000-8000-000000000001',eid='aaaa0000-0000-4000-8000-00
 function page(file='src/app/tournament/[tournamentId]/results/page.tsx'){const state={gate:false,preparationGate:false,roles:['director'],calls:[],url:'https://nnhcnvksxgxnpvdqjgpg.supabase.co',gateAfterSummary:null};
  const summary=async()=>{state.calls.push('summary');if(state.gateAfterSummary!==null)state.gate=state.gateAfterSummary;return{tournamentName:'Fictional',events:[{eventId:eid,name:'Fictional Main',eventType:'main',format:'singles',participantCount:18}]};};
  const dependencies={
+  'native-paper-pairing-read-v29':{nativePaperPairingEnabledV29:()=>false},
   'next/navigation':{notFound:()=>{throw Error('NOT_FOUND');}},
   'react/jsx-runtime':{jsx:(type,props)=>({type,props}),jsxs:(type,props)=>({type,props})},
   'validation':{isUuid:v=>typeof v==='string'&&/^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v)},
