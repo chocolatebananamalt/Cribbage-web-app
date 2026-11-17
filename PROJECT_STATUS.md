@@ -1,3 +1,7 @@
+## 2026-11-17: V26 manual event PDF character handling - LOCAL ONLY
+
+Manual identity event PDFs now apply the existing report text fallback before font measurement/drawing, so Hawaiian okina/macron text no longer makes the entire download fail. The PDF visibly discloses simplified accents/unsupported-character replacement; source cards retain original spelling, NOT exact Unicode rendering in the PDF. Raw and normalized legal-field UUID/Temporary-ID exclusions protect the manual-export boundary. No result/amount/MRP, SQL, permission, gate or source-record changes. Seven focused groups and four actual download/session-denial browser cases at390/1440 use synthetic session/provider fixtures; not genuine Auth/database/NextSSR or hosted acceptance. See docs/quality/2026-11-17-manual-event-report-text-v26.md. Production/practice/session/publication untouched; no email.
+
 ## 2026-11-17: V25 legacy paper registration bridge — LOCAL, default closed
 
 New isolated paper-player registration page/API/provider and private SQL proposal atomically preserve complete address and middle/prefix/suffix/local distinction alongside a real legacy roster entry under the SAME ID. Existing V3 writer and records are unchanged. Exact duplicate selection opens the recorded person; distinct people require visibly distinct recorded names. No name/email merge, fake address, digital-account linking, payments, check-in or seating occurs during creation. Both shared V11 and own audited control must be enabled in a fictional fixture; hosted activation is explicitly refused.
