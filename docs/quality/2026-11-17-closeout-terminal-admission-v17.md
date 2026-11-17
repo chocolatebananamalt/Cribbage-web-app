@@ -1,0 +1,34 @@
+# Closeout V17 — local source integration, not activation
+
+Preserved frozen application cb6da09159622d63070534561d529d319bf077a9/tree045a94bbfa81f7fe0e341b885f60559fe6965d9a and prior V16 package. No publication retry, hosted SQL, permissions, flags, callback, production, practice tournament or session access.
+
+## Implemented
+
+New closed versioned SQL proposal combines immutable terminal storage, authorized session-locked explicit retirement, exact terminal readback, and nine source-pinned admission patches. These are actual current writer bodies, including the lower pool writer, generated selected award writer reconstructed through its existing checked clone program, legacy modern award writer and public lifecycle close. Pre-lock authorization/validation remains before the new common actor/op guard; later original role checks retain their original positions. All existing writer operation locks/effects follow the guard. Original code is otherwise byte-identical after newline normalization. New functions remain private, no grants; retirement default false. Enforcement and readback never depend on the NEW-retirement gate.
+
+Retirement serializes on the same common actor/op key. It returns existing bound accepted/incomplete/conflicting history through the original five operation readers. Every other known journal or lifecycle receipt blocks a no-effect claim. Only bound absence under the participating writer fence creates immutable retirement evidence with original actor/session/request, reason, timestamps and actual SQL operator provenance. It is not a normal accepted closure/payment receipt. No payouts/MRPs/ACC actions are performed.
+
+The helper patch generator refuses unexpected owner/SECURITY DEFINER/body hash, preserves OID/ACL/config and applies only the exact admission insertion. Wrong preimage/reapplication fails closed, never auto-repins. Full proposal must run in ONE transaction with an explicitly verified nonsuperuser postgres/BYPASSRLS installer. No installer or gate was run against hosted services.
+
+## Executed evidence and limits
+
+LATEST_RESULT.json is authoritative. Native PostgreSQL17.12 ran on a new owned 127.0.0.1 dynamic-port cluster with non-super postgres/BYPASSRLS. Tests compile actual nine writer bodies and actual five operation readers, apply/rollback then commit, preserve writer security identity, invoke each actual writer against retired op while gate OFF, preserve accepted history and unresolved manual authorization, serialize shared guard/retirement, deny every client role new execute, refuse incorrect source and recover exact terminal evidence while creation gate OFF. Owned PID stop, absent PID file, ECONNREFUSED and data removal are required.
+
+Important: Auth helpers, source validators, schema shape and access predicates are synthetic. Actual writers execute through admission denial, NOT successful financial effects. Existing accepted receipt is seeded synthetic history read through real reader code. This is not full mature-schema, genuine Auth, PostgREST, Next/browser or real payout/closeout acceptance. No runtime application UI/route changed; no broad unchanged application suites rerun. Initial fixture schema-owner, SQL-spacing and missing-outcome-table problems are recorded in prior failed runs, with cleanup; not product regressions.
+
+Final native run passed28groups, including actual five reader bodies. Strict cleanup passed. Required `pnpm verify` was attempted in the isolated source but could not start: pnpm is not on this execution environment's PATH. Dependency junction creation was also denied by filesystem access; no package installation, dependency repair or global configuration change attempted. Aggregate app verification remains INCOMPLETE; unchanged frozen V15 test evidence is not substituted for it. Portable patch check/application succeeds and all three output byte hashes match SOURCE_MANIFEST when Git is invoked with process-local `-c core.autocrlf=false`; default Windows conversion produced different bytes in the preserved first patch-check fixture. No global Git setting changed.
+
+## Remaining implementation/verification gates
+
+1. Reconcile nine exact source fingerprints with actual mature installed definitions/ACL and exhaustive effect-capable entrypoint scan. Catalog metadata from earlier packages is not current clearance. Other native/legacy financial entry points and derived child operation IDs must be explicitly covered or proven irrelevant. Current no-effect proof must NOT be used outside this bounded dependency graph.
+2. Establish a shared write-pause/drain covering ALL old and direct paths during installation. An already-running old function body can outlive CREATE OR REPLACE. Default false avoids issuing retirements before this is proven. Identity-adoption-only pause does not cover finance/lifecycle writers.
+3. Verify authentic session/role locks and auth.sessions privileges against mature schema, complete positive writer/retirement both-order effects, concurrent role revocation, immutable history, restore and rollback acceptance with real providers. Existing SQL guards preserve original runtime auth, but the synthetic fixture is not authority to enable anything.
+4. Only then expose narrowly granted versioned normal-client RPC wrappers + strict terminal DTO, explicit client immutable archive/CAS and fresh review/new director approval. Do not clear pending from absence, generic rejection, timeout, feature-disabled NULL or an untrusted client-created terminal payload. No app UI unlock shipped.
+
+## Recovery and publication
+
+Before any retirement exists, an uncommitted install can rollback atomically. After committed tombstones, disabling NEW retirement is safe; removing admission guards/table or disabling enforcement is NOT rollback. Preserve immutable evidence and use forward repair, never recreate old operation IDs. Any future deployment needs its own exact mature prerequisite/role/ACL/grant review.
+
+The separate app publication rejection remains untouched. See ../schedule-event-selection-v15-20261117-1050/PUBLICATION_BLOCKED.md for original normal non-force command and verbatim rejection. Tomorrow's request concerns publishing frozen cb6da091 to staging-only Preview, identity writes OFF, production/practice unchanged; it does not include this unactivated SQL proposal. Separate exact persistent branch-alias Auth callback approval remains required. No retry, alternate route, email or owner nudge was made.
+
+The first local clone attempt failed on Windows Git shell object creation. An ordinary local Git archive of the exact frozen commit was extracted instead; no remote/Git publication route was used. Dependency-junction creation was denied by filesystem access; no install/repair/workaround attempted. Native SQL tests do not require it. The archive copy is separate from every verified checkpoint.

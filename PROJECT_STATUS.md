@@ -1,3 +1,11 @@
+## 2026-11-17: Closeout V18 local API/UI and current-catalog admission integration — OFF
+
+Actual Final Event Review/API/IndexedDB recovery now has explicit no-effect retirement and immutable archive/CAS, with original bytes preserved and fresh approval required. Sixteen source-pinned writers and twelve delegate paths include manual clone/native/reopen gaps; current staging code/ACL metadata read only matches sixteen writer preimages. Local native terminal SQL plus synthetic Auth/capability/financial reads passed26phone/laptop browser cases; app3749/type/lint/provider/build pass. Aggregate pnpm verify unavailable, fresh audit incomplete, Next security warning retained. Full mature positive effects, all-path pause/drain, genuine Auth/PostgREST/SSR and runtime catalog capability implementation remain gates. New API gates/capability and page props stay OFF; no hosted apply, publication retry or practice/session access. V18 combined proposal supersedes unapplied V17, never install both. See docs/quality/2026-11-17-closeout-terminal-recovery-v18.md.
+
+## 2026-11-17: Closed closeout terminal admission proposal, LOCAL ONLY
+
+Nine exact source-pinned writer admission patches and immutable terminal retirement/readback are implemented in a separate default-closed SQL proposal. Actual writer/operation-reader bodies pass native denial/history tests against synthetic dependencies; positive effects, mature catalog/ACL/Auth/provider coverage and strict app DTO/UI remain unverified. No UI unlock, hosted changes or publication. Frozen cb6da091 preserved separately. See docs/quality/2026-11-17-closeout-terminal-admission-v17.md.
+
 ## 2026-11-17: V15 single local test candidate (V14 + schedule/start reliability)
 
 V15 builds on V14/53f6512 and fixes actual ScheduleClient selection/confirmation/recovery dead ends: deliberate event choice after list changes, exact-source Start consent with A-B-A invalidation, owner-scoped in-memory state and one always-reachable existing exact publication retry.28actual phone/laptop browser cases pass with explicit synthetic Auth/API/router; app3740pass/type0. Final broad outcomes and the ONE cumulative patch from publishedV13 are in the external V15 package and docs/quality/2026-11-17-schedule-selection-v15.md. No SQL/grants/flags/financial policy or hosted/user-draft/session change.
