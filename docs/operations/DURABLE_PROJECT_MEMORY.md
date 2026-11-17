@@ -1,3 +1,7 @@
+## 2026-11-17: V38 pool proposals connected to Results — LOCAL, default OFF
+
+Main-event finalized-qualification Results now has a gated read-only panel for current unsaved/saved/source-changed Q/Side proposals. Historical awards provide status only, never proposal amounts. Links reach existing ownership/review pages and return to the same event Results. Writers, calculations, fixed-$5/current award journals and their precedence remain unchanged. 26 focused, 3,875 app and 26 synthetic browser cases pass; no genuine provider/Next/editor-control acceptance. New gate stays literal false. No hosted, practice/session, publication or email action; V37 preserved. See docs/quality/2026-11-17-pool-proposal-results-v38.md.
+
 ## 2026-11-17: V37 integrated read-only event playoff progress — LOCAL, default OFF
 
 PrimaryDirector route links from Results/Preparation, joins existing currentpairings/generations to exactverifiedseries, and separates held/unprepared/waiting/unavailable/conflicting states. ExplicitMain/Consolation selection,Satellite separate; no qualification/prize/Q/Side settlement or fullResults acceptance inferred.21focused/3869app/22synthetic page->reader->SSR/browser cases pass, lint/type/provider/build pass. Gate remainsliteralfalse; genuineAuth/Next/provider/ACL acceptance pending. NoSQL/grant/flag/hosted/userdraft/session changes; V36 preserved. See docs/quality/2026-11-17-playoff-progress-v37.md.

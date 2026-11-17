@@ -1,0 +1,10 @@
+import Link from 'next/link';
+import type {PoolProposalResultsV38} from '../lib/results/pool-proposal-results-v38';
+import {SelectedStepPoolReviewV3} from './selected-step-pool-review-v3';
+const labels={unsaved:'Current calculated proposal — not saved',saved:'Saved proposal matches the current source — not final','changed-source':'Current source changed — a new proposal review is required'};
+export function PoolProposalResultsViewV38({view,tournamentId,eventId,reviewAvailable,ownershipAvailable}:{view:PoolProposalResultsV38|null;tournamentId:string;eventId:string;reviewAvailable:boolean;ownershipAvailable:boolean}){
+ const root='/tournament/'+tournamentId+'/finance/'+eventId;
+ return <section aria-label="Pool Proposal Status"><h2>Q-Pool and Side-Pool Proposal Status</h2><p>Qualification is locked separately. Proposed pool amounts are not final awards, payment records or bank-settlement evidence. Regular prizes remain separate; no total is combined across award journals.</p>
+ {!view?<p role="status">Current pool proposal evidence is unavailable. Unknown amounts are not zero.</p>:view.status==='held'?<p role="status">Pool proposal held: {view.code.replaceAll('_',' ')}. Amounts remain unknown.</p>:view.status==='historical-record'?<p role="status">A historical unpaid award record exists. It is not proof of current awards. Current pool awards are shown separately only when their source check succeeds.</p>:<><p role="status">{labels[view.status]}</p><SelectedStepPoolReviewV3 enabled review={view.review} readOnly/></>}
+ <nav aria-label="Pool review workflow">{ownershipAvailable&&<Link prefetch={false} href={root+'/pool-ownership'}>Review Pool Fund Ownership</Link>}{reviewAvailable&&<Link prefetch={false} href={root+'/pool-awards'}>Open Pool Proposal Review</Link>}</nav><p>Open the review screen for any explicit Director action. This Results panel never saves a proposal, finalizes awards, sends money or marks anyone paid. This is one Main-event pool workflow, not acceptance of the complete qualification, prize and pool Results flow.</p></section>;
+}
