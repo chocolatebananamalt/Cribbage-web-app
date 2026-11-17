@@ -1,3 +1,7 @@
+## 2026-11-17: V33 local scoring observation — default closed
+
+Read-only playoff observation added with exact current actor/state/intent/storage protection; existing write/archive bodies unchanged and gate FALSE. Ordinary LiveScoreEntry unchanged and separately tested both orders, later opponent updates, drafts and retained actions. Synthetic server/browser evidence only: not hosted defect resolution. 16focused/3855app tests pass, lint/type/provider/build pass; see docs/quality/2026-11-17-playoff-observation-v33.md for precise coverage and recovery-ID conflict limitation. Production/practice/session untouched; no publication/email.
+
 ## 2026-11-17: V32 private receipt evidence export — LOCAL, default closed
 
 Ordinary Payments now has a gated optional CSV download of fresh recorded receipt/void history using the existing normal authenticated ledger RPC. One download-local ordinal per immutable roster entry keeps identical names separate without exposing IDs. It retains unsigned evidence and historical other methods, leaves unrecorded amounts blank, omits notes/reasons/recorder/contact/ACC/internal identifiers, preserves Unicode, and discloses spreadsheet apostrophe protection inside the file. No balances, paid-in-full, reconciliation, refunds, event allocation, payout approval or ACC submission are inferred. Device preparation time is explicitly not server audit time.
