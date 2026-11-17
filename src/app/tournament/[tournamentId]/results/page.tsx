@@ -4,6 +4,9 @@ import{PoolProposalResultsViewV38}from'../../../../components/pool-proposal-resu
 import{selectedStepPoolPageEnabledV3}from'../../../../lib/finance/selected-step-pool-page-gates-v3';
 import{selectedStepOwnershipPageEnabledV3}from'../../../../lib/finance/selected-step-ownership-gates-v3';
 import{modernEventClosePageEnabledV1}from'../../../../lib/finance/modern-event-close-transport-v1';
+import{eventApprovalResultsEnabledV40,eventApprovalEventEligibleV40}from'../../../../lib/results/event-approval-results-v40';
+import{readResultsCompletionV40}from'../../../../lib/results/completion-read-v40';
+import{EventApprovalResultsViewV40}from'../../../../components/event-approval-results-v40';
 import{playoffProgressEnabledV37,progressEventEligibleV37}from'../../../../lib/playoffs/progress-v37';
 import { integratedTestBackendRef, integratedTestBackendOrigin } from '../../../../lib/integrated-test-target.ts';
 import{manualPreparationEnabledV1}from'../../../../lib/playoffs/modern-manual-preparation-contract-v1';
@@ -173,7 +176,10 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     }
   }
 
-  const poolProposal=showPoolProposal&&finalized?await readPoolProposalResultsV38({enabled:poolProposalResultsEnabledV38,normal:createNormalClient,service:()=>{const c=createServerOnlyAdminClient();return(n,a)=>c.rpc(n,a);},scope:{actorId:access.user.id,tournamentId,eventId:event},qualificationId:finalized.resultVersionId}):null;
+  const showApproval=eventApprovalResultsEnabledV40()&&!!finalized&&!finalReport&&!syntheticContext&&access.role==='director'&&eventApprovalEventEligibleV40(selectedEvent);
+  // The joint reader is the last awaited source and fences both optional views.
+  const completion=showApproval&&finalized?await readResultsCompletionV40({enabled:eventApprovalResultsEnabledV40,poolEnabled:showPoolProposal,normal:createNormalClient,service:()=>{const c=createServerOnlyAdminClient();return(n,a)=>c.rpc(n,a);},scope:{actorId:access.user.id,tournamentId,eventId:event},qualificationId:finalized.resultVersionId}):null;
+  const poolProposal=showApproval?completion?.poolProposal??null:showPoolProposal&&finalized?await readPoolProposalResultsV38({enabled:poolProposalResultsEnabledV38,normal:createNormalClient,service:()=>{const c=createServerOnlyAdminClient();return(n,a)=>c.rpc(n,a);},scope:{actorId:access.user.id,tournamentId,eventId:event},qualificationId:finalized.resultVersionId}):null;
   if (finalized) return <main className="auth-shell"><section className="auth-card standings-card" aria-labelledby="standings-title">
     {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
     <p className="eyebrow">TOURNAMENT RESULTS</p>
@@ -222,6 +228,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     {showSelectedStepPrizes&&<><ModernPrizeResultsV2 view={selectedStepPrizes}/>{selectedStepAwardPageEnabledV3()&&<Link className="guide-link" href={`/tournament/${tournamentId}/finance/${event}/selected-step-awards`}>Review Regular Prize Awards</Link>}</>}
       {showSelectedStepPrizes && selectedStepPrizes && modernPrizeExportEnabledV2() && <a href={`/api/v1/tournaments/${tournamentId}/events/${event}/regular-prize-report`}>Download Current Unpaid Regular Prize Awards CSV</a>}
     {showPoolProposal&&<PoolProposalResultsViewV38 view={poolProposal} tournamentId={tournamentId} eventId={event} reviewAvailable={selectedStepPoolPageEnabledV3()} ownershipAvailable={selectedStepOwnershipPageEnabledV3()}/>}
+    {showApproval&&<EventApprovalResultsViewV40 view={completion?.approval??null}/>}
     {showSelectedPoolAwards && <SelectedStepPoolResultsV3 view={selectedPoolAwards}/>}
     {showNativePoolAwards && <NativePoolAwardResultsV2 view={nativePoolAwards}/>}
     {finalReport ? <a className="guide-link" href={`/api/v1/tournaments/${tournamentId}/events/${event}/final-results.pdf`}>Download Final Event Results PDF</a> : null}
