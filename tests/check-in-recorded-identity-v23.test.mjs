@@ -70,4 +70,3 @@ test('actual Seating page gates the read affordance without changing legacy work
     assert.equal(authReads, gate && role === 'director' ? 1 : 0);
   }
 });
-

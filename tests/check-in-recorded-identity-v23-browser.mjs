@@ -127,4 +127,3 @@ finally {
   if (server) { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); result.cleanup.serverClosed = true; result.cleanup.listening = server.listening; }
   fs.writeFileSync(path.resolve('../BROWSER_RESULT.json'), JSON.stringify(result, null, 2));
 }
-
