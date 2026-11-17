@@ -39,6 +39,7 @@ test("event roster result is request-bound and validates paper and linked partic
   assert.equal(isEventRosterEnrollmentResult(result, request), true);
   assert.equal(isEventRosterEnrollmentResult({ ...result, eventId: rosterA }, request), false);
   assert.equal(isEventRosterEnrollmentResult({ ...result, createdCount: 1 }, request), false);
+  assert.equal(isEventRosterEnrollmentResult({ ...result, participants: [result.participants[0], {...result.participants[1], participantId:result.participants[0].participantId}] }, request), false);
   assert.equal(isEventRosterEnrollmentResult({ ...result, participants: [result.participants[0], result.participants[0]] }, request), false);
   assert.equal(isEventRosterEnrollmentResult({ ...result, participants: [{ ...result.participants[0], verificationId: "seat one" }, result.participants[1]] }, request), false);
 });
@@ -115,9 +116,11 @@ test("only documented rejection codes are exposed", () => {
 
 test("started-event enrollment is a terminal rejection with correction guidance", () => {
   const client = read("src/app/tournament/[tournamentId]/participants/participants-client.tsx");
-  assert.match(client, /response.status === 409 && isRejectedEventRosterEnrollment\(data\)/);
-  assert.match(client, /clearSaved\(storageKey\); setPending\(null\)/);
-  assert.match(client, /data.code === "event_already_started"/);
+  assert.match(client, /response.status\s*===\s*409\s*&&\s*isRejectedEventRosterEnrollment\(data\)/);
+  assert.match(client, /transitionAppRecoveryItem\(sessionStorage,storageKey,raw,null\)/);
+  assert.match(client, /canFinishRejectedEnrollmentV27\(outcome.code\)/);
+  assert.doesNotMatch(client, /sessionStorage\.removeItem|clearSaved/);
+  assert.match(client, /data.code\s*===\s*['"]event_already_started['"]/);
   assert.match(client, /already started.*existing correction tools/);
   assert.match(client, /Manage Doubles enrollment and supported team play/);
   assert.doesNotMatch(client, /doubles events remain paper-scored/);

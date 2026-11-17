@@ -1,131 +1,54 @@
 "use client";
-import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '../../../../lib/supabase/client';
+import { assertRecoveryStorageOwner } from '../../../../lib/auth/recovery-owner';
+import { transitionAppRecoveryItem, trackAppRecoveryWrite } from '../../../../lib/recovery-write-coordinator';
+import { isEventRosterEnrollmentRequest, isEventRosterEnrollmentResult, isRejectedEventRosterEnrollment, type EventRosterEnrollmentRequest, type EventRosterEnrollmentWorkspace } from '../../../../lib/api/event-roster-enrollment';
+import { readEnrollmentRecoveryV27, enrollmentRecoveryBytesV27, canFinishRejectedEnrollmentV27 } from '../../../../lib/events/roster-enrollment-recovery-v27';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import {
-  isEventRosterEnrollmentRequest,
-  isEventRosterEnrollmentResult,
-  isRejectedEventRosterEnrollment,
-  type EventRosterEnrollmentRequest,
-  type EventRosterEnrollmentWorkspace,
-} from "../../../../lib/api/event-roster-enrollment";
-
-type SavedRequest = { kind: "event-roster-enrollment"; request: EventRosterEnrollmentRequest };
-
-function isSavedRequest(value: unknown): value is SavedRequest {
-  return !!value && typeof value === "object" && !Array.isArray(value)
-    && Object.keys(value).length === 2
-    && (value as Record<string, unknown>).kind === "event-roster-enrollment"
-    && isEventRosterEnrollmentRequest((value as Record<string, unknown>).request);
-}
-function readSaved(key: string) {
-  try {
-    const value: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null");
-    return isSavedRequest(value) ? value.request : null;
-  } catch { return null; }
-}
-function writeSaved(key: string, request: EventRosterEnrollmentRequest) {
-  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-roster-enrollment", request })); return true; }
-  catch { return false; }
-}
-function clearSaved(key: string) { try { window.sessionStorage.removeItem(key); } catch { /* server receipt is authoritative */ } }
-
-export default function ParticipantsClient({ actorId, tournamentId, workspace }: {
-  actorId: string;
-  tournamentId: string;
-  workspace: EventRosterEnrollmentWorkspace;
-}) {
-  const router = useRouter();
-  const storageKey = `event-roster-enrollment:${actorId}:${tournamentId}`;
-  const digitalEvents = useMemo(() => workspace.events.filter((event) => event.format === "standard_singles" && event.scoringMethod === "digital"), [workspace.events]);
-  const [eventId, setEventId] = useState(digitalEvents[0]?.eventId ?? "");
-  const [selected, setSelected] = useState<string[]>([]);
-  const [pending, setPending] = useState<EventRosterEnrollmentRequest | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const flight = useRef(false);
-  const activeEvent = digitalEvents.find((event) => event.eventId === eventId);
-  const eligible = workspace.roster.filter((entry) => entry.checkInState === "checked_in");
-  const unenrolled = eligible.filter((entry) => !entry.enrolledEventIds.includes(eventId));
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const saved = readSaved(storageKey);
-      if (saved) {
-        setPending(saved);
-        setEventId(saved.eventId);
-        setSelected(saved.rosterEntryIds);
-        setMessage("A prior enrollment request is unresolved. Retry this exact saved request.");
-      }
-      setReady(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [storageKey]);
-
-  async function submit(request: EventRosterEnrollmentRequest) {
-    if (busy || flight.current) return;
-    flight.current = true; setBusy(true); setPending(request); setMessage(null);
+type Outcome={kind:'accepted';createdCount:number;existingCount:number}|{kind:'rejected';code:string};
+export default function ParticipantsClient({actorId,tournamentId,workspace}:{actorId:string;tournamentId:string;workspace:EventRosterEnrollmentWorkspace}) {
+  const router=useRouter(),storageKey=`event-roster-enrollment:${actorId}:${tournamentId}`;
+  const events=useMemo(()=>workspace.events.filter(e=>e.format==='standard_singles'&&e.scoringMethod==='digital'),[workspace.events]);
+  const [eventId,setEventId]=useState(events[0]?.eventId??''),[selected,setSelected]=useState<string[]>([]),[pending,setPending]=useState<EventRosterEnrollmentRequest|null>(null),[raw,setRaw]=useState<string|null>(null),[outcome,setOutcome]=useState<Outcome|null>(null),[busy,setBusy]=useState(false),[ready,setReady]=useState(false),[blocked,setBlocked]=useState(false),[message,setMessage]=useState<string|null>(null);
+  const alive=useRef(false),epoch=useRef(0),flight=useRef(false),owner=useMemo(()=>({actorId,tournamentId}),[actorId,tournamentId]),liveOwner=useRef(owner);
+  const intent=useMemo(()=>({owner,workspace,eventId,selected,pending,raw,outcome,busy,ready,blocked}),[owner,workspace,eventId,selected,pending,raw,outcome,busy,ready,blocked]),liveIntent=useRef<object|null>(null);
+  useLayoutEffect(()=>{alive.current=true;liveOwner.current=owner;liveIntent.current=intent;return()=>{alive.current=false;if(liveIntent.current===intent)liveIntent.current=null;};},[intent,owner]);
+  const current=()=>alive.current&&liveOwner.current===owner;
+  const act=()=>{if(!current()||liveIntent.current!==intent||!ready||blocked)return false;try{assertRecoveryStorageOwner(actorId);return true;}catch{liveIntent.current=null;epoch.current++;setBlocked(true);setOutcome(null);setMessage('Recovery ownership changed. Reload before continuing; retained bytes are preserved.');return false;}};
+  const invalidate=()=>{liveIntent.current=null;return ++epoch.current;};
+  const fingerprint=JSON.stringify(workspace),priorSource=useRef(fingerprint);
+  useLayoutEffect(()=>{if(priorSource.current===fingerprint)return;priorSource.current=fingerprint;liveIntent.current=null;epoch.current++;const sourceEpoch=epoch.current;queueMicrotask(()=>{if(!alive.current||epoch.current!==sourceEpoch)return;setSelected([]);setOutcome(null);if(!pending&&!events.some(e=>e.eventId===eventId))setEventId('');setMessage('The event or roster changed. Review current players before a new enrollment. Retained recovery is unchanged.');});},[fingerprint,eventId,events,pending]);
+  useEffect(()=>{
+    alive.current=true;let active=true;
+    queueMicrotask(()=>{if(!active)return;try{assertRecoveryStorageOwner(actorId);const bytes=sessionStorage.getItem(storageKey),saved=readEnrollmentRecoveryV27(bytes);setRaw(bytes);setPending(saved);setReady(true);if(bytes!==null){if(saved){setEventId(saved.eventId);setSelected(saved.rosterEntryIds);setMessage('A prior enrollment is retained. Retry only this exact saved request.');}else{setBlocked(true);setMessage('Unrecognized enrollment recovery is preserved. No new enrollment will be sent.');}}}catch{setBlocked(true);setMessage('Recovery ownership or storage is unavailable. No enrollment was sent.');}});
+    let unsubscribe=()=>{};try{const subscription=createClient().auth.onAuthStateChange(event=>{if(!active||event==='INITIAL_SESSION')return;liveIntent.current=null;epoch.current++;setBlocked(true);setOutcome(null);setMessage('Your sign-in context changed. Reload this page before continuing. Retained enrollment is preserved.');});unsubscribe=()=>subscription.data.subscription.unsubscribe();}catch{liveIntent.current=null;epoch.current++;queueMicrotask(()=>{if(active){setBlocked(true);setMessage('Sign-in monitoring is unavailable. Retained enrollment is preserved.');}});}
+    return()=>{active=false;alive.current=false;liveIntent.current=null;unsubscribe();};
+  },[actorId,storageKey]);
+  const activeEvent=events.find(e=>e.eventId===eventId),eligible=workspace.roster.filter(e=>e.checkInState==='checked_in'),unenrolled=eligible.filter(e=>!e.enrolledEventIds.includes(eventId));
+  async function submit(request:EventRosterEnrollmentRequest,bytes:string) {
+    if(flight.current)return;const ticket=invalidate();flight.current=true;setBusy(true);setOutcome(null);setMessage(null);
+    const valid=()=>current()&&epoch.current===ticket&&sessionStorage.getItem(storageKey)===bytes;
     try {
-      const response = await fetch(`/api/v1/tournaments/${tournamentId}/event-roster-enrollment`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        credentials: "same-origin",
-        cache: "no-store",
-        body: JSON.stringify(request),
-      });
-      const data: unknown = await response.json().catch(() => null);
-      if (response.ok && isEventRosterEnrollmentResult(data, request)) {
-        clearSaved(storageKey); setPending(null); setSelected([]);
-        setMessage(`${data.createdCount} player${data.createdCount === 1 ? "" : "s"} enrolled. ${data.existingCount ? `${data.existingCount} already enrolled.` : ""}`.trim());
-        router.refresh();
-      } else if (response.status === 409 && isRejectedEventRosterEnrollment(data)) {
-        clearSaved(storageKey); setPending(null);
-        setMessage(data.code === "event_already_started"
-          ? "Enrollment was not changed because this event has already started. Review the event's existing correction tools."
-          : "Enrollment was not changed. Refresh the roster and review check-in status before retrying.");
-      } else {
-        setMessage("The request is unresolved. Retry the same protected request.");
-      }
-    } catch {
-      setMessage("The request is unresolved. Retry the same protected request.");
-    } finally { flight.current = false; setBusy(false); }
+      assertRecoveryStorageOwner(actorId);if(sessionStorage.getItem(storageKey)!==bytes)throw Error('recovery_changed');
+      const {response,data}=await trackAppRecoveryWrite(async()=>{const response=await fetch(`/api/v1/tournaments/${tournamentId}/event-roster-enrollment`,{method:'POST',headers:{'content-type':'application/json','x-expected-actor-id':actorId},credentials:'same-origin',cache:'no-store',body:JSON.stringify(request)});const data:unknown=await response.json().catch(()=>null);return {response,data};});
+      assertRecoveryStorageOwner(actorId);if(!valid())return;
+      if(response.ok&&isEventRosterEnrollmentResult(data,request)){setOutcome({kind:'accepted',createdCount:data.createdCount,existingCount:data.existingCount});setMessage(`${data.createdCount} player${data.createdCount===1?'':'s'} enrolled. ${data.existingCount} already enrolled. Finish this confirmed request before another enrollment.`);}
+      else if(response.status===409&&isRejectedEventRosterEnrollment(data)){setOutcome({kind:'rejected',code:data.code});setMessage(data.code==='idempotency_conflict'?'The operation reference conflicts. Keep this recovery for review; no new enrollment is enabled.':!canFinishRejectedEnrollmentV27(data.code)?'This rejection needs review. Retained enrollment is preserved; no new operation is enabled.':data.code==='event_already_started'?"Enrollment was not changed because this event has already started. Use the existing correction tools; finish the confirmed no-change result here.":'Enrollment was not changed. Review the current roster and check-in status after finishing this confirmed no-change result.');}
+      else setMessage('The enrollment outcome is unconfirmed. Keep this request and retry it exactly; nothing was cleared.');
+    }catch{if(current()&&epoch.current===ticket)setMessage('The enrollment outcome is unconfirmed. Retained bytes are preserved; do not clear browser data.');}
+    finally{flight.current=false;if(current())setBusy(false);}
   }
-
-  function startEnrollment() {
-    if (!eventId || selected.length === 0 || pending) return;
-    const request = { eventId, rosterEntryIds: selected, idempotencyKey: crypto.randomUUID() };
-    if (!isEventRosterEnrollmentRequest(request) || !writeSaved(storageKey, request)) {
-      setMessage("This browser cannot safely retain the enrollment request for retry.");
-      return;
-    }
-    void submit(request);
-  }
-
-  if (workspace.events.length === 0) return <section className="correction-item"><h2>Activate tournament events first</h2><p>Save and activate the tournament setup before assigning players to events.</p></section>;
-  if (digitalEvents.length === 0) return <section className="correction-item"><h2>No digital Standard Singles event</h2><p>Manage Doubles enrollment and supported team play in <a href={`/tournament/${tournamentId}/teams`}>Team Scorecards</a>. Review other formats in their existing event controls.</p></section>;
-
+  function startEnrollment(){if(!act()||busy||flight.current||pending||raw!==null||!activeEvent||!selected.length)return;const allowed=new Set(unenrolled.map(e=>e.rosterEntryId));if(!selected.every(id=>allowed.has(id))){setMessage('Review the current checked-in players before enrolling.');return;}const request={eventId,rosterEntryIds:[...selected],idempotencyKey:crypto.randomUUID()},bytes=enrollmentRecoveryBytesV27(request);try{if(!isEventRosterEnrollmentRequest(request)||!transitionAppRecoveryItem(sessionStorage,storageKey,null,bytes))throw Error('recovery');setRaw(bytes);setPending(request);void submit(request,bytes);}catch{invalidate();setBlocked(true);setMessage('This browser cannot safely retain this enrollment. Existing recovery is preserved; no new request was sent.');}}
+  function retry(){if(!act()||busy||flight.current||!pending||raw===null||outcome?.kind==='accepted'||outcome?.kind==='rejected')return;void submit(pending,raw);}
+  function finish(){if(!act()||busy||flight.current||!pending||raw===null||!outcome||outcome.kind==='rejected'&&!canFinishRejectedEnrollmentV27(outcome.code))return;invalidate();try{if(!transitionAppRecoveryItem(sessionStorage,storageKey,raw,null))throw Error('changed');setRaw(null);setPending(null);setSelected([]);setOutcome(null);setMessage('Confirmed request finished. Review the refreshed event roster before another enrollment.');router.refresh();}catch{setBlocked(true);setMessage('Recovery changed or could not be cleared safely. Keep the retained record for review.');}}
+  const disabled=!ready||busy||blocked||!!pending||raw!==null;
   return <section className="policy-settings">
-    <section className="correction-item">
-      <h2>Choose Event</h2>
-      <label>Event<select className="check-in-control" value={eventId} disabled={!ready || busy || !!pending} onChange={(event) => { setEventId(event.target.value); setSelected([]); }}>
-        {digitalEvents.map((event) => <option key={event.eventId} value={event.eventId}>{event.name} · {event.participantCount} enrolled</option>)}
-      </select></label>
-      <p>{workspace.registrationClosed ? "Registration closed" : "Registration open"} · {workspace.seatingPublished ? "Verification IDs assigned" : "Initial seating not yet published"}</p>
-    </section>
-    <section className="correction-item">
-      <div className="participant-selection-heading"><div><h2>Checked-in Players</h2><p>Select the players joining {activeEvent?.name ?? "this event"}. Existing participants remain selected in the event record.</p></div><button className="secondary" type="button" disabled={!ready || busy || !!pending || unenrolled.length === 0} onClick={() => setSelected(unenrolled.map((entry) => entry.rosterEntryId))}>Select all not enrolled</button></div>
-      <ul className="participant-selection-list">
-        {eligible.map((entry) => {
-          const enrolled = entry.enrolledEventIds.includes(eventId);
-          return <li key={entry.rosterEntryId}><label><input type="checkbox" checked={enrolled || selected.includes(entry.rosterEntryId)} disabled={enrolled || !ready || busy || !!pending} onChange={(event) => setSelected((current) => event.target.checked ? [...current, entry.rosterEntryId] : current.filter((id) => id !== entry.rosterEntryId))} /><span><strong>{entry.displayName}</strong><small>{entry.scorecardType === "digital" ? "Digital scorecard" : "Paper scorecard"} · {entry.profileLinked ? "App account linked" : "No app account linked"}{entry.verificationId ? ` · ID # ${entry.verificationId}` : " · ID assigned with seating"}</small></span><b>{enrolled ? "Enrolled" : "Available"}</b></label></li>;
-        })}
-        {eligible.length === 0 ? <li>No checked-in players are available yet.</li> : null}
-      </ul>
-      {pending ? <button className="primary" type="button" disabled={busy} onClick={() => void submit(pending)}>{busy ? "Enrolling…" : "Retry exact saved enrollment"}</button> : <button className="primary" type="button" disabled={!ready || busy || selected.length === 0} onClick={startEnrollment}>Enroll selected players</button>}
-      {message ? <p className="live-status" role="status">{message}</p> : null}
-    </section>
+    {raw!==null&&<section className="correction-item" aria-label="Saved enrollment recovery"><h2>Saved enrollment recovery</h2><p>Recovery remains available even if the saved event is no longer listed. No request is retried automatically.</p>{pending&&!outcome&&<button type="button" disabled={!ready||busy||blocked} onClick={retry}>{busy?'Enrolling.':'Retry exact saved enrollment'}</button>}{outcome?.kind==='accepted'&&<button type="button" disabled={busy||blocked} onClick={finish}>Finish confirmed enrollment</button>}{outcome?.kind==='rejected'&&canFinishRejectedEnrollmentV27(outcome.code)&&<button type="button" disabled={busy||blocked} onClick={finish}>Finish confirmed no-change result</button>}</section>}
+    {workspace.events.length===0?<section className="correction-item"><h2>Activate tournament events first</h2><p>Save and activate setup before assigning players to events.</p></section>:events.length===0?<section className="correction-item"><h2>No digital Standard Singles event</h2><p>Manage Doubles enrollment and supported team play in <a href={`/tournament/${tournamentId}/teams`}>Team Scorecards</a>. Review other formats in existing event controls.</p></section>:<>
+      <section className="correction-item"><h2>Choose Event</h2><label>Event<select className="check-in-control" value={eventId} disabled={disabled} onChange={e=>{if(!act()||disabled)return;invalidate();setEventId(e.target.value);setSelected([]);}}><option value="">Choose event</option>{events.map(e=><option key={e.eventId} value={e.eventId}>{e.name} - {e.participantCount} enrolled</option>)}</select></label><p>{workspace.registrationClosed?'Registration closed':'Registration open'} - {workspace.seatingPublished?'Verification IDs assigned':'Initial seating not yet published'}</p></section>
+      <section className="correction-item"><div className="participant-selection-heading"><div><h2>Checked-in Players</h2><p>Select players joining {activeEvent?.name??'the chosen event'}. Existing participants remain in the event record.</p></div><button className="secondary" type="button" disabled={disabled||!activeEvent||!unenrolled.length} onClick={()=>{if(!act()||disabled||!activeEvent)return;invalidate();setSelected(unenrolled.map(e=>e.rosterEntryId));}}>Select all not enrolled</button></div><ul className="participant-selection-list">{eligible.map(entry=>{const enrolled=entry.enrolledEventIds.includes(eventId);return <li key={entry.rosterEntryId}><label><input type="checkbox" checked={enrolled||selected.includes(entry.rosterEntryId)} disabled={enrolled||disabled||!activeEvent} onChange={e=>{if(!act()||disabled||enrolled)return;invalidate();setSelected(ids=>e.target.checked?[...ids,entry.rosterEntryId]:ids.filter(id=>id!==entry.rosterEntryId));}}/><span><strong>{entry.displayName}</strong><small>{entry.scorecardType==='digital'?'Digital scorecard':'Paper scorecard'} - {entry.profileLinked?'App account linked':'No app account linked'}{entry.verificationId?` - ID # ${entry.verificationId}`:' - ID assigned with seating'}</small></span><b>{enrolled?'Enrolled':'Available'}</b></label></li>})}{!eligible.length&&<li>No checked-in players are available yet.</li>}</ul><button className="primary" type="button" disabled={disabled||!activeEvent||!selected.length} onClick={startEnrollment}>Enroll selected players</button></section>
+    </>}{message&&<p className="live-status" role="status">{message}</p>}
   </section>;
 }

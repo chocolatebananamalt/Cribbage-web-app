@@ -25,9 +25,9 @@ export default async function ParticipantsPage({ params }: { params: Promise<{ t
     <h1 id="participants-title">Event Participants</h1>
     <p className="auth-note">Enroll checked-in players in each Standard Singles event. A player without app access remains a paper participant; the event and scorecard record still exist for cross-checking.</p>
     <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to tournament</Link>
-    <ParticipantsClient actorId={access.user.id} tournamentId={tournamentId} workspace={workspace} />
+    <ParticipantsClient key={JSON.stringify([access.user.id,tournamentId])} actorId={access.user.id} tournamentId={tournamentId} workspace={workspace} />
     <Link className="guide-link" href={`/tournament/${tournamentId}/participant-status`}>Attendance, Disqualification, and Reinstatement</Link>
-    {mrpMembershipManualReviewRoutesEnabledV1()&&access.role==='director'&&<MrpMembershipReviewProviderV1 enabled actorId={access.user.id} tournamentId={tournamentId} projectUrl={getPublicSupabaseEnv().url} workspace={workspace}/>} 
+    {mrpMembershipManualReviewRoutesEnabledV1()&&access.role==='director'&&<MrpMembershipReviewProviderV1 enabled actorId={access.user.id} tournamentId={tournamentId} projectUrl={getPublicSupabaseEnv().url} workspace={workspace}/>}
     {consyAddonDirectorRoutesEnabledV1()&&['director','co_director'].includes(access.role)&&<ConsyAddonDirectorProviderV1 enabled actorId={access.user.id} tournamentId={tournamentId} projectUrl={getPublicSupabaseEnv().url} workspace={workspace}/>}
     <SharedDeviceSignOut />
   </section></main>;

@@ -93,12 +93,14 @@ export function isEventRosterEnrollmentResult(
     || !Array.isArray(value.participants) || value.participants.length !== value.requestedCount) return false;
   const requested = new Set(request.rosterEntryIds);
   const seen = new Set<string>();
+  const seenParticipants = new Set<string>();
   return value.participants.every((item) => {
     if (!record(item) || !exact(item, ["rosterEntryId", "participantId", "profileLinked", "verificationId"])) return false;
     if (!isUuid(item.rosterEntryId) || !requested.has(item.rosterEntryId) || seen.has(item.rosterEntryId)
-      || !isUuid(item.participantId) || typeof item.profileLinked !== "boolean"
+      || !isUuid(item.participantId) || seenParticipants.has(item.participantId.toLowerCase()) || typeof item.profileLinked !== "boolean"
       || !(item.verificationId === null || (typeof item.verificationId === "string" && /^[A-Z]-[1-9][0-9]*$/.test(item.verificationId)))) return false;
     seen.add(item.rosterEntryId);
+    seenParticipants.add(item.participantId.toLowerCase());
     return true;
   });
 }

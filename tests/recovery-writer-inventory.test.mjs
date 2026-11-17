@@ -5,10 +5,22 @@ import path from 'node:path';
 import ts from 'typescript';
 import {isAppRecoveryStorageKey,countAppSessionStorageRecords,clearAppSessionStorage} from '../src/lib/client-session-storage.ts';
 const inventory=JSON.parse(fs.readFileSync('docs/quality/2026-10-28-recovery-writer-inventory.json','utf8'));
+function usesCoordinatedCAS(source){
+ const ast=ts.createSourceFile('writer.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),bindings=new Set();
+ for(const node of ast.statements)if(ts.isImportDeclaration(node)&&ts.isStringLiteral(node.moduleSpecifier)&&/\/recovery-write-coordinator(?:\.ts)?$/.test(node.moduleSpecifier.text)&&node.importClause?.namedBindings&&ts.isNamedImports(node.importClause.namedBindings))for(const item of node.importClause.namedBindings.elements)if((item.propertyName?.text??item.name.text)==='transitionAppRecoveryItem')bindings.add(item.name.text);
+ let called=false;const visit=node=>{if(ts.isCallExpression(node)&&ts.isIdentifier(node.expression)&&bindings.has(node.expression.text)&&node.arguments.length>=4&&/^(?:window\.)?sessionStorage$/.test(node.arguments[0].getText(ast)))called=true;ts.forEachChild(node,visit)};visit(ast);return called;
+}
+test('inventory recognizes actual coordinator CAS calls, not comments or an unrelated function',()=>{
+ const sample="import {transitionAppRecoveryItem} from '../lib/recovery-write-coordinator'; transitionAppRecoveryItem(sessionStorage,key,raw,null)";
+ assert.ok(usesCoordinatedCAS(sample));assert.equal(usesCoordinatedCAS('// '+sample),false);assert.equal(usesCoordinatedCAS(sample.replace('recovery-write-coordinator','unsafe')),false);assert.equal(usesCoordinatedCAS(sample.replace('transitionAppRecoveryItem(sessionStorage','unrelated(sessionStorage')),false);
+ const coordinator=fs.readFileSync('src/lib/recovery-write-coordinator.ts','utf8'),ast=ts.createSourceFile('coordinator.ts',coordinator,ts.ScriptTarget.Latest,true),transition=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='transitionAppRecoveryItem');
+ assert.match(transition.body.getText(ast),/assertRecoveryWriteAllowed\(\)/);assert.match(transition.body.getText(ast),/storage.getItem\(key\) !== expected/);assert.match(transition.body.getText(ast),/isAppRecoveryStorageKey/);
+});
+
 test('every inventoried retained writer uses the coordinator and every literal prefix is counted',()=>{
   let checked=0;
   for(const {path:file} of inventory.synchronousWriters){
-    const source=fs.readFileSync(file,'utf8');assert.match(source,/setAppRecoveryItem|setPublicCheckInRecoveryItem/);assert.doesNotMatch(source,/(?:sessionStorage|storage)\.setItem\(/);
+    const source=fs.readFileSync(file,'utf8');assert.ok(/setAppRecoveryItem|setPublicCheckInRecoveryItem/.test(source)||usesCoordinatedCAS(source),file+' must use the protected storage coordinator');assert.doesNotMatch(source,/(?:sessionStorage|storage)\.setItem\(/);
     const ast=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
     const visit=node=>{const value=ts.isTemplateExpression(node)?node.head.text:ts.isStringLiteral(node)?node.text:null;
       if(value&&/^[a-z][a-z0-9-]*:/.test(value)&&!/^https?:/.test(value)){assert.equal(isAppRecoveryStorageKey(value),true,`${file}: unregistered recovery prefix`);checked++;}ts.forEachChild(node,visit);};visit(ast);
