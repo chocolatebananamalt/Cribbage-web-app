@@ -1,3 +1,7 @@
+## 2026-11-17: V39 Results to final approval workflow - LOCAL ONLY
+
+Finalized Main/Consolation digital singles Results and existing pool review now reach the exact event Final Event Approval route under its unchanged capability gate. Final review returns to same-event Results rather than advertising an unconditional Main-only pool editor. Existing regular-prize embedded approval, server authority, manual approvals, write gates, calculations and recovery are unchanged. Navigation is not readiness, settlement or payment evidence. See docs/quality/2026-11-17-final-review-workflow-v39.md. Production, practice data and all hosted settings untouched; V38 preserved.
+
 ## 2026-11-17: V38 pool proposals connected to Results — LOCAL, default OFF
 
 Main-event finalized-qualification Results now has a gated read-only panel for current unsaved/saved/source-changed Q/Side proposals. Historical awards provide status only, never proposal amounts. Links reach existing ownership/review pages and return to the same event Results. Writers, calculations, fixed-$5/current award journals and their precedence remain unchanged. 26 focused, 3,875 app and 26 synthetic browser cases pass; no genuine provider/Next/editor-control acceptance. New gate stays literal false. No hosted, practice/session, publication or email action; V37 preserved. See docs/quality/2026-11-17-pool-proposal-results-v38.md.

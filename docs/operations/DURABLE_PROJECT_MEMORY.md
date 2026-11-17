@@ -2364,3 +2364,8 @@ Default-off V8 gate now has exact nnhcnvksxgxnpvdqjgpg / codex/integrated-test-a
 ## 2026-11-17: manual recovery and distinct-person boundary
 Daron reaffirms that distinct people may share legal name/address; preserve separate stable identities and distinguish them at check-in with middle name/prefix/suffix or the agreed local desk label, preserving legal report names and avoiding DOB. V22 recovery matches only own actor/tournament/operation receipts and original roster IDs, with no name/address/latest-row fallback or merge. Two preaccepted fictional IDs are tested; creation/duplicate prompt and actual check-in/scorecard differentiation remain separate unverified identity requirements. V22 stores only existing operation metadata and holds null/unknown outcomes. Its exact local getter-family correction is not hosted applied; unverified identity gates remain off.
 
+
+
+## 2026-11-17 - V39 local integrated Results transition
+
+Owner prioritizes completion of qualification/prize/pool Results. Found missing direct Results and pool-proposal navigation to existing final approval; regular-prize page already embeds controls and remains unchanged. Connect exact event paths only behind existing capabilities; availability is never approval readiness. Final review returns to Results to avoid unconditional Main pool link for Consolation or disabled lane. No math, provider, SQL, permissions, gates or recovery behavior changed; no publication or practice/session access. This is independent local navigation acceptance, not genuine signed-in approval/settlement acceptance.

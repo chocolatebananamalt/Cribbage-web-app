@@ -3,6 +3,7 @@ import{readPoolProposalResultsV38}from'../../../../lib/results/pool-proposal-rea
 import{PoolProposalResultsViewV38}from'../../../../components/pool-proposal-results-v38';
 import{selectedStepPoolPageEnabledV3}from'../../../../lib/finance/selected-step-pool-page-gates-v3';
 import{selectedStepOwnershipPageEnabledV3}from'../../../../lib/finance/selected-step-ownership-gates-v3';
+import{modernEventClosePageEnabledV1}from'../../../../lib/finance/modern-event-close-transport-v1';
 import{playoffProgressEnabledV37,progressEventEligibleV37}from'../../../../lib/playoffs/progress-v37';
 import { integratedTestBackendRef, integratedTestBackendOrigin } from '../../../../lib/integrated-test-target.ts';
 import{manualPreparationEnabledV1}from'../../../../lib/playoffs/modern-manual-preparation-contract-v1';
@@ -227,6 +228,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     {canManageDisputes ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/disputes`}>Open Event Dispute Register</Link> : null}
     {(access.role === "director" || access.role === "co_director") && selectedEvent.eventType === "main" && finalized.qualifierCount === 5 ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/playoff-v4`}>Record Five-qualifier Playoff and Byes</Link> : null}
     {consolationPlayoffHref ? <Link className="guide-link" href={consolationPlayoffHref}>Review Simulated Consolation Playoff</Link> : null}
+    {!finalReport&&!syntheticContext&&access.role==='director'&&modernEventClosePageEnabledV1()&&['main','consolation'].includes(selectedEvent.eventType)&&selectedEvent.format==='standard_singles'&&selectedEvent.scoringMethod==='digital'&&<section aria-label="Event approval workflow"><h2>Review Final Approval and Event Closure</h2><p>Qualification, regular prizes and optional pools are reviewed separately. Open the current requirements before approving unpaid awards or closing this event. An available link does not mean the records are ready. Payments and ACC submission remain separate.</p><Link prefetch={false} className="guide-link" href={`/tournament/${tournamentId}/finance/${event}/final-review`}>Open Final Event Approval</Link></section>}
     {(access.role === "director" || access.role === "co_director") ? <Link className="guide-link" href={`/tournament/${tournamentId}/events/${event}/settlement`}>Open Post-event Draft</Link> : null}
     <Link className="guide-link" href={`/tournament/${tournamentId}/scorecard?event=${event}`}>Back to Scorecard</Link>
     {canViewResults ? <Link className="guide-link" href={`/tournament/${tournamentId}/results`}>Previous Screen</Link> : null}

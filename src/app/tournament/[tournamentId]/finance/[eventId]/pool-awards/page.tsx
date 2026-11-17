@@ -6,9 +6,10 @@ import{selectedStepPoolPageEnabledV3,selectedStepPoolWritesVerifiedV3}from'../..
 import{requireTournamentAccess}from'../../../../../../lib/auth/require-tournament-access';
 import{createClient}from'../../../../../../lib/supabase/server';
 import{isUuid}from'../../../../../../lib/api/validation';
+import{modernEventClosePageEnabledV1}from'../../../../../../lib/finance/modern-event-close-transport-v1';
 export const dynamic='force-dynamic';
 export default async function PoolAwardsPage({params}:{params:Promise<{tournamentId:string;eventId:string}>}){
  if(!selectedStepPoolPageEnabledV3())notFound();const{tournamentId,eventId}=await params;if(!isUuid(tournamentId)||!isUuid(eventId))notFound();const access=await requireTournamentAccess(tournamentId);if(access.role!=='director')notFound();
  const c=await createClient(),r=await c.auth.getUser();if(r.error||r.data.user?.id!==access.user.id)notFound();
- return <>{selectedStepOwnershipPageEnabledV3()&&<Link href={`/tournament/${tournamentId}/finance/${eventId}/pool-ownership`}>Review Fund Ownership</Link>}<SelectedStepPoolJournalSectionV3 enabled scope={{actorId:access.user.id,tournamentId,eventId}} role={access.role} writesVerified={selectedStepPoolWritesVerifiedV3()}/><Link prefetch={false} href={`/tournament/${tournamentId}/results?event=${eventId}`}>Back to Event Results</Link></>;
+ return <>{selectedStepOwnershipPageEnabledV3()&&<Link href={`/tournament/${tournamentId}/finance/${eventId}/pool-ownership`}>Review Fund Ownership</Link>}<SelectedStepPoolJournalSectionV3 enabled scope={{actorId:access.user.id,tournamentId,eventId}} role={access.role} writesVerified={selectedStepPoolWritesVerifiedV3()}/>{modernEventClosePageEnabledV1()&&<section aria-label="After pool proposal review"><h2>Next: Review Event Approval Requirements</h2><p>A saved pool proposal is not a final award. Review the current records and explicitly approve any required unpaid awards on the next screen. Opening that screen does not save, pay or close anything.</p><Link prefetch={false} href={`/tournament/${tournamentId}/finance/${eventId}/final-review`}>Open Final Event Approval</Link></section>}<Link prefetch={false} href={`/tournament/${tournamentId}/results?event=${eventId}`}>Back to Event Results</Link></>;
 }
