@@ -1,0 +1,16 @@
+import {isUuid} from '../api/validation.ts';
+export const directorUnresolvedGamesEnabledV31=()=>false;
+type Side={name:string;fixedId:string;chair:string};
+export type DirectorUnresolvedGamesV31={kind:'director-unresolved-games-v31';actorId:string;tournamentId:string;scope:'ordinary-standard-singles-digital-events';observedAt:string;afterGameId:string|null;totalUnresolved:number;hasMore:boolean;nextCursor:string|null;rows:{gameId:string;eventId:string;eventName:string;gameNumber:number;matchInstance:number;state:'pending'|'submitted'|'confirmation_pending'|'mismatch'|'verified'|'corrected';sideA:Side;sideB:Side}[]};
+const obj=(x:unknown):x is Record<string,unknown>=>!!x&&typeof x==='object'&&!Array.isArray(x);
+const exact=(x:unknown,keys:string[]):x is Record<string,unknown>=>obj(x)&&Object.keys(x).length===keys.length&&keys.every(k=>Object.hasOwn(x,k));
+const text=(x:unknown):x is string=>typeof x==='string'&&!!x.trim()&&x.length<=200&&!/[\u0000-\u001f\u007f]|[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}|temporary\s*id\s*#\s*\d+/i.test(x.normalize('NFKC'));
+const whole=(x:unknown,min=0,max=Number.MAX_SAFE_INTEGER)=>Number.isSafeInteger(x)&&Number(x)>=min&&Number(x)<=max;
+const side=(x:unknown):x is Side=>exact(x,['name','fixedId','chair'])&&text(x.name)&&typeof x.fixedId==='string'&&/^[A-Z]-[1-9][0-9]*$/.test(x.fixedId)&&typeof x.chair==='string'&&/^[A-Z]-[1-9][0-9]*$/.test(x.chair);
+export function readDirectorUnresolvedGamesV31(raw:unknown,expected:{actorId:string;tournamentId:string;afterGameId:string|null},now=Date.now()):DirectorUnresolvedGamesV31|null {try{
+ if(!isUuid(expected.actorId)||!isUuid(expected.tournamentId)||expected.afterGameId!==null&&!isUuid(expected.afterGameId)||!exact(raw,['kind','actorId','tournamentId','scope','observedAt','afterGameId','totalUnresolved','hasMore','nextCursor','rows'])||raw.kind!=='director-unresolved-games-v31'||raw.scope!=='ordinary-standard-singles-digital-events'||raw.actorId!==expected.actorId||raw.tournamentId!==expected.tournamentId||raw.afterGameId!==expected.afterGameId||typeof raw.observedAt!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(raw.observedAt)||!Number.isFinite(Date.parse(raw.observedAt))||Date.parse(raw.observedAt)>now||now-Date.parse(raw.observedAt)>30000||!whole(raw.totalUnresolved)||typeof raw.hasMore!=='boolean'||!Array.isArray(raw.rows)||raw.rows.length>100)return null;
+ let previous=expected.afterGameId??'';for(const r of raw.rows){if(!exact(r,['gameId','eventId','eventName','gameNumber','matchInstance','state','sideA','sideB'])||!isUuid(r.gameId)||r.gameId<=previous||!isUuid(r.eventId)||!text(r.eventName)||!whole(r.gameNumber,1,99)||!whole(r.matchInstance,1)||!['pending','submitted','confirmation_pending','mismatch','verified','corrected'].includes(String(r.state))||!side(r.sideA)||!side(r.sideB)||r.sideA.fixedId===r.sideB.fixedId||r.sideA.chair===r.sideB.chair)return null;previous=r.gameId;}
+ if(Number(raw.totalUnresolved)<raw.rows.length||(raw.hasMore?(raw.rows.length!==100||raw.nextCursor!==previous||Number(raw.totalUnresolved)<=100):raw.nextCursor!==null))return null;
+ if(expected.afterGameId===null&&!raw.hasMore&&raw.totalUnresolved!==raw.rows.length)return null;
+ return structuredClone(raw) as DirectorUnresolvedGamesV31;
+ }catch{return null;}}

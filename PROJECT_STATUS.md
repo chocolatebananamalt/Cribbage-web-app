@@ -1,3 +1,11 @@
+## 2026-11-17: V31 director unresolved-game queue — LOCAL, default closed
+
+A separate read-only queue now locates unresolved ordinary published Standard Singles digital-scoring games across events. It uses the same authoritative resolution predicate as final cross-checking, not raw game state: complete verified/corrected scorelines, approved recovery and forfeits are excluded; incomplete verified states remain visible. Fixed Tournament IDs and saved chairs distinguish players; no score entry on another player's behalf, verification, payout or mode inference is added. Upcoming/not-started games are not labeled late.
+
+SQL proposal and app gate remain FALSE, with execute revoked from all client roles including service_role and no GRANT. Final Cross-Checking link stays hidden. Native rehearsals, teams, retired/manual events and unsupported publication sources are excluded rather than converted. SQL is local/uninstalled.
+
+Nine native PostgreSQL17.12 groups passed with exact0169 resolution predicate and synthetic schema/recovery-approval dependency;35focused/audit groups,3836app tests and14Chrome390/1440 groups passed. Browser uses actual page-sourceVM/reader/view, captured native rows with fixture observation clock, synthetic Auth/SDK and synthetic next-page continuation; not genuine Auth/PostgREST/live native browser pipeline/realNextSSR or mature ACL proof. Both initial and final owned clusters stopped/port-closed/data-removed; listener/contexts closed. No hosted/practice/production/session changes, denied publication retry or email. See docs/quality/2026-11-17-director-unresolved-queue-v31.md and aggregatepackage.
+
 ## 2026-11-17: V30 actionable final cross-check workflow — LOCAL ONLY
 
 Finalize Cross-Checking now connects each outstanding servercondition to existing review work, with gated destinations withheld and primaryDirector assignment distinguished fromCo access. Refresh current status performs a read-only router refresh; no condition is cleared, readiness inferred, finalization automatically sent or financial/score authority added. Existing finalize function and RPC/SQL are unchanged. Cashing-card evidence link is Satellite-only per0230; Schedule locates pairings, NOT a general unverifieddigitalgame review queue. Ordinarydigitalplayers still use ownMyGames.

@@ -1,3 +1,4 @@
+import {directorUnresolvedGamesEnabledV31} from '../src/lib/operations/director-unresolved-games-v31.ts';
 import {integratedAreaLinks} from '../src/lib/integrated-workspace.ts';
 import{nativeMixedPreparationPageEnabledV1}from'../src/lib/seating/native-mixed-pilot-preparation-v1.ts';
 import{nativeMixedGameReopenRoutesEnabledV1}from'../src/lib/api/native-mixed-game-reopen-v1.ts';
@@ -58,6 +59,7 @@ test("every tournament page is linked from somewhere a director can reach", () =
   const orphans = [];
   for (const segment of segments) {
     if (INTERNAL.has(segment)) continue;
+    if(segment==='unresolved-games'&&!directorUnresolvedGamesEnabledV31()){const file=BASE+'/unresolved-games/page.tsx';assert.deepEqual(sourceFiles(BASE+'/unresolved-games').filter(p=>p.endsWith('/page.tsx')),[file]);const page=readFileSync(file,'utf8');assert(page.indexOf('if(!directorUnresolvedGamesEnabledV31())notFound()')<page.indexOf('await params'));continue;}
     // Exact closed paper candidate only; enabling it requires real navigation.
     if(segment==='rehearsal-playoff-paper'&&!playoffPaperRoutesEnabledV1()){
       const file=`${BASE}/rehearsal-playoff-paper/[eventId]/[contextId]/[slot]/[gameNumber]/page.tsx`;

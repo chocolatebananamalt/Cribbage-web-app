@@ -1,6 +1,6 @@
 import {crossCheckConditionCodes,type CrossCheckCondition} from '../api/cross-check-finalization.ts';
 import {isUuid} from '../api/validation.ts';
-export type CrossCheckReviewAccessV30={canAssignCrossCheckers:boolean;correctionsEnabled:boolean;eventDeskEnabled:boolean;manualCardsEnabled:boolean};
+export type CrossCheckReviewAccessV30={canAssignCrossCheckers:boolean;correctionsEnabled:boolean;eventDeskEnabled:boolean;manualCardsEnabled:boolean;digitalQueueEnabled?:boolean};
 export type CrossCheckReviewRouteV30={links:{label:string;href:string}[];note:string};
 /** Navigation only. Counts and completion authority stay with the existing
  * server workspace/writer. No inferred event, player, score or permission. */
@@ -10,7 +10,7 @@ export function crossCheckReviewRoutesV30(tournamentId:string,condition:CrossChe
  switch(condition.code){
   case 'tournament_not_open_for_cross_check':return{links:[link('Review tournament status','setup')],note:'Review the saved tournament status. This link does not change it.'};
   case 'cross_checkers_not_assigned':return access.canAssignCrossCheckers?{links:[link('Review cross-checker assignments','cross-checkers')],note:'The primary Director assigns cross-checkers; assignment alone does not verify a score.'}:{links:[],note:'Ask the primary Director to review cross-checker assignments.'};
-  case 'games_not_verified':return{links:[link('Find published games','schedule'),...(access.manualCardsEnabled?[link('Review original paper cards','manual-paper-cards')]:[])],note:'Locate pairings by event. Ordinary digital players enter and confirm on their own My Games screens; Schedule is not an unverified-game review queue. Use the original paper card for independent manual review.'};
+  case 'games_not_verified':return{links:[...(access.digitalQueueEnabled?[link('Review unresolved scheduled games','unresolved-games')]:[]),link('Find published games','schedule'),...(access.manualCardsEnabled?[link('Review original paper cards','manual-paper-cards')]:[])],note:'Locate pairings by event. Ordinary digital players enter and confirm on their own My Games screens; Schedule is not an unverified-game review queue. Use the original paper card for independent manual review.'};
   case 'team_games_not_verified':return{links:[link('Review team scorecards','teams')],note:'Choose the team event. Each destination rechecks its authorized actions.'};
   case 'corrections_pending':return access.correctionsEnabled?{links:[link('Review pending corrections','corrections')],note:'A different eligible official must review where required; opening the queue changes no score.'}:{links:[],note:'The correction workflow is not enabled here. Pending corrections remain outstanding.'};
   case 'disputes_unresolved':return access.eventDeskEnabled?{links:[link('Choose an event to review disputes','event-desk')],note:'Choose the affected event, then Review Event Disputes. No event is inferred from this tournament-wide count.'}:{links:[],note:'The event dispute directory is not enabled here. Existing disputes remain outstanding.'};
