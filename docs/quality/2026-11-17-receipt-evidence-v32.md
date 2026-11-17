@@ -1,0 +1,23 @@
+# V32: private receipt evidence download
+
+Base exactV31 fc2e73fcf9c974384323a4e5a18e3a4dcdc9abf6 / tree97eacf84a76d17ba5d26d592433d24bf5c50a137 preserved. Separate isolated receipt-evidence-v32-20261117 workspace.
+
+## Functional scope
+Existing Payments shows private receipt/void history but no portable evidence report for manual finance review. New optional client download reads the existing get_roster_payment_workspace(p_tournament_id) with the normal authenticated SDK.0154 binds auth.uid to current Director/Co; no new SQL/grant/API/admin client. Server mounts it only in the ordinary branch, outside synthetic context, with receiptEvidenceExportEnabledV32 returning false. No environment flag opens it.
+
+CSV whitelists download-local row ordinal, display name, history version/type, unsigned evidence amount USD, recorded method, source timestamps with their recorded offsets, and current-receipt indicator. Same-name roster entries stay separate; repeated history rows retain one ordinal. Ordinals are NOT permanent player IDs or cross-file identity proof. Unrecorded amounts/dates stay blank. Historical other methods are preserved, not made available for new entries. No sums/net balances, paid-in-full, check-in, refunds, event allocations, expenses, payout approval or ACC submission. Internal UUIDs, ACC/Temporary IDs, contacts, recorder names and free-text notes/reasons are omitted; original private ledger retains them.
+
+A visible file legend says not to sum receipt and void rows and explains omissions and leading-apostrophe formula protection. UTF8 BOM/quoted cells preserve Unicode; dangerous formula-leading text, including whitespace/BOM/fullwidth forms, gets a disclosed apostrophe. This is not exact textual preservation for those cells; source objects stay untouched. Preparation time is the device clock, explicitly not server audit time.
+
+## Safety
+Pure projection rejects malformed/duplicate identity/event IDs, inconsistent versions/current receipt/void amounts, unsafe amounts and private identifier display text. Actor/SID/expiry/current role verified before and after the read; source cloned immediately. Auth/owner/gate epoch checks with layout cleanup suppress late results and retained old callbacks before Blob/anchor creation. Optional SDK construction or subscription errors stay contained and disable export without throwing into Payments. No writes, replay, cached data, local/session storage or pending operation cleanup.
+
+## Executed evidence
+Nine focused groups pass, including actual component VM retained-handler/layout-before-passive tests and setup exceptions, exact receipt history, same-name separation, formula/Unicode/private-field boundaries, current Auth/role and post-read drift/provider errors.3845final app tests pass.20Chrome groups at390/1440 use actual component/read helper/CSV bytes, real Blob/downloads and fresh contexts. Verify successful UTF8 and protected formula files, closed wrapper zero client, denied role/provider, pending read followed by Auth/gate/owner change zero download, setup errors contained and existing-host control remains interactive. Foreign synthetic pending storage bytes unchanged. Owned listener/contexts closed.
+
+Browser Auth/SDK/ledger and surrounding existing-payment-tools host are SYNTHETIC. It does not exercise actual payment writers, full Payments server rendering, real Next runtime, GoTrue/PostgREST/native database or accounting/reconciliation. Synthetic values only; no owner session/storage/draft or actual ledger read.
+
+Independent review found passive-only invalidation and optional SDK exception propagation; both fixed. Stable layout invalidation and catch boundaries pass final review. Initial browser gate failure was a fixture waiting on a busy button label rather than committed heading removal; corrected the observation without weakening product guards. Two new lint warnings removed, leaving252baselinewarnings/0errors. Type/provider/build pass; initial Next16.4.2 advisory retained and identical fictional-loopback retry passed. pnpm/audit unavailable, private handoff absent. Aggregate report includes workspace and candidate hashes.
+
+## Remaining gate
+Keep export false pending genuine authenticated ordinary-ledger/role/session acceptance, actual Payments/Next integration, and download handling on real devices. Existing ledger RPC/body has no actor/tournament echo; binding is through verified normal Auth and exact existing RPC argument contract, not invented response metadata. Do not enable it for native/simulation finance or present it as a combined finance/expense/payout report. No hosted SQL/grant/flag/deploy, denied publication retry, sign-in email, practice/production or original source changes.

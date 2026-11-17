@@ -1,3 +1,11 @@
+## 2026-11-17: V32 private receipt evidence export — LOCAL, default closed
+
+Ordinary Payments now has a gated optional CSV download of fresh recorded receipt/void history using the existing normal authenticated ledger RPC. One download-local ordinal per immutable roster entry keeps identical names separate without exposing IDs. It retains unsigned evidence and historical other methods, leaves unrecorded amounts blank, omits notes/reasons/recorder/contact/ACC/internal identifiers, preserves Unicode, and discloses spreadsheet apostrophe protection inside the file. No balances, paid-in-full, reconciliation, refunds, event allocation, payout approval or ACC submission are inferred. Device preparation time is explicitly not server audit time.
+
+Current verified user/SID/expiry/Director-or-Co checks surround the read; layout cleanup invalidates old owner/gate callbacks and late responses before Blob creation. Optional SDK/subscription failure disables only export. No storage/recovery mutation or writer/SQL/grant change. The export gate returns false and synthetic finance branches do not mount it. Prior unverified gates remain off.
+
+Nine focused lifecycle/projection/read groups,3845app tests and20Chrome390/1440 real-download checks pass with SYNTHETIC Auth/SDK/ledger and an existing-tools host fixture, not actual normal-auth database/Next runtime/full Payments acceptance. Lint0errors252baselinewarnings/type/provider/build pass. No production/practice/session/draft/hosted/publication/email changes; V31 preserved. See docs/quality/2026-11-17-receipt-evidence-v32.md and aggregatepackage.
+
 ## 2026-11-17: V31 director unresolved-game queue — LOCAL, default closed
 
 A separate read-only queue now locates unresolved ordinary published Standard Singles digital-scoring games across events. It uses the same authoritative resolution predicate as final cross-checking, not raw game state: complete verified/corrected scorelines, approved recovery and forfeits are excluded; incomplete verified states remain visible. Fixed Tournament IDs and saved chairs distinguish players; no score entry on another player's behalf, verification, payout or mode inference is added. Upcoming/not-started games are not labeled late.
