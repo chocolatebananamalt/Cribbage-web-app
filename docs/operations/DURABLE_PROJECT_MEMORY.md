@@ -1,3 +1,9 @@
+## 2026-11-17: V30 actionable final cross-check workflow — LOCAL ONLY
+
+Finalize Cross-Checking now connects each outstanding servercondition to existing review work, with gated destinations withheld and primaryDirector assignment distinguished fromCo access. Refresh current status performs a read-only router refresh; no condition is cleared, readiness inferred, finalization automatically sent or financial/score authority added. Existing finalize function and RPC/SQL are unchanged. Cashing-card evidence link is Satellite-only per0230; Schedule locates pairings, NOT a general unverifieddigitalgame review queue. Ordinarydigitalplayers still use ownMyGames.
+
+18focused/3828app and8Chrome390/1440 checks pass with actualcomponent SSR/hydration and SYNTHETIC workspace/router/destination fixtures. Provider/Auth/Next-runtime and destinationaction acceptance are not verified by those fixtures. No SQL/gates/grants/permissions/writers/fees/score/recovery mutation. All prior unverified gates stayOFF; V29/practice/production/session untouched. No publication retry/email. See docs/quality/2026-11-17-cross-check-workflow-v30.md and aggregatepackage for final build/lint/workspace outcomes.
+
 ## 2026-11-17: V29 native rehearsal pairing read adapter — LOCAL ONLY
 
 Separate native print source projects saved native18-player/12-round chairs/opponents directly, joining names by BOTH roster-entry and participant IDs plus fixed Tournament ID. Existing native strict source and pool-directory decoders remain separate from ordinary schedule DTOs. Matching repeated captures are explicitly NOT atomic; source hashes are copy references, not authenticated provenance. Per-sheet notices identify fictional rehearsal and no verified normal-start, money or human presence.

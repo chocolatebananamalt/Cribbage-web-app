@@ -1,3 +1,6 @@
+import {rule12CorrectionEnabled} from "../../../../lib/api/rule12-correction-release";
+import {eventDeskEnabledV1} from "../../../../lib/operations/event-desk-v1";
+import {manualMixedHandoffEnabledV1} from "../../../../lib/games/manual-mixed-handoff-v1";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -38,7 +41,7 @@ export default async function CrossCheckFinalizationPage({ params }: { params: P
       <p className="card-context">{data.tournamentName}</p>
       {syntheticContext && <SyntheticEventNotice context={syntheticContext}/>}
       <p className="auth-note">Every condition below is read from the tournament server when this page loads. Finalizing records that cross-checking was completed, with a receipt and an audit entry. It changes no score, correction, dispute or result.</p>
-      <CrossCheckFinalizationClient tournamentId={tournamentId} workspace={data} />
+      <CrossCheckFinalizationClient tournamentId={tournamentId} workspace={data} reviewAccess={{canAssignCrossCheckers:access.role==='director',correctionsEnabled:rule12CorrectionEnabled(),eventDeskEnabled:eventDeskEnabledV1(),manualCardsEnabled:manualMixedHandoffEnabledV1()}} />
       <Link className="guide-link" href={`/tournament/${tournamentId}`}>Back to Tournament</Link>
       <SharedDeviceSignOut />
     </section>
