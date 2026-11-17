@@ -7,12 +7,14 @@ import type { AssignedGameSummary } from "../lib/games/my-games-decision";
 import { currentScorecardAssignment, scorecardPlayerName, scorecardPresentationRows } from "../lib/games/scorecard-presentation";
 import { getScorecardVerificationStatus } from "../lib/games/scorecard-status";
 import { formatScorecardSpread, formatSignedNet } from "../lib/score";
+import {ScorecardObserverV42} from './scorecard-observer-v42';
 
 /** Presentation only. The route retains authentication and all actor-scoped reads. */
-export function PlayerScorecardView({ scorecard, assignments = [], hasCorrectionNotice = false }: {
+export function PlayerScorecardView({ scorecard, assignments = [], hasCorrectionNotice = false, observationActorId }: {
   scorecard: PlayerScorecard & { player: PlayerScorecard["player"] & { accNumber?: string } };
   assignments?: readonly AssignedGameSummary[];
   hasCorrectionNotice?: boolean;
+  observationActorId?:string;
 }) {
   const { tournamentId, eventId: event } = scorecard;
   const verificationStatus = getScorecardVerificationStatus(scorecard.pendingGames.map((game) => game.state));
@@ -21,6 +23,7 @@ export function PlayerScorecardView({ scorecard, assignments = [], hasCorrection
 
   return <PlayerPageFrame tournamentId={tournamentId} tournamentName={scorecard.tournamentName} eventId={event} eventName={scorecard.eventName} activeTab="card" player={scorecard.player}>
     <ScorecardPrintControl />
+    {observationActorId&&<ScorecardObserverV42 actorId={observationActorId} tournamentId={tournamentId} eventId={event} verificationId={scorecard.player.verificationId}/>}
     <h1 className="player-card-name" id="scorecard-title">{scorecardPlayerName(scorecard.player)}</h1>
     <p className="player-card-id"><strong>Tournament ID# {scorecard.player.verificationId}</strong></p>
     <p className="player-card-state" role="status">{scorecard.lines.length} {scorecard.lines.length === 1 ? "game" : "games"} verified{verificationStatus.tone !== "current" ? ` · ${verificationStatus.message}` : ""}</p>

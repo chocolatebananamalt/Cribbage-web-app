@@ -1,0 +1,7 @@
+import React from 'react';
+const router={refresh:()=>window.refreshScorecard()};
+export const useRouter=()=>router;
+export const createClient=()=>({auth:{onAuthStateChange:fn=>{window.authObservers.add(fn);fn('INITIAL_SESSION',{user:{id:window.initialProps.observationActorId}});return{data:{subscription:{unsubscribe:()=>window.authObservers.delete(fn)}}};}}});
+export function PlayerPageFrame({children}){return <main className="player-page"><div className="player-page-content">{children}</div></main>;}
+export const SharedDeviceSignOut=()=>null;
+export default function Link({children,...props}){return <a {...props}>{children}</a>;}

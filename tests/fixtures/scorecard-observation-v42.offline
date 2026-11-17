@@ -1,0 +1,5 @@
+import React from 'react';import {createRoot} from 'react-dom/client';import {PlayerScorecardView} from '../../src/components/player-scorecard-view';
+window.authObservers=new Set();window.refreshRequests=0;window.refreshCompleted=0;
+const root=createRoot(document.getElementById('root'));function show(props){root.render(<PlayerScorecardView {...props}/>);}
+window.refreshScorecard=async()=>{window.refreshRequests++;try{const r=await fetch('/card?actor='+window.initialProps.observationActorId);if(!r.ok)throw Error('fixture unavailable');const props=await r.json();if(props.observationActorId!==window.initialProps.observationActorId)throw Error('foreign fixture response');show(props);window.refreshCompleted++;}catch{/* Old authoritative view remains; no local result is manufactured. */}};
+window.changeObservedActor=actor=>{for(const fn of window.authObservers)fn('SIGNED_IN',actor?{user:{id:actor}}:null);};window.unmountScorecard=()=>root.unmount();show(window.initialProps);

@@ -14,7 +14,7 @@ export default async function PlayerScorecardPage({ params, searchParams }: { pa
   const access = await requireTournamentAccess(tournamentId);
   const [scorecard, assigned] = await Promise.all([getPlayerScorecard(tournamentId, event), getMyGames(tournamentId)]);
   const notices = rule12CorrectionEnabled() ? await getRule12PlayerNotices(access.user.id, tournamentId) : [];
-  return <PlayerScorecardView scorecard={scorecard}
+  return <PlayerScorecardView scorecard={scorecard} observationActorId={access.user.id}
     assignments={assigned.status === "available" ? assigned.workspace.games : []}
     hasCorrectionNotice={notices.some((notice) => notice.eventId === event)} />;
 }
