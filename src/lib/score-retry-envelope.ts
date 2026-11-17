@@ -61,13 +61,24 @@ export function readPendingScoreSubmission(storage: Storage, actorId: string, to
   return null;
 }
 
-export function clearPendingScoreSubmission(storage: Storage, envelope: Pick<PendingScoreSubmission, "actorId" | "tournamentId" | "gameId" | "playerSide">) {
-  try { storage.removeItem(scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide)); } catch { /* The server remains authoritative. */ }
+export function clearPendingScoreSubmission(storage: Pick<Storage, "getItem" | "removeItem">, envelope: PendingScoreSubmission) {
+  try {
+    const key = scoreSubmissionStorageKey(envelope.actorId, envelope.tournamentId, envelope.gameId, envelope.playerSide);
+    const raw = storage.getItem(key);
+    const current: unknown = raw === null ? null : JSON.parse(raw);
+    if (!isPendingScoreSubmission(current) || !Object.entries(envelope).every(([key, value]) => current[key as keyof PendingScoreSubmission] === value)) return false;
+    // No asynchronous boundary between the exact read and removal.
+    if (storage.getItem(key) !== raw) return false;
+    storage.removeItem(key);
+    return true;
+  } catch { return false; /* Unknown or unavailable recovery stays preserved. */ }
 }
 
-export function pendingSubmissionRecovery(pending: PendingScoreSubmission | null, serverSubmissionId: string | null) {
+export function pendingSubmissionRecovery(pending: PendingScoreSubmission | null, serverSubmission: {id: string; winnerSide: "a" | "b"; margin: number} | null) {
   if (!pending) return { action: "none" as const };
-  if (serverSubmissionId) return { action: "clear" as const };
+  if (serverSubmission) return serverSubmission.id === pending.submissionId && serverSubmission.winnerSide === pending.winnerSide && serverSubmission.margin === pending.margin
+    ? { action: "clear" as const }
+    : { action: "conflict" as const, envelope: pending };
   return { action: "retry" as const, envelope: pending };
 }
 

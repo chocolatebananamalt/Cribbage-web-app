@@ -1,3 +1,7 @@
+## 2026-11-17: V34 ordinary scoring recovery conflict hold — LOCAL only
+
+Retained submission cleanup now requires exact server ID/winner/margin and exact stored envelope. Conflicts, replacement or unknown/unreadable bytes hold retry/confirmation/handoff while preserving drafts and recovery. Same-mounted null-to-conflicting readback is protected independently of local submissionId. 54focused and18synthetic Chrome390/1440 cases pass; final checks in aggregatepackage. No SQL/grant/flag/hosted changes or publication. See docs/quality/2026-11-17-ordinary-score-recovery-v34.md.
+
 ## 2026-11-17: V33 local scoring observation — default closed
 
 Read-only playoff observation added with exact current actor/state/intent/storage protection; existing write/archive bodies unchanged and gate FALSE. Ordinary LiveScoreEntry unchanged and separately tested both orders, later opponent updates, drafts and retained actions. Synthetic server/browser evidence only: not hosted defect resolution. 16focused/3855app tests pass, lint/type/provider/build pass; see docs/quality/2026-11-17-playoff-observation-v33.md for precise coverage and recovery-ID conflict limitation. Production/practice/session untouched; no publication/email.

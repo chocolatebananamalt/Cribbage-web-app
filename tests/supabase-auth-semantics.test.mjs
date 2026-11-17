@@ -626,7 +626,7 @@ test('ambiguous score submission locks one exact persisted retry envelope', asyn
   values.set(retry.scoreSubmissionStorageKey('actor-1', 'tournament-1', 'game-1', 'a'), JSON.stringify({ ...envelope, margin: 122 }));
   assert.equal(retry.readPendingScoreSubmission(storage, 'actor-1', 'tournament-1', 'game-1', 'a'), null);
   assert.equal(values.size, 2, 'malformed recovery stays retained and blocks switching');
-  assert.deepEqual(retry.pendingSubmissionRecovery(envelope, 'different-server-submission'), { action: 'clear' });
+  assert.deepEqual(retry.pendingSubmissionRecovery(envelope, {id:'different-server-submission',winnerSide:envelope.winnerSide,margin:envelope.margin}), { action: 'conflict', envelope });
   assert.deepEqual(retry.pendingSubmissionRecovery(envelope, null), { action: 'retry', envelope });
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'not_assigned' }, 'game-1', 'submission'), true);
   assert.equal(retry.isDefinitiveScoreMutationFailure(409, { status: 'rejected', game_id: 'game-1', code: 'duplicate_submission' }, 'game-1', 'submission'), true);

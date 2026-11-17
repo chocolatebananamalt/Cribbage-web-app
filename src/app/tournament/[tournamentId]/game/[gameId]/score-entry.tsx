@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { SharedDeviceSignOut } from "../../../../../components/shared-device-sign-out";
 import { deriveScore, isScoreEntryReady, type ScoreResult } from "../../../../../lib/score";
 import type { AssignedGameContext } from "../../../../../lib/games/assigned-game-context";
-import { clearPendingScoreSubmission, isDefinitiveScoreMutationFailure, pendingSubmissionRecovery, readPendingScoreSubmission, type PendingScoreSubmission } from "../../../../../lib/score-retry-envelope";
+import { clearPendingScoreSubmission, isDefinitiveScoreMutationFailure, pendingSubmissionRecovery, readPendingScoreSubmission, scoreSubmissionStorageKey, type PendingScoreSubmission } from "../../../../../lib/score-retry-envelope";
 import { canDeleteOfflineQueueRecord, type OfflineQueueRecord, type OfflineSubmissionCapability } from "../../../../../lib/offline-score-queue-contract";
 import { deleteOfflineSubmission, provisionOfflineSubmission, queueOfflineSubmission, readOfflineSubmission, readPreparedOfflineSubmissionCapability, replayOfflineSubmission } from "../../../../../lib/offline-score-queue";
 import { prepareCurrentScorePageForOffline } from "../../../../../lib/offline-score-page-cache";
@@ -61,6 +61,9 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
   const [marginText, setMarginText] = useState(() => context.ownSubmission ? String(context.ownSubmission.margin) : "");
   const [submissionId, setSubmissionId] = useState<string | null>(context.ownSubmission?.id ?? null);
   const [pendingSubmission, setPendingSubmission] = useState<PendingScoreSubmission | null>(null);
+  const [recoveryBlocked, setRecoveryBlocked] = useState(false);
+  const recoveryConflict = pendingSubmissionRecovery(pendingSubmission, context.ownSubmission).action === "conflict";
+  const holdRecovery = () => { setRecoveryBlocked(true); setStatus("Saved recovery work changed or could not be checked. It has not been cleared. Ask your director to review before continuing."); };
   const [offlineCapability, setOfflineCapability] = useState<OfflineSubmissionCapability | null>(null);
   const [offlineRecord, setOfflineRecord] = useState<OfflineQueueRecord | null>(null);
   const [offlineReplayClosed, setOfflineReplayClosed] = useState(false);
@@ -76,7 +79,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
   // snapshot, including accepted offline submission and other-player progress,
   // rather than only the canConfirm boolean captured at first mount.
   const [lastServerStateKey, setLastServerStateKey] = useState(serverState.key);
-  if (lastServerStateKey !== serverState.key && !busy && !offlineRecord && !pendingSubmission) {
+  if (lastServerStateKey !== serverState.key && !busy && !offlineRecord && !pendingSubmission && !recoveryBlocked) {
     setLastServerStateKey(serverState.key);
     setCanConfirm(serverState.canConfirm);
     setStatus(serverState.status);
@@ -88,7 +91,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
   }
 
   useEffect(() => {
-    if (!submissionId || busy || offlineRecord || pendingSubmission || context.state === "verified") return;
+    if (!submissionId || busy || offlineRecord || pendingSubmission || recoveryBlocked || context.state === "verified") return;
     // Read-only refresh: never submits, replays, confirms, or deletes a queue.
     const refresh = () => { if (navigator.onLine && document.visibilityState === "visible") router.refresh(); };
     const storage = (event: StorageEvent) => { if (event.key === "acc-score-result-accepted") refresh(); };
@@ -104,7 +107,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       window.removeEventListener("online", refresh);
       window.removeEventListener("storage", storage);
     };
-  }, [submissionId, busy, offlineRecord, pendingSubmission, context.state, router]);
+  }, [submissionId, busy, offlineRecord, pendingSubmission, recoveryBlocked, context.state, router]);
   const draftIdentity = { actorId: context.actorId, tournamentId: context.tournamentId, eventId: context.eventId, gameId: context.gameId, side: context.player.side };
   const persistDraft = (nextWinner: Winner, nextMargin: string) => {
     try {
@@ -137,7 +140,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
   const winnerSide = winner === "player" ? context.player.side : context.opponent.side;
 
   const syncOffline = async (record: OfflineQueueRecord) => {
-    if (offlineSyncInFlight.current || !navigator.onLine) return;
+    if (offlineSyncInFlight.current || !navigator.onLine || recoveryBlocked || recoveryConflict) return;
     offlineSyncInFlight.current = true;
     setBusy(true);
     setStatus("Connection restored. Syncing your saved offline entry…");
@@ -202,10 +205,28 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       await preparePage(capability.capabilityExpiresAtMs);
     };
     const timer = window.setTimeout(async () => {
-      const pending = readPendingScoreSubmission(window.sessionStorage, context.actorId, context.tournamentId, context.gameId, context.player.side);
-      const recovery = pendingSubmissionRecovery(pending, context.ownSubmission?.id ?? null);
+      let pending: PendingScoreSubmission | null;
+      try {
+        pending = readPendingScoreSubmission(window.sessionStorage, context.actorId, context.tournamentId, context.gameId, context.player.side);
+        if (!pending && window.sessionStorage.getItem(scoreSubmissionStorageKey(context.actorId, context.tournamentId, context.gameId, context.player.side)) !== null) throw new Error("unknown_saved_work");
+      } catch { holdRecovery(); setHydrated(true); return; }
+      const recovery = pendingSubmissionRecovery(pending, context.ownSubmission);
+      if (recovery.action === "conflict") {
+        setRecoveryBlocked(true);
+        setPendingSubmission(recovery.envelope);
+        setWinner(recovery.envelope.winnerSide === context.player.side ? "player" : "opponent");
+        setMarginText(String(recovery.envelope.margin));
+        setStatus("The saved entry differs from this game's server entry. Both are preserved. Ask your director to review before retrying or confirming. Do not clear browser data.");
+        setHydrated(true);
+        return;
+      }
       if (recovery.action === "clear" && pending) {
-        clearPendingScoreSubmission(window.sessionStorage, pending);
+        if (!clearPendingScoreSubmission(window.sessionStorage, pending)) {
+          setPendingSubmission(pending);
+          holdRecovery();
+          setHydrated(true);
+          return;
+        }
         setPendingSubmission(null);
       } else if (recovery.action === "retry") {
         setPendingSubmission(recovery.envelope);
@@ -213,6 +234,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
         setMarginText(String(recovery.envelope.margin));
         setStatus("A previous entry is awaiting a safe retry. Only that exact result can be sent until the tournament server responds.");
       }
+      setRecoveryBlocked(false);
       try {
         const queued = await readOfflineSubmission(context.actorId, context.gameId);
         if (!active) return;
@@ -267,7 +289,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
     return () => { active = false; window.clearTimeout(timer); window.removeEventListener("online", connectionRestored); window.removeEventListener("offline", connectionLost); };
     // The active queue is intentionally rebound when its identity changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.actorId, context.gameId, context.ownSubmission?.id, context.player.side, context.tournamentId]);
+  }, [context.actorId, context.gameId, context.ownSubmission?.id, context.ownSubmission?.winnerSide, context.ownSubmission?.margin, context.player.side, context.tournamentId]);
 
   const saveOffline = async () => {
     if (!derived || !winner) return null;
@@ -276,8 +298,8 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
         ?? await readPreparedOfflineSubmissionCapability(context.actorId, context.gameId)
         ?? await provisionOfflineSubmission(context.actorId, context.gameId);
       const record = await queueOfflineSubmission(capability, winnerSide, derived.margin);
+      if (pendingSubmission && !clearPendingScoreSubmission(window.sessionStorage, pendingSubmission)) { setOfflineRecord(record); holdRecovery(); return null; }
       discardDraft();
-      if (pendingSubmission) clearPendingScoreSubmission(window.sessionStorage, pendingSubmission);
       setPendingSubmission(null);
       setOfflineCapability(capability);
       setOfflineRecord(record);
@@ -304,7 +326,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
     persistDraft(winner, next); setMarginText(next);
   };
   const submit = async () => {
-    if (busy || submissionId || offlineReplayClosed || !hydrated) return;
+    if (busy || submissionId || offlineReplayClosed || !hydrated || recoveryBlocked || recoveryConflict) return;
     if (!pendingSubmission) {
       const record = await saveOffline();
       if (record && navigator.onLine) await syncOffline(record);
@@ -317,7 +339,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       const response = await fetch(`/api/v1/games/${context.gameId}/submissions`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ submissionId: envelope.submissionId, submissionSlot: envelope.submissionSlot, winnerSide: envelope.winnerSide, margin: envelope.margin, idempotencyKey: envelope.idempotencyKey }) });
       const payload: unknown = await response.json().catch(() => null);
       if (!response.ok) {
-        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId, "submission")) { clearPendingScoreSubmission(window.sessionStorage, envelope); setPendingSubmission(null); }
+        if (isDefinitiveScoreMutationFailure(response.status, payload, context.gameId, "submission")) { if (!clearPendingScoreSubmission(window.sessionStorage, envelope)) { holdRecovery(); return; } setPendingSubmission(null); }
         setStatus(publicMessage(response.status, payload));
         return;
       }
@@ -325,7 +347,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       const result = payload as { status?: string; submission_id?: string };
       const id = result.submission_id;
       if (id !== envelope.submissionId || !["submitted", "confirmation_pending", "mismatch"].includes(result.status ?? "")) { setStatus("The server response was incomplete. Retry this same entry after the connection is restored."); return; }
-      clearPendingScoreSubmission(window.sessionStorage, envelope);
+      if (!clearPendingScoreSubmission(window.sessionStorage, envelope)) { holdRecovery(); return; }
       setPendingSubmission(null);
       setSubmissionId(id);
       try { window.localStorage.setItem("acc-score-result-accepted", new Date().toISOString()); } catch { /* ten-second refresh remains available */ }
@@ -336,7 +358,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
     } finally { setBusy(false); }
   };
   const confirm = async () => {
-    if (!submissionId || !canConfirm || busy) return;
+    if (!submissionId || !canConfirm || busy || !hydrated || pendingSubmission || recoveryBlocked || recoveryConflict) return;
     if (!navigator.onLine) {
       setStatus("You are offline. This confirmation has not been saved. Reconnect before confirming.");
       return;
@@ -363,7 +385,7 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       setStatus("Network issue. Please try again; this confirmation will safely retry with the same request ID.");
     } finally { setBusy(false); }
   };
-  const locked = !hydrated || busy || !!submissionId || !!pendingSubmission || !!offlineRecord || offlineReplayClosed;
+  const locked = recoveryBlocked || recoveryConflict || !hydrated || busy || !!submissionId || !!pendingSubmission || !!offlineRecord || offlineReplayClosed;
   return <PlayerPageFrame tournamentId={context.tournamentId} tournamentName={tournamentName} eventId={context.eventId} eventName={context.eventName} activeTab="entry" player={context.player} beforeNavigate={beforeNavigate}>
     <section className="player-entry" aria-labelledby="live-score-title">
       <h1 id="live-score-title">{cardNumbers?.isMakeup ? <>Card game {displayedGame}</> : <>Game {context.roundNumber}</>}</h1>
@@ -376,12 +398,12 @@ export function LiveScoreEntry({ context,cardNumbers,tournamentName = "Tournamen
       <div className="player-spread-entry"><label htmlFor="player-spread-value">Spread Points</label><output id="player-spread-value" aria-live="polite">{marginText || "—"}</output><SkunkAid level={derived?.skunkLevel ?? 0} /></div>
       <div className="keypad player-keypad" aria-label="Spread points keypad">{keypad.map((value) => <button type="button" key={value} aria-label={value === "clear" ? "Clear spread points" : value === "backspace" ? "Delete last digit" : undefined} onClick={() => key(value)} disabled={locked}>{value === "clear" ? "Clear" : value === "backspace" ? "Delete" : value}</button>)}</div>
       {derived ? <ResultPreview score={derived} /> : null}
-      {offlineRecord ? <button type="button" className="primary full" disabled={busy || !online} onClick={() => syncOffline(offlineRecord)}>{busy ? "Syncing…" : online ? "Sync Saved Entry" : "Waiting for Connection"}</button>
-        : !submissionId && !offlineReplayClosed ? <button type="button" className="primary full" disabled={(!pendingSubmission && !derived) || busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : pendingSubmission ? "Retry This Same Entry" : "Submit result"}</button>
-          : canConfirm ? <button type="button" className="primary full" disabled={busy || !online} onClick={confirm}>{busy ? "Confirming…" : "Confirm My Entry"}</button> : null}
+      {offlineRecord ? <button type="button" className="primary full" disabled={busy || !online || recoveryBlocked || recoveryConflict} onClick={() => syncOffline(offlineRecord)}>{busy ? "Syncing…" : online ? "Sync Saved Entry" : "Waiting for Connection"}</button>
+        : !submissionId && !offlineReplayClosed && !recoveryBlocked && !recoveryConflict ? <button type="button" className="primary full" disabled={(!pendingSubmission && !derived) || busy || !hydrated} onClick={submit}>{busy ? "Submitting…" : pendingSubmission ? "Retry This Same Entry" : "Submit result"}</button>
+          : canConfirm && !pendingSubmission && !recoveryBlocked && !recoveryConflict ? <button type="button" className="primary full" disabled={busy || !online || !hydrated} onClick={confirm}>{busy ? "Confirming…" : "Confirm My Entry"}</button> : null}
       <p className="live-status player-entry-status" role="status">{playerStatusCopy(status)}</p>
       <p className="player-offline-status" role="status">{canConfirm && !online ? "Reconnect before confirming. Confirmations are saved only online." : offlinePageReady ? "Offline Ready" : online ? "Preparing Offline Use…" : "Offline reload is not ready on this device."}</p>
-      <ManualMixedHandoffV1 actorId={context.actorId} gameId={context.gameId} submissionId={submissionId}/><details className="player-help"><summary>Help and account options</summary><JudgeCallButton tournamentId={context.tournamentId} gameId={context.gameId} /><PaperDigitalGuide /><a className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</a><SharedDeviceSignOut /></details>
+      {hydrated&&!pendingSubmission&&!recoveryBlocked&&!recoveryConflict&&<ManualMixedHandoffV1 actorId={context.actorId} gameId={context.gameId} submissionId={submissionId}/>}<details className="player-help"><summary>Help and account options</summary><JudgeCallButton tournamentId={context.tournamentId} gameId={context.gameId} /><PaperDigitalGuide /><a className="guide-link" href={`/tournament/${context.tournamentId}/how-to`}>Open Start Here / How To</a><SharedDeviceSignOut /></details>
     </section>
   </PlayerPageFrame>;
 }
