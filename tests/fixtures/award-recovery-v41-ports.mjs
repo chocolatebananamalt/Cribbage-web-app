@@ -1,0 +1,4 @@
+// Browser-only synthetic Auth/recovery storage ports. Never imported by product.
+export const createClient=()=>({auth:{onAuthStateChange:f=>{f('INITIAL_SESSION',{user:{id:window.fixture.scope.actorId}});return{data:{subscription:{unsubscribe(){}}}};}}});
+export const trackAppRecoveryWrite=fn=>fn();
+export const createIndexedFinanceDraftRetainedV1=()=>({read:async key=>sessionStorage.getItem(key),transition:async(key,expected,next,archive,signal)=>{if(signal?.aborted||sessionStorage.getItem(key)!==expected||archive&&window.fixture.mode==='archive-failure')return false;if(archive){const a=JSON.parse(sessionStorage.getItem('fixture:archives')??'[]');a.push(archive);sessionStorage.setItem('fixture:archives',JSON.stringify(a));}if(next===null)sessionStorage.removeItem(key);else sessionStorage.setItem(key,next);return true;}});

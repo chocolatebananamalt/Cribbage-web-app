@@ -1,0 +1,5 @@
+import React from 'react';import {createRoot} from 'react-dom/client';
+import {SelectedStepAwardSectionV3} from '../../src/components/selected-step-award-section-v3';
+const f=window.fixture,key=`selected-step-award-v3:${f.scope.actorId}:${f.scope.tournamentId}:${f.scope.eventId}`;
+if(!sessionStorage.getItem('fixture:seeded')){sessionStorage.setItem(key,JSON.stringify(f.attempt));sessionStorage.setItem('foreign:retained','KEEP EXACT');sessionStorage.setItem('fixture:seeded','yes');}
+createRoot(document.getElementById('root')).render(<SelectedStepAwardSectionV3 enabled scope={f.scope} role="director" writesVerified={f.write} recoveryVerified={f.recovery}/>);
