@@ -1,3 +1,6 @@
+## 2026-11-17: V13 read-only existing-profile navigation, LOCAL and unpublished
+
+Fixed one reproduced app wiring defect: existing identity GET navigation was disabled by the adoption editing fieldset when writes were paused. Read navigation now retains every other blocker; editing/write/retry/recovery/security behavior remains unchanged.22focused and3740application tests pass; full check limitations in docs/quality/2026-11-17-readonly-profile-navigation-v13.md. V12base04491766 is now the published staging Preview, with app and database identity writes OFF. Exact new callback was separately approved/saved/read back; no email or user session/draft access. V13 is not published. Earlier dated status below is historical.
 ## 2026-11-17: Integrated Identity V12, unpublished; closed staging backend installed
 
 V5/V8/V10 source layers are assembled on the preserved live ef2b93dd base in a separate candidate. Application tests 3,737 pass, TypeScript/provider/build pass, lint zero errors (252 warnings), workspace seven pass/one private-handoff skip, high-threshold audit passes with one moderate advisory. Stock pnpm verify remains incomplete because dependency-junction repair aborted safely; no check bypass or dependency change. See docs/quality/2026-11-17-integrated-identity-v12.md for exact limits and publication gates.
