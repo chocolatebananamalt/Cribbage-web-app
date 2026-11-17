@@ -10,7 +10,6 @@ import { PaperCardReviewLinks } from "../../../../components/paper-card-review-l
 import {MakeupCardLines} from '../../../../components/makeup-card-lines';
 import type {GameScorecardNumbers} from '../../../../lib/api/odd-field-makeup';
 import {
-  isAcceptedPaperGameCompletion,
   isAcceptedPaperGameReview,
   isAcceptedPaperOfficialIdentity,
   isBindPaperOfficialIdentityRequest,
@@ -26,24 +25,14 @@ import { SyntheticPaperCards } from "../../../../components/synthetic-paper-card
 import type { SyntheticPaperArtifact } from "../../../../lib/api/synthetic-paper-evidence";
 import type { PaperGameCandidate, PaperGameReviewCase } from "../../../../lib/paper-games/workspace";
 
+import{readPaperCaptureRecoveryV36,paperCaptureOutcomeV36}from'../../../../lib/paper-games/capture-recovery-v36';
+
 function paperPlayerLabel(side: PaperGameCandidate["sideA"]) {
   return `ID # ${side.verificationId} - ${side.displayName}`;
 }
 
 function storageKey(actorId: string, gameId: string) {
   return `paper-game-completion:${actorId}:${gameId}`;
-}
-
-function readLocked(key: string): CompletePaperGameRequest | null {
-  try {
-    const value: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null");
-    return isCompletePaperGameRequest(value) ? value : null;
-  } catch { return null; }
-}
-
-function saveLocked(key: string, value: CompletePaperGameRequest) {
-  try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify(value)); return true; }
-  catch { return false; }
 }
 
 function clearLocked(key: string) {
@@ -89,7 +78,7 @@ function SavedOperationReconciler({ actorId, tournamentId }: { actorId: string; 
           if (raw === null) continue;
           const saved: unknown = JSON.parse(raw);
           if (key.startsWith(`paper-game-completion:${actorId}:`) && isCompletePaperGameRequest(saved)) {
-            entries.push({ raw, key, operationType: "complete_paper_vs_paper_game_v1", targetId: saved.completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameCompletion(value, saved) || isRejectedPaperGameCompletion(value, saved.completionId) });
+            entries.push({ raw, key, operationType: "complete_paper_vs_paper_game_v1", targetId: saved.completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => ["accepted","rejected"].includes(paperCaptureOutcomeV36(value,saved,tournamentId)) });
           } else if (key.startsWith(`paper-game-review:${actorId}:`) && isReviewPaperGameRequest(saved)) {
             const completionId = key.slice(`paper-game-review:${actorId}:`.length).replace(/:synthetic-v1$/, "");
             entries.push({ raw, key, operationType: "review_paper_vs_paper_game_v1", targetId: completionId, idempotencyKey: saved.idempotencyKey, accepted: (value) => isAcceptedPaperGameReview(value, completionId, saved) || isRejectedPaperGameCompletion(value, completionId) });
@@ -136,6 +125,15 @@ function PaperGameForm({ actorId, tournamentId, game,cardNumbers,synthetic }: { 
   const [busy, setBusy] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
   const [message, setMessage] = useState("");
+  const [blocked, setBlocked] = useState(false);
+  const syntheticMode=!!synthetic;
+  const retainedRaw = useRef<string | null | undefined>(undefined);
+  const lease = useRef<object | null>(null);
+  const inFlight = useRef(false);
+  useLayoutEffect(() => { const token = {}; lease.current = token; return () => { if (lease.current === token) lease.current = null; }; }, [actorId,tournamentId,game.gameId,game.eventId,syntheticMode]);
+  const hold = () => { setBlocked(true); setMessage("Saved paper-card work cannot be safely checked. It remains preserved. Ask your director to review; do not clear browser data."); };
+  const retainedMatches = () => { try { return window.sessionStorage.getItem(key) === retainedRaw.current; } catch { return false; } };
+  const retireRetained = () => { try { const raw=retainedRaw.current; if(typeof raw!=='string'||!transitionAppRecoveryItem(window.sessionStorage,key,raw,null))return false;retainedRaw.current=null;return true; } catch { return false; } };
   const numericSideAMargin = Number(sideAMargin);
   const numericSideBMargin = Number(sideBMargin);
   const claimsValid = sideAWinner !== "" && sideBWinner !== "" && Number.isInteger(numericSideAMargin) && numericSideAMargin >= 1 && numericSideAMargin <= 121
@@ -145,30 +143,41 @@ function PaperGameForm({ actorId, tournamentId, game,cardNumbers,synthetic }: { 
     && sideAReference.trim().toLowerCase() !== sideBReference.trim().toLowerCase();
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const saved = readLocked(key);
-      if (!saved || saved.gameId !== game.gameId || saved.eventId !== game.eventId) { setStorageReady(true); return; }
-      void reconcileOperation(tournamentId, "complete_paper_vs_paper_game_v1", saved.completionId, saved.idempotencyKey).then((result) => {
-        if (result !== null && (isAcceptedPaperGameCompletion(result, saved) || isRejectedPaperGameCompletion(result, saved.completionId))) {
-          clearLocked(key); setMessage("The saved paper-card entry was reconciled with the tournament record."); router.refresh(); return;
+    const token=lease.current;let cancelled=false;
+    const current=()=>!cancelled&&token!==null&&lease.current===token;
+    const timer=window.setTimeout(async()=>{
+      try{
+        const raw=window.sessionStorage.getItem(key),read=readPaperCaptureRecoveryV36(raw,{gameId:game.gameId,eventId:game.eventId});
+        if(!current())return;
+        retainedRaw.current=raw;
+        if(read.kind==='blocked'){hold();return;}
+        if(read.kind==='empty')return;
+        const saved=read.request;
+        const result=await reconcileOperation(tournamentId,'complete_paper_vs_paper_game_v1',saved.completionId,saved.idempotencyKey).catch(()=>undefined);
+        if(!current())return;
+        if(window.sessionStorage.getItem(key)!==raw){hold();return;}
+        const outcome=paperCaptureOutcomeV36(result,saved,tournamentId);
+        if(outcome==='accepted'||outcome==='rejected'){
+          if(!transitionAppRecoveryItem(window.sessionStorage,key,raw,null)){hold();return;}
+          retainedRaw.current=null;
+          setMessage('The saved paper-card entry was reconciled with the tournament record.');router.refresh();return;
         }
-        setSideAWinner(saved.sideAClaim.winnerSide); setSideBWinner(saved.sideBClaim.winnerSide);
-        setSideAMargin(String(saved.sideAClaim.margin)); setSideBMargin(String(saved.sideBClaim.margin));
-        setSideAReference(saved.sideAClaim.evidenceReference); setSideBReference(saved.sideBClaim.evidenceReference);
-        setLocked(saved); setMessage("A prior paper-card completion may be unresolved. Retry sends the exact same protected request.");
-      }).catch(() => {
-        setSideAWinner(saved.sideAClaim.winnerSide); setSideBWinner(saved.sideBClaim.winnerSide);
-        setSideAMargin(String(saved.sideAClaim.margin)); setSideBMargin(String(saved.sideBClaim.margin));
-        setSideAReference(saved.sideAClaim.evidenceReference); setSideBReference(saved.sideBClaim.evidenceReference);
-        setLocked(saved); setMessage("A prior paper-card completion may be unresolved. Retry sends the exact same protected request.");
-      }).finally(() => setStorageReady(true));
+        setLocked(saved);setSideAWinner(saved.sideAClaim.winnerSide);setSideBWinner(saved.sideBClaim.winnerSide);
+        setSideAMargin(String(saved.sideAClaim.margin));setSideBMargin(String(saved.sideBClaim.margin));
+        setSideAReference(saved.sideAClaim.evidenceReference);setSideBReference(saved.sideBClaim.evidenceReference);
+        if(outcome==='conflict'){hold();return;}
+        setMessage('A prior paper-card completion may be unresolved. Retry sends the exact same protected request.');
+      }catch{if(current())hold();}
+      finally{if(current())setStorageReady(true);}
     });
-    return () => window.clearTimeout(timer);
-  }, [game.eventId, game.gameId, key, router, tournamentId]);
+    return()=>{cancelled=true;window.clearTimeout(timer);};
+  }, [game.eventId,game.gameId,key,router,tournamentId]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (sideAWinner === "" || sideBWinner === "" || !storageReady || !valid || busy) return;
+    if (sideAWinner === "" || sideBWinner === "" || !storageReady || !valid || busy || blocked || inFlight.current) return;
+    const token=lease.current,current=()=>token!==null&&lease.current===token;
+    if(!current())return;
     const envelope = locked ?? {
       completionId: crypto.randomUUID(), eventId: game.eventId, gameId: game.gameId,
       expectedGameVersion: game.gameVersion,
@@ -176,30 +185,36 @@ function PaperGameForm({ actorId, tournamentId, game,cardNumbers,synthetic }: { 
       sideBClaim: { winnerSide: sideBWinner, margin: numericSideBMargin, evidenceReference: sideBReference.trim() },
       idempotencyKey: crypto.randomUUID(),
     } satisfies CompletePaperGameRequest;
-    if (!locked && !saveLocked(key, envelope)) {
-      setMessage("This browser cannot safely retain the request. Enable session storage before continuing.");
-      return;
-    }
+    try{
+      const expected=retainedRaw.current;
+      if(expected===undefined||window.sessionStorage.getItem(key)!==expected){hold();return;}
+      if(!locked){const raw=JSON.stringify(envelope);if(!transitionAppRecoveryItem(window.sessionStorage,key,expected,raw)){hold();return;}retainedRaw.current=raw;}
+    }catch{hold();return;}
+    inFlight.current=true;
     setLocked(envelope); setBusy(true); setMessage("");
     try {
       const response = await fetch(`/api/v1/tournaments/${encodeURIComponent(tournamentId)}/${synthetic ? "synthetic-paper-game-completions" : "paper-game-completions"}`, {
         method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(envelope),
       });
       const result: unknown = await response.json().catch(() => null);
-      if (response.ok && isAcceptedPaperGameCompletion(result, envelope)) {
-        clearLocked(key); setLocked(null);
+      if(!current())return;
+      if(!retainedMatches()){hold();return;}
+      const outcome=paperCaptureOutcomeV36(result,envelope,tournamentId);
+      if (response.ok && outcome === "accepted") {
+        if(!retireRetained()){hold();return;}setLocked(null);
         setMessage(synthetic ? "Both synthetic scorecards were recorded. Separate re-entry is still required before the result counts; no human review is claimed." : "Both paper scorecards were recorded. A second official must independently confirm them before the result counts.");
         router.refresh(); return;
       }
-      if (response.status === 409 && isRejectedPaperGameCompletion(result, envelope.completionId)) {
-        clearLocked(key); setLocked(null);
+      if (response.status === 409 && outcome === "rejected") {
+        if(!retireRetained()){hold();return;}setLocked(null);
         setMessage("The tournament server rejected this completion. Refresh the game list before trying again.");
         router.refresh(); return;
       }
+      if(outcome === "conflict"){hold();return;}
       setMessage("The result is uncertain. Retry the same locked request; do not enter it again.");
     } catch {
-      setMessage("Connection problem. Retry the same locked request; do not enter it again.");
-    } finally { setBusy(false); }
+      if(current())setMessage("Connection problem. Retry the same locked request; do not enter it again.");
+    } finally { if(current()){inFlight.current=false;setBusy(false);} }
   }
 
   const winnerName = paperPlayerLabel(sideAWinner === "a" ? game.sideA : game.sideB);
@@ -210,27 +225,27 @@ function PaperGameForm({ actorId, tournamentId, game,cardNumbers,synthetic }: { 
     <p>{game.sideA.displayName} Â· ID # {game.sideA.verificationId}<br />{game.sideB.displayName} Â· ID # {game.sideB.verificationId}</p>
     {synthetic ? <SyntheticPaperCards artifact={synthetic} /> : null}
     <form onSubmit={submit}>
-      <fieldset disabled={!storageReady || busy || !!locked}><legend>{paperPlayerLabel(game.sideA)}&apos;s {synthetic ? 'synthetic card' : 'paper card'}</legend>
-        {!synthetic ? <PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={game.gameId} cardSide="a" verificationId={game.sideA.verificationId} inputId={`${game.gameId}-a-photo`} label={paperPlayerLabel(game.sideA)} disabled={!storageReady || busy || !!locked} /> : null}
+      <fieldset disabled={!storageReady || blocked || busy || !!locked}><legend>{paperPlayerLabel(game.sideA)}&apos;s {synthetic ? 'synthetic card' : 'paper card'}</legend>
+        {!synthetic ? <PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={game.gameId} cardSide="a" verificationId={game.sideA.verificationId} inputId={`${game.gameId}-a-photo`} label={paperPlayerLabel(game.sideA)} disabled={!storageReady || blocked || busy || !!locked} /> : null}
         <label><input type="radio" name={`${game.gameId}-a-winner`} checked={sideAWinner === "a"} onChange={() => setSideAWinner("a")} /> {paperPlayerLabel(game.sideA)} Won</label>
         <label><input type="radio" name={`${game.gameId}-a-winner`} checked={sideAWinner === "b"} onChange={() => setSideAWinner("b")} /> {paperPlayerLabel(game.sideB)} Won</label>
         <label htmlFor={`${game.gameId}-a-margin`}>Spread Points</label>
         <input id={`${game.gameId}-a-margin`} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={sideAMargin} onChange={(event) => setSideAMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} />
       </fieldset>
-      <fieldset disabled={!storageReady || busy || !!locked}><legend>{paperPlayerLabel(game.sideB)}&apos;s {synthetic ? 'synthetic card' : 'paper card'}</legend>
-        {!synthetic ? <PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={game.gameId} cardSide="b" verificationId={game.sideB.verificationId} inputId={`${game.gameId}-b-photo`} label={paperPlayerLabel(game.sideB)} disabled={!storageReady || busy || !!locked} /> : null}
+      <fieldset disabled={!storageReady || blocked || busy || !!locked}><legend>{paperPlayerLabel(game.sideB)}&apos;s {synthetic ? 'synthetic card' : 'paper card'}</legend>
+        {!synthetic ? <PrivatePaperCardPhoto actorId={actorId} tournamentId={tournamentId} gameId={game.gameId} cardSide="b" verificationId={game.sideB.verificationId} inputId={`${game.gameId}-b-photo`} label={paperPlayerLabel(game.sideB)} disabled={!storageReady || blocked || busy || !!locked} /> : null}
         <label><input type="radio" name={`${game.gameId}-b-winner`} checked={sideBWinner === "a"} onChange={() => setSideBWinner("a")} /> {paperPlayerLabel(game.sideA)} Won</label>
         <label><input type="radio" name={`${game.gameId}-b-winner`} checked={sideBWinner === "b"} onChange={() => setSideBWinner("b")} /> {paperPlayerLabel(game.sideB)} Won</label>
         <label htmlFor={`${game.gameId}-b-margin`}>Spread Points</label>
         <input id={`${game.gameId}-b-margin`} inputMode="numeric" pattern="[0-9]*" maxLength={3} value={sideBMargin} onChange={(event) => setSideBMargin(event.target.value.replace(/\D/g, "").slice(0, 3))} />
       </fieldset>
       <label htmlFor={`${game.gameId}-a-reference`}>{paperPlayerLabel(game.sideA)}&apos;s {synthetic ? 'synthetic-card reference' : 'paper-card reference'}</label>
-      <input id={`${game.gameId}-a-reference`} value={sideAReference} maxLength={200} disabled={busy || !!locked} onChange={(event) => setSideAReference(event.target.value)} placeholder={`Example: card ${game.sideA.verificationId}`} />
+      <input id={`${game.gameId}-a-reference`} value={sideAReference} maxLength={200} disabled={!storageReady || blocked || busy || !!locked} onChange={(event) => setSideAReference(event.target.value)} placeholder={`Example: card ${game.sideA.verificationId}`} />
       <label htmlFor={`${game.gameId}-b-reference`}>{paperPlayerLabel(game.sideB)}&apos;s {synthetic ? 'synthetic-card reference' : 'paper-card reference'}</label>
-      <input id={`${game.gameId}-b-reference`} value={sideBReference} maxLength={200} disabled={busy || !!locked} onChange={(event) => setSideBReference(event.target.value)} placeholder={`Example: card ${game.sideB.verificationId}`} />
+      <input id={`${game.gameId}-b-reference`} value={sideBReference} maxLength={200} disabled={!storageReady || blocked || busy || !!locked} onChange={(event) => setSideBReference(event.target.value)} placeholder={`Example: card ${game.sideB.verificationId}`} />
       {valid ? <p className="auth-note">Review: {winnerName} won by {numericSideAMargin}. Winner: {gamePoints} game points, +{numericSideAMargin}. Opponent: 0 game points, âˆ’{numericSideAMargin}.</p> : claimsValid && !reciprocal ? <p className="error-text" role="alert">The two paper cards do not match. Do not complete this game; send it for review.</p> : <p className="auth-note">{synthetic ? "Enter each synthetic card separately, using the two exact artifact references and the displayed spread." : "Enter each original paper card separately, using two different card references and a possible spread point number."}</p>}
-      <label className="publication-confirmation"><input type="checkbox" required disabled={busy || !!locked} /> {synthetic ? "I compared both referenced synthetic test scorecards; no physical originals or human review are claimed." : "I compared both original paper scorecards and they show this same result."}</label>
-      <button className="primary full" type="submit" disabled={!storageReady || !valid || busy}>{!storageReady ? "Checking prior requestâ€¦" : busy ? "Recording paper cardsâ€¦" : locked ? "Retry locked request" : "Record for independent confirmation"}</button>
+      <label className="publication-confirmation"><input type="checkbox" required disabled={!storageReady || blocked || busy || !!locked} /> {synthetic ? "I compared both referenced synthetic test scorecards; no physical originals or human review are claimed." : "I compared both original paper scorecards and they show this same result."}</label>
+      <button className="primary full" type="submit" disabled={!storageReady || blocked || !valid || busy}>{!storageReady ? "Checking prior requestâ€¦" : busy ? "Recording paper cardsâ€¦" : locked ? "Retry locked request" : "Record for independent confirmation"}</button>
     </form>
     {message ? <p className="error-text" role="status">{message}</p> : null}
   </li>;
@@ -371,5 +386,5 @@ function IdentityBinding({ actorId, tournamentId, officials, roster }: { actorId
 }
 
 export default function PaperGameClient({ actorId, tournamentId, actorRole, actorIdentityConfirmed, unboundOfficials, rosterChoices, candidates, reviewCases,cardNumberContexts={},syntheticArtifacts,syntheticEventIds=[],syntheticGameIds=[] }: { actorId: string; tournamentId: string; actorRole: "director" | "co_director" | "cross_checker"; actorIdentityConfirmed: boolean; unboundOfficials: { profileId: string; displayName: string; role: "director" | "co_director" | "cross_checker"; bindingVersion: number }[]; rosterChoices: { rosterEntryId: string; displayName: string }[]; candidates: PaperGameCandidate[]; reviewCases: PaperGameReviewCase[];cardNumberContexts?:Record<string,GameScorecardNumbers>;syntheticArtifacts?:Record<string,SyntheticPaperArtifact>;syntheticEventIds?:string[];syntheticGameIds?:string[] }) {
-  return <><PendingPaperCardPhotos actorId={actorId} tournamentId={tournamentId} /><SavedOperationReconciler actorId={actorId} tournamentId={tournamentId} />{actorRole !== "cross_checker" ? <IdentityBinding actorId={actorId} tournamentId={tournamentId} officials={unboundOfficials} roster={rosterChoices} /> : null}{!actorIdentityConfirmed ? <p className="error-text" role="status">Confirm your official identity above before recording or reviewing paper games.</p> : null}{actorIdentityConfirmed ? <><h2>{syntheticEventIds.length ? "Capture scorecard evidence" : "Record both paper cards"}</h2>{candidates.length ? <ul className="correction-list">{candidates.map((game) => syntheticEventIds.includes(game.eventId) && !syntheticArtifacts?.[game.gameId] ? <li key={game.gameId} role="status">Synthetic artifact is not authorized for this game. Recording is blocked.</li> : <PaperGameForm synthetic={syntheticArtifacts?.[game.gameId]} key={game.gameId} actorId={actorId} tournamentId={tournamentId} game={game} cardNumbers={cardNumberContexts[game.gameId]} />)}</ul> : <p className="auth-note">No unresolved scheduled games are available for paper-card entry.</p>}</> : null}<h2>{syntheticEventIds.length ? "Separate re-entry" : "Independent confirmations"}</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => syntheticGameIds.includes(item.gameId) && !syntheticArtifacts?.[item.gameId] ? <li key={item.completionId} role="status">Synthetic artifact is not authorized for this review. Confirmation is blocked.</li> : <ReviewForm synthetic={syntheticArtifacts?.[item.gameId]} key={item.completionId} actorId={actorId} tournamentId={tournamentId} item={item} cardNumbers={cardNumberContexts[item.gameId]} />)}</ul> : <p className="auth-note">No paper-card confirmations are waiting for you.</p>}</>;
+  return <><PendingPaperCardPhotos actorId={actorId} tournamentId={tournamentId} /><SavedOperationReconciler actorId={actorId} tournamentId={tournamentId} />{actorRole !== "cross_checker" ? <IdentityBinding actorId={actorId} tournamentId={tournamentId} officials={unboundOfficials} roster={rosterChoices} /> : null}{!actorIdentityConfirmed ? <p className="error-text" role="status">Confirm your official identity above before recording or reviewing paper games.</p> : null}{actorIdentityConfirmed ? <><h2>{syntheticEventIds.length ? "Capture scorecard evidence" : "Record both paper cards"}</h2>{candidates.length ? <ul className="correction-list">{candidates.map((game) => syntheticEventIds.includes(game.eventId) && !syntheticArtifacts?.[game.gameId] ? <li key={game.gameId} role="status">Synthetic artifact is not authorized for this game. Recording is blocked.</li> : <PaperGameForm synthetic={syntheticArtifacts?.[game.gameId]} key={`${actorId}:${tournamentId}:${game.eventId}:${game.gameId}:${!!syntheticArtifacts?.[game.gameId]}`} actorId={actorId} tournamentId={tournamentId} game={game} cardNumbers={cardNumberContexts[game.gameId]} />)}</ul> : <p className="auth-note">No unresolved scheduled games are available for paper-card entry.</p>}</> : null}<h2>{syntheticEventIds.length ? "Separate re-entry" : "Independent confirmations"}</h2>{actorIdentityConfirmed && reviewCases.length ? <ul className="correction-list">{reviewCases.map((item) => syntheticGameIds.includes(item.gameId) && !syntheticArtifacts?.[item.gameId] ? <li key={item.completionId} role="status">Synthetic artifact is not authorized for this review. Confirmation is blocked.</li> : <ReviewForm synthetic={syntheticArtifacts?.[item.gameId]} key={item.completionId} actorId={actorId} tournamentId={tournamentId} item={item} cardNumbers={cardNumberContexts[item.gameId]} />)}</ul> : <p className="auth-note">No paper-card confirmations are waiting for you.</p>}</>;
 }

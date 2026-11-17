@@ -1,3 +1,7 @@
+## 2026-11-17: V36 paper-card capture recovery — LOCAL only
+
+Capture now preserves unknown/foreign/replaced retained bytes, binds current context and exact request, uses coordinatedCAS and blocks rapid double-submit. Accepted receipt requires exact tournament; idempotencyconflict is held (also backgroundcapturepredicate). Postcommit503/null/error reload preserve exact explicitretry.16focused/3863app/42synthetic Chrome390/1440 cases pass; no genuineprovider/Next/physicalpaper acceptance. ReviewForm/IdentityBinding unchanged and remain separate cleanup gaps. V35/gates/livepractice preserved; no hosted/publication/email action. See docs/quality/2026-11-17-paper-capture-v36.md.
+
 ## 2026-11-17: V35 paper cross-check background recovery — LOCAL only
 
 SavedOperationReconciler now requires exact retained bytes and an ABA-safe current context lease before historical receipt cleanup through the existing recovery coordinator. Stale/cancelled/replaced/denied work remains intact; no game verification inferred. Baseline actualcomponent reproduced replacement deletion.13focused/3860app/26synthetic Chrome390/1440 cases pass; no genuineprovider/Next acceptance. All paperform bodies unchanged and their cleanup paths remain separate review gaps. No SQL/grant/flag/hosted/publication/email action; V34 preserved. See docs/quality/2026-11-17-paper-reconciliation-v35.md.
