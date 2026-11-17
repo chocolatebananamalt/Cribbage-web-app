@@ -1,3 +1,7 @@
+## 2026-11-17: V37 integrated read-only event playoff progress — LOCAL, default OFF
+
+PrimaryDirector route links from Results/Preparation, joins existing currentpairings/generations to exactverifiedseries, and separates held/unprepared/waiting/unavailable/conflicting states. ExplicitMain/Consolation selection,Satellite separate; no qualification/prize/Q/Side settlement or fullResults acceptance inferred.21focused/3869app/22synthetic page->reader->SSR/browser cases pass, lint/type/provider/build pass. Gate remainsliteralfalse; genuineAuth/Next/provider/ACL acceptance pending. NoSQL/grant/flag/hosted/userdraft/session changes; V36 preserved. See docs/quality/2026-11-17-playoff-progress-v37.md.
+
 ## 2026-11-17: V36 paper-card capture recovery — LOCAL only
 
 Capture now preserves unknown/foreign/replaced retained bytes, binds current context and exact request, uses coordinatedCAS and blocks rapid double-submit. Accepted receipt requires exact tournament; idempotencyconflict is held (also backgroundcapturepredicate). Postcommit503/null/error reload preserve exact explicitretry.16focused/3863app/42synthetic Chrome390/1440 cases pass; no genuineprovider/Next/physicalpaper acceptance. ReviewForm/IdentityBinding unchanged and remain separate cleanup gaps. V35/gates/livepractice preserved; no hosted/publication/email action. See docs/quality/2026-11-17-paper-capture-v36.md.

@@ -1,3 +1,4 @@
+import{playoffProgressEnabledV37,progressEventEligibleV37}from'../../../../lib/playoffs/progress-v37';
 import { integratedTestBackendRef, integratedTestBackendOrigin } from '../../../../lib/integrated-test-target.ts';
 import{manualPreparationEnabledV1}from'../../../../lib/playoffs/modern-manual-preparation-contract-v1';
 import{modernManualResultsEnabledV1,getModernManualResultsV1}from'../../../../lib/results/modern-manual-playoff-results-v1';
@@ -208,6 +209,7 @@ export default async function PreliminaryResultsPage({ params, searchParams }: {
     {showResultMrp&&<ResultBasedMrpV1 view={resultMrp?.status==='available'?resultMrp:null}/>}
     {manualPreparationEnabledV1()&&finalized&&access.roles.includes("director")&&!syntheticContext&&<Link href={`/tournament/${tournamentId}/manual-playoffs/prepare/${event}`}>Prepare Manual Playoff Rules, Start and Matches</Link>}
     {showManualPlayoffs&&<ModernManualPlayoffResultsV1 view={manualPlayoffs}/>}
+    {playoffProgressEnabledV37()&&finalized&&access.role==='director'&&!syntheticContext&&progressEventEligibleV37(selectedEvent)&&<Link prefetch={false} href={`/tournament/${tournamentId}/events/${event}/playoff-progress`}>Review Current Playoff Progress</Link>}
     {showModernPrizes && <ModernPrizeResultsV2 view={modernPrizes}/>}
     {showSelectedStepPrizes&&<><ModernPrizeResultsV2 view={selectedStepPrizes}/>{selectedStepAwardPageEnabledV3()&&<Link className="guide-link" href={`/tournament/${tournamentId}/finance/${event}/selected-step-awards`}>Review Regular Prize Awards</Link>}</>}
       {showSelectedStepPrizes && selectedStepPrizes && modernPrizeExportEnabledV2() && <a href={`/api/v1/tournaments/${tournamentId}/events/${event}/regular-prize-report`}>Download Current Unpaid Regular Prize Awards CSV</a>}

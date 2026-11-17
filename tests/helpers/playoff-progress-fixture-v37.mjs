@@ -1,0 +1,7 @@
+import{preparationFixtureV1,prepId as id}from'./modern-manual-preparation-fixture-v1.mjs';
+export {prepId as progressIdV37}from'./modern-manual-preparation-fixture-v1.mjs';
+/** Synthetic source DTOs, not proof of ACC bracket seeding or a real database. */
+export function playoffProgressFixtureV37(count=4){const{scope,w}=preparationFixtureV1();w.qualifierCount=count;w.originalEntrants=count===5?18:16;w.gateReviewId=id(20);w.expectedStartId=id(21);w.startedCurrent=true;
+ const pairs=count===4?[[1,4],[2,3],[1,2]]:[[4,5],[1,4],[2,3],[1,2]];
+ w.slots=pairs.map((pair,i)=>({slot:i+1,status:'available',sourceDigest:String(i+1).repeat(64),expectedVersion:1,generationId:id(200+i),generationCurrent:true,round:i===pairs.length-1?'final':count===5&&i===0?'regular':'semifinal',players:pair.map(n=>({name:'Fictional Player '+n,tournamentPlayerId:'A-'+n,mode:n%2?'digital':'paper'}))}));
+ const results={kind:'modern-manual-playoff-results-v1',...scope,qualificationId:w.qualificationId,qualifierCount:count,sourceDigest:'f'.repeat(64),matches:w.slots.map((p,i)=>({slot:p.slot,status:'verified',resultId:id(300+i),generationId:p.generationId,sourceDigest:p.sourceDigest,winner:{participantId:id(500+pairs[i][0]),name:p.players[0].name,tournamentPlayerId:p.players[0].tournamentPlayerId},loser:{participantId:id(500+pairs[i][1]),name:p.players[1].name,tournamentPlayerId:p.players[1].tournamentPlayerId}})),complete:true,sourceCurrent:true,financeAuthorized:false,moneyMoved:false};return{scope,w,results};}

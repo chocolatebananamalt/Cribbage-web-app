@@ -54,6 +54,7 @@ export function regularPrizeV3WiringFixture(kind='main'){
     'native-pool-award-results-v2':{nativePoolAwardResultsEnabledV2:()=>false},
     'selected-step-pool-results-v3':{selectedStepPoolResultsEnabledV3:()=>false},
     'modern-manual-playoff-results-v1':{modernManualResultsEnabledV1:()=>false},
+    'progress-v37':{playoffProgressEnabledV37:()=>false},
     'modern-manual-preparation-contract-v1':{manualPreparationEnabledV1:()=>false},
     'consolation-playoff-navigation':{consolationPlayoffEntry:()=>null},
     score:{formatSignedNet:n=>String(n)},
