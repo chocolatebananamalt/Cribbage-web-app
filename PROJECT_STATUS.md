@@ -7175,3 +7175,11 @@ Mounted explicit legacy adoption API/recovery UI with incomplete-address review,
 ## 2026-11-17: Identity V10 staging route preparation - not enabled
 
 Default-off V8 gate now has exact nnhcnvksxgxnpvdqjgpg / codex/integrated-test-app / Preview-only mode reviewed-staging-v8, full integrated-test isolation and matching backend bindings, and expected backend hash. Both configured modes hold V5 prepare/write, including invalid bindings; no fallback or authority bypass. Existing live Auth/getUser/Director/capability checks unchanged. Fifteen focused actual-runtime/component tests with synthetic ports and typecheck pass; no hosted verification. Independent bounded source review passes; final lint outcome external report. Source dependency read-only staging check06:09UTC has29column type matches, scoped roster key and existing owner permissions, identity schemas/RPCs absent. No hosted SQL/grants/flags/deploy/session/draft changes. This is NOT mature schema/install or genuine Auth/PostgREST acceptance. V9 SQL/localcatalog pin cannot be applied to staging; exact mature transaction and approvals remain. Prior denied Docker action not retried. See external identity-staging-route-v10-20261117 handoff.
+
+## 2026-11-17 V19 local control checkpoint (incomplete)
+Strict capability verifier and default-paused operator protocol added in isolation. Fourteen focused tests and eight native PostgreSQL protocol groups pass. Runtime installer/old-body fence/catalog RPC remain missing; actual app gates remain false. No hosted activation/publication. See docs/quality/2026-11-17-closeout-control-v19.md.
+
+
+## 2026-11-17 V20 local closeout runtime (closed)
+Capability RPC/route adapter and16-writer shared fencing implemented locally.3760app tests,68native checks, production build/provider checks pass; see docs/quality/2026-11-17-closeout-runtime-v20.md. Bootstrap=false, route gates=false, grants closed; mature positive effects and genuine Auth/PostgREST remain unverified. No hosted action or publication retry.
+

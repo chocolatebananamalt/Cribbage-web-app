@@ -10,7 +10,7 @@ import{readCloseoutTerminalV18,terminalReasonV18,type TerminalReplyV18}from'./cl
 export const closeoutTerminalReadEnabledV18=()=>false;
 export const closeoutTerminalWriteEnabledV18=()=>false;
 type Normal={auth:{getClaims:()=>Promise<{data:{claims?:{sub?:unknown;session_id?:unknown}}|null;error:unknown}>;getUser:()=>Promise<{data:{user:{id:string}|null};error:unknown}>};rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};
-type Ports={readEnabled:()=>boolean;writeEnabled:()=>boolean;normal:()=>Promise<Normal>;service:()=>{rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};verifyCapability:(scope:CloseScope,sessionId:string)=>Promise<boolean>};
+type Ports={readEnabled:()=>boolean;writeEnabled:()=>boolean;normal:()=>Promise<Normal>;service:()=>{rpc:(name:string,args:Record<string,unknown>)=>PromiseLike<{data:unknown;error:unknown}>};verifyCapability:(scope:CloseScope,sessionId:string,action:'recover'|'retire')=>Promise<boolean>};
 const json=(value:unknown,status=200)=>Response.json(value,{status,headers:{'cache-control':'private, no-store'}});
 class AccessFailure extends Error{status:number;constructor(status:number){super('access_changed');this.status=status;}}
 export function createCloseoutTerminalHandlerV18(ports:Ports){return async(request:Request,params:{id:string;eventId:string},boundedInput?:{value:unknown}):Promise<Response>=>{
@@ -26,7 +26,7 @@ export function createCloseoutTerminalHandlerV18(ports:Ports){return async(reque
   const body=boundedInput?boundedInput.value:await readLargeJson(request);if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).sort().join(',')!=='action,attempt,reason')return json({error:'invalid_request'},400);
   const input=body as{action:unknown;attempt:unknown;reason:unknown},attempt=readCloseAttempt(input.attempt,scope);if(!attempt||input.action!=='recover'&&input.action!=='retire'||input.action==='recover'&&input.reason!==null||input.action==='retire'&&!terminalReasonV18(input.reason))return json({error:'invalid_request'},400);
   const writing=input.action==='retire';if(writing&&!ports.writeEnabled())return json({error:'retirement_unavailable'},403);
-  if(!await ports.verifyCapability(scope,identity.sessionId))return json({error:'terminal_capability_unverified'},503);
+  if(!await ports.verifyCapability(scope,identity.sessionId,writing?'retire':'recover'))return json({error:'terminal_capability_unverified'},503);
   await authorize();if(!ports.readEnabled()||writing&&!ports.writeEnabled())return json({error:'retirement_unavailable'},503);
   const service=ports.service(),args:Record<string,unknown>={actor:scope.actorId,sid:identity.sessionId,tid:scope.tournamentId,eid:scope.eventId,op:attempt.operationId,stage:attempt.review.stage,request:attempt.request};if(writing)args.reason=input.reason;
   const response=await service.rpc(writing?'retire_closeout_operation_v18':'get_closeout_terminal_v18',args);
