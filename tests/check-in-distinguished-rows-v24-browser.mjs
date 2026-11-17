@@ -13,7 +13,7 @@ const root = process.cwd(), dir = path.resolve('../browser-fixture');
 fs.mkdirSync(dir, { recursive: true });
 const require = createRequire(import.meta.url), { webpack } = require('next/dist/compiled/webpack/webpack');
 fs.writeFileSync(path.join(dir, 'loader.cjs'), `const ts=require(${JSON.stringify(path.join(root, 'node_modules/typescript'))});module.exports=function(s){return ts.transpileModule(s,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText}`);
-fs.writeFileSync(path.join(dir, 'auth.offline'), `const listeners=new Set();window.fixtureAuthEvent=event=>listeners.forEach(fn=>fn(event));export const createClient=()=>({auth:{onAuthStateChange:fn=>{listeners.add(fn);queueMicrotask(()=>fn('INITIAL_SESSION'));return{data:{subscription:{unsubscribe:()=>listeners.delete(fn)}}}}}});window.fixtureSubscriptions=()=>listeners.size;`);
+fs.writeFileSync(path.join(dir, 'auth.offline'), `const listeners=new Set();window.fixtureAuthEvent=event=>listeners.forEach(fn=>fn(event));export const createClient=()=>({auth:{onAuthStateChange:fn=>{listeners.add(fn);queueMicrotask(()=>{if(window.fixture.authBeforeInitial)fn('SIGNED_OUT');fn('INITIAL_SESSION')});return{data:{subscription:{unsubscribe:()=>listeners.delete(fn)}}}}}});window.fixtureSubscriptions=()=>listeners.size;`);
 fs.writeFileSync(path.join(dir, 'router.offline'), `export const useRouter=()=>({refresh:()=>{window.fixtureRefreshes=(window.fixtureRefreshes??0)+1}});`);
 fs.writeFileSync(path.join(dir, 'entry.offline'), `import React from'react';import{createRoot}from'react-dom/client';import Seating from'${path.join(root, 'src/app/tournament/[tournamentId]/seating/seating-client').replaceAll('\\', '/')}';const f=window.fixture;const root=createRoot(document.getElementById('root'));window.fixtureRender=props=>root.render(<Seating {...props}/>);window.fixtureRender(f.props);`);
 await new Promise((resolve, reject) => {
@@ -60,14 +60,18 @@ try {
     const context = await browser.newContext({ viewport: { width, height: 1000 }, serviceWorkers: 'block' });
     const props = { actorId: scope.actorId, tournamentId: scope.tournamentId, identityScope: scope, registrationClosed: false, publication: null, checkIn };
     await context.addInitScript(({ props }) => { window.fixture = { props }; }, { props });
+    await context.addInitScript(() => {
+      window.fixtureStorageWrites = 0;
+      const original = Storage.prototype.setItem;
+      Storage.prototype.setItem = function(key, value) { window.fixtureStorageWrites++; return original.call(this, key, value); };
+    });
     const page = await context.newPage(), errors = [];
     page.on('pageerror', error => errors.push(error.message));
     const rows = () => page.locator('#check-in-list > li'), review = n => rows().nth(n).getByRole('button', { name: 'Review recorded identity', exact: true });
-    await page.goto(origin); await review(0).waitFor();
-    assert.equal(controls.requests.length, 0, 'No automatic identity request');
-    // Same legal name/address, independent stable IDs, replies deliberately reversed.
     controls.hold = true;
-    await review(0).click(); await review(1).click();
+    await page.goto(origin);
+    // Same legal name/address: automatic readback, no profile-opening click.
+
     await page.waitForFunction(() => document.querySelectorAll('button:disabled').length > 0);
     await held(2);
     controls.held.pop()(); await rows().nth(1).getByRole('heading', { name: 'Alex Example Jr.', exact: true }).waitFor();
@@ -75,14 +79,22 @@ try {
     assert.ok((await rows().nth(0).innerText()).includes('Temporary ID# 1'));
     assert.ok((await rows().nth(1).innerText()).includes('Temporary ID# 2'));
     assert.equal(await page.getByText('1 Fictional Way', { exact: false }).count(), 0);
+    assert.equal(controls.requests.length, 2, 'Exactly one automatic GET for each owned row');
     assert.equal(controls.writes.length, 0);
-    result.checks.push({ width, case: 'explicit reads, identical legal names/address, distinct IDs/suffixes, reverse replies, no writes or private ID/address display' });
+    result.checks.push({ width, case: 'inline automatic reads show distinct recorded suffixes for identical legal names/address without opening profiles; reverse replies, no writes/private fields' });
     // Null/wrong row must clear a previous display and never choose its namesake.
     for (const mode of ['null', 'wrong-row']) {
       controls.mode = mode; await review(0).click(); await rows().nth(0).getByText('Recorded identity is unavailable or needs binding review.', { exact: false }).waitFor();
       assert.equal(await rows().nth(0).getByRole('heading', { name: 'Alex Example Sr.', exact: true }).count(), 0);
       result.checks.push({ width, case: mode + ' leaves explicit unavailable, no fallback' });
     }
+    const beforeToggle = controls.requests.length;
+    await page.evaluate(props => window.fixtureRender({ ...props, registrationClosed: true }), props);
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('button')).find(button => button.textContent === 'Review recorded identity')?.disabled);
+    await page.evaluate(props => window.fixtureRender(props), props);
+    await page.waitForFunction(() => !Array.from(document.querySelectorAll('button')).find(button => button.textContent === 'Review recorded identity')?.disabled);
+    assert.equal(controls.requests.length, beforeToggle);
+    result.checks.push({ width, case: 'null/error and disable-enable never automatically retry a previously attempted row' });
     controls.mode = 'incomplete'; await review(0).click(); await rows().nth(0).getByText('Address information is incomplete.', { exact: false }).waitFor();
     result.checks.push({ width, case: 'incomplete address is not represented as a complete duplicate match' });
     // Auth epoch invalidates an already-computed response; no token is used/read.
@@ -100,24 +112,29 @@ try {
     assert.equal(await page.evaluate(() => window.fixtureSubscriptions()), 0);
     assert.equal(await page.getByRole('heading', { name: 'Alex Example Sr.', exact: true }).count(), 0);
     result.checks.push({ width, case: 'gate removal/unmount unsubscribes and drops delayed read' });
-    await page.evaluate(props => window.fixtureRender(props), props); await review(0).waitFor();
-    controls.hold = true; await review(0).click(); await held();
-    await page.evaluate(({ props, actorId }) => window.fixtureRender({ ...props, actorId, identityScope: { ...props.identityScope, actorId } }), { props, actorId: id(99) });
-    // A's first button is still Reading. A fresh Review button proves B committed,
-    // unlike the listener count (which is two in both owners).
-    await review(0).waitFor();
-    assert.equal(await page.evaluate(() => window.fixtureSubscriptions()), 2);
-    await page.evaluate(props => window.fixtureRender(props), props); await review(0).waitFor();
-    controls.held.pop()(); controls.hold = false;
-    assert.equal(await page.getByRole('heading', { name: 'Alex Example Sr.', exact: true }).count(), 0);
-    result.checks.push({ width, case: 'actor context ABA remount does not accept an old owner response' });
+    // A new owned mount reads once; old queued/in-flight work cannot restore it.
+    const beforeRestore=controls.requests.length;
+    await page.evaluate(props => window.fixtureRender(props), props);
+    await rows().nth(0).getByRole('heading', { name: 'Alex Example Sr.', exact: true }).waitFor();
+    assert.equal(controls.requests.length,beforeRestore+2);
+    result.checks.push({width,case:'fresh owned mount reads exact IDs once; disposed subscribers remain gone'});
     // Reload never recovers/guesses identity automatically and makes no writer call.
-    const readsBefore = controls.requests.length; await page.reload(); await review(0).waitFor(); assert.equal(controls.requests.length, readsBefore);
+    const readsBefore = controls.requests.length; await page.reload(); await rows().nth(0).getByRole('heading',{name:'Alex Example Sr.',exact:true}).waitFor(); await rows().nth(1).getByRole('heading',{name:'Alex Example Jr.',exact:true}).waitFor(); assert.equal(controls.requests.length, readsBefore+2);
     controls.access = { ...scope, sessionId: id(99) }; await review(0).click(); await rows().nth(0).getByText('Recorded identity is unavailable or needs binding review.', { exact: false }).waitFor(); controls.access = scope;
-    result.checks.push({ width, case: 'reload has no auto request; foreign session rejected by existing handler' });
+    result.checks.push({ width, case: 'reload explicitly re-reads both exact rows once without writes; foreign session rejected' });
     assert.equal(controls.writes.length, 0); assert.deepEqual(errors, []);
+    assert.equal(await page.evaluate(() => window.fixtureStorageWrites), 0);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
     await context.close(); controls.requests = []; controls.rpc = [];
+    const preflight = await browser.newContext({ viewport: { width, height: 1000 }, serviceWorkers: 'block' });
+    await preflight.addInitScript(props => { window.fixture = { props, authBeforeInitial: true }; }, props);
+    const preflightPage = await preflight.newPage();
+    await preflightPage.goto(origin);
+    await preflightPage.getByText('Sign-in changed.', { exact: false }).first().waitFor();
+    await preflightPage.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(controls.requests.length, 0, 'An Auth event before initial readiness permanently cancels automatic eligibility');
+    result.checks.push({ width, case: 'Auth-before-INITIAL_SESSION cancels automatic reads; no requests or assumed identity' });
+    await preflight.close();
   }
   result.passed = true;
 } catch (error) { result.passed = false; result.error = String(error.stack ?? error); throw error; }

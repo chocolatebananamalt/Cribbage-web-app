@@ -1,19 +1,21 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createClient } from '../lib/supabase/client';
 import type { IdentityAccessV5 } from '../lib/identity-v5/contracts';
 import { recordedCheckInIdentityV23 } from '../lib/seating/recorded-identity-v23';
+import type { IdentityReadQueueV24 } from '../lib/seating/identity-read-queue-v24';
 
-type Props = { scope: IdentityAccessV5; rosterEntryId: string; disabled: boolean };
+type Props = { scope: IdentityAccessV5; rosterEntryId: string; disabled: boolean; automaticReads?: IdentityReadQueueV24 };
 type View = NonNullable<ReturnType<typeof recordedCheckInIdentityV23>>;
 
 export function CheckInRecordedIdentityV23(props: Props) {
   return <RecordedIdentity key={JSON.stringify([props.scope.actorId, props.scope.sessionId, props.scope.tournamentId, props.rosterEntryId])} {...props} />;
 }
 
-function RecordedIdentity({ scope, rosterEntryId, disabled }: Props) {
+function RecordedIdentity({ scope, rosterEntryId, disabled, automaticReads }: Props) {
   const alive = useRef(false), epoch = useRef(0), flight = useRef<AbortController | null>(null);
+  const attempted = useRef(false), automaticAllowed = useRef(true);
   const [view, setView] = useState<View | null>(null), [busy, setBusy] = useState(false);
   const [available, setAvailable] = useState(false);
   const [message, setMessage] = useState('Review the recorded distinction before choosing between people with the same name.');
@@ -27,6 +29,7 @@ function RecordedIdentity({ scope, rosterEntryId, disabled }: Props) {
         if (!alive.current) return;
         setAvailable(true);
         if (event === 'INITIAL_SESSION') return;
+        automaticAllowed.current = false;
         epoch.current++; flight.current?.abort(); flight.current = null;
         setBusy(false); setView(null);
         setMessage('Sign-in changed. Review the recorded identity again; a different session needs a page reload.');
@@ -41,7 +44,9 @@ function RecordedIdentity({ scope, rosterEntryId, disabled }: Props) {
     }
   }, []);
 
-  async function review() {
+  const review = useCallback(async (automatic = false) => {
+    if (automatic && !automaticAllowed.current) return;
+    if (!automatic) automaticAllowed.current = false;
     if (disabled || !available || flight.current || !alive.current) return;
     const controller = new AbortController(), ticket = ++epoch.current;
     flight.current = controller; setBusy(true); setView(null);
@@ -64,12 +69,23 @@ function RecordedIdentity({ scope, rosterEntryId, disabled }: Props) {
     } finally {
       if (current()) { flight.current = null; setBusy(false); }
     }
-  }
+  }, [available, disabled, rosterEntryId, scope]);
+
+  useEffect(() => {
+    if (!automaticReads || !available || disabled || attempted.current || !automaticAllowed.current) return;
+    attempted.current = true;
+    const queued = new AbortController();
+    automaticReads.enqueue(async () => {
+      if (alive.current && automaticAllowed.current && !queued.signal.aborted) await review(true);
+    }, queued.signal);
+    return () => queued.abort();
+  }, [automaticReads, available, disabled, review]);
 
   return <section aria-label="Recorded check-in identity">
     <button type="button" disabled={disabled || busy || !available} onClick={() => void review()}>{busy ? 'Reading recorded identity…' : 'Review recorded identity'}</button>
     <p role="status" aria-live="polite">{message}</p>
     {view && <div>
+      <p>Recorded name for this registration:</p>
       <h3>{view.displayName}</h3><p>{view.reference}</p>
       <p>{view.nonmember ? 'Nonmember' : 'Membership not verified'}</p>
       {view.incompleteAddress && <p>Address information is incomplete. Recorded duplicate review does not establish an address match.</p>}
