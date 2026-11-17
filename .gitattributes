@@ -13,3 +13,12 @@ database/migrations/0252_odd_field_qualifying_makeup_v1.sql -text
 database/migrations/0253_five_qualifier_prize_accounting_v1.sql -text
 database/migrations/0254_no_q_accounting_v7.sql -text
 database/migrations/0255_acc_weighted_q_policy_v3.sql -text
+
+# Preserve exact reviewed Identity V5 SQL artifact hashes.
+proposals/identity-mounted-v5/IDENTITY_ENGINE_V5.INPUT.sql -text
+proposals/identity-mounted-v5/IDENTITY_ENGINE_V5.LOCAL-ONLY.sql -text
+proposals/identity-mounted-v5/SAME_ZZ_CONFIRMATION.LOCAL-DELTA.sql -text
+
+# Preserve exact local Identity V8 and V7-input SQL proposal bytes.
+proposals/identity-adoption-v8/*.sql -text
+proposals/identity-adoption-v8/v7-input/*.sql -text

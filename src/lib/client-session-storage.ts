@@ -1,3 +1,5 @@
+import {resolvedAdoptionRejectionV8} from './identity-adoption-v8/rejection-archive.ts';
+import {resolvedIdentityRejectionV5} from './identity-v5/rejection-archive.ts';
 const appStoragePrefixes = [
   "acc-score:",
   "acc-correction:",
@@ -63,7 +65,11 @@ export function countAppSessionStorageRecords(storage: Storage) {
   let count = 0;
   for (let index = 0; index < storage.length; index += 1) {
     const key = storage.key(index);
-    if (key && isAppRecoveryStorageKey(key)) count += 1;
+    if (key && isAppRecoveryStorageKey(key)) {
+      if(key.startsWith('manual-roster-operation:identity-adoption-v8:')&&key.includes(':rejected:')&&resolvedAdoptionRejectionV8(key,storage.getItem(key))) continue;
+      if(key.startsWith('manual-roster-operation:identity-v5:')&&key.includes(':rejected:')&&resolvedIdentityRejectionV5(key,storage.getItem(key))) continue;
+      count += 1;
+    }
   }
   return count;
 }

@@ -1,0 +1,9 @@
+# V4 boundary / coordination
+
+New isolated copy from V3 manifest6d9b126d33d5cef4e493a6b1af06fd809b60a5b44f36cffc9d9784e9aa4c36c8. No shared fixture/schema edits. Parent must relay to backend engineer6af6f4a8-fa78-8191-b139-c88e6f86202f; prior cross-thread denial not retried.
+
+Existing genuine local stack documented in task/integrated-fullstack-local-20261113/READINESS.md uses Docker Desktop desktop-linux, cached images and disposable internal network/containers. It is not continuously running. No psql/postgres/pg_ctl found on PATH or C:/Program Files/PostgreSQL. Prior Docker API/inventory denial remains; no Docker command retried, no new install. Therefore real PostgreSQL acceptance is currently an ACCESS/INFRASTRUCTURE blocker, not evidence that functions pass. New SQL/tests must be run by authorized local PostgreSQL fixture owner before integration.
+
+This checkpoint adds executable, closed local-only SQL proposal in its own private identity_trial_v4 schema, not shared app tables. It requires existing auth.sessions and app.tournament_roles for actor/session/director checks; synthetic test harness supplies only fictional prerequisite rows. It never writes existing registration/payment/score tables. No public RPC grants/exposed schema supplied. App factory ports are unmounted until exact writer/readback accepted. This is genuine implementation progress but not complete registration integration.
+
+Joined ACC at this tournament maps to existing joiningClaim.status=claimed_pending; none means not recorded, NOT a claim that the player did not join. Checkbox records claim of dues paid and joining before end; does not post payment, verify membership, require a known number, retire ZZ, or award official MRPs. Correction is versioned; previous claim fact retained. Manual report explicitly labels claimed/pending fact, no invented official ACC formfield or automated submission.

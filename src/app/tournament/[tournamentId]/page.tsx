@@ -1,3 +1,5 @@
+import {adoptionEnabledV8}from'../../../lib/identity-adoption-v8/runtime';
+import {identityWorkflowEnabledV5}from'../../../lib/identity-v5/gate';
 import { eventDeskEnabledV1 } from '../../../lib/operations/event-desk-v1';
 import { requireTournamentAccess } from "../../../lib/auth/require-tournament-access";
 import { SharedDeviceSignOut } from "../../../components/shared-device-sign-out";
@@ -41,6 +43,8 @@ export default async function ProtectedTournamentPage({ params }: { params: Prom
         <Link className="secondary workspace-chooser-link" href="/">Back to Your Tournaments</Link>
         <h1 id="tournament-title">{tournamentName ?? "Tournament workspace"}</h1>
         <p className="lede">Your role{access.roles.length === 1 ? "" : "s"}: {access.roles.map((role) => roleLabels[role] ?? role).join(", ")}.</p>
+        {access.roles.includes('director')&&adoptionEnabledV8()?<Link className="guide-link" href={`/tournament/${tournamentId}/identity-adoption-v8`}>Review existing registration adoption</Link>:null}
+        {access.roles.includes('director')&&identityWorkflowEnabledV5()?<Link className="guide-link" href={`/tournament/${tournamentId}/identity-v5`}>Local player identity workflow</Link>:null}
         {isDirector && eventDeskEnabledV1() ? <Link className="guide-link" href={`/tournament/${tournamentId}/event-desk`}>Director Event Desk</Link> : null}
         {checklist ? <DirectorChecklist tournamentId={tournamentId} snapshot={checklist} /> : null}
         {integratedTestUiEnabled() ? <IntegratedWorkspaceNav tournamentId={tournamentId} director={isDirector} official={isCrossCheckOfficial} /> : null}

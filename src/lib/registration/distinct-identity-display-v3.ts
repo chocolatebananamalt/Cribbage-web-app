@@ -1,0 +1,10 @@
+import{readLocalIdentityV2,localIdentityDisplayV2,type LocalIdentityReadbackV2}from'./local-player-identity-v2.ts';
+import{isVisibleDistinctionV3,visibleIdentityNameV3,type VisibleDistinctionV3}from'./identity-pre-save-v3.ts';
+import type{IdentityReadScopeV1}from'../games/scorecard-identity-v1.ts';
+export type DistinctIdentityReadbackV3={kind:'local-player-identity-v3';identity:LocalIdentityReadbackV2;distinction:VisibleDistinctionV3&{kind:'identity-display-distinction-v3';tournamentId:string;rosterEntryId:string;playerIdentityId:string;identityVersion:number;identityOperationId:string}};
+export function readDistinctIdentityV3(value:unknown,scope:IdentityReadScopeV1):DistinctIdentityReadbackV3|null{
+ if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).sort().join()!=='distinction,identity,kind')return null;const v=value as DistinctIdentityReadbackV3;if(v.kind!=='local-player-identity-v3'||!v.distinction||typeof v.distinction!=='object')return null;
+ const base=readLocalIdentityV2(v.identity,scope),x=v.distinction;if(!base||Object.keys(x).sort().join()!==['kind','tournamentId','rosterEntryId','playerIdentityId','identityVersion','identityOperationId','prefix','middleName','suffix','localLabel'].sort().join()||x.kind!=='identity-display-distinction-v3'||x.tournamentId!==base.fact.tournamentId||x.rosterEntryId!==base.fact.rosterEntryId||x.playerIdentityId!==base.fact.playerIdentityId||x.identityVersion!==base.fact.version||x.identityOperationId!==base.fact.operationId||x.suffix!==base.fact.displaySuffix||!isVisibleDistinctionV3({prefix:x.prefix,middleName:x.middleName,suffix:x.suffix,localLabel:x.localLabel}))return null;
+ return v;
+}
+export function distinctIdentityDisplayV3(value:unknown,scope:IdentityReadScopeV1){const v=readDistinctIdentityV3(value,scope);if(!v)return null;const basic=localIdentityDisplayV2(v.identity,scope),name=visibleIdentityNameV3(v.identity.fact.entry,{prefix:v.distinction.prefix,middleName:v.distinction.middleName,suffix:v.distinction.suffix,localLabel:v.distinction.localLabel});return basic&&name?{...basic,displayName:name}:null;}

@@ -1,0 +1,14 @@
+import{isUuid}from'../api/validation.ts';
+import{readIdentityReceiptV1,type IdentityReceiptV1,identityPresentationV1}from'../registration/nonmember-identity-v1.ts';
+export type IdentityBindingV1={kind:'event-player-identity-binding-v1';tournamentId:string;eventId:string;participantId:string;rosterEntryId:string;playerIdentityId:string;identityVersion:number;identityOperationId:string;viewerActorId:string};
+export type IdentityReadScopeV1={actorId:string;tournamentId:string;eventId:string;participantId:string;rosterEntryId:string};
+export function projectScorecardIdentityV1(receipt:IdentityReceiptV1,binding:IdentityBindingV1,scope:IdentityReadScopeV1){
+ const r=readIdentityReceiptV1(receipt,{actorId:receipt?.actorId,tournamentId:scope.tournamentId});
+ if(!r||!binding||Object.keys(binding).sort().join()!==['kind','tournamentId','eventId','participantId','rosterEntryId','playerIdentityId','identityVersion','identityOperationId','viewerActorId'].sort().join()||binding.kind!=='event-player-identity-binding-v1'||![scope.actorId,scope.tournamentId,scope.eventId,scope.participantId,scope.rosterEntryId].every(isUuid)||binding.viewerActorId!==scope.actorId||binding.tournamentId!==scope.tournamentId||binding.eventId!==scope.eventId||binding.participantId!==scope.participantId||binding.rosterEntryId!==scope.rosterEntryId||r.rosterEntryId!==scope.rosterEntryId||binding.playerIdentityId!==r.playerIdentityId||binding.identityVersion!==r.identityVersion||binding.identityOperationId!==r.idempotencyKey)return null;
+ return{tournamentId:scope.tournamentId,eventId:scope.eventId,participantId:scope.participantId,rosterEntryId:r.rosterEntryId,playerIdentityId:r.playerIdentityId,firstName:r.entry.firstName,lastName:r.entry.lastName,city:r.entry.city,state:r.entry.state,accNumber:r.entry.accNumber||null,...identityPresentationV1(r.entry)};
+}
+/** INTERNAL draft annotation only, NOT an ACC export. Use the v2 whitelist for ACC preparation. Financial/performance sources still need authoritative readers. */
+export function projectIdentityReportDraftV1(receipt:IdentityReceiptV1,binding:IdentityBindingV1,scope:IdentityReadScopeV1,values:{prizeAmountMinor:number;proposedMrp:number}){
+ const identity=projectScorecardIdentityV1(receipt,binding,scope);if(!identity||!values||typeof values!=='object'||Object.keys(values).sort().join()!=='prizeAmountMinor,proposedMrp'||![values.prizeAmountMinor,values.proposedMrp].every(x=>Number.isSafeInteger(x)&&x>=0))return null;
+ return{...identity,prizeAmountMinor:values.prizeAmountMinor,proposedMrp:values.proposedMrp,financialSourceVerified:false as const,performanceSourceVerified:false as const,accSubmissionPerformed:false as const,reportingAllowed:true as const,overrideResolutionBlocksSubmission:false as const,contactComplete:!!identity.city.trim()&&!!identity.state.trim()};
+}

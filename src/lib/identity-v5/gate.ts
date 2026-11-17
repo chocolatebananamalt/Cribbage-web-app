@@ -1,0 +1,1 @@
+export function identityWorkflowEnabledV5(env:Record<string,string|undefined>=process.env){if(env.CRIBBAGE_IDENTITY_V5!=='local-reviewed-v5')return false;try{return ['127.0.0.1','localhost','[::1]'].includes(new URL(env.NEXT_PUBLIC_SUPABASE_URL??'').hostname)}catch{return false}}

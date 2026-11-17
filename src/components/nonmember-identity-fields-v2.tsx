@@ -1,0 +1,6 @@
+import{NonmemberIdentityFieldsV1}from'./nonmember-identity-fields-v1';
+import type{IdentityDeskRequestV2}from'../lib/registration/local-player-identity-v2';
+/** Versioned writer integration remains required; no number is allocated in this component. */
+export function NonmemberIdentityFieldsV2({value,onChange,disabled=false}:{value:IdentityDeskRequestV2;onChange:(v:IdentityDeskRequestV2)=>void;disabled?:boolean}){
+ return <><NonmemberIdentityFieldsV1 value={value.entry} onChange={entry=>onChange({...value,entry})} disabled={disabled}/><fieldset disabled={disabled}><legend>Desk distinction</legend><label>Local display suffix (optional)<input maxLength={80} value={value.displaySuffix} onChange={e=>onChange({...value,displaySuffix:e.target.value})}/></label><label>Private desk reference (optional; not printed or exported)<input maxLength={500} value={value.privateDeskNote} onChange={e=>onChange({...value,privateDeskNote:e.target.value})}/></label><p>Same legal name and address can belong to different people. Keep separate player profiles; do not merge based on a name or address. An issued number belongs on the existing profile. The server assigns any tournament-only Temporary ID after a confirmed save.</p></fieldset></>;
+}

@@ -1,0 +1,15 @@
+# Identity V8 - proposal, not a hosted installer
+
+Base: preserved mounted V5 source plus exact reviewed V7 SQL inputs. Apply the delivery patch only on the matching V5 preimages. It is not a patch directly on live ef2 and does not import the unavailable full overnight candidate.
+
+The external `run.mjs` / `native-v8.mjs` harness supplies executable local installation order and rollback acceptance: captured synthetic roles and application baseline; original V5 engine; V7 atomic installer; then V8 SCHEMA, INNER, WRITER and V5_COEXISTENCE_GUARD in one transaction. `build-sql.py` derives INNER from preserved inputs. SQL snapshots and hashes are in the delivery manifest. No hosted installation or application grants are authorized by this document.
+
+Public normal-client RPC contracts are defined by src/lib/identity-adoption-v8/provider.ts. The fixture uses a synthetic vendor HTTP bridge mapping those names to real native SQL. They are NOT installed PostgREST wrappers. Before real use the backend owner must create/review exact exposed wrappers with verified current actor/session/Director/tournament binding; closed schemas and least-privilege ACLs; catalog capability pinning; and exclusive use of checked V5 prepare/write functions. Direct unguarded V5 writers would bypass persistent incomplete-coverage protection and may invert lock ordering. A process flag alone is insufficient.
+
+Private V8 SQL uses fixed original roster UUID, immutable operation/request receipts and scoped coverage reviews. Missing address is `incomplete_reviewed`, never a fabricated matching address. Private opaque `unverified_legacy_row:<roster UUID>` prevents accidental cross-person merge and is not exported. Existing linked accounts or profile ambiguity stop that row; no policy resolving them is invented. Duplicate legal-name candidates require explicit review and distinct local display. Normal report projection excludes internal/Temporary IDs and local labels.
+
+Runtime default is off. The local-only gate requires CRIBBAGE_IDENTITY_ADOPTION_V8=local-reviewed-v8 and a valid CRIBBAGE_IDENTITY_ADOPTION_V8_CATALOG_HASH; it rejects VERCEL_ENV and non-loopback backend configuration. Do not add these to Preview. Actual runtime must not silently fall back to V3/V5 when V8 is unavailable.
+
+Recovery storage retains exact actor/tournament/operation/request bytes. Read-only reconciliation can return original committed receipt marked recorded_binding_review_required if current binding changed; explicit local Finish removes only matching pending bytes, blocks that row and requires a valid refreshed inventory before another save. Rejected operations may be archived only with strict exact no-effects evidence. Uncertain/conflicting/malformed/foreign entries stay retained and counted.
+
+Remaining gates: mature-schema migration and ACL review; real Auth/PostgREST/SSR acceptance; linked-profile policy; authoritative real event result/finance adapter reconciliation. Native PG + synthetic Auth is not hosted or genuine Auth acceptance.
