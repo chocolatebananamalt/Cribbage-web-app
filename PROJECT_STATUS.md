@@ -1,3 +1,10 @@
+## 2026-11-17: V15 single local test candidate (V14 + schedule/start reliability)
+
+V15 builds on V14/53f6512 and fixes actual ScheduleClient selection/confirmation/recovery dead ends: deliberate event choice after list changes, exact-source Start consent with A-B-A invalidation, owner-scoped in-memory state and one always-reachable existing exact publication retry.28actual phone/laptop browser cases pass with explicit synthetic Auth/API/router; app3740pass/type0. Final broad outcomes and the ONE cumulative patch from publishedV13 are in the external V15 package and docs/quality/2026-11-17-schedule-selection-v15.md. No SQL/grants/flags/financial policy or hosted/user-draft/session change.
+
+Current hosted source is V13/458c8d49 READY at kmjbh1omx, preserving immutable V12/i8ztifgot and its separately approved callback. Earlier status entries saying V13unpublished are historical. V14+V15 remain local; no new callback/email tonight. A single stable test-branch alias/callback is proposed for the consolidated release, requiring its own exact approval before use. Both identity write controls stayOFF. Genuine authenticated acceptance still awaits Daron's own sign-in.
+
+Closeout source-change recovery needs a backend terminal cancellation/outcome serialized with writers; a plain absent lookup is not no-effect proof. No unsafe local archive/unlock was added.
 ## 2026-11-17: Seating closure refresh V14, local and unpublished
 
 Fixed a reproduced actual SeatingClient state bug: another director's closed-registration server refresh now updates this screen without resetting manual seat choices or recovery. Own accepted close acknowledgement remains immediate and actor/tournament bound. Fourteen new phone/laptop browser cases and ten existing seating refresh cases pass using explicit synthetic router/API/Auth ports; full application3740pass. See docs/quality/2026-11-17-seating-closure-refresh-v14.md and external verification package for exact gates/limits. No SQL/grants/flags/financial policy, owner session/draft, hosted data or production changes. V13 staging publication is separately recorded; V14 not published.

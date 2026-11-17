@@ -3,7 +3,7 @@ import { validateInitialGameSeats } from "../../../../lib/initial-game-seats";
 import { GamePlayerLocation } from "../../../../components/game-player-location";
 import { setAppRecoveryItem } from "../../../../lib/recovery-write-coordinator";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { isEventScheduleRequest, isEventScheduleResult, isEventStartRequest, isEventStartResult, isRejectedEventSchedule, isRejectedEventStart, parseScheduleCsv, validateScheduleForEvent, type EventScheduleRequest, type EventScheduleWorkspace, type EventStartRequest } from "../../../../lib/api/event-schedule";
@@ -28,7 +28,9 @@ function clearSaved(key: string) { try { window.sessionStorage.removeItem(key); 
 function readSavedStart(key: string): EventStartRequest | null { try { const value: unknown = JSON.parse(window.sessionStorage.getItem(key) ?? "null"); if (!value || typeof value !== "object" || Array.isArray(value)) return null; const saved = value as Record<string, unknown>; return saved.kind === "event-start" && isEventStartRequest(saved.request) ? saved.request : null; } catch { return null; } }
 function writeSavedStart(key: string, request: EventStartRequest) { try { setAppRecoveryItem(window.sessionStorage, key, JSON.stringify({ kind: "event-start", request } satisfies SavedStartRequest)); return true; } catch { return false; } }
 
-export default function ScheduleClient({ actorId, tournamentId, workspace }: { actorId: string; tournamentId: string; workspace: EventScheduleWorkspace }) {
+type ScheduleClientProps = { actorId: string; tournamentId: string; workspace: EventScheduleWorkspace };
+export default function ScheduleClient(props: ScheduleClientProps) { return <ScheduleOwned key={`${props.actorId}:${props.tournamentId}`} {...props} />; }
+function ScheduleOwned({ actorId, tournamentId, workspace }: ScheduleClientProps) {
   const router = useRouter();
   const digitalEvents = useMemo(() => workspace.events.filter((event) => event.format === "standard_singles" && event.scoringMethod === "digital"), [workspace.events]);
   const [eventId, setEventId] = useState(digitalEvents[0]?.eventId ?? "");
@@ -39,7 +41,8 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [selectedGame, setSelectedGame] = useState(1);
-  const [startConfirmed, setStartConfirmed] = useState(false);
+  const [startConfirmedChoice, setStartConfirmed] = useState(false);
+  const [startConfirmationBinding, setStartConfirmationBinding] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [pendingStart, setPendingStart] = useState<EventStartRequest | null>(null);
   const [acceptedStartEventId, setAcceptedStartEventId] = useState<string | null>(null);
@@ -47,11 +50,15 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   const storageKey = `event-schedule:${actorId}:${tournamentId}`;
   const startStorageKey = `event-start:${actorId}:${tournamentId}`;
   const activeEvent = digitalEvents.find((event) => event.eventId === eventId);
+  const startConfirmationKey = JSON.stringify([actorId, tournamentId, eventId, activeEvent?.schedulePublicationId, activeEvent?.participantSnapshotDigest, activeEvent?.participantCount, activeEvent?.gameCount, activeEvent?.playState, workspace.registrationClosed, workspace.tableCount, workspace.seatsPerTable]);
+  const lastStartConfirmationKey = useRef(startConfirmationKey);
+  const startConfirmed = !!pendingStart || (startConfirmedChoice && startConfirmationBinding === startConfirmationKey);
+  useLayoutEffect(() => { if (lastStartConfirmationKey.current !== startConfirmationKey) { lastStartConfirmationKey.current = startConfirmationKey; setStartConfirmed(false); setStartConfirmationBinding(null); } }, [startConfirmationKey]);
   const makeupRequired=activeEvent?.participantCount===17&&activeEvent.gameCount===12&&!activeEvent.schedulePublished;
   const participants = workspace.participants.filter((participant) => participant.eventId === eventId);
   const publishedMatches = workspace.matches.filter((match) => match.eventId === eventId && activeEvent?.schedulePublished && match.gameNumber === selectedGame);
   const parsed = useMemo(() => parseScheduleCsv(csv), [csv]);
-  const validationErrors = makeupRequired?["Use the seventeen-player makeup workflow to publish 102 real games, including six makeups."]:activeEvent && parsed.errors.length === 0 ? [...validateInitialGameSeats(parsed.matches), ...validateScheduleForEvent(
+  const validationErrors = !activeEvent?["Choose a current event before reviewing a new schedule."]:makeupRequired?["Use the seventeen-player makeup workflow to publish 102 real games, including six makeups."]:parsed.errors.length === 0 ? [...validateInitialGameSeats(parsed.matches), ...validateScheduleForEvent(
     parsed.matches,
     activeEvent.gameCount,
     participants.map((participant) => participant.verificationId),
@@ -132,19 +139,20 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
   }
 
   const pendingTargetMissing = !!pendingStart && !activeEvent;
-  if (digitalEvents.length === 0 && !pendingStart) return <section className="correction-item"><h2>Activate a Standard Singles event first</h2><p>Only activated digital Standard Singles events can publish a game schedule for this pilot.</p>{message ? <p className="live-status" role="status">{message}</p> : null}</section>;
+  if (digitalEvents.length === 0 && !pendingStart && !pending) return <section className="correction-item"><h2>Activate a Standard Singles event first</h2><p>Only activated digital Standard Singles events can publish a game schedule for this pilot.</p>{message ? <p className="live-status" role="status">{message}</p> : null}</section>;
   return <section className="policy-settings">
     {activeEvent?.participantCount===17&&activeEvent.gameCount===12&&<p><a href={`/tournament/${tournamentId}/events/${activeEvent.eventId}/odd-field-makeup`}>Review seventeen-player qualifying makeup games and original card lines</a>. Twelve sit-outs need six real makeup games; sitting out awards no points.</p>}
-    <section className="correction-item"><h2>Choose Event</h2><label>Event<select className="check-in-control" value={eventId} disabled={!ready || busy || starting || !!pending || !!pendingStart} onChange={(event) => { setEventId(event.target.value); setReviewed(false); setSelectedGame(1); }}>
+    <section className="correction-item"><h2>Choose Event</h2><label>Event<select className="check-in-control" value={eventId} disabled={!ready || busy || starting || !!pending || !!pendingStart} onChange={(event) => { setEventId(event.target.value); setReviewed(false); setStartConfirmed(false); setSelectedGame(1); }}>
+      {!activeEvent&&<option value={eventId} disabled>{pending||pendingStart?"Saved event is not in the current list":eventId?"Selected event unavailable; choose a current event":"Choose a current event"}</option>}
       {digitalEvents.map((event) => <option key={event.eventId} value={event.eventId}>{event.name} · {event.gameCount} games · {event.participantCount} players</option>)}</select></label>
-      {activeEvent?.schedulePublished ? <p className="success-text">Published · {activeEvent.publishedMatchCount} matchups · {activeEvent.playState.replaceAll("_", " ")}</p> : <p>Not published. Publishing creates the games, but an official must separately start this event before anyone can score.</p>}
+      {activeEvent?.schedulePublished ? <p className="success-text">Published · {activeEvent.publishedMatchCount} matchups · {activeEvent.playState.replaceAll("_", " ")}</p> : <p>{activeEvent?"Not published. Publishing creates the games, but an official must separately start this event before anyone can score.":"Choose a current event to review its schedule. Saved requests stay bound to their original event."}</p>}
     </section>
     {pendingTargetMissing ? <section className="correction-item"><h2>Retry Event Start</h2><p>The saved event is no longer listed. Retry the exact request to confirm whether it was accepted.</p><button className="primary" type="button" disabled={starting || !ready} onClick={() => void startEvent()}>{starting ? "Starting…" : "Retry Exact Event Start"}</button></section> : activeEvent?.schedulePublished ? <section className="correction-item"><h2>Published Schedule</h2><label>Game<select className="check-in-control" value={selectedGame} onChange={(event) => setSelectedGame(Number(event.target.value))}>
       {Array.from({ length: activeEvent.gameCount }, (_, index) => <option key={index + 1} value={index + 1}>Game {index + 1}</option>)}</select></label>
       <ul className="schedule-match-list">{publishedMatches.map((match) => <li key={match.canonicalGameId}><span><GamePlayerLocation label={match.sideADisplayName} playerId={match.sideAVerificationId} tableSeat={match.sideATableSeat} /></span><b>vs.</b><span><GamePlayerLocation label={match.sideBDisplayName} playerId={match.sideBVerificationId} tableSeat={match.sideBTableSeat} /></span></li>)}</ul>
       {(pendingStart || activeEvent.playState === "ready_to_start") ? <section className="event-start-confirmation" aria-labelledby="event-start-title"><h3 id="event-start-title">Final Start Confirmation</h3>
         <p><strong>{activeEvent.name}</strong> · {activeEvent.participantCount} players · {activeEvent.gameCount} games</p>
-        <label className="publication-confirmation"><input type="checkbox" checked={startConfirmed} disabled={starting || !!pendingStart} onChange={(event) => setStartConfirmed(event.target.checked)} />I confirm registration is closed and this event roster, attendance, seating, and schedule are ready for play.</label>
+        <label className="publication-confirmation"><input type="checkbox" checked={startConfirmed} disabled={starting || !!pendingStart} onChange={(event) => { setStartConfirmationBinding(event.target.checked ? startConfirmationKey : null); setStartConfirmed(event.target.checked); }} />I confirm registration is closed and this event roster, attendance, seating, and schedule are ready for play.</label>
         <button className="primary" type="button" disabled={(!startConfirmed && !pendingStart) || starting || !ready || acceptedStartEventId === activeEvent.eventId} onClick={() => void startEvent()}>{starting ? "Starting…" : acceptedStartEventId === activeEvent.eventId ? "Event Started" : pendingStart ? "Retry Exact Event Start" : `Start ${activeEvent.name}`}</button>
       </section> : activeEvent.playState === "preparing" ? <p className="auth-note">Start Play will become available after registration is closed and the event roster, attendance, seating, and schedule are complete.</p>
         : <p className="success-text">{activeEvent.playState === "in_progress" ? "Play is in progress." : activeEvent.playState === "completed" ? "All scheduled games are complete." : "This event is finalized."}{activeEvent.startedAt ? ` Started by ${activeEvent.startedBy ?? "an official"}.` : ""}</p>}
@@ -161,8 +169,9 @@ export default function ScheduleClient({ actorId, tournamentId, workspace }: { a
       }} /></label><label>Or Paste CSV<textarea className="schedule-csv" value={csv} disabled={!ready || busy || !!pending} onChange={(event) => { setCsv(event.target.value); setReviewed(false); }} /></label>
         <p>{parsed.matches.length} matchup rows found.</p>{validationErrors.length ? <ul className="schedule-errors" role="alert">{validationErrors.map((error) => <li key={error}>{error}</li>)}</ul> : <p className="success-text">Complete schedule ready for final review.</p>}
         <label className="publication-confirmation"><input type="checkbox" checked={reviewed} disabled={validationErrors.length > 0 || busy || !!pending} onChange={(event) => setReviewed(event.target.checked)} />I reviewed the complete schedule and approve these pairings and Table/Seat assignments.</label>
-        {pending ? <button className="primary" type="button" disabled={busy} onClick={() => void submit(pending)}>{busy ? "Publishing…" : "Retry exact saved publication"}</button> : <button className="primary" type="button" disabled={!ready || busy || !reviewed || validationErrors.length > 0} onClick={publish}>Publish Game Schedule</button>}
+        {!pending && <button className="primary" type="button" disabled={!ready || busy || !reviewed || validationErrors.length > 0} onClick={publish}>Publish Game Schedule</button>}
       </section></>}
+    {pending ? <section className="correction-item"><h2>Recover Schedule Publication</h2><p>This exact saved publication stays bound to its original event, even when the current list or published status changes.</p><button className="primary" type="button" disabled={busy} onClick={() => void submit(pending)}>{busy ? "Publishing…" : "Retry exact saved publication"}</button></section> : null}
     {message ? <p className="live-status" role="status">{message}</p> : null}
   </section>;
 }

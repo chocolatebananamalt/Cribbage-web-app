@@ -1,0 +1,23 @@
+import {createRoot} from 'react-dom/client';
+import {useLayoutEffect} from 'react';
+function CommitProbe({version,children}){useLayoutEffect(()=>{window.fixture.committed=version;},[version]);return children;}
+import ScheduleClient from '../../src/app/tournament/[tournamentId]/schedule/schedule-client';
+import {isEventScheduleWorkspace,isEventScheduleRequest,isEventStartRequest} from '../../src/lib/api/event-schedule';
+const id=n=>`ce150000-0000-4000-8000-${String(n).padStart(12,'0')}`,actorId=id(1),tournamentId=id(2),root=createRoot(document.getElementById('root'));
+export const useRouter=()=>({refresh:()=>window.fixture.render()});
+export const setAppRecoveryItem=(s,k,v)=>s.setItem(k,v);
+export default function Link({href,children,...props}){return <a href={href} {...props}>{children}</a>;}
+const event=(n,published=true)=>({eventId:id(n),name:n===3?'Fictional Main':'Fictional Consolation',format:'standard_singles',scoringMethod:'digital',gameCount:1,participantCount:2,schedulePublished:published,schedulePublicationId:published?id(n+10):null,participantSnapshotDigest:published?'a'.repeat(64):null,publishedMatchCount:published?1:0,playState:published?'ready_to_start':'preparing',startedAt:null,startedBy:null});
+const workspace=events=>({tournamentName:'Fictional selection fixture',registrationClosed:true,tableCount:1,seatsPerTable:4,events,participants:events.flatMap(e=>[1,2].map(n=>({eventId:e.eventId,participantId:id(30+n),displayName:'Fictional '+n,verificationId:'A-'+n,profileLinked:false}))),matches:events.filter(e=>e.schedulePublished).map(e=>({eventId:e.eventId,canonicalGameId:id(50+Number(e.eventId.slice(-2))),gameNumber:1,sideAVerificationId:'A-1',sideBVerificationId:'A-2',sideATableSeat:'A-1',sideBTableSeat:'A-2',sideADisplayName:'Fictional 1',sideBDisplayName:'Fictional 2',state:'pending'}))});
+window.mount=mode=>{
+ const publication={eventId:id(3),matches:[{gameNumber:1,sideAVerificationId:'A-1',sideBVerificationId:'A-2',sideATableSeat:'A-1',sideBTableSeat:'A-2'}],reviewedAndApproved:true,idempotencyKey:id(90)},start={eventId:id(3),schedulePublicationId:id(13),participantSnapshotDigest:'a'.repeat(64),expectedParticipantCount:2,expectedGameCount:1,confirmed:true,idempotencyKey:id(91)};
+ if(!isEventScheduleRequest(publication)||!isEventStartRequest(start))throw Error('invalid fixture recovery DTO');
+ const key=`event-schedule:${actorId}:${tournamentId}`,startKey=`event-start:${actorId}:${tournamentId}`;
+ if(mode==='removed-publication'||mode==='pending-publication-scope'||mode==='pending-published-publication')sessionStorage.setItem(key,JSON.stringify({kind:'event-schedule-publication',request:publication}));
+ if(mode==='removed-start'||mode==='pending-start-scope')sessionStorage.setItem(startKey,JSON.stringify({kind:'event-start',request:start}));
+ sessionStorage.setItem('payment-operation:foreign-fictional-preserved','foreign recovery untouched');
+ const f=window.fixture={actorId,tournamentId,key,startKey,publication,start,requests:[],version:0,committed:0,registrationClosed:true,tableCount:1,seatsPerTable:4,events:mode==='empty-arrival'||mode.startsWith('removed-p')||mode==='removed-start'?[]:mode==='direct-switch'?[event(3),event(4)]:[event(3,mode!=='csv-preserved'&&mode!=='pending-publication-scope')]};
+ f.render=()=>{const w={...workspace(f.events),registrationClosed:f.registrationClosed,tableCount:f.tableCount,seatsPerTable:f.seatsPerTable};if(!isEventScheduleWorkspace(w))throw Error('invalid fixture workspace');const version=++f.version;root.render(<CommitProbe version={version}><ScheduleClient actorId={f.actorId} tournamentId={f.tournamentId} workspace={w}/></CommitProbe>);};
+ f.replace=ids=>{f.events=ids.map(n=>event(n,mode!=='csv-preserved'));f.render();};
+ window.fetch=async(url,init)=>{f.requests.push({url,method:init.method,request:JSON.parse(init.body)});return{ok:false,status:503,json:async()=>({error:'synthetic response unavailable'})};};f.render();
+};
